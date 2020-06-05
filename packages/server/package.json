@@ -1,0 +1,33 @@
+{
+  "name": "@ccg/server",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/",
+  "scripts": {
+    "start": "nodemon --exec babel-node --root-mode upward --ignore=' ' --experimental-modules -r esm --es-module-specifier-resolution=node src/server.js",
+    "nodemon": "node --experimental-modules -r esm src/server.js"
+  },
+  "dependencies": {
+    "@ccg/assets": "^0.1.0",
+    "@ccg/components": "^0.1.0",
+    "@ccg/config": "^0.1.0",
+    "@ccg/data": "^0.1.0",
+    "@ccg/enums": "^0.1.0",
+    "@ccg/hooks": "^0.1.0",
+    "@ccg/utils": "^0.1.0"
+  },
+  "peerDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/node": "^7.10.1",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "boardgame.io": "^0.39.12",
+    "core-js": "3",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "mathjs": "^7.0.1",
+    "regenerator": "^0.14.4",
+    "uuid": "^8.1.0"
+  }
+}

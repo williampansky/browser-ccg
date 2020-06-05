@@ -1,0 +1,37 @@
+{
+  "Import Exists": {
+    "prefix": "import exists",
+    "body": [
+      "import exists from 'utils/element.exists';"
+    ],
+    "description": "Import the element.exists function."
+  },
+  "Import Img": {
+    "prefix": "import img",
+    "body": [
+      "import Img from 'react-image';"
+    ],
+    "description": "Import the <Img /> component package."
+  },
+  "Import MediaQuery": {
+    "prefix": "import mediaquery",
+    "body": [
+      "import MediaQuery from 'react-responsive';"
+    ],
+    "description": "Import the <MediaQuery /> component package."
+  },
+  "Import PropTypes": {
+    "prefix": "import proptypes",
+    "body": [
+      "import PropTypes from 'prop-types';"
+    ],
+    "description": "Import the PropTypes package."
+  },
+  "Import Styled Components": {
+    "prefix": "import styled",
+    "body": [
+      "import styled from 'styled-components';"
+    ],
+    "description": "Import the styled-components package."
+  }
+}

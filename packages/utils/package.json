@@ -1,0 +1,18 @@
+{
+  "name": "@ccg/utils",
+  "shortName": "utils",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/",
+  "type": "module",
+  "peerDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/node": "^7.10.1",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "@testing-library/jest-dom": "^5.9.0",
+    "babel-jest": "^26.0.1",
+    "esm": "^3.2.25",
+    "jest": "^26.0.1"
+  }
+}
