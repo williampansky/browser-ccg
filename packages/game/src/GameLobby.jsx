@@ -4,17 +4,19 @@ import { Client as BoardgameClient } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
 import { ReactCCG } from '@ccg/server';
 // import GameWrapper from './components/game-wrapper/GameWrapper';
-// import GameLoading from 'components/loading/GameLoading';
+import GameLoader from './components/game-loader';
 // import './index.css';
 // import './styles/game.scss';
 
 const REDUX_DEVTOOLS =
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+  typeof window !== undefined &&
+  window.__REDUX_DEVTOOLS_EXTENSION__ &&
+  window.__REDUX_DEVTOOLS_EXTENSION__();
 
 const Client = BoardgameClient({
   game: ReactCCG,
   // board: GameWrapper,
-  // loading: GameLoading,
+  loading: GameLoader,
   debug: true,
   multiplayer: SocketIO({ server: 'localhost:8000' }),
   enhancer: REDUX_DEVTOOLS

@@ -1,0 +1,28 @@
+@import '@ccg/styles';
+
+.loader {
+  height: 100%;
+  width: 100%;
+  @include display-flex(column nowrap, center, center);
+  @include position-fixed(0, 0, 0, 0, 1);
+}
+
+.ellipsis {
+  text-align: left;
+  width: 75px;
+
+  &:after {
+    animation: ellipsis steps(4, end) 900ms infinite;
+    content: '\2026'; // ascii code for the ellipsis character
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    width: 0px;
+  }
+
+  @keyframes ellipsis {
+    to {
+      width: 1.25em;
+    }
+  }
+}

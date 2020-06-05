@@ -19,12 +19,12 @@
         "--inspect=8000",
         "--exec",
         "babel-node",
-        // "--root-mode upward",
-        // "--ignore=' '",
+        "--root-mode upward",
+        "--ignore=' '"
         // "--experimental-modules",
         // "--es-module-specifier-resolution=node",
-        "-r",
-        "esm"
+        // "-r",
+        // "esm"
       ],
       "skipFiles": ["<node_internals>/**"]
     },

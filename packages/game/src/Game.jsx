@@ -9,7 +9,9 @@ import { ReactCCG } from '@ccg/server';
 // import './styles/game.scss';
 
 const REDUX_DEVTOOLS =
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+  typeof window !== undefined &&
+  window.__REDUX_DEVTOOLS_EXTENSION__ &&
+  window.__REDUX_DEVTOOLS_EXTENSION__();
 
 const Client = BoardgameClient({
   game: ReactCCG,

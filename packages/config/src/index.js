@@ -1,1 +1,3 @@
-export { default as GAME_CONFIG } from './game.config';
+import GAME_CONFIG from './game.config';
+
+export { GAME_CONFIG };

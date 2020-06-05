@@ -4,7 +4,8 @@
   "private": true,
   "main": "src/",
   "scripts": {
-    "start": "nodemon --exec babel-node --root-mode upward --ignore=' ' --experimental-modules -r esm --es-module-specifier-resolution=node src/server.js",
+    "start": "npx --inspect=8000 babel-node --root-mode upward --ignore=' ' src/server.js",
+    "nodemon-extended": "nodemon --exec babel-node --root-mode upward --ignore=' ' --experimental-modules -r esm --es-module-specifier-resolution=node src/server.js",
     "nodemon": "node --experimental-modules -r esm src/server.js"
   },
   "dependencies": {

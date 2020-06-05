@@ -2,5 +2,6 @@
   "name": "@ccg/config",
   "version": "0.1.0",
   "private": true,
-  "main": "src/"
+  "main": "src/",
+  "type": "module"
 }
