@@ -7,6 +7,7 @@
   "scripts": {
     "airtable": "node -r esm airtable.js",
     "bootstrap": "lerna bootstrap",
+    "start:dev": "lerna run --scope @ccg/dev start --stream",
     "start:game": "lerna run --scope @ccg/game start --stream",
     "start:game:p1": "lerna run --scope @ccg/game start:p1 --stream",
     "start:game:p2": "lerna run --scope @ccg/game start:p2 --stream",

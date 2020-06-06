@@ -1,0 +1,15 @@
+@import '@ccg/styles';
+
+#root {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}
+
+.app {
+  box-sizing: border-box;
+}
