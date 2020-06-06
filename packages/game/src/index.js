@@ -4,4 +4,4 @@ import App from './App';
 import Game from './Game';
 import GameLobby from './GameLobby';
 
-ReactDOM.render(<GameLobby />, document.getElementById('root'));
+ReactDOM.render(<Game />, document.getElementById('root'));

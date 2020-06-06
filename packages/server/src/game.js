@@ -7,13 +7,14 @@ import turns from './turns';
  * @see https://boardgame.io/documentation/#/
  */
 export default {
-  name: 'HSclone',
+  name: 'ReactCCG',
   setup: () => state,
   moves: moves,
 
   /**
    * This method uses the `stripSecrets` function to hide
    * the opponent player's hand and deck data from your client.
+   * @name playerView
    * @requires stripSecrets
    * @see https://boardgame.io/documentation/#/secret-state
    */
@@ -23,7 +24,6 @@ export default {
 
   /**
    * @name turn
-   * @memberof HSclone
    * @see https://boardgame.io/documentation/#/turn-order
    */
   turn: turns
@@ -34,7 +34,6 @@ export default {
    * are drafting cards before entering a playing phase, for example.
    *
    * @name phases
-   * @memberof HSclone
    * @see https://boardgame.io/documentation/#/phases
    */
   // phases: {},

@@ -1,10 +1,11 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
-import { Client as BoardgameClient } from 'boardgame.io/react';
-import { SocketIO } from 'boardgame.io/multiplayer';
+// import { Client as BoardgameClient } from 'boardgame.io/react';
+import { Lobby } from 'boardgame.io/react';
+// import { SocketIO } from 'boardgame.io/multiplayer';
 import { ReactCCG } from '@ccg/server';
 // import GameWrapper from './components/game-wrapper/GameWrapper';
-import GameLoader from './components/game-loader';
+// import GameLoader from './components/game-loader';
 // import './index.css';
 // import './styles/game.scss';
 
@@ -13,59 +14,18 @@ const REDUX_DEVTOOLS =
   window.__REDUX_DEVTOOLS_EXTENSION__ &&
   window.__REDUX_DEVTOOLS_EXTENSION__();
 
-const Client = BoardgameClient({
-  game: ReactCCG,
-  // board: GameWrapper,
-  loading: GameLoader,
-  debug: true,
-  multiplayer: SocketIO({ server: 'localhost:8000' }),
-  enhancer: REDUX_DEVTOOLS
-});
+const server = `http://locahost:8000`;
+const importedGames = [{ game: ReactCCG }];
 
-class App extends React.Component {
-  state = {
-    playerID: null,
-    playerName: null,
-    deck: []
-  };
-
-  componentDidMount() {
-    const {
-      location: { href }
-    } = window;
-
-    href.includes('3002')
-      ? this.setState({ playerID: '1' })
-      : this.setState({ playerID: '0' });
-
-    if (localStorage.getItem('playerName'))
-      this.setState({ playerName: localStorage.getItem('playerName') });
-  }
-
-  render() {
-    if (this.state.playerID === null) {
-      return (
-        <div>
-          <p>Play as</p>
-          <button onClick={() => this.setState({ playerID: '0' })}>
-            Player 0
-          </button>
-          <button onClick={() => this.setState({ playerID: '1' })}>
-            Player 1
-          </button>
-        </div>
-      );
-    }
-
-    return (
-      <React.Fragment>
-        <Client
-          playerID={this.state.playerID}
-          playerName={this.state.playerName}
-        />
-      </React.Fragment>
-    );
-  }
-}
+const App = () => (
+  <div>
+    <h1>Lobby</h1>
+    <Lobby
+      gameServer={server}
+      lobbyServer={server}
+      gameComponents={importedGames}
+    />
+  </div>
+);
 
 export default hot(module)(App);
