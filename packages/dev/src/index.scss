@@ -1,6 +1,12 @@
 @import '@ccg/styles';
 
+html,
+body {
+  background-color: transparent;
+}
+
 #root {
+  background: #222;
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
@@ -10,6 +16,6 @@
   width: 100%;
 }
 
-.app {
+#app {
   box-sizing: border-box;
 }

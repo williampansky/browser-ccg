@@ -1,0 +1,36 @@
+.card__attack {
+  align-items: center;
+  bottom: calc(var(--card-height) / -50);
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: calc(var(--card-height) / 12.5);
+  height: calc(var(--card-height) / 5.714285714);
+  justify-content: center;
+  left: calc(var(--card-height) / -26.666666667);
+  position: absolute;
+  width: calc(var(--card-height) / 5.714285714);
+  z-index: 2;
+
+  & > div {
+    left: calc(var(--card-height) / 200);
+    top: calc(var(--card-height) / 53.333333333);
+    z-index: 1;
+  }
+
+  &__badge {
+    height: calc(var(--card-height) / 5.714285714);
+    position: absolute;
+  }
+
+  &.card__attack__elite {
+    left: calc(var(--card-height) / -56.666666667);
+    height: calc(var(--card-height) / 4.896551724);
+    width: calc(var(--card-height) / 6.639004149);
+  }
+
+  &__badge__elite {
+    height: calc(var(--card-height) / 4.896551724);
+    position: absolute;
+    image-rendering: pixelated;
+  }
+}

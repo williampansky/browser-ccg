@@ -1,0 +1,16 @@
+.card {
+  border-radius: var(--card-border-radius);
+  font-family: var(--font-family-card);
+  height: var(--card-height);
+  width: calc(var(--card-height) / var(--card-width-division));
+  margin: 0 auto;
+  position: relative;
+
+  * {
+    user-select: none;
+  }
+}
+
+.card.dev {
+  --card-height: 400px;
+}

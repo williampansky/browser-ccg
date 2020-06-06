@@ -1,8 +1,9 @@
 const TYPE = {
-  TYPE_ITEM: '%TYPE_ITEM%',
-  TYPE_MINION: '%TYPE_MINION%',
-  TYPE_SPELL: '%TYPE_SPELL%',
-  TYPE_WEAPON: '%TYPE_WEAPON%'
+  ITEM: '%TYPE_ITEM%',
+  MINION: '%TYPE_MINION%',
+  NONE: '%TYPE_NONE%',
+  SPELL: '%TYPE_SPELL%',
+  WEAPON: '%TYPE_WEAPON%'
 };
 
 export default TYPE;

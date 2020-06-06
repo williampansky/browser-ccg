@@ -1,0 +1,7 @@
+.card__base__image {
+  border-radius: var(--card-border-radius);
+  height: var(--card-height);
+  image-rendering: pixelated;
+  position: relative;
+  z-index: 1;
+}

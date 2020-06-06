@@ -66,7 +66,7 @@ base
     });
 
     const constants = JSON.stringify(Object.assign({}, ...map));
-    fs.writeFileSync('./packages/data/constants.json', constants);
+    fs.writeFileSync('./packages/data/src/constants.json', constants);
   });
 
 // MECHANICS
@@ -96,7 +96,7 @@ base
     });
 
     const mechanics = JSON.stringify(Object.assign({}, ...map));
-    fs.writeFileSync('./packages/data/mechanics.json', mechanics);
+    fs.writeFileSync('./packages/data/src/mechanics.json', mechanics);
   });
 
 // HEROS
@@ -145,7 +145,7 @@ base
     });
 
     const heros = JSON.stringify(Object.assign({}, ...map));
-    fs.writeFileSync('./packages/data/heros.json', heros);
+    fs.writeFileSync('./packages/data/src/heros.json', heros);
   });
 
 // ABILITIES
@@ -215,7 +215,7 @@ base
     });
 
     const abilities = JSON.stringify(Object.assign({}, ...map));
-    fs.writeFileSync('./packages/data/abilities.json', abilities);
+    fs.writeFileSync('./packages/data/src/abilities.json', abilities);
   });
 
 // CORE
@@ -252,7 +252,7 @@ base
     });
 
     const game = JSON.stringify(Object.assign({}, ...map));
-    fs.writeFileSync('./packages/data/cards.game.json', game);
+    fs.writeFileSync('./packages/data/src/cards.game.json', game);
   });
 
 // CORE
@@ -307,7 +307,7 @@ base
           collectible,
           cost,
           description,
-          elite,
+          elite: elite ? true : false,
           entourage: parseCardEntourage(entourage),
           flavor,
           health,
@@ -337,7 +337,7 @@ base
     });
 
     const core = JSON.stringify(Object.assign({}, ...map));
-    fs.writeFileSync('./packages/data/cards.core.json', core);
+    fs.writeFileSync('./packages/data/src/cards.core.json', core);
   });
 
 // PRIME
@@ -392,7 +392,7 @@ base
           collectible,
           cost,
           description,
-          elite,
+          elite: elite ? true : false,
           entourage: parseCardEntourage(entourage),
           flavor,
           health,
@@ -422,7 +422,7 @@ base
     });
 
     const prime = JSON.stringify(Object.assign({}, ...map));
-    fs.writeFileSync('./packages/data/cards.prime.json', prime);
+    fs.writeFileSync('./packages/data/src/cards.prime.json', prime);
   });
 
 // ENTOURAGE
@@ -477,7 +477,7 @@ base
           collectible,
           cost,
           description,
-          elite,
+          elite: elite ? true : false,
           flavor,
           health,
           howToEarn,
@@ -507,5 +507,5 @@ base
     });
 
     const entourage = JSON.stringify(Object.assign({}, ...map));
-    fs.writeFileSync('./packages/data/cards.entourage.json', entourage);
+    fs.writeFileSync('./packages/data/src/cards.entourage.json', entourage);
   });
