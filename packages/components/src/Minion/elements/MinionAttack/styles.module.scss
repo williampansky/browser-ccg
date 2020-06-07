@@ -43,8 +43,13 @@
   z-index: 0;
 }
 
-.badge.elite {
-  height: calc(var(--minion-height) / 2.75);
-  left: -5px;
-  top: -8px;
+.attack__wrapper.elite {
+  .badge {
+    height: calc(var(--minion-height) / 2.75);
+  }
+
+  .text {
+    left: -5px;
+    top: -8px;
+  }
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
-import { RARITY } from '@ccg/enums';
 import { getCardAssetImage, replaceConstant } from '@ccg/utils';
 import {
   CARD_ASSETS as ASSETS,
@@ -85,17 +84,20 @@ const Minion = ({
         placeholderSrc={imagePlaceholderSrc}
         set={set}
       />
+
       <MinionAttack
         currentAttack={currentAttack}
         elite={elite}
         imageSrc={getCardAssetImage('attack', null, elite, ASSETS)}
       />
+
       <MinionHealth
         currentHealth={currentHealth}
         elite={elite}
         imageSrc={getCardAssetImage('health', null, elite, ASSETS)}
         isDamaged={currentHealth < totalHealth}
       />
+
       <MechanicIcon
         hasCurse={hasCurse}
         hasEventListener={hasEventListener}

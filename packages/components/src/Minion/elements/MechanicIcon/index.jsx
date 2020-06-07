@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
-import { getMechanicIconImage } from '@ccg/utils';
+import { getMechanicImage } from '@ccg/utils';
 
 const MechanicIcon = ({
   hasCurse,
@@ -23,7 +23,7 @@ const MechanicIcon = ({
       <div className={styles['minion__mechanics']}>
         <img
           alt="hasCurse"
-          src={getMechanicIconImage('ON_DEATH.png', mechanicImages)}
+          src={getMechanicImage('ON_DEATH.png', mechanicImages)}
         />
       </div>
     );
@@ -32,7 +32,7 @@ const MechanicIcon = ({
       <div className={styles['minion__mechanics']}>
         <img
           alt="hasEventListener"
-          src={getMechanicIconImage('EVENT.png', mechanicImages)}
+          src={getMechanicImage('EVENT.png', mechanicImages)}
         />
       </div>
     );
@@ -41,7 +41,7 @@ const MechanicIcon = ({
       <div className={styles['minion__mechanics']}>
         <img
           alt="hasPoison"
-          src={getMechanicIconImage('POISON.png', mechanicImages)}
+          src={getMechanicImage('POISON.png', mechanicImages)}
         />
       </div>
     );
@@ -50,7 +50,7 @@ const MechanicIcon = ({
       <div className={styles['minion__mechanics']}>
         <img
           alt="hasOnslaught"
-          src={getMechanicIconImage('DOUBLE_ATTACK.png', mechanicImages)}
+          src={getMechanicImage('DOUBLE_ATTACK.png', mechanicImages)}
         />
       </div>
     );

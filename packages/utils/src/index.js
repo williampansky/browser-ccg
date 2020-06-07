@@ -9,7 +9,7 @@ export { default as getCardFlairImage } from './get-card-flair-image';
 export { default as getConstantDescription } from './get-constant-description';
 export { default as getHost } from './get-host';
 export { default as getImage } from './get-image';
-export { default as getMechanicIconImage } from './get-mechanic-icon-image';
+export { default as getMechanicImage } from './get-mechanic-image';
 export { default as getMechanicShortDescription } from './get-mechanic-short-description';
 export { default as getMinionFlairImage } from './get-minion-flair-image';
 export { default as removeSymbols } from './remove-symbols';

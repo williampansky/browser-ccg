@@ -12,7 +12,7 @@ function getImageObject(key, images = {}) {
   return imgMatch;
 }
 
-export default function getMechanicIconImage(cardId, cardSet, images) {
+export default function getMechanicImage(cardId, cardSet, images) {
   try {
     const imgObj = getImageObject(cardId, cardSet, images);
     const { value } = imgObj;

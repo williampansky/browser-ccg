@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import useHover from 'react-use-hover';
 import ReactTooltip from 'react-tooltip';
 import { PLAYER_BOARDS, PLAY_TYPE } from '@ccg/enums';
-import { SETS } from '@ccg/images';
+import { MECHANICS, SETS } from '@ccg/images';
 import { usePrevious } from '@ccg/hooks';
 import {
   getMechanicShortDescription,
   replaceConstant,
-  getMinionFlairImage
+  getMinionFlairImage,
+  getMechanicImage
 } from '@ccg/utils';
 
 // child components
@@ -21,11 +22,10 @@ import {
 // import IsConcealed from '@/components/game/mechanics/IsConcealed';
 // import IsDeadPoof from '@/components/game/animations/minions/IsDeadPoof';
 // import IsDisabled from '@/components/game/mechanics/IsDisabled';
-import { Minion, MinionInteraction } from '@ccg/components';
+import { IsElite, Minion, MinionInteraction } from '@ccg/components';
 // import MinionInteraction from '@/components/game/interactions/minions/MinionInteraction';
 // import WillExpire from '@/components/game/mechanics/WillExpire';
 // import HasCurse from '@/components/game/mechanics/HasCurse';
-// import IsElite from '../mechanics/IsElite';
 // import Card from '@/components/collection/Card';
 // import HasPoison from '../mechanics/HasPoison';
 
@@ -177,11 +177,11 @@ export default function BoardSlot({
   }, [index, isDead, KillMinionCallback]);
 
   function handleIsAttackingClass(bool) {
-    if (bool) return styles['minion__animation--animate-attack'];
+    if (bool) return 'minion__animation--animate-attack';
   }
 
   function handleIsEnteringClass(bool) {
-    if (bool) return styles['minion__animation--is-entering'];
+    if (bool) return 'minion__animation--is-entering';
     return setTimeout(() => {
       return '';
     }, 400);
@@ -241,7 +241,9 @@ export default function BoardSlot({
       {...hoverProps}
     >
       {/* elite */}
-      {/* {minionData && elite && <IsElite />} */}
+      {minionData && elite && (
+        <IsElite imgSrc={getMechanicImage('ELITE.png', MECHANICS)} />
+      )}
 
       {/* interactions layer */}
       {minionData && (
