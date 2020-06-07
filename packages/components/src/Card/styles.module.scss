@@ -11,6 +11,15 @@
   }
 }
 
+.card {
+  &.card--type-ITEM,
+  &.card--type-MINION,
+  &.card--type-SPELL,
+  &.card--type-WEAPON {
+    box-sizing: border-box;
+  }
+}
+
 .card.dev {
   --card-height: 400px;
 }

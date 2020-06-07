@@ -1,0 +1,20 @@
+.card__rarity__gem {
+  height: calc(var(--card-height) / 9.090909091);
+  image-rendering: pixelated;
+  left: calc(var(--card-height) / 3.30806452);
+  position: absolute;
+  top: calc(var(--card-height) / -30.363636364);
+  z-index: 2;
+
+  &[data-rarity='%RARITY_COMMON%'] {
+    top: calc(var(--card-height) / -26.363636364);
+  }
+
+  &[data-rarity='%RARITY_SUPERIOR%'] {
+    top: calc(var(--card-height) / -26.363636364);
+  }
+
+  &[data-rarity='%RARITY_MYTHIC%'] {
+    top: calc(var(--card-height) / -24.363636364);
+  }
+}

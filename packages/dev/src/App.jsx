@@ -1,11 +1,11 @@
 import React from 'react';
 import { Card as Component } from '@ccg/components';
-import { CARDS_CORE } from '@ccg/data';
+import { CARDS_CORE, CARDS_PRIME } from '@ccg/data';
 import { CARDS, SETS } from '@ccg/images';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 
 const App = () => {
-  const CARD = CARDS_CORE['CORE_001'];
+  const CARD = CARDS_PRIME['PRIME_125'];
 
   return (
     <React.Fragment>

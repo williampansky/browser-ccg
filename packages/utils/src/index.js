@@ -3,7 +3,7 @@ export { default as createMarkup } from './create-markup';
 export { default as exists } from './element-exists';
 export { default as formatCardText } from './format-card-text';
 export { default as formatUrlString } from './format-url-string';
-export { default as getCardBadgeImage } from './get-card-badge-image';
+export { default as getCardAssetImage } from './get-card-asset-image';
 export { default as getCardBaseImage } from './get-card-base-image';
 export { default as getCardFlairImage } from './get-card-flair-image';
 export { default as getConstantDescription } from './get-constant-description';

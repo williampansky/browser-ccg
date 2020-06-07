@@ -12,7 +12,7 @@ import {
   exists,
   fontSizeBasedOnCharacterLength,
   formatCardText,
-  getCardBadgeImage,
+  getCardAssetImage,
   removeSymbols,
   replaceConstant
 } from '@ccg/utils';
@@ -23,6 +23,7 @@ import CardBaseImage from './elements/card-base-image';
 import CardCost from './elements/card-cost';
 import CardFlairImage from './elements/card-flair-image';
 import CardHealth from './elements/card-health';
+import CardRarityGem from './elements/card-rarity-gem';
 
 const Card = ({
   active,
@@ -61,21 +62,12 @@ const Card = ({
   text,
   type
 }) => {
-  // const NAME = replaceConstant(name);
-  // const IS_MINION = type === TYPE[1] ? true : false;
-  // const IS_ITEM = type === TYPE[2] ? true : false;
-  // const IS_SPELL = type === TYPE[3] ? true : false;
-  // const IS_WEAPON = type === TYPE[4] ? true : false;
-
   return (
     <div
       className={[
         styles['card'],
+        styles[`card--type-${replaceConstant(type).toUpperCase()}`],
         dev ? styles['dev'] : ''
-        // IS_MINION ? '--is-minion' : '',
-        // IS_SPELL ? '--is-spell' : '',
-        // IS_ITEM ? '--is-item' : '',
-        // IS_WEAPON ? '--is-weapon' : ''
       ].join(' ')}
       onClick={onClick}
       onKeyPress={onClick}
@@ -83,6 +75,11 @@ const Card = ({
       tabIndex={deckBuilder ? 0 : null}
     >
       <CardCost cost={cost} />
+      <CardRarityGem
+        rarity={rarity}
+        gemImgSrc={getCardAssetImage('rarity', rarity, elite, CARD_ASSETS)}
+        rarityEnums={RARITY}
+      />
       <CardFlairImage
         imageSrc={imageFlairSrc}
         name={name}
@@ -91,20 +88,20 @@ const Card = ({
       <CardBaseImage imageSrc={imageBaseSrc} />
       <CardAttack
         attack={attack}
-        badgeImgSrc={getCardBadgeImage('attack badge', elite, CARD_ASSETS)}
+        badgeImgSrc={getCardAssetImage('attack', null, elite, CARD_ASSETS)}
         elite={elite}
         type={type}
         typeEnums={TYPE}
       />
       <CardHealth
-        badgeImgSrc={getCardBadgeImage('health badge', elite, CARD_ASSETS)}
+        badgeImgSrc={getCardAssetImage('health', null, elite, CARD_ASSETS)}
         health={health}
         elite={elite}
         type={type}
         typeEnums={TYPE}
       />
-      {/* 
 
+      {/* 
       {name ? (
         <div className={'card__name'}>
           <div
@@ -146,59 +143,6 @@ const Card = ({
         <div className={'card__type'}>
           <div>{replaceConstant(type)}</div>
         </div>
-      )}
-
-      {(IS_MINION || IS_WEAPON) && (
-        <React.Fragment>
-          <div
-            className={[
-              'card__attack',
-              elite ? 'card__attack__elite' : ''
-            ].join(' ')}
-            data-value={attack}
-          >
-            <div className={'text__value'} data-value={attack}>
-              {attack}
-            </div>
-            {elite ? (
-              <img
-                alt=""
-                className={`card__attack__badge__elite`}
-                src={`/images/card-assets/ic_sword-alt.png`}
-              />
-            ) : (
-              <img
-                alt=""
-                className={`card__attack__badge`}
-                src={`/images/card-assets/ic_sword.png`}
-              />
-            )}
-          </div>
-          <div
-            className={[
-              'card__health',
-              elite ? 'card__health__elite' : ''
-            ].join(' ')}
-            data-value={health}
-          >
-            <div className={'text__value'} data-value={health}>
-              {health}
-            </div>
-            {elite ? (
-              <img
-                alt=""
-                className={`card__health__badge__elite`}
-                src={`/images/card-assets/ic_shield-alt.png`}
-              />
-            ) : (
-              <img
-                alt=""
-                className={`card__health__badge`}
-                src={`/images/card-assets/ic_shield.png`}
-              />
-            )}
-          </div>
-        </React.Fragment>
       )}
 
       {rarity !== RARITY[0] && rarity !== RARITY[1] ? (
