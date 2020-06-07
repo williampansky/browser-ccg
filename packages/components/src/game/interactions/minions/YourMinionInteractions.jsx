@@ -14,9 +14,9 @@ import CanBeHealed from './CanBeHealed';
 import CanBeReturned from './CanBeReturned';
 import CanBeSacrificed from './CanBeSacrificed';
 import CanBeStolen from './CanBeStolen';
-import CanReceiveEnergyShield from './CanReceiveEnergyShield';
-import CanReceiveGuard from './CanReceiveGuard';
-import CanReceiveOnslaught from './CanReceiveOnslaught';
+import CanReceiveEnergyShield from './CanReceiveBubble';
+import CanReceiveGuard from './CanReceiveBulwark';
+import CanReceiveOnslaught from './CanReceiveDoubleAttack';
 import IsAttacking from './IsAttacking';
 
 export default function YourMinionInteractions({

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import replaceConstant from '@/utils/replace-constants';
+import { replaceConstant } from '@ccg/utils';
 
 export default function HasGuardBackground({ race }) {
   const [isAnimating, setIsAnimating] = React.useState(false);
