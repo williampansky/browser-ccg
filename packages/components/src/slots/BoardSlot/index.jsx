@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import styles from './styles.module.scss';
+// import styles from './styles.module.scss';
 import useHover from 'react-use-hover';
 import ReactTooltip from 'react-tooltip';
 import { PLAYER_BOARDS, PLAY_TYPE } from '@ccg/enums';
@@ -216,18 +216,16 @@ export default function BoardSlot({
       data-for={`${id}--${index}`}
       data-tip={true}
       className={[
-        styles['board__slot'],
-        data === null ? styles['board__slot--is-empty'] : '',
-        data !== null ? styles['board__slot--has-minion'] : '',
-        data === null && !canDrop
-          ? styles['board__slot--cannot-drop-minion']
-          : '',
+        'board__slot',
+        data === null ? 'board__slot--is-empty' : '',
+        data !== null ? 'board__slot--has-minion' : '',
+        data === null && !canDrop ? 'board__slot--cannot-drop-minion' : '',
         isEntering ? handleIsEnteringClass(isEntering) : '',
-        isDead ? styles['minion--is-dead'] : '',
-        hasGuard ? styles['minion--has-guard'] : '',
+        isDead ? 'minion--is-dead' : '',
+        hasGuard ? 'minion--has-guard' : '',
         yourCelectedCardObject !== null &&
         yourCardSpellType !== PLAY_TYPE['TARGETED']
-          ? styles['board__slot--cannot-drop-minion']
+          ? 'board__slot--cannot-drop-minion'
           : '',
         wasAttackedState ? 'minion--was-attacked' : '',
         isAttacking ? 'minion--is-attacking' : '',

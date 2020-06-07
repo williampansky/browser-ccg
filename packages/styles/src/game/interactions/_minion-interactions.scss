@@ -1,0 +1,137 @@
+.minion-interaction-layer {
+  border-top-left-radius: var(--minion-border-radius);
+  border-top-right-radius: var(--minion-border-radius);
+  height: 100%;
+  width: 100%;
+  @include position-absolute(0, 0, 0, 0, 100);
+
+  & + div:before,
+  & + div:after {
+    border-radius: var(--minion-border-radius);
+    content: '';
+    height: 100%;
+    opacity: 1;
+    pointer-events: none;
+    width: 100%;
+    transition: 200ms ease-in-out;
+    transition-property: box-shadow, opacity;
+    @include position-absolute(0, 0, 0, 0, -1);
+  }
+
+  &[data-render='false'] {
+    opacity: 0;
+  }
+}
+
+.minion-interaction-layer.minion--can_attack {
+  cursor: pointer;
+  outline: 0;
+
+  & + div:before {
+    box-shadow: 0px 0px 15px 5px rgba(0, 196, 105, 0.465);
+  }
+}
+
+.minion-interaction-layer.minion--has_guard {
+  border-radius: 0;
+
+  & ~ .minion,
+  & ~ .minion:before,
+  & ~ .minion:after,
+  & ~ .minion .image-wrapper,
+  & ~ .minion .image-wrapper:before,
+  & ~ .minion .image-wrapper:after,
+  & ~ .minion .minion__bezel,
+  & ~ .minion .minion__bezel:before,
+  & ~ .minion .minion__bezel:after {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+}
+
+.minion-interaction-layer.minion--has_warcry {
+  box-sizing: border-box;
+}
+
+.minion-interaction-layer.minion--has_stampede {
+  box-sizing: border-box;
+}
+
+.minion-interaction-layer.minion--is_attacking {
+  & + div:before {
+    opacity: 0;
+  }
+
+  & + div:after {
+    animation: isAttackingGlow 2500ms infinite;
+  }
+
+  & + div {
+    z-index: 200;
+    pointer-events: none;
+  }
+}
+
+.minion-interaction-layer.minion--is_not_attacking {
+  cursor: default;
+  pointer-events: none;
+
+  & + div:before {
+    opacity: 0;
+  }
+
+  & + div:after {
+    animation: none;
+  }
+}
+
+.minion-interaction-layer.minion--can_be_attacked {
+  cursor: pointer;
+
+  & + div:before {
+    opacity: 0;
+  }
+
+  & + div:after {
+    animation: none;
+    box-shadow: 0 0 5px #c43800;
+  }
+
+  &.minion--has_guard + div:after {
+    animation: none;
+    box-shadow: 0 0 5px #c43800;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+
+  &:hover + div:after {
+    box-shadow: 0 0 20px #c43800;
+  }
+}
+
+@keyframes canAttackGlow {
+  0% {
+    box-shadow: 0 0 -20px #00c469;
+  }
+  50% {
+    box-shadow: 0 0 8px #0ee681;
+  }
+  100% {
+    box-shadow: 0 0 -20px #00c469;
+  }
+}
+
+@keyframes isAttackingGlow {
+  0% {
+    box-shadow: 0 0 5px #ecd24f;
+  }
+  40% {
+    box-shadow: 0 0 20px #e9c305;
+  }
+  60% {
+    box-shadow: 0 0 20px #e9c305;
+  }
+  100% {
+    box-shadow: 0 0 5px #ecd24f;
+  }
+}
