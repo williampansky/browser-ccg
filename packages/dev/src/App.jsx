@@ -1,9 +1,9 @@
 import React from 'react';
-import CardDev from './comps/Card.dev';
+import MinionDev from './comps/Minion.dev';
 
 const App = () => (
   <React.Fragment>
-    <CardDev />
+    <MinionDev />
   </React.Fragment>
 );
 

@@ -12,6 +12,11 @@ const CARD_ASSETS = importAll(
   require.context('./card-assets', true, /\.(png|jpe?g|svg)$/)
 );
 
+// card asset images
+const MECHANICS = importAll(
+  require.context('./mechanics', true, /\.(png|jpe?g|svg)$/)
+);
+
 // card flair img placeholder
 const PLACEHOLDER_IMAGE = importAll(
   require.context('./sets', false, /\.(png|jpe?g|svg)$/)
@@ -25,5 +30,13 @@ const PLACEHOLDER_BASE_IMAGE = importAll(
 const CARDS = importAll(require.context('./cards', true, /\.(png)$/));
 const SETS = importAll(require.context('./sets', true, /\.(jpg)$/));
 
-export { CARD_ASSETS, CARDS, PLACEHOLDER_BASE_IMAGE, PLACEHOLDER_IMAGE, SETS };
+export {
+  CARD_ASSETS,
+  CARDS,
+  MECHANICS,
+  PLACEHOLDER_BASE_IMAGE,
+  PLACEHOLDER_IMAGE,
+  SETS
+};
+
 export default IMAGES;
