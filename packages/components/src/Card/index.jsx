@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { PLAY_TYPE, RACE, RARITY, SET, TYPE } from '@ccg/enums';
 import {
-  CARD_ASSETS,
+  CARD_ASSETS as ASSETS,
   PLACEHOLDER_BASE_IMAGE,
   PLACEHOLDER_IMAGE
 } from '@ccg/images';
@@ -18,12 +18,17 @@ import {
 } from '@ccg/utils';
 
 // child elements
-import CardAttack from './elements/card-attack';
-import CardBaseImage from './elements/card-base-image';
-import CardCost from './elements/card-cost';
-import CardFlairImage from './elements/card-flair-image';
-import CardHealth from './elements/card-health';
-import CardRarityGem from './elements/card-rarity-gem';
+import CardAttack from './elements/CardAttack';
+import CardBaseImage from './elements/CardBaseImage';
+import CardCost from './elements/CardCost';
+import CardFlairImage from './elements/CardFlairImage';
+import CardHealth from './elements/CardHealth';
+import CardName from './elements/CardName';
+import CardRarityGem from './elements/CardRarityGem';
+import CardSubTypeBadge from './elements/CardSubTypeBadge';
+import CardText from './elements/CardText';
+import CardTypeBadge from './elements/CardTypeBadge';
+import CardTypeLabel from './elements/CardTypeLabel';
 
 const Card = ({
   active,
@@ -58,6 +63,7 @@ const Card = ({
   rarity,
   set,
   sounds,
+  spellDmgBoon,
   targetingArrowText,
   text,
   type
@@ -75,158 +81,70 @@ const Card = ({
       tabIndex={deckBuilder ? 0 : null}
     >
       <CardCost cost={cost} />
+
       <CardRarityGem
         rarity={rarity}
-        gemImgSrc={getCardAssetImage('rarity', rarity, elite, CARD_ASSETS)}
+        gemImgSrc={getCardAssetImage('rarity', rarity, elite, ASSETS)}
         rarityEnums={RARITY}
       />
+
+      <CardTypeLabel
+        formatter={replaceConstant}
+        race={race}
+        raceEnums={RACE}
+        type={type}
+        typeEnums={TYPE}
+      />
+
       <CardFlairImage
         imageSrc={imageFlairSrc}
         name={name}
         placeholderSrc={imagePlaceholderSrc}
       />
-      <CardBaseImage imageSrc={imageBaseSrc} />
+
+      <CardName
+        formatter={fontSizeBasedOnCharacterLength}
+        name={replaceConstant(name)}
+      />
+
+      <CardTypeBadge
+        badgeImgSrc={getCardAssetImage('type', 'WRAPPER', elite, ASSETS)}
+        typeImgSrc={getCardAssetImage('type', type, elite, ASSETS)}
+      />
+
+      {exists(race) && race !== RACE['NONE'] && type === TYPE['MINION'] ? (
+        <CardSubTypeBadge
+          badgeImgSrc={getCardAssetImage('type', 'WRAPPER', elite, ASSETS)}
+          subtypeImgSrc={getCardAssetImage('subtype', race, elite, ASSETS)}
+        />
+      ) : null}
+
+      <CardText
+        createMarkup={createMarkup}
+        formatCardText={formatCardText}
+        numberPrimary={numberPrimary}
+        numberSecondary={numberSecondary}
+        spellDmgBoon={spellDmgBoon}
+        text={text}
+      />
+
       <CardAttack
         attack={attack}
-        badgeImgSrc={getCardAssetImage('attack', null, elite, CARD_ASSETS)}
+        badgeImgSrc={getCardAssetImage('attack', null, elite, ASSETS)}
         elite={elite}
         type={type}
         typeEnums={TYPE}
       />
+
       <CardHealth
-        badgeImgSrc={getCardAssetImage('health', null, elite, CARD_ASSETS)}
+        badgeImgSrc={getCardAssetImage('health', null, elite, ASSETS)}
         health={health}
         elite={elite}
         type={type}
         typeEnums={TYPE}
       />
 
-      {/* 
-      {name ? (
-        <div className={'card__name'}>
-          <div
-            className={'text__value'}
-            style={{ fontSize: `${fontSizeBasedOnCharacterLength(NAME)}em` }}
-          >
-            {NAME}
-          </div>
-        </div>
-      ) : null}
-
-      {text ? (
-        <div className={'card__text'}>
-          <p
-            className={'text__value'}
-            dangerouslySetInnerHTML={createMarkup(
-              formatCardText(
-                text,
-                numberPrimary,
-                numberSecondary,
-                dynamicSpellDamageText
-              )
-            )}
-          />
-        </div>
-      ) : null}
-
-      {IS_MINION ? (
-        race !== RACE[0] ? (
-          <div className={'card__type'}>
-            <div>{replaceConstant(race)}</div>
-          </div>
-        ) : (
-          <div className={'card__type'}>
-            <div>{replaceConstant(type)}</div>
-          </div>
-        )
-      ) : (
-        <div className={'card__type'}>
-          <div>{replaceConstant(type)}</div>
-        </div>
-      )}
-
-      {rarity !== RARITY[0] && rarity !== RARITY[1] ? (
-        <img
-          alt=""
-          className={`card__rarity__gem`}
-          data-rarity={rarity.toUpperCase()}
-          src={`/images/gems/Gem_Rarity_${replaceConstant(
-            rarity
-          ).toUpperCase()}.png`}
-        />
-      ) : null}
-
-      {type ? (
-        <div className={`card__type__image__wrapper`}>
-          <div className={`card__type__image__icon__wrapper`}>
-            <img
-              alt=""
-              className={`card__type__image`}
-              src={`/images/card-assets/TYPE_${replaceConstant(
-                type
-              ).toUpperCase()}.png`}
-            />
-          </div>
-          {IS_WEAPON || playContext === '%DAMAGE%' ? (
-            <img
-              alt=""
-              className={`card__type__image__badge`}
-              src={`/images/card-assets/Card_Type_Board.png`}
-            />
-          ) : (
-            <img
-              alt=""
-              className={`card__type__image__badge`}
-              src={`/images/card-assets/Card_Type_Board.png`}
-            />
-          )}
-        </div>
-      ) : null}
-
-      {exists(race) && race !== RACE[0] && IS_MINION ? (
-        <div className={`card__subtype__image__wrapper`}>
-          <div className={`card__subtype__image__icon__wrapper`}>
-            <img
-              alt=""
-              className={`card__subtype__image`}
-              src={`/images/card-assets/SUBTYPE_${removeSymbols(
-                race
-              ).toUpperCase()}.png`}
-            />
-          </div>
-          {IS_WEAPON || playContext === '%DAMAGE%' ? (
-            <img
-              alt=""
-              className={`card__subtype__image__badge`}
-              src={`/images/card-assets/Card_Type_Board.png`}
-            />
-          ) : (
-            <img
-              alt=""
-              className={`card__subtype__image__badge`}
-              src={`/images/card-assets/Card_Type_Board.png`}
-            />
-          )}
-        </div>
-      ) : null}
-
-      {IS_MINION || IS_WEAPON ? (
-        <img
-          alt=""
-          className={`card__base__image`}
-          src={`/images/cards/front/${replaceConstant(
-            rarity
-          ).toUpperCase()}.png`}
-        />
-      ) : (
-        <img
-          alt=""
-          className={`card__base__image`}
-          src={`/images/cards/front/${replaceConstant(
-            rarity
-          ).toUpperCase()}-ALT.png`}
-        />
-      )} */}
+      <CardBaseImage imageSrc={imageBaseSrc} />
     </div>
   );
 };
@@ -264,6 +182,7 @@ Card.propTypes = {
   rarity: PropTypes.string,
   set: PropTypes.string,
   sounds: PropTypes.object,
+  spellDmgBoon: PropTypes.number,
   targetingArrowText: PropTypes.string,
   text: PropTypes.string,
   type: PropTypes.string
@@ -271,7 +190,7 @@ Card.propTypes = {
 
 Card.defaultProps = {
   active: false,
-  artist: '',
+  artist: null,
   attack: 0,
   collectible: false,
   cost: 0,
@@ -279,13 +198,13 @@ Card.defaultProps = {
   dev: false,
   elite: false,
   entourage: [],
-  flavor: '',
+  flavor: null,
   health: 1,
-  howToEarn: '',
-  howToEarnGolden: '',
+  howToEarn: null,
+  howToEarnGolden: null,
   id: 'CARD_ID',
   imageBaseSrc: PLACEHOLDER_BASE_IMAGE,
-  imageFlairSrc: '',
+  imageFlairSrc: null,
   imagePlaceholderSrc: PLACEHOLDER_IMAGE,
   isGolden: false,
   mechanics: [],
@@ -295,15 +214,16 @@ Card.defaultProps = {
   numberRNG: 0,
   numberSecondary: 0,
   onClick: () => {},
-  playContext: '',
+  playContext: null,
   playRequirements: [],
   playType: PLAY_TYPE['GLOBAL'],
   race: RACE['NONE'],
   rarity: RARITY['NONE'],
   set: SET[1],
   sounds: {},
-  targetingArrowText: '',
-  text: '',
+  spellDmgBoon: 0,
+  targetingArrowText: null,
+  text: null,
   type: TYPE['NONE']
 };
 

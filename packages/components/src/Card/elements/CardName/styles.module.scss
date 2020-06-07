@@ -1,0 +1,19 @@
+.card__name {
+  align-items: center;
+  bottom: calc(var(--card-height) / 3.333333333);
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: calc(var(--card-height) / 30);
+  justify-content: center;
+  left: calc(var(--card-height) / 7.002188184);
+  position: absolute;
+  text-align: center;
+  width: calc(var(--card-height) / 2.333844834);
+  z-index: 2;
+
+  & > div {
+    line-height: 0.85;
+    top: -0.5px;
+    white-space: nowrap;
+  }
+}

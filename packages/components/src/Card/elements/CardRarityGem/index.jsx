@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 
 const CardRarityGem = ({ rarity, gemImgSrc, rarityEnums }) => {
-  return rarity !== rarityEnums['NONE'] || rarity !== rarityEnums['FREE'] ? (
+  return rarity !== rarityEnums['NONE'] && rarity !== rarityEnums['FREE'] ? (
     <img
       alt=""
       className={styles[`card__rarity__gem`]}
       data-rarity={rarity}
+      role="presentation"
       src={gemImgSrc}
     />
   ) : null;

@@ -7,17 +7,25 @@ function getStringPrefix(primaryKey) {
     case 'attack':  return 'BADGE_SWORD';
     case 'health':  return 'BADGE_SHIELD';
     case 'rarity':  return 'GEM_RARITY';
+    case 'subtype': return 'SUBTYPE_RACE';
+    case 'type':    return 'TYPE';
     default:        return;
   }
 }
 
 function constructString(primaryKey, variable, isElite, prefix) {
-  // prettier-ignore
   switch (primaryKey) {
     case 'attack':
-    case 'health':  return isElite ? `${prefix}-ALT.png` : `${prefix}.png`;
-    case 'rarity':  return `${prefix}_${variable.toUpperCase()}.png`;
-    default:        return `${prefix}.png`;
+    case 'health':
+      return isElite ? `${prefix}-ALT.png` : `${prefix}.png`;
+    case 'rarity':
+      return `${prefix}_${variable.toUpperCase()}.png`;
+    case 'subtype':
+      return `${prefix}_${variable.toUpperCase()}.png`;
+    case 'type':
+      return `${prefix}_${variable.toUpperCase()}.png`;
+    default:
+      return `${prefix}.png`;
   }
 }
 

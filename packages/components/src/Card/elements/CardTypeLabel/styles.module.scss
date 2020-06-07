@@ -1,0 +1,17 @@
+.card__type {
+  align-items: center;
+  color: white;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: calc(var(--card-height) / 33.333333333);
+  justify-content: center;
+  left: calc(var(--card-height) / 6.666666667);
+  letter-spacing: calc(var(--card-height) / 1111.111111111);
+  line-height: 1;
+  position: absolute;
+  text-align: center;
+  text-transform: uppercase;
+  top: calc(var(--card-height) / 14.814814815);
+  width: calc(var(--card-height) / 2.414409194);
+  z-index: 2;
+}

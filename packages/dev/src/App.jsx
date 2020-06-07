@@ -5,7 +5,7 @@ import { CARDS, SETS } from '@ccg/images';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 
 const App = () => {
-  const CARD = CARDS_PRIME['PRIME_125'];
+  const CARD = CARDS_CORE['CORE_062'];
 
   return (
     <React.Fragment>
