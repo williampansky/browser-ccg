@@ -11,7 +11,7 @@ import {
 } from '@ccg/data';
 
 export default function CardDev() {
-  const CARD = CARDS_CORE['CORE_126'];
+  const CARD = CARDS_CORE['CORE_020'];
 
   return (
     <React.Fragment>

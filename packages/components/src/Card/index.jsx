@@ -13,7 +13,6 @@ import {
   fontSizeBasedOnCharacterLength,
   formatCardText,
   getCardAssetImage,
-  removeSymbols,
   replaceConstant
 } from '@ccg/utils';
 
@@ -82,11 +81,13 @@ const Card = ({
     >
       <CardCost cost={cost} />
 
-      <CardRarityGem
-        rarity={rarity}
-        gemImgSrc={getCardAssetImage('rarity', rarity, elite, ASSETS)}
-        rarityEnums={RARITY}
-      />
+      {rarity !== RARITY['NONE'] && rarity !== RARITY['FREE'] ? (
+        <CardRarityGem
+          rarity={rarity}
+          gemImgAlt={replaceConstant(rarity)}
+          gemImgSrc={getCardAssetImage('rarity', rarity, elite, ASSETS)}
+        />
+      ) : null}
 
       <CardTypeLabel
         formatter={replaceConstant}
@@ -109,42 +110,46 @@ const Card = ({
 
       <CardTypeBadge
         badgeImgSrc={getCardAssetImage('type', 'WRAPPER', elite, ASSETS)}
+        typeIconAlt={replaceConstant(type)}
         typeImgSrc={getCardAssetImage('type', type, elite, ASSETS)}
       />
 
       {exists(race) && race !== RACE['NONE'] && type === TYPE['MINION'] ? (
         <CardSubTypeBadge
           badgeImgSrc={getCardAssetImage('type', 'WRAPPER', elite, ASSETS)}
+          subtypeIconAlt={replaceConstant(race)}
           subtypeImgSrc={getCardAssetImage('subtype', race, elite, ASSETS)}
         />
       ) : null}
 
-      <CardText
-        createMarkup={createMarkup}
-        formatCardText={formatCardText}
-        numberPrimary={numberPrimary}
-        numberSecondary={numberSecondary}
-        spellDmgBoon={spellDmgBoon}
-        text={text}
-      />
+      {text ? (
+        <CardText
+          text={createMarkup(
+            formatCardText(text, numberPrimary, numberSecondary, spellDmgBoon)
+          )}
+        />
+      ) : null}
 
-      <CardAttack
-        attack={attack}
-        badgeImgSrc={getCardAssetImage('attack', null, elite, ASSETS)}
-        elite={elite}
-        type={type}
-        typeEnums={TYPE}
-      />
+      {type === TYPE['MINION'] || type === TYPE['WEAPON'] ? (
+        <React.Fragment>
+          <CardAttack
+            attack={attack}
+            badgeImgSrc={getCardAssetImage('attack', null, elite, ASSETS)}
+            elite={elite}
+          />
 
-      <CardHealth
-        badgeImgSrc={getCardAssetImage('health', null, elite, ASSETS)}
-        health={health}
-        elite={elite}
-        type={type}
-        typeEnums={TYPE}
-      />
+          <CardHealth
+            badgeImgSrc={getCardAssetImage('health', null, elite, ASSETS)}
+            health={health}
+            elite={elite}
+          />
+        </React.Fragment>
+      ) : null}
 
-      <CardBaseImage imageSrc={imageBaseSrc} />
+      <CardBaseImage
+        imageAlt={replaceConstant(rarity)}
+        imageSrc={imageBaseSrc}
+      />
     </div>
   );
 };

@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 
-const CardBaseImage = ({ imageSrc }) => {
+const CardBaseImage = ({ imageAlt, imageSrc }) => {
   return (
     <React.Fragment>
       <img
-        alt=""
+        alt={`${imageAlt} Card`}
         className={styles['card__base__image']}
         role="presentation"
         src={imageSrc}
@@ -16,7 +16,8 @@ const CardBaseImage = ({ imageSrc }) => {
 };
 
 CardBaseImage.propTypes = {
-  imageSrc: PropTypes.string
+  imageAlt: PropTypes.string.isRequired,
+  imageSrc: PropTypes.string.isRequired
 };
 
 export default CardBaseImage;

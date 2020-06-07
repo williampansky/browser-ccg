@@ -2,29 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 
-const CardSubTypeBadge = ({ badgeImgSrc, subtypeImgSrc }) => {
-  return (
-    <div className={styles['card__subtype__image__wrapper']}>
-      <div className={styles['card__subtype__image__icon__wrapper']}>
-        <img
-          alt=""
-          className={styles['card__subtype__image']}
-          role="presentation"
-          src={subtypeImgSrc}
-        />
-      </div>
+const CardSubTypeBadge = ({ badgeImgSrc, subtypeIconAlt, subtypeImgSrc }) => (
+  <div className={styles['card__subtype__image__wrapper']}>
+    <div className={styles['card__subtype__image__icon__wrapper']}>
       <img
-        alt=""
-        className={styles['card__subtype__image__badge']}
+        alt={`${subtypeIconAlt} Icon`}
+        className={styles['card__subtype__image']}
         role="presentation"
-        src={badgeImgSrc}
+        src={subtypeImgSrc}
       />
     </div>
-  );
-};
+    <img
+      alt=""
+      className={styles['card__subtype__image__badge']}
+      role="presentation"
+      src={badgeImgSrc}
+    />
+  </div>
+);
 
 CardSubTypeBadge.propTypes = {
   badgeImgSrc: PropTypes.string.isRequired,
+  subtypeIconAlt: PropTypes.string.isRequired,
   subtypeImgSrc: PropTypes.string.isRequired
 };
 
