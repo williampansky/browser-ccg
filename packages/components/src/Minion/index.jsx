@@ -10,10 +10,10 @@ import {
 } from '@ccg/images';
 
 // child components
-import Attack from './elements/attack';
-import Health from './elements/health';
-import Image from './elements/image';
-import MechanicIcon from './elements/mechanic-icon';
+import MinionAttack from './elements/MinionAttack';
+import MinionHealth from './elements/MinionHealth';
+import MinionImage from './elements/MinionImage';
+import MechanicIcon from './elements/MechanicIcon';
 
 const Minion = ({
   active,
@@ -77,7 +77,7 @@ const Minion = ({
       ].join(' ')}
       data-file="Minion"
     >
-      <Image
+      <MinionImage
         id={id}
         isGolden={isGolden}
         imgSrc={imageFlairSrc}
@@ -85,12 +85,12 @@ const Minion = ({
         placeholderSrc={imagePlaceholderSrc}
         set={set}
       />
-      <Attack
+      <MinionAttack
         currentAttack={currentAttack}
         elite={elite}
         imageSrc={getCardAssetImage('attack', null, elite, ASSETS)}
       />
-      <Health
+      <MinionHealth
         currentHealth={currentHealth}
         elite={elite}
         imageSrc={getCardAssetImage('health', null, elite, ASSETS)}
@@ -108,45 +108,45 @@ const Minion = ({
 };
 
 Minion.propTypes = {
-  active: PropTypes.string,
+  active: PropTypes.bool,
   artist: PropTypes.string,
-  attack: PropTypes.string,
-  collectible: PropTypes.string,
-  cost: PropTypes.string,
-  currentAttack: PropTypes.string,
-  currentHealth: PropTypes.string,
-  elite: PropTypes.string,
-  entourage: PropTypes.string,
+  attack: PropTypes.number,
+  collectible: PropTypes.bool,
+  cost: PropTypes.number,
+  currentAttack: PropTypes.number,
+  currentHealth: PropTypes.number,
+  elite: PropTypes.bool,
+  entourage: PropTypes.array,
   flavor: PropTypes.string,
-  hasCurse: PropTypes.string,
-  hasEnergyShield: PropTypes.string,
-  hasEventListener: PropTypes.string,
-  hasOnslaught: PropTypes.string,
-  hasPoison: PropTypes.string,
-  health: PropTypes.string,
+  hasCurse: PropTypes.bool,
+  hasEnergyShield: PropTypes.bool,
+  hasEventListener: PropTypes.bool,
+  hasOnslaught: PropTypes.bool,
+  hasPoison: PropTypes.bool,
+  health: PropTypes.number,
   howToEarn: PropTypes.string,
   howToEarnGolden: PropTypes.string,
   id: PropTypes.string,
   imageFlairSrc: PropTypes.string,
   imagePlaceholderSrc: PropTypes.string,
-  isAttacking: PropTypes.string,
-  isGolden: PropTypes.string,
-  mechanics: PropTypes.string,
+  isAttacking: PropTypes.bool,
+  isGolden: PropTypes.bool,
+  mechanics: PropTypes.array,
   name: PropTypes.string,
-  numberPrimary: PropTypes.string,
+  numberPrimary: PropTypes.number,
   playContext: PropTypes.string,
   playRequirements: PropTypes.string,
   playType: PropTypes.string,
   race: PropTypes.string,
   rarity: PropTypes.string,
   set: PropTypes.string,
-  slot: PropTypes.string,
-  sounds: PropTypes.string,
+  slot: PropTypes.number,
+  sounds: PropTypes.object,
   targetingArrowText: PropTypes.string,
   text: PropTypes.string,
-  totalHealth: PropTypes.string,
+  totalHealth: PropTypes.number,
   type: PropTypes.string,
-  wasAttacked: PropTypes.string
+  wasAttacked: PropTypes.bool
 };
 
 Minion.defaultProps = {

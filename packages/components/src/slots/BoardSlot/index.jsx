@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import useHover from 'react-use-hover';
@@ -21,7 +21,7 @@ import {
 // import IsConcealed from '@/components/game/mechanics/IsConcealed';
 // import IsDeadPoof from '@/components/game/animations/minions/IsDeadPoof';
 // import IsDisabled from '@/components/game/mechanics/IsDisabled';
-import { Minion } from '@ccg/components';
+import { Minion, MinionInteraction } from '@ccg/components';
 // import MinionInteraction from '@/components/game/interactions/minions/MinionInteraction';
 // import WillExpire from '@/components/game/mechanics/WillExpire';
 // import HasCurse from '@/components/game/mechanics/HasCurse';
@@ -141,7 +141,7 @@ export default function BoardSlot({
     mouseLeaveDelayMS: 0
   });
 
-  const animateWasAttacked = React.useCallback(
+  const animateWasAttacked = useCallback(
     currentHealth => {
       if (isActive && board === PLAYER_BOARDS[2]) {
         currentHealth < previousCurrentHealth && setWasAttackedState(true);
@@ -158,22 +158,23 @@ export default function BoardSlot({
     [board, isActive, previousCurrentHealth]
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     animateWasAttacked(currentHealth);
   }, [currentHealth, animateWasAttacked]);
 
-  const KillMinion = React.useCallback(
+  const KillMinionCallback = useCallback(
     index => {
       return setTimeout(() => {
+        if (dev) return;
         killMinion(playerID, data, index);
       }, 900);
     },
-    [playerID, data, killMinion]
+    [playerID, data, dev, killMinion]
   );
 
-  React.useEffect(() => {
-    isDead && KillMinion(index);
-  }, [index, isDead, KillMinion]);
+  useEffect(() => {
+    isDead && KillMinionCallback(index);
+  }, [index, isDead, KillMinionCallback]);
 
   function handleIsAttackingClass(bool) {
     if (bool) return styles['minion__animation--animate-attack'];
@@ -245,7 +246,7 @@ export default function BoardSlot({
       {/* {minionData && elite && <IsElite />} */}
 
       {/* interactions layer */}
-      {/* {minionData && (
+      {minionData && (
         <MinionInteraction
           G={G}
           ctx={ctx}
@@ -288,7 +289,7 @@ export default function BoardSlot({
           willExpire={willExpire}
           dev={dev}
         />
-      )} */}
+      )}
 
       {/* mechanics */}
       {/* {minionData && hasBoon && <HasBoon />}

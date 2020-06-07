@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Img } from 'react-image';
 import styles from './styles.module.scss';
 
-const Image = ({ imgSrc, name, placeholderSrc }) => (
+const MinionImage = ({ imgSrc, name, placeholderSrc }) => (
   <div className={styles['image__wrapper']} data-file="Minion/image">
     <div className="concealed__clouds" style={{ display: 'none' }} />
     <Img
@@ -25,10 +25,10 @@ const Image = ({ imgSrc, name, placeholderSrc }) => (
   </div>
 );
 
-Image.propTypes = {
+MinionImage.propTypes = {
   imgSrc: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   placeholderSrc: PropTypes.string.isRequired
 };
 
-export default Image;
+export default MinionImage;

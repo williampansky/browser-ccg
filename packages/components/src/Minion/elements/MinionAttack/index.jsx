@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 
-const Attack = ({ currentAttack, elite, imageSrc }) => {
+const MinionAttack = ({ currentAttack, elite, imageSrc }) => {
   return (
     <div className={styles['attack__wrapper']} data-value={currentAttack}>
       <div className={styles['text']}>
@@ -28,10 +28,10 @@ const Attack = ({ currentAttack, elite, imageSrc }) => {
   );
 };
 
-Attack.propTypes = {
+MinionAttack.propTypes = {
   currentAttack: PropTypes.number.isRequired,
   elite: PropTypes.bool.isRequired,
-  imageSrc: PropTypes.bool.isRequired
+  imageSrc: PropTypes.string.isRequired
 };
 
-export default Attack;
+export default MinionAttack;

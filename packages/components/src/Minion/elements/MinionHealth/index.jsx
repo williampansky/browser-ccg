@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 
-const Health = ({ currentHealth, elite, imageSrc, isDamaged }) => {
+const MinionHealth = ({ currentHealth, elite, imageSrc, isDamaged }) => {
   return (
     <div className={styles['health__wrapper']} data-value={currentHealth}>
       <div className={styles['text']} data--is-damaged={isDamaged}>
@@ -28,11 +28,11 @@ const Health = ({ currentHealth, elite, imageSrc, isDamaged }) => {
   );
 };
 
-Health.propTypes = {
+MinionHealth.propTypes = {
   currentHealth: PropTypes.number.isRequired,
   elite: PropTypes.bool.isRequired,
   imageSrc: PropTypes.string.isRequired,
   isDamaged: PropTypes.bool.isRequired
 };
 
-export default Health;
+export default MinionHealth;

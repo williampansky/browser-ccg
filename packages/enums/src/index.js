@@ -1,4 +1,5 @@
 export { default as MECHANICS } from './mechanics.enums';
+export { default as MINION_TARGET_CONTEXT } from './minion-target-context.enums';
 export { default as PLAY_CONTEXT } from './play-context.enums';
 export { default as PLAY_TYPE } from './play-type.enums';
 export { default as PLAYER_BOARDS } from './player-boards.enums';
