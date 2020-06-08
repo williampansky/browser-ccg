@@ -1,0 +1,44 @@
+.game-wrapper.game-over {
+  animation: blur 800ms ease-in-out forwards;
+
+  &:before {
+    animation: fadeOut 800ms ease-in-out forwards;
+    pointer-events: auto;
+  }
+}
+
+// prettier-ignore
+.game-wrapper {
+  &.defeat:before { background: rgba(29, 0, 0, 0.625); }
+  &.victory:before { background: rgba(20, 62, 72, 0.625); }
+}
+
+@keyframes blur {
+  0% {
+    filter: blur(0);
+  }
+
+  100% {
+    filter: blur(4px);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInText {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,35 @@
+.board {
+  box-sizing: border-box;
+  background: black;
+  // height: calc(100vh - var(--board-hands-height));
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.their-board {
+  align-items: center;
+  box-shadow: inset 0 0 10px transparent;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  height: calc(100% / 2);
+  justify-content: flex-start;
+  position: relative;
+  margin: auto auto 0;
+  width: 100%;
+}
+
+.your-board {
+  align-items: center;
+  box-shadow: inset 0 0 10px transparent;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  height: calc(100% / 2);
+  justify-content: flex-end;
+  position: relative;
+  margin: auto auto 0;
+  width: 100%;
+}

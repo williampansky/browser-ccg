@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import IMAGES from '@ccg/images';
 
 // child components
 import Board from '../boards/Board';
@@ -13,6 +14,7 @@ import ResizeObserver from './ResizeObserver';
 import TheirHand from '../hands/TheirHand';
 import YourCardSelection from '../card-selection/YourCardSelection';
 import YourHand from '../hands/YourHand';
+import { getImage } from '@ccg/utils/src';
 
 export default function GameWrapper(props) {
   // global state manipulations
@@ -77,8 +79,8 @@ export default function GameWrapper(props) {
   }, []);
 
   // health declarations
-  const YOUR_HEALTH = G && health && health[yourID];
-  const THEIR_HEALTH = G && health && health[theirID];
+  const YOUR_HEALTH = health[yourID];
+  const THEIR_HEALTH = health[theirID];
 
   useEffect(() => {
     if (YOUR_HEALTH === 0) setGameWinner(theirID);
@@ -97,7 +99,7 @@ export default function GameWrapper(props) {
       >
         <TheirHand
           G={G}
-          cardBackSrc={cardBack && cardBack[theirID]}
+          cardBackSrc={cardBack[theirID]}
           theirID={theirID}
           toggleMenuFn={() => toggleMenu()}
           gameWidth={1920}
@@ -128,12 +130,12 @@ export default function GameWrapper(props) {
           ctx={ctx}
           moves={moves}
           isActive={isActive}
-          cardBackSrc={cardBack && cardBack[yourID]}
+          cardBackSrc={cardBack[yourID]}
           yourID={yourID}
           gameWidth={1920}
         />
         <GameBackground
-          backgroundImage="assets/images/boards/BOARD.jpg"
+          backgroundImage={getImage('boards/BOARD.jpg', IMAGES)}
           // backgroundImage="assets/images/Uldaman_Board.jpg"
           gameWidth={1920}
           gameHeight={1080}

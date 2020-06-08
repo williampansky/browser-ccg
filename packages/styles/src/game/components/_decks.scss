@@ -1,0 +1,119 @@
+.deck {
+  position: absolute;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  height: 270px;
+  font-size: 12px;
+  width: 150px;
+  right: 15%;
+  z-index: -1;
+}
+
+.deck__card {
+  pointer-events: auto;
+  position: absolute;
+
+  &:before {
+    content: '';
+    box-shadow: 0 2px 10px hsla(0, 0%, 0%, 0.925);
+    border-radius: var(--card-border-radius);
+    left: 0;
+    height: var(--card-height);
+    position: absolute;
+    top: 0;
+    transition: box-shadow 800ms cubic-bezier(0.19, 1, 0.22, 1);
+    width: 100%;
+    pointer-events: none;
+  }
+
+  &:after {
+    content: '';
+    background: rgba(0, 0, 0, 0.415);
+    border-radius: var(--card-border-radius);
+    left: 0;
+    height: var(--card-height);
+    position: absolute;
+    top: 0;
+    transition: 800ms cubic-bezier(0.19, 1, 0.22, 1);
+    transition-property: box-shadow, filter, opacity;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .deck:hover & {
+    // filter: blur(2px);
+    &:after {
+      opacity: 1;
+    }
+  }
+}
+
+// prettier-ignore
+[data-file='player-sidebar/PlayerSidebar'] .deck {
+  bottom: 2.5%;
+  .deck__card {
+    &[data-index='0'] { transform: translate(-50px, 10px) rotate(-4deg); }
+    &[data-index='1'] { transform: translate(-25px, -10px) rotate(1deg); }
+    &[data-index='2'] { transform: translate(0, 2px) rotate(4deg); }
+  }
+}
+
+// prettier-ignore
+[data-file='hands/TheirHand'] .deck {
+  .deck__card {
+    &[data-index='0'] { transform: translate(-50px, -10px) rotate(4deg); }
+    &[data-index='1'] { transform: translate(-25px, 10px) rotate(1deg); }
+    &[data-index='2'] { transform: translate(0, -10px) rotate(-4deg); }
+  }
+}
+
+// // prettier-ignore
+// .your-board-play-area .deck__card {
+//   &[data-index='0'] { transform: rotate(0deg); }
+//   // &[data-index='1'] { transform: translateX(-25px); }
+//   // &[data-index='2'] { transform: translateX(0); }
+// }
+
+.deck__count {
+  font-family: 'Carter One', sans-serif;
+  color: white;
+  // text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.825);
+  opacity: 0;
+  position: relative;
+  pointer-events: none;
+  user-select: none;
+  max-width: 90px;
+  line-height: 1;
+  text-align: center;
+  font-size: 1em;
+  left: -22.5px;
+  z-index: 2;
+  // transform: translate(0, calc(-0.65 * var(--card-height)));
+  transform: translateY(0);
+  transition: 600ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition-property: opacity, transform;
+  text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black;
+
+  .deck__card:hover ~ & {
+    opacity: 1;
+    // transform: translate(-50%, calc(-0.65 * var(--card-height)));
+    transform: translateY(calc(var(--deck-offset) * -0.25));
+  }
+}

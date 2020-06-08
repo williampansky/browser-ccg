@@ -1,0 +1,168 @@
+.card__v2 {
+  font-family: 'Carter One', sans-serif;
+  position: relative;
+  height: var(--card-height);
+  width: calc(var(--card-height) / 1.4);
+
+  .card__cost {
+    font-size: 26px;
+    position: absolute;
+    bottom: 88.5px;
+    left: 8px;
+    height: 34px;
+    width: 34px;
+    @include display-flex(column nowrap, center, center);
+  }
+
+  .card__attack {
+    font-size: 24px;
+    position: absolute;
+    bottom: 6px;
+    right: 8.5px;
+    height: 30px;
+    width: 30px;
+    @include display-flex(column nowrap, center, center);
+  }
+
+  .card__health {
+    font-size: 24px;
+    position: absolute;
+    bottom: 32.15px;
+    right: 45px;
+    height: 30px;
+    width: 30px;
+    @include display-flex(column nowrap, center, center);
+  }
+
+  .card__name {
+    position: absolute;
+    bottom: 66px;
+    left: 16px;
+    font-size: 10px;
+    width: 100px;
+    height: 14px;
+    text-align: center;
+    @include display-flex(column nowrap, center, center);
+  }
+
+  .card__text {
+    position: absolute;
+    font-size: 8px;
+    bottom: 20px;
+    left: 17px;
+    height: 44px;
+    text-align: center;
+    padding: 0 10px;
+    word-spacing: 0.125em;
+    @include display-flex(column nowrap, center, center);
+  }
+
+  .card__text strong {
+    color: #fff649;
+  }
+
+  &.--is-minion .card__text {
+    width: 48%;
+  }
+
+  &.--is-spell .card__text {
+    width: 56%;
+  }
+
+  .card__text .text__value {
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  .card__type {
+    color: white;
+    position: absolute;
+    bottom: 9px;
+    font-size: 6px;
+    left: 22px;
+    width: 55%;
+    text-align: center;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1;
+    height: 10px;
+    @include display-flex(column nowrap, center, center);
+  }
+
+  .card__type__image {
+    position: absolute;
+    width: 26px;
+    bottom: 74px;
+    right: 24.5px;
+    image-rendering: pixelated;
+  }
+
+  .text__value {
+    color: white;
+    line-height: 1;
+    position: relative;
+    top: 0.5px;
+    left: 0;
+    text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black;
+  }
+
+  .card__image__wrapper {
+    background-color: #191919;
+    border-radius: var(--card-border-radius);
+    border-top: 1px solid rgba(255, 255, 255, 0.465);
+    position: absolute;
+    width: 100%;
+    height: 70%;
+    overflow: hidden;
+    z-index: -1;
+
+    &:before {
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.25);
+      border-radius: var(--card-border-radius);
+      content: '';
+      height: 100%;
+      width: 100%;
+      pointer-events: none;
+      position: absolute;
+      z-index: 1;
+    }
+  }
+
+  .card__image {
+    width: 100%;
+    height: 120%;
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    object-fit: cover;
+    position: relative;
+    top: -20px;
+    image-rendering: pixelated;
+  }
+
+  .card__base__image {
+    height: var(--card-height);
+    width: calc(var(--card-height) / 1.4);
+    image-rendering: pixelated;
+  }
+}
+
+// prettier-ignore
+.card__v2 {
+  .card__health[data-value='2'] .text__value { left: -1px; }
+  .card__health[data-value='3'] .text__value { left: -1px; }
+  .card__health[data-value='5'] .text__value { top: 1px; left: -1px; }
+  .card__health[data-value='7'] .text__value { left: -1px; }
+}

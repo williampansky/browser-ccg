@@ -1,0 +1,28 @@
+.board-play-area {
+  align-items: flex-start;
+  background: transparent;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  min-height: 150px;
+  padding: 1% 2%;
+  position: relative;
+  width: calc(100% / 1.675);
+
+  position: absolute;
+}
+
+.their-board-play-area {
+  top: 29%;
+  left: 20%;
+}
+
+.your-board-play-area {
+  bottom: 36%;
+  left: 20%;
+
+  &[data-is-your-turn='true'] {
+    z-index: 200;
+  }
+}

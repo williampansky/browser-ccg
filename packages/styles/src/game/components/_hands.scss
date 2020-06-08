@@ -1,0 +1,31 @@
+.hand {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.hands--their_hand {
+  // background: var(--board-theirHand-background-color);
+  height: var(--board-theirHand-height);
+  z-index: var(--board-theirHand-zIndex);
+}
+
+.hands--your_hand {
+  // background: var(--board-yourHand-background-color);
+  height: var(--board-yourHand-height);
+  z-index: var(--board-yourHand-zIndex);
+  z-index: 250;
+}
+
+.active-warcry {
+  background: white;
+  position: absolute;
+  right: 2.5%;
+  top: -100%;
+  transform: translateY(0) rotate(0) scale(1) !important;
+  z-index: 100;
+}

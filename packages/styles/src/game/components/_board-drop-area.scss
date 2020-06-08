@@ -1,0 +1,48 @@
+.drop-area {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  box-sizing: border-box;
+  color: white;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  // margin: 0 1.25%;
+  // min-width: 5%;
+  min-height: 150px;
+  opacity: 0;
+  pointer-events: none;
+  position: relative;
+  user-select: none;
+  width: 0;
+  overflow: hidden;
+  transition: all 200ms ease-in-out;
+  height: 100%;
+}
+
+.board-is-active.drop-area {
+  cursor: pointer;
+  pointer-events: auto;
+  width: 1%;
+  opacity: 1;
+
+  &.area-is-alone {
+    width: 3.5%;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.925);
+    width: 7.5%;
+  }
+
+  @keyframes ants {
+    to {
+      background-position: 100%;
+    }
+  }
+}
+
+.spell-slot ~ .board-is-active .drop-area {
+  opacity: 0;
+}

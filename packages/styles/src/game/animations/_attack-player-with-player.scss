@@ -1,0 +1,28 @@
+.player-avatar {
+  transition: 200ms cubic-bezier(0.19, 1, 0.22, 1);
+
+  &.player-avatar--is_attacking {
+    transform: scale(1.1) translateY(-2vh);
+  }
+
+  &.player-avatar--is_attacking_player {
+    animation-name: attackPlayerWithPlayer;
+    animation-duration: 800ms;
+    animation-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+    animation-fill-mode: forwards;
+    z-index: 900;
+  }
+}
+
+@keyframes attackPlayerWithPlayer {
+  0% {
+    transform: scale(1.4) translateY(-2vh);
+  }
+  40% {
+    transform: scale(1.4) translateY(-40vh);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    z-index: 2;
+  }
+}

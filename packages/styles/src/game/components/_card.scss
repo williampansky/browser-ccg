@@ -1,0 +1,453 @@
+.card {
+  border-top: 1px solid rgba(255, 255, 255, 0.465);
+  background: var(--card-background-color);
+  border-radius: var(--card-border-radius);
+  box-sizing: border-box;
+  color: black;
+  font-size: calc(var(--card-height) / 20);
+  height: var(--card-height);
+  position: relative;
+  user-select: none;
+  width: calc(var(--card-height) / 1.4);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.425);
+}
+
+.card .card__cost {
+  font-family: 'Carter One', sans-serif;
+  align-items: center;
+  background-image: radial-gradient(
+    circle,
+    hsla(197, 100%, 80%, 1),
+    hsla(197, 90%, 65%, 1)
+  );
+  border-radius: 50%;
+  // border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  // border-left: 1px solid rgba(255, 255, 255, 0.15);
+  // border-right: 1px solid rgba(0, 0, 0, 0.15);
+  // border-top: 1px solid rgba(255, 255, 255, 0.25);
+  color: #042c3c;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 1em;
+  font-weight: 600;
+  height: calc(var(--card-height) / 8);
+  justify-content: center;
+  overflow: hidden;
+  left: -8.675px;
+  line-height: 1;
+  position: absolute;
+  top: -8.675px;
+  user-select: none;
+  width: calc(var(--card-height) / 8);
+  z-index: 5;
+  box-shadow: 0px 0px 1.5px rgba(0, 0, 0, 0.925),
+    0px 0px 4px rgba(0, 0, 0, 0.465);
+
+  &:before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    pointer-events: none;
+    border-radius: 50%;
+    border-top: 4px solid rgb(195, 238, 255);
+    border-bottom: 4px solid rgb(56, 164, 207);
+    filter: blur(2px);
+    @include position-absolute(0, 0, 0, 0, 0);
+  }
+}
+
+.card .card__image__wrapper {
+  border-top-left-radius: var(--card-border-radius);
+  border-top-right-radius: var(--card-border-radius);
+  box-sizing: border-box;
+  height: 50%;
+  width: 100%;
+  position: relative;
+  user-select: none;
+  margin: 0 auto;
+  box-shadow: inset 0px 0px 0px 2px rgba(190, 190, 190, 0.265);
+  @include display-flex(column nowrap, center, center);
+}
+
+.card .card__image {
+  border-top-left-radius: var(--card-border-radius);
+  border-top-right-radius: var(--card-border-radius);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  &:before {
+    border-top-left-radius: var(--card-border-radius);
+    border-top-right-radius: var(--card-border-radius);
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    pointer-events: none;
+    box-shadow: inset 0px 0px 0px 2px rgba(190, 190, 190, 0.265);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+  }
+}
+
+.card.--is-minion {
+  .card__image__wrapper {
+    border-top: 1px solid rgba(255, 255, 255, 0.465);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: var(--minion-border-radius);
+    top: -9px;
+    z-index: 3;
+    height: 50%;
+    width: 50%;
+    box-shadow: 0px 0px 4.5px rgba(0, 0, 0, 0.925),
+      0px 0px 12.5px rgba(0, 0, 0, 0.465);
+  }
+
+  .card__image {
+    border-radius: var(--minion-border-radius);
+    overflow: hidden;
+    z-index: 3;
+
+    &:before {
+      border-radius: var(--avatar-border-radius);
+    }
+  }
+
+  .minion__bezel {
+    border-radius: var(--minion-border-radius);
+    height: 100%;
+    width: 100%;
+    background-color: #565656;
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(white),
+      color-stop(1%, white),
+      color-stop(2%, black),
+      color-stop(5%, white),
+      color-stop(95%, white),
+      color-stop(98%, black),
+      color-stop(99%, white),
+      to(white)
+    );
+    border-left: 3px solid black;
+    border-right: 3px solid black;
+    border-bottom: 3px solid #0d0d0d;
+    box-sizing: border-box;
+    box-shadow: inset 0px 0px 10px 0px rgba(190, 190, 190, 0.8);
+    @include position-absolute(0, 0, 0, 0, 0);
+
+    &:before {
+      border-top: 1px solid rgba(255, 255, 255, 0.465);
+      content: '';
+      width: 112%;
+      height: 106%;
+      background: #353535;
+      position: absolute;
+      top: -2px;
+      right: 0;
+      bottom: -2px;
+      left: -5px;
+      border-radius: var(--avatar-border-radius);
+    }
+
+    &:after {
+      content: '';
+      width: 101%;
+      height: 101%;
+      background: #000;
+      position: absolute;
+      border-radius: var(--avatar-border-radius);
+    }
+  }
+}
+
+.card.--is-spell {
+  .card__text {
+    height: 25%;
+  }
+}
+
+.card.--is-weapon {
+  .card__image__wrapper {
+    border-top: 1px solid rgba(255, 255, 255, 0.465);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: var(--weapon-border-radius);
+    top: -9px;
+    z-index: 3;
+    height: 48%;
+    width: 68%;
+    box-shadow: 0px 0px 4.5px rgba(0, 0, 0, 0.925),
+      0px 0px 12.5px rgba(0, 0, 0, 0.465);
+  }
+
+  .card__image {
+    border-radius: var(--weapon-border-radius);
+    overflow: hidden;
+    z-index: 3;
+
+    &:before {
+      border-radius: var(--weapon-border-radius);
+    }
+  }
+
+  .card__text {
+    height: 31%;
+  }
+}
+
+.card .card__name {
+  font-family: 'Carter One', sans-serif;
+  align-items: center;
+  background: #746d75;
+  // border-radius: calc(var(--card-border-radius) / 2);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  bottom: 12.5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  font-weight: normal;
+  height: 10%;
+  justify-content: center;
+  line-height: 1;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+  text-align: center;
+  user-select: none;
+  width: 100%;
+  z-index: 2;
+
+  .name__value {
+    color: white;
+    // text-shadow: 0px 0px 2px black;
+    text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+      0 0 1px black;
+  }
+}
+
+.card .card__text {
+  background-color: #f3f2ee;
+  box-sizing: content-box;
+  align-items: center;
+  top: -13px;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 1em;
+  font-weight: normal;
+  height: 25%;
+  justify-content: center;
+  line-height: calc(1.45 / var(--card-height));
+  margin: 0;
+  padding: 20px;
+  position: relative;
+  text-align: center;
+  user-select: none;
+
+  & > p {
+    margin: 0;
+    pointer-events: none;
+    user-select: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  &:after {
+    background-image: url('https://cdn.shopify.com/s/files/1/1750/4945/products/classic_avalanche_white_felt_600p_600x.jpg');
+    background-size: cover;
+    background-position: center center;
+    // content: '';
+    @include position-absolute(0, 0, 0, 0, 0);
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.card .card__type {
+  font-family: 'Carter One', sans-serif;
+  align-items: center;
+  background: lightgray;
+  border-radius: calc(var(--card-border-radius) / 2);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  bottom: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.014);
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 0.7em;
+  height: 5%;
+  justify-content: center;
+  letter-spacing: 0.0875em;
+  margin: 0 auto;
+  padding: 0.2em 0.15em;
+  position: absolute;
+  text-align: center;
+  user-select: none;
+  width: 100%;
+  bottom: 0;
+}
+
+.card .card__attack,
+.card .card__weapon__attack {
+  font-family: 'Carter One', sans-serif;
+  align-items: center;
+  background: radial-gradient(
+    circle at 50% 15%,
+    white -10px,
+    rgb(232, 233, 141) 3%,
+    rgb(197, 173, 37) 60%
+  );
+  border-radius: 50%;
+  bottom: -6.165px;
+  color: #6f3205;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 1em;
+  font-weight: 600;
+  height: calc(var(--card-height) / 8);
+  justify-content: center;
+  left: -6.165px;
+  line-height: 1;
+  position: absolute;
+  overflow: hidden;
+  user-select: none;
+  width: calc(var(--card-height) / 8);
+  z-index: 5;
+  box-shadow: 0px 0px 1.5px rgba(0, 0, 0, 0.925),
+    0px 0px 4px rgba(0, 0, 0, 0.465);
+
+  &:before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    pointer-events: none;
+    border-radius: 50%;
+    border-top: 4px solid rgb(254, 255, 200);
+    border-bottom: 4px solid rgb(179, 154, 18);
+    filter: blur(2px);
+    @include position-absolute(0, 0, 0, 0, 0);
+  }
+}
+
+.card .card__health,
+.card .card__weapon__health {
+  font-family: 'Carter One', sans-serif;
+  align-items: center;
+  background: radial-gradient(
+    circle at 50% 15%,
+    white -10px,
+    rgb(233, 141, 141) 3%,
+    rgb(197, 37, 37) 60%
+  );
+  border-radius: 50%;
+  bottom: -6.165px;
+  color: rgb(121, 21, 21);
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 1em;
+  font-weight: 600;
+  height: calc(var(--card-height) / 8);
+  justify-content: center;
+  line-height: 1;
+  position: absolute;
+  overflow: hidden;
+  right: -6.165px;
+  user-select: none;
+  width: calc(var(--card-height) / 8);
+  z-index: 5;
+  box-shadow: 0px 0px 1.5px rgba(0, 0, 0, 0.925),
+    0px 0px 4px rgba(0, 0, 0, 0.465);
+
+  &:before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    pointer-events: none;
+    border-radius: 50%;
+    border-top: 4px solid rgb(255, 198, 198);
+    border-bottom: 4px solid rgb(145, 9, 9);
+    filter: blur(2px);
+    @include position-absolute(0, 0, 0, 0, 0);
+  }
+}
+
+.card .text__value {
+  color: white;
+  position: relative;
+  top: 0.5px;
+  left: 0;
+  // text-shadow: 0px 0px 2px black;
+  text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+    0 0 1px black;
+}
+
+// draw/entrance animation
+// prettier-ignore
+.draw-card-animation {
+  .card {
+    // animation: drawCard 2000ms cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  }
+
+  // &:nth-child(1) .card { animation-delay: 0ms; }
+  // &:nth-child(2) .card { animation-delay: 2000ms; }
+  // &:nth-child(3) .card { animation-delay: 4000ms; }
+  // &:nth-child(4) .card { animation-delay: 6000ms; }
+  // &:nth-child(5) .card { animation-delay: 8000ms; }
+  // &:nth-child(6) .card { animation-delay: 10000ms; }
+  // &:nth-child(7) .card { animation-delay: 12000ms; }
+}
+
+@keyframes drawCard {
+  0% {
+    opacity: 0;
+    transform: translate3d(1000%, -200%, 0) scale(0.1) rotate(45deg);
+  }
+  10%,
+  20%,
+  40%,
+  60%,
+  80%,
+  90% {
+    opacity: 1;
+    transform: translate3d(400%, -200%, 0) scale(2.525);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}

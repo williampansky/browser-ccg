@@ -1,0 +1,26 @@
+.game-menu-trigger {
+  font-family: 'Carter One', sans-serif;
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: auto;
+  top: 0;
+  margin: 0 20px;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.45);
+
+  &:hover {
+    color: white;
+  }
+}
+
+.game-menu-trigger.active {
+  color: white;
+  height: var(--board-theirHand-height);
+}

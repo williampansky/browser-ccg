@@ -1,0 +1,4 @@
+.board-is-active .spell-slot[data-render='false'] {
+  opacity: 0;
+  pointer-events: none;
+}
