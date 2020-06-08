@@ -17,13 +17,17 @@ export default function YourHand({
   moves,
   isActive,
   yourID,
-  gameWidth
+  gameWidth,
+  healthSphereSrc,
+  warcrySphereSrc,
+  spellSphereSrc,
+  classSkillSphereSrc
 }) {
   const {
     counts,
     energy,
     players,
-    playerClass,
+    playerHero,
     selectedCardIndex,
     selectedCardObject,
     playerCanUseClassSkill,
@@ -70,6 +74,7 @@ export default function YourHand({
         board={PLAYER_BOARDS[1]}
         shieldPoints={playerShieldPoints[yourID]}
         // wasAttacked={wasAttacked}
+        healthSphereSrc={healthSphereSrc}
       />
 
       <ClassSkillButton
@@ -77,9 +82,10 @@ export default function YourHand({
         ctx={ctx}
         moves={moves}
         isActive={isActive}
-        playerClass={playerClass[yourID]}
+        playerClass={playerHero[yourID]}
         board={PLAYER_BOARDS[1]}
         canUse={playerCanUseClassSkill[yourID] && energy[yourID].current >= 2}
+        classSkillSphereSrc={classSkillSphereSrc}
       />
 
       {/* <Deck
@@ -94,10 +100,18 @@ export default function YourHand({
       />
 
       {warcryObject[yourID] ? (
-        <WarcryObject data={warcryObject[yourID]} />
+        <WarcryObject
+          data={warcryObject[yourID]}
+          warcrySphereSrc={warcrySphereSrc}
+        />
       ) : null}
 
-      {spellObject[yourID] ? <SpellObject data={spellObject[yourID]} /> : null}
+      {spellObject[yourID] ? (
+        <SpellObject
+          data={spellObject[yourID]}
+          spellSphereSrc={spellSphereSrc}
+        />
+      ) : null}
 
       {hand.map((card, index) => {
         return (

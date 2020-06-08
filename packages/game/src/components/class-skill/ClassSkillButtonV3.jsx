@@ -10,7 +10,8 @@ export default function ClassSkillButton({
   isActive,
   playerClass,
   board,
-  canUse
+  canUse,
+  classSkillSphereSrc
 }) {
   const { initClassSkill } = moves;
 
@@ -60,7 +61,7 @@ export default function ClassSkillButton({
         <Image backgroundImage={`assets/images/Game_logo.png`} board={board} />
       )}
 
-      <Badge src={`assets/card-assets/Class_Skill_Sphere.png`} />
+      <Badge src={classSkillSphereSrc} />
 
       {canUse && isActive && <BoxShadow />}
     </Component>

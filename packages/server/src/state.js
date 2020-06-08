@@ -46,7 +46,7 @@ export default {
   playerCanBeAttackedByWarcry: playerCanBeAttacked.playerCanBeAttackedByWarcry,
   playerCanBeHealed: playerCanBeHealed.__DATA_MODEL,
   playerCanUseClassSkill: playerCanUseClassSkill.__DATA_MODEL,
-  playerClass: { '0': null, '1': null },
+  playerHero: { '0': '%HERO_ZEUS%', '1': '%HERO_EXILE%' },
   playerHasAttacked: { '0': false, '1': false },
   playerIsAttacking: playerIsAttacking.__DATA_MODEL,
   playerIsDisabled: playerIsDisabled.__DATA_MODEL,
@@ -63,10 +63,7 @@ export default {
   selectedMinionObject: selectedMinionObject.__DATA_MODEL,
   spellObject: spellObject.__DATA_MODEL,
   warcryObject: warcryObject.__DATA_MODEL,
-  playerName: {
-    '0': 'Player 0',
-    '1': 'Player 1'
-  },
+  playerName: { '0': 'Player 0', '1': 'Player 1' },
   animationStates: {
     minionIsAttacking: {
       '0': null,

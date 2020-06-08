@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { replaceConstant, replaceDynamicText } from '@ccg/utils';
 
-export default function SpellObject({ data }) {
+export default function SpellObject({ data, spellSphereSrc }) {
   const { id, attack, playType, playContext, targetingArrowText } = data;
 
   function cardText(string, spellDmg = attack) {
@@ -23,7 +23,7 @@ export default function SpellObject({ data }) {
         </div>
       </div>
       <Ring />
-      <Badge src={`assets/card-assets/Class_Skill_Sphere.png`} />
+      <Badge src={spellSphereSrc} />
     </Component>
   );
 }

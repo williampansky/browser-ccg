@@ -13,7 +13,9 @@ export default function YourAvatar({
   board,
   yourID,
   playerClass,
-  playerIsAttacking
+  playerIsAttacking,
+  yourAvatarSrc,
+  weaponSphereSrc
 }) {
   const [attackingPlayerClass, setAttackingPlayerClass] = React.useState('');
 
@@ -95,6 +97,7 @@ export default function YourAvatar({
           canUse={playerCanAttack[yourID]}
           playerAttackValue={playerAttackValue[yourID]}
           weapon={playerWeapon[yourID]}
+          weaponSphereSrc={weaponSphereSrc}
         />
       ) : null}
 
@@ -112,9 +115,11 @@ export default function YourAvatar({
         ].join(' ')}
       >
         {playerClass && (
-          <div
+          <img
+            alt=""
             className={'avatar-image'}
-            style={{ backgroundImage: `url(${classImage(playerClass)})` }}
+            role="presentation"
+            src={yourAvatarSrc}
           />
         )}
       </div>

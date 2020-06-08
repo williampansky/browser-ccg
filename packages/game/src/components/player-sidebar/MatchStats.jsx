@@ -50,6 +50,7 @@ MatchStats.propTypes = {
 };
 
 const Component = styled.div`
+  font-family: var(--font-family-card);
   font-size: 18px;
   padding: 40px 10px;
 

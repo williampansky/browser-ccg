@@ -10,8 +10,7 @@ const playerCanUseClassSkill = {
    * @param {string} player
    */
   enable: (G, player) => {
-    const result = (G.playerCanUseClassSkill[player] = true);
-    return result;
+    G.playerCanUseClassSkill[player] = true;
   },
 
   /**
@@ -20,8 +19,7 @@ const playerCanUseClassSkill = {
    * @param {string} player
    */
   disable: (G, player) => {
-    const result = (G.playerCanUseClassSkill[player] = false);
-    return result;
+    G.playerCanUseClassSkill[player] = false;
   }
 };
 

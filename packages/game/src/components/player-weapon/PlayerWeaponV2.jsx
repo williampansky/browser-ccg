@@ -7,7 +7,8 @@ export default function PlayerWeapon({
   board,
   canUse,
   playerAttackValue,
-  weapon
+  weapon,
+  weaponSphereSrc
 }) {
   const { attack, health, id, set } = weapon;
   const AP_VALUE = playerAttackValue !== 0 ? playerAttackValue : attack;
@@ -29,7 +30,7 @@ export default function PlayerWeapon({
         <img alt="" src={'assets/card-assets/ic_health.png'} />
       </HealthWrapper>
 
-      <Sphere src={`assets/card-assets/Class_Skill_Sphere.png`} />
+      <Sphere src={weaponSphereSrc} />
     </Component>
   );
 }

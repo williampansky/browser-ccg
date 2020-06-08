@@ -30,7 +30,10 @@ export default function Board({
   credentials,
   yourID,
   theirID,
-  gameWidth
+  gameWidth,
+  theirAvatarSrc,
+  yourAvatarSrc,
+  weaponSphereSrc
 }) {
   const {
     cardBack,
@@ -40,7 +43,7 @@ export default function Board({
     playerCanUseClassSkill,
     playerAttackValue,
     playerIsAttacking,
-    playerClass,
+    playerHero,
     playerWeapon,
     selectedCardObject,
     selectedCardType,
@@ -67,7 +70,14 @@ export default function Board({
   }
 
   return (
-    <div data-file="boards/Board" className={['board'].join(' ')}>
+    <div
+      data-file="boards/Board"
+      className={['board'].join(' ')}
+      style={{
+        width: 1920,
+        height: 1080 - 40
+      }}
+    >
       {cardType === TYPE[2] && spellType === PLAY_TYPE['GLOBAL'] ? (
         <ItemSlot
           index={0}
@@ -91,26 +101,6 @@ export default function Board({
           onClick={() => equipPlayerWeapon()}
         />
       ) : null}
-      {/* <TheirBoard
-        G={G}
-        ctx={ctx}
-        moves={moves}
-        events={events}
-        playerID={playerID}
-        isActive={isActive}
-        theirID={theirID}
-        yourID={yourID}
-      /> */}
-
-      {/* <YourBoard
-        G={G}
-        ctx={ctx}
-        moves={moves}
-        events={events}
-        playerID={playerID}
-        isActive={isActive}
-        yourID={yourID}
-      /> */}
       <TheirAvatar
         G={G}
         ctx={ctx}
@@ -119,7 +109,8 @@ export default function Board({
         board={PLAYER_BOARDS[2]}
         theirID={theirID}
         yourID={yourID}
-        playerClass={playerClass[theirID]}
+        playerClass={playerHero[theirID]}
+        theirAvatarSrc={theirAvatarSrc}
       />
       <TheirBoardPlayerArea
         G={G}
@@ -146,18 +137,11 @@ export default function Board({
         isActive={isActive}
         board={PLAYER_BOARDS[1]}
         yourID={yourID}
-        playerClass={playerClass[yourID]}
+        playerClass={playerHero[yourID]}
+        yourAvatarSrc={yourAvatarSrc}
         playerIsAttacking={playerIsAttacking[yourID]}
+        weaponSphereSrc={weaponSphereSrc}
       />
-      {/* {warcryObject[yourID] ? (
-        <WarcryObject data={warcryObject[yourID]} />
-      ) : null} */}
-      {/* {spellObject[yourID] ? <SpellObject data={spellObject[yourID]} /> : null} */}
-      {/* <Deck
-        board={PLAYER_BOARDS[1]}
-        cardBackSrc={cardBack[yourID]}
-        length={counts[yourID].deck}
-      /> */}
     </div>
   );
 }

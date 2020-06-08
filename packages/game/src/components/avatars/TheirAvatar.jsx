@@ -16,7 +16,8 @@ export default function TheirAvatar({
   board,
   theirID,
   yourID,
-  playerClass
+  playerClass,
+  theirAvatarSrc
 }) {
   const {
     playerCanUseClassSkill,
@@ -91,9 +92,11 @@ export default function TheirAvatar({
         ].join(' ')}
       >
         {playerClass && (
-          <div
+          <img
+            alt=""
             className={'avatar-image'}
-            style={{ backgroundImage: `url(${classImage(playerClass)})` }}
+            role="presentation"
+            src={theirAvatarSrc}
           />
         )}
       </div>

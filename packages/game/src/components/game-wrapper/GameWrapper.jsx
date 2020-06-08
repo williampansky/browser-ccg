@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import IMAGES from '@ccg/images';
+import { getImage, removeSymbols } from '@ccg/utils/src';
 
 // child components
 import Board from '../boards/Board';
@@ -14,7 +15,6 @@ import ResizeObserver from './ResizeObserver';
 import TheirHand from '../hands/TheirHand';
 import YourCardSelection from '../card-selection/YourCardSelection';
 import YourHand from '../hands/YourHand';
-import { getImage } from '@ccg/utils/src';
 
 export default function GameWrapper(props) {
   // global state manipulations
@@ -39,13 +39,28 @@ export default function GameWrapper(props) {
     isConnected,
     credentials
   } = props;
-  const { cardBack, health, allPlayedCards, initHandsSelection, winner } = G;
+  const {
+    cardBack,
+    health,
+    allPlayedCards,
+    initHandsSelection,
+    playerHero,
+    winner
+  } = G;
   const { phase, gameover } = ctx;
   const { setGameWinner } = moves;
 
   // id declarations
   const yourID = playerID === '0' ? '0' : '1';
   const theirID = playerID === '0' ? '1' : '0';
+
+  // avatar string declarations
+  const yourAvatarSrcString = `heros/${removeSymbols(
+    playerHero[yourID]
+  )}/AVATAR.jpg`;
+  const theirAvatarSrcString = `heros/${removeSymbols(
+    playerHero[theirID]
+  )}/AVATAR.jpg`;
 
   // toggle game menu
   function toggleMenu() {
@@ -85,7 +100,7 @@ export default function GameWrapper(props) {
   useEffect(() => {
     if (YOUR_HEALTH === 0) setGameWinner(theirID);
     if (THEIR_HEALTH === 0) setGameWinner(yourID);
-  }, [YOUR_HEALTH, THEIR_HEALTH, setGameWinner]);
+  }, [yourID, theirID, YOUR_HEALTH, THEIR_HEALTH, setGameWinner]);
 
   return props ? (
     <React.Fragment>
@@ -96,6 +111,10 @@ export default function GameWrapper(props) {
           gameover && winner === theirID ? 'game-over defeat' : '',
           gameover && winner === yourID ? 'game-over victory' : ''
         ].join(' ')}
+        style={{
+          width: 1920,
+          height: 1080 - 40
+        }}
       >
         <TheirHand
           G={G}
@@ -124,6 +143,9 @@ export default function GameWrapper(props) {
           yourID={yourID}
           theirID={theirID}
           gameWidth={1920}
+          theirAvatarSrc={getImage(theirAvatarSrcString, IMAGES)}
+          yourAvatarSrc={getImage(yourAvatarSrcString, IMAGES)}
+          weaponSphereSrc={getImage('ui/GENERIC_SPHERE.png', IMAGES)}
         />
         <YourHand
           G={G}
@@ -133,18 +155,16 @@ export default function GameWrapper(props) {
           cardBackSrc={cardBack[yourID]}
           yourID={yourID}
           gameWidth={1920}
+          healthSphereSrc={getImage('ui/GENERIC_SPHERE.png', IMAGES)}
+          warcrySphereSrc={getImage('ui/GENERIC_SPHERE.png', IMAGES)}
+          spellSphereSrc={getImage('ui/GENERIC_SPHERE.png', IMAGES)}
+          classSkillSphereSrc={getImage('ui/GENERIC_SPHERE.png', IMAGES)}
         />
         <GameBackground
           backgroundImage={getImage('boards/BOARD.jpg', IMAGES)}
-          // backgroundImage="assets/images/Uldaman_Board.jpg"
           gameWidth={1920}
           gameHeight={1080}
         />
-        {/* <SidebarBackground
-          backgroundImage="assets/SIDEBAR.png"
-          gameWidth={1920}
-          gameHeight={1080}
-        /> */}
       </div>
 
       {gameover && (

@@ -9,7 +9,8 @@ export default function PlayerHealth({
   health,
   player,
   shieldPoints,
-  wasAttacked
+  wasAttacked,
+  healthSphereSrc
 }) {
   const [animation, setAnimation] = useState(false);
   const progress = React.useRef();
@@ -74,7 +75,7 @@ export default function PlayerHealth({
         </div>
       </div>
 
-      <Badge src={`assets/card-assets/Class_Skill_Sphere.png`} />
+      <Badge src={healthSphereSrc} />
     </Component>
   );
 }
@@ -88,11 +89,12 @@ PlayerHealth.propTypes = {
 
 const Badge = styled.img`
   height: calc(var(--class-skill-button-size) + 30px);
-  right: -15px;
+  right: -14px;
   top: -12px;
   pointer-events: none;
   position: absolute;
   z-index: 0;
+  image-rendering: pixelated;
 `;
 
 const Component = styled.div`
