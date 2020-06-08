@@ -28,7 +28,7 @@ export default function CanBeHealed({ G, ctx, moves, board, index }) {
 
   return (
     <div
-      className="can-be-buffed"
+      className="minion--can-be-buffed"
       data-file="interactions/minions/CanBeHealed"
       onClick={() => handleClick()}
     />

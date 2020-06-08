@@ -1,8 +1,5 @@
 .minion--has-guard-background {
   // animation-duration: 300ms;
-  background-image: url('/images/mechanics/BULWARK/background.png');
-  background-repeat: no-repeat;
-  background-size: contain;
   position: absolute;
   width: 105%;
   height: 110%;
@@ -16,16 +13,16 @@
   will-change: transform;
   z-index: 0;
 
-  &.--is-animating {
+  &.minion--is-animating {
     transform: scale(0.1);
   }
 
-  .--is-attacking & {
+  .minion--is-attacking & {
     transform: scale(1.15);
     transition-duration: 100ms;
   }
 
-  .is-dead & {
+  .minion--is-dead & {
     opacity: 0;
     transform: scale(0.1);
   }
@@ -39,9 +36,6 @@
 
 .minion--has-guard-foreground {
   // animation-duration: 300ms;
-  background-image: url('/images/mechanics/BULWARK/foreground.png');
-  background-repeat: no-repeat;
-  background-size: contain;
   position: absolute;
   width: 105%;
   height: 110%;
@@ -54,16 +48,16 @@
   transition: transform 400ms var(--animation-transition-cubic);
   z-index: 1;
 
-  &.--is-animating {
+  &.minion--is-animating {
     transform: scale(0.1);
   }
 
-  .--is-attacking & {
+  .minion--is-attacking & {
     transform: scale(1.15);
     transition-duration: 100ms;
   }
 
-  .is-dead & {
+  .minion--is-dead & {
     transform: scale(0.1);
   }
 }

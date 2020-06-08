@@ -8,7 +8,6 @@ const MinionHealth = ({ currentHealth, elite, imageSrc, isDamaged }) => {
       <div className={styles['text']} data--is-damaged={isDamaged}>
         <div className="text__value">{currentHealth}</div>
       </div>
-
       {elite ? (
         <img
           alt=""

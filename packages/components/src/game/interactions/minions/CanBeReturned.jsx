@@ -7,7 +7,7 @@ export default function CanBeReturned({ moves, index, targetContext }) {
   const { castTargetedSpell } = moves;
   return (
     <div
-      className="can-be-debuffed"
+      className="minion--can-be-debuffed"
       data-file="interactions/minions/CanBeReturned"
       onClick={() => castTargetedSpell(TARGET_CONTEXT[targetContext], index)}
       role="button"

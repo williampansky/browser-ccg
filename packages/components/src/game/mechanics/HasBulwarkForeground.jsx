@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function HasGuardForeground() {
+export default function HasGuardForeground({ imgSrc }) {
   const [isAnimating, setIsAnimating] = React.useState(false);
 
   // prettier-ignore
@@ -11,18 +11,19 @@ export default function HasGuardForeground() {
   }, []);
 
   return (
-    <div
+    <img
+      alt=""
       className={[
         'minion--has-guard-foreground'
         // isAnimating ? '--is-animating' : ''
       ].join(' ')}
       data-file="mechanics/HasGuardForeground"
+      role="presentation"
+      src={imgSrc}
     />
   );
 }
 
 HasGuardForeground.propTypes = {
-  moves: PropTypes.object,
-  data: PropTypes.object,
-  index: PropTypes.number
+  imgSrc: PropTypes.string
 };

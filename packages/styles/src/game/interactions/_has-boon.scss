@@ -10,7 +10,7 @@
   transition: 600ms ease-in-out;
   transition-property: box-shadow, opacity, transform;
 
-  .is-selected ~ & {
+  .minion--is-selected ~ & {
     transform: scale(1.15);
   }
 

@@ -84,13 +84,11 @@ const Minion = ({
         placeholderSrc={imagePlaceholderSrc}
         set={set}
       />
-
       <MinionAttack
         currentAttack={currentAttack}
         elite={elite}
         imageSrc={getCardAssetImage('attack', null, elite, ASSETS)}
       />
-
       <MinionHealth
         currentHealth={currentHealth}
         elite={elite}

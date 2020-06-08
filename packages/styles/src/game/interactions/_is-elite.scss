@@ -16,12 +16,12 @@
     width: 100%;
   }
 
-  .--is-attacking & {
+  .minion--is-attacking & {
     transform: scale(1.15);
     transition-duration: 100ms;
   }
 
-  .is-dead & {
+  .minionis-dead & {
     opacity: 0;
     transform: scale(0.1);
   }

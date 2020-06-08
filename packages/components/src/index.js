@@ -1,7 +1,14 @@
 // ========================================================================
 // GLOBAL => game-related components
 export { default as Card } from './Card';
-export { default as Minion } from './Minion';
+
+// ========================================================================
+// GLOBAL => minion
+export { default as MechanicIcon } from './Minion/elements/MechanicIcon';
+export { default as MinionAttack } from './Minion/elements/MinionAttack';
+export { default as MinionHealth } from './Minion/elements/MinionHealth';
+export { default as MinionImage } from './Minion/elements/MinionImage';
+export { default as Minion } from './Minion/Minion';
 
 // ========================================================================
 // GAME => slots

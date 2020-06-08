@@ -6,7 +6,7 @@ export default function IsAttacking({ moves }) {
 
   return (
     <div
-      className="is-selected"
+      className="minion--is-selected"
       data-file="interactions/minions/IsAttacking"
       onClick={() => deselectMinion()}
       onKeyPress={() => deselectMinion()}

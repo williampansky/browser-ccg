@@ -7,7 +7,7 @@ export default function CanReceiveStampede({ moves, index }) {
 
   return (
     <div
-      className="can-be-buffed"
+      className="minion--can-be-buffed"
       data-file="interactions/minions/CanReceiveStampede"
       onClick={() => giveMinionStampede(index)}
       role="button"

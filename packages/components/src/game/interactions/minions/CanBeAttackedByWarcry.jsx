@@ -7,7 +7,7 @@ export default function CanBeAttackedByWarcry({ moves, index }) {
   const { castTargetedWarcry } = moves;
   return (
     <div
-      className="can-be-attacked"
+      className="board__slot--can-be-attacked"
       data-file="interactions/minions/CanBeAttackedByWarcry"
       onClick={() => castTargetedWarcry(TARGET_CONTEXT['OPPONENT'], index)}
       role="button"

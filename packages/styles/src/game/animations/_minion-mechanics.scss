@@ -4,12 +4,12 @@
   transition-property: transform;
   will-change: transform;
 
-  .--is-attacking & {
+  .minion--is-attacking & {
     transform: scale(1.15) translateY(calc(var(--minion-height) / 15));
     transition-duration: 100ms;
   }
 
-  .is-dead & {
+  .minionis-dead & {
     opacity: 0;
     transform: scale(0.1);
   }

@@ -4,21 +4,14 @@ import styles from './styles.module.scss';
 
 const MinionAttack = ({ currentAttack, elite, imageSrc }) => {
   return (
-    <div
-      className={[
-        styles['attack__wrapper'],
-        elite === true ? styles['elite'] : ''
-      ].join(' ')}
-      data-value={currentAttack}
-    >
-      <div className={styles['text']}>
+    <div className={styles['attack__wrapper']} data-value={currentAttack}>
+      <div className={[styles['text'], elite ? styles['elite'] : ''].join(' ')}>
         <div className="text__value">{currentAttack}</div>
       </div>
-
       {elite ? (
         <img
           alt=""
-          className={styles['badge']}
+          className={[styles['badge'], styles['elite']].join(' ')}
           role="presentation"
           src={imageSrc}
         />

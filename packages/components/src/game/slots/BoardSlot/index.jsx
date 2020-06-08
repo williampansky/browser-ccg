@@ -14,19 +14,22 @@ import {
 } from '@ccg/utils';
 
 // child components
-// import HasBoon from '@/components/game/mechanics/HasBoon';
-// import HasEnergyShield from '@/components/game/mechanics/HasEnergyShield';
-// import HasGuardBackground from '@/components/game/mechanics/HasGuardBackground';
-// import HasGuardForeground from '@/components/game/mechanics/HasGuardForeground';
-// import HasOnslaught from '@/components/game/mechanics/HasOnslaught';
-// import IsConcealed from '@/components/game/mechanics/IsConcealed';
 // import IsDeadPoof from '@/components/game/animations/minions/IsDeadPoof';
-// import IsDisabled from '@/components/game/mechanics/IsDisabled';
-import { IsElite, Minion, MinionInteraction } from '@ccg/components';
-// import MinionInteraction from '@/components/game/interactions/minions/MinionInteraction';
-// import WillExpire from '@/components/game/mechanics/WillExpire';
-// import HasCurse from '@/components/game/mechanics/HasCurse';
-// import Card from '@/components/collection/Card';
+import {
+  Card,
+  HasBoon,
+  HasBubble,
+  HasBulwarkBackground,
+  HasBulwarkForeground,
+  HasCurse,
+  HasDoubleAttack,
+  IsConcealed,
+  IsDisabled,
+  IsElite,
+  Minion,
+  MinionInteraction,
+  WillExpire
+} from '@ccg/components';
 // import HasPoison from '../mechanics/HasPoison';
 
 export default function BoardSlot({
@@ -292,13 +295,17 @@ export default function BoardSlot({
       )}
 
       {/* mechanics */}
-      {/* {minionData && hasBoon && <HasBoon />}
-      {minionData && hasEnergyShield && <HasEnergyShield />}
-      {minionData && isImmune && <HasEnergyShield />}
-      {minionData && hasGuard && <HasGuardForeground />}
+      {minionData && hasBoon && <HasBoon />}
+      {minionData && hasEnergyShield && <HasBubble />}
+      {minionData && isImmune && <HasBubble />}
       {minionData && isConcealed && <IsConcealed />}
       {minionData && isDisabled && <IsDisabled />}
-      {minionData && willExpire && <WillExpire count={willExpireIn} />} */}
+      {minionData && willExpire && <WillExpire count={willExpireIn} />}
+      {minionData && hasGuard && (
+        <HasBulwarkForeground
+          imgSrc={getMechanicImage('BULWARK_FOREGROUND.png', MECHANICS)}
+        />
+      )}
 
       {/* visible minion component */}
       {minionData && (
@@ -407,8 +414,13 @@ export default function BoardSlot({
         </div>
       ) : null} */}
 
-      {/* {minionData && hasGuard && <HasGuardBackground race={race} />}
-      {isDead && <IsDeadPoof />} */}
+      {minionData && hasGuard && (
+        <HasBulwarkBackground
+          imgSrc={getMechanicImage('BULWARK_BACKGROUND.png', MECHANICS)}
+          race={race}
+        />
+      )}
+      {/* {isDead && <IsDeadPoof />} */}
     </div>
   );
 }

@@ -17,7 +17,7 @@ export default function CanBeBuffed({ G, ctx, moves, index }) {
 
   return (
     <div
-      className="can-be-buffed"
+      className="minion--can-be-buffed"
       data-file="interactions/minions/CanBeBuffed"
       onClick={() => handleClick()}
       role="button"

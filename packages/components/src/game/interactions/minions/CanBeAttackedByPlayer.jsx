@@ -5,7 +5,7 @@ export default function CanBeAttackedByPlayer({ moves, index }) {
   const { attackMinionWithPlayer } = moves;
   return (
     <div
-      className="can-be-attacked"
+      className="board__slot--can-be-attacked"
       data-file="interactions/minions/CanBeAttackedByPlayer"
       onClick={() => attackMinionWithPlayer(index)}
     />

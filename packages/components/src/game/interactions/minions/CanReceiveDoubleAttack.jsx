@@ -14,7 +14,7 @@ export default function CanReceiveOnslaught({ G, ctx, moves, index }) {
 
   return (
     <div
-      className="can-be-buffed"
+      className="minion--can-be-buffed"
       data-file="interactions/minions/CanReceiveOnslaught"
       onClick={() => handleClick()}
       role="button"

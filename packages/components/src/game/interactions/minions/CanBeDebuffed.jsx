@@ -7,7 +7,7 @@ export default function CanBeDebuffed({ moves, index }) {
   const { castTargetedSpell } = moves;
   return (
     <div
-      className="can-be-debuffed"
+      className="minion--can-be-debuffed"
       data-file="interactions/minions/CanBeDebuffed"
       onClick={() => castTargetedSpell(TARGET_CONTEXT['OPPONENT'], index)}
       role="button"

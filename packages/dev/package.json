@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "react-app-rewired start --hot",
     "start:p1": "PORT=3001 react-app-rewired start --hot",
     "start:p2": "PORT=3002 react-app-rewired start --hot",
     "build": "react-scripts build",

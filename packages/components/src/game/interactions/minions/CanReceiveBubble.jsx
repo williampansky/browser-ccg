@@ -7,7 +7,7 @@ export default function CanReceiveEnergyShield({ moves, index }) {
   const { castTargetedSpell } = moves;
   return (
     <div
-      className="can-be-buffed"
+      className="minion--can-be-buffed"
       data-file="interactions/minions/CanReceiveEnergyShield"
       onClick={() => castTargetedSpell(TARGET_CONTEXT['SELF'], index)}
       role="button"

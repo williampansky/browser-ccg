@@ -7,7 +7,7 @@ export default function CanBeSacrificed({ moves, index }) {
   const { castTargetedSpell } = moves;
   return (
     <div
-      className="can-be-debuffed"
+      className="minion--can-be-debuffed"
       data-file="interactions/minions/CanBeSacrificed"
       onClick={() => castTargetedSpell(TARGET_CONTEXT['SELF'], index)}
       role="button"

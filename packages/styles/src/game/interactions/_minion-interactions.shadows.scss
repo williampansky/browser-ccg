@@ -32,7 +32,7 @@
   }
 }
 
-.can-be-attacked {
+.board__slot--can-be-attacked {
   box-shadow: var(--box-shadow-can-be-attacked);
 
   &:hover {
@@ -73,7 +73,7 @@
   }
 }
 
-.can-be-buffed {
+.board__slot--can-be-buffed {
   box-shadow: var(--box-shadow-can-be-buffed);
 
   &:hover {
@@ -114,7 +114,7 @@
   }
 }
 
-.can-be-debuffed {
+.board__slot--can-be-debuffed {
   box-shadow: var(--box-shadow-can-be-debuffed);
 
   &:hover {
@@ -155,11 +155,11 @@
   }
 }
 
-.can-be-selected {
+.board__slot--can-be-selected {
   box-shadow: var(--box-shadow-can-be-selected);
 }
 
-.is-selected {
+.minion--is-selected {
   box-shadow: var(--box-shadow-is-selected);
   transform: scale(1.15);
   transition-property: box-shadow, opacity, transform;

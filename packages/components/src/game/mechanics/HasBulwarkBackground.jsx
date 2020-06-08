@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { replaceConstant } from '@ccg/utils';
 
-export default function HasGuardBackground({ race }) {
+export default function HasGuardBackground({ imgSrc, race }) {
   const [isAnimating, setIsAnimating] = React.useState(false);
 
   // prettier-ignore
@@ -20,17 +20,21 @@ export default function HasGuardBackground({ race }) {
   }
 
   return (
-    <div
+    <img
+      alt=""
       className={[
         'minion--has-guard-background',
         getMinionRaceClass(race)
         // isAnimating ? '--is-animating' : ''
       ].join(' ')}
       data-file="mechanics/HasGuardBackground"
+      role="presentation"
+      src={imgSrc}
     />
   );
 }
 
 HasGuardBackground.propTypes = {
+  imgSrc: PropTypes.string.isRequired,
   race: PropTypes.string.isRequired
 };

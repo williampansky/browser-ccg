@@ -8,7 +8,7 @@ export default function CanBeAttackedBySpell({ moves, index }) {
   const { castTargetedSpell } = moves;
   return (
     <div
-      className="can-be-attacked"
+      className="board__slot--can-be-attacked"
       data-file="interactions/minions/CanBeAttackedBySpell"
       onClick={() => castTargetedSpell(TARGET_CONTEXT['OPPONENT'], index)}
     />

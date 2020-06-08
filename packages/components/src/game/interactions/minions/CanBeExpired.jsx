@@ -7,7 +7,7 @@ export default function CanBeExpired({ moves, index }) {
   const { castTargetedSpell } = moves;
   return (
     <div
-      className="can-be-debuffed"
+      className="minion--can-be-debuffed"
       data-file="interactions/minions/CanBeExpired"
       onClick={() => castTargetedSpell(TARGET_CONTEXT['OPPONENT'], index)}
       role="button"

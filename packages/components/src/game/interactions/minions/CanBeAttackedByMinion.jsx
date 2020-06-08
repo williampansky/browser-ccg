@@ -23,7 +23,7 @@ export default function CanBeAttackedByMinion({ G, ctx, moves, index }) {
 
   return (
     <div
-      className="can-be-attacked"
+      className="board__slot--can-be-attacked"
       data-file="interactions/minions/CanBeAttackedByMinion"
       onClick={() => handleClick()}
     />
