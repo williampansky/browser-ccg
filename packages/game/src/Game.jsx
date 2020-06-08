@@ -1,12 +1,9 @@
 import React from 'react';
-import { hot } from 'react-hot-loader';
 import { Client as BoardgameClient } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
 import { ReactCCG } from '@ccg/server';
-// import GameWrapper from './components/game-wrapper/GameWrapper';
+import GameWrapper from './components/game-wrapper/GameWrapper';
 import GameLoader from './components/game-loader';
-// import './index.css';
-// import './styles/game.scss';
 
 const REDUX_DEVTOOLS =
   typeof window !== undefined &&
@@ -15,7 +12,7 @@ const REDUX_DEVTOOLS =
 
 const Client = BoardgameClient({
   game: ReactCCG,
-  // board: GameWrapper,
+  board: GameWrapper,
   loading: GameLoader,
   debug: true,
   multiplayer: SocketIO({ server: 'localhost:8000' }),
@@ -71,4 +68,4 @@ class App extends React.Component {
   }
 }
 
-export default hot(module)(App);
+export default App;

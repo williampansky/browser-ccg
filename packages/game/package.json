@@ -42,6 +42,7 @@
     "react-svg": "^11.0.24",
     "react-tooltip": "^4.2.6",
     "react-transition-group": "^4.4.1",
-    "react-use-hover": "^1.0.0"
+    "react-use-hover": "^1.0.0",
+    "styled-components": "^5.1.1"
   }
 }

@@ -4,8 +4,9 @@
   "private": true,
   "main": "src/",
   "scripts": {
-    "start": "npx --inspect=8000 babel-node --root-mode upward --ignore=' ' src/server.js",
-    "nodemon-extended": "nodemon --exec babel-node --root-mode upward --ignore=' ' --experimental-modules -r esm --es-module-specifier-resolution=node src/server.js",
+    "start": "npx babel-node --inspect=8000 --root-mode upward --ignore=' ' src/server.js",
+    "nodemon-extended": "nodemon --exec babel-node --inspect=8000 --experimental-modules src/server.js",
+    "nodemon-extended-old": "nodemon --exec babel-node --root-mode upward --ignore=' ' -r esm --es-module-specifier-resolution=node --experimental-modules src/server.js",
     "nodemon": "node --experimental-modules -r esm src/server.js"
   },
   "dependencies": {
@@ -27,8 +28,13 @@
     "core-js": "3",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
+    "is-promise": "^4.0.0",
     "mathjs": "^7.0.1",
+    "nodemon": "^2.0.4",
     "regenerator": "^0.14.4",
     "uuid": "^8.1.0"
+  },
+  "resolutions": {
+    "is-promise": "4.0.0"
   }
 }
