@@ -1,0 +1,11 @@
+.game__board {
+  height: 100%;
+  margin: calc(var(--card-height) / 10) auto;
+  @include display-flex(column nowrap, center, space-between);
+}
+
+.their__board,
+.your__board {
+  height: 50%;
+  @include display-flex(column nowrap, center, center);
+}

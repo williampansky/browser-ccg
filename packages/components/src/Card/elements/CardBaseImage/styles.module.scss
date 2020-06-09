@@ -1,5 +1,5 @@
 .card__base__image {
-  border-radius: var(--card-border-radius);
+  border-radius: calc(var(--card-height) / 28.571428571);
   height: var(--card-height);
   image-rendering: pixelated;
   position: relative;

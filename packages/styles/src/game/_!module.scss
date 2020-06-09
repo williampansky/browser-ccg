@@ -1,4 +1,5 @@
-@import 'animations/!module';
-@import 'interactions/!module';
-@import 'components/!module';
-@import 'board-slot';
+@import 'game-wrapper';
+@import 'game-board';
+@import 'cards-wrapper';
+@import 'avatar';
+@import 'player__health';

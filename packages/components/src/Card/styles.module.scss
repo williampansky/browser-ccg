@@ -1,5 +1,5 @@
 .card {
-  border-radius: var(--card-border-radius);
+  border-radius: calc(var(--card-height) / 28.571428571);
   font-family: var(--font-family-card);
   height: var(--card-height);
   width: calc(var(--card-height) / var(--card-width-division));

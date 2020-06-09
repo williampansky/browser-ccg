@@ -11,17 +11,17 @@
 // import { _kM, _kM0 } from 'lib/state/board-methods/kill-minion';
 // import { _aTMH, _sFMH } from 'lib/state/board-methods/minion-health';
 // import { _pC } from 'lib/state/board-methods/place-card-on-board';
-// import createBoardSlotObject from 'lib/creators/create-board-slot-object';
+import createBoardSlotObject from '../creators/create-board-slot-object';
 
 // createBoardSlotObject('CORE_057b')
 // prettier-ignore
 const boards = {
   __DATA_MODEL: {
     '0': [
-      // { ...createBoardSlotObject('CORE_062') }
+      { ...createBoardSlotObject('CORE_062') }
     ],
     '1': [
-      // { ...createBoardSlotObject('CORE_004') },
+      { ...createBoardSlotObject('CORE_004') },
       // { ...createBoardSlotObject('CORE_005') },
       // { ...createBoardSlotObject('CORE_006') },
       // { ...createBoardSlotObject('CORE_007') },

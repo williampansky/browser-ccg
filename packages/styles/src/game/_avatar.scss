@@ -1,0 +1,16 @@
+.avatar__wrapper {
+  position: relative;
+  height: var(--avatar-height);
+  width: var(--avatar-width);
+}
+
+.your__avatar__wrapper {
+  margin-top: auto;
+}
+
+.avatar__image {
+  border-radius: var(--card-border-radius);
+  height: var(--avatar-height);
+  width: var(--avatar-width);
+  image-rendering: pixelated;
+}
