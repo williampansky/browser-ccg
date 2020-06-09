@@ -2,3 +2,7 @@
 @import 'abstracts/!module';
 @import 'utilities/!module';
 @import 'game/!module';
+
+.debug-panel {
+  display: none !important;
+}

@@ -21,6 +21,7 @@ const Client = BoardgameClient({
 
 class App extends React.Component {
   state = {
+    addressBarSize: 0,
     playerID: null,
     playerName: null,
     deck: []
@@ -40,6 +41,19 @@ class App extends React.Component {
 
     if (localStorage.getItem('deck'))
       this.setState({ deck: JSON.parse(localStorage.getItem('deck')) });
+
+    /**
+     * Uses html.perspective CSS property, which is set to 100vh, to determine
+     * a mobile browser's address bar height; such as Android Chrome's URL bar.
+     * @see [StackOverflow]{@link https://stackoverflow.com/a/54796813}
+     */
+    if (typeof document !== 'undefined') {
+      this.setState({
+        addressBarSize:
+          parseFloat(getComputedStyle(document.documentElement).perspective) -
+          document.documentElement.clientHeight
+      });
+    }
   }
 
   render() {
@@ -60,6 +74,7 @@ class App extends React.Component {
     return (
       <React.Fragment>
         <Client
+          addressBarSize={this.state.addressBarSize}
           playerID={this.state.playerID}
           playerName={this.state.playerName}
         />

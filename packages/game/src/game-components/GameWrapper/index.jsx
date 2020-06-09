@@ -38,7 +38,8 @@ const GameWrapper = props => {
     isActive,
     isMultiplayer,
     isConnected,
-    credentials
+    credentials,
+    addressBarSize
   } = props;
 
   const { boards, health, playerHero } = G;
@@ -48,11 +49,12 @@ const GameWrapper = props => {
   const theirID = playerID === '0' ? '1' : '0';
 
   return (
-    <div className="game__wrapper">
+    <div
+      className="game__wrapper"
+      data-address-bar-size={addressBarSize}
+      style={{ height: `calc(100vh - ${addressBarSize}px)` }}
+    >
       <div className="avatar__wrapper their__avatar__wrapper">
-        <div className="player__health">
-          <span className="text__value">{health[theirID]}</span>
-        </div>
         <img
           alt={replaceConstant(playerHero[theirID])}
           className="avatar__image your__avatar"
@@ -62,29 +64,51 @@ const GameWrapper = props => {
             IMAGES
           )}
         />
+        <div className="player__info__wrapper">
+          <div className="player__health">
+            <span className="text__value">{health[theirID]}</span>
+          </div>
+        </div>
       </div>
 
       <div className="game__board">
-        <div className="their__board">
+        <div className="board__play__area their__board__play__area">
           {boards[theirID].map((obj, i) => (
-            <div key={i}>
-              <BoardSlot />
-            </div>
+            <React.Fragment key={i}>
+              <BoardSlot
+                G={G}
+                ctx={ctx}
+                moves={moves}
+                isActive={isActive}
+                data={obj}
+                index={i}
+                yourID={yourID}
+                theirID={theirID}
+                dev={false}
+              />
+            </React.Fragment>
           ))}
         </div>
-        <div className="your__board">
+        <div className="board__play__area your__board__play__area">
           {boards[yourID].map((obj, i) => (
-            <div key={i}>
-              <Minion />
-            </div>
+            <React.Fragment key={i}>
+              <BoardSlot
+                G={G}
+                ctx={ctx}
+                moves={moves}
+                isActive={isActive}
+                data={obj}
+                index={i}
+                yourID={yourID}
+                theirID={theirID}
+                dev={false}
+              />
+            </React.Fragment>
           ))}
         </div>
       </div>
 
       <div className="avatar__wrapper your__avatar__wrapper">
-        <div className="player__health">
-          <span className="text__value">{health[yourID]}</span>
-        </div>
         <img
           alt={replaceConstant(playerHero[yourID])}
           className="avatar__image your__avatar"
@@ -94,6 +118,11 @@ const GameWrapper = props => {
             IMAGES
           )}
         />
+        <div className="player__info__wrapper">
+          <div className="player__health">
+            <span className="text__value">{health[yourID]}</span>
+          </div>
+        </div>
       </div>
       <div className="cards__wrapper your__cards__wrapper">
         {DECK_DEFAULT_001.splice(4, 10).map((string, i) => {

@@ -22,10 +22,10 @@ const boards = {
     ],
     '1': [
       { ...createBoardSlotObject('CORE_004') },
-      // { ...createBoardSlotObject('CORE_005') },
-      // { ...createBoardSlotObject('CORE_006') },
-      // { ...createBoardSlotObject('CORE_007') },
-      // { ...createBoardSlotObject('CORE_008') },
+      { ...createBoardSlotObject('CORE_005') },
+      { ...createBoardSlotObject('CORE_006') },
+      { ...createBoardSlotObject('CORE_007') },
+      { ...createBoardSlotObject('CORE_008') },
       // { ...createBoardSlotObject('CORE_009') }
     ]
   },

@@ -1,16 +1,31 @@
 .avatar__wrapper {
+  $sizeH: var(--avatar-height);
+  $sizeW: var(--avatar-width);
+
   position: relative;
-  height: var(--avatar-height);
-  width: var(--avatar-width);
-}
+  height: $sizeH;
+  width: 100%;
+  padding: 0 calc(var(--card-height) / 30);
+  margin: calc(var(--card-height) / 30) 0;
+  @include display-flex(row nowrap, flex-start, flex-start);
 
-.your__avatar__wrapper {
-  margin-top: auto;
-}
+  &.your__avatar__wrapper {
+    margin-bottom: 0;
+  }
 
-.avatar__image {
-  border-radius: var(--card-border-radius);
-  height: var(--avatar-height);
-  width: var(--avatar-width);
-  image-rendering: pixelated;
+  &.their__avatar__wrapper {
+    margin-top: calc(var(--card-height) / 20);
+  }
+
+  .avatar__image {
+    border-radius: var(--card-border-radius);
+    height: $sizeH;
+    width: $sizeW;
+    image-rendering: pixelated;
+  }
+
+  @media (min-width: 410px) and (min-height: 730px) {
+    --avatar-height: 100px;
+    --avatar-width: 100px;
+  }
 }

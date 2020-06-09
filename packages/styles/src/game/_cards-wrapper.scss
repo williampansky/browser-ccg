@@ -13,15 +13,17 @@
   --card-height: 200px;
 
   min-height: 100px;
-  overflow: auto hidden;
+  max-height: 100px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 // prettier-ignore
 .card__wrapper {
-  padding-left: calc(var(--card-height) / 10);
   position: relative;
   z-index: 1;
-
+  
+  &:first-child { padding-left: calc(var(--card-height) / 10); }
   & + .card__wrapper { margin-left: calc(var(--card-height) / -2.5); }
   &:last-child { padding-right: calc(var(--card-height) / 10); }
 }

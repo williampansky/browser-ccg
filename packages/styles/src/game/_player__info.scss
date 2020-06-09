@@ -1,0 +1,14 @@
+.player__info__wrapper {
+  font-size: 20px;
+  height: 100%;
+  width: 100%;
+  margin-left: calc(var(--card-height) / 30);
+  @include display-flex(row nowrap, center, flex-start);
+
+  .player__health {
+    font-size: 1em;
+    font-family: var(--font-family-card);
+    height: 100%;
+    @include display-flex(column nowrap, center, center);
+  }
+}
