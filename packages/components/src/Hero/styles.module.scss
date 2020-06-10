@@ -1,0 +1,24 @@
+.hero {
+  $sizeH: 100px;
+  $sizeW: 150px;
+  $ratio: 1.333333333;
+
+  background: #111;
+  // border-radius: calc(var(--card-border-radius) / 2);
+  box-sizing: content-box;
+  // overflow: hidden;
+  height: $sizeH;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100vw;
+
+  .player__info {
+    padding-top: calc(#{$sizeH} / 15);
+    padding-right: calc(#{$sizeH} / 10);
+    padding-bottom: calc(#{$sizeH} / 15);
+    padding-left: calc(#{$sizeH} / 10);
+    width: 100%;
+  }
+}
