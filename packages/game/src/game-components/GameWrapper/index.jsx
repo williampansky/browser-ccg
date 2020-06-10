@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { PLAY_TYPE, RACE, RARITY, SET, TYPE } from '@ccg/enums';
-import IMAGES, { CARDS, SETS } from '@ccg/images';
+import IMAGES, { CARDS, HEROS, SETS } from '@ccg/images';
 import {
   createMarkup,
   exists,
@@ -13,7 +13,9 @@ import {
   removeSymbols,
   getCardByID,
   getCardBaseImage,
-  getCardFlairImage
+  getCardFlairImage,
+  getHeroAbilityName,
+  getHeroAbilityText
 } from '@ccg/utils';
 import { DECK_DEFAULT_001 } from '@ccg/data';
 import { Card, Minion } from '@ccg/components';
@@ -42,7 +44,16 @@ const GameWrapper = props => {
     addressBarSize
   } = props;
 
-  const { boards, health, playerHero } = G;
+  // states
+  const [fabActive, setFabActive] = useState(false);
+
+  useLayoutEffect(() => {
+    fabActive
+      ? document.body.classList.add('body-fade')
+      : document.body.classList.remove('body-fade');
+  }, [fabActive]);
+
+  const { boards, health, players, playerHero } = G;
 
   // id declarations
   const yourID = playerID === '0' ? '0' : '1';
@@ -54,19 +65,80 @@ const GameWrapper = props => {
       data-address-bar-size={addressBarSize}
       style={{ height: `calc(100vh - ${addressBarSize}px)` }}
     >
-      <div className="avatar__wrapper their__avatar__wrapper">
-        <img
-          alt={replaceConstant(playerHero[theirID])}
-          className="avatar__image your__avatar"
-          role="presentation"
-          src={getImage(
-            `heros/${removeSymbols(playerHero[theirID])}/AVATAR.jpg`,
-            IMAGES
-          )}
-        />
+      <div className="player__wrapper their__player__wrapper">
+        <div className="avatar__image">
+          <img
+            alt={replaceConstant(playerHero[theirID])}
+            className="avatar__image your__avatar"
+            role="presentation"
+            src={getImage(
+              `heros/${removeSymbols(playerHero[theirID])}/AVATAR.jpg`,
+              IMAGES
+            )}
+          />
+        </div>
         <div className="player__info__wrapper">
-          <div className="player__health">
-            <span className="text__value">{health[theirID]}</span>
+          <div>
+            <div className="player__name">
+              <span className="text__value">Player {theirID}</span>
+            </div>
+            <div className="player__hero">
+              <span className="">{replaceConstant(playerHero[theirID])}</span>
+            </div>
+            <div className="player__health">
+              <span className="text__value">{health[theirID]}</span>
+            </div>
+          </div>
+          <div>
+            <div className="opponent__stats__and__skills__wrapper">
+              <div className="player__abilities__wrapper">
+                <ul className="abilities__list">
+                  <li>
+                    <div className="abilities__list__button">
+                      <img
+                        alt="Abilities Icon"
+                        className="abilities__icon"
+                        src={getImage('HERO_EXILE/HERO_EXILE_001.jpg', HEROS)}
+                      />
+                    </div>
+                  </li>
+                  <li>
+                    <div className="abilities__list__button">
+                      <img
+                        alt="Abilities Icon"
+                        className="abilities__icon"
+                        src={getImage('HERO_EXILE/HERO_EXILE_002.jpg', HEROS)}
+                      />
+                    </div>
+                  </li>
+                  <li>
+                    <div className="abilities__list__button">
+                      <img
+                        alt="Abilities Icon"
+                        className="abilities__icon"
+                        src={getImage('HERO_EXILE/HERO_EXILE_003.jpg', HEROS)}
+                      />
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div className="player__stats__wrapper">
+                <div className="player__stats">
+                  <div className="cards__stat cards__in__hand">
+                    <span className="stat__label">Hand</span>
+                    <span className="stat__value text__value">
+                      {players[theirID].hand.length}
+                    </span>
+                  </div>
+                  <div className="cards__stat cards__in__deck">
+                    <span className="stat__label">Deck</span>
+                    <span className="stat__value text__value">
+                      {players[theirID].deck.length}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -108,24 +180,52 @@ const GameWrapper = props => {
         </div>
       </div>
 
-      <div className="avatar__wrapper your__avatar__wrapper">
-        <img
-          alt={replaceConstant(playerHero[yourID])}
-          className="avatar__image your__avatar"
-          role="presentation"
-          src={getImage(
-            `heros/${removeSymbols(playerHero[yourID])}/AVATAR.jpg`,
-            IMAGES
-          )}
-        />
+      <div className="player__wrapper your__player__wrapper">
+        <div className="avatar__image">
+          <img
+            alt={replaceConstant(playerHero[yourID])}
+            className="avatar__image your__avatar"
+            role="presentation"
+            src={getImage(
+              `heros/${removeSymbols(playerHero[yourID])}/AVATAR.jpg`,
+              IMAGES
+            )}
+          />
+        </div>
         <div className="player__info__wrapper">
-          <div className="player__health">
-            <span className="text__value">{health[yourID]}</span>
+          <div>
+            <div className="player__name">
+              <span className="text__value">Player {yourID}</span>
+            </div>
+            <div className="player__hero">
+              <span className="">{replaceConstant(playerHero[yourID])}</span>
+            </div>
+            <div className="player__health">
+              <span className="text__value">{health[yourID]}</span>
+            </div>
+          </div>
+          <div>
+            <div className="player__stats__wrapper">
+              <div className="player__stats">
+                <div className="cards__stat cards__in__hand">
+                  <span className="stat__label">Hand</span>
+                  <span className="stat__value text__value">
+                    {players[yourID].hand.length}
+                  </span>
+                </div>
+                <div className="cards__stat cards__in__deck">
+                  <span className="stat__label">Deck</span>
+                  <span className="stat__value text__value">
+                    {players[yourID].deck.length}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <div className="cards__wrapper your__cards__wrapper">
-        {DECK_DEFAULT_001.splice(4, 10).map((string, i) => {
+        {DECK_DEFAULT_001.map((string, i) => {
           const card = getCardByID(string);
           return (
             <div className="card__wrapper" key={i}>
@@ -167,6 +267,101 @@ const GameWrapper = props => {
             </div>
           );
         })}
+      </div>
+      <div className="player__abilities__wrapper">
+        <div
+          className={[
+            'abilities__icon__button',
+            fabActive ? 'active' : ''
+          ].join(' ')}
+          role="button"
+          onClick={() => setFabActive(!fabActive ? true : false)}
+          onKeyPress={() => setFabActive(!fabActive ? true : false)}
+          tabIndex={0}
+        >
+          <img
+            alt="Close Abilities"
+            className="abilities__icon"
+            src={
+              fabActive
+                ? getImage('heros/ABILITIES_ICON_CLOSE.jpg', IMAGES)
+                : getImage('heros/ABILITIES_ICON.jpg', IMAGES)
+            }
+          />
+        </div>
+        <ul
+          className={['abilities__list', fabActive ? 'active' : ''].join(' ')}
+        >
+          <li>
+            <div
+              className="abilities__list__button"
+              role="button"
+              onClick={e => console.log(e)}
+              onKeyPress={e => console.log(e)}
+              tabIndex={0}
+            >
+              <div className="abilities__list__info">
+                <div className="ability__name">
+                  {getHeroAbilityName('HERO_ZEUS_001')}
+                </div>
+                <div className="ability__description">
+                  {getHeroAbilityText('HERO_ZEUS_001')}
+                </div>
+              </div>
+              <img
+                alt="Abilities Icon"
+                className="abilities__icon"
+                src={getImage('HERO_ZEUS/HERO_ZEUS_001.jpg', HEROS)}
+              />
+            </div>
+          </li>
+          <li>
+            <div
+              className="abilities__list__button"
+              role="button"
+              onClick={e => console.log(e)}
+              onKeyPress={e => console.log(e)}
+              tabIndex={0}
+            >
+              <div className="abilities__list__info">
+                <div className="ability__name">
+                  {getHeroAbilityName('HERO_ZEUS_002')}
+                </div>
+                <div className="ability__description">
+                  {getHeroAbilityText('HERO_ZEUS_002')}
+                </div>
+              </div>
+              <img
+                alt="Abilities Icon"
+                className="abilities__icon"
+                src={getImage('HERO_ZEUS/HERO_ZEUS_002.jpg', HEROS)}
+              />
+            </div>
+          </li>
+          <li>
+            <div
+              className="abilities__list__button"
+              role="button"
+              onClick={e => console.log(e)}
+              onKeyPress={e => console.log(e)}
+              tabIndex={0}
+            >
+              <div className="abilities__list__info">
+                <div className="ability__name">
+                  {getHeroAbilityName('HERO_ZEUS_003')}
+                </div>
+                <div className="ability__description">
+                  {getHeroAbilityText('HERO_ZEUS_003')}
+                </div>
+              </div>
+              <img
+                alt="Abilities Icon"
+                className="abilities__icon"
+                src={getImage('HERO_ZEUS/HERO_ZEUS_003.jpg', HEROS)}
+              />
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   );

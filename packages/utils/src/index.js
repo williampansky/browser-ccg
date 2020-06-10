@@ -18,6 +18,8 @@ export { default as removeSymbols } from './remove-symbols';
 export { default as replaceConstant } from './replace-constants';
 export { default as replaceDynamicText } from './replace-dynamic-text';
 export { default as uid } from './uid';
+export { default as getHeroAbilityName } from './get-hero-ability-name';
+export { default as getHeroAbilityText } from './get-hero-ability-text';
 
 // named
 export { getLengthOfString, fontSizeBasedOnCharacterLength } from './text';
