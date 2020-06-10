@@ -1,9 +1,9 @@
 import React from 'react';
-import MinionDev from './comps/Minion.dev';
+import Component from './components/Hero.dev';
 
 const App = () => (
   <React.Fragment>
-    <MinionDev />
+    <Component />
   </React.Fragment>
 );
 

@@ -9,7 +9,8 @@
     "@ccg/assets": "^0.1.0",
     "@ccg/config": "^0.1.0",
     "@ccg/data": "^0.1.0",
-    "@ccg/enums": "^0.1.0"
+    "@ccg/enums": "^0.1.0",
+    "@ccg/images": "^0.1.0"
   },
   "peerDependencies": {
     "@babel/core": "^7.10.2",
