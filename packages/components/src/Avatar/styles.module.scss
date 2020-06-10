@@ -1,0 +1,34 @@
+.avatar {
+  $sizeH: 120px;
+  $ratio: 1.333333333;
+  $offset: 20px;
+
+  display: block;
+  height: calc(#{$sizeH} - #{$offset});
+  width: calc(#{$sizeH} / #{$ratio});
+  position: relative;
+  // margin-right: 5%;
+  // border-top-left-radius: calc(var(--card-border-radius) / 2);
+  // border-bottom-left-radius: calc(var(--card-border-radius) / 2);
+  // overflow: hidden;
+
+  .avatar__position__block {
+    height: calc(#{$sizeH} - #{$offset});
+    width: calc(#{$sizeH} / #{$ratio});
+  }
+
+  .avatar__image__wrapper {
+    height: calc(#{$sizeH});
+    width: calc(#{$sizeH} / #{$ratio});
+    display: block;
+    position: absolute;
+    top: calc(#{$offset} / -1.75);
+  }
+
+  .avatar__image {
+    height: 100%;
+    image-rendering: pixelated;
+    object-fit: cover;
+    width: 100%;
+  }
+}
