@@ -12,6 +12,10 @@ export default function HeroDev() {
       <Hero
         heroSymbol={HERO_SYMBOL}
         avatarPlaceholderImageSrc={PLACEHOLDER_IMAGE}
+        cardsInDeck={19}
+        cardsInHand={4}
+        playerId={0}
+        playerName="pantsme"
       />
     </div>
   );

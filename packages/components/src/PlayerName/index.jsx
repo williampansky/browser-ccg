@@ -19,7 +19,7 @@ const PlayerName = ({ id = '0', name }) => {
 };
 
 PlayerName.propTypes = {
-  id: PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   name: PropTypes.string
 };
 
