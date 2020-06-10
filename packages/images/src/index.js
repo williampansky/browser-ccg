@@ -30,11 +30,13 @@ const PLACEHOLDER_BASE_IMAGE = importAll(
 const CARDS = importAll(require.context('./cards', true, /\.(png)$/));
 const SETS = importAll(require.context('./sets', true, /\.(jpg)$/));
 const HEROS = importAll(require.context('./heros', true, /\.(jpg)$/));
+const ICONS = importAll(require.context('./icons', true, /\.(svg)$/));
 
 export {
   CARD_ASSETS,
   CARDS,
   HEROS,
+  ICONS,
   MECHANICS,
   PLACEHOLDER_BASE_IMAGE,
   PLACEHOLDER_IMAGE,
