@@ -1,0 +1,255 @@
+.card-in-your-hand {
+  box-sizing: border-box;
+  cursor: not-allowed;
+  // margin-left: calc(calc(var(--card-height) / 0.95) / -2.765);
+  margin-bottom: -50px;
+  padding: 0 0 100px;
+  position: relative;
+  right: 0;
+  top: 0;
+  transition: 800ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition-property: transform;
+  transform: translateY(12%) scale(0.475);
+  // user-select: none;
+  z-index: 1; // make sure to NOT animate z-index
+
+  * {
+    pointer-events: none;
+  }
+
+  &:before {
+    border-radius: var(--card-border-radius);
+    box-shadow: -5px 5px 5px hsla(0, 0%, 0%, 0.925);
+    content: '';
+    height: var(--card-height);
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    transition: box-shadow 800ms cubic-bezier(0.19, 1, 0.22, 1);
+    width: 100%;
+  }
+
+  .card__v3:after {
+    animation: none;
+    background: #fff;
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 0;
+  }
+}
+
+.card-in-your-hand:hover {
+  transform: translateY(calc(var(--card-height) - 330px)) rotate(0deg)
+    scale(0.85) !important;
+  transition: 100ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-property: box-shadow, padding, transform;
+  z-index: 100;
+
+  &:before {
+    box-shadow: 0 10px 20px hsla(0, 0%, 0%, 0.925);
+  }
+
+  .card__v3:after {
+    animation: fade 250ms ease-out forwards;
+  }
+}
+
+.card-in-your-hand[data-is-playable='true'] {
+  cursor: pointer;
+}
+
+// prettier-ignore
+.card-in-your-hand[data-is-selected='true'] {
+  $scale: 1.35;
+  $offset: 42.5;
+  $base: 660.5%;
+
+  // transform: translateY(calc(-0.0015 * var(--card-height))) rotate(0deg)
+  //   scale(1) !important;
+  transform: translateY(-35%) rotate(0) scale($scale) !important;
+
+  // &[data-index="0"] { transform: translate(460.5%, -85%) rotate(0) scale($scale) !important; }
+  // &[data-index="1"] { transform: translate(418%, -85%) rotate(0) scale($scale) !important; }
+  // &[data-index="2"] { transform: translate(375.5%, -85%) rotate(0) scale($scale) !important; }
+  // &[data-index="3"] { transform: translate(333%, -85%) rotate(0) scale($scale) !important; }
+  // &[data-index="4"] { transform: translate(290.5%, -85%) rotate(0) scale($scale) !important; }
+  // &[data-index="5"] { transform: translate(248%, -85%) rotate(0) scale($scale) !important; }
+  // &[data-index="6"] { transform: translate(205.5%, -85%) rotate(0) scale($scale) !important; }
+  // &[data-index="7"] { transform: translate(163%, -85%) rotate(0) scale($scale) !important; }
+  // &[data-index="8"] { transform: translate(120.5%, -85%) rotate(0) scale($scale) !important; }
+  // &[data-index="9"] { transform: translate(78%, -85%) rotate(0) scale($scale) !important; }
+  z-index: 300;
+
+  &:before {
+    box-shadow: 0 60px 50px hsla(0, 0%, 0%, 0.825);
+  }
+
+  .card__v3:after {
+    content: none;
+  }
+
+  &:hover {
+    // padding-bottom: 0;
+    // transform: inherit;
+  }
+}
+
+.card-in-your-hand.card-placeholder {
+  background: transparent;
+  border-radius: var(--card-border-radius);
+  box-sizing: border-box;
+  color: transparent;
+  height: var(--card-height);
+  pointer-events: none;
+  position: relative;
+  user-select: none;
+  width: calc(var(--card-height) / 1.4);
+
+  &:before {
+    box-shadow: none !important;
+  }
+}
+
+.card-in-your-hand.animate-in {
+  animation: drawYourCard 3000ms var(--animation-transition-cubic) reverse;
+  // cursor: default;
+  // pointer-events: none;
+
+  // [data-file*='interactions/cards'] {
+  //   cursor: default;
+  //   pointer-events: none;
+  // }
+
+  // &:before {
+  //   pointer-events: none;
+  // }
+
+  @keyframes drawYourCard {
+    0% {
+    }
+    10%,
+    20%,
+    30%,
+    40%,
+    50%,
+    60%,
+    70%,
+    80% {
+      transform: translate(100%, -100%) rotate(0deg) scale(1.35);
+    }
+    100% {
+      transform: translate(300%, -100%) rotate(0deg) scale(0.1);
+    }
+  }
+}
+
+// prettier-ignore
+// [data-file*='hands'] {
+//   &[data-number-of-cards='2'] .animate-in {
+//     & + .animate-in { animation-delay: 400ms; }
+//   }
+
+//   &[data-number-of-cards='3'] .animate-in {
+//     & + .animate-in { animation-delay: 400ms; }
+//     & + .animate-in + .animate-in { animation-delay: 600ms; }
+//   }
+
+//   &[data-number-of-cards='4'] .animate-in {
+//     & + .animate-in { animation-delay: 400ms; }
+//     & + .animate-in + .animate-in { animation-delay: 600ms; }
+//     & + .animate-in + .animate-in + .animate-in { animation-delay: 800ms; }
+//   }
+
+//   &[data-number-of-cards='5'] .animate-in {
+//     & + .animate-in { animation-delay: 400ms; }
+//     & + .animate-in + .animate-in { animation-delay: 600ms; }
+//     & + .animate-in + .animate-in + .animate-in { animation-delay: 800ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1000ms; }
+//   }
+
+//   &[data-number-of-cards='6'] .animate-in {
+//     & + .animate-in { animation-delay: 400ms; }
+//     & + .animate-in + .animate-in { animation-delay: 600ms; }
+//     & + .animate-in + .animate-in + .animate-in { animation-delay: 800ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1000ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1200ms; }
+//   }
+
+//   &[data-number-of-cards='7'] .animate-in {
+//     & + .animate-in { animation-delay: 400ms; }
+//     & + .animate-in + .animate-in { animation-delay: 600ms; }
+//     & + .animate-in + .animate-in + .animate-in { animation-delay: 800ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1000ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1200ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in { animation-delay: 1400ms; }
+//   }
+
+//   &[data-number-of-cards='8'] .animate-in {
+//     & + .animate-in { animation-delay: 400ms; }
+//     & + .animate-in + .animate-in { animation-delay: 600ms; }
+//     & + .animate-in + .animate-in + .animate-in { animation-delay: 800ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1000ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1200ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in { animation-delay: 1400ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in + .animate-in { animation-delay: 1600ms; }
+//   }
+
+//   &[data-number-of-cards='8'] .animate-in {
+//     & + .animate-in { animation-delay: 400ms; }
+//     & + .animate-in + .animate-in { animation-delay: 600ms; }
+//     & + .animate-in + .animate-in + .animate-in { animation-delay: 800ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1000ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1200ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in { animation-delay: 1400ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in + .animate-in { animation-delay: 1600ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in + .animate-in + .animate-in { animation-delay: 1800ms; }
+//   }
+
+//   &[data-number-of-cards='9'] .animate-in {
+//     & + .animate-in { animation-delay: 400ms; }
+//     & + .animate-in + .animate-in { animation-delay: 600ms; }
+//     & + .animate-in + .animate-in + .animate-in { animation-delay: 800ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1000ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1200ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in { animation-delay: 1400ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in + .animate-in { animation-delay: 1600ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in + .animate-in + .animate-in { animation-delay: 1800ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1800ms; }
+//   }
+
+//   &[data-number-of-cards='10'] .animate-in {
+//     & + .animate-in { animation-delay: 400ms; }
+//     & + .animate-in + .animate-in { animation-delay: 600ms; }
+//     & + .animate-in + .animate-in + .animate-in { animation-delay: 800ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1000ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1200ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in { animation-delay: 1400ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in + .animate-in { animation-delay: 1600ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in + .animate-in + .animate-in { animation-delay: 1800ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in + .animate-in + .animate-in + .animate-in { animation-delay: 1800ms; }
+//     & + .animate-in + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in + .animate-in + .animate-in + .animate-in
+//       + .animate-in { animation-delay: 2000ms; }
+//   }
+// }

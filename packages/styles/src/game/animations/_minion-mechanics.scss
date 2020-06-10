@@ -1,0 +1,16 @@
+.minion__mechanics {
+  transform: scale(1);
+  transition: transform 400ms var(--animation-transition-cubic);
+  transition-property: transform;
+  will-change: transform;
+
+  .minion--is-attacking & {
+    transform: scale(1.15) translateY(calc(var(--minion-height) / 15));
+    transition-duration: 100ms;
+  }
+
+  .minionis-dead & {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+}

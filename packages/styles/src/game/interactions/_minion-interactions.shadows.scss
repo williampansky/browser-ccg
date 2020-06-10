@@ -1,0 +1,167 @@
+[data-file*='interactions/minions'] {
+  animation: fadeIn 1200ms var(--animation-transition-cubic) forwards;
+  border-radius: var(--minion-border-radius);
+  cursor: pointer;
+  height: 100%;
+  opacity: 0;
+  outline: none;
+  position: absolute;
+  transition: 600ms ease-in-out;
+  transition-property: box-shadow, opacity;
+  width: 100%;
+  will-change: box-shadow, opacity;
+
+  // prettier-ignore
+  @keyframes fadeIn {
+    from  { opacity: 0; }
+    to    { opacity: 1; }
+  }
+
+  [data-file='mechanics/IsElite'] ~ & {
+    transform: scale(1.05);
+  }
+
+  .has-guard & {
+    border-top-left-radius: 15px !important;
+    border-top-right-radius: 15px !important;
+
+    &:after {
+      border-top-left-radius: 15px !important;
+      border-top-right-radius: 15px !important;
+    }
+  }
+}
+
+.board__slot--can-be-attacked {
+  box-shadow: var(--box-shadow-can-be-attacked);
+
+  &:hover {
+    box-shadow: 0px 0px 5px 5px rgba(196, 56, 0, 0);
+  }
+
+  &:after {
+    animation: targeting-ripple-attacked 600ms linear infinite;
+    border-radius: var(--minion-border-radius);
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: opacity 600ms ease-in-out;
+    will-change: opacity;
+  }
+
+  &:hover:after {
+    opacity: 1;
+  }
+
+  @keyframes targeting-ripple-attacked {
+    0% {
+      box-shadow: 0 4px 10px var(--box-shadow-can-be-attacked-color-ripple),
+        0 0 0 0 var(--box-shadow-can-be-attacked-color-ripple),
+        0 0 0 5px var(--box-shadow-can-be-attacked-color-ripple),
+        0 0 0 10px var(--box-shadow-can-be-attacked-color-ripple);
+    }
+    100% {
+      box-shadow: 0 4px 10px var(--box-shadow-can-be-attacked-color-ripple),
+        0 0 0 5px var(--box-shadow-can-be-attacked-color-ripple),
+        0 0 0 10px var(--box-shadow-can-be-attacked-color-ripple),
+        0 0 0 20px rgba(0, 0, 0, 0);
+    }
+  }
+}
+
+.board__slot--can-be-buffed {
+  box-shadow: var(--box-shadow-can-be-buffed);
+
+  &:hover {
+    box-shadow: 0px 0px 5px 5px rgba(196, 56, 0, 0);
+  }
+
+  &:after {
+    animation: targeting-ripple-buff 600ms linear infinite;
+    border-radius: var(--minion-border-radius);
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: opacity 600ms ease-in-out;
+    will-change: opacity;
+  }
+
+  &:hover:after {
+    opacity: 1;
+  }
+
+  @keyframes targeting-ripple-buff {
+    0% {
+      box-shadow: 0 4px 10px var(--box-shadow-can-be-buffed-color-ripple),
+        0 0 0 0 var(--box-shadow-can-be-buffed-color-ripple),
+        0 0 0 5px var(--box-shadow-can-be-buffed-color-ripple),
+        0 0 0 10px var(--box-shadow-can-be-buffed-color-ripple);
+    }
+    100% {
+      box-shadow: 0 4px 10px var(--box-shadow-can-be-buffed-color-ripple),
+        0 0 0 5px var(--box-shadow-can-be-buffed-color-ripple),
+        0 0 0 10px var(--box-shadow-can-be-buffed-color-ripple),
+        0 0 0 20px rgba(0, 0, 0, 0);
+    }
+  }
+}
+
+.board__slot--can-be-debuffed {
+  box-shadow: var(--box-shadow-can-be-debuffed);
+
+  &:hover {
+    box-shadow: 0px 0px 5px 5px rgba(196, 56, 0, 0);
+  }
+
+  &:after {
+    animation: targeting-ripple-debuff 600ms linear infinite;
+    border-radius: var(--minion-border-radius);
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: opacity 600ms ease-in-out;
+    will-change: opacity;
+  }
+
+  &:hover:after {
+    opacity: 1;
+  }
+
+  @keyframes targeting-ripple-debuff {
+    0% {
+      box-shadow: 0 4px 10px var(--box-shadow-can-be-debuffed-color-ripple),
+        0 0 0 0 var(--box-shadow-can-be-debuffed-color-ripple),
+        0 0 0 5px var(--box-shadow-can-be-debuffed-color-ripple),
+        0 0 0 10px var(--box-shadow-can-be-debuffed-color-ripple);
+    }
+    100% {
+      box-shadow: 0 4px 10px var(--box-shadow-can-be-debuffed-color-ripple),
+        0 0 0 5px var(--box-shadow-can-be-debuffed-color-ripple),
+        0 0 0 10px var(--box-shadow-can-be-debuffed-color-ripple),
+        0 0 0 20px rgba(0, 0, 0, 0);
+    }
+  }
+}
+
+.board__slot--can-be-selected {
+  box-shadow: var(--box-shadow-can-be-selected);
+}
+
+.minion--is-selected {
+  box-shadow: var(--box-shadow-is-selected);
+  transform: scale(1.15);
+  transition-property: box-shadow, opacity, transform;
+  z-index: -1;
+}

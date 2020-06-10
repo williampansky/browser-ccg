@@ -21,7 +21,8 @@
   // height: 50%;
   // overflow: auto hidden;
   max-width: 100vw;
-  padding: 10px 0;
+  width: 100vw;
+  padding: 2vh 0;
   overflow-x: auto;
   overflow-y: visible;
   // padding-left: calc(var(--card-height) / 30);
@@ -30,22 +31,22 @@
 }
 
 // prettier-ignore
-.board__slot {
-  margin: 0 calc(var(--card-height) / 30);
-  outline: none;
+// .board__slot {
+//   margin: 0 calc(var(--card-height) / 30);
+//   outline: none;
 
-  &:last-child {
-    margin-right: 0;
-    padding-right: calc(var(--card-height) / 30);
-  }
+//   &:last-child {
+//     margin-right: 0;
+//     padding-right: calc(var(--card-height) / 30);
+//   }
 
-  &:first-child {
-    margin-left: calc(var(--card-height) / 30);
-    padding-right: 0;
-  }
+//   &:first-child {
+//     margin-left: calc(var(--card-height) / 30);
+//     padding-right: 0;
+//   }
 
-  &:only-child {
-    padding: 0 calc(var(--card-height) / 30);
-    margin-left: 0;
-  }
-}
+//   &:only-child {
+//     padding: 0 calc(var(--card-height) / 30);
+//     margin-left: 0;
+//   }
+// }
