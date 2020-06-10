@@ -23,6 +23,7 @@ export { default as getHeroAbilityText } from './get-hero-ability-text';
 export { default as getHeroImage } from './get-hero-image';
 export { default as getHeroName } from './get-hero-name';
 export { default as getIcon } from './get-icon';
+export { default as getPercentageChange } from './get-percentage-change';
 
 // named
 export { getLengthOfString, fontSizeBasedOnCharacterLength } from './text';

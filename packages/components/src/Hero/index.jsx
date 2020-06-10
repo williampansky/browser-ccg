@@ -5,17 +5,21 @@ import {
   Avatar,
   PlayerName,
   PlayerStatIcon,
-  ReactBurgerMenu
+  ReactBurgerMenu,
+  PlayerHealthOrb
 } from '@ccg/components';
 import { getHeroImage, getHeroName } from '@ccg/utils';
 
 const Hero = ({
   heroSymbol,
   avatarPlaceholderImageSrc,
-  cardsInDeck = 0,
-  cardsInHand = 0,
+  cardsInDeck,
+  cardsInHand,
   playerId,
-  playerName
+  playerName,
+  playerArmorPoints,
+  playerHealthCurrent,
+  playerHealthTotal
 }) => {
   const [deckMenuOpen, setDeckMenuOpen] = useState(false);
 
@@ -62,6 +66,13 @@ const Hero = ({
           />
         </div>
       </header>
+      <footer className={styles['player__health']}>
+        <PlayerHealthOrb
+          armorPoints={playerArmorPoints}
+          currentHealth={playerHealthCurrent}
+          totalHealth={playerHealthTotal}
+        />
+      </footer>
       <ReactBurgerMenu
         isOpen={deckMenuOpen}
         onStateChange={state => handleStateChange(state)}
@@ -76,7 +87,18 @@ Hero.propTypes = {
   cardsInHand: PropTypes.number,
   heroSymbol: PropTypes.string.isRequired,
   playerId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  playerName: PropTypes.string
+  playerName: PropTypes.string,
+  playerArmorPoints: PropTypes.number,
+  playerHealthCurrent: PropTypes.number,
+  playerHealthTotal: PropTypes.number
+};
+
+Hero.defaultProps = {
+  cardsInDeck: 0,
+  cardsInHand: 0,
+  playerArmorPoints: 0,
+  playerHealthCurrent: 30,
+  playerHealthTotal: 30
 };
 
 export default Hero;

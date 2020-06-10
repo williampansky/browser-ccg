@@ -21,4 +21,15 @@
     padding-left: calc(#{$sizeH} / 10);
     width: 100%;
   }
+
+  .player__health {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+
+    & > div {
+      margin-right: calc(var(--class-skill-button-size) / -4.375);
+    }
+  }
 }
