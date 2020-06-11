@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import {
@@ -6,7 +6,8 @@ import {
   PlayerName,
   PlayerStatIcon,
   ReactBurgerMenu,
-  PlayerHealthOrb
+  PlayerHealthOrb,
+  PlayerDeck
 } from '@ccg/components';
 import { getHeroImage, getHeroName } from '@ccg/utils';
 
@@ -15,13 +16,15 @@ const Hero = ({
   avatarPlaceholderImageSrc,
   cardsInDeck,
   cardsInHand,
+  costGemImageSrc,
+  playerDeck,
   playerId,
   playerName,
   playerArmorPoints,
   playerHealthCurrent,
   playerHealthTotal
 }) => {
-  const [deckMenuOpen, setDeckMenuOpen] = useState(false);
+  const [deckMenuOpen, setDeckMenuOpen] = useState(true);
 
   const handleDeckIconClick = useCallback(
     event => {
@@ -40,44 +43,51 @@ const Hero = ({
   useEffect(() => {}, []);
 
   return (
-    <article className={styles['hero']} data-file="Hero">
-      <Avatar
-        heroImageSrc={getHeroImage(heroSymbol, 'AVATAR')}
-        heroName={getHeroName(heroSymbol)}
-        placeholderImageSrc={avatarPlaceholderImageSrc}
-      />
-      <header className={styles['player__info']}>
-        <PlayerName id={playerId} name={playerName} />
-        <div className={styles['player__stats']}>
-          <PlayerStatIcon
-            iconColor="white"
-            icon="HAND"
-            statColor="white"
-            statLabel="Cards in Hand"
-            statValue={cardsInHand}
-          />
-          <PlayerStatIcon
-            iconColor="white"
-            icon="DECK"
-            onClick={e => handleDeckIconClick(e)}
-            statColor="white"
-            statLabel="Cards in Deck"
-            statValue={cardsInDeck}
-          />
-        </div>
-      </header>
-      <footer className={styles['player__health']}>
-        <PlayerHealthOrb
-          armorPoints={playerArmorPoints}
-          currentHealth={playerHealthCurrent}
-          totalHealth={playerHealthTotal}
+    <Fragment>
+      <article className={styles['hero']} data-file="Hero">
+        <Avatar
+          heroImageSrc={getHeroImage(heroSymbol, 'AVATAR')}
+          heroName={getHeroName(heroSymbol)}
+          placeholderImageSrc={avatarPlaceholderImageSrc}
         />
-      </footer>
+
+        <header className={styles['player__info']}>
+          <PlayerName id={playerId} name={playerName} />
+          <div className={styles['player__stats']}>
+            <PlayerStatIcon
+              iconColor="white"
+              icon="HAND"
+              statColor="white"
+              statLabel="Cards in Hand"
+              statValue={cardsInHand}
+            />
+            <PlayerStatIcon
+              iconColor="white"
+              icon="DECK"
+              onClick={e => handleDeckIconClick(e)}
+              statColor="white"
+              statLabel="Cards in Deck"
+              statValue={cardsInDeck}
+            />
+          </div>
+        </header>
+
+        <footer className={styles['player__health']}>
+          <PlayerHealthOrb
+            armorPoints={playerArmorPoints}
+            currentHealth={playerHealthCurrent}
+            totalHealth={playerHealthTotal}
+          />
+        </footer>
+      </article>
+
       <ReactBurgerMenu
         isOpen={deckMenuOpen}
         onStateChange={state => handleStateChange(state)}
-      />
-    </article>
+      >
+        <PlayerDeck costImageSrc={costGemImageSrc} playerDeck={playerDeck} />
+      </ReactBurgerMenu>
+    </Fragment>
   );
 };
 
@@ -85,7 +95,9 @@ Hero.propTypes = {
   avatarPlaceholderImageSrc: PropTypes.string.isRequired,
   cardsInDeck: PropTypes.number,
   cardsInHand: PropTypes.number,
+  costGemImageSrc: PropTypes.string,
   heroSymbol: PropTypes.string.isRequired,
+  playerDeck: PropTypes.array,
   playerId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   playerName: PropTypes.string,
   playerArmorPoints: PropTypes.number,
@@ -96,6 +108,7 @@ Hero.propTypes = {
 Hero.defaultProps = {
   cardsInDeck: 0,
   cardsInHand: 0,
+  playerDeck: [],
   playerArmorPoints: 0,
   playerHealthCurrent: 30,
   playerHealthTotal: 30

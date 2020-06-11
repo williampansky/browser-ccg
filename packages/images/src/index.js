@@ -17,6 +17,11 @@ const MECHANICS = importAll(
   require.context('./mechanics', true, /\.(png|jpe?g|svg)$/)
 );
 
+// card cost gem
+const COST_GEM_IMAGE = importAll(
+  require.context('./card-assets', false, /\.(png|jpe?g|svg)$/)
+)['BADGE_GEM.png'];
+
 // card flair img placeholder
 const PLACEHOLDER_IMAGE = importAll(
   require.context('./sets', false, /\.(png|jpe?g|svg)$/)
@@ -35,6 +40,7 @@ const ICONS = importAll(require.context('./icons', true, /\.(svg)$/));
 export {
   CARD_ASSETS,
   CARDS,
+  COST_GEM_IMAGE,
   HEROS,
   ICONS,
   MECHANICS,

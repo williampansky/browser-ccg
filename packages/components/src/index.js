@@ -9,3 +9,5 @@ export { default as AppIcon } from './AppIcon';
 export { default as PlayerStatIcon } from './PlayerStatIcon';
 export { default as ReactBurgerMenu } from './ReactBurgerMenu';
 export { default as PlayerHealthOrb } from './PlayerHealthOrb';
+export { default as PlayerDeck } from './PlayerDeck';
+export { default as DeckSlotItem } from './DeckSlotItem';
