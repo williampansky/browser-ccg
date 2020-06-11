@@ -92,15 +92,35 @@ const HeroAbilityFAB = ({
         {heroAbilities
           .map((obj, idx) => {
             idx = idx + 1;
-            const { cost, id, mechanics, name, playType, playContext } = obj;
+            const {
+              cooldown,
+              cost,
+              id,
+              mechanics,
+              name,
+              playType,
+              playContext,
+              ultimate
+            } = obj;
+
             return (
               <Action
                 key={idx}
                 onClick={event => handleAbilityClick(event, id)}
               >
-                <div className={styles['main__button__icon__cost']}>
-                  <div className="text__value">{cost}</div>
-                  <img alt="" role="presentation" src={costImageSrc} />
+                <div className={styles['main__button__cost']}>
+                  <div className={styles['main__button__cost--gem']}>
+                    <div className="text__value">{cost}</div>
+                    <img alt="" role="presentation" src={costImageSrc} />
+                  </div>
+                  <div className={styles['main__button__cost--cooldown']}>
+                    <div>
+                      <div className="text__value">
+                        {ultimate ? 'Ult' : cooldown}
+                      </div>
+                    </div>
+                    <AppIcon fileName="icon-uikit-refresh" />
+                  </div>
                 </div>
                 <div className={styles['main__button__spell__type']}>
                   <AppIcon

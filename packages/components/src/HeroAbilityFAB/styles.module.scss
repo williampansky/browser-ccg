@@ -27,14 +27,51 @@
   &.fab--open { opacity: 0; }
 }
 
-.main__button__icon__cost {
+// .main__button__icon__cost {
+//   font-family: var(--font-family-card);
+//   display: flex;
+//   flex-flow: column nowrap;
+//   align-items: center;
+//   justify-content: flex-start;
+//   position: absolute;
+//   pointer-events: none;
+//   top: -10px;
+//   right: auto;
+//   left: auto;
+//   bottom: auto;
+//   margin: 0;
+//   z-index: 1;
+
+//   & > div {
+//     font-size: 0.925em;
+//     display: flex;
+//     flex-flow: column nowrap;
+//     align-items: center;
+//     justify-content: center;
+//     position: absolute;
+//     width: 100%;
+//     height: 100%;
+//   }
+
+//   img {
+//     height: 32px;
+//   }
+
+//   svg path {
+//     fill: none;
+//   }
+// }
+
+.main__button__cost {
+  $size: 32px;
+
   font-family: var(--font-family-card);
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   justify-content: flex-start;
   position: absolute;
-  pointer-events: none;
+  // pointer-events: none;
   top: -10px;
   right: auto;
   left: auto;
@@ -42,19 +79,56 @@
   margin: 0;
   z-index: 1;
 
-  & > div {
-    font-size: 0.925em;
+  &--gem {
+    height: $size;
+    width: $size;
+    position: relative;
+
+    & > div {
+      font-size: 0.925em;
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    // prettier-ignore
+    & > img { height: 100%; }
+  }
+
+  &--cooldown {
+    height: calc(#{$size} / 1.6);
+    width: calc(#{$size} / 1.6);
+    position: absolute;
+    top: -6px;
+    right: -18px;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-  }
 
-  img {
-    height: 32px;
+    & > div:nth-child(1) {
+      font-size: 0.65em;
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    & > div:nth-child(2) {
+      position: relative;
+      top: -2px;
+    }
+
+    // prettier-ignore
+    svg path { fill: none; }
   }
 }
 

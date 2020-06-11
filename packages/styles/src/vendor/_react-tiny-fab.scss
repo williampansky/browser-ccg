@@ -92,9 +92,11 @@
     position: relative;
     opacity: 0;
     padding: 10px;
-    transition-property: opacity, transform;
+    filter: blur(4px);
+    transition-property: filter, opacity, transform;
     transition-timing-function: var(--animation-transition-cubic);
     transition-duration: 400ms;
+    will-change: filter, opacity, transform;
   }
 
   .rtf--ab__c > span {
@@ -145,6 +147,7 @@
   // prettier-ignore
   &.open .rtf--ab__c {
     opacity: 1;
+    filter: blur(0);
     &:nth-child(1).top { transform: translate(0, $li) scale(1); transition-delay: 500ms; }
     &:nth-child(2).top { transform: translate(0, calc(#{$li} * 2)) scale(1);  transition-delay: 300ms; }
     &:nth-child(3).top { transform: translate(0, $li) scale(1);  transition-delay: 100ms; }
