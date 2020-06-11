@@ -3,11 +3,6 @@
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
-  // transform: translateY(calc(var(--player-fab-size) / -2.8));
-  // transform: translate(
-  //   calc(var(--player-fab-size) / -0.78714286),
-  //   calc(var(--player-fab-size) / -2)
-  // );
 }
 
 .main__button__icon {
@@ -24,59 +19,23 @@
   transition-property: opacity, transform;
 
   &.fab--closed { opacity: 1; }
-  &.fab--open { opacity: 0; }
+  &.fab--open   { opacity: 0; }
 }
-
-// .main__button__icon__cost {
-//   font-family: var(--font-family-card);
-//   display: flex;
-//   flex-flow: column nowrap;
-//   align-items: center;
-//   justify-content: flex-start;
-//   position: absolute;
-//   pointer-events: none;
-//   top: -10px;
-//   right: auto;
-//   left: auto;
-//   bottom: auto;
-//   margin: 0;
-//   z-index: 1;
-
-//   & > div {
-//     font-size: 0.925em;
-//     display: flex;
-//     flex-flow: column nowrap;
-//     align-items: center;
-//     justify-content: center;
-//     position: absolute;
-//     width: 100%;
-//     height: 100%;
-//   }
-
-//   img {
-//     height: 32px;
-//   }
-
-//   svg path {
-//     fill: none;
-//   }
-// }
 
 .main__button__cost {
   $size: 32px;
-
-  font-family: var(--font-family-card);
+  align-items: center;
+  bottom: auto;
   display: flex;
   flex-flow: column nowrap;
-  align-items: center;
+  font-family: var(--font-family-card);
   justify-content: flex-start;
-  position: absolute;
-  // pointer-events: none;
-  top: -10px;
-  right: auto;
   left: auto;
-  bottom: auto;
   margin: 0;
+  pointer-events: none;
+  position: absolute;
+  right: auto;
+  top: -10px;
   z-index: 1;
 
   &--gem {

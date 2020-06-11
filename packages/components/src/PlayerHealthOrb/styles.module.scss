@@ -11,7 +11,7 @@
   justify-content: center;
   /* pointer-events: none; */
   width: $size;
-  z-index: 1;
+  z-index: 0;
   position: relative;
 
   .player__health__orb__value {

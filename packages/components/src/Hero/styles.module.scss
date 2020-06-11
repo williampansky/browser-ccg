@@ -37,18 +37,13 @@
   }
 
   .player__fab {
-    // display: flex;
-    // flex-flow: column nowrap;
-    // align-items: center;
-    // justify-content: flex-start;
-    // width: var(--player-fab-size);
-    // overflow: visible;
     position: absolute;
     top: 0;
     left: 48%;
     right: auto;
     bottom: auto;
-    transform: translateY(calc(var(--player-fab-size) / -1.58));
+    transform: translateY(calc(var(--player-fab-size) / -3.58));
+    z-index: 1;
   }
 
   .player__stats {

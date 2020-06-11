@@ -4,6 +4,7 @@
   position: relative;
   margin-top: 20px;
   outline: none;
+  z-index: 2;
 
   & + .player__stats__icon {
     margin-left: 10px;
