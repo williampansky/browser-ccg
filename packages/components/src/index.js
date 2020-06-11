@@ -11,3 +11,4 @@ export { default as ReactBurgerMenu } from './ReactBurgerMenu';
 export { default as PlayerHealthOrb } from './PlayerHealthOrb';
 export { default as PlayerDeck } from './PlayerDeck';
 export { default as DeckSlotItem } from './DeckSlotItem';
+export { default as HeroAbilityFAB } from './HeroAbilityFAB';

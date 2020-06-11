@@ -9,7 +9,7 @@ const PlayerName = ({ id = '0', name }) => {
   return (
     <h1 className={styles['player__name']}>
       <span
-        className="text__value"
+        className="text__value uk-text-truncate"
         style={{ fontSize: `${fontSizeBasedOnCharacterLength(nameString)}em` }}
       >
         {nameString}

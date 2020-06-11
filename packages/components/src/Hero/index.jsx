@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import {
@@ -7,24 +7,28 @@ import {
   PlayerStatIcon,
   ReactBurgerMenu,
   PlayerHealthOrb,
-  PlayerDeck
+  PlayerDeck,
+  HeroAbilityFAB
 } from '@ccg/components';
 import { getHeroImage, getHeroName } from '@ccg/utils';
 
 const Hero = ({
-  heroSymbol,
+  abilitiesImageBase,
+  abilitiesImageClose,
   avatarPlaceholderImageSrc,
   cardsInDeck,
   cardsInHand,
   costGemImageSrc,
-  playerDeck,
-  playerId,
-  playerName,
+  heroAbilities,
+  heroSymbol,
   playerArmorPoints,
+  playerDeck,
   playerHealthCurrent,
-  playerHealthTotal
+  playerHealthTotal,
+  playerId,
+  playerName
 }) => {
-  const [deckMenuOpen, setDeckMenuOpen] = useState(true);
+  const [deckMenuOpen, setDeckMenuOpen] = useState(false);
 
   const handleDeckIconClick = useCallback(
     event => {
@@ -34,13 +38,11 @@ const Hero = ({
     [deckMenuOpen, setDeckMenuOpen]
   );
 
-  // This keeps your state in sync
-  function handleStateChange(state) {
+  // This keeps the deckMenuOpen state in sync
+  const handleStateChange = state => {
     const { isOpen } = state;
     return setDeckMenuOpen(isOpen);
-  }
-
-  useEffect(() => {}, []);
+  };
 
   return (
     <Fragment>
@@ -52,7 +54,6 @@ const Hero = ({
         />
 
         <header className={styles['player__info']}>
-          <PlayerName id={playerId} name={playerName} />
           <div className={styles['player__stats']}>
             <PlayerStatIcon
               iconColor="white"
@@ -70,7 +71,18 @@ const Hero = ({
               statValue={cardsInDeck}
             />
           </div>
+          <PlayerName id={playerId} name={playerName} />
         </header>
+
+        <div className={styles['player__fab']}>
+          <HeroAbilityFAB
+            abilitiesImageBase={abilitiesImageBase}
+            abilitiesImageClose={abilitiesImageClose}
+            costImageSrc={costGemImageSrc}
+            heroAbilities={heroAbilities}
+            heroSymbol={heroSymbol}
+          />
+        </div>
 
         <footer className={styles['player__health']}>
           <PlayerHealthOrb
@@ -92,22 +104,26 @@ const Hero = ({
 };
 
 Hero.propTypes = {
+  abilitiesImageBase: PropTypes.string,
+  abilitiesImageClose: PropTypes.string,
   avatarPlaceholderImageSrc: PropTypes.string.isRequired,
   cardsInDeck: PropTypes.number,
   cardsInHand: PropTypes.number,
   costGemImageSrc: PropTypes.string,
+  heroAbilities: PropTypes.array,
   heroSymbol: PropTypes.string.isRequired,
-  playerDeck: PropTypes.array,
-  playerId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  playerName: PropTypes.string,
   playerArmorPoints: PropTypes.number,
+  playerDeck: PropTypes.array,
   playerHealthCurrent: PropTypes.number,
-  playerHealthTotal: PropTypes.number
+  playerHealthTotal: PropTypes.number,
+  playerId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  playerName: PropTypes.string
 };
 
 Hero.defaultProps = {
   cardsInDeck: 0,
   cardsInHand: 0,
+  heroAbilities: [],
   playerDeck: [],
   playerArmorPoints: 0,
   playerHealthCurrent: 30,

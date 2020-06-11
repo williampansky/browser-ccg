@@ -17,6 +17,14 @@ const MECHANICS = importAll(
   require.context('./mechanics', true, /\.(png|jpe?g|svg)$/)
 );
 
+// abilities
+const ABILITIES_ICON = importAll(
+  require.context('./heros', false, /\.(png|jpe?g|svg)$/)
+)['ABILITIES_ICON.jpg'];
+const ABILITIES_ICON_CLOSE = importAll(
+  require.context('./heros', false, /\.(png|jpe?g|svg)$/)
+)['ABILITIES_ICON_CLOSE.jpg'];
+
 // card cost gem
 const COST_GEM_IMAGE = importAll(
   require.context('./card-assets', false, /\.(png|jpe?g|svg)$/)
@@ -38,6 +46,8 @@ const HEROS = importAll(require.context('./heros', true, /\.(jpg)$/));
 const ICONS = importAll(require.context('./icons', true, /\.(svg)$/));
 
 export {
+  ABILITIES_ICON,
+  ABILITIES_ICON_CLOSE,
   CARD_ASSETS,
   CARDS,
   COST_GEM_IMAGE,

@@ -3,23 +3,27 @@
   $sizeW: 150px;
   $ratio: 1.333333333;
 
+  align-items: stretch;
   background: #111;
-  // border-radius: calc(var(--card-border-radius) / 2);
   box-sizing: content-box;
-  // overflow: hidden;
-  height: $sizeH;
   display: flex;
   flex-flow: row nowrap;
-  align-items: stretch;
+  height: $sizeH;
   justify-content: flex-start;
   width: 100vw;
+  position: relative;
 
   .player__info {
-    padding-top: calc(#{$sizeH} / 15);
-    padding-right: calc(#{$sizeH} / 10);
     padding-bottom: calc(#{$sizeH} / 15);
     padding-left: calc(#{$sizeH} / 10);
+    padding-right: calc(#{$sizeH} / 10);
+    padding-top: calc(#{$sizeH} / 15);
     width: 100%;
+    flex: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+    justify-content: space-evenly;
   }
 
   .player__health {
@@ -28,8 +32,26 @@
     align-items: center;
     justify-content: center;
 
-    & > div {
-      margin-right: calc(var(--class-skill-button-size) / -4.375);
-    }
+    // prettier-ignore
+    & > div { margin-right: calc(var(--class-skill-button-size) / -4.375); }
+  }
+
+  .player__fab {
+    // display: flex;
+    // flex-flow: column nowrap;
+    // align-items: center;
+    // justify-content: flex-start;
+    // width: var(--player-fab-size);
+    // overflow: visible;
+    position: absolute;
+    top: 0;
+    left: 48%;
+    right: auto;
+    bottom: auto;
+    transform: translateY(calc(var(--player-fab-size) / -1.58));
+  }
+
+  .player__stats {
+    box-sizing: border-box;
   }
 }

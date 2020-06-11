@@ -3,9 +3,12 @@
   font-size: 1em;
   line-height: 1.35;
   margin: 0;
+  max-width: 166px;
   white-space: nowrap;
+  width: 100%;
 
   & > span {
     line-height: inherit;
+    width: 100%;
   }
 }

@@ -1,7 +1,7 @@
 import { HEROS } from '@ccg/images';
 import { removeSymbols } from '@ccg/utils';
 
-function getImageObject(heroName, imageString, images = {}) {
+function getImageObject(heroName, imageString, images = HEROS) {
   const name = removeSymbols(heroName);
   const srcString = `${name}/${imageString}.jpg`;
   const imgMatch = Object.entries(images)
@@ -17,9 +17,9 @@ function getImageObject(heroName, imageString, images = {}) {
   return imgMatch;
 }
 
-export default function getHeroImage(heroName, imageString, images = HEROS) {
+export default function getHeroImage(heroName, imageString) {
   try {
-    const imgObj = getImageObject(heroName, imageString, images);
+    const imgObj = getImageObject(heroName, imageString);
     const { value } = imgObj;
     return value;
   } catch (error) {

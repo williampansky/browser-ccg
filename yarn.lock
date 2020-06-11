@@ -13853,6 +13853,11 @@ react-test-renderer@^16.0.0-0:
     react-is "^16.8.6"
     scheduler "^0.19.1"
 
+react-tiny-fab@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/react-tiny-fab/-/react-tiny-fab-3.5.0.tgz#214887a715a68639e574c6eb1029dcac13c6fbec"
+  integrity sha512-KjWzs7fsTTvrmCZrtKVV8EKdfoC7BgWCePujtWfczpXiUCECtBYkhP+EvBYLRgU6BAHdtduBfybfN4pTCpw2Zw==
+
 react-tooltip@^4.2.6:
   version "4.2.6"
   resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-4.2.6.tgz#a3d5f0d1b0c597c0852ba09c5e2af0019b7cfc70"

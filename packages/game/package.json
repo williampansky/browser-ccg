@@ -42,6 +42,7 @@
     "react-scroll-to-bottom": "^2.0.0",
     "react-spring": "^8.0.27",
     "react-svg": "^11.0.24",
+    "react-tiny-fab": "^3.5.0",
     "react-tooltip": "^4.2.6",
     "react-transition-group": "^4.4.1",
     "react-use-gesture": "^7.0.15",
