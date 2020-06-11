@@ -34,6 +34,7 @@
   align-items: center;
   justify-content: flex-start;
   position: absolute;
+  pointer-events: none;
   top: -10px;
   right: auto;
   left: auto;
@@ -55,4 +56,24 @@
   img {
     height: 32px;
   }
+}
+
+.main__button__spell__type {
+  $size: 24px;
+  background: #111;
+  border-radius: 50%;
+  position: absolute;
+  top: auto;
+  right: auto;
+  left: auto;
+  bottom: calc(#{$size} / -2);
+  pointer-events: none;
+  margin: 0;
+  z-index: 1;
+  height: $size;
+  width: $size;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
 }

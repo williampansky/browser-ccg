@@ -11,7 +11,7 @@ import {
 } from '@ccg/images';
 
 export default function HeroDev() {
-  const HERO = 'EXILE';
+  const HERO = 'ZEUS';
   const HERO_SYMBOL = `%HERO_${HERO}%`;
   const PLAYER_DECK = [
     {

@@ -4,7 +4,9 @@ import { Img } from 'react-image';
 import { Fab, Action } from 'react-tiny-fab';
 import 'react-tiny-fab/dist/styles.css';
 import styles from './styles.module.scss';
-import { getHeroImage, removeSymbols } from '@ccg/utils/src';
+import { getHeroImage, removeSymbols, getIcon } from '@ccg/utils';
+import { MECHANICS, PLAY_CONTEXT, PLAY_TYPE } from '@ccg/enums';
+import { AppIcon } from '@ccg/components';
 
 const HeroAbilityFAB = ({
   abilitiesImageBase,
@@ -46,10 +48,19 @@ const HeroAbilityFAB = ({
     [onAbilityClick]
   );
 
+  const handleAbilityIcon = useCallback(
+    (cardMechanics, playType, playContext) => {
+      if (playType === PLAY_TYPE['TARGETED']) return 'TARGET';
+      else if (playContext === PLAY_CONTEXT['SUMMON']) return 'SUMMON';
+      else if (cardMechanics.includes(MECHANICS['AOE'])) return 'AOE';
+      else if (cardMechanics.includes(MECHANICS['DAMAGE'])) return 'DAMAGE';
+    },
+    []
+  );
+
   return (
     <div className={styles['hero__ability__fab']}>
       <Fab
-        // actionButtonStyles={mainButtonStyles}
         alwaysShowTitle={false}
         event="click"
         icon={
@@ -81,7 +92,7 @@ const HeroAbilityFAB = ({
         {heroAbilities
           .map((obj, idx) => {
             idx = idx + 1;
-            const { cost, id, name } = obj;
+            const { cost, id, mechanics, name, playType, playContext } = obj;
             return (
               <Action
                 key={idx}
@@ -90,6 +101,16 @@ const HeroAbilityFAB = ({
                 <div className={styles['main__button__icon__cost']}>
                   <div className="text__value">{cost}</div>
                   <img alt="" role="presentation" src={costImageSrc} />
+                </div>
+                <div className={styles['main__button__spell__type']}>
+                  <AppIcon
+                    color="white"
+                    fileName={handleAbilityIcon(
+                      mechanics,
+                      playType,
+                      playContext
+                    )}
+                  />
                 </div>
                 <img
                   alt={name}
