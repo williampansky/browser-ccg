@@ -35,15 +35,17 @@ const HeroAbilityButton = ({
 
   return (
     <Fragment>
-      <div
-        className={[
-          styles['overlay'],
-          styles['locked__overlay'],
-          cooldownInEffect ? styles['overlay--in-effect'] : ''
-        ].join(' ')}
-      >
-        <AppIcon color="white" fileName="icon-uikit-lock" size="32px" />
-      </div>
+      {abilityLocked ? (
+        <div
+          className={[
+            styles['overlay'],
+            styles['locked__overlay'],
+            styles['overlay--in-effect']
+          ].join(' ')}
+        >
+          <AppIcon color="white" fileName="icon-uikit-lock" size="32px" />
+        </div>
+      ) : null}
 
       {!abilityLocked ? (
         <div

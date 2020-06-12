@@ -8,7 +8,8 @@ import {
   ReactBurgerMenu,
   PlayerHealthOrb,
   PlayerDeck,
-  HeroAbilityFAB
+  HeroAbilityFAB,
+  PlayerStatEnergy
 } from '@ccg/components';
 import { getHeroImage, getHeroName } from '@ccg/utils';
 
@@ -19,6 +20,8 @@ const Hero = ({
   cardsInDeck,
   cardsInHand,
   costGemImageSrc,
+  energyCurrent,
+  energyTotal,
   heroAbilities,
   heroSymbol,
   playerArmorPoints,
@@ -70,6 +73,14 @@ const Hero = ({
               statLabel="Cards in Deck"
               statValue={cardsInDeck}
             />
+            <PlayerStatEnergy
+              iconColor="white"
+              onClick={e => handleDeckIconClick(e)}
+              statColor="white"
+              statLabel="Cards in Deck"
+              statValue={energyCurrent}
+              totalEnergy={energyTotal}
+            />
           </div>
           <PlayerName id={playerId} name={playerName} />
         </header>
@@ -110,6 +121,8 @@ Hero.propTypes = {
   cardsInDeck: PropTypes.number,
   cardsInHand: PropTypes.number,
   costGemImageSrc: PropTypes.string,
+  energyCurrent: PropTypes.number,
+  energyTotal: PropTypes.number,
   heroAbilities: PropTypes.array,
   heroSymbol: PropTypes.string.isRequired,
   playerArmorPoints: PropTypes.number,
@@ -123,6 +136,8 @@ Hero.propTypes = {
 Hero.defaultProps = {
   cardsInDeck: 0,
   cardsInHand: 0,
+  energyCurrent: 0,
+  energyTotal: 0,
   heroAbilities: [],
   playerDeck: [],
   playerArmorPoints: 0,

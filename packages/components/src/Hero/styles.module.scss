@@ -39,10 +39,10 @@
   .player__fab {
     position: absolute;
     top: 0;
-    left: 48%;
+    left: 45%;
     right: auto;
     bottom: auto;
-    transform: translateY(calc(var(--player-fab-size) / -3.58));
+    transform: translateY(calc(var(--player-fab-size) / -1.458));
     z-index: 1;
   }
 

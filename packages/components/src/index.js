@@ -6,6 +6,7 @@ export { default as Avatar } from './Avatar';
 export { default as Hero } from './Hero';
 export { default as PlayerName } from './PlayerName';
 export { default as AppIcon } from './AppIcon';
+export { default as PlayerStatEnergy } from './PlayerStatEnergy';
 export { default as PlayerStatIcon } from './PlayerStatIcon';
 export { default as ReactBurgerMenu } from './ReactBurgerMenu';
 export { default as PlayerHealthOrb } from './PlayerHealthOrb';
