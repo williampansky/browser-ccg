@@ -7,7 +7,7 @@ import { Card } from '@ccg/components';
 const Hand = ({ cardsInHand, imagesDataCards, imagesDataSets }) => {
   return (
     <div className={styles['hand']} data-file="Hand">
-      {cardsInHand.map((object, i) => {
+      {cardsInHand.map(object => {
         const {
           active,
           artist,
@@ -42,8 +42,9 @@ const Hand = ({ cardsInHand, imagesDataCards, imagesDataSets }) => {
           type,
           uuid
         } = object;
+
         return (
-          <div className="card__wrapper" key={uuid}>
+          <div className={styles['card__wrapper']} key={uuid}>
             <Card
               active={active}
               artist={artist}
@@ -89,8 +90,8 @@ const Hand = ({ cardsInHand, imagesDataCards, imagesDataSets }) => {
 
 Hand.propTypes = {
   cardsInHand: PropTypes.array,
-  imagesDataCards: PropTypes.object,
-  imagesDataSets: PropTypes.object
+  imagesDataCards: PropTypes.object.isRequired,
+  imagesDataSets: PropTypes.object.isRequired
 };
 
 Hand.defaultProps = {
