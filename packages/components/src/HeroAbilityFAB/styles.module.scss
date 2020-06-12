@@ -5,109 +5,16 @@
   justify-content: center;
 }
 
-.main__button__icon {
-  object-fit: cover;
-  width: 100%;
+// prettier-ignore
+.main__button__image {
+  border-radius: 50%;
   height: 100%;
   image-rendering: pixelated;
-  position: relative;
-}
-
-// prettier-ignore
-.main__button__icon {
-  border-radius: 50%;
+  object-fit: cover;
   position: absolute;
   transition-property: opacity, transform;
+  width: 100%;
 
   &.fab--closed { opacity: 1; }
   &.fab--open   { opacity: 0; }
-}
-
-.main__button__cost {
-  $size: 32px;
-  align-items: center;
-  bottom: auto;
-  display: flex;
-  flex-flow: column nowrap;
-  font-family: var(--font-family-card);
-  justify-content: flex-start;
-  left: auto;
-  margin: 0;
-  pointer-events: none;
-  position: absolute;
-  right: auto;
-  top: -10px;
-  z-index: 1;
-
-  &--gem {
-    height: $size;
-    width: $size;
-    position: relative;
-
-    & > div {
-      font-size: 0.925em;
-      display: flex;
-      flex-flow: column nowrap;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-    }
-
-    // prettier-ignore
-    & > img { height: 100%; }
-  }
-
-  &--cooldown {
-    height: calc(#{$size} / 1.6);
-    width: calc(#{$size} / 1.6);
-    position: absolute;
-    top: -6px;
-    right: -18px;
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    justify-content: center;
-
-    & > div:nth-child(1) {
-      font-size: 0.65em;
-      display: flex;
-      flex-flow: column nowrap;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
-
-    & > div:nth-child(2) {
-      position: relative;
-      top: -2px;
-    }
-
-    // prettier-ignore
-    svg path { fill: none; }
-  }
-}
-
-.main__button__spell__type {
-  $size: 24px;
-  background: #111;
-  border-radius: 50%;
-  position: absolute;
-  top: auto;
-  right: auto;
-  left: auto;
-  bottom: calc(#{$size} / -2);
-  pointer-events: none;
-  margin: 0;
-  z-index: 1;
-  height: $size;
-  width: $size;
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  justify-content: center;
 }

@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { Fab, Action } from 'react-tiny-fab';
 import 'react-tiny-fab/dist/styles.css';
 import styles from './styles.module.scss';
-import { MECHANICS, PLAY_CONTEXT, PLAY_TYPE } from '@ccg/enums';
-import { getHeroImage, removeSymbols } from '@ccg/utils';
-import { AppIcon } from '@ccg/components';
+import { HeroAbilityButton } from '@ccg/components';
 
 const HeroAbilityFAB = ({
   abilitiesImageBase,
@@ -47,16 +45,6 @@ const HeroAbilityFAB = ({
     [onAbilityClick]
   );
 
-  const handleAbilityIcon = useCallback(
-    (cardMechanics, playType, playContext) => {
-      if (playType === PLAY_TYPE['TARGETED']) return 'TARGET';
-      else if (playContext === PLAY_CONTEXT['SUMMON']) return 'SUMMON';
-      else if (cardMechanics.includes(MECHANICS['AOE'])) return 'AOE';
-      else if (cardMechanics.includes(MECHANICS['DAMAGE'])) return 'DAMAGE';
-    },
-    []
-  );
-
   return (
     <div className={styles['hero__ability__fab']}>
       <Fab
@@ -67,7 +55,7 @@ const HeroAbilityFAB = ({
             <img
               alt="Hero Abilities"
               className={[
-                styles['main__button__icon'],
+                styles['main__button__image'],
                 styles['fab--closed']
               ].join(' ')}
               role="presentation"
@@ -76,7 +64,7 @@ const HeroAbilityFAB = ({
             <img
               alt="Hero Abilities"
               className={[
-                styles['main__button__icon'],
+                styles['main__button__image'],
                 styles['fab--open']
               ].join(' ')}
               role="presentation"
@@ -97,8 +85,8 @@ const HeroAbilityFAB = ({
               id,
               mechanics,
               name,
-              playType,
               playContext,
+              playType,
               ultimate
             } = obj;
 
@@ -107,38 +95,17 @@ const HeroAbilityFAB = ({
                 key={idx}
                 onClick={event => handleAbilityClick(event, id)}
               >
-                <div className={styles['main__button__cost']}>
-                  <div className={styles['main__button__cost--gem']}>
-                    <div className="text__value">{cost}</div>
-                    <img alt="" role="presentation" src={costImageSrc} />
-                  </div>
-                  <div className={styles['main__button__cost--cooldown']}>
-                    <div>
-                      <div className="text__value">
-                        {ultimate ? 'Ult' : cooldown}
-                      </div>
-                    </div>
-                    <AppIcon fileName="icon-uikit-refresh" />
-                  </div>
-                </div>
-                <div className={styles['main__button__spell__type']}>
-                  <AppIcon
-                    color="white"
-                    fileName={handleAbilityIcon(
-                      mechanics,
-                      playType,
-                      playContext
-                    )}
-                  />
-                </div>
-                <img
-                  alt={name}
-                  className={styles['main__button__icon']}
-                  role="presentation"
-                  src={getHeroImage(
-                    heroSymbol,
-                    `${removeSymbols(heroSymbol)}_00${idx}`
-                  )}
+                <HeroAbilityButton
+                  cooldown={cooldown}
+                  cost={cost}
+                  costImageSrc={costImageSrc}
+                  heroSymbol={heroSymbol}
+                  index={idx}
+                  mechanics={mechanics}
+                  name={name}
+                  playContext={playContext}
+                  playType={playType}
+                  ultimate={ultimate}
                 />
               </Action>
             );
