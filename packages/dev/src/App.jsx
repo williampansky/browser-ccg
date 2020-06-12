@@ -1,5 +1,5 @@
 import React from 'react';
-import Component from './components/Hero.dev';
+import Component from './components/Hand.dev';
 
 const App = () => (
   <React.Fragment>
