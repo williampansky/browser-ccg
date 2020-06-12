@@ -42,7 +42,7 @@ const Hero = ({
   );
 
   // This keeps the deckMenuOpen state in sync
-  const handleStateChange = state => {
+  const handleDeckMenuStateChange = state => {
     const { isOpen } = state;
     return setDeckMenuOpen(isOpen);
   };
@@ -105,7 +105,8 @@ const Hero = ({
 
       <ReactBurgerMenu
         isOpen={deckMenuOpen}
-        onStateChange={state => handleStateChange(state)}
+        onStateChange={state => handleDeckMenuStateChange(state)}
+        side="right"
       >
         <PlayerDeck costImageSrc={costGemImageSrc} playerDeck={playerDeck} />
       </ReactBurgerMenu>

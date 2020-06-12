@@ -7,8 +7,9 @@ import styles from './styles.module.scss';
 
 /**
  * @requires react-burger-menu
+ * @see https://github.com/negomi/react-burger-menu
  */
-const ReactBurgerMenu = ({ children, isOpen = false, onStateChange }) => {
+const ReactBurgerMenu = ({ children, isOpen, onStateChange, side }) => {
   return (
     <Fragment>
       <Menu
@@ -18,7 +19,7 @@ const ReactBurgerMenu = ({ children, isOpen = false, onStateChange }) => {
         disableCloseOnEsc
         isOpen={isOpen}
         onStateChange={onStateChange}
-        right
+        right={side === 'right' ? true : false}
       >
         {children}
       </Menu>
@@ -28,12 +29,15 @@ const ReactBurgerMenu = ({ children, isOpen = false, onStateChange }) => {
 
 ReactBurgerMenu.propTypes = {
   children: PropTypes.node.isRequired,
-  isOpen: PropTypes.bool,
-  onStateChange: PropTypes.func.isRequired
+  isOpen: PropTypes.bool.isRequired,
+  onStateChange: PropTypes.func.isRequired,
+  side: PropTypes.string
 };
 
 ReactBurgerMenu.defaultProps = {
-  onStateChange: () => {}
+  isOpen: false,
+  onStateChange: () => {},
+  side: 'left'
 };
 
 export default ReactBurgerMenu;
