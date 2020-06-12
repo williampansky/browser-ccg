@@ -155,6 +155,8 @@ const Card = ({
       <CardBaseImage
         imageAlt={replaceConstant(rarity)}
         imageSrc={imageBaseSrc}
+        placeholderBaseSrc={PLACEHOLDER_BASE_IMAGE}
+        useReactImage={true}
       />
     </div>
   );
@@ -186,7 +188,7 @@ Card.propTypes = {
   numberRNG: PropTypes.number,
   numberSecondary: PropTypes.number,
   onClick: PropTypes.func,
-  playContext: PropTypes.string.isRequired,
+  playContext: PropTypes.string,
   playRequirements: PropTypes.array,
   playType: PropTypes.string.isRequired,
   race: PropTypes.string,
