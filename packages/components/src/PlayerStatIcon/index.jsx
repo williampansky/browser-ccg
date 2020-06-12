@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { AppIcon } from '@ccg/components';
-// import { getIcon } from '@ccg/utils';
 import styles from './styles.module.scss';
+import { AppIcon } from '@ccg/components';
 
 /**
  * @requires AppIcon
@@ -10,10 +9,10 @@ import styles from './styles.module.scss';
 const PlayerStatIcon = ({
   iconColor,
   icon,
-  iconSize = '20px',
-  onClick = () => {},
-  statColor = 'white',
-  statFontSize = '1em',
+  iconSize,
+  onClick,
+  statColor,
+  statFontSize,
   statLabel,
   statValue
 }) => {
@@ -58,6 +57,13 @@ PlayerStatIcon.propTypes = {
   statLabel: PropTypes.string.isRequired,
   statValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
     .isRequired
+};
+
+PlayerStatIcon.defaultProps = {
+  iconSize: '20px',
+  onClick: () => {},
+  statColor: 'white',
+  statFontSize: '1em'
 };
 
 export default PlayerStatIcon;
