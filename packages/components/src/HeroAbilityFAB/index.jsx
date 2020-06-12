@@ -1,11 +1,10 @@
 import React, { useCallback, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Img } from 'react-image';
 import { Fab, Action } from 'react-tiny-fab';
 import 'react-tiny-fab/dist/styles.css';
 import styles from './styles.module.scss';
-import { getHeroImage, removeSymbols, getIcon } from '@ccg/utils';
 import { MECHANICS, PLAY_CONTEXT, PLAY_TYPE } from '@ccg/enums';
+import { getHeroImage, removeSymbols } from '@ccg/utils';
 import { AppIcon } from '@ccg/components';
 
 const HeroAbilityFAB = ({

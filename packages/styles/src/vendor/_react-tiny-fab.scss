@@ -21,13 +21,51 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    transition: ease-in-out transform 200ms;
+
+    &:before {
+      border-top: 1px solid rgba(255, 255, 255, 0.925);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.725);
+      border-radius: 50%;
+      content: '';
+      width: 100%;
+      height: 100%;
+      filter: blur(0.25px);
+      overflow: hidden;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    &:after {
+      border-top: 4px solid rgba(255, 255, 255, 0.25);
+      border-bottom: 4px solid rgba(0, 0, 0, 0.425);
+      border-radius: 50%;
+      content: '';
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      filter: blur(4px);
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+    }
   }
 
   // prettier-ignore
   &.open .rtf--mb {
+    transform: rotate(-360deg);
     & > img:first-child { opacity: 0; }
     & > img:last-child { opacity: 1; }
-    & > * { transform: rotate(-315deg); }
+    & > * { transform: rotate(0); }
   }
 
   // prettier-ignore
