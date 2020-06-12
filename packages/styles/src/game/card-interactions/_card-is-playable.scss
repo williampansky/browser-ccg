@@ -1,0 +1,22 @@
+.card__interaction--is-playable {
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 200;
+}
+
+.card__effect--is-playable {
+  $shadowColor: var(--box-shadow-can-be-selected-color);
+  border-radius: calc(var(--card-height) / 28.571428571);
+  box-shadow: 0 0 10px $shadowColor, 0 0 20px $shadowColor;
+  height: 100%;
+  pointer-events: none;
+  transition: opacity 400ms cubic-bezier(0.19, 1, 0.22, 1);
+  visibility: hidden;
+  width: 100%;
+  @include position-absolute(0, 0, 0, 0, 0);
+}
+
+.card__interaction--is-playable .card__effect--is-playable {
+  opacity: 1;
+  visibility: visible;
+}

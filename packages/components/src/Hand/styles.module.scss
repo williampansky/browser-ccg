@@ -16,6 +16,7 @@
   min-width: 100vw;
   overflow-x: auto;
   overflow-y: hidden;
+  padding-bottom: calc(var(--card-height) / 10);
   padding-top: calc(var(--card-height) / 10);
   width: 100vw;
 }
@@ -26,6 +27,6 @@
   z-index: 1;
   
   &:first-child { padding-left: calc(var(--card-height) / 10); }
-  & + .card__wrapper { margin-left: calc(var(--card-height) / -2.5); }
+  & + .card__wrapper { margin-left: calc(var(--card-height) / -3.5); }
   &:last-child { padding-right: calc(var(--card-height) / 10); }
 }
