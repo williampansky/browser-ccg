@@ -16,3 +16,4 @@ export { default as HeroAbilityFAB } from './HeroAbilityFAB';
 export { default as HeroAbilityButton } from './HeroAbilityButton';
 export { default as Hand } from './Hand';
 export { default as CardInteractionLayer } from './CardInteractionLayer';
+export { default as Player } from './Player';

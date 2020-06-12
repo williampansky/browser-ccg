@@ -7,6 +7,7 @@ const CardInteractionLayer = ({
   card,
   cardImageBaseSrc,
   cardImageFlairSrc,
+  handleInteractionClick,
   index,
   isPlayable,
   isSelected
@@ -50,10 +51,15 @@ const CardInteractionLayer = ({
     <div
       className={[
         styles['card__interaction__layer'],
-        isPlayable ? 'card__interaction--is-playable' : ''
+        isPlayable ? 'card__interaction--is-playable' : '',
+        isSelected ? 'card__interaction--is-selected' : ''
       ].join(' ')}
       data-file="CardInteractionLayer"
       data-index={index}
+      onClick={e => handleInteractionClick(e, card)}
+      onKeyPress={e => handleInteractionClick(e, card)}
+      role={isPlayable ? 'button' : 'presentation'}
+      tabIndex={isPlayable ? 'button' : 'presentation'}
     >
       <Card
         active={active}
@@ -93,6 +99,7 @@ const CardInteractionLayer = ({
       />
 
       <div className="card__effect--is-playable" />
+      <div className="card__effect--is-selected" />
     </div>
   );
 };
@@ -101,11 +108,14 @@ CardInteractionLayer.propTypes = {
   card: PropTypes.object.isRequired,
   cardImageBaseSrc: PropTypes.string.isRequired,
   cardImageFlairSrc: PropTypes.string.isRequired,
+  handleInteractionClick: PropTypes.func,
   index: PropTypes.number.isRequired,
   isPlayable: PropTypes.bool.isRequired,
   isSelected: PropTypes.bool.isRequired
 };
 
-CardInteractionLayer.defaultProps = {};
+CardInteractionLayer.defaultProps = {
+  handleInteractionClick: () => {}
+};
 
 export default CardInteractionLayer;

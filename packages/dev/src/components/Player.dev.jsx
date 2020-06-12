@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { Hand, Hero } from '@ccg/components';
+import { Player } from '@ccg/components';
 import { ABILITIES, CARDS_DATABASE } from '@ccg/data';
 import { CARDS, SETS } from '@ccg/images';
 import { getCardByID } from '@ccg/utils';
@@ -87,23 +87,21 @@ export default function PlayerDev() {
 
   return (
     <div id="app" style={{ justifyContent: 'flex-end' }}>
-      <Hero
+      <Player
         abilitiesImageBase={ABILITIES_ICON}
         abilitiesImageClose={ABILITIES_ICON_CLOSE}
         avatarPlaceholderImageSrc={PLACEHOLDER_IMAGE}
-        cardsInDeck={19}
-        cardsInHand={4}
+        cardsInHandArray={CARDS_ARRAY}
+        cardsInDeckCount={19}
+        cardsInHandCount={4}
         costGemImageSrc={COST_GEM_IMAGE}
         heroAbilities={HERO_ABILITIES}
         heroSymbol={HERO_SYMBOL}
-        playerDeck={PLAYER_DECK}
-        playerId={0}
-        playerName="pantsme"
-      />
-      <Hand
-        cardsInHand={CARDS_ARRAY}
         imagesDataCards={CARDS}
         imagesDataSets={SETS}
+        playerDeck={PLAYER_DECK}
+        playerId={'0'}
+        playerName="pantsme"
       />
     </div>
   );
