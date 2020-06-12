@@ -5,13 +5,14 @@
 
   align-items: stretch;
   background: #111;
+  border-top: 1px solid rgba(255, 255, 255, 0.465);
   box-sizing: content-box;
   display: flex;
   flex-flow: row nowrap;
   height: $sizeH;
   justify-content: flex-start;
-  width: 100vw;
   position: relative;
+  width: 100vw;
   z-index: 1;
 
   .player__info {

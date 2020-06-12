@@ -35,7 +35,7 @@ export default function PlayerDev() {
     CARD_10
   ];
 
-  const HERO = 'ZEUS';
+  const HERO = 'EXILE';
   const HERO_SYMBOL = `%HERO_${HERO}%`;
   const PLAYER_DECK = [
     {

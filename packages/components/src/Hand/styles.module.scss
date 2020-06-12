@@ -6,7 +6,6 @@
 .hand {
   align-items: center;
   background: var(--board-yourPlayerArea-background-color);
-  border-top: 1px solid rgba(0, 0, 0, 0.65);
   bottom: 0;
   display: flex;
   flex-flow: column nowrap;
@@ -19,23 +18,36 @@
   position: fixed;
   right: 0;
   top: auto;
-  transform: translateY(25%);
+  transform: translateY(35%);
   transition: transform 600ms var(--animation-transition-cubic);
   width: 100vw;
   z-index: 0;
 
-  &:after {
-    background: rgba(0, 0, 0, 0.4765);
+  &:before {
+    border-top: 1px solid rgba(255, 255, 255, 0.465);
     content: '';
     height: 100%;
     left: 0;
     pointer-events: none;
     position: absolute;
     top: 0;
+    transition: border-color 100ms linear;
+    width: 100%;
+    z-index: 1;
+  }
+
+  &:after {
+    background: rgba(0, 0, 0, 0.4765);
+    content: '';
+    height: 100%;
+    left: 0;
+    opacity: 1;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
     transition: opacity 300ms linear;
     width: 100%;
     z-index: 1;
-    opacity: 1;
   }
 }
 
@@ -99,9 +111,9 @@
   &.hand--is-expanded {
     opacity: 1;
     visibility: visible;
-    transform: translateX(0);
+    transform: translateY(1px);
     pointer-events: auto;
-    z-index: 0;
+    z-index: 1;
   }
 }
 
@@ -118,13 +130,12 @@
 .hand--is-expanded {
   max-height: 100%;
 
+  // prettier-ignore
   &.hand {
     overflow-y: visible;
     transform: translateY(-100px);
-  }
-
-  &.hand:after {
-    opacity: 0;
+    &:before { border-color: rgba(0, 0, 0, 0.65); }
+    &:after  { opacity: 0; }
   }
 
   & > .card__wrapper > [data-file='CardInteractionLayer'] {
