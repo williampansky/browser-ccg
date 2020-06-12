@@ -75,7 +75,6 @@ const Hero = ({
             />
             <PlayerStatEnergy
               iconColor="white"
-              onClick={e => handleDeckIconClick(e)}
               statColor="white"
               statLabel="Cards in Deck"
               statValue={energyCurrent}
