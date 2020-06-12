@@ -13,12 +13,7 @@ import styles from './styles.module.scss';
  * @requires react-svg
  * @see https://github.com/tanem/react-svg
  */
-const AppIcon = ({
-  color = 'white',
-  fileName,
-  height = '20px',
-  width = '20px'
-}) => {
+const AppIcon = ({ color, fileName, height, size, width }) => {
   return (
     <ReactSVG
       className={styles['icon']}
@@ -26,8 +21,8 @@ const AppIcon = ({
       src={getIcon(fileName)}
       style={{
         color: color,
-        height: height,
-        width: width
+        height: height || size,
+        width: width || size
       }}
     />
   );
@@ -37,7 +32,13 @@ AppIcon.propTypes = {
   color: PropTypes.string,
   fileName: PropTypes.string.isRequired,
   height: PropTypes.string,
+  size: PropTypes.string,
   width: PropTypes.string
+};
+
+AppIcon.defaultProps = {
+  color: 'white',
+  size: '20px'
 };
 
 export default AppIcon;
