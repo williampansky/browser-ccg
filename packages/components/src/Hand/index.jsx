@@ -25,24 +25,35 @@ const Hand = ({ cardsInHand, imagesDataCards, imagesDataSets }) => {
       data-file="Hand"
       onClick={e => !trayIsExpanded && handleHandTrayClick(e, true)}
       onKeyPress={e => !trayIsExpanded && handleHandTrayClick(e, true)}
-      role="button"
-      tabIndex={0}
+      role={trayIsExpanded ? 'presentation' : 'button'}
+      tabIndex={trayIsExpanded ? -1 : 0}
     >
-      {cardsInHand.map((object, index) => {
-        const { id, rarity, set, type, uuid } = object;
-        return (
-          <div className={styles['card__wrapper']} key={uuid}>
-            <CardInteractionLayer
-              card={object}
-              cardImageBaseSrc={getCardBaseImage(rarity, type, imagesDataCards)}
-              cardImageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
-              index={index}
-              isPlayable={false}
-              isSelected={false}
-            />
-          </div>
-        );
-      })}
+      <div
+        className={[
+          styles['card__tray'],
+          trayIsExpanded ? styles['hand--is-expanded'] : ''
+        ].join(' ')}
+      >
+        {cardsInHand.map((object, index) => {
+          const { id, rarity, set, type, uuid } = object;
+          return (
+            <div className={styles['card__wrapper']} key={uuid}>
+              <CardInteractionLayer
+                card={object}
+                cardImageBaseSrc={getCardBaseImage(
+                  rarity,
+                  type,
+                  imagesDataCards
+                )}
+                cardImageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
+                index={index}
+                isPlayable={index === 1 ? true : false}
+                isSelected={false}
+              />
+            </div>
+          );
+        })}
+      </div>
 
       <div
         className={[

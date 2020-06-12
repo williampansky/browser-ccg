@@ -12,6 +12,7 @@
   justify-content: flex-start;
   width: 100vw;
   position: relative;
+  z-index: 1;
 
   .player__info {
     padding-bottom: calc(#{$sizeH} / 15);

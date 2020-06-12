@@ -4,25 +4,58 @@
 }
 
 .hand {
-  align-items: flex-start;
+  align-items: center;
   background: var(--board-yourPlayerArea-background-color);
   border-top: 1px solid rgba(0, 0, 0, 0.65);
+  bottom: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  left: 0;
+  margin-top: calc(var(--card-height) / 10);
+  max-width: 100vw;
+  min-width: 100vw;
+  outline: none;
+  position: fixed;
+  right: 0;
+  top: auto;
+  transform: translateY(25%);
+  transition: transform 600ms var(--animation-transition-cubic);
+  width: 100vw;
+  z-index: 0;
+
+  &:after {
+    background: rgba(0, 0, 0, 0.4765);
+    content: '';
+    height: 100%;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    transition: opacity 300ms linear;
+    width: 100%;
+    z-index: 1;
+    opacity: 1;
+  }
+}
+
+.card__tray {
+  max-width: 100vw;
+  min-width: 100vw;
+  overflow-x: auto;
+  overflow-y: hidden;
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
-  margin-top: calc(var(--card-height) / 10);
-  max-height: 100px;
-  max-width: 100vw;
-  min-height: 100px;
-  min-width: 100vw;
-  outline: none;
-  overflow-x: auto;
-  overflow-y: hidden;
+  align-items: flex-start;
   padding-bottom: calc(var(--card-height) / 10);
   padding-top: calc(var(--card-height) / 10);
-  position: relative;
-  transition: max-height 600ms var(--animation-transition-cubic);
-  width: 100vw;
+
+  // prettier-ignore
+  & > .card__wrapper {
+    &:first-child { padding-left:  calc(var(--card-height) / 10); }
+    &:last-child  { padding-right: calc(var(--card-height) / 10); }
+  }
 }
 
 .close__tray__button {
@@ -38,15 +71,16 @@
   border-top-left-radius: 50%;
   border-top-right-radius: 50%;
   bottom: calc(var(--card-height) + #{$spacing});
+  cursor: pointer;
   display: flex;
   flex-flow: row nowrap;
   height: $size;
   justify-content: center;
-  margin: calc(#{$size} / 1.95);
+  margin: calc(#{$size} / 1.995);
   opacity: 0;
   outline: none;
   padding: 10px;
-  position: fixed;
+  position: absolute;
   right: 0;
   top: auto;
   transform: translateY(200%);
@@ -72,15 +106,13 @@
 }
 
 // prettier-ignore
-.card__wrapper {
+[data-file='Hand'] .card__wrapper {
   position: relative;
   transition: margin 600ms var(--animation-transition-cubic);
   z-index: 1;
   
   & > [data-file="CardInteractionLayer"] { pointer-events: none; }
-  &:first-child { padding-left: calc(var(--card-height) / 10); }
   & + .card__wrapper { margin-left: calc(var(--card-height) / -3.5); }
-  &:last-child { padding-right: calc(var(--card-height) / 10); }
 }
 
 .hand--is-expanded {
@@ -88,6 +120,11 @@
 
   &.hand {
     overflow-y: visible;
+    transform: translateY(-100px);
+  }
+
+  &.hand:after {
+    opacity: 0;
   }
 
   & > .card__wrapper > [data-file='CardInteractionLayer'] {
