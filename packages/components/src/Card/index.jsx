@@ -65,7 +65,8 @@ const Card = ({
   spellDmgBoon,
   targetingArrowText,
   text,
-  type
+  type,
+  uuid
 }) => {
   return (
     <div
@@ -74,6 +75,7 @@ const Card = ({
         styles[`card--type-${replaceConstant(type).toUpperCase()}`],
         dev ? styles['dev'] : ''
       ].join(' ')}
+      id={uuid}
       onClick={onClick}
       onKeyPress={onClick}
       role={deckBuilder ? 'button' : null}
@@ -159,42 +161,43 @@ const Card = ({
 };
 
 Card.propTypes = {
-  active: PropTypes.bool,
+  active: PropTypes.bool.isRequired,
   artist: PropTypes.string,
   attack: PropTypes.number,
-  collectible: PropTypes.bool,
-  cost: PropTypes.number,
+  collectible: PropTypes.bool.isRequired,
+  cost: PropTypes.number.isRequired,
   deckBuilder: PropTypes.bool,
   dev: PropTypes.bool,
-  elite: PropTypes.bool,
+  elite: PropTypes.bool.isRequired,
   entourage: PropTypes.array,
   flavor: PropTypes.string,
   health: PropTypes.number,
   howToEarn: PropTypes.string,
   howToEarnGolden: PropTypes.string,
-  id: PropTypes.string,
-  imageBaseSrc: PropTypes.string,
-  imageFlairSrc: PropTypes.string,
+  id: PropTypes.string.isRequired,
+  imageBaseSrc: PropTypes.string.isRequired,
+  imageFlairSrc: PropTypes.string.isRequired,
   imagePlaceholderSrc: PropTypes.string,
-  isGolden: PropTypes.bool,
+  isGolden: PropTypes.bool.isRequired,
   mechanics: PropTypes.array,
-  name: PropTypes.string,
+  name: PropTypes.string.isRequired,
   numberOvercharge: PropTypes.number,
   numberPrimary: PropTypes.number,
   numberRNG: PropTypes.number,
   numberSecondary: PropTypes.number,
   onClick: PropTypes.func,
-  playContext: PropTypes.string,
+  playContext: PropTypes.string.isRequired,
   playRequirements: PropTypes.array,
-  playType: PropTypes.string,
+  playType: PropTypes.string.isRequired,
   race: PropTypes.string,
-  rarity: PropTypes.string,
-  set: PropTypes.string,
+  rarity: PropTypes.string.isRequired,
+  set: PropTypes.string.isRequired,
   sounds: PropTypes.object,
   spellDmgBoon: PropTypes.number,
   targetingArrowText: PropTypes.string,
   text: PropTypes.string,
-  type: PropTypes.string
+  type: PropTypes.string.isRequired,
+  uuid: PropTypes.string.isRequired
 };
 
 Card.defaultProps = {
