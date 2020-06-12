@@ -59,14 +59,14 @@ const Hero = ({
         <header className={styles['player__info']}>
           <div className={styles['player__stats']}>
             <PlayerStatIcon
-              iconColor="white"
+              iconColor="#ccc"
               icon="HAND"
               statColor="white"
               statLabel="Cards in Hand"
               statValue={cardsInHand}
             />
             <PlayerStatIcon
-              iconColor="white"
+              iconColor="#ccc"
               icon="DECK"
               onClick={e => handleDeckIconClick(e)}
               statColor="white"
@@ -74,7 +74,7 @@ const Hero = ({
               statValue={cardsInDeck}
             />
             <PlayerStatEnergy
-              iconColor="white"
+              iconColor="#ccc"
               statColor="white"
               statLabel="Cards in Deck"
               statValue={energyCurrent}

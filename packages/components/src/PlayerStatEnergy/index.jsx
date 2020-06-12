@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 
 const PlayerStatEnergy = ({
+  iconColor,
   iconSize,
   onClick,
   statColor,
@@ -21,7 +22,10 @@ const PlayerStatEnergy = ({
       tabIndex={0}
     >
       <div className={styles['total__energy']}>
-        <span className="text__value">{`/${totalEnergy}`}</span>
+        <span
+          className="text__value"
+          style={{ color: iconColor }}
+        >{`/${totalEnergy}`}</span>
       </div>
       <div
         className={styles['player__stat']}
@@ -40,6 +44,7 @@ const PlayerStatEnergy = ({
 };
 
 PlayerStatEnergy.propTypes = {
+  iconColor: PropTypes.string,
   iconSize: PropTypes.string,
   onClick: PropTypes.func,
   statColor: PropTypes.string,
@@ -51,6 +56,7 @@ PlayerStatEnergy.propTypes = {
 };
 
 PlayerStatEnergy.defaultProps = {
+  iconColor: 'white',
   iconSize: '20px',
   onClick: () => {},
   statColor: 'white',
