@@ -3,16 +3,17 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { CardInteractionLayer } from '@ccg/components';
+import AppIcon from '../AppIcon';
 
 const Hand = ({ cardsInHand, imagesDataCards, imagesDataSets }) => {
   const [trayIsExpanded, setTrayIsExpanded] = useState(false);
 
   const handleHandTrayClick = useCallback(
-    event => {
+    (event, bool) => {
       event.preventDefault();
-      !trayIsExpanded ? setTrayIsExpanded(true) : setTrayIsExpanded(false);
+      setTrayIsExpanded(bool);
     },
-    [trayIsExpanded, setTrayIsExpanded]
+    [setTrayIsExpanded]
   );
 
   return (
@@ -22,8 +23,8 @@ const Hand = ({ cardsInHand, imagesDataCards, imagesDataSets }) => {
         trayIsExpanded ? styles['hand--is-expanded'] : ''
       ].join(' ')}
       data-file="Hand"
-      onClick={e => handleHandTrayClick(e)}
-      onKeyPress={e => handleHandTrayClick(e)}
+      onClick={e => !trayIsExpanded && handleHandTrayClick(e, true)}
+      onKeyPress={e => !trayIsExpanded && handleHandTrayClick(e, true)}
       role="button"
       tabIndex={0}
     >
@@ -42,6 +43,19 @@ const Hand = ({ cardsInHand, imagesDataCards, imagesDataSets }) => {
           </div>
         );
       })}
+
+      <div
+        className={[
+          styles['close__tray__button'],
+          trayIsExpanded ? styles['hand--is-expanded'] : ''
+        ].join(' ')}
+        onClick={e => trayIsExpanded && handleHandTrayClick(e, false)}
+        onKeyPress={e => trayIsExpanded && handleHandTrayClick(e, false)}
+        role="button"
+        tabIndex={0}
+      >
+        <AppIcon color="white" fileName="icon-uikit-close" size="initial" />
+      </div>
     </div>
   );
 };

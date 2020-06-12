@@ -1,3 +1,4 @@
+// prettier-ignore
 .hand {
   --card-height: 200px;
 }
@@ -19,8 +20,55 @@
   overflow-y: hidden;
   padding-bottom: calc(var(--card-height) / 10);
   padding-top: calc(var(--card-height) / 10);
+  position: relative;
   transition: max-height 600ms var(--animation-transition-cubic);
   width: 100vw;
+}
+
+.close__tray__button {
+  $size: 40px;
+  $spacing: calc(calc(var(--card-height) / 10) * 1);
+
+  align-items: center;
+  background: #282927;
+  border: 1px solid rgba(0, 0, 0, 0.65);
+  border-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  bottom: calc(var(--card-height) + #{$spacing});
+  display: flex;
+  flex-flow: row nowrap;
+  height: $size;
+  justify-content: center;
+  margin: calc(#{$size} / 1.95);
+  opacity: 0;
+  outline: none;
+  padding: 10px;
+  position: fixed;
+  right: 0;
+  top: auto;
+  transform: translateY(200%);
+  transition-property: opacity, transform, visibility;
+  transition: 300ms var(--animation-transition-cubic);
+  visibility: hidden;
+  width: $size;
+  z-index: -1;
+
+  // svg wrapper
+  & > div {
+    position: relative;
+    top: 2px;
+  }
+
+  &.hand--is-expanded {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    pointer-events: auto;
+    z-index: 0;
+  }
 }
 
 // prettier-ignore
@@ -29,7 +77,7 @@
   transition: margin 600ms var(--animation-transition-cubic);
   z-index: 1;
   
-  & > [data-file="CardInteractionLayer"] { pointer-events: none !important; }
+  & > [data-file="CardInteractionLayer"] { pointer-events: none; }
   &:first-child { padding-left: calc(var(--card-height) / 10); }
   & + .card__wrapper { margin-left: calc(var(--card-height) / -3.5); }
   &:last-child { padding-right: calc(var(--card-height) / 10); }
@@ -37,6 +85,10 @@
 
 .hand--is-expanded {
   max-height: 100%;
+
+  &.hand {
+    overflow-y: visible;
+  }
 
   & > .card__wrapper > [data-file='CardInteractionLayer'] {
     pointer-events: auto;
