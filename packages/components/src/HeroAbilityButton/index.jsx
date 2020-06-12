@@ -9,7 +9,10 @@ import { AppIcon } from '@ccg/components';
  * @requires AppIcon
  */
 const HeroAbilityButton = ({
+  abilityLocked,
   cooldown,
+  cooldownCurrentCount,
+  cooldownInEffect,
   cost,
   costImageSrc,
   heroSymbol,
@@ -32,25 +35,60 @@ const HeroAbilityButton = ({
 
   return (
     <Fragment>
-      <div className={styles['main__button__cost']}>
-        <div className={styles['main__button__cost--gem']}>
-          <div className="text__value">{cost}</div>
-          <img alt="" role="presentation" src={costImageSrc} />
-        </div>
-        <div className={styles['main__button__cost--cooldown']}>
-          <div>
-            <div className="text__value">{ultimate ? 'Ult' : cooldown}</div>
-          </div>
-          <AppIcon fileName="icon-uikit-refresh" />
-        </div>
+      <div
+        className={[
+          styles['overlay'],
+          styles['locked__overlay'],
+          cooldownInEffect ? styles['overlay--in-effect'] : ''
+        ].join(' ')}
+      >
+        <AppIcon color="white" fileName="icon-uikit-lock" size="32px" />
       </div>
 
-      <div className={styles['main__button__spell__type']}>
-        <AppIcon
-          color="white"
-          fileName={handleAbilityIcon(mechanics, playType, playContext)}
-        />
-      </div>
+      {!abilityLocked ? (
+        <div
+          className={[
+            styles['overlay'],
+            cooldownInEffect ? styles['overlay--in-effect'] : ''
+          ].join(' ')}
+        >
+          <div className="text__value">{cooldownCurrentCount}</div>
+        </div>
+      ) : null}
+
+      {!abilityLocked ? (
+        <div
+          className={[
+            styles['main__button__cost'],
+            cooldownInEffect ? styles['overlay--in-effect'] : ''
+          ].join(' ')}
+        >
+          <div className={styles['main__button__cost--gem']}>
+            <div className="text__value">{cost}</div>
+            <img alt="" role="presentation" src={costImageSrc} />
+          </div>
+          <div className={styles['main__button__cost--cooldown']}>
+            <div>
+              <div className="text__value">{ultimate ? 'Ult' : cooldown}</div>
+            </div>
+            <AppIcon fileName="icon-uikit-refresh" />
+          </div>
+        </div>
+      ) : null}
+
+      {!abilityLocked ? (
+        <div
+          className={[
+            styles['main__button__spell__type'],
+            cooldownInEffect ? styles['overlay--in-effect'] : ''
+          ].join(' ')}
+        >
+          <AppIcon
+            color="white"
+            fileName={handleAbilityIcon(mechanics, playType, playContext)}
+          />
+        </div>
+      ) : null}
 
       <img
         alt={name}
@@ -66,7 +104,10 @@ const HeroAbilityButton = ({
 };
 
 HeroAbilityButton.propTypes = {
+  abilityLocked: PropTypes.bool.isRequired,
   cooldown: PropTypes.number.isRequired,
+  cooldownCurrentCount: PropTypes.number.isRequired,
+  cooldownInEffect: PropTypes.bool.isRequired,
   cost: PropTypes.number.isRequired,
   costImageSrc: PropTypes.string.isRequired,
   heroSymbol: PropTypes.string.isRequired,
@@ -79,7 +120,10 @@ HeroAbilityButton.propTypes = {
 };
 
 HeroAbilityButton.defaultProps = {
+  abilityLocked: true,
   cooldown: 0,
+  cooldownCurrentCount: 0,
+  cooldownInEffect: false,
   ultimate: false
 };
 

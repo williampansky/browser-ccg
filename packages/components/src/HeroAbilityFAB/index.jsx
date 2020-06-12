@@ -96,7 +96,9 @@ const HeroAbilityFAB = ({
                 onClick={event => handleAbilityClick(event, id)}
               >
                 <HeroAbilityButton
+                  abilityLocked={false}
                   cooldown={cooldown}
+                  cooldownInEffect={false}
                   cost={cost}
                   costImageSrc={costImageSrc}
                   heroSymbol={heroSymbol}
