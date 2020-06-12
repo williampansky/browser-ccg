@@ -31,6 +31,7 @@
     "mathjs": "^7.0.1",
     "react": "^16.10.2",
     "react-animate-height": "^2.0.21",
+    "react-burger-menu": "^2.6.15",
     "react-countup": "^4.3.3",
     "react-dom": "^16.10.2",
     "react-helmet": "^6.0.0",
@@ -39,9 +40,12 @@
     "react-responsive": "^8.1.0",
     "react-scripts": "3.2.0",
     "react-scroll-to-bottom": "^2.0.0",
+    "react-spring": "^8.0.27",
     "react-svg": "^11.0.24",
+    "react-tiny-fab": "^3.5.0",
     "react-tooltip": "^4.2.6",
     "react-transition-group": "^4.4.1",
+    "react-use-gesture": "^7.0.15",
     "react-use-hover": "^1.0.0",
     "styled-components": "^5.1.1"
   }

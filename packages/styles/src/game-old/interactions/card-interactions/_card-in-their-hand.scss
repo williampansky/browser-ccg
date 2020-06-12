@@ -1,0 +1,355 @@
+.card-in-their-hand {
+  border-radius: var(--card-border-radius);
+  box-sizing: border-box;
+  cursor: default;
+  padding: 0;
+  position: relative;
+  right: 0;
+  top: 0;
+  transition: 800ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition-property: top, transform;
+  user-select: none;
+  z-index: 1; // make sure to NOT animate z-index
+
+  * {
+    pointer-events: none;
+  }
+
+  &:before {
+    content: '';
+    border-radius: var(--card-border-radius);
+    box-shadow: -5px 5px 5px hsla(0, 0%, 0%, 0.925);
+    left: 0;
+    height: var(--card-height);
+    position: absolute;
+    top: 0;
+    transition: box-shadow 800ms cubic-bezier(0.19, 1, 0.22, 1);
+    width: 100%;
+    pointer-events: none;
+  }
+
+  &:after {
+    border-radius: var(--card-border-radius);
+    content: none;
+  }
+}
+
+.card-they-are-hovering:after {
+  animation: isAttackingGlow 2500ms infinite;
+  border-radius: var(--card-border-radius);
+  bottom: 0;
+  content: '';
+  left: 0;
+  opacity: 1;
+  position: absolute;
+  right: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.card-they-have-selected {
+  animation: selectedRotation 10000ms infinite;
+  border-radius: var(--card-border-radius);
+  animation-timing-function: ease-in-out;
+  top: calc(var(--card-height) / 2);
+  z-index: 100;
+
+  &:before {
+    box-shadow: 0 10px 20px hsla(0, 0%, 0%, 0.925);
+  }
+
+  &:after {
+    animation: isAttackingGlow 2500ms infinite;
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+  }
+}
+
+.card-in-their-hand:last-of-type {
+  animation: drawTheirCard 2000ms var(--animation-transition-cubic) reverse;
+  // cursor: default;
+  // opacity: 1;
+  // pointer-events: none;
+
+  // [data-file*='interactions/cards'] {
+  //   cursor: default;
+  //   pointer-events: none;
+  // }
+
+  // &:before {
+  //   pointer-events: none;
+  // }
+
+  @keyframes drawTheirCard {
+    0% {
+    }
+    10%,
+    20%,
+    30%,
+    40%,
+    50%,
+    60%,
+    70%,
+    80%,
+    100% {
+      opacity: 0;
+      transform: translate(50%, 50%) rotate(0deg) scale(0.475);
+    }
+  }
+}
+
+// // prettier-ignore
+// [data-file*='hands'] {
+//   &[data-number-of-cards='2'] [data-is-animating='true'] {
+//     & + [data-is-animating='true'] { animation-delay: 400ms; }
+//   }
+
+//   &[data-number-of-cards='3'] [data-is-animating='true'] {
+//     & + [data-is-animating='true'] { animation-delay: 400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 600ms; }
+//   }
+
+//   &[data-number-of-cards='4'] [data-is-animating='true'] {
+//     & + [data-is-animating='true'] { animation-delay: 400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 600ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 800ms; }
+//   }
+
+//   &[data-number-of-cards='5'] [data-is-animating='true'] {
+//     & + [data-is-animating='true'] { animation-delay: 400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 600ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] + [data-is-animating='true'] { animation-delay: 800ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1000ms; }
+//   }
+
+//   &[data-number-of-cards='6'] [data-is-animating='true'] {
+//     & + [data-is-animating='true'] { animation-delay: 400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 600ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 800ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1000ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1200ms; }
+//   }
+
+//   &[data-number-of-cards='7'] [data-is-animating='true'] {
+//     & + [data-is-animating='true'] { animation-delay: 400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 600ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] + [data-is-animating='true'] { animation-delay: 800ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1000ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1200ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1400ms; }
+//   }
+
+//   &[data-number-of-cards='8'] [data-is-animating='true'] {
+//     & + [data-is-animating='true'] { animation-delay: 400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 600ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] + [data-is-animating='true'] { animation-delay: 800ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1000ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1200ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1600ms; }
+//   }
+
+//   &[data-number-of-cards='8'] [data-is-animating='true'] {
+//     & + [data-is-animating='true'] { animation-delay: 400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 600ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 800ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1000ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1200ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1600ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1800ms; }
+//   }
+
+//   &[data-number-of-cards='9'] [data-is-animating='true'] {
+//     & + [data-is-animating='true'] { animation-delay: 400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 600ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 800ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1000ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1200ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1600ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1800ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1800ms; }
+//   }
+
+//   &[data-number-of-cards='10'] [data-is-animating='true'] {
+//     & + [data-is-animating='true'] { animation-delay: 400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 600ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 800ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1000ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1200ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1400ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1600ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1800ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 1800ms; }
+//     & + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true']
+//       + [data-is-animating='true'] { animation-delay: 2000ms; }
+//   }
+// }

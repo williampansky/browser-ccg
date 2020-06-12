@@ -1,4 +1,9 @@
 @import 'mixins/!module';
 @import 'abstracts/!module';
 @import 'utilities/!module';
+@import 'vendor/!module';
 @import 'game/!module';
+
+.debug-panel {
+  display: none !important;
+}

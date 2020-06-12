@@ -1,0 +1,63 @@
+.minion--has-guard-background {
+  // animation-duration: 300ms;
+  position: absolute;
+  width: 105%;
+  height: 110%;
+  top: -5px;
+  right: 0;
+  bottom: 0;
+  left: -4px;
+  pointer-events: none;
+  transform: scale(1);
+  transition: transform 400ms var(--animation-transition-cubic);
+  will-change: transform;
+  z-index: 0;
+
+  &.minion--is-animating {
+    transform: scale(0.1);
+  }
+
+  .minion--is-attacking & {
+    transform: scale(1.15);
+    transition-duration: 100ms;
+  }
+
+  .minion--is-dead & {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+
+  &.minion__race--location {
+    background: black;
+    border-radius: var(--minion-border-radius);
+    height: 80%;
+  }
+}
+
+.minion--has-guard-foreground {
+  // animation-duration: 300ms;
+  position: absolute;
+  width: 105%;
+  height: 110%;
+  top: -5px;
+  right: 0;
+  bottom: 0;
+  left: -4px;
+  pointer-events: none;
+  transform: scale(1);
+  transition: transform 400ms var(--animation-transition-cubic);
+  z-index: 1;
+
+  &.minion--is-animating {
+    transform: scale(0.1);
+  }
+
+  .minion--is-attacking & {
+    transform: scale(1.15);
+    transition-duration: 100ms;
+  }
+
+  .minion--is-dead & {
+    transform: scale(0.1);
+  }
+}

@@ -2,8 +2,8 @@ import React from 'react';
 import { Client as BoardgameClient } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
 import { ReactCCG } from '@ccg/server';
-import GameWrapper from './components/game-wrapper/GameWrapper';
-import GameLoader from './components/game-loader';
+import GameWrapper from './components-old/game-wrapper/GameWrapper';
+import GameLoader from './components-old/game-loader';
 
 const REDUX_DEVTOOLS =
   typeof window !== undefined &&

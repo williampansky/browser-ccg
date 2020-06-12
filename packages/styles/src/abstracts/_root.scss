@@ -26,6 +26,7 @@
 
   /* ================================ */
   /* layout vars */
+  --game-wrapper-background-color:              #333;
   --board-theirHand-background-color:           #151515;
   --board-theirHand-height:                     45px;
   --board-theirHand-zIndex:                     200;
@@ -65,12 +66,19 @@
   /* ================================ */
   /* avatar vars */
   --avatar-border-radius:               65%;
-  --avatar-height:                      155px;
-  --avatar-width:                       175px;
+  // --avatar-height:                      155px;
+  // --avatar-width:                       175px;
+  --avatar-height:                      50px;
+  --avatar-width:                       50px;
+
+  /* ================================ */
+  /* player FAB vars */
+  --player-fab-size:                    56px;
 
   /* ================================ */
   /* player health vars */
-  --player-health-size:                 50px;
+  --player-health-size:                 175px;
+  --player-health-size-division:        1.166666667;
 
   /* ================================ */
   /* deck vars */

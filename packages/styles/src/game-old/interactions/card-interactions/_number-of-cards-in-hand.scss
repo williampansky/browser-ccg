@@ -1,0 +1,29 @@
+// prettier-ignore
+[data-file='hands/TheirHand'] {
+  &[data-number-of-cards='1'] .card-in-their-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.125); }
+  &[data-number-of-cards='2'] .card-in-their-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.125); }
+  &[data-number-of-cards='3'] .card-in-their-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.125); }
+  &[data-number-of-cards='4'] .card-in-their-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.125); }
+  &[data-number-of-cards='5'] .card-in-their-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.125); }
+  &[data-number-of-cards='6'] .card-in-their-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.125); }
+  &[data-number-of-cards='7'] .card-in-their-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.125); }
+  &[data-number-of-cards='8'] .card-in-their-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.125); }
+  &[data-number-of-cards='9'] .card-in-their-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.125); }
+  &[data-number-of-cards='10'] .card-in-their-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.125); }
+  .card-in-their-hand[data-index='0'] { margin-left: 0; }
+}
+
+// prettier-ignore
+[data-file='hands/YourHand'] {
+  &[data-number-of-cards='1'] .card-in-your-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.645); }
+  &[data-number-of-cards='2'] .card-in-your-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.645); }
+  &[data-number-of-cards='3'] .card-in-your-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.645); }
+  &[data-number-of-cards='4'] .card-in-your-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.645); }
+  &[data-number-of-cards='5'] .card-in-your-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.665); }
+  &[data-number-of-cards='6'] .card-in-your-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.565); }
+  &[data-number-of-cards='7'] .card-in-your-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.565); }
+  &[data-number-of-cards='8'] .card-in-your-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.565); }
+  &[data-number-of-cards='9'] .card-in-your-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.565); }
+  &[data-number-of-cards='10'] .card-in-your-hand { margin-left: calc(calc(var(--card-height) / 0.95) / -2.565); }
+  .card-in-your-hand[data-index='0'] { margin-left: 0; }
+}

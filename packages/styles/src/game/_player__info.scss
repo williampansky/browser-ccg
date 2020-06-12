@@ -1,0 +1,188 @@
+.player__info__wrapper {
+  color: white;
+  font-size: 20px;
+  height: 100%;
+  width: 100%;
+  margin-left: calc(var(--card-height) / 30);
+  padding: calc(var(--card-height) / 60) 0;
+  @include display-flex(row nowrap, flex-start, space-between);
+
+  // prettier-ignore
+  & > div {
+    height: 100%;
+    & + div { margin-left: calc(var(--card-height) / 30); }
+  }
+
+  .player__name {
+    font-family: var(--font-family-card);
+    font-size: 1em;
+  }
+
+  .player__hero {
+    font-size: 0.625em;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  }
+
+  // prettier-ignore
+  .player__health {
+    font-family: var(--font-family-card);
+    font-size: 1em;
+    @media (min-width: 410px) { font-size: 2em; }
+    margin-top: calc(var(--card-height) / 30);
+    // height: 100%;
+    @include display-flex(column nowrap, flex-start, center);
+  }
+}
+
+.player__stats__wrapper {
+  height: 100%;
+  @include display-flex(column nowrap, flex-end, flex-end);
+
+  .player__stats {
+    @include display-flex(row nowrap, flex-end, flex-end);
+  }
+
+  // prettier-ignore
+  .cards__stat {
+    @include display-flex(column nowrap, center, center);
+    & + .cards__stat { margin-left: calc(var(--card-height) / 60); }
+  }
+
+  .stat__label {
+    display: block;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 0.45em;
+    line-height: 1.45;
+    text-transform: uppercase;
+  }
+
+  .stat__value {
+    display: block;
+    font-family: var(--font-family-card);
+    font-size: 1.45em;
+  }
+}
+
+.player__abilities__wrapper {
+  border-radius: var(--card-border-radius);
+  height: calc(var(--avatar-height) / 1);
+  width: calc(var(--avatar-height) / 1);
+  @include position-absolute(auto, calc(var(--card-height) / 30), 0, auto, 101);
+
+  // prettier-ignore
+  & {
+    @media (min-height: 730px) { bottom: 28vh; }
+    @media (min-height: 820px) { bottom: 29vh; }
+  }
+
+  .abilities__icon__button {
+    border-radius: var(--card-border-radius);
+    outline: none;
+    height: calc(var(--avatar-height) / 1);
+    width: calc(var(--avatar-height) / 1);
+    z-index: 101;
+  }
+
+  .abilities__icon {
+    border-radius: var(--card-border-radius);
+    height: calc(var(--avatar-height) / 1);
+    width: calc(var(--avatar-height) / 1);
+    image-rendering: pixelated;
+    transition: border-radius 400ms var(--animation-transition-cubic) 50ms;
+    will-change: border-radius;
+  }
+
+  // prettier-ignore
+  .active {
+    &.abilities__icon__button { border-radius: 50%; }
+    & > .abilities__icon { border-radius: 50%; }
+  }
+
+  img {
+    pointer-events: none;
+  }
+}
+
+// prettier-ignore
+.abilities__list {
+  display: none;
+  &.active { display: block; }
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  @include position-absolute(-210px, 0, 0, 0, -1);
+
+  & > li {
+    margin-bottom: calc(var(--card-height) / 20);
+    &:last-child { margin-bottom: 0; }
+  }
+
+  .abilities__list__button {
+    color: white;
+    outline: none;
+    height: calc(var(--avatar-height) / 1);
+    width: calc(var(--avatar-height) / 1);
+    @include display-flex(row nowrap, flex-end, flex-end);
+  }
+
+  .abilities__list__info {
+    margin-right: calc(var(--card-height) / 60);
+    height: calc(var(--avatar-height) / 1);
+    width: 100%;
+    text-align: right;
+    @include display-flex(column nowrap, flex-end, center);
+  }
+
+  .ability__name {
+    font-family: var(--font-family-card);
+    font-size: 1em;
+    line-height: 1;
+    min-width: 65vw;
+    white-space: nowrap;
+  }
+
+  .ability__description {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 0.765em;
+    min-width: 65vw;
+  }
+}
+
+.opponent__stats__and__skills__wrapper {
+  height: 100%;
+  @include display-flex(column nowrap, flex-end, flex-end);
+
+  .player__abilities__wrapper {
+    position: relative;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    margin-bottom: calc(var(--card-height) / 40);
+    z-index: auto;
+    @include display-flex(column nowrap, flex-end, flex-end);
+  }
+
+  .player__stats__wrapper {
+    height: auto;
+  }
+
+  // prettier-ignore
+  .abilities__list {
+    top: 0;
+    z-index: auto;
+    @include display-flex(row nowrap, center, flex-end);
+    & > li {
+      margin-bottom: 0;
+      margin-right: calc(var(--card-height) / 40);
+      &:last-child { margin-right: 0; }
+    }
+  }
+
+  .abilities__icon,
+  .abilities__list__button {
+    border-radius: calc(var(--card-border-radius) / 2);
+    height: calc(var(--avatar-height) / 3);
+    width: calc(var(--avatar-height) / 3);
+  }
+}

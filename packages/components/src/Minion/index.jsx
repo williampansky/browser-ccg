@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { getCardAssetImage, replaceConstant } from '@ccg/utils';
+import { RACE } from '@ccg/enums';
 import {
   CARD_ASSETS as ASSETS,
   MECHANICS,
@@ -151,7 +152,8 @@ Minion.propTypes = {
 
 Minion.defaultProps = {
   imageFlairSrc: '',
-  imagePlaceholderSrc: PLACEHOLDER_IMAGE
+  imagePlaceholderSrc: PLACEHOLDER_IMAGE,
+  race: RACE['NONE']
 };
 
 export default Minion;

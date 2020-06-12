@@ -89,13 +89,15 @@ const Card = ({
         />
       ) : null}
 
-      <CardTypeLabel
-        formatter={replaceConstant}
-        race={race}
-        raceEnums={RACE}
-        type={type}
-        typeEnums={TYPE}
-      />
+      {type !== TYPE['NONE'] ? (
+        <CardTypeLabel
+          formatter={replaceConstant}
+          race={race}
+          raceEnums={RACE}
+          type={type}
+          typeEnums={TYPE}
+        />
+      ) : null}
 
       <CardFlairImage
         imageSrc={imageFlairSrc}
@@ -108,11 +110,13 @@ const Card = ({
         name={replaceConstant(name)}
       />
 
-      <CardTypeBadge
-        badgeImgSrc={getCardAssetImage('type', 'WRAPPER', elite, ASSETS)}
-        typeIconAlt={replaceConstant(type)}
-        typeImgSrc={getCardAssetImage('type', type, elite, ASSETS)}
-      />
+      {type !== TYPE['NONE'] ? (
+        <CardTypeBadge
+          badgeImgSrc={getCardAssetImage('type', 'WRAPPER', elite, ASSETS)}
+          typeIconAlt={replaceConstant(type)}
+          typeImgSrc={getCardAssetImage('type', type, elite, ASSETS)}
+        />
+      ) : null}
 
       {exists(race) && race !== RACE['NONE'] && type === TYPE['MINION'] ? (
         <CardSubTypeBadge

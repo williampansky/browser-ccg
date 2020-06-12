@@ -1,0 +1,142 @@
+.board__slot {
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: var(--minion-border-radius);
+  color: white;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  margin: 0 1.25%;
+  min-width: 5%;
+  opacity: 0;
+  pointer-events: none;
+  position: relative;
+  transition: 400ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition-property: margin, min-width, transform, width;
+  user-select: none;
+  width: auto;
+  outline: none;
+}
+
+// prettier-ignore
+.board__slot {
+  &[data-slot='0'] { z-index: 8; }
+  &[data-slot='1'] { z-index: 7; }
+  &[data-slot='2'] { z-index: 6; }
+  &[data-slot='3'] { z-index: 5; }
+  &[data-slot='4'] { z-index: 4; }
+  &[data-slot='5'] { z-index: 3; }
+  &[data-slot='6'] { z-index: 2; }
+  &[data-slot='7'] { z-index: 1; }
+}
+
+.board-is-active .board__slot {
+  cursor: pointer;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.board__slot.board__slot--has-minion {
+  border-color: transparent;
+  opacity: 1 !important;
+  pointer-events: auto;
+}
+
+.board__slot.board__slot--is-empty {
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  height: 75%;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.625);
+  }
+}
+
+.your-board-play-area
+  .board__slot.board__slot--has-minion.board__slot--cannot-drop-minion {
+  cursor: default;
+  pointer-events: none;
+}
+
+.board-is-active .board__slot[data-render='false'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.board__slot.board__slot--animate-minion-drop {
+  animation-name: dropDown;
+  animation-duration: 300ms;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+
+  @keyframes dropDown {
+    0% {
+      opacity: 0;
+      transform: scale(1.8);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+.board__slot.board__slot--is-dead {
+  min-width: 0;
+}
+
+.board__slot-card-tooltip {
+  --card-height: 350px;
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  animation-duration: 200ms;
+  top: calc(var(--card-height) * -0.8);
+  right: calc(var(--card-height) * -0.6);
+  z-index: 10;
+  @include display-flex(column nowrap, flex-start, flex-start);
+}
+
+.board__slot-card-tooltip .tooltip__mechanics__wrapper {
+  margin: calc(var(--card-height) / 40) 0 0 calc(var(--card-height) / 1.315);
+  max-width: calc(var(--card-height) / 2.500263249);
+  // max-width: calc(var(--card-height) / 1.400263249);
+  position: absolute;
+  width: 100%;
+}
+
+.board__slot-card-tooltip .tooltip__mechanics__wrapper .mechanic__item {
+  $bg: #333;
+  background-color: $bg;
+  background-image: url('/images/card-assets/binding_dark.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 4px;
+  border: 2px solid mix(white, $bg, 20%);
+  font-size: 12px;
+  padding: 8px 10px 10px;
+
+  & + .mechanic__item {
+    margin-top: calc(var(--card-height) / 55);
+  }
+
+  .mechanic__item-title {
+    color: mix(white, $bg, 80%);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 0.75em;
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 0 0 0.25em;
+    text-transform: uppercase;
+  }
+
+  .mechanic__item-description {
+    color: mix(white, $bg, 100%);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1em;
+    font-weight: normal;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+  }
+}

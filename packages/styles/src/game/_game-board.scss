@@ -1,0 +1,52 @@
+.game__board {
+  --minion-height: 125px;
+
+  background: var(--board-yourPlayerArea-background-color);
+  border-top: 1px solid rgba(255, 255, 255, 0.265);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.45);
+  height: 100%;
+  // max-height: 360px;
+  max-width: 100vw;
+  width: 100vw;
+  overflow-x: hidden;
+  overflow-y: visible;
+  padding: calc(var(--card-height) / 30) 0;
+  margin: auto 0;
+  // height: 40vh;
+  @include display-flex(column nowrap, center, center);
+}
+
+.their__board__play__area,
+.your__board__play__area {
+  // height: 50%;
+  // overflow: auto hidden;
+  max-width: 100vw;
+  width: 100vw;
+  padding: 2vh 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  // padding-left: calc(var(--card-height) / 30);
+  // margin-right: calc(var(--card-height) / 30);
+  @include display-flex(row nowrap, center, flex-start);
+}
+
+// prettier-ignore
+// .board__slot {
+//   margin: 0 calc(var(--card-height) / 30);
+//   outline: none;
+
+//   &:last-child {
+//     margin-right: 0;
+//     padding-right: calc(var(--card-height) / 30);
+//   }
+
+//   &:first-child {
+//     margin-left: calc(var(--card-height) / 30);
+//     padding-right: 0;
+//   }
+
+//   &:only-child {
+//     padding: 0 calc(var(--card-height) / 30);
+//     margin-left: 0;
+//   }
+// }
