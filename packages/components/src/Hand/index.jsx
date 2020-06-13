@@ -2,8 +2,7 @@ import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
-import { CardInteractionLayer } from '@ccg/components';
-import AppIcon from '../AppIcon';
+import { AppIcon, CardInteractionLayer } from '@ccg/components';
 
 const Hand = ({
   cardsInHand,
