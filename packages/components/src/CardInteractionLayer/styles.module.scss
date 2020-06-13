@@ -4,6 +4,7 @@
   font-family: var(--font-family-card);
   height: var(--card-height);
   width: calc(var(--card-height) / var(--card-width-division));
+  transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
 
   // box shadow
   &:before {
@@ -23,5 +24,9 @@
   // to avoid mixed interactions
   [data-file='Card'] {
     pointer-events: none;
+  }
+
+  &.card__interaction--is-selected {
+    transform: translate(0, -100px);
   }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { Card } from '@ccg/components';
@@ -47,17 +47,29 @@ const CardInteractionLayer = ({
     uuid
   } = card;
 
+  const handleInteractionClass = useCallback(() => {
+    if (isSelected) return 'card__interaction--is-selected';
+    else if (isPlayable) return 'card__interaction--is-playable';
+    else return '';
+  }, [isPlayable, isSelected]);
+
+  const handleInteractionModule = useCallback(() => {
+    if (isSelected) return styles['card__interaction--is-selected'];
+    else if (isPlayable) return styles['card__interaction--is-playable'];
+    else return '';
+  }, [isPlayable, isSelected]);
+
   return (
     <div
       className={[
         styles['card__interaction__layer'],
-        isPlayable ? 'card__interaction--is-playable' : '',
-        isSelected ? 'card__interaction--is-selected' : ''
+        handleInteractionClass(),
+        handleInteractionModule()
       ].join(' ')}
       data-file="CardInteractionLayer"
       data-index={index}
-      onClick={e => handleInteractionClick(e, card)}
-      onKeyPress={e => handleInteractionClick(e, card)}
+      onClick={e => handleInteractionClick(e, card, isPlayable, isSelected)}
+      onKeyPress={e => handleInteractionClick(e, card, isPlayable, isSelected)}
       role={isPlayable ? 'button' : 'presentation'}
       tabIndex={isPlayable ? 'button' : 'presentation'}
     >

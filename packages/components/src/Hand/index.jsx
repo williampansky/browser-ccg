@@ -5,7 +5,14 @@ import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { CardInteractionLayer } from '@ccg/components';
 import AppIcon from '../AppIcon';
 
-const Hand = ({ cardsInHand, imagesDataCards, imagesDataSets }) => {
+const Hand = ({
+  cardsInHand,
+  handleCardInteractionClick,
+  imagesDataCards,
+  imagesDataSets,
+  selectedCardObject,
+  selectedCardUuid
+}) => {
   const [trayIsExpanded, setTrayIsExpanded] = useState(false);
 
   const handleHandTrayClick = useCallback(
@@ -46,9 +53,10 @@ const Hand = ({ cardsInHand, imagesDataCards, imagesDataSets }) => {
                   imagesDataCards
                 )}
                 cardImageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
+                handleInteractionClick={handleCardInteractionClick}
                 index={index}
                 isPlayable={index === 1 ? true : false}
-                isSelected={false}
+                isSelected={selectedCardUuid === uuid ? true : false}
               />
             </div>
           );
@@ -73,9 +81,12 @@ const Hand = ({ cardsInHand, imagesDataCards, imagesDataSets }) => {
 
 Hand.propTypes = {
   cardsInHand: PropTypes.array,
+  handleCardInteractionClick: PropTypes.func.isRequired,
   imagesDataCards: PropTypes.object.isRequired,
   imagesDataSets: PropTypes.object.isRequired,
-  trayIsExpanded: PropTypes.bool.isRequired
+  trayIsExpanded: PropTypes.bool.isRequired,
+  selectedCardObject: PropTypes.object,
+  selectedCardUuid: PropTypes.string
 };
 
 Hand.defaultProps = {

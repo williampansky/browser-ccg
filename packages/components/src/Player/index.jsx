@@ -11,15 +11,27 @@ const Player = ({
   cardsInDeckCount,
   cardsInHandCount,
   costGemImageSrc,
+  deselectCardFunction,
   heroAbilities,
   heroSymbol,
   imagesDataCards,
   imagesDataSets,
   playerDeck,
   playerId,
-  playerName
+  playerName,
+  selectCardFunction,
+  selectedCardObject,
+  selectedCardUuid
 }) => {
-  const handleInteractionClick = useCallback(() => {}, []);
+  const handleCardInteractionClick = useCallback(
+    (event, cardObject, cardIsPlayable, cardIsSelected) => {
+      event.preventDefault();
+      if (cardIsSelected) return deselectCardFunction();
+      else if (cardIsPlayable) return selectCardFunction(cardObject);
+      else return;
+    },
+    [deselectCardFunction, selectCardFunction]
+  );
 
   return (
     <div className={styles['player']} data-component="Player">
@@ -38,8 +50,11 @@ const Player = ({
       />
       <Hand
         cardsInHand={cardsInHandArray}
+        handleCardInteractionClick={handleCardInteractionClick}
         imagesDataCards={imagesDataCards}
         imagesDataSets={imagesDataSets}
+        selectedCardObject={selectedCardObject}
+        selectedCardUuid={selectedCardUuid}
       />
     </div>
   );
@@ -53,13 +68,17 @@ Player.propTypes = {
   cardsInDeckCount: PropTypes.number.isRequired,
   cardsInHandCount: PropTypes.number.isRequired,
   costGemImageSrc: PropTypes.string.isRequired,
+  deselectCardFunction: PropTypes.func.isRequired,
   heroAbilities: PropTypes.array.isRequired,
   heroSymbol: PropTypes.string.isRequired,
   imagesDataCards: PropTypes.object.isRequired,
   imagesDataSets: PropTypes.object.isRequired,
   playerDeck: PropTypes.array.isRequired,
   playerId: PropTypes.string.isRequired,
-  playerName: PropTypes.string.isRequired
+  playerName: PropTypes.string.isRequired,
+  selectCardFunction: PropTypes.func.isRequired,
+  selectedCardObject: PropTypes.object,
+  selectedCardUuid: PropTypes.string
 };
 
 Player.defaultProps = {
@@ -69,7 +88,9 @@ Player.defaultProps = {
   heroAbilities: [],
   imagesDataCards: {},
   imagesDataSets: {},
-  playerDeck: []
+  playerDeck: [],
+  selectedCardObject: null,
+  selectedCardUuid: ''
 };
 
 export default Player;

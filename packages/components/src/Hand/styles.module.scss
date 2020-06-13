@@ -132,7 +132,6 @@
 
   // prettier-ignore
   &.hand {
-    overflow-y: visible;
     transform: translateY(-100px);
     &:before { border-color: rgba(0, 0, 0, 0.65); }
     &:after  { opacity: 0; }
