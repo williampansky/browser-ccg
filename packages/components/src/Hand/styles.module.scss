@@ -84,49 +84,43 @@
 
 .close__tray__button {
   $size: 40px;
-  $spacing: calc(calc(var(--card-height) / 10) * 1);
+  $spacing: calc(calc(var(--card-height) / 10) * 2);
 
   align-items: center;
   background: #282927;
+  border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.65);
-  border-bottom: 0;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-top-left-radius: 50%;
-  border-top-right-radius: 50%;
   bottom: calc(var(--card-height) + #{$spacing});
   cursor: pointer;
   display: flex;
   flex-flow: row nowrap;
   height: $size;
   justify-content: center;
-  margin: calc(#{$size} / 1.995);
   opacity: 0;
   outline: none;
+  margin: 10px;
   padding: 10px;
   position: absolute;
   right: 0;
   top: auto;
-  transform: translateY(200%);
+  transform: translateX(200%);
   transition-delay: 0ms;
   transition-duration: 300ms;
   transition-property: opacity, transform;
   transition-timing-function: var(--animation-transition-cubic);
   width: $size;
-  z-index: -1;
+  z-index: 0;
 
   // svg wrapper
   & > div {
     position: relative;
-    top: 2px;
   }
 
   &.hand--is-expanded {
     opacity: 1;
-    transform: translateY(1px);
+    transform: translateX(0);
     pointer-events: auto;
     transition-delay: 400ms;
-    z-index: 1;
   }
 }
 
@@ -140,10 +134,8 @@
   & + .card__wrapper { margin-left: calc(var(--card-height) / -3.5); }
 }
 
+// prettier-ignore
 .hand--is-expanded {
-  max-height: calc(var(--card-height) + 50px);
-
-  // prettier-ignore
   &.hand {
     transform: translateY(-100px);
     &:before { border-color: rgba(0, 0, 0, 0.65); }
@@ -152,6 +144,7 @@
 
   &.hand.card--is-selected {
     transform: translateY(calc(var(--card-height) * 2));
+    transition-duration: 2000ms;
   }
 
   & > .card__wrapper > [data-component='CardInteractionLayer'] {

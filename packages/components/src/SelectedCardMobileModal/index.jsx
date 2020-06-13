@@ -1,4 +1,9 @@
-import React, { useCallback } from 'react';
+import React, {
+  useCallback,
+  useState,
+  useLayoutEffect,
+  useEffect
+} from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
@@ -12,6 +17,20 @@ const SelectedCardMobileModal = ({
   imagesDataSets,
   selectedCardUuid
 }) => {
+  const [animateIn, setAnimateIn] = useState(false);
+  const [animateOut, setAnimateOut] = useState(false);
+
+  // prettier-ignore
+  useLayoutEffect(() => {
+    setAnimateOut(false);
+    setTimeout(() => { setAnimateIn(true); }, 250);
+
+    return () => {
+      setAnimateIn(false);
+      setAnimateOut(true);
+    }
+  }, [card]);
+
   const handleCancelClick = useCallback(
     event => {
       event.preventDefault();
@@ -27,27 +46,35 @@ const SelectedCardMobileModal = ({
       id={`selectedCard__${selectedCardUuid}`}
     >
       <div className={styles['modal__dialog']}>
-        <div className={styles['context__menu']}>
+        <div
+          className={[
+            styles['context__menu'],
+            animateIn ? styles['context__menu--animate-in'] : ''
+          ].join(' ')}
+        >
           <ul
             className={styles['context__menu__list']}
-            data-length={contextActions.length}
+            data-length={contextActions.length + 1}
           >
             {contextActions.map((ctxObj, idx) => {
-              const { label } = ctxObj;
+              const { label, value } = ctxObj;
               return (
                 <li className={styles['list__item']} key={idx}>
-                  <button onClick={e => console.log(e)}>{label}</button>
+                  <button onClick={e => console.log(value)}>
+                    <span>{label}</span>
+                  </button>
                 </li>
               );
             })}
 
             <li className={styles['list__item']}>
               <button onClick={e => handleCancelClick(e)}>
-                <AppIcon
+                {/* <AppIcon
                   color="black"
                   fileName="icon-uikit-close"
                   size="initial"
-                />
+                /> */}
+                <span>Cancel</span>
               </button>
             </li>
           </ul>

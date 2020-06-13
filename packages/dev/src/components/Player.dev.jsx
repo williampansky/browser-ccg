@@ -4,7 +4,7 @@ import Fullscreen from 'react-full-screen';
 import { Player, SelectedCardMobileModal } from '@ccg/components';
 import { ABILITIES, CARDS_DATABASE } from '@ccg/data';
 import { CARDS, SETS } from '@ccg/images';
-import { getCardByID, exists } from '@ccg/utils';
+import { getCardByID, exists, replaceConstant } from '@ccg/utils';
 import {
   ABILITIES_ICON,
   ABILITIES_ICON_CLOSE,
@@ -12,6 +12,7 @@ import {
   PLACEHOLDER_BASE_IMAGE,
   PLACEHOLDER_IMAGE
 } from '@ccg/images';
+import { TYPE } from '@ccg/enums';
 
 const CARD_01 = getCardByID('CORE_001');
 const CARD_02 = getCardByID('CORE_002');
@@ -111,13 +112,27 @@ const TEMP_CARD = {
   uuid: 'ba11dd5f-0c50-4851-a776-36ead9020712'
 };
 
+const handleContextActions = cardObject => {
+  try {
+    const { type } = cardObject;
+    switch (type) {
+      case TYPE['MINION']:
+        return Array({
+          label: replaceConstant('%SUMMON%'),
+          value: '%SUMMON%'
+        });
+
+      default:
+        return;
+    }
+  } catch (error) {
+    return;
+  }
+};
+
 export default function PlayerDev() {
   const [selectedCardObject, setSelectedCardObject] = useState(TEMP_CARD);
   const [isFullScreen, setIsFullScreen] = useState(false);
-
-  // useLayoutEffect(() => {
-  //   document.querySelector('.fullscreen__toggle').click();
-  // }, []);
 
   const CTX_ACTIONS = [{ label: 'Attack' }, { label: 'Buff' }];
 
@@ -156,7 +171,7 @@ export default function PlayerDev() {
 
         <SelectedCardMobileModal
           card={selectedCardObject}
-          contextActions={CTX_ACTIONS}
+          contextActions={handleContextActions(selectedCardObject)}
           deselectCardFunction={() => setSelectedCardObject(null)}
           imagesDataCards={CARDS}
           imagesDataSets={SETS}
