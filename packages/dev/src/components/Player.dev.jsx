@@ -94,8 +94,8 @@ export default function PlayerDev() {
         abilitiesImageClose={ABILITIES_ICON_CLOSE}
         avatarPlaceholderImageSrc={PLACEHOLDER_IMAGE}
         cardsInHandArray={CARDS_ARRAY}
-        cardsInDeckCount={19}
-        cardsInHandCount={4}
+        cardsInDeckCount={PLAYER_DECK.length}
+        cardsInHandCount={CARDS_ARRAY.length}
         costGemImageSrc={COST_GEM_IMAGE}
         deselectCardFunction={() => setSelectedCardObject(null)}
         heroAbilities={HERO_ABILITIES}
