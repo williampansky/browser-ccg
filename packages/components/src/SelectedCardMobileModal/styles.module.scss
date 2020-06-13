@@ -52,7 +52,7 @@
   margin: auto auto 0;
   max-width: 1000px;
   opacity: 0;
-  padding: 0 15px 15px;
+  padding: 30px 15px 15px;
   position: relative;
   transform: scale(0.1);
   transition: opacity, transform 500ms linear;
@@ -78,6 +78,14 @@
 }
 
 .context__menu {
+  $fabButtonSize: var(--player-fab-size);
+  $actionButtonSize: calc(#{$fabButtonSize} * 1.5);
+  $li: calc(#{$fabButtonSize} / -0.8);
+
+  * {
+    outline: none;
+  }
+
   position: absolute;
   top: 0;
   right: 0;
@@ -85,13 +93,56 @@
   bottom: auto;
   width: 100%;
   margin: 0 auto;
+  z-index: 0;
+
+  button {
+    appearance: none;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
 
   &__list {
-    padding: 0;
-    margin: 0;
+    bottom: 0px;
+    left: 0px;
     list-style-type: none;
+    margin: 0;
+    margin: 0px;
+    padding: 0;
+    position: relative;
+    right: 0px;
+    top: 0px;
+    z-index: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
   }
 
   .list__item {
+    height: $actionButtonSize;
+    width: $actionButtonSize;
+    padding: 0;
+    margin: 0;
+    transition-property: filter, opacity, transform;
+    transition-timing-function: var(--animation-transition-cubic);
+    transition-duration: 400ms;
+    will-change: filter, opacity, transform;
+    padding: 10px;
+    position: relative;
+  }
+
+  // prettier-ignore
+  .list__item {
+    &:nth-child(1) { transform: translate(0, $li) scale(1); transition-delay: 400ms; }
+    &:nth-child(2) { transform: translate(0, calc(#{$li} * 1.45)) scale(1); transition-delay: 300ms; }
+    &:nth-child(3) { transform: translate(0, $li) scale(1);  transition-delay: 200ms; }
+    &:nth-child(4) { transform: translate(0, $li) scale(1);  transition-delay: 100ms; }
   }
 }
+
+// transform: translate(0, calc(var(--player-fab-size) / -0.8)) scale(1);
+//     transition-delay: 500ms;

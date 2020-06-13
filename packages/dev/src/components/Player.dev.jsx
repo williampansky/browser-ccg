@@ -9,6 +9,7 @@ import {
   ABILITIES_ICON,
   ABILITIES_ICON_CLOSE,
   COST_GEM_IMAGE,
+  PLACEHOLDER_BASE_IMAGE,
   PLACEHOLDER_IMAGE
 } from '@ccg/images';
 
@@ -118,11 +119,7 @@ export default function PlayerDev() {
   //   document.querySelector('.fullscreen__toggle').click();
   // }, []);
 
-  const CTX_ACTIONS = [
-    { label: 'Cancel' },
-    { label: 'Attack' },
-    { label: 'Buff' }
-  ];
+  const CTX_ACTIONS = [{ label: 'Attack' }, { label: 'Buff' }];
 
   return (
     <Fullscreen
@@ -156,11 +153,14 @@ export default function PlayerDev() {
           selectedCardObject={selectedCardObject}
           selectedCardUuid={selectedCardObject && selectedCardObject.uuid}
         />
+
         <SelectedCardMobileModal
           card={selectedCardObject}
           contextActions={CTX_ACTIONS}
+          deselectCardFunction={() => setSelectedCardObject(null)}
           imagesDataCards={CARDS}
           imagesDataSets={SETS}
+          selectedCardUuid={selectedCardObject && selectedCardObject.uuid}
         />
       </div>
     </Fullscreen>
