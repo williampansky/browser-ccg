@@ -7,7 +7,10 @@ const Avatar = ({ heroImageSrc, heroName, placeholderImageSrc }) => {
   return (
     <div className={styles['avatar']}>
       <div className={styles['avatar__position__block']} />
-      <picture className={styles['avatar__image__wrapper']} data-file="Avatar">
+      <picture
+        className={styles['avatar__image__wrapper']}
+        data-component="Avatar"
+      >
         <Img
           alt={heroName}
           className={styles['avatar__image']}

@@ -22,7 +22,7 @@
 
   // disable card component pointer
   // to avoid mixed interactions
-  [data-file='Card'] {
+  [data-component='Card'] {
     pointer-events: none;
   }
 }

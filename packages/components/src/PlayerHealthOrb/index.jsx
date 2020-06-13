@@ -51,7 +51,10 @@ const PlayerHealthOrb = ({ armorPoints, currentHealth, totalHealth }) => {
   }, [setColorClassCallback, healthState]);
 
   return (
-    <div className={styles['player__health__orb']} data-file="PlayerHealthOrb">
+    <div
+      className={styles['player__health__orb']}
+      data-component="PlayerHealthOrb"
+    >
       <div className={colorClass}>
         <div className="progress" ref={progressRef}>
           <div className="inner">

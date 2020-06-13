@@ -59,7 +59,7 @@ const CardInteractionLayer = ({
         styles['card__interaction__layer'],
         handleInteractionClass()
       ].join(' ')}
-      data-file="CardInteractionLayer"
+      data-component="CardInteractionLayer"
       data-index={index}
       onClick={e => handleInteractionClick(e, card, isPlayable, isSelected)}
       onKeyPress={e => handleInteractionClick(e, card, isPlayable, isSelected)}

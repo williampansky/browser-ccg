@@ -38,7 +38,7 @@ const Hand = ({
         styles['hand'],
         trayIsExpanded ? styles['hand--is-expanded'] : ''
       ].join(' ')}
-      data-file="Hand"
+      data-component="Hand"
       onClick={e => !trayIsExpanded && handleHandTrayClick(e, true)}
       onKeyPress={e => !trayIsExpanded && handleHandTrayClick(e, true)}
       role={trayIsExpanded ? 'presentation' : 'button'}

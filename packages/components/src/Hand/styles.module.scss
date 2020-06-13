@@ -118,12 +118,12 @@
 }
 
 // prettier-ignore
-[data-file='Hand'] .card__wrapper {
+[data-component='Hand'] .card__wrapper {
   position: relative;
   transition: margin 600ms var(--animation-transition-cubic);
   z-index: 1;
   
-  & > [data-file="CardInteractionLayer"] { pointer-events: none; }
+  & > [data-component="CardInteractionLayer"] { pointer-events: none; }
   & + .card__wrapper { margin-left: calc(var(--card-height) / -3.5); }
 }
 
@@ -137,7 +137,7 @@
     &:after  { opacity: 0; }
   }
 
-  & > .card__wrapper > [data-file='CardInteractionLayer'] {
+  & > .card__wrapper > [data-component='CardInteractionLayer'] {
     pointer-events: auto;
   }
 

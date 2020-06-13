@@ -49,7 +49,7 @@ const Hero = ({
 
   return (
     <Fragment>
-      <article className={styles['hero']} data-file="Hero">
+      <article className={styles['hero']} data-component="Hero">
         <Avatar
           heroImageSrc={getHeroImage(heroSymbol, 'AVATAR')}
           heroName={getHeroName(heroSymbol)}

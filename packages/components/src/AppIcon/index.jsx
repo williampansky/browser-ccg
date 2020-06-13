@@ -17,7 +17,7 @@ const AppIcon = ({ color, fileName, height, size, width }) => {
   return (
     <ReactSVG
       className={styles['icon']}
-      data-file="AppIcon"
+      data-component="AppIcon"
       src={getIcon(fileName)}
       style={{
         color: color,

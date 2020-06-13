@@ -7,7 +7,7 @@ import { getCardDeckImage } from '@ccg/utils';
 
 const PlayerDeck = ({ costImageSrc, playerDeck, playerPlayedCards }) => {
   return (
-    <div className={styles['deck']} data-file="Deck">
+    <div className={styles['deck']} data-component="Deck">
       {playerDeck.map((item, index) => {
         const { _amount, cost, elite, id, name, rarity, set } = item;
 

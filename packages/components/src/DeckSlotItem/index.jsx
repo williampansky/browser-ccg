@@ -18,7 +18,7 @@ const DeckSlotItem = ({
         styles['deck__item'],
         amount === 0 ? styles['deck__item--empty'] : ''
       ].join(' ')}
-      data-file="DeckItem"
+      data-component="DeckItem"
     >
       <div className={styles['item__cost']}>
         <div className="text__value">{cost}</div>

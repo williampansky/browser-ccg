@@ -75,7 +75,7 @@ const Card = ({
         styles[`card--type-${replaceConstant(type).toUpperCase()}`],
         dev ? styles['dev'] : ''
       ].join(' ')}
-      data-file="Card"
+      data-component="Card"
       id={uuid}
       onClick={onClick}
       onKeyPress={onClick}

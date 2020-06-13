@@ -75,7 +75,7 @@ const Minion = ({
         currentHealth < totalHealth ? styles['minion--is-damaged'] : '',
         currentHealth === 0 ? styles['minion--is-dead'] : ''
       ].join(' ')}
-      data-file="Minion"
+      data-component="Minion"
     >
       <MinionImage
         id={id}
