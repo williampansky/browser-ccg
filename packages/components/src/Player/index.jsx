@@ -50,6 +50,7 @@ const Player = ({
       />
       <Hand
         cardsInHand={cardsInHandArray}
+        deselectCardFunction={deselectCardFunction}
         handleCardInteractionClick={handleCardInteractionClick}
         imagesDataCards={imagesDataCards}
         imagesDataSets={imagesDataSets}
@@ -85,10 +86,16 @@ Player.defaultProps = {
   cardsInHandArray: [],
   cardsInDeckCount: 0,
   cardsInHandCount: 0,
+  deselectCardFunction: () => {
+    console.error('deselectCardFunction() provided as a defaultProp');
+  },
   heroAbilities: [],
   imagesDataCards: {},
   imagesDataSets: {},
   playerDeck: [],
+  selectCardFunction: () => {
+    console.error('selectCardFunction() provided as a defaultProp');
+  },
   selectedCardObject: null,
   selectedCardUuid: ''
 };
