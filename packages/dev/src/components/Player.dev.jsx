@@ -24,10 +24,10 @@ const CARD_10 = getCardByID('CORE_010');
 const CARDS_ARRAY = [
   CARD_01,
   CARD_02,
-  CARD_03
-  // CARD_04,
-  // CARD_05,
-  // CARD_06,
+  CARD_03,
+  CARD_04,
+  CARD_05,
+  CARD_06
   // CARD_07,
   // CARD_08,
   // CARD_09,

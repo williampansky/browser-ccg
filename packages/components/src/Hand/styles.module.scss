@@ -96,9 +96,10 @@
   right: 0;
   top: auto;
   transform: translateY(200%);
-  transition-property: opacity, transform, visibility;
-  transition: 300ms var(--animation-transition-cubic);
-  visibility: hidden;
+  transition-delay: 0ms;
+  transition-duration: 300ms;
+  transition-property: opacity, transform;
+  transition-timing-function: var(--animation-transition-cubic);
   width: $size;
   z-index: -1;
 
@@ -110,9 +111,9 @@
 
   &.hand--is-expanded {
     opacity: 1;
-    visibility: visible;
     transform: translateY(1px);
     pointer-events: auto;
+    transition-delay: 400ms;
     z-index: 1;
   }
 }
@@ -128,7 +129,8 @@
 }
 
 .hand--is-expanded {
-  max-height: 100%;
+  // overflow: visible;
+  max-height: 240px;
 
   // prettier-ignore
   &.hand {

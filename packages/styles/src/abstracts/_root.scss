@@ -116,5 +116,6 @@
 
   // z-index vars
   // ========================================================================
-  --zIndex-SelectedCardMobileModal:    100;
+  --zIndex-SelectedCardMobileModal:               100;
+  --zIndex-CardInteractionLayer--is-selected:     600;
 }
