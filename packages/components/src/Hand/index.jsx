@@ -7,6 +7,7 @@ import AppIcon from '../AppIcon';
 
 const Hand = ({
   cardsInHand,
+  deselectCardFunction,
   handleCardInteractionClick,
   imagesDataCards,
   imagesDataSets,
@@ -21,6 +22,15 @@ const Hand = ({
       setTrayIsExpanded(bool);
     },
     [setTrayIsExpanded]
+  );
+
+  const handleCloseTrayClick = useCallback(
+    (event, bool) => {
+      event.preventDefault();
+      deselectCardFunction(null);
+      setTrayIsExpanded(bool);
+    },
+    [deselectCardFunction, setTrayIsExpanded]
   );
 
   return (
@@ -68,8 +78,8 @@ const Hand = ({
           styles['close__tray__button'],
           trayIsExpanded ? styles['hand--is-expanded'] : ''
         ].join(' ')}
-        onClick={e => trayIsExpanded && handleHandTrayClick(e, false)}
-        onKeyPress={e => trayIsExpanded && handleHandTrayClick(e, false)}
+        onClick={e => trayIsExpanded && handleCloseTrayClick(e, false)}
+        onKeyPress={e => trayIsExpanded && handleCloseTrayClick(e, false)}
         role="button"
         tabIndex={0}
       >
@@ -81,10 +91,10 @@ const Hand = ({
 
 Hand.propTypes = {
   cardsInHand: PropTypes.array,
+  deselectCardFunction: PropTypes.func.isRequired,
   handleCardInteractionClick: PropTypes.func.isRequired,
   imagesDataCards: PropTypes.object.isRequired,
   imagesDataSets: PropTypes.object.isRequired,
-  trayIsExpanded: PropTypes.bool.isRequired,
   selectedCardObject: PropTypes.object,
   selectedCardUuid: PropTypes.string
 };
@@ -92,8 +102,7 @@ Hand.propTypes = {
 Hand.defaultProps = {
   cardsInHand: [],
   imagesDataCards: {},
-  imagesDataSets: {},
-  trayIsExpanded: true
+  imagesDataSets: {}
 };
 
 export default Hand;
