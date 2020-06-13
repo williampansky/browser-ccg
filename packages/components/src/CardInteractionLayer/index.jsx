@@ -53,18 +53,11 @@ const CardInteractionLayer = ({
     else return '';
   }, [isPlayable, isSelected]);
 
-  const handleInteractionModule = useCallback(() => {
-    if (isSelected) return styles['card__interaction--is-selected'];
-    else if (isPlayable) return styles['card__interaction--is-playable'];
-    else return '';
-  }, [isPlayable, isSelected]);
-
   return (
     <div
       className={[
         styles['card__interaction__layer'],
-        handleInteractionClass(),
-        handleInteractionModule()
+        handleInteractionClass()
       ].join(' ')}
       data-file="CardInteractionLayer"
       data-index={index}

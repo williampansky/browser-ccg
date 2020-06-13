@@ -25,8 +25,4 @@
   [data-file='Card'] {
     pointer-events: none;
   }
-
-  &.card__interaction--is-selected {
-    transform: translate(0, -100px);
-  }
 }
