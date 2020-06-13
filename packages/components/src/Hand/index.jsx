@@ -36,7 +36,8 @@ const Hand = ({
     <div
       className={[
         styles['hand'],
-        trayIsExpanded ? styles['hand--is-expanded'] : ''
+        trayIsExpanded ? styles['hand--is-expanded'] : '',
+        selectedCardObject ? styles['card--is-selected'] : ''
       ].join(' ')}
       data-component="Hand"
       onClick={e => !trayIsExpanded && handleHandTrayClick(e, true)}
@@ -47,7 +48,8 @@ const Hand = ({
       <div
         className={[
           styles['card__tray'],
-          trayIsExpanded ? styles['hand--is-expanded'] : ''
+          trayIsExpanded ? styles['hand--is-expanded'] : '',
+          selectedCardObject ? styles['card--is-selected'] : ''
         ].join(' ')}
       >
         {cardsInHand.map((object, index) => {

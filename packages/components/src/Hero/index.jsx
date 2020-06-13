@@ -17,6 +17,7 @@ const Hero = ({
   abilitiesImageBase,
   abilitiesImageClose,
   avatarPlaceholderImageSrc,
+  cardIsSelected,
   cardsInDeck,
   cardsInHand,
   costGemImageSrc,
@@ -49,7 +50,13 @@ const Hero = ({
 
   return (
     <Fragment>
-      <article className={styles['hero']} data-component="Hero">
+      <article
+        className={[
+          styles['hero'],
+          cardIsSelected ? styles['card--is-selected'] : ''
+        ].join(' ')}
+        data-component="Hero"
+      >
         <Avatar
           heroImageSrc={getHeroImage(heroSymbol, 'AVATAR')}
           heroName={getHeroName(heroSymbol)}
@@ -118,6 +125,7 @@ Hero.propTypes = {
   abilitiesImageBase: PropTypes.string,
   abilitiesImageClose: PropTypes.string,
   avatarPlaceholderImageSrc: PropTypes.string.isRequired,
+  cardIsSelected: PropTypes.bool,
   cardsInDeck: PropTypes.number,
   cardsInHand: PropTypes.number,
   costGemImageSrc: PropTypes.string,
@@ -134,6 +142,7 @@ Hero.propTypes = {
 };
 
 Hero.defaultProps = {
+  cardIsSelected: false,
   cardsInDeck: 0,
   cardsInHand: 0,
   energyCurrent: 0,

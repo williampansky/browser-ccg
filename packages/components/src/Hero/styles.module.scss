@@ -12,8 +12,13 @@
   height: $sizeH;
   justify-content: flex-start;
   position: relative;
+  transition: transform 600ms var(--animation-transition-cubic);
   width: 100vw;
   z-index: 1;
+
+  &.card--is-selected {
+    transform: translateY(calc(#{$sizeH} / 1.333333333));
+  }
 
   .player__info {
     padding-bottom: calc(#{$sizeH} / 15);

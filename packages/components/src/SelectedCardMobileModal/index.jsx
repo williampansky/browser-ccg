@@ -4,7 +4,12 @@ import styles from './styles.module.scss';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { Card } from '@ccg/components';
 
-const SelectedCardMobileModal = ({ card, imagesDataCards, imagesDataSets }) => {
+const SelectedCardMobileModal = ({
+  card,
+  contextActions,
+  imagesDataCards,
+  imagesDataSets
+}) => {
   if (card === null) return null;
 
   const {
@@ -49,44 +54,55 @@ const SelectedCardMobileModal = ({ card, imagesDataCards, imagesDataSets }) => {
       id={`selectedCard__${uuid}`}
     >
       <div className={styles['modal__dialog']}>
-        <div>
-          <Card
-            active={active}
-            artist={artist}
-            attack={attack}
-            collectible={collectible}
-            cost={cost}
-            deckBuilder={deckBuilder}
-            elite={elite}
-            entourage={entourage}
-            flavor={flavor}
-            health={health}
-            howToEarn={howToEarn}
-            howToEarnGolden={howToEarnGolden}
-            id={id}
-            imageBaseSrc={getCardBaseImage(rarity, type, imagesDataCards)}
-            imageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
-            isGolden={isGolden}
-            mechanics={mechanics}
-            name={name}
-            numberOvercharge={numberOvercharge}
-            numberPrimary={numberPrimary}
-            numberRNG={numberRNG}
-            numberSecondary={numberSecondary}
-            onClick={onClick}
-            playContext={playContext}
-            playRequirements={playRequirements}
-            playType={playType}
-            race={race}
-            rarity={rarity}
-            set={set}
-            sounds={sounds}
-            targetingArrowText={targetingArrowText}
-            text={text}
-            type={type}
-            uuid={uuid}
-          />
+        <div className={styles['context__menu']}>
+          <ul className={styles['context__menu__list']}>
+            {contextActions.map((ctx, idx) => {
+              return (
+                <li className={styles['list__item']} key={idx}>
+                  {idx}
+                </li>
+              );
+            })}
+            <li className={styles['list__item']}>Cancel</li>
+          </ul>
         </div>
+
+        <Card
+          active={active}
+          artist={artist}
+          attack={attack}
+          collectible={collectible}
+          cost={cost}
+          deckBuilder={deckBuilder}
+          elite={elite}
+          entourage={entourage}
+          flavor={flavor}
+          health={health}
+          howToEarn={howToEarn}
+          howToEarnGolden={howToEarnGolden}
+          id={id}
+          imageBaseSrc={getCardBaseImage(rarity, type, imagesDataCards)}
+          imageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
+          isGolden={isGolden}
+          mechanics={mechanics}
+          name={name}
+          numberOvercharge={numberOvercharge}
+          numberPrimary={numberPrimary}
+          numberRNG={numberRNG}
+          numberSecondary={numberSecondary}
+          onClick={onClick}
+          playContext={playContext}
+          playRequirements={playRequirements}
+          playType={playType}
+          race={race}
+          rarity={rarity}
+          set={set}
+          sounds={sounds}
+          targetingArrowText={targetingArrowText}
+          text={text}
+          type={type}
+          uuid={uuid}
+        />
       </div>
     </div>
   );
@@ -94,12 +110,14 @@ const SelectedCardMobileModal = ({ card, imagesDataCards, imagesDataSets }) => {
 
 SelectedCardMobileModal.propTypes = {
   card: PropTypes.object,
+  contextActions: PropTypes.array,
   imagesDataCards: PropTypes.object.isRequired,
   imagesDataSets: PropTypes.object.isRequired
 };
 
 SelectedCardMobileModal.defaultProps = {
   card: {},
+  contextActions: [],
   imagesDataCards: {},
   imagesDataSets: {}
 };

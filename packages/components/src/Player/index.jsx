@@ -39,6 +39,7 @@ const Player = ({
         abilitiesImageBase={abilitiesImageBase}
         abilitiesImageClose={abilitiesImageClose}
         avatarPlaceholderImageSrc={avatarPlaceholderImageSrc}
+        cardIsSelected={selectedCardUuid ? true : false}
         cardsInDeck={cardsInDeckCount}
         cardsInHand={cardsInHandCount}
         costGemImageSrc={costGemImageSrc}

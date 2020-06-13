@@ -46,7 +46,10 @@ const HeroAbilityFAB = ({
   );
 
   return (
-    <div className={styles['hero__ability__fab']}>
+    <div
+      className={styles['hero__ability__fab']}
+      data-component="HeroAbilityFAB"
+    >
       <Fab
         alwaysShowTitle={false}
         event="click"

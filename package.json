@@ -66,6 +66,7 @@
     "react-burger-menu": "^2.6.15",
     "react-countup": "^4.3.3",
     "react-dom": "^16.10.2",
+    "react-full-screen": "^0.2.4",
     "react-helmet": "^6.0.0",
     "react-hot-loader": "^4.12.21",
     "react-image": "^4.0.1",

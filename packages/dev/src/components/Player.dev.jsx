@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
+import Fullscreen from 'react-full-screen';
 import { Player, SelectedCardMobileModal } from '@ccg/components';
 import { ABILITIES, CARDS_DATABASE } from '@ccg/data';
 import { CARDS, SETS } from '@ccg/images';
@@ -84,36 +85,84 @@ const HERO_ABILITIES = [
   ABILITIES[`HERO_${HERO}_003`]
 ];
 
+const TEMP_CARD = {
+  active: true,
+  artist:
+    '<a href="https://graphicriver.net/user/rexard" rel="noopener noreferrer" target="_blank">Rexard</a>',
+  attack: 1,
+  cardClass: '%CLASS_NONE%',
+  collectible: true,
+  cost: 1,
+  elite: false,
+  entourage: [],
+  health: 2,
+  howToEarn: 'Provided to all players.',
+  mechanics: ['%BULWARK%'],
+  id: 'CORE_002',
+  name: 'Rookie Lancer',
+  race: '%RACE_NONE%',
+  rarity: '%RARITY_FREE%',
+  set: '%SET_002%',
+  text: '<strong>%BULWARK%</strong>',
+  type: '%TYPE_MINION%',
+  key: 'CORE_002',
+  value: 'Rookie Lancer',
+  uuid: 'ba11dd5f-0c50-4851-a776-36ead9020712'
+};
+
 export default function PlayerDev() {
-  const [selectedCardObject, setSelectedCardObject] = useState(null);
+  const [selectedCardObject, setSelectedCardObject] = useState(TEMP_CARD);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  // useLayoutEffect(() => {
+  //   document.querySelector('.fullscreen__toggle').click();
+  // }, []);
+
+  const CTX_ACTIONS = [
+    { label: 'Cancel' },
+    { label: 'Attack' },
+    { label: 'Buff' }
+  ];
 
   return (
-    <div id="app" style={{ justifyContent: 'flex-end' }}>
-      <Player
-        abilitiesImageBase={ABILITIES_ICON}
-        abilitiesImageClose={ABILITIES_ICON_CLOSE}
-        avatarPlaceholderImageSrc={PLACEHOLDER_IMAGE}
-        cardsInHandArray={CARDS_ARRAY}
-        cardsInDeckCount={PLAYER_DECK.length}
-        cardsInHandCount={CARDS_ARRAY.length}
-        costGemImageSrc={COST_GEM_IMAGE}
-        deselectCardFunction={() => setSelectedCardObject(null)}
-        heroAbilities={HERO_ABILITIES}
-        heroSymbol={HERO_SYMBOL}
-        imagesDataCards={CARDS}
-        imagesDataSets={SETS}
-        playerDeck={PLAYER_DECK}
-        playerId={'0'}
-        playerName="pantsme"
-        selectCardFunction={obj => setSelectedCardObject(obj)}
-        selectedCardObject={selectedCardObject}
-        selectedCardUuid={selectedCardObject && selectedCardObject.uuid}
-      />
-      {/* <SelectedCardMobileModal
-        card={selectedCardObject}
-        imagesDataCards={CARDS}
-        imagesDataSets={SETS}
-      /> */}
-    </div>
+    <Fullscreen
+      enabled={isFullScreen}
+      onChange={isFull => setIsFullScreen(isFull)}
+    >
+      <button
+        className="addressBarSize"
+        onClick={() => setIsFullScreen(!isFullScreen ? true : false)}
+      >
+        full
+      </button>
+      <div id="app" style={{ justifyContent: 'flex-end' }}>
+        <Player
+          abilitiesImageBase={ABILITIES_ICON}
+          abilitiesImageClose={ABILITIES_ICON_CLOSE}
+          avatarPlaceholderImageSrc={PLACEHOLDER_IMAGE}
+          cardsInHandArray={CARDS_ARRAY}
+          cardsInDeckCount={PLAYER_DECK.length}
+          cardsInHandCount={CARDS_ARRAY.length}
+          costGemImageSrc={COST_GEM_IMAGE}
+          deselectCardFunction={() => setSelectedCardObject(null)}
+          heroAbilities={HERO_ABILITIES}
+          heroSymbol={HERO_SYMBOL}
+          imagesDataCards={CARDS}
+          imagesDataSets={SETS}
+          playerDeck={PLAYER_DECK}
+          playerId={'0'}
+          playerName="pantsme"
+          selectCardFunction={obj => setSelectedCardObject(obj)}
+          selectedCardObject={selectedCardObject}
+          selectedCardUuid={selectedCardObject && selectedCardObject.uuid}
+        />
+        <SelectedCardMobileModal
+          card={selectedCardObject}
+          contextActions={CTX_ACTIONS}
+          imagesDataCards={CARDS}
+          imagesDataSets={SETS}
+        />
+      </div>
+    </Fullscreen>
   );
 }

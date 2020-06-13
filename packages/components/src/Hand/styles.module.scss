@@ -1,6 +1,8 @@
 // prettier-ignore
 .hand {
   --card-height: 200px;
+  @media (min-width: 400px) and (min-height: 730px) { --card-height: 300px; }
+  @media (min-width: 1200px) and (min-height: 1040px) { --card-height: 400px; }
 }
 
 .hand {
@@ -22,6 +24,12 @@
   transition: transform 600ms var(--animation-transition-cubic);
   width: 100vw;
   z-index: 0;
+
+  // prettier-ignore
+  & {
+    @media (min-width: 400px) and (min-height: 730px) { transform: translateY(50%); }
+    @media (min-width: 1200px) and (min-height: 1040px) { transform: translateY(60%); }
+  }
 
   &:before {
     border-top: 1px solid rgba(255, 255, 255, 0.465);
@@ -129,14 +137,17 @@
 }
 
 .hand--is-expanded {
-  // overflow: visible;
-  max-height: 240px;
+  max-height: calc(var(--card-height) + 50px);
 
   // prettier-ignore
   &.hand {
     transform: translateY(-100px);
     &:before { border-color: rgba(0, 0, 0, 0.65); }
     &:after  { opacity: 0; }
+  }
+
+  &.hand.card--is-selected {
+    transform: translateY(calc(var(--card-height) * 2));
   }
 
   & > .card__wrapper > [data-component='CardInteractionLayer'] {
