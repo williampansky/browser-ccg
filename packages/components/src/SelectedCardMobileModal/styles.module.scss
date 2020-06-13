@@ -1,26 +1,73 @@
-.icon {
-  display: inline-block;
-  color: white;
-  width: 100%;
+// prettier-ignore
+.selected__card__mobile__modal {
+  --card-height: 350px;
+  @media (min-width: 375px) { --card-height: 375px; }
+}
+
+.selected__card__mobile__modal {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  flex-flow: column nowrap;
   height: 100%;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: var(--zIndex-SelectedCardMobileModal);
 
-  div {
-    pointer-events: none;
-    width: 100%;
+  &:after {
+    animation: fadeInModalBg 200ms ease-out 0ms 1 normal forwards;
+    background: mix(black, transparent, 75%);
+    bottom: 0;
+    content: '';
     height: 100%;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: calc(var(--zIndex-SelectedCardMobileModal) - 1);
   }
 
-  svg {
-    display: block;
-    pointer-events: none;
-    width: 100%;
-    height: 100%;
+  // prettier-ignore
+  @keyframes fadeInModalBg {
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
+}
 
-  svg,
-  svg g,
-  svg path {
-    fill: currentColor;
-    stroke: currentColor;
+.modal__dialog {
+  align-items: center;
+  animation: scaleInDialog 400ms ease-out 0ms 1 normal forwards;
+  background: none;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  margin: auto;
+  max-width: 1000px;
+  opacity: 0;
+  padding: 30px 15px;
+  position: relative;
+  transform: scale(0.1);
+  transition: opacity, transform 500ms linear;
+  width: 100%;
+  z-index: calc(var(--zIndex-SelectedCardMobileModal) + 1);
+
+  @keyframes scaleInDialog {
+    from {
+      opacity: 0;
+      transform: scale(0.1);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }

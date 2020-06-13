@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { Player } from '@ccg/components';
+import { Player, SelectedCardMobileModal } from '@ccg/components';
 import { ABILITIES, CARDS_DATABASE } from '@ccg/data';
 import { CARDS, SETS } from '@ccg/images';
 import { getCardByID, exists } from '@ccg/utils';
@@ -24,14 +24,14 @@ const CARD_10 = getCardByID('CORE_010');
 const CARDS_ARRAY = [
   CARD_01,
   CARD_02,
-  CARD_03,
-  CARD_04,
-  CARD_05,
-  CARD_06,
-  CARD_07,
-  CARD_08,
-  CARD_09,
-  CARD_10
+  CARD_03
+  // CARD_04,
+  // CARD_05,
+  // CARD_06,
+  // CARD_07,
+  // CARD_08,
+  // CARD_09,
+  // CARD_10
 ];
 
 const HERO = 'EXILE';
@@ -109,6 +109,11 @@ export default function PlayerDev() {
         selectedCardObject={selectedCardObject}
         selectedCardUuid={selectedCardObject && selectedCardObject.uuid}
       />
+      {/* <SelectedCardMobileModal
+        card={selectedCardObject}
+        imagesDataCards={CARDS}
+        imagesDataSets={SETS}
+      /> */}
     </div>
   );
 }
