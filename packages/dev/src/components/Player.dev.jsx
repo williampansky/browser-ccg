@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Player } from '@ccg/components';
 import { ABILITIES, CARDS_DATABASE } from '@ccg/data';
 import { CARDS, SETS } from '@ccg/images';
@@ -87,10 +87,6 @@ const HERO_ABILITIES = [
 export default function PlayerDev() {
   const [selectedCardObject, setSelectedCardObject] = useState(null);
 
-  useEffect(() => {
-    exists(selectedCardObject) && console.log(selectedCardObject.uuid);
-  }, [selectedCardObject]);
-
   return (
     <div id="app" style={{ justifyContent: 'flex-end' }}>
       <Player
@@ -101,7 +97,7 @@ export default function PlayerDev() {
         cardsInDeckCount={19}
         cardsInHandCount={4}
         costGemImageSrc={COST_GEM_IMAGE}
-        deselectCardFunction={() => setSelectedCardObject({})}
+        deselectCardFunction={() => setSelectedCardObject(null)}
         heroAbilities={HERO_ABILITIES}
         heroSymbol={HERO_SYMBOL}
         imagesDataCards={CARDS}
