@@ -45,7 +45,7 @@
   }
 
   &:after {
-    background: rgba(0, 0, 0, 0.4765);
+    background: mix(black, transparent, 65%);
     content: '';
     height: 100%;
     left: 0;

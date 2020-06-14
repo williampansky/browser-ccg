@@ -17,7 +17,7 @@ const Player = ({
   imagesDataCards,
   imagesDataSets,
   playerDeck,
-  playerId,
+  yourId,
   playerName,
   selectCardFunction,
   selectedCardObject,
@@ -46,7 +46,7 @@ const Player = ({
         heroAbilities={heroAbilities}
         heroSymbol={heroSymbol}
         playerDeck={playerDeck}
-        playerId={playerId}
+        yourId={yourId}
         playerName={playerName}
       />
       <Hand
@@ -76,7 +76,7 @@ Player.propTypes = {
   imagesDataCards: PropTypes.object.isRequired,
   imagesDataSets: PropTypes.object.isRequired,
   playerDeck: PropTypes.array.isRequired,
-  playerId: PropTypes.string.isRequired,
+  yourId: PropTypes.string.isRequired,
   playerName: PropTypes.string.isRequired,
   selectCardFunction: PropTypes.func.isRequired,
   selectedCardObject: PropTypes.object,

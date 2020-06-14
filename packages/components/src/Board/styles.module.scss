@@ -1,0 +1,51 @@
+.board {
+  background: var(--board-board-background-color);
+  height: 65vh;
+  width: 100vw;
+  max-width: 100vw;
+  min-width: 100vw;
+  margin-bottom: 78px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.player__board {
+  height: 50%;
+  width: 100vw;
+  max-width: 100vw;
+  min-width: 100vw;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.their__board {
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.your__board {
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.play__area {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100vw;
+  max-width: 100vw;
+  min-width: 100vw;
+  overflow-y: hidden;
+  overflow-x: auto;
+
+  & > div {
+    margin: 0 60px;
+    height: 40px;
+    background: red;
+  }
+}

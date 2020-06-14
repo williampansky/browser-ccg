@@ -29,7 +29,7 @@ const Hero = ({
   playerDeck,
   playerHealthCurrent,
   playerHealthTotal,
-  playerId,
+  yourId,
   playerName
 }) => {
   const [deckMenuOpen, setDeckMenuOpen] = useState(false);
@@ -88,7 +88,7 @@ const Hero = ({
               totalEnergy={energyTotal}
             />
           </div>
-          <PlayerName id={playerId} name={playerName} />
+          <PlayerName id={yourId} name={playerName} />
         </header>
 
         <div className={styles['player__fab']}>
@@ -137,7 +137,7 @@ Hero.propTypes = {
   playerDeck: PropTypes.array,
   playerHealthCurrent: PropTypes.number,
   playerHealthTotal: PropTypes.number,
-  playerId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  yourId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   playerName: PropTypes.string
 };
 
