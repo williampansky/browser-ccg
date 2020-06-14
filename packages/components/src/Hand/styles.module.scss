@@ -75,10 +75,19 @@
   padding-bottom: calc(var(--card-height) / 10);
   padding-top: calc(var(--card-height) / 10);
 
-  // prettier-ignore
-  & > .card__wrapper {
-    &:first-child { padding-left:  calc(var(--card-height) / 10); }
-    &:last-child  { padding-right: calc(var(--card-height) / 10); }
+  & > div {
+    &:first-child {
+      margin-left: 0 !important;
+      padding-left: calc(var(--card-height) / 10);
+    }
+
+    &:last-child {
+      padding-right: calc(var(--card-height) / 10);
+    }
+  }
+
+  & > div > [data-component='CardInteractionLayer'] {
+    pointer-events: none;
   }
 }
 
@@ -125,17 +134,17 @@
 }
 
 // prettier-ignore
-[data-component='Hand'] .card__wrapper {
-  position: relative;
-  transition: margin 600ms var(--animation-transition-cubic);
-  z-index: 1;
-  
-  & > [data-component="CardInteractionLayer"] { pointer-events: none; }
-  & + .card__wrapper { margin-left: calc(var(--card-height) / -3.5); }
-}
+// [data-component='Hand'] .card__wrapper {
+//   position: relative;
+//   transition: margin 600ms var(--animation-transition-cubic);
+//   z-index: 1;
 
-// prettier-ignore
+//   & > [data-component="CardInteractionLayer"] { pointer-events: none; }
+//   & + .card__wrapper { margin-left: calc(var(--card-height) / -3.5); }
+// }
+
 .hand--is-expanded {
+  // prettier-ignore
   &.hand {
     transform: translateY(-100px);
     &:before { border-color: rgba(0, 0, 0, 0.65); }
@@ -147,11 +156,11 @@
     transition-duration: 2000ms;
   }
 
-  & > .card__wrapper > [data-component='CardInteractionLayer'] {
+  & > div > [data-component='CardInteractionLayer'] {
     pointer-events: auto;
   }
 
-  & > .card__wrapper + .card__wrapper {
-    margin-left: calc(var(--card-height) / 10);
-  }
+  // & > .card__wrapper + .card__wrapper {
+  //   margin-left: calc(var(--card-height) / 10);
+  // }
 }

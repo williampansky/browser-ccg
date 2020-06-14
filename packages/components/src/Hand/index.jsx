@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { AppIcon, CardInteractionLayer } from '@ccg/components';
+import HandSlot from '../HandSlot';
 
 const Hand = ({
   cardsInHand,
@@ -55,21 +56,17 @@ const Hand = ({
         {cardsInHand.map((object, index) => {
           const { id, rarity, set, type, uuid } = object;
           return (
-            <div className={styles['card__wrapper']} key={uuid}>
-              <CardInteractionLayer
-                card={object}
-                cardImageBaseSrc={getCardBaseImage(
-                  rarity,
-                  type,
-                  imagesDataCards
-                )}
-                cardImageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
-                handleInteractionClick={handleCardInteractionClick}
-                index={index}
-                isPlayable={index === 1 ? true : false}
-                isSelected={selectedCardUuid === uuid ? true : false}
-              />
-            </div>
+            <HandSlot
+              cardImageBaseSrc={getCardBaseImage(rarity, type, imagesDataCards)}
+              cardImageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
+              cardObject={object}
+              cardUuid={uuid}
+              handleInteractionClick={handleCardInteractionClick}
+              key={uuid}
+              selectedCardUuid={selectedCardUuid}
+              slotIndex={index}
+              trayIsExpanded={trayIsExpanded}
+            />
           );
         })}
       </div>
