@@ -2,18 +2,19 @@ import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
-import { AppIcon, CardInteractionLayer } from '@ccg/components';
-import HandSlot from '../HandSlot';
+import { AppIcon, HandSlot } from '@ccg/components';
 
-const Hand = ({
-  cardsInHand,
-  deselectCardFunction,
-  handleCardInteractionClick,
-  imagesDataCards,
-  imagesDataSets,
-  selectedCardObject,
-  selectedCardUuid
-}) => {
+const Hand = props => {
+  const {
+    cardsInHand,
+    deselectCardFunction,
+    handleCardInteractionClick,
+    imagesDataCards,
+    imagesDataSets,
+    selectedCardObject,
+    selectedCardUuid
+  } = props;
+
   const [trayIsExpanded, setTrayIsExpanded] = useState(false);
 
   const handleHandTrayClick = useCallback(
@@ -99,8 +100,11 @@ Hand.propTypes = {
 
 Hand.defaultProps = {
   cardsInHand: [],
-  imagesDataCards: {},
-  imagesDataSets: {}
+  deselectCardFunction: () => {
+    console.error('Hand: deselectCardFunction() provided as a defaultProp');
+  },
+  selectedCardObject: null,
+  selectedCardUuid: null
 };
 
 export default Hand;
