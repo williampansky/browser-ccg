@@ -1,22 +1,19 @@
-import React, {
-  useCallback,
-  useState,
-  useLayoutEffect,
-  useEffect
-} from 'react';
+import React, { useCallback, useState, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { AppIcon, Card } from '@ccg/components';
 
-const SelectedCardMobileModal = ({
-  card,
-  contextActions,
-  deselectCardFunction,
-  imagesDataCards,
-  imagesDataSets,
-  selectedCardUuid
-}) => {
+const SelectedCardMobileModal = props => {
+  const {
+    card,
+    contextActions,
+    deselectCardFunction,
+    imagesDataCards,
+    imagesDataSets,
+    selectedCardUuid
+  } = props;
+
   const [animateIn, setAnimateIn] = useState(false);
   const [animateOut, setAnimateOut] = useState(false);
 
