@@ -23,6 +23,7 @@ body,
   max-width: 100vw;
 }
 
+.fullscreen,
 #app {
   background: #222;
   display: flex;
@@ -44,4 +45,8 @@ body,
   right: 0;
   text-align: right;
   z-index: 1;
+
+  &.button {
+    z-index: 2;
+  }
 }

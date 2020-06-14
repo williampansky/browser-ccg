@@ -1,5 +1,5 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
-import Component from './components/Player.dev';
+import Component from './components/Board.dev';
 
 const App = () => {
   const [addressBarSize, setAddressBarSize] = useState(0);

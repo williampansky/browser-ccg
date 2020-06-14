@@ -24,7 +24,7 @@
   right: auto;
   top: -10px;
   visibility: visible;
-  z-index: 1;
+  z-index: 2;
 
   &.overlay--in-effect {
     opacity: 0;
@@ -104,7 +104,7 @@
   top: auto;
   visibility: visible;
   width: $size;
-  z-index: 1;
+  z-index: 2;
 
   &.overlay--in-effect {
     opacity: 0;

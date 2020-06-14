@@ -2,17 +2,19 @@ import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
-import { AppIcon, CardInteractionLayer } from '@ccg/components';
+import { AppIcon, HandSlot } from '@ccg/components';
 
-const Hand = ({
-  cardsInHand,
-  deselectCardFunction,
-  handleCardInteractionClick,
-  imagesDataCards,
-  imagesDataSets,
-  selectedCardObject,
-  selectedCardUuid
-}) => {
+const Hand = props => {
+  const {
+    cardsInHand,
+    deselectCardFunction,
+    handleCardInteractionClick,
+    imagesDataCards,
+    imagesDataSets,
+    selectedCardObject,
+    selectedCardUuid
+  } = props;
+
   const [trayIsExpanded, setTrayIsExpanded] = useState(false);
 
   const handleHandTrayClick = useCallback(
@@ -36,7 +38,8 @@ const Hand = ({
     <div
       className={[
         styles['hand'],
-        trayIsExpanded ? styles['hand--is-expanded'] : ''
+        trayIsExpanded ? styles['hand--is-expanded'] : '',
+        selectedCardObject ? styles['card--is-selected'] : ''
       ].join(' ')}
       data-component="Hand"
       onClick={e => !trayIsExpanded && handleHandTrayClick(e, true)}
@@ -47,27 +50,24 @@ const Hand = ({
       <div
         className={[
           styles['card__tray'],
-          trayIsExpanded ? styles['hand--is-expanded'] : ''
+          trayIsExpanded ? styles['hand--is-expanded'] : '',
+          selectedCardObject ? styles['card--is-selected'] : ''
         ].join(' ')}
       >
         {cardsInHand.map((object, index) => {
           const { id, rarity, set, type, uuid } = object;
           return (
-            <div className={styles['card__wrapper']} key={uuid}>
-              <CardInteractionLayer
-                card={object}
-                cardImageBaseSrc={getCardBaseImage(
-                  rarity,
-                  type,
-                  imagesDataCards
-                )}
-                cardImageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
-                handleInteractionClick={handleCardInteractionClick}
-                index={index}
-                isPlayable={index === 1 ? true : false}
-                isSelected={selectedCardUuid === uuid ? true : false}
-              />
-            </div>
+            <HandSlot
+              cardImageBaseSrc={getCardBaseImage(rarity, type, imagesDataCards)}
+              cardImageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
+              cardObject={object}
+              cardUuid={uuid}
+              handleInteractionClick={handleCardInteractionClick}
+              key={uuid}
+              selectedCardUuid={selectedCardUuid}
+              slotIndex={index}
+              trayIsExpanded={trayIsExpanded}
+            />
           );
         })}
       </div>
@@ -100,8 +100,11 @@ Hand.propTypes = {
 
 Hand.defaultProps = {
   cardsInHand: [],
-  imagesDataCards: {},
-  imagesDataSets: {}
+  deselectCardFunction: () => {
+    console.error('Hand: deselectCardFunction() provided as a defaultProp');
+  },
+  selectedCardObject: null,
+  selectedCardUuid: null
 };
 
 export default Hand;

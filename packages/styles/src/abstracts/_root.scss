@@ -27,6 +27,7 @@
   // layout vars
   // ========================================================================
   --game-wrapper-background-color:              #333;
+  --board-board-background-color:               #151515;
   --board-theirHand-background-color:           #151515;
   --board-theirHand-height:                     45px;
   --board-theirHand-zIndex:                     200;
@@ -116,5 +117,6 @@
 
   // z-index vars
   // ========================================================================
-  --zIndex-SelectedCardMobileModal:    100;
+  --zIndex-SelectedCardMobileModal:               100;
+  --zIndex-CardInteractionLayer--is-selected:     600;
 }

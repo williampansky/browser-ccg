@@ -1,6 +1,8 @@
 // prettier-ignore
 .hand {
   --card-height: 200px;
+  @media (min-width: 400px) and (min-height: 730px) { --card-height: 300px; }
+  @media (min-width: 1200px) and (min-height: 1040px) { --card-height: 400px; }
 }
 
 .hand {
@@ -23,6 +25,12 @@
   width: 100vw;
   z-index: 0;
 
+  // prettier-ignore
+  & {
+    @media (min-width: 400px) and (min-height: 730px) { transform: translateY(50%); }
+    @media (min-width: 1200px) and (min-height: 1040px) { transform: translateY(60%); }
+  }
+
   &:before {
     border-top: 1px solid rgba(255, 255, 255, 0.465);
     content: '';
@@ -37,7 +45,7 @@
   }
 
   &:after {
-    background: rgba(0, 0, 0, 0.4765);
+    background: mix(black, transparent, 65%);
     content: '';
     height: 100%;
     left: 0;
@@ -48,6 +56,10 @@
     transition: opacity 300ms linear;
     width: 100%;
     z-index: 1;
+  }
+
+  &.card--is-selected {
+    transform: translateY(calc(var(--card-height) * 2));
   }
 }
 
@@ -63,85 +75,83 @@
   padding-bottom: calc(var(--card-height) / 10);
   padding-top: calc(var(--card-height) / 10);
 
-  // prettier-ignore
-  & > .card__wrapper {
-    &:first-child { padding-left:  calc(var(--card-height) / 10); }
-    &:last-child  { padding-right: calc(var(--card-height) / 10); }
+  & > div {
+    &:first-child {
+      margin-left: 0 !important;
+      padding-left: calc(var(--card-height) / 10);
+    }
+
+    &:last-child {
+      padding-right: calc(var(--card-height) / 10);
+    }
+  }
+
+  & > div > [data-component='CardInteractionLayer'] {
+    pointer-events: none;
   }
 }
 
 .close__tray__button {
   $size: 40px;
-  $spacing: calc(calc(var(--card-height) / 10) * 1);
+  $spacing: calc(calc(var(--card-height) / 10) * 2);
 
   align-items: center;
   background: #282927;
+  border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.65);
-  border-bottom: 0;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-top-left-radius: 50%;
-  border-top-right-radius: 50%;
   bottom: calc(var(--card-height) + #{$spacing});
   cursor: pointer;
   display: flex;
   flex-flow: row nowrap;
   height: $size;
   justify-content: center;
-  margin: calc(#{$size} / 1.995);
   opacity: 0;
   outline: none;
+  margin: 10px;
   padding: 10px;
   position: absolute;
   right: 0;
   top: auto;
-  transform: translateY(200%);
-  transition-property: opacity, transform, visibility;
-  transition: 300ms var(--animation-transition-cubic);
-  visibility: hidden;
+  transform: translateX(200%);
+  transition-delay: 0ms;
+  transition-duration: 300ms;
+  transition-property: opacity, transform;
+  transition-timing-function: var(--animation-transition-cubic);
   width: $size;
-  z-index: -1;
+  z-index: 0;
 
   // svg wrapper
   & > div {
     position: relative;
-    top: 2px;
   }
 
   &.hand--is-expanded {
     opacity: 1;
-    visibility: visible;
-    transform: translateY(1px);
+    transform: translateX(0);
     pointer-events: auto;
-    z-index: 1;
+    transition-delay: 400ms;
   }
-}
-
-// prettier-ignore
-[data-component='Hand'] .card__wrapper {
-  position: relative;
-  transition: margin 600ms var(--animation-transition-cubic);
-  z-index: 1;
-  
-  & > [data-component="CardInteractionLayer"] { pointer-events: none; }
-  & + .card__wrapper { margin-left: calc(var(--card-height) / -3.5); }
 }
 
 .hand--is-expanded {
-  max-height: 100%;
-
-  // prettier-ignore
   &.hand {
     transform: translateY(-100px);
-    &:before { border-color: rgba(0, 0, 0, 0.65); }
-    &:after  { opacity: 0; }
+
+    &:before {
+      border-color: rgba(0, 0, 0, 0.65);
+    }
+
+    &:after {
+      opacity: 0;
+    }
   }
 
-  & > .card__wrapper > [data-component='CardInteractionLayer'] {
+  &.hand.card--is-selected {
+    transform: translateY(calc(var(--card-height) * 2));
+    transition-duration: 2000ms;
+  }
+
+  & > div > [data-component='CardInteractionLayer'] {
     pointer-events: auto;
-  }
-
-  & > .card__wrapper + .card__wrapper {
-    margin-left: calc(var(--card-height) / 10);
   }
 }

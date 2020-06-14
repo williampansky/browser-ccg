@@ -1,17 +1,33 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import styles from './styles.module.scss';
+import { useSpring, animated, config } from 'react-spring';
 import { Card } from '@ccg/components';
+import styles from './styles.module.scss';
 
-const CardInteractionLayer = ({
-  card,
-  cardImageBaseSrc,
-  cardImageFlairSrc,
-  handleInteractionClick,
-  index,
-  isPlayable,
-  isSelected
-}) => {
+const CardInteractionLayer = props => {
+  const {
+    card,
+    cardImageBaseSrc,
+    cardImageFlairSrc,
+    handleInteractionClick,
+    index,
+    isPlayable,
+    isSelected,
+    trayIsExpanded
+  } = props;
+
+  const [trayIsExpandedState, setTrayIsExpandedState] = useState(false);
+  const style = useSpring({
+    pointerEvents: trayIsExpandedState ? 'auto' : 'none',
+    config: config.default
+  });
+
+  useEffect(() => {
+    trayIsExpanded
+      ? setTrayIsExpandedState(true)
+      : setTrayIsExpandedState(false);
+  }, [trayIsExpanded]);
+
   const {
     active,
     artist,
@@ -54,7 +70,7 @@ const CardInteractionLayer = ({
   }, [isPlayable, isSelected]);
 
   return (
-    <div
+    <animated.div
       className={[
         styles['card__interaction__layer'],
         handleInteractionClass()
@@ -65,6 +81,7 @@ const CardInteractionLayer = ({
       onKeyPress={e => handleInteractionClick(e, card, isPlayable, isSelected)}
       role={isPlayable ? 'button' : 'presentation'}
       tabIndex={isPlayable ? 'button' : 'presentation'}
+      style={style}
     >
       <Card
         active={active}
@@ -105,7 +122,7 @@ const CardInteractionLayer = ({
 
       <div className="card__effect--is-playable" />
       <div className="card__effect--is-selected" />
-    </div>
+    </animated.div>
   );
 };
 
@@ -115,12 +132,20 @@ CardInteractionLayer.propTypes = {
   cardImageFlairSrc: PropTypes.string.isRequired,
   handleInteractionClick: PropTypes.func,
   index: PropTypes.number.isRequired,
-  isPlayable: PropTypes.bool.isRequired,
-  isSelected: PropTypes.bool.isRequired
+  isPlayable: PropTypes.bool,
+  isSelected: PropTypes.bool,
+  trayIsExpanded: PropTypes.bool
 };
 
 CardInteractionLayer.defaultProps = {
-  handleInteractionClick: () => {}
+  handleInteractionClick: () => {
+    console.error(
+      'CardInteractionLayer: handleInteractionClick() provided as a defaultProp'
+    );
+  },
+  isPlayable: false,
+  isSelected: false,
+  trayIsExpanded: false
 };
 
 export default CardInteractionLayer;

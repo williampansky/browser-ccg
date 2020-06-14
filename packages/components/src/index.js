@@ -18,3 +18,5 @@ export { default as Hand } from './Hand';
 export { default as CardInteractionLayer } from './CardInteractionLayer';
 export { default as Player } from './Player';
 export { default as SelectedCardMobileModal } from './SelectedCardMobileModal';
+export { default as Board } from './Board';
+export { default as HandSlot } from './HandSlot';

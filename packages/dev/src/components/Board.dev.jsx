@@ -1,18 +1,17 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useLayoutEffect } from 'react';
 import Fullscreen from 'react-full-screen';
-import { Player, SelectedCardMobileModal } from '@ccg/components';
+import { Board, Player, SelectedCardMobileModal } from '@ccg/components';
 import { ABILITIES, CARDS_DATABASE } from '@ccg/data';
 import { CARDS, SETS } from '@ccg/images';
-import { getCardByID, exists, replaceConstant } from '@ccg/utils';
+import { getCardByID, replaceConstant } from '@ccg/utils';
+import { TYPE } from '@ccg/enums';
 import {
   ABILITIES_ICON,
   ABILITIES_ICON_CLOSE,
   COST_GEM_IMAGE,
-  PLACEHOLDER_BASE_IMAGE,
   PLACEHOLDER_IMAGE
 } from '@ccg/images';
-import { TYPE } from '@ccg/enums';
 
 const CARD_01 = getCardByID('CORE_001');
 const CARD_02 = getCardByID('CORE_002');
@@ -37,7 +36,7 @@ const CARDS_ARRAY = [
   // CARD_10
 ];
 
-const HERO = 'EXILE';
+const HERO = 'ZEUS';
 const HERO_SYMBOL = `%HERO_${HERO}%`;
 const PLAYER_DECK = [
   {
@@ -130,24 +129,23 @@ const handleContextActions = cardObject => {
   }
 };
 
-export default function PlayerDev() {
-  const [selectedCardObject, setSelectedCardObject] = useState(TEMP_CARD);
+export default function BoardDev() {
+  const [selectedCardObject, setSelectedCardObject] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
-
-  const CTX_ACTIONS = [{ label: 'Attack' }, { label: 'Buff' }];
 
   return (
     <Fullscreen
       enabled={isFullScreen}
       onChange={isFull => setIsFullScreen(isFull)}
     >
-      <button
-        className="addressBarSize"
-        onClick={() => setIsFullScreen(!isFullScreen ? true : false)}
-      >
-        full
-      </button>
       <div id="app" style={{ justifyContent: 'flex-end' }}>
+        {/* <Board
+          // theirBoard={THEIR_BOARD_SLOTS}
+          theirId={'1'}
+          yourBoard={YOUR_BOARD_SLOTS}
+          yourId={'0'}
+        /> */}
+
         <Player
           abilitiesImageBase={ABILITIES_ICON}
           abilitiesImageClose={ABILITIES_ICON_CLOSE}
@@ -162,7 +160,7 @@ export default function PlayerDev() {
           imagesDataCards={CARDS}
           imagesDataSets={SETS}
           playerDeck={PLAYER_DECK}
-          playerId={'0'}
+          yourId={'0'}
           playerName="pantsme"
           selectCardFunction={obj => setSelectedCardObject(obj)}
           selectedCardObject={selectedCardObject}

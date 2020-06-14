@@ -17,6 +17,7 @@ const Hero = ({
   abilitiesImageBase,
   abilitiesImageClose,
   avatarPlaceholderImageSrc,
+  cardIsSelected,
   cardsInDeck,
   cardsInHand,
   costGemImageSrc,
@@ -28,7 +29,7 @@ const Hero = ({
   playerDeck,
   playerHealthCurrent,
   playerHealthTotal,
-  playerId,
+  yourId,
   playerName
 }) => {
   const [deckMenuOpen, setDeckMenuOpen] = useState(false);
@@ -49,7 +50,13 @@ const Hero = ({
 
   return (
     <Fragment>
-      <article className={styles['hero']} data-component="Hero">
+      <article
+        className={[
+          styles['hero'],
+          cardIsSelected ? styles['card--is-selected'] : ''
+        ].join(' ')}
+        data-component="Hero"
+      >
         <Avatar
           heroImageSrc={getHeroImage(heroSymbol, 'AVATAR')}
           heroName={getHeroName(heroSymbol)}
@@ -81,7 +88,7 @@ const Hero = ({
               totalEnergy={energyTotal}
             />
           </div>
-          <PlayerName id={playerId} name={playerName} />
+          <PlayerName id={yourId} name={playerName} />
         </header>
 
         <div className={styles['player__fab']}>
@@ -118,6 +125,7 @@ Hero.propTypes = {
   abilitiesImageBase: PropTypes.string,
   abilitiesImageClose: PropTypes.string,
   avatarPlaceholderImageSrc: PropTypes.string.isRequired,
+  cardIsSelected: PropTypes.bool,
   cardsInDeck: PropTypes.number,
   cardsInHand: PropTypes.number,
   costGemImageSrc: PropTypes.string,
@@ -129,11 +137,12 @@ Hero.propTypes = {
   playerDeck: PropTypes.array,
   playerHealthCurrent: PropTypes.number,
   playerHealthTotal: PropTypes.number,
-  playerId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  yourId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   playerName: PropTypes.string
 };
 
 Hero.defaultProps = {
+  cardIsSelected: false,
   cardsInDeck: 0,
   cardsInHand: 0,
   energyCurrent: 0,
