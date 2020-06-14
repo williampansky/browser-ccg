@@ -133,22 +133,17 @@
   }
 }
 
-// prettier-ignore
-// [data-component='Hand'] .card__wrapper {
-//   position: relative;
-//   transition: margin 600ms var(--animation-transition-cubic);
-//   z-index: 1;
-
-//   & > [data-component="CardInteractionLayer"] { pointer-events: none; }
-//   & + .card__wrapper { margin-left: calc(var(--card-height) / -3.5); }
-// }
-
 .hand--is-expanded {
-  // prettier-ignore
   &.hand {
     transform: translateY(-100px);
-    &:before { border-color: rgba(0, 0, 0, 0.65); }
-    &:after  { opacity: 0; }
+
+    &:before {
+      border-color: rgba(0, 0, 0, 0.65);
+    }
+
+    &:after {
+      opacity: 0;
+    }
   }
 
   &.hand.card--is-selected {
@@ -159,8 +154,4 @@
   & > div > [data-component='CardInteractionLayer'] {
     pointer-events: auto;
   }
-
-  // & > .card__wrapper + .card__wrapper {
-  //   margin-left: calc(var(--card-height) / 10);
-  // }
 }
