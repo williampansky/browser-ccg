@@ -18,7 +18,7 @@ const HandSlot = props => {
 
   const [trayIsExpandedState, setTrayIsExpandedState] = useState(false);
   const style = useSpring({
-    marginLeft: trayIsExpandedState ? '10%' : '-15%',
+    marginLeft: trayIsExpandedState ? '30px' : '-60px',
     pointerEvents: trayIsExpandedState ? 'auto' : 'none',
     config: config.default
   });
@@ -39,7 +39,7 @@ const HandSlot = props => {
         card={cardObject}
         cardImageBaseSrc={cardImageBaseSrc}
         cardImageFlairSrc={cardImageFlairSrc}
-        handleInteractionClick={handleCardInteractionClick}
+        handleCardInteractionClick={handleCardInteractionClick}
         index={slotIndex}
         isPlayable={slotIndex === 1 ? true : false}
         isSelected={selectedCardUuid === cardUuid ? true : false}
@@ -61,11 +61,11 @@ HandSlot.propTypes = {
 };
 
 HandSlot.defaultProps = {
-  handleCardInteractionClick: () => {
-    console.error(
-      'HandSlot: handleCardInteractionClick() provided as a defaultProp'
-    );
-  },
+  // handleCardInteractionClick: () => {
+  //   console.error(
+  //     'HandSlot: handleCardInteractionClick() provided as a defaultProp'
+  //   );
+  // },
   selectedCardUuid: null,
   trayIsExpanded: false
 };

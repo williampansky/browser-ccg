@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
+import { useSpring, animated, config } from 'react-spring';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { AppIcon, HandSlot } from '@ccg/components';
 
@@ -16,6 +17,15 @@ const Hand = props => {
   } = props;
 
   const [trayIsExpanded, setTrayIsExpanded] = useState(false);
+  const style = useSpring({
+    filter: selectedCardUuid ? 'blur(2px)' : 'blur(0px)',
+    transform: trayIsExpanded
+      ? selectedCardUuid
+        ? 'translateY(280px)'
+        : 'translateY(-100px)'
+      : 'translateY(180px)',
+    config: config.default
+  });
 
   const handleHandTrayClick = useCallback(
     (event, bool) => {
@@ -35,7 +45,7 @@ const Hand = props => {
   );
 
   return (
-    <div
+    <animated.div
       className={[
         styles['hand'],
         trayIsExpanded ? styles['hand--is-expanded'] : '',
@@ -46,6 +56,7 @@ const Hand = props => {
       onKeyPress={e => !trayIsExpanded && handleHandTrayClick(e, true)}
       role={trayIsExpanded ? 'presentation' : 'button'}
       tabIndex={trayIsExpanded ? -1 : 0}
+      style={style}
     >
       <div
         className={[
@@ -62,7 +73,7 @@ const Hand = props => {
               cardImageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
               cardObject={object}
               cardUuid={uuid}
-              handleInteractionClick={handleCardInteractionClick}
+              handleCardInteractionClick={handleCardInteractionClick}
               key={uuid}
               selectedCardUuid={selectedCardUuid}
               slotIndex={index}
@@ -75,7 +86,7 @@ const Hand = props => {
       <div
         className={[
           styles['close__tray__button'],
-          trayIsExpanded ? styles['hand--is-expanded'] : ''
+          trayIsExpanded && !selectedCardUuid ? styles['hand--is-expanded'] : ''
         ].join(' ')}
         onClick={e => trayIsExpanded && handleCloseTrayClick(e, false)}
         onKeyPress={e => trayIsExpanded && handleCloseTrayClick(e, false)}
@@ -84,7 +95,7 @@ const Hand = props => {
       >
         <AppIcon color="white" fileName="icon-uikit-close" size="initial" />
       </div>
-    </div>
+    </animated.div>
   );
 };
 
@@ -100,9 +111,9 @@ Hand.propTypes = {
 
 Hand.defaultProps = {
   cardsInHand: [],
-  deselectCardFunction: () => {
-    console.error('Hand: deselectCardFunction() provided as a defaultProp');
-  },
+  // deselectCardFunction: () => {
+  //   console.error('Hand: deselectCardFunction() provided as a defaultProp');
+  // },
   selectedCardObject: null,
   selectedCardUuid: null
 };

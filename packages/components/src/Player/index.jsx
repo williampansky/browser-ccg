@@ -3,26 +3,28 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { Hand, Hero } from '@ccg/components';
 
-const Player = ({
-  abilitiesImageBase,
-  abilitiesImageClose,
-  avatarPlaceholderImageSrc,
-  cardsInHandArray,
-  cardsInDeckCount,
-  cardsInHandCount,
-  costGemImageSrc,
-  deselectCardFunction,
-  heroAbilities,
-  heroSymbol,
-  imagesDataCards,
-  imagesDataSets,
-  playerDeck,
-  yourId,
-  playerName,
-  selectCardFunction,
-  selectedCardObject,
-  selectedCardUuid
-}) => {
+const Player = props => {
+  const {
+    abilitiesImageBase,
+    abilitiesImageClose,
+    avatarPlaceholderImageSrc,
+    cardsInHandArray,
+    cardsInDeckCount,
+    cardsInHandCount,
+    costGemImageSrc,
+    deselectCardFunction,
+    heroAbilities,
+    heroSymbol,
+    imagesDataCards,
+    imagesDataSets,
+    playerDeck,
+    yourId,
+    playerName,
+    selectCardFunction,
+    selectedCardObject,
+    selectedCardUuid
+  } = props;
+
   const handleCardInteractionClick = useCallback(
     (event, cardObject, cardIsPlayable, cardIsSelected) => {
       event.preventDefault();
@@ -87,16 +89,16 @@ Player.defaultProps = {
   cardsInHandArray: [],
   cardsInDeckCount: 0,
   cardsInHandCount: 0,
-  deselectCardFunction: () => {
-    console.error('deselectCardFunction() provided as a defaultProp');
-  },
+  // deselectCardFunction: () => {
+  //   console.error('deselectCardFunction() provided as a defaultProp');
+  // },
   heroAbilities: [],
   imagesDataCards: {},
   imagesDataSets: {},
   playerDeck: [],
-  selectCardFunction: () => {
-    console.error('selectCardFunction() provided as a defaultProp');
-  },
+  // selectCardFunction: () => {
+  //   console.error('selectCardFunction() provided as a defaultProp');
+  // },
   selectedCardObject: null,
   selectedCardUuid: ''
 };

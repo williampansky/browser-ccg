@@ -1,5 +1,5 @@
 .hero {
-  $sizeH: 100px;
+  $sizeH: var(--hero-height);
   $sizeW: 150px;
   $ratio: 1.333333333;
 

@@ -9,7 +9,7 @@ const CardInteractionLayer = props => {
     card,
     cardImageBaseSrc,
     cardImageFlairSrc,
-    handleInteractionClick,
+    handleCardInteractionClick,
     index,
     isPlayable,
     isSelected,
@@ -77,8 +77,10 @@ const CardInteractionLayer = props => {
       ].join(' ')}
       data-component="CardInteractionLayer"
       data-index={index}
-      onClick={e => handleInteractionClick(e, card, isPlayable, isSelected)}
-      onKeyPress={e => handleInteractionClick(e, card, isPlayable, isSelected)}
+      onClick={e => handleCardInteractionClick(e, card, isPlayable, isSelected)}
+      onKeyPress={e =>
+        handleCardInteractionClick(e, card, isPlayable, isSelected)
+      }
       role={isPlayable ? 'button' : 'presentation'}
       tabIndex={isPlayable ? 'button' : 'presentation'}
       style={style}
@@ -130,7 +132,7 @@ CardInteractionLayer.propTypes = {
   card: PropTypes.object.isRequired,
   cardImageBaseSrc: PropTypes.string.isRequired,
   cardImageFlairSrc: PropTypes.string.isRequired,
-  handleInteractionClick: PropTypes.func,
+  handleCardInteractionClick: PropTypes.func,
   index: PropTypes.number.isRequired,
   isPlayable: PropTypes.bool,
   isSelected: PropTypes.bool,
@@ -138,11 +140,11 @@ CardInteractionLayer.propTypes = {
 };
 
 CardInteractionLayer.defaultProps = {
-  handleInteractionClick: () => {
-    console.error(
-      'CardInteractionLayer: handleInteractionClick() provided as a defaultProp'
-    );
-  },
+  // handleInteractionClick: () => {
+  //   console.error(
+  //     'CardInteractionLayer: handleInteractionClick() provided as a defaultProp'
+  //   );
+  // },
   isPlayable: false,
   isSelected: false,
   trayIsExpanded: false

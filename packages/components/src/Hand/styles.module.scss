@@ -13,23 +13,23 @@
   flex-flow: column nowrap;
   justify-content: center;
   left: 0;
-  margin-top: calc(var(--card-height) / 10);
+  // margin-top: calc(var(--card-height) / 10);
   max-width: 100vw;
   min-width: 100vw;
   outline: none;
   position: fixed;
   right: 0;
   top: auto;
-  transform: translateY(35%);
-  transition: transform 600ms var(--animation-transition-cubic);
+  // transform: translateY(35%);
+  // transition: transform 600ms var(--animation-transition-cubic);
   width: 100vw;
   z-index: 0;
 
   // prettier-ignore
-  & {
-    @media (min-width: 400px) and (min-height: 730px) { transform: translateY(50%); }
-    @media (min-width: 1200px) and (min-height: 1040px) { transform: translateY(60%); }
-  }
+  // & {
+  //   @media (min-width: 400px) and (min-height: 730px) { transform: translateY(50%); }
+  //   @media (min-width: 1200px) and (min-height: 1040px) { transform: translateY(60%); }
+  // }
 
   &:before {
     border-top: 1px solid rgba(255, 255, 255, 0.465);
@@ -58,9 +58,9 @@
     z-index: 1;
   }
 
-  &.card--is-selected {
-    transform: translateY(calc(var(--card-height) * 2));
-  }
+  // &.card--is-selected {
+  //   transform: translateY(calc(var(--card-height) * 2));
+  // }
 }
 
 .card__tray {
@@ -129,29 +129,16 @@
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
-    transition-delay: 400ms;
+    transition-delay: 200ms;
   }
 }
 
+// prettier-ignore
 .hand--is-expanded {
   &.hand {
-    transform: translateY(-100px);
-
-    &:before {
-      border-color: rgba(0, 0, 0, 0.65);
-    }
-
-    &:after {
-      opacity: 0;
-    }
+    &:before { border-color: rgba(0, 0, 0, 0.65); }
+    &:after { opacity: 0; }
   }
 
-  &.hand.card--is-selected {
-    transform: translateY(calc(var(--card-height) * 2));
-    transition-duration: 2000ms;
-  }
-
-  & > div > [data-component='CardInteractionLayer'] {
-    pointer-events: auto;
-  }
+  & > div > [data-component='CardInteractionLayer'] { pointer-events: auto; }
 }
