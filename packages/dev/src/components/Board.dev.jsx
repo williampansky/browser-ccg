@@ -139,12 +139,12 @@ export default function BoardDev() {
       onChange={isFull => setIsFullScreen(isFull)}
     >
       <div id="app" style={{ justifyContent: 'flex-end' }}>
-        {/* <Board
+        <Board
           // theirBoard={THEIR_BOARD_SLOTS}
           theirId={'1'}
-          yourBoard={YOUR_BOARD_SLOTS}
+          // yourBoard={YOUR_BOARD_SLOTS}
           yourId={'0'}
-        /> */}
+        />
 
         <Player
           abilitiesImageBase={ABILITIES_ICON}
