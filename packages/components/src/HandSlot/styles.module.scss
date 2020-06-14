@@ -1,8 +1,4 @@
 .hand__slot {
   position: relative;
   z-index: 1;
-
-  & > [data-component='CardInteractionLayer'] {
-    pointer-events: none;
-  }
 }

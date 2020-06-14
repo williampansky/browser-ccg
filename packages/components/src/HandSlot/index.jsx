@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSpring, animated, config } from 'react-spring';
 import { CardInteractionLayer } from '@ccg/components';
@@ -16,14 +16,17 @@ const HandSlot = props => {
     trayIsExpanded
   } = props;
 
-  const [expandedState, setExpandedState] = React.useState(false);
+  const [trayIsExpandedState, setTrayIsExpandedState] = useState(false);
   const style = useSpring({
-    marginLeft: expandedState ? '10%' : '-15%',
+    marginLeft: trayIsExpandedState ? '10%' : '-15%',
+    pointerEvents: trayIsExpandedState ? 'auto' : 'none',
     config: config.default
   });
 
   useEffect(() => {
-    trayIsExpanded ? setExpandedState(true) : setExpandedState(false);
+    trayIsExpanded
+      ? setTrayIsExpandedState(true)
+      : setTrayIsExpandedState(false);
   }, [trayIsExpanded]);
 
   return (
@@ -40,6 +43,7 @@ const HandSlot = props => {
         index={slotIndex}
         isPlayable={slotIndex === 1 ? true : false}
         isSelected={selectedCardUuid === cardUuid ? true : false}
+        trayIsExpanded={trayIsExpanded}
       />
     </animated.div>
   );
@@ -58,7 +62,9 @@ HandSlot.propTypes = {
 
 HandSlot.defaultProps = {
   handleCardInteractionClick: () => {
-    console.error('handleCardInteractionClick() provided as a defaultProp');
+    console.error(
+      'HandSlot: handleCardInteractionClick() provided as a defaultProp'
+    );
   },
   selectedCardUuid: null,
   trayIsExpanded: false
