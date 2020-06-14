@@ -1,32 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSpring, animated, config } from 'react-spring';
-import styles from './styles.module.scss';
 import { CardInteractionLayer } from '@ccg/components';
-import { useEffect } from 'react';
+import styles from './styles.module.scss';
 
-const HandSlot = ({
-  cardImageBaseSrc,
-  cardImageFlairSrc,
-  cardObject,
-  cardUuid,
-  handleCardInteractionClick,
-  selectedCardUuid,
-  slotIndex,
-  trayIsExpanded
-}) => {
-  const [expanded, set] = React.useState(false);
-  const props = useSpring({ marginLeft: expanded ? '10%' : '-15%' });
+const HandSlot = props => {
+  const {
+    cardImageBaseSrc,
+    cardImageFlairSrc,
+    cardObject,
+    cardUuid,
+    handleCardInteractionClick,
+    selectedCardUuid,
+    slotIndex,
+    trayIsExpanded
+  } = props;
+
+  const [expandedState, setExpandedState] = React.useState(false);
+  const style = useSpring({
+    marginLeft: expandedState ? '10%' : '-15%',
+    config: config.default
+  });
 
   useEffect(() => {
-    trayIsExpanded ? set(true) : set(false);
+    trayIsExpanded ? setExpandedState(true) : setExpandedState(false);
   }, [trayIsExpanded]);
 
   return (
     <animated.div
       className={styles['hand__slot']}
       data-component="HandSlot"
-      style={props}
+      style={style}
     >
       <CardInteractionLayer
         card={cardObject}
@@ -41,6 +45,23 @@ const HandSlot = ({
   );
 };
 
-HandSlot.propTypes = {};
+HandSlot.propTypes = {
+  cardImageBaseSrc: PropTypes.string.isRequired,
+  cardImageFlairSrc: PropTypes.string.isRequired,
+  cardObject: PropTypes.object.isRequired,
+  cardUuid: PropTypes.string.isRequired,
+  handleCardInteractionClick: PropTypes.func,
+  selectedCardUuid: PropTypes.string,
+  slotIndex: PropTypes.number.isRequired,
+  trayIsExpanded: PropTypes.bool
+};
+
+HandSlot.defaultProps = {
+  handleCardInteractionClick: () => {
+    console.error('handleCardInteractionClick() provided as a defaultProp');
+  },
+  selectedCardUuid: null,
+  trayIsExpanded: false
+};
 
 export default HandSlot;
