@@ -13,25 +13,28 @@ import {
 } from '@ccg/components';
 import { getHeroImage, getHeroName } from '@ccg/utils';
 
-const Hero = ({
-  abilitiesImageBase,
-  abilitiesImageClose,
-  avatarPlaceholderImageSrc,
-  cardIsSelected,
-  cardsInDeck,
-  cardsInHand,
-  costGemImageSrc,
-  energyCurrent,
-  energyTotal,
-  heroAbilities,
-  heroSymbol,
-  playerArmorPoints,
-  playerDeck,
-  playerHealthCurrent,
-  playerHealthTotal,
-  yourId,
-  playerName
-}) => {
+const Hero = props => {
+  const {
+    abilitiesImageBase,
+    abilitiesImageClose,
+    avatarPlaceholderImageSrc,
+    cardIsSelected,
+    cardsInDeck,
+    cardsInHand,
+    costGemImageSrc,
+    energyCurrent,
+    energyTotal,
+    heroAbilities,
+    heroSymbol,
+    playerArmorPoints,
+    playerDeck,
+    playerHealthCurrent,
+    playerHealthTotal,
+    yourId,
+    parentComponent,
+    playerName
+  } = props;
+
   const [deckMenuOpen, setDeckMenuOpen] = useState(false);
 
   const handleDeckIconClick = useCallback(
@@ -91,15 +94,17 @@ const Hero = ({
           <PlayerName id={yourId} name={playerName} />
         </header>
 
-        <div className={styles['player__fab']}>
-          <HeroAbilityFAB
-            abilitiesImageBase={abilitiesImageBase}
-            abilitiesImageClose={abilitiesImageClose}
-            costImageSrc={costGemImageSrc}
-            heroAbilities={heroAbilities}
-            heroSymbol={heroSymbol}
-          />
-        </div>
+        {parentComponent === 'Player' ? (
+          <div className={styles['player__fab']}>
+            <HeroAbilityFAB
+              abilitiesImageBase={abilitiesImageBase}
+              abilitiesImageClose={abilitiesImageClose}
+              costImageSrc={costGemImageSrc}
+              heroAbilities={heroAbilities}
+              heroSymbol={heroSymbol}
+            />
+          </div>
+        ) : null}
 
         <footer className={styles['player__health']}>
           <PlayerHealthOrb
@@ -110,13 +115,15 @@ const Hero = ({
         </footer>
       </article>
 
-      <ReactBurgerMenu
-        isOpen={deckMenuOpen}
-        onStateChange={state => handleDeckMenuStateChange(state)}
-        side="right"
-      >
-        <PlayerDeck costImageSrc={costGemImageSrc} playerDeck={playerDeck} />
-      </ReactBurgerMenu>
+      {parentComponent === 'Player' ? (
+        <ReactBurgerMenu
+          isOpen={deckMenuOpen}
+          onStateChange={state => handleDeckMenuStateChange(state)}
+          side="right"
+        >
+          <PlayerDeck costImageSrc={costGemImageSrc} playerDeck={playerDeck} />
+        </ReactBurgerMenu>
+      ) : null}
     </Fragment>
   );
 };

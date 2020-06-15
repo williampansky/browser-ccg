@@ -20,3 +20,4 @@ export { default as Player } from './Player';
 export { default as SelectedCardMobileModal } from './SelectedCardMobileModal';
 export { default as Board } from './Board';
 export { default as HandSlot } from './HandSlot';
+export { default as Opponent } from './Opponent';

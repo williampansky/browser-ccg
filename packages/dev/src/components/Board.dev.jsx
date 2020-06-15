@@ -1,7 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useLayoutEffect } from 'react';
 import Fullscreen from 'react-full-screen';
-import { Board, Player, SelectedCardMobileModal } from '@ccg/components';
+import {
+  Board,
+  Opponent,
+  Player,
+  SelectedCardMobileModal
+} from '@ccg/components';
 import { ABILITIES, CARDS_DATABASE } from '@ccg/data';
 import { CARDS, SETS } from '@ccg/images';
 import { getCardByID, replaceConstant } from '@ccg/utils';
@@ -139,6 +144,17 @@ export default function BoardDev() {
       onChange={isFull => setIsFullScreen(isFull)}
     >
       <div id="app" style={{ justifyContent: 'flex-end' }}>
+        <Opponent
+          avatarPlaceholderImageSrc={PLACEHOLDER_IMAGE}
+          cardsInDeckCount={PLAYER_DECK.length}
+          cardsInHandCount={CARDS_ARRAY.length}
+          costGemImageSrc={COST_GEM_IMAGE}
+          heroAbilities={HERO_ABILITIES}
+          heroSymbol={HERO_SYMBOL}
+          yourId={'1'}
+          playerName="someDumbPlayerGuy"
+        />
+
         <Board
           // theirBoard={THEIR_BOARD_SLOTS}
           theirId={'1'}

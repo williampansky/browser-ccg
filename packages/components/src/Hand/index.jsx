@@ -21,7 +21,7 @@ const Hand = props => {
     filter: selectedCardUuid ? 'blur(2px)' : 'blur(0px)',
     transform: trayIsExpanded
       ? selectedCardUuid
-        ? 'translateY(280px)'
+        ? 'translateY(180px)'
         : 'translateY(-100px)'
       : 'translateY(180px)',
     config: config.default
