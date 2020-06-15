@@ -25,13 +25,15 @@
 }
 
 .their__board {
+  background: var(--board-theirPlayerArea-background-color);
   justify-content: flex-end;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
 }
 
 .your__board {
+  background: var(--board-yourPlayerArea-background-color);
   justify-content: flex-start;
-  margin-top: 20px;
+  padding-top: 20px;
 }
 
 .play__area {

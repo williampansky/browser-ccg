@@ -209,12 +209,16 @@ export default function BoardDev() {
       <div id="app" style={{ justifyContent: 'flex-end' }}>
         <Opponent
           avatarPlaceholderImageSrc={PLACEHOLDER_IMAGE}
+          cardIsSelected={selectedCardObject ? true : false}
           cardsInDeckCount={OPPO_DECK.length}
           cardsInHandCount={OPPO_CARDS_ARRAY.length}
-          cardIsSelected={selectedCardObject ? true : false}
           costGemImageSrc={COST_GEM_IMAGE}
+          energyCurrent={1}
+          energyTotal={4}
           heroAbilities={OPPO_ABILITIES}
           heroSymbol={OPPO_SYMBOL}
+          playerHealthCurrent={30}
+          playerHealthTotal={30}
           playerName="someDumbPlayerGuy"
           theirId={'1'}
         />
@@ -230,21 +234,25 @@ export default function BoardDev() {
           abilitiesImageBase={ABILITIES_ICON}
           abilitiesImageClose={ABILITIES_ICON_CLOSE}
           avatarPlaceholderImageSrc={PLACEHOLDER_IMAGE}
-          cardsInHandArray={CARDS_ARRAY}
           cardsInDeckCount={PLAYER_DECK.length}
+          cardsInHandArray={CARDS_ARRAY}
           cardsInHandCount={CARDS_ARRAY.length}
           costGemImageSrc={COST_GEM_IMAGE}
           deselectCardFunction={() => setSelectedCardObject(null)}
+          energyCurrent={1}
+          energyTotal={4}
           heroAbilities={HERO_ABILITIES}
           heroSymbol={HERO_SYMBOL}
           imagesDataCards={CARDS}
           imagesDataSets={SETS}
           playerDeck={PLAYER_DECK}
-          yourId={'0'}
+          playerHealthCurrent={30}
+          playerHealthTotal={30}
           playerName="pantsme"
           selectCardFunction={obj => setSelectedCardObject(obj)}
           selectedCardObject={selectedCardObject}
           selectedCardUuid={selectedCardObject && selectedCardObject.uuid}
+          yourId={'0'}
         />
 
         <SelectedCardMobileModal

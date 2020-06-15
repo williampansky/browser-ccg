@@ -76,6 +76,26 @@
   }
 }
 
+.card__wrapper {
+  border-radius: calc(var(--card-height) / 28.571428571);
+  position: relative;
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+
+  &:before {
+    border-radius: calc(var(--card-height) / 28.571428571);
+    box-shadow: var(--box-shadow-is-selected);
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
 .context__menu {
   $fabButtonSize: var(--player-fab-size);
   $actionButtonSize: calc(#{$fabButtonSize} * 1.5);

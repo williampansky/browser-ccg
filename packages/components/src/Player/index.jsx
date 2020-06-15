@@ -8,21 +8,25 @@ const Player = props => {
     abilitiesImageBase,
     abilitiesImageClose,
     avatarPlaceholderImageSrc,
-    cardsInHandArray,
     cardsInDeckCount,
+    cardsInHandArray,
     cardsInHandCount,
     costGemImageSrc,
     deselectCardFunction,
+    energyCurrent,
+    energyTotal,
     heroAbilities,
     heroSymbol,
     imagesDataCards,
     imagesDataSets,
     playerDeck,
-    yourId,
+    playerHealthCurrent,
+    playerHealthTotal,
     playerName,
     selectCardFunction,
     selectedCardObject,
-    selectedCardUuid
+    selectedCardUuid,
+    yourId
   } = props;
 
   const handleCardInteractionClick = useCallback(
@@ -45,12 +49,16 @@ const Player = props => {
         cardsInDeck={cardsInDeckCount}
         cardsInHand={cardsInHandCount}
         costGemImageSrc={costGemImageSrc}
+        energyCurrent={energyCurrent}
+        energyTotal={energyTotal}
         heroAbilities={heroAbilities}
         heroSymbol={heroSymbol}
-        playerDeck={playerDeck}
-        yourId={yourId}
         parentComponent="Player"
+        playerDeck={playerDeck}
+        playerHealthCurrent={playerHealthCurrent}
+        playerHealthTotal={playerHealthTotal}
         playerName={playerName}
+        yourId={yourId}
       />
       <Hand
         cardsInHand={cardsInHandArray}
@@ -69,21 +77,25 @@ Player.propTypes = {
   abilitiesImageBase: PropTypes.string.isRequired,
   abilitiesImageClose: PropTypes.string.isRequired,
   avatarPlaceholderImageSrc: PropTypes.string.isRequired,
-  cardsInHandArray: PropTypes.array.isRequired,
   cardsInDeckCount: PropTypes.number.isRequired,
+  cardsInHandArray: PropTypes.array.isRequired,
   cardsInHandCount: PropTypes.number.isRequired,
   costGemImageSrc: PropTypes.string.isRequired,
+  energyCurrent: PropTypes.number.isRequired,
+  energyTotal: PropTypes.number.isRequired,
   deselectCardFunction: PropTypes.func.isRequired,
   heroAbilities: PropTypes.array.isRequired,
   heroSymbol: PropTypes.string.isRequired,
   imagesDataCards: PropTypes.object.isRequired,
   imagesDataSets: PropTypes.object.isRequired,
   playerDeck: PropTypes.array.isRequired,
-  yourId: PropTypes.string.isRequired,
+  playerHealthCurrent: PropTypes.number.isRequired,
+  playerHealthTotal: PropTypes.number.isRequired,
   playerName: PropTypes.string.isRequired,
   selectCardFunction: PropTypes.func.isRequired,
   selectedCardObject: PropTypes.object,
-  selectedCardUuid: PropTypes.string
+  selectedCardUuid: PropTypes.string,
+  yourId: PropTypes.string.isRequired
 };
 
 Player.defaultProps = {

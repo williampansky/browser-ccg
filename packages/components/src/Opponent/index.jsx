@@ -6,14 +6,18 @@ import { Hero } from '@ccg/components';
 const Opponent = props => {
   const {
     avatarPlaceholderImageSrc,
+    cardIsSelected,
     cardsInDeckCount,
     cardsInHandCount,
-    cardIsSelected,
     costGemImageSrc,
+    energyCurrent,
+    energyTotal,
     heroAbilities,
     heroSymbol,
-    theirId,
-    playerName
+    playerHealthCurrent,
+    playerHealthTotal,
+    playerName,
+    theirId
   } = props;
 
   return (
@@ -24,11 +28,15 @@ const Opponent = props => {
         cardsInDeck={cardsInDeckCount}
         cardsInHand={cardsInHandCount}
         costGemImageSrc={costGemImageSrc}
+        energyCurrent={energyCurrent}
+        energyTotal={energyTotal}
         heroAbilities={heroAbilities}
         heroSymbol={heroSymbol}
-        yourId={theirId}
         parentComponent="Opponent"
+        playerHealthCurrent={playerHealthCurrent}
+        playerHealthTotal={playerHealthTotal}
         playerName={playerName}
+        yourId={theirId}
       />
     </div>
   );
@@ -36,14 +44,18 @@ const Opponent = props => {
 
 Opponent.propTypes = {
   avatarPlaceholderImageSrc: PropTypes.string.isRequired,
+  cardIsSelected: PropTypes.bool,
   cardsInDeckCount: PropTypes.number,
   cardsInHandCount: PropTypes.number,
-  cardIsSelected: PropTypes.bool,
   costGemImageSrc: PropTypes.string.isRequired,
+  energyCurrent: PropTypes.number.isRequired,
+  energyTotal: PropTypes.number.isRequired,
   heroAbilities: PropTypes.array,
   heroSymbol: PropTypes.string.isRequired,
-  theirId: PropTypes.string.isRequired,
-  playerName: PropTypes.string
+  playerHealthCurrent: PropTypes.number.isRequired,
+  playerHealthTotal: PropTypes.number.isRequired,
+  playerName: PropTypes.string,
+  theirId: PropTypes.string.isRequired
 };
 
 Opponent.defaultProps = {

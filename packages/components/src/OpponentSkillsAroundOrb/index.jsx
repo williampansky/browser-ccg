@@ -78,6 +78,7 @@ const OpponentSkillsAroundOrb = props => {
 
 OpponentSkillsAroundOrb.propTypes = {
   abilityLocked: PropTypes.bool.isRequired,
+  cooldownInEffect: PropTypes.bool.isRequired,
   costImageSrc: PropTypes.string,
   heroAbilities: PropTypes.array.isRequired,
   heroSymbol: PropTypes.string.isRequired

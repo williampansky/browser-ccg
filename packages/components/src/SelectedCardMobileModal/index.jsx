@@ -77,46 +77,48 @@ const SelectedCardMobileModal = props => {
           </ul>
         </div>
 
-        <Card
-          active={card.active}
-          artist={card.artist}
-          attack={card.attack}
-          collectible={card.collectible}
-          cost={card.cost}
-          deckBuilder={card.deckBuilder}
-          elite={card.elite}
-          entourage={card.entourage}
-          flavor={card.flavor}
-          health={card.health}
-          howToEarn={card.howToEarn}
-          howToEarnGolden={card.howToEarnGolden}
-          id={card.id}
-          imageBaseSrc={getCardBaseImage(
-            card.rarity,
-            card.type,
-            imagesDataCards
-          )}
-          imageFlairSrc={getCardFlairImage(card.id, card.set, imagesDataSets)}
-          isGolden={card.isGolden}
-          mechanics={card.mechanics}
-          name={card.name}
-          numberOvercharge={card.numberOvercharge}
-          numberPrimary={card.numberPrimary}
-          numberRNG={card.numberRNG}
-          numberSecondary={card.numberSecondary}
-          onClick={card.onClick}
-          playContext={card.playContext}
-          playRequirements={card.playRequirements}
-          playType={card.playType}
-          race={card.race}
-          rarity={card.rarity}
-          set={card.set}
-          sounds={card.sounds}
-          targetingArrowText={card.targetingArrowText}
-          text={card.text}
-          type={card.type}
-          uuid={card.uuid}
-        />
+        <div className={styles['card__wrapper']}>
+          <Card
+            active={card.active}
+            artist={card.artist}
+            attack={card.attack}
+            collectible={card.collectible}
+            cost={card.cost}
+            deckBuilder={card.deckBuilder}
+            elite={card.elite}
+            entourage={card.entourage}
+            flavor={card.flavor}
+            health={card.health}
+            howToEarn={card.howToEarn}
+            howToEarnGolden={card.howToEarnGolden}
+            id={card.id}
+            imageBaseSrc={getCardBaseImage(
+              card.rarity,
+              card.type,
+              imagesDataCards
+            )}
+            imageFlairSrc={getCardFlairImage(card.id, card.set, imagesDataSets)}
+            isGolden={card.isGolden}
+            mechanics={card.mechanics}
+            name={card.name}
+            numberOvercharge={card.numberOvercharge}
+            numberPrimary={card.numberPrimary}
+            numberRNG={card.numberRNG}
+            numberSecondary={card.numberSecondary}
+            onClick={card.onClick}
+            playContext={card.playContext}
+            playRequirements={card.playRequirements}
+            playType={card.playType}
+            race={card.race}
+            rarity={card.rarity}
+            set={card.set}
+            sounds={card.sounds}
+            targetingArrowText={card.targetingArrowText}
+            text={card.text}
+            type={card.type}
+            uuid={card.uuid}
+          />
+        </div>
       </div>
     </div>
   ) : null;
