@@ -5,13 +5,7 @@ import { getHeroImage, removeSymbols } from '@ccg/utils';
 import { AppIcon } from '@ccg/components';
 
 const OpponentSkillsAroundOrb = props => {
-  const {
-    abilityLocked,
-    cooldownInEffect,
-    costImageSrc,
-    heroAbilities,
-    heroSymbol
-  } = props;
+  const { costImageSrc, heroAbilities, heroSymbol } = props;
 
   return (
     <div
@@ -23,6 +17,8 @@ const OpponentSkillsAroundOrb = props => {
           .map((obj, idx) => {
             idx = idx + 1;
             const {
+              abilityLocked,
+              cooldownInEffect,
               cooldown,
               cost,
               id,
@@ -77,8 +73,6 @@ const OpponentSkillsAroundOrb = props => {
 };
 
 OpponentSkillsAroundOrb.propTypes = {
-  abilityLocked: PropTypes.bool.isRequired,
-  cooldownInEffect: PropTypes.bool.isRequired,
   costImageSrc: PropTypes.string,
   heroAbilities: PropTypes.array.isRequired,
   heroSymbol: PropTypes.string.isRequired

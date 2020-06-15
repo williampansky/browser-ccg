@@ -86,9 +86,21 @@ const PLAYER_DECK = [
   }
 ].sort((a, b) => a.cost - b.cost);
 const HERO_ABILITIES = [
-  ABILITIES[`HERO_${HERO}_001`],
-  ABILITIES[`HERO_${HERO}_002`],
-  ABILITIES[`HERO_${HERO}_003`]
+  {
+    ...ABILITIES[`HERO_${HERO}_001`],
+    abilityLocked: false,
+    cooldownInEffect: false
+  },
+  {
+    ...ABILITIES[`HERO_${HERO}_002`],
+    abilityLocked: false,
+    cooldownInEffect: false
+  },
+  {
+    ...ABILITIES[`HERO_${HERO}_003`],
+    abilityLocked: false,
+    cooldownInEffect: false
+  }
 ];
 
 const OPPO = 'EXILE';
@@ -136,9 +148,21 @@ const OPPO_DECK = [
   }
 ].sort((a, b) => a.cost - b.cost);
 const OPPO_ABILITIES = [
-  ABILITIES[`HERO_${OPPO}_001`],
-  ABILITIES[`HERO_${OPPO}_002`],
-  ABILITIES[`HERO_${OPPO}_003`]
+  {
+    ...ABILITIES[`HERO_${OPPO}_001`],
+    abilityLocked: false,
+    cooldownInEffect: false
+  },
+  {
+    ...ABILITIES[`HERO_${OPPO}_002`],
+    abilityLocked: false,
+    cooldownInEffect: false
+  },
+  {
+    ...ABILITIES[`HERO_${OPPO}_003`],
+    abilityLocked: false,
+    cooldownInEffect: false
+  }
 ];
 
 const OPPO_CARDS_ARRAY = [

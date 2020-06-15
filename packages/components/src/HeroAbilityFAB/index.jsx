@@ -83,7 +83,9 @@ const HeroAbilityFAB = ({
           .map((obj, idx) => {
             idx = idx + 1;
             const {
+              abilityLocked,
               cooldown,
+              cooldownInEffect,
               cost,
               id,
               mechanics,
@@ -99,9 +101,9 @@ const HeroAbilityFAB = ({
                 onClick={event => handleAbilityClick(event, id)}
               >
                 <HeroAbilityButton
-                  abilityLocked={false}
+                  abilityLocked={abilityLocked}
                   cooldown={cooldown}
-                  cooldownInEffect={false}
+                  cooldownInEffect={cooldownInEffect}
                   cost={cost}
                   costImageSrc={costImageSrc}
                   heroSymbol={heroSymbol}
