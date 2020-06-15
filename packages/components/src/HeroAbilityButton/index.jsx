@@ -8,21 +8,23 @@ import { AppIcon } from '@ccg/components';
 /**
  * @requires AppIcon
  */
-const HeroAbilityButton = ({
-  abilityLocked,
-  cooldown,
-  cooldownCurrentCount,
-  cooldownInEffect,
-  cost,
-  costImageSrc,
-  heroSymbol,
-  index,
-  mechanics,
-  name,
-  playContext,
-  playType,
-  ultimate
-}) => {
+const HeroAbilityButton = props => {
+  const {
+    abilityLocked,
+    cooldown,
+    cooldownCurrentCount,
+    cooldownInEffect,
+    cost,
+    costImageSrc,
+    heroSymbol,
+    index,
+    mechanics,
+    name,
+    playContext,
+    playType,
+    ultimate
+  } = props;
+
   const handleAbilityIcon = useCallback(
     (cardMechanics, playType, playContext) => {
       if (playType === PLAY_TYPE['TARGETED']) return 'TARGET';
