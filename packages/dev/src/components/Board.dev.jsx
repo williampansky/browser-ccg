@@ -91,6 +91,69 @@ const HERO_ABILITIES = [
   ABILITIES[`HERO_${HERO}_003`]
 ];
 
+const OPPO = 'EXILE';
+const OPPO_SYMBOL = `%HERO_${OPPO}%`;
+const OPPO_DECK = [
+  {
+    ...CARDS_DATABASE['CORE_001'.replace(' ', '')],
+    _id: 'CORE_001',
+    _amount: 0
+  },
+  {
+    ...CARDS_DATABASE['CORE_002'.replace(' ', '')],
+    _id: 'CORE_002',
+    _amount: 2
+  },
+  {
+    ...CARDS_DATABASE['CORE_020'.replace(' ', '')],
+    _id: 'CORE_020',
+    _amount: 2
+  },
+  {
+    ...CARDS_DATABASE['CORE_030'.replace(' ', '')],
+    _id: 'CORE_030',
+    _amount: 2
+  },
+  {
+    ...CARDS_DATABASE['CORE_022'.replace(' ', '')],
+    _id: 'CORE_022',
+    _amount: 1
+  },
+  {
+    ...CARDS_DATABASE['CORE_040'.replace(' ', '')],
+    _id: 'CORE_040',
+    _amount: 2
+  },
+  {
+    ...CARDS_DATABASE['CORE_080'.replace(' ', '')],
+    _id: 'CORE_080',
+    _amount: 2
+  },
+  {
+    ...CARDS_DATABASE['CORE_044'.replace(' ', '')],
+    _id: 'CORE_044',
+    _amount: 2
+  }
+].sort((a, b) => a.cost - b.cost);
+const OPPO_ABILITIES = [
+  ABILITIES[`HERO_${OPPO}_001`],
+  ABILITIES[`HERO_${OPPO}_002`],
+  ABILITIES[`HERO_${OPPO}_003`]
+];
+
+const OPPO_CARDS_ARRAY = [
+  CARD_01,
+  CARD_02,
+  CARD_03,
+  CARD_04,
+  CARD_05,
+  CARD_06,
+  CARD_07,
+  CARD_08,
+  CARD_09
+  // CARD_10
+];
+
 const TEMP_CARD = {
   active: true,
   artist:
@@ -146,13 +209,14 @@ export default function BoardDev() {
       <div id="app" style={{ justifyContent: 'flex-end' }}>
         <Opponent
           avatarPlaceholderImageSrc={PLACEHOLDER_IMAGE}
-          cardsInDeckCount={PLAYER_DECK.length}
-          cardsInHandCount={CARDS_ARRAY.length}
+          cardsInDeckCount={OPPO_DECK.length}
+          cardsInHandCount={OPPO_CARDS_ARRAY.length}
+          cardIsSelected={selectedCardObject ? true : false}
           costGemImageSrc={COST_GEM_IMAGE}
-          heroAbilities={HERO_ABILITIES}
-          heroSymbol={HERO_SYMBOL}
-          yourId={'1'}
+          heroAbilities={OPPO_ABILITIES}
+          heroSymbol={OPPO_SYMBOL}
           playerName="someDumbPlayerGuy"
+          theirId={'1'}
         />
 
         <Board

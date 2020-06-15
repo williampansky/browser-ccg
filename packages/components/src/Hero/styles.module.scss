@@ -40,9 +40,11 @@
     flex-flow: row nowrap;
     align-items: center;
     justify-content: center;
+    position: relative;
 
-    // prettier-ignore
-    & > div { margin-right: calc(var(--class-skill-button-size) / -4.375); }
+    div[data-component='PlayerHealthOrb'] {
+      margin-right: calc(var(--class-skill-button-size) / -4.375);
+    }
   }
 
   .player__fab {

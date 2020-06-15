@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { Hero } from '@ccg/components';
@@ -8,10 +8,11 @@ const Opponent = props => {
     avatarPlaceholderImageSrc,
     cardsInDeckCount,
     cardsInHandCount,
+    cardIsSelected,
     costGemImageSrc,
     heroAbilities,
     heroSymbol,
-    yourId,
+    theirId,
     playerName
   } = props;
 
@@ -19,13 +20,14 @@ const Opponent = props => {
     <div className={styles['opponent']} data-component="Opponent">
       <Hero
         avatarPlaceholderImageSrc={avatarPlaceholderImageSrc}
-        cardIsSelected={false}
+        cardIsSelected={cardIsSelected}
         cardsInDeck={cardsInDeckCount}
         cardsInHand={cardsInHandCount}
         costGemImageSrc={costGemImageSrc}
         heroAbilities={heroAbilities}
         heroSymbol={heroSymbol}
-        yourId={yourId}
+        yourId={theirId}
+        parentComponent="Opponent"
         playerName={playerName}
       />
     </div>
@@ -34,37 +36,22 @@ const Opponent = props => {
 
 Opponent.propTypes = {
   avatarPlaceholderImageSrc: PropTypes.string.isRequired,
-  cardsInHandArray: PropTypes.array.isRequired,
-  cardsInDeckCount: PropTypes.number.isRequired,
-  cardsInHandCount: PropTypes.number.isRequired,
+  cardsInDeckCount: PropTypes.number,
+  cardsInHandCount: PropTypes.number,
+  cardIsSelected: PropTypes.bool,
   costGemImageSrc: PropTypes.string.isRequired,
-  heroAbilities: PropTypes.array.isRequired,
+  heroAbilities: PropTypes.array,
   heroSymbol: PropTypes.string.isRequired,
-  imagesDataCards: PropTypes.object.isRequired,
-  imagesDataSets: PropTypes.object.isRequired,
-  playerDeck: PropTypes.array.isRequired,
-  yourId: PropTypes.string.isRequired,
-  playerName: PropTypes.string.isRequired,
-  selectedCardObject: PropTypes.object,
-  selectedCardUuid: PropTypes.string
+  theirId: PropTypes.string.isRequired,
+  playerName: PropTypes.string
 };
 
 Opponent.defaultProps = {
-  cardsInHandArray: [],
   cardsInDeckCount: 0,
   cardsInHandCount: 0,
-  // deselectCardFunction: () => {
-  //   console.error('deselectCardFunction() provided as a defaultProp');
-  // },
+  cardIsSelected: false,
   heroAbilities: [],
-  imagesDataCards: {},
-  imagesDataSets: {},
-  playerDeck: [],
-  // selectCardFunction: () => {
-  //   console.error('selectCardFunction() provided as a defaultProp');
-  // },
-  selectedCardObject: null,
-  selectedCardUuid: ''
+  playerName: 'Opponent'
 };
 
 export default Opponent;

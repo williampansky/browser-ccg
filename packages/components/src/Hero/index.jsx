@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import {
   Avatar,
-  PlayerName,
-  PlayerStatIcon,
-  ReactBurgerMenu,
-  PlayerHealthOrb,
-  PlayerDeck,
   HeroAbilityFAB,
-  PlayerStatEnergy
+  OpponentSkillsAroundOrb,
+  PlayerDeck,
+  PlayerHealthOrb,
+  PlayerName,
+  PlayerStatEnergy,
+  PlayerStatIcon,
+  ReactBurgerMenu
 } from '@ccg/components';
 import { getHeroImage, getHeroName } from '@ccg/utils';
 
@@ -26,13 +27,13 @@ const Hero = props => {
     energyTotal,
     heroAbilities,
     heroSymbol,
+    parentComponent,
     playerArmorPoints,
     playerDeck,
     playerHealthCurrent,
     playerHealthTotal,
-    yourId,
-    parentComponent,
-    playerName
+    playerName,
+    yourId
   } = props;
 
   const [deckMenuOpen, setDeckMenuOpen] = useState(false);
@@ -59,6 +60,9 @@ const Hero = props => {
           cardIsSelected ? styles['card--is-selected'] : ''
         ].join(' ')}
         data-component="Hero"
+        style={{
+          transform: parentComponent === 'Opponent' && 'translateY(0)'
+        }}
       >
         <Avatar
           heroImageSrc={getHeroImage(heroSymbol, 'AVATAR')}
@@ -107,6 +111,13 @@ const Hero = props => {
         ) : null}
 
         <footer className={styles['player__health']}>
+          {parentComponent === 'Opponent' ? (
+            <OpponentSkillsAroundOrb
+              costImageSrc={costGemImageSrc}
+              heroAbilities={heroAbilities}
+              heroSymbol={heroSymbol}
+            />
+          ) : null}
           <PlayerHealthOrb
             armorPoints={playerArmorPoints}
             currentHealth={playerHealthCurrent}
@@ -145,6 +156,7 @@ Hero.propTypes = {
   playerHealthCurrent: PropTypes.number,
   playerHealthTotal: PropTypes.number,
   yourId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  parentComponent: PropTypes.string,
   playerName: PropTypes.string
 };
 

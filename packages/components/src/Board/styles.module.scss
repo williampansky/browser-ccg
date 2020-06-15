@@ -1,6 +1,8 @@
 .board {
+  // height: calc(100vh - 278px);
+
   background: var(--board-board-background-color);
-  height: 62vh;
+  height: calc(100vh - calc(calc(var(--hero-height) * 2) + 78px));
   width: 100vw;
   max-width: 100vw;
   min-width: 100vw;
