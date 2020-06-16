@@ -7,9 +7,9 @@ import styles from './styles.module.scss';
 const Board = props => {
   const {
     theirBoard,
-    theirId,
+    theirID,
     yourBoard,
-    yourId,
+    yourID,
     cardIsSelected,
     handleDropAreaClick
   } = props;
@@ -19,19 +19,19 @@ const Board = props => {
       <div
         className={[styles['player__board'], styles['their__board']].join(' ')}
         data-board={PLAYER_BOARDS[2]}
-        data-board-id={theirId}
+        data-board-id={theirID}
       >
-        {Object.keys(theirBoard).map((key, index) => {
+        {theirBoard.map((obj, index) => {
           index = index + 1;
-          // console.log(index, yourBoard[key]);
-          return <Fragment key={index}>{index}</Fragment>;
+          // console.log(obj);
+          // return <Fragment key={index}>{obj.minionData.name}</Fragment>;
         })}
       </div>
 
       <div
         className={[styles['player__board'], styles['your__board']].join(' ')}
         data-board={PLAYER_BOARDS[1]}
-        data-board-id={yourId}
+        data-board-id={yourID}
       >
         <div className={styles['play__area']}>
           {yourBoard.length <= 6 ? (
@@ -42,11 +42,10 @@ const Board = props => {
               onClick={() => handleDropAreaClick(0)}
             />
           ) : null}
-          {yourBoard.map((key, index) => {
+          {/* {yourBoard.map((obj, index) => {
             index = index + 1;
-            // console.log(index, yourBoard[key]);
             return <Fragment key={index}>{index}</Fragment>;
-          })}
+          })} */}
         </div>
       </div>
     </div>
@@ -54,15 +53,18 @@ const Board = props => {
 };
 
 Board.propTypes = {
-  theirId: PropTypes.string.isRequired,
-  theirBoard: PropTypes.object,
-  yourId: PropTypes.string.isRequired,
-  yourBoard: PropTypes.array
+  theirID: PropTypes.string.isRequired,
+  theirBoard: PropTypes.array,
+  yourID: PropTypes.string.isRequired,
+  yourBoard: PropTypes.array,
+  handleDropAreaClick: PropTypes.func
 };
 
 Board.defaultProps = {
-  theirBoard: {},
-  yourBoard: []
+  theirBoard: [],
+  yourBoard: [],
+  handleDropAreaClick: () => {},
+  cardIsSelected: false
 };
 
 export default Board;

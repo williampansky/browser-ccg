@@ -156,7 +156,10 @@ SelectedCardMobileModal.defaultProps = {
   contextActions: [],
   imagesDataCards: {},
   imagesDataSets: {},
-  selectedCardUuid: ''
+  selectedCardUuid: '',
+  selectedCardContext: null,
+  deselectCardFunction: () => {},
+  selectCardContextFunction: () => {}
 };
 
 export default SelectedCardMobileModal;

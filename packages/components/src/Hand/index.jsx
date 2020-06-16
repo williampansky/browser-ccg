@@ -67,22 +67,37 @@ const Hand = props => {
           selectedCardObject ? styles['card--is-selected'] : ''
         ].join(' ')}
       >
-        {cardsInHand.map((object, index) => {
-          const { id, rarity, set, type, uuid } = object;
-          return (
-            <HandSlot
-              cardImageBaseSrc={getCardBaseImage(rarity, type, imagesDataCards)}
-              cardImageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
-              cardObject={object}
-              cardUuid={uuid}
-              handleCardInteractionClick={handleCardInteractionClick}
-              key={uuid}
-              selectedCardUuid={selectedCardUuid}
-              slotIndex={index}
-              trayIsExpanded={trayIsExpanded}
-            />
-          );
-        })}
+        {cardsInHand.length ? (
+          cardsInHand.map((object, index) => {
+            const { id, rarity, set, type, uuid } = object;
+            return (
+              <HandSlot
+                cardImageBaseSrc={getCardBaseImage(
+                  rarity,
+                  type,
+                  imagesDataCards
+                )}
+                cardImageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
+                cardObject={object}
+                cardUuid={uuid}
+                handleCardInteractionClick={handleCardInteractionClick}
+                key={uuid}
+                selectedCardUuid={selectedCardUuid}
+                slotIndex={index}
+                trayIsExpanded={trayIsExpanded}
+              />
+            );
+          })
+        ) : (
+          <div
+            style={{
+              height: 'var(--card-height)',
+              width: '100%',
+              opacity: 0,
+              pointerEvents: 'none'
+            }}
+          />
+        )}
       </div>
 
       <div

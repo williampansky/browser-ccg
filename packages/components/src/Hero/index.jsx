@@ -33,7 +33,7 @@ const Hero = props => {
     playerHealthCurrent,
     playerHealthTotal,
     playerName,
-    yourId,
+    playerId,
     selectedCardContext
   } = props;
 
@@ -98,19 +98,21 @@ const Hero = props => {
               totalEnergy={actionPointsTotal}
             />
           </div>
-          <PlayerName id={yourId} name={playerName} />
+          <PlayerName id={playerId} name={playerName} />
         </header>
 
         {parentComponent === 'Player' ? (
-          <div className={styles['player__fab']}>
-            <HeroAbilityFAB
-              abilitiesImageBase={abilitiesImageBase}
-              abilitiesImageClose={abilitiesImageClose}
-              costImageSrc={costGemImageSrc}
-              heroAbilities={heroAbilities}
-              heroSymbol={heroSymbol}
-            />
-          </div>
+          heroAbilities.length ? (
+            <div className={styles['player__fab']}>
+              <HeroAbilityFAB
+                abilitiesImageBase={abilitiesImageBase}
+                abilitiesImageClose={abilitiesImageClose}
+                costImageSrc={costGemImageSrc}
+                heroAbilities={heroAbilities}
+                heroSymbol={heroSymbol}
+              />
+            </div>
+          ) : null
         ) : null}
 
         <footer className={styles['player__health']}>
@@ -158,7 +160,7 @@ Hero.propTypes = {
   playerDeck: PropTypes.array,
   playerHealthCurrent: PropTypes.number,
   playerHealthTotal: PropTypes.number,
-  yourId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  playerId: PropTypes.string,
   parentComponent: PropTypes.string,
   playerName: PropTypes.string
 };

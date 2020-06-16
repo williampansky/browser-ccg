@@ -44,7 +44,6 @@ export default {
   playerCanBeAttackedBySpell: playerCanBeAttacked.playerCanBeAttackedBySpell,
   playerCanBeAttackedByWarcry: playerCanBeAttacked.playerCanBeAttackedByWarcry,
   playerCanBeHealed: playerCanBeHealed.__DATA_MODEL,
-  playerCanUseClassSkill: playerCanUseClassSkill.__DATA_MODEL,
   playerHasAttacked: { '0': false, '1': false },
   playerHealth: playerHealth.__DATA_MODEL,
   playerHero: { '0': '%HERO_ZEUS%', '1': '%HERO_EXILE%' },

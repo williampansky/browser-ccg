@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Player } from '@ccg/components';
+import { Opponent } from '@ccg/components';
 
-const PlayerWrapper = props => {
+const OpponentWrapper = props => {
   const {
     G: {
       deckInfo,
@@ -32,33 +32,8 @@ const PlayerWrapper = props => {
   const { hand } = players[playerID];
   const { deckLength, handLength } = counts[playerID];
 
-  const TEMP_CARD = {
-    active: true,
-    artist:
-      '<a href="https://graphicriver.net/user/rexard" rel="noopener noreferrer" target="_blank">Rexard</a>',
-    attack: 1,
-    cardClass: '%CLASS_NONE%',
-    collectible: true,
-    cost: 1,
-    elite: false,
-    entourage: [],
-    health: 2,
-    howToEarn: 'Provided to all players.',
-    mechanics: ['%BULWARK%'],
-    id: 'CORE_002',
-    name: 'Rookie Lancer',
-    race: '%RACE_NONE%',
-    rarity: '%RARITY_FREE%',
-    set: '%SET_002%',
-    text: '<strong>%BULWARK%</strong>',
-    type: '%TYPE_MINION%',
-    key: 'CORE_002',
-    value: 'Rookie Lancer',
-    uuid: 'ba11dd5f-0c50-4851-a776-36ead9020712'
-  };
-
   return (
-    <Player
+    <Opponent
       abilitiesImageBase={ABILITIES_ICON}
       abilitiesImageClose={ABILITIES_ICON_CLOSE}
       avatarPlaceholderImageSrc={PLACEHOLDER_IMAGE}
@@ -82,10 +57,10 @@ const PlayerWrapper = props => {
       selectedCardUuid={
         selectedCardObject[playerID] && selectedCardObject[playerID].uuid
       }
-      yourId={playerID}
+      theirID={playerID}
       selectedCardContext={selectedCardInteractionContext}
     />
   );
 };
 
-export default PlayerWrapper;
+export default OpponentWrapper;

@@ -10,14 +10,14 @@ const Opponent = props => {
     cardsInDeckCount,
     cardsInHandCount,
     costGemImageSrc,
-    energyCurrent,
-    energyTotal,
+    actionPointsCurrent,
+    actionPointsTotal,
     heroAbilities,
     heroSymbol,
     playerHealthCurrent,
     playerHealthTotal,
     playerName,
-    theirId,
+    theirID,
     selectedCardContext
   } = props;
 
@@ -29,15 +29,15 @@ const Opponent = props => {
         cardsInDeck={cardsInDeckCount}
         cardsInHand={cardsInHandCount}
         costGemImageSrc={costGemImageSrc}
-        energyCurrent={energyCurrent}
-        energyTotal={energyTotal}
+        actionPointsCurrent={actionPointsCurrent}
+        actionPointsTotal={actionPointsTotal}
         heroAbilities={heroAbilities}
         heroSymbol={heroSymbol}
         parentComponent="Opponent"
         playerHealthCurrent={playerHealthCurrent}
         playerHealthTotal={playerHealthTotal}
         playerName={playerName}
-        yourId={theirId}
+        playerId={theirID}
         selectedCardContext={selectedCardContext}
       />
     </div>
@@ -50,14 +50,14 @@ Opponent.propTypes = {
   cardsInDeckCount: PropTypes.number,
   cardsInHandCount: PropTypes.number,
   costGemImageSrc: PropTypes.string.isRequired,
-  energyCurrent: PropTypes.number.isRequired,
-  energyTotal: PropTypes.number.isRequired,
+  actionPointsCurrent: PropTypes.number.isRequired,
+  actionPointsTotal: PropTypes.number.isRequired,
   heroAbilities: PropTypes.array,
   heroSymbol: PropTypes.string.isRequired,
   playerHealthCurrent: PropTypes.number.isRequired,
   playerHealthTotal: PropTypes.number.isRequired,
   playerName: PropTypes.string,
-  theirId: PropTypes.string.isRequired
+  theirID: PropTypes.string.isRequired
 };
 
 Opponent.defaultProps = {

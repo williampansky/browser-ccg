@@ -21,11 +21,21 @@ const Client = BoardgameClient({
 
 class App extends React.Component {
   state = {
+    hasError: false,
     addressBarSize: 0,
     playerID: null,
-    playerName: null,
-    deck: []
+    playerName: null
   };
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    console.error(error, errorInfo);
+  }
 
   componentDidMount() {
     const {
@@ -35,12 +45,6 @@ class App extends React.Component {
     href.includes('3002')
       ? this.setState({ playerID: '1' })
       : this.setState({ playerID: '0' });
-
-    if (localStorage.getItem('playerName'))
-      this.setState({ playerName: localStorage.getItem('playerName') });
-
-    if (localStorage.getItem('deck'))
-      this.setState({ deck: JSON.parse(localStorage.getItem('deck')) });
 
     /**
      * Uses html.perspective CSS property, which is set to 100vh, to determine
@@ -69,6 +73,11 @@ class App extends React.Component {
           </button>
         </div>
       );
+    }
+
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
     }
 
     return (
