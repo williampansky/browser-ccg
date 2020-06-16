@@ -17,7 +17,8 @@ const Opponent = props => {
     playerHealthCurrent,
     playerHealthTotal,
     playerName,
-    theirId
+    theirId,
+    selectedCardContext
   } = props;
 
   return (
@@ -37,6 +38,7 @@ const Opponent = props => {
         playerHealthTotal={playerHealthTotal}
         playerName={playerName}
         yourId={theirId}
+        selectedCardContext={selectedCardContext}
       />
     </div>
   );

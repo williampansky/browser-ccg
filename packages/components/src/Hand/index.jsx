@@ -13,12 +13,14 @@ const Hand = props => {
     imagesDataCards,
     imagesDataSets,
     selectedCardObject,
-    selectedCardUuid
+    selectedCardUuid,
+    selectedCardContext
   } = props;
 
   const [trayIsExpanded, setTrayIsExpanded] = useState(false);
   const style = useSpring({
-    filter: selectedCardUuid ? 'blur(2px)' : 'blur(0px)',
+    filter:
+      selectedCardUuid && !selectedCardContext ? 'blur(2px)' : 'blur(0px)',
     transform: trayIsExpanded
       ? selectedCardUuid
         ? 'translateY(180px)'

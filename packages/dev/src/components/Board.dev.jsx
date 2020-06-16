@@ -19,11 +19,11 @@ import {
 } from '@ccg/images';
 
 const CARD_01 = getCardByID('CORE_001');
-const CARD_02 = getCardByID('CORE_002');
+const CARD_02 = getCardByID('CORE_069');
 const CARD_03 = getCardByID('CORE_003');
-const CARD_04 = getCardByID('CORE_004');
+const CARD_04 = getCardByID('CORE_076');
 const CARD_05 = getCardByID('CORE_005');
-const CARD_06 = getCardByID('CORE_006');
+const CARD_06 = getCardByID('CORE_087');
 const CARD_07 = getCardByID('CORE_007');
 const CARD_08 = getCardByID('CORE_008');
 const CARD_09 = getCardByID('CORE_009');
@@ -207,10 +207,28 @@ const handleContextActions = cardObject => {
   try {
     const { type } = cardObject;
     switch (type) {
+      case TYPE['ITEM']:
+        return Array({
+          label: 'Use',
+          value: '%ITEM%'
+        });
+
       case TYPE['MINION']:
         return Array({
-          label: replaceConstant('%SUMMON%'),
+          label: 'Play',
           value: '%SUMMON%'
+        });
+
+      case TYPE['SPELL']:
+        return Array({
+          label: 'Cast',
+          value: '%SPELL%'
+        });
+
+      case TYPE['WEAPON']:
+        return Array({
+          label: 'Equip',
+          value: '%WEAPON%'
         });
 
       default:
@@ -223,6 +241,7 @@ const handleContextActions = cardObject => {
 
 export default function BoardDev() {
   const [selectedCardObject, setSelectedCardObject] = useState(null);
+  const [selectedCardContext, setSelectedCardContext] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   return (
@@ -245,6 +264,7 @@ export default function BoardDev() {
           playerHealthTotal={30}
           playerName="someDumbPlayerGuy"
           theirId={'1'}
+          selectedCardContext={selectedCardContext}
         />
 
         <Board
@@ -277,6 +297,7 @@ export default function BoardDev() {
           selectedCardObject={selectedCardObject}
           selectedCardUuid={selectedCardObject && selectedCardObject.uuid}
           yourId={'0'}
+          selectedCardContext={selectedCardContext}
         />
 
         <SelectedCardMobileModal
@@ -285,6 +306,8 @@ export default function BoardDev() {
           deselectCardFunction={() => setSelectedCardObject(null)}
           imagesDataCards={CARDS}
           imagesDataSets={SETS}
+          selectCardContextFunction={str => setSelectedCardContext(str)}
+          selectedCardContext={selectedCardContext}
           selectedCardUuid={selectedCardObject && selectedCardObject.uuid}
         />
       </div>

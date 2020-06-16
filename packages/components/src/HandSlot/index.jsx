@@ -41,7 +41,7 @@ const HandSlot = props => {
         cardImageFlairSrc={cardImageFlairSrc}
         handleCardInteractionClick={handleCardInteractionClick}
         index={slotIndex}
-        isPlayable={slotIndex === 1 ? true : false}
+        isPlayable={true}
         isSelected={selectedCardUuid === cardUuid ? true : false}
         trayIsExpanded={trayIsExpanded}
       />

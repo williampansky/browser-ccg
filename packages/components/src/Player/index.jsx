@@ -26,7 +26,8 @@ const Player = props => {
     selectCardFunction,
     selectedCardObject,
     selectedCardUuid,
-    yourId
+    yourId,
+    selectedCardContext
   } = props;
 
   const handleCardInteractionClick = useCallback(
@@ -59,6 +60,7 @@ const Player = props => {
         playerHealthTotal={playerHealthTotal}
         playerName={playerName}
         yourId={yourId}
+        selectedCardContext={selectedCardContext}
       />
       <Hand
         cardsInHand={cardsInHandArray}
@@ -68,6 +70,7 @@ const Player = props => {
         imagesDataSets={imagesDataSets}
         selectedCardObject={selectedCardObject}
         selectedCardUuid={selectedCardUuid}
+        selectedCardContext={selectedCardContext}
       />
     </div>
   );

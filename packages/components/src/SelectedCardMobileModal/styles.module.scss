@@ -19,8 +19,8 @@
   z-index: var(--zIndex-SelectedCardMobileModal);
 
   &:after {
-    // animation: fadeInModalBg 200ms ease-out 0ms 1 normal forwards;
-    background: mix(black, transparent, 75%);
+    animation: fadeInModalBg 200ms ease-out 0ms 1 normal forwards;
+    background: mix(black, transparent, 15%);
     bottom: 0;
     content: '';
     height: 100%;
@@ -80,6 +80,7 @@
   border-radius: calc(var(--card-height) / 28.571428571);
   position: relative;
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+  transition: 200ms ease;
 
   &:before {
     border-radius: calc(var(--card-height) / 28.571428571);
@@ -224,3 +225,20 @@
 
 // transform: translate(0, calc(var(--player-fab-size) / -0.8)) scale(1);
 //     transition-delay: 500ms;
+
+.selected__card__context--SUMMON {
+  pointer-events: none;
+
+  &:after {
+    opacity: 0;
+  }
+
+  .card__wrapper {
+    transform: translate(-100px, 80px) scale(0.5);
+  }
+
+  .context__menu {
+    opacity: 0;
+    pointer-events: none;
+  }
+}

@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
-import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
+import { getCardBaseImage, getCardFlairImage, removeSymbols } from '@ccg/utils';
 import { AppIcon, Card } from '@ccg/components';
 
 const SelectedCardMobileModal = props => {
@@ -11,20 +11,19 @@ const SelectedCardMobileModal = props => {
     deselectCardFunction,
     imagesDataCards,
     imagesDataSets,
-    selectedCardUuid
+    selectedCardUuid,
+    selectedCardContext,
+    selectCardContextFunction
   } = props;
 
   const [animateIn, setAnimateIn] = useState(false);
-  const [animateOut, setAnimateOut] = useState(false);
 
   // prettier-ignore
   useLayoutEffect(() => {
-    setAnimateOut(false);
     setTimeout(() => { setAnimateIn(true); }, 250);
 
     return () => {
       setAnimateIn(false);
-      setAnimateOut(true);
     }
   }, [card]);
 
@@ -36,9 +35,25 @@ const SelectedCardMobileModal = props => {
     [deselectCardFunction]
   );
 
+  const handleContextClick = useCallback(
+    (event, obj) => {
+      const { value } = obj;
+      event.preventDefault();
+      return selectCardContextFunction(value);
+    },
+    [selectCardContextFunction]
+  );
+
   return card !== null ? (
     <div
-      className={styles['selected__card__mobile__modal']}
+      className={[
+        styles['selected__card__mobile__modal'],
+        selectedCardContext !== null
+          ? styles[
+              `selected__card__context--${removeSymbols(selectedCardContext)}`
+            ]
+          : ''
+      ].join(' ')}
       data-component="SelectedCardMobileModal"
       id={`selectedCard__${selectedCardUuid}`}
     >
@@ -57,7 +72,10 @@ const SelectedCardMobileModal = props => {
               const { label, value } = ctxObj;
               return (
                 <li className={styles['list__item']} key={idx}>
-                  <button onClick={e => console.log(value)}>
+                  <button
+                    data-value={value}
+                    onClick={e => handleContextClick(e, ctxObj)}
+                  >
                     <span>{label}</span>
                   </button>
                 </li>
