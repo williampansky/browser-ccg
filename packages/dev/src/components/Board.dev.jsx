@@ -17,6 +17,7 @@ import {
   COST_GEM_IMAGE,
   PLACEHOLDER_IMAGE
 } from '@ccg/images';
+import { useCallback } from 'react';
 
 const CARD_01 = getCardByID('CORE_001');
 const CARD_02 = getCardByID('CORE_069');
@@ -239,10 +240,16 @@ const handleContextActions = cardObject => {
   }
 };
 
+const YOUR_BOARD_SLOTS = [];
+
 export default function BoardDev() {
   const [selectedCardObject, setSelectedCardObject] = useState(null);
   const [selectedCardContext, setSelectedCardContext] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const handleDropAreaClick = useCallback(index => {
+    console.log(index);
+  }, []);
 
   return (
     <Fullscreen
@@ -270,8 +277,10 @@ export default function BoardDev() {
         <Board
           // theirBoard={THEIR_BOARD_SLOTS}
           theirId={'1'}
-          // yourBoard={YOUR_BOARD_SLOTS}
+          yourBoard={YOUR_BOARD_SLOTS}
           yourId={'0'}
+          cardIsSelected={selectedCardObject ? true : false}
+          handleDropAreaClick={handleDropAreaClick}
         />
 
         <Player

@@ -31,6 +31,7 @@
     right: 0;
     top: 0;
     width: 100%;
+    transition: opacity 200ms ease-out;
     z-index: calc(var(--zIndex-SelectedCardMobileModal) - 1);
   }
 
@@ -230,7 +231,7 @@
   pointer-events: none;
 
   &:after {
-    opacity: 0;
+    opacity: 0 !important;
   }
 
   .card__wrapper {

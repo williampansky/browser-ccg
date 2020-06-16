@@ -22,3 +22,4 @@ export { default as Board } from './Board';
 export { default as HandSlot } from './HandSlot';
 export { default as Opponent } from './Opponent';
 export { default as OpponentSkillsAroundOrb } from './OpponentSkillsAroundOrb';
+export { default as BoardDropArea } from './BoardDropArea';
