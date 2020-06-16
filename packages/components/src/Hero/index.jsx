@@ -23,8 +23,8 @@ const Hero = props => {
     cardsInDeck,
     cardsInHand,
     costGemImageSrc,
-    energyCurrent,
-    energyTotal,
+    actionPointsCurrent,
+    actionPointsTotal,
     heroAbilities,
     heroSymbol,
     parentComponent,
@@ -94,8 +94,8 @@ const Hero = props => {
               iconColor="#ccc"
               statColor="white"
               statLabel="Cards in Deck"
-              statValue={energyCurrent}
-              totalEnergy={energyTotal}
+              statValue={actionPointsCurrent}
+              totalEnergy={actionPointsTotal}
             />
           </div>
           <PlayerName id={yourId} name={playerName} />

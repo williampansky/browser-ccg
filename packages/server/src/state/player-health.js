@@ -1,6 +1,6 @@
 import limitNumberWithinRange from '../utils/range-limit';
 
-const health = {
+const playerHealth = {
   __DATA_MODEL: {
     '0': 30,
     '1': 30
@@ -35,4 +35,4 @@ export const subtractFromPlayerHealth = (G, player, amount) => {
   G.health[player] = newHealth;
 };
 
-export default health;
+export default playerHealth;

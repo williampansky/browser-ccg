@@ -13,8 +13,8 @@ const Player = props => {
     cardsInHandCount,
     costGemImageSrc,
     deselectCardFunction,
-    energyCurrent,
-    energyTotal,
+    actionPointsCurrent,
+    actionPointsTotal,
     heroAbilities,
     heroSymbol,
     imagesDataCards,
@@ -50,8 +50,8 @@ const Player = props => {
         cardsInDeck={cardsInDeckCount}
         cardsInHand={cardsInHandCount}
         costGemImageSrc={costGemImageSrc}
-        energyCurrent={energyCurrent}
-        energyTotal={energyTotal}
+        actionPointsCurrent={actionPointsCurrent}
+        actionPointsTotal={actionPointsTotal}
         heroAbilities={heroAbilities}
         heroSymbol={heroSymbol}
         parentComponent="Player"
@@ -84,8 +84,8 @@ Player.propTypes = {
   cardsInHandArray: PropTypes.array.isRequired,
   cardsInHandCount: PropTypes.number.isRequired,
   costGemImageSrc: PropTypes.string.isRequired,
-  energyCurrent: PropTypes.number.isRequired,
-  energyTotal: PropTypes.number.isRequired,
+  actionPointsCurrent: PropTypes.number.isRequired,
+  actionPointsTotal: PropTypes.number.isRequired,
   deselectCardFunction: PropTypes.func.isRequired,
   heroAbilities: PropTypes.array.isRequired,
   heroSymbol: PropTypes.string.isRequired,
@@ -105,16 +105,12 @@ Player.defaultProps = {
   cardsInHandArray: [],
   cardsInDeckCount: 0,
   cardsInHandCount: 0,
-  // deselectCardFunction: () => {
-  //   console.error('deselectCardFunction() provided as a defaultProp');
-  // },
+  deselectCardFunction: () => {},
   heroAbilities: [],
   imagesDataCards: {},
   imagesDataSets: {},
   playerDeck: [],
-  // selectCardFunction: () => {
-  //   console.error('selectCardFunction() provided as a defaultProp');
-  // },
+  selectCardFunction: () => {},
   selectedCardObject: null,
   selectedCardUuid: ''
 };

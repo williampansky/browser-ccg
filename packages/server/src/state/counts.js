@@ -11,6 +11,7 @@ const counts = {
       timer: 75000
     }
   },
+
   deincrementDeck: (G, player) => {
     G.counts[player].deck--;
   },
