@@ -1,6 +1,5 @@
 import SERVER_CONFIG from './config';
 import players from './state/players';
-
 import boards from './state/boards';
 import buffs from './state/buffs';
 import cardBack from './state/card-back';
@@ -14,12 +13,10 @@ import playerAttackValue from './state/player-attack-value';
 import playerCanAttack from './state/player-can-attack';
 import playerCanBeAttacked from './state/player-can-be-attacked';
 import playerCanBeHealed from './state/player-can-be-healed';
-import playerCanUseClassSkill from './state/player-can-use-class-skill';
 import playerIsAttacking from './state/player-is-attacking';
 import playerIsDisabled from './state/player-is-disabled';
 import playerShieldPoints from './state/player-shield-points';
 import playerSpellDamage from './state/player-spell-damage';
-import playerUsedClassSkill from './state/player-used-class-skill';
 import playerWeapon from './state/player-weapon';
 import selectedCardIndex from './state/selected-card-index';
 import selectedCardObject from './state/selected-card-object';

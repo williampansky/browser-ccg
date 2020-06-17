@@ -5,7 +5,7 @@ const deckInfo = {
     '0': [],
     '1': []
   },
-  set: (G, ctx, player, data) => {
+  set: (G, player, data) => {
     const unique = [...new Set(data)];
     const duplicates = unique.map(value => {
       return {

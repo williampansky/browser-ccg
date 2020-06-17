@@ -30,7 +30,7 @@ const OpponentWrapper = props => {
 
   const { current: currentAP, total: totalAP } = actionPoints[playerID];
   const { hand } = players[playerID];
-  const { deckLength, handLength } = counts[playerID];
+  const { deck: deckLength, hand: handLength } = counts[playerID];
 
   return (
     <Opponent

@@ -11,7 +11,7 @@ const SERVER_CONFIG = {
     enableText: true
   },
   matchConfig: {
-    enableInitHandsStage: true,
+    enableInitHandsStage: false,
     enableRandomTurnOrder: false
   }
 };
