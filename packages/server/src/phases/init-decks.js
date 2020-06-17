@@ -2,14 +2,16 @@ import deckInfo from '../state/deck-info';
 import playerHero from '../state/player-hero';
 import players from '../state/players';
 const testDeck = require('../data/deck.default.001.json');
+const testDeck1 = require('../data/deck.default.001.json');
+const testDeck2 = require('../data/deck.default.002.json');
 
 export default {
   // Start the match by initiating each player's deck from the
   // component (client-side) state into the G state.
   // @TODO fix later on for deck selection/lobby/etc
   onBegin: (G, ctx) => {
-    const p1deck = testDeck;
-    const p2deck = testDeck;
+    const p1deck = testDeck1;
+    const p2deck = testDeck2;
 
     players.setDeck(G, '0', ctx.random.Shuffle(p1deck));
     players.setDeck(G, '1', ctx.random.Shuffle(p2deck));
