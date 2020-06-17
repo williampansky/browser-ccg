@@ -28,6 +28,7 @@ export default function getCardBaseImage(cardRarity, cardType, images, isGold) {
     const { value } = imgObj;
     return value;
   } catch (error) {
-    return console.error(error);
+    return;
+    // return console.error(error);
   }
 }

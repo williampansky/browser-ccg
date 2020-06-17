@@ -18,6 +18,7 @@ export default function getMechanicImage(cardId, cardSet, images) {
     const { value } = imgObj;
     return value;
   } catch (error) {
+    // return;
     return console.error(error);
   }
 }
