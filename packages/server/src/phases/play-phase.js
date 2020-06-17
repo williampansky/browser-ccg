@@ -2,18 +2,22 @@ import { TurnOrder } from 'boardgame.io/core';
 import boards from '../state/boards';
 import counts from '../state/counts';
 import drawCardAtStartOfTurn from '../utils/draw-turn-start-card';
-import actionPoints from '../state/action-points';
 import getCardByID from '../utils/get-card-by-id';
 import playerCanAttack from '../state/player-can-attack';
 import playerIsDisabled from '../state/player-is-disabled';
+
+// onBegin methods used
+import {
+  incrementAndSetTotalActionPoints,
+  resetMinionAttackBoon
+} from './play-methods';
 
 const onBegin = (G, ctx) => {
   const { turnOrder } = G;
   const { currentPlayer } = ctx;
   const otherPlayer = turnOrder.find(p => p !== currentPlayer);
 
-  actionPoints.incrementTotal(G, currentPlayer);
-  actionPoints.matchTotal(G, currentPlayer);
+  incrementAndSetTotalActionPoints(G, currentPlayer);
   drawCardAtStartOfTurn(G, ctx);
 
   G.boards[currentPlayer].forEach((slot, i) => {
@@ -25,9 +29,7 @@ const onBegin = (G, ctx) => {
       // boards.enableCanAttack(G, currentPlayer, i);
     }
 
-    // reset player's minion stats back to total values,
-    // which should reset turn-only enhancements
-    slot.currentAttack = slot.totalAttack;
+    resetMinionAttackBoon(G, slot);
 
     // handle disabled mechanic
     if (slot.isDisabled === true) {
@@ -191,8 +193,8 @@ const onEnd = (G, ctx) => {
   G.warcryObject = { '0': null, '1': null };
 
   // reset animation states
-  G.animationStates.playerIsAttackingPlayer['0'] = false;
-  G.animationStates.playerIsAttackingPlayer['1'] = false;
+  // G.animationStates.playerIsAttackingPlayer['0'] = false;
+  // G.animationStates.playerIsAttackingPlayer['1'] = false;
 };
 
 export default {

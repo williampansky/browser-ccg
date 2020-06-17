@@ -31,7 +31,7 @@ export const incrementTotalAP = (G, player) => {
   const { actionPoints } = G;
   const { total } = actionPoints[player];
 
-  if (total === 10) return;
+  if (total === 10) return; // eject if total is max (10)
 
   const newTotal = add(Number(total), 1);
   G.actionPoints[player].total = newTotal;
