@@ -26,7 +26,10 @@ const Hand = props => {
         ? 'translateY(180px)'
         : 'translateY(-100px)'
       : 'translateY(180px)',
-    config: config.default
+    config: {
+      ...config.default,
+      easing: 'cubic-bezier(0.19, 1, 0.22, 1)'
+    }
   });
 
   const handleHandTrayClick = useCallback(
