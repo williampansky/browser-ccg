@@ -47,8 +47,14 @@ const boards = {
   // enableCanAttack: (G, player, index) => _eMCA(G, player, index),
   // enableAllCanAttack: (G, player) => _eAMCA(G, player),
   
-  // // can be attacked
-  // disableCanBeAttacked: (G, player, index) => _dMCBA(G, player, index),
+  // can be attacked
+  disableCanBeAttacked: (G, player, index) => {
+    if (!G.boards[player][index]) return;
+    G.boards[player][index].canBeAttackedByMinion = false;
+    G.boards[player][index].canBeAttackedByPlayer = false;
+    G.boards[player][index].canBeAttackedBySpell = false;
+    G.boards[player][index].canBeAttackedByWarcry = false;
+  },
   // disableAllCanBeAttacked: (G, player) => _dAMCBA(G, player),
   // enableCanBeAttacked: (G, player, index) => _eMCBA(G, player, index),
   // enableAllCanBeAttacked: (G, player) => _eAMCBA(G, player),

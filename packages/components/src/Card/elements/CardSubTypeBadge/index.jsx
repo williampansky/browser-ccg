@@ -22,9 +22,9 @@ const CardSubTypeBadge = ({ badgeImgSrc, subtypeIconAlt, subtypeImgSrc }) => (
 );
 
 CardSubTypeBadge.propTypes = {
-  badgeImgSrc: PropTypes.string.isRequired,
-  subtypeIconAlt: PropTypes.string.isRequired,
-  subtypeImgSrc: PropTypes.string.isRequired
+  badgeImgSrc: PropTypes.string,
+  subtypeIconAlt: PropTypes.string,
+  subtypeImgSrc: PropTypes.string
 };
 
 export default CardSubTypeBadge;
