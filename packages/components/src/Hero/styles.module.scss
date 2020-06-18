@@ -17,7 +17,7 @@
   width: 100vw;
   z-index: var(--zIndex-Hero);
 
-  &.card--is-selected {
+  &[data-player='Player'].card--is-selected {
     filter: blur(2px);
     transform: translateY(calc(#{$sizeH} / 1.333333333));
 

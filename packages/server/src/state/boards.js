@@ -20,7 +20,7 @@ const boards = {
     '0': [
       { ...createBoardSlotObject('CORE_001') },
       { ...createBoardSlotObject('CORE_002'), hasBulwark: true },
-      { ...createBoardSlotObject('CORE_003'), hasBook: true },
+      { ...createBoardSlotObject('CORE_003'), hasBoon: true },
       // { ...createBoardSlotObject('CORE_004') },
       // { ...createBoardSlotObject('CORE_005') },
       // { ...createBoardSlotObject('CORE_006') },

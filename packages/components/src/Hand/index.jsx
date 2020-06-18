@@ -126,7 +126,7 @@ const Hand = props => {
         role="button"
         tabIndex={0}
       >
-        <AppIcon color="white" fileName="icon-uikit-close" size="initial" />
+        <AppIcon color="inherit" fileName="icon-uikit-close" size="initial" />
       </div>
     </animated.div>
   );

@@ -63,9 +63,7 @@ const Hero = props => {
             : ''
         ].join(' ')}
         data-component="Hero"
-        style={{
-          transform: parentComponent === 'Opponent' && 'translateY(0)'
-        }}
+        data-player={parentComponent}
       >
         <Avatar
           heroImageSrc={getHeroImage(heroSymbol, 'AVATAR')}

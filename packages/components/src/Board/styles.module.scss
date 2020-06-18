@@ -42,11 +42,13 @@
   min-width: 100vw;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: calc(var(--minion-height) / 7.5) 0;
+  padding: calc(var(--minion-height) / 4) 0;
   width: 100vw;
 
   @media (min-width: 960px) {
     align-items: center;
     justify-content: center;
+    overflow-x: visible;
+    overflow-y: visible;
   }
 }

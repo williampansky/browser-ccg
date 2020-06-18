@@ -1,3 +1,8 @@
+$close__btn--size: 40px;
+$close__btn--spacing: calc(calc(var(--card-height) / 10) * 2);
+$close__btn--background-color: red;
+$close__btn--icon-color: white;
+
 // prettier-ignore
 .hand {
   --card-height: 200px;
@@ -93,22 +98,20 @@
 }
 
 .close__tray__button {
-  $size: 40px;
-  $spacing: calc(calc(var(--card-height) / 10) * 2);
-
   align-items: center;
-  background: #282927;
+  background: $close__btn--background-color;
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.65);
-  bottom: calc(var(--card-height) + #{$spacing});
+  bottom: calc(var(--card-height) + #{$close__btn--spacing});
+  color: $close__btn--icon-color;
   cursor: pointer;
   display: flex;
   flex-flow: row nowrap;
-  height: $size;
+  height: $close__btn--size;
   justify-content: center;
+  margin: 10px;
   opacity: 0;
   outline: none;
-  margin: 10px;
   padding: 10px;
   position: absolute;
   right: 0;
@@ -118,7 +121,7 @@
   transition-duration: 300ms;
   transition-property: opacity, transform;
   transition-timing-function: var(--animation-transition-cubic);
-  width: $size;
+  width: $close__btn--size;
   z-index: 0;
 
   // svg wrapper

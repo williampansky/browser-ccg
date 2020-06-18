@@ -1,8 +1,8 @@
-.minion--is-concealed {
+.minion--is-hidden {
   pointer-events: none;
 }
 
-.minion--is-concealed ~ [data-file='Minion'] {
+.minion--is-hidden ~ [data-file='Minion'] {
   &:before {
     background: #333;
     border-radius: var(--minion-border-radius);
@@ -17,9 +17,9 @@
     opacity: 0.25;
   }
 
-  .concealed__clouds {
+  .hidden__clouds {
     animation: scroll-smoke 20s linear infinite;
-    background-image: url('/images/mechanics/CONCEALED.png');
+    background-image: url('/images/mechanics/HIDDEN.png');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
