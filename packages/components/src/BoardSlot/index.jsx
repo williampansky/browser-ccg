@@ -2,7 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { getMechanicImage, getMinionFlairImage } from '@ccg/utils';
-import { Minion, BulwarkForeground, BulwarkBackground } from '@ccg/components';
+import {
+  Minion,
+  Boon,
+  Bubble,
+  BulwarkBackground,
+  BulwarkForeground,
+  Disabled,
+  DoubleAttack,
+  Elite,
+  Poison
+} from '@ccg/components';
 
 const BoardSlot = props => {
   const {
@@ -13,6 +23,7 @@ const BoardSlot = props => {
       currentAttack,
       currentHealth,
       hasBulwark,
+      hasBoon,
       minionData: {
         active,
         artist,
@@ -22,10 +33,10 @@ const BoardSlot = props => {
         elite,
         entourage,
         flavor,
-        hasCurse,
-        hasEnergyShield,
+        hasOnDeath,
+        hasBubble,
         hasEventListener,
-        hasOnslaught,
+        hasDoubleAttack,
         hasPoison,
         health,
         howToEarn,
@@ -60,6 +71,7 @@ const BoardSlot = props => {
       data-slot={index}
     >
       {/* mechanics (above minion) */}
+      {slotObject && hasBoon && <Boon />}
       {slotObject && hasBulwark && (
         <BulwarkForeground
           imgSrc={getMechanicImage('BULWARK_FOREGROUND.png')}
@@ -78,10 +90,10 @@ const BoardSlot = props => {
         elite={elite}
         entourage={entourage}
         flavor={flavor}
-        hasCurse={hasCurse}
-        hasEnergyShield={hasEnergyShield}
+        hasBubble={hasBubble}
+        hasDoubleAttack={hasDoubleAttack}
         hasEventListener={hasEventListener}
-        hasOnslaught={hasOnslaught}
+        hasOnDeath={hasOnDeath}
         hasPoison={hasPoison}
         health={health}
         howToEarn={howToEarn}

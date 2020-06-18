@@ -1,4 +1,4 @@
-.minion--has-energy-shield {
+.minion--has-bubble {
   animation: es-mounted 1200ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
   border-radius: var(--minion-border-radius);
   height: 108%;
@@ -35,6 +35,6 @@
   }
 }
 
-.minion--is-attacking .minion--has-energy-shield .outer__ring {
+.minion--is-attacking .minion--has-bubble .outer__ring {
   transform: scale(1.15);
 }

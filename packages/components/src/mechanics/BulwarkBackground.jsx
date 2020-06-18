@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getMinionRaceClass } from '@ccg/utils';
 
-const HasBulwarkBackground = ({ imgSrc, race }) => {
+export default function HasBulwarkBackground({ imgSrc, race }) {
   const [isAnimating, setIsAnimating] = React.useState(false);
 
   // prettier-ignore
@@ -24,11 +24,9 @@ const HasBulwarkBackground = ({ imgSrc, race }) => {
       src={imgSrc}
     />
   );
-};
+}
 
 HasBulwarkBackground.propTypes = {
   imgSrc: PropTypes.string.isRequired,
   race: PropTypes.string.isRequired
 };
-
-export default HasBulwarkBackground;

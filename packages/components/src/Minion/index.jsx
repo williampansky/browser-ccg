@@ -26,10 +26,10 @@ const Minion = ({
   elite,
   entourage,
   flavor,
-  hasCurse,
-  hasEnergyShield,
+  hasBubble,
+  hasDoubleAttack,
   hasEventListener,
-  hasOnslaught,
+  hasOnDeath,
   hasPoison,
   health,
   howToEarn,
@@ -68,7 +68,7 @@ const Minion = ({
       className={[
         styles['minion'],
         styles[getMinionRaceClass(race)],
-        hasEnergyShield ? styles['minion--has-energy-shield'] : '',
+        hasBubble ? styles['minion--has-bubble'] : '',
         isAttacking ? styles['minion--is-attacking'] : '',
         currentHealth < totalHealth ? styles['minion--is-damaged'] : '',
         currentHealth === 0 ? styles['minion--is-dead'] : ''
@@ -96,9 +96,9 @@ const Minion = ({
       />
 
       <MechanicIcon
-        hasCurse={hasCurse}
+        hasDoubleAttack={hasDoubleAttack}
         hasEventListener={hasEventListener}
-        hasOnslaught={hasOnslaught}
+        hasOnDeath={hasOnDeath}
         hasPoison={hasPoison}
         mechanicImages={MECHANICS}
       />
@@ -117,10 +117,10 @@ Minion.propTypes = {
   elite: PropTypes.bool,
   entourage: PropTypes.array,
   flavor: PropTypes.string,
-  hasCurse: PropTypes.bool,
-  hasEnergyShield: PropTypes.bool,
+  hasBubble: PropTypes.bool,
+  hasDoubleAttack: PropTypes.bool,
   hasEventListener: PropTypes.bool,
-  hasOnslaught: PropTypes.bool,
+  hasOnDeath: PropTypes.bool,
   hasPoison: PropTypes.bool,
   health: PropTypes.number,
   howToEarn: PropTypes.string,

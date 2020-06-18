@@ -24,5 +24,13 @@ export { default as PlayerStatEnergy } from './PlayerStatEnergy';
 export { default as PlayerStatIcon } from './PlayerStatIcon';
 export { default as ReactBurgerMenu } from './ReactBurgerMenu';
 export { default as SelectedCardMobileModal } from './SelectedCardMobileModal';
+
+// mechanics
+export { default as Boon } from './mechanics/Boon';
+export { default as Bubble } from './mechanics/Bubble';
 export { default as BulwarkBackground } from './mechanics/BulwarkBackground';
 export { default as BulwarkForeground } from './mechanics/BulwarkForeground';
+export { default as Disabled } from './mechanics/Disabled';
+export { default as DoubleAttack } from './mechanics/DoubleAttack';
+export { default as Elite } from './mechanics/Elite';
+export { default as Poison } from './mechanics/Poison';

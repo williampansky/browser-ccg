@@ -43,7 +43,7 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
 }
 
 // prettier-ignore
-.minion.minion--has-energy-shield {
+.minion.minion--has-bubble {
   & > div:nth-child(2) { // attack badge
     transform: translateX(10px);
     transition: transform 200ms ease-out;

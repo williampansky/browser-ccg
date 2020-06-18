@@ -4,25 +4,25 @@ import styles from './styles.module.scss';
 import { getMechanicImage } from '@ccg/utils';
 
 const MechanicIcon = ({
-  hasCurse,
+  hasDoubleAttack,
   hasEventListener,
-  hasOnslaught,
+  hasOnDeath,
   hasPoison,
   mechanicImages
 }) => {
   function getDataLength() {
     let num = 0;
-    if (hasCurse) num = num + 1;
-    if (hasOnslaught) num = num + 1;
+    if (hasOnDeath) num = num + 1;
+    if (hasDoubleAttack) num = num + 1;
     if (hasPoison) num = num + 1;
     return num;
   }
 
-  if (hasCurse) {
+  if (hasOnDeath) {
     return (
       <div className={styles['minion__mechanics']}>
         <img
-          alt="hasCurse"
+          alt="hasOnDeath"
           src={getMechanicImage('ON_DEATH.png', mechanicImages)}
         />
       </div>
@@ -45,11 +45,11 @@ const MechanicIcon = ({
         />
       </div>
     );
-  } else if (hasOnslaught) {
+  } else if (hasDoubleAttack) {
     return (
       <div className={styles['minion__mechanics']}>
         <img
-          alt="hasOnslaught"
+          alt="hasDoubleAttack"
           src={getMechanicImage('DOUBLE_ATTACK.png', mechanicImages)}
         />
       </div>
@@ -60,8 +60,8 @@ const MechanicIcon = ({
 
   // return (
   //   <div className={styles.component} data-length={getDataLength()}>
-  //     {hasCurse ? (
-  //       <img alt="hasCurse" src="/images/mechanics/ON_DEATH.png" />
+  //     {hasOnDeath ? (
+  //       <img alt="hasOnDeath" src="/images/mechanics/ON_DEATH.png" />
   //     ) : null}
 
   //     {hasEventListener ? (
@@ -72,25 +72,25 @@ const MechanicIcon = ({
   //       <img alt="hasPoison" src="/images/mechanics/POISON.png" />
   //     ) : null}
 
-  //     {hasOnslaught ? (
-  //       <img alt="hasOnslaught" src="/images/mechanics/DOUBLE_ATTACK.png" />
+  //     {hasDoubleAttack ? (
+  //       <img alt="hasDoubleAttack" src="/images/mechanics/DOUBLE_ATTACK.png" />
   //     ) : null}
   //   </div>
   // );
 };
 
 MechanicIcon.propTypes = {
-  hasCurse: PropTypes.bool,
+  hasOnDeath: PropTypes.bool,
   hasEventListener: PropTypes.bool,
-  hasOnslaught: PropTypes.bool,
+  hasDoubleAttack: PropTypes.bool,
   hasPoison: PropTypes.bool,
   mechanicImages: PropTypes.object.isRequired
 };
 
 MechanicIcon.defaultProps = {
-  hasCurse: false,
+  hasOnDeath: false,
   hasEventListener: false,
-  hasOnslaught: false,
+  hasDoubleAttack: false,
   hasPoison: false
 };
 
