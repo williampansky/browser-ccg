@@ -77,10 +77,8 @@ const CardInteractionLayer = props => {
       ].join(' ')}
       data-component="CardInteractionLayer"
       data-index={index}
-      onClick={e => handleCardInteractionClick(e, card, isPlayable, isSelected)}
-      onKeyPress={e =>
-        handleCardInteractionClick(e, card, isPlayable, isSelected)
-      }
+      onClick={() => handleCardInteractionClick(card, index)}
+      onKeyPress={() => handleCardInteractionClick(card, index)}
       role={isPlayable ? 'button' : 'presentation'}
       tabIndex={isPlayable ? 'button' : 'presentation'}
       style={style}

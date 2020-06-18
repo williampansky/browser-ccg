@@ -61,6 +61,7 @@ const GameWrapper = props => {
       <PlayerWrapper
         G={G}
         ctx={ctx}
+        moves={moves}
         playerID={yourID}
         images={{
           CARDS: CARDS,
@@ -75,6 +76,7 @@ const GameWrapper = props => {
       <SelectedCardMobileModalWrapper
         G={G}
         ctx={ctx}
+        moves={moves}
         playerID={yourID}
         images={{
           CARDS: CARDS,

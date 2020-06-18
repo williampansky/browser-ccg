@@ -2,7 +2,7 @@
  * Resets various interactive states back to default.
  * @param {object} G
  */
-const resetInteractionStates = G => {
+const resetInteractionStatesOnBegin = G => {
   // reset card states
   G.hoveringCardIndex = { '0': null, '1': null };
   G.selectedCardIndex = { '0': null, '1': null };
@@ -14,9 +14,6 @@ const resetInteractionStates = G => {
 
   // reset warcry states
   G.warcryObject = { '0': null, '1': null };
-
-  // reset playerUsedClassSkill states
-  G.playerUsedClassSkill = { '0': false, '1': false };
 };
 
-export default resetInteractionStates;
+export default resetInteractionStatesOnBegin;

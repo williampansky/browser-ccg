@@ -18,10 +18,13 @@ const SelectedCardMobileModalWrapper = props => {
       selectedCardInteractionContext,
       counts
     },
+    ctx,
+    moves,
     playerID,
     images: { CARDS: IMAGES_CARDS, SETS: IMAGES_SETS }
   } = props;
 
+  const { deselectCard } = moves;
   const { current: currentAP, total: totalAP } = actionPoints[playerID];
   const { hand } = players[playerID];
   const { deckLength, handLength } = counts[playerID];
@@ -66,7 +69,7 @@ const SelectedCardMobileModalWrapper = props => {
     <SelectedCardMobileModal
       card={selectedCardObject[playerID]}
       contextActions={handleContextActions(selectedCardObject[playerID])}
-      // deselectCardFunction={() => setSelectedCardObject(null)}
+      deselectCardFunction={() => deselectCard(null)}
       imagesDataCards={IMAGES_CARDS}
       imagesDataSets={IMAGES_SETS}
       // selectCardContextFunction={str => setSelectedCardContext(str)}

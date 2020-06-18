@@ -4,6 +4,7 @@ import styles from './styles.module.scss';
 import { useSpring, animated, config } from 'react-spring';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { AppIcon, HandSlot } from '@ccg/components';
+import { useResponsive } from '@ccg/hooks';
 
 const Hand = props => {
   const {
@@ -17,15 +18,27 @@ const Hand = props => {
     selectedCardContext
   } = props;
 
+  const { isDesktop } = useResponsive();
   const [trayIsExpanded, setTrayIsExpanded] = useState(false);
+
+  const handleFilterStyle = useCallback(() => {
+    if (isDesktop) return 'blur(0px)';
+    else if (selectedCardUuid && !selectedCardContext) return 'blur(2px)';
+    else return 'blur(0px)';
+  }, [isDesktop, selectedCardContext, selectedCardUuid]);
+
+  const handleTranslateStyle = useCallback(() => {
+    if (trayIsExpanded) {
+      if (selectedCardUuid) return 'translateY(180px)';
+      else return 'translateY(-100px)';
+    } else {
+      return 'translateY(180px)';
+    }
+  }, [selectedCardUuid, trayIsExpanded]);
+
   const style = useSpring({
-    filter:
-      selectedCardUuid && !selectedCardContext ? 'blur(2px)' : 'blur(0px)',
-    transform: trayIsExpanded
-      ? selectedCardUuid
-        ? 'translateY(180px)'
-        : 'translateY(-100px)'
-      : 'translateY(180px)',
+    filter: handleFilterStyle(),
+    transform: handleTranslateStyle(),
     config: {
       ...config.default,
       easing: 'cubic-bezier(0.19, 1, 0.22, 1)'

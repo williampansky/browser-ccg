@@ -17,6 +17,8 @@ const PlayerWrapper = props => {
       selectedCardInteractionContext,
       counts
     },
+    ctx,
+    moves,
     playerID,
     images: {
       CARDS: IMAGES_CARDS,
@@ -31,31 +33,7 @@ const PlayerWrapper = props => {
   const { current: currentAP, total: totalAP } = actionPoints[playerID];
   const { hand } = players[playerID];
   const { deck: deckLength, hand: handLength } = counts[playerID];
-
-  const TEMP_CARD = {
-    active: true,
-    artist:
-      '<a href="https://graphicriver.net/user/rexard" rel="noopener noreferrer" target="_blank">Rexard</a>',
-    attack: 1,
-    cardClass: '%CLASS_NONE%',
-    collectible: true,
-    cost: 1,
-    elite: false,
-    entourage: [],
-    health: 2,
-    howToEarn: 'Provided to all players.',
-    mechanics: ['%BULWARK%'],
-    id: 'CORE_002',
-    name: 'Rookie Lancer',
-    race: '%RACE_NONE%',
-    rarity: '%RARITY_FREE%',
-    set: '%SET_002%',
-    text: '<strong>%BULWARK%</strong>',
-    type: '%TYPE_MINION%',
-    key: 'CORE_002',
-    value: 'Rookie Lancer',
-    uuid: 'ba11dd5f-0c50-4851-a776-36ead9020712'
-  };
+  const { deselectCard, selectCard } = moves;
 
   return (
     <Player
@@ -66,7 +44,7 @@ const PlayerWrapper = props => {
       cardsInHandArray={hand}
       cardsInHandCount={handLength}
       costGemImageSrc={COST_GEM_IMAGE}
-      // deselectCardFunction={() => setSelectedCardObject(null)}
+      deselectCardFunction={() => deselectCard(null)}
       actionPointsCurrent={currentAP}
       actionPointsTotal={totalAP}
       heroAbilities={playerHeroAbilities[playerID]}
@@ -77,7 +55,7 @@ const PlayerWrapper = props => {
       playerHealthCurrent={playerHealth[playerID]}
       playerHealthTotal={30}
       playerName={playerName[playerID]}
-      // selectCardFunction={obj => setSelectedCardObject(obj)}
+      selectCardFunction={(obj, idx) => selectCard(obj, idx)}
       selectedCardObject={selectedCardObject[playerID]}
       selectedCardUuid={
         selectedCardObject[playerID] && selectedCardObject[playerID].uuid

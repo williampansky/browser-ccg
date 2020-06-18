@@ -20,6 +20,11 @@
   &.card--is-selected {
     filter: blur(2px);
     transform: translateY(calc(#{$sizeH} / 1.333333333));
+
+    @media (min-width: 960px) {
+      filter: blur(0px);
+      transform: translateY(0);
+    }
   }
 
   .player__info {

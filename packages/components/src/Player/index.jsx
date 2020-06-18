@@ -31,13 +31,12 @@ const Player = props => {
   } = props;
 
   const handleCardInteractionClick = useCallback(
-    (event, cardObject, cardIsPlayable, cardIsSelected) => {
-      event.preventDefault();
-      if (cardIsSelected) return deselectCardFunction();
-      else if (cardIsPlayable) return selectCardFunction(cardObject);
-      else return;
+    (cardObject, index) => {
+      if (selectedCardUuid) return console.log('deselect');
+      else return selectCardFunction(cardObject, index);
+      // else if (cardIsPlayable) return selectCardFunction(cardObject, index);
     },
-    [deselectCardFunction, selectCardFunction]
+    [selectedCardUuid, deselectCardFunction, selectCardFunction]
   );
 
   return (

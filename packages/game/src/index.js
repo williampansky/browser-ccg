@@ -2,16 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './store';
-import GameLocal from './GameLocal';
+import Game from './Game';
 import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
 if (process.env.NODE_ENV === 'development' && module.hot) {
-  module.hot.accept('./GameLocal', () => {
-    const GameLocal = require('./GameLocal').default;
+  module.hot.accept('./Game', () => {
+    const Game = require('./Game').default;
     ReactDOM.render(
       <Provider store={store}>
-        <GameLocal />
+        <Game />
       </Provider>,
       document.getElementById('root')
     );
@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
 
 ReactDOM.render(
   <Provider store={store}>
-    <GameLocal />
+    <Game />
   </Provider>,
   document.getElementById('root')
 );
