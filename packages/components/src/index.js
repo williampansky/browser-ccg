@@ -24,6 +24,7 @@ export { default as PlayerStatEnergy } from './PlayerStatEnergy';
 export { default as PlayerStatIcon } from './PlayerStatIcon';
 export { default as ReactBurgerMenu } from './ReactBurgerMenu';
 export { default as SelectedCardMobileModal } from './SelectedCardMobileModal';
+export { default as PlayerInteractionLayer } from './PlayerInteractionLayer';
 
 // mechanics
 export { default as Boon } from './mechanics/Boon';

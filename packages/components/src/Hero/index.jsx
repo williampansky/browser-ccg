@@ -66,8 +66,10 @@ const Hero = props => {
         data-player={parentComponent}
       >
         <Avatar
+          handlePlayerInteractionClick={e => console.log(e)}
           heroImageSrc={getHeroImage(heroSymbol, 'AVATAR')}
           heroName={getHeroName(heroSymbol)}
+          parentComponent={parentComponent}
           placeholderImageSrc={avatarPlaceholderImageSrc}
         />
 
