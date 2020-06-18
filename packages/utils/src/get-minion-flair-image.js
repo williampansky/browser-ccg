@@ -1,6 +1,7 @@
+import { SETS } from '@ccg/images';
 import { removeSymbols } from '@ccg/utils';
 
-function getImageObject(cardId, cardSet, images = {}, isGold = false) {
+function getImageObject(cardId, cardSet, isGold = false, images = SETS) {
   const id = removeSymbols(cardId);
   const set = removeSymbols(cardSet);
   const srcString = `${set}/${id}-MINION.jpg`;
@@ -17,9 +18,9 @@ function getImageObject(cardId, cardSet, images = {}, isGold = false) {
   return imgMatch;
 }
 
-export default function getCardFlairImage(cardId, cardSet, images, isGold) {
+export default function getMinionFlairImage(cardId, cardSet, isGold) {
   try {
-    const imgObj = getImageObject(cardId, cardSet, images, isGold);
+    const imgObj = getImageObject(cardId, cardSet, isGold);
     const { value } = imgObj;
     return value;
   } catch (error) {

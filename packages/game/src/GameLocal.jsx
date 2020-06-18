@@ -58,6 +58,21 @@ class App extends React.Component {
           document.documentElement.clientHeight
       });
     }
+
+    /**
+     * Auto closes the Boardgame.io debug panel on refreshes.
+     */
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        window.dispatchEvent(
+          new KeyboardEvent('keypress', {
+            key: '.',
+            code: 'Period',
+            keyCode: 190
+          })
+        );
+      }, 100);
+    }
   }
 
   render() {

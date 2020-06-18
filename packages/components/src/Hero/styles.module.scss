@@ -15,7 +15,7 @@
   transition: 600ms var(--animation-transition-cubic);
   transition-property: filter, opacity, transform;
   width: 100vw;
-  z-index: 1;
+  z-index: var(--zIndex-Hero);
 
   &.card--is-selected {
     filter: blur(2px);

@@ -53,8 +53,7 @@ const Minion = ({
   targetingArrowText,
   text,
   totalHealth,
-  type,
-  wasAttacked
+  type
 }) => {
   /**
    * Returns minion race in lower case format
@@ -71,7 +70,6 @@ const Minion = ({
         styles[getMinionRaceClass(race)],
         hasEnergyShield ? styles['minion--has-energy-shield'] : '',
         isAttacking ? styles['minion--is-attacking'] : '',
-        wasAttacked ? styles['minion--was-attacked'] : '',
         currentHealth < totalHealth ? styles['minion--is-damaged'] : '',
         currentHealth === 0 ? styles['minion--is-dead'] : ''
       ].join(' ')}
@@ -146,8 +144,7 @@ Minion.propTypes = {
   targetingArrowText: PropTypes.string,
   text: PropTypes.string,
   totalHealth: PropTypes.number,
-  type: PropTypes.string,
-  wasAttacked: PropTypes.bool
+  type: PropTypes.string
 };
 
 Minion.defaultProps = {

@@ -18,15 +18,22 @@ import createBoardSlotObject from '../creators/create-board-slot-object';
 const boards = {
   __DATA_MODEL: {
     '0': [
-      { ...createBoardSlotObject('CORE_062') }
+      { ...createBoardSlotObject('CORE_001') },
+      { ...createBoardSlotObject('CORE_002'), hasBulwark: true },
+      { ...createBoardSlotObject('CORE_003'), hasBook: true },
+      // { ...createBoardSlotObject('CORE_004') },
+      // { ...createBoardSlotObject('CORE_005') },
+      // { ...createBoardSlotObject('CORE_006') },
+      // { ...createBoardSlotObject('CORE_062') }
     ],
     '1': [
       { ...createBoardSlotObject('CORE_004') },
-      { ...createBoardSlotObject('CORE_005') },
+      { ...createBoardSlotObject('CORE_005'), hasRush: true },
       { ...createBoardSlotObject('CORE_006') },
-      { ...createBoardSlotObject('CORE_007') },
-      { ...createBoardSlotObject('CORE_008') },
-      // { ...createBoardSlotObject('CORE_009') }
+      { ...createBoardSlotObject('CORE_007'), hasNoAttack: true },
+      // { ...createBoardSlotObject('CORE_008') },
+      // { ...createBoardSlotObject('CORE_009') },
+      // { ...createBoardSlotObject('CORE_130') }
     ]
   },
 

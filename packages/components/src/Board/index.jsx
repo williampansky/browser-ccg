@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { PLAYER_BOARDS } from '@ccg/enums';
-import { BoardDropArea } from '@ccg/components';
+import { BoardDropArea, BoardSlot } from '@ccg/components';
 import styles from './styles.module.scss';
 
 const Board = props => {
@@ -21,11 +21,21 @@ const Board = props => {
         data-board={PLAYER_BOARDS[2]}
         data-board-id={theirID}
       >
-        {theirBoard.map((obj, index) => {
-          index = index + 1;
-          // console.log(obj);
-          // return <Fragment key={index}>{obj.minionData.name}</Fragment>;
-        })}
+        <div className={styles['play__area']}>
+          {theirBoard.map((object, index) => {
+            index = index + 1;
+            return (
+              <BoardSlot
+                key={`slot_${index}`}
+                board={PLAYER_BOARDS[1]}
+                slotObject={object}
+                index={index}
+                playerID={theirID}
+                // onClick={() => handleClick(index)}
+              />
+            );
+          })}
+        </div>
       </div>
 
       <div
@@ -42,10 +52,28 @@ const Board = props => {
               onClick={() => handleDropAreaClick(0)}
             />
           ) : null}
-          {/* {yourBoard.map((obj, index) => {
+          {yourBoard.map((object, index) => {
             index = index + 1;
-            return <Fragment key={index}>{index}</Fragment>;
-          })} */}
+            return (
+              <Fragment key={`fragment_${index}`}>
+                <BoardSlot
+                  key={`slot_${index}`}
+                  board={PLAYER_BOARDS[1]}
+                  slotObject={object}
+                  index={index}
+                  playerID={yourID}
+                  // onClick={() => handleClick(index)}
+                />
+                {yourBoard.length <= 6 ? (
+                  <BoardDropArea
+                    index={index + 1}
+                    // boardIsActive={BOARD_IS_ACTIVE}
+                    // onClick={() => dropMinion(index + 1)}
+                  />
+                ) : null}
+              </Fragment>
+            );
+          })}
         </div>
       </div>
     </div>

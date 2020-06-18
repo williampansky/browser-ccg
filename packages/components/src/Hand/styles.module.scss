@@ -24,7 +24,7 @@
   // transform: translateY(35%);
   // transition: transform 600ms var(--animation-transition-cubic);
   width: 100vw;
-  z-index: 0;
+  z-index: var(--zIndex-Hand);
 
   // prettier-ignore
   // & {

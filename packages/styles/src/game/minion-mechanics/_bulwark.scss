@@ -1,12 +1,12 @@
-.minion--has-guard-background {
+.minion--has-bulwark-background {
   // animation-duration: 300ms;
   position: absolute;
-  width: 105%;
-  height: 110%;
-  top: -5px;
+  width: calc(var(--minion-height) / 1.19047619);
+  height: calc(var(--minion-height) / 0.909090909);
+  top: calc(var(--minion-height) / -30);
   right: 0;
   bottom: 0;
-  left: -4px;
+  left: calc(var(--minion-height) / -37.5);
   pointer-events: none;
   transform: scale(1);
   transition: transform 400ms var(--animation-transition-cubic);
@@ -34,15 +34,15 @@
   }
 }
 
-.minion--has-guard-foreground {
+.minion--has-bulwark-foreground {
   // animation-duration: 300ms;
   position: absolute;
-  width: 105%;
-  height: 110%;
-  top: -5px;
+  width: calc(var(--minion-height) / 1.19047619);
+  height: calc(var(--minion-height) / 0.909090909);
+  top: calc(var(--minion-height) / -30);
   right: 0;
   bottom: 0;
-  left: -4px;
+  left: calc(var(--minion-height) / -37.5);
   pointer-events: none;
   transform: scale(1);
   transition: transform 400ms var(--animation-transition-cubic);

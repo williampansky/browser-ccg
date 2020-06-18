@@ -45,3 +45,8 @@
 // .spell-slot ~ .board-is-active .board__drop__area {
 //   opacity: 0;
 // }
+
+.board__drop__area.cant--drop-minion {
+  cursor: default;
+  pointer-events: none;
+}

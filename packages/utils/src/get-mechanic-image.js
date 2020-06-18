@@ -1,4 +1,6 @@
-function getImageObject(key, images = {}) {
+import { MECHANICS } from '@ccg/images';
+
+function getImageObject(key, images = MECHANICS) {
   const imgMatch = Object.entries(images)
     .map(([key, value]) => {
       return {
@@ -12,13 +14,13 @@ function getImageObject(key, images = {}) {
   return imgMatch;
 }
 
-export default function getMechanicImage(cardId, cardSet, images) {
+export default function getMechanicImage(fileName) {
   try {
-    const imgObj = getImageObject(cardId, cardSet, images);
+    const imgObj = getImageObject(fileName);
     const { value } = imgObj;
     return value;
   } catch (error) {
-    // return;
-    return console.error(error);
+    return;
+    // return console.error(error);
   }
 }

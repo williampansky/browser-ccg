@@ -1,3 +1,10 @@
+$modal--background-fade-amount: 65%;
+
+$ctx--button-size: var(--player-fab-size);
+$ctx--action-button-size: calc(#{$ctx--button-size} * 1.5);
+$ctx--transform: calc(#{$ctx--button-size} / -0.8);
+$ctx--button-background-color: var(--color-rarity-FREE);
+
 // prettier-ignore
 .selected__card__mobile__modal {
   --card-height: 350px;
@@ -20,7 +27,7 @@
 
   &:after {
     animation: fadeInModalBg 200ms ease-out 0ms 1 normal forwards;
-    background: mix(black, transparent, 15%);
+    background: mix(black, transparent, $modal--background-fade-amount);
     bottom: 0;
     content: '';
     height: 100%;
@@ -99,10 +106,6 @@
 }
 
 .context__menu {
-  $fabButtonSize: var(--player-fab-size);
-  $actionButtonSize: calc(#{$fabButtonSize} * 1.5);
-  $li: calc(#{$fabButtonSize} / -0.8);
-
   * {
     outline: none;
   }
@@ -119,10 +122,10 @@
 
   button {
     appearance: none;
-    background: #111;
+    background: $ctx--button-background-color;
     border-radius: 50%;
     border: 0;
-    color: white;
+    color: invert(#a4bed3, 100%);
     cursor: pointer;
     height: 100%;
     margin: 0;
@@ -183,8 +186,8 @@
   }
 
   .list__item {
-    height: $actionButtonSize;
-    width: $actionButtonSize;
+    height: $ctx--action-button-size;
+    width: $ctx--action-button-size;
     padding: 0;
     margin: 0;
     transform: translate(0, 0) scale(0.1);
@@ -209,18 +212,18 @@
   // prettier-ignore
   &.context__menu--animate-in {
     .context__menu__list[data-length='1'] .list__item {
-      &:nth-child(1) { transform: translate(0, $li) scale(1); transition-delay: 100ms; }
+      &:nth-child(1) { transform: translate(0, $ctx--transform) scale(1); transition-delay: 100ms; }
     }
 
     .context__menu__list[data-length='2'] .list__item {
-      &:nth-child(1) { transform: translate(0, $li) scale(1); transition-delay: 200ms; }
-      &:nth-child(2) { transform: translate(0, $li) scale(1); transition-delay: 100ms; }
+      &:nth-child(1) { transform: translate(0, $ctx--transform) scale(1); transition-delay: 200ms; }
+      &:nth-child(2) { transform: translate(0, $ctx--transform) scale(1); transition-delay: 100ms; }
     }
 
     .context__menu__list[data-length='3'] .list__item {
-      &:nth-child(1) { transform: translate(0, $li) scale(1); transition-delay: 300ms; }
-      &:nth-child(2) { transform: translate(0, calc(#{$li} * 1.45)) scale(1); transition-delay: 200ms; }
-      &:nth-child(3) { transform: translate(0, $li) scale(1); transition-delay: 100ms; }
+      &:nth-child(1) { transform: translate(0, $ctx--transform) scale(1); transition-delay: 300ms; }
+      &:nth-child(2) { transform: translate(0, calc(#{$ctx--transform} * 1.45)) scale(1); transition-delay: 200ms; }
+      &:nth-child(3) { transform: translate(0, $ctx--transform) scale(1); transition-delay: 100ms; }
     }
   }
 }
