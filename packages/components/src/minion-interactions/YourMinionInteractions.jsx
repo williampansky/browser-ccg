@@ -20,7 +20,17 @@ import { CanAttack, IsAttacking } from '@ccg/components';
 // import IsAttacking from './IsAttacking';
 
 export default function YourMinionInteractions(props) {
-  const { G, ctx, moves, slotObject, index, canAttack, isAttacking } = props;
+  const {
+    G,
+    ctx,
+    moves,
+    slotObject,
+    index,
+    canAttack,
+    isAttacking,
+    handleCanAttackFunction,
+    handleIsAttackingFunction
+  } = props;
 
   // if (dev && canBeAttackedBySpell) {
   //   return <CanBeAttackedBySpell moves={moves} index={index} />;
@@ -84,14 +94,10 @@ export default function YourMinionInteractions(props) {
 
   if (isAttacking) {
     return (
-      <IsAttacking
-        handleIsAttackingFunction={() => console.log('IsAttacking')}
-      />
+      <IsAttacking handleIsAttackingFunction={handleIsAttackingFunction} />
     );
   } else if (canAttack) {
-    return (
-      <CanAttack handleCanAttackFunction={() => console.log('CanAttack')} />
-    );
+    return <CanAttack handleCanAttackFunction={handleCanAttackFunction} />;
   }
 
   // if (canAttack && isAttacking) {

@@ -20,6 +20,8 @@ const BoardSlot = props => {
     G,
     ctx,
     moves,
+    handleCanAttackFunction,
+    handleIsAttackingFunction,
     index,
     playerID,
     slotObject,
@@ -130,6 +132,8 @@ const BoardSlot = props => {
         moves={moves}
         canAttack={canAttack}
         isAttacking={isAttacking}
+        handleCanAttackFunction={handleCanAttackFunction}
+        handleIsAttackingFunction={handleIsAttackingFunction}
       />
 
       {/* minion box shadows */}

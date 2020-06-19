@@ -18,8 +18,8 @@ import createBoardSlotObject from '../creators/create-board-slot-object';
 const boards = {
   __DATA_MODEL: {
     '0': [
-      { ...createBoardSlotObject('CORE_001'), canAttack: true, isAttacking: false },
-      { ...createBoardSlotObject('CORE_002'), canAttack: true, hasBulwark: true, isAttacking: false },
+      { ...createBoardSlotObject('CORE_001'), canAttack: true },
+      { ...createBoardSlotObject('CORE_002'), canAttack: true, hasBulwark: true },
       { ...createBoardSlotObject('CORE_003'), canAttack: true, hasBoon: true },
       // { ...createBoardSlotObject('CORE_004') },
       // { ...createBoardSlotObject('CORE_005') },
@@ -82,8 +82,24 @@ const boards = {
   // killMinion: (G, ctx, player, boardSlot, index) => _kM(G, ctx, player, boardSlot, index),
   // killMinionIfHealthIsZero: (G, ctx, player, boardSlot, index) => _kM0(G, ctx, player, boardSlot, index),
 
-  // // card placement
-  // placeCardOnBoard: (G, player, boardSlotObject, index) => _pC(G, player, boardSlotObject, index),
+  /**
+   * Places a slot object in the specific `index` of a player's board.
+   *
+   * @param {object} G
+   * @param {string} player
+   * @param {object} boardSlotObject
+   * @param {number} index defaults to zero
+   */
+  placeCardOnBoard: (G, player, boardSlotObject, index = 0) => {
+    const newBoard = [
+      ...G.boards[player].slice(0, index),
+      boardSlotObject,
+      ...G.boards[player].slice(index)
+    ];
+  
+    // swap new board in
+    G.boards[player] = newBoard;
+  }
 };
 
 export default boards;

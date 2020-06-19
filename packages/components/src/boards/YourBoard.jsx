@@ -11,12 +11,18 @@ const YourBoard = props => {
     yourBoard,
     yourID,
     cardIsSelected,
-    cardIsLocked
+    cardIsLocked,
+    minionIsSelected
   } = props;
 
-  const handleDropAreaClick = useCallback(slotIndexClicked => {
-    console.log(slotIndexClicked);
-  }, []);
+  const { deselectMinion, playMinionCard, selectMinion } = moves;
+
+  const handleDropAreaClick = useCallback(
+    slotIndexClicked => {
+      return playMinionCard(slotIndexClicked);
+    },
+    [playMinionCard]
+  );
 
   return (
     <div
@@ -42,7 +48,6 @@ const YourBoard = props => {
         ) : null}
 
         {yourBoard.map((object, index) => {
-          index = index + 1;
           return (
             <Fragment key={`fragment_${index}`}>
               <BoardSlot
@@ -54,7 +59,8 @@ const YourBoard = props => {
                 slotObject={object}
                 index={index}
                 playerID={yourID}
-                // onClick={() => handleClick(index)}
+                handleCanAttackFunction={() => selectMinion(object, index)}
+                handleIsAttackingFunction={() => deselectMinion()}
               />
 
               {yourBoard.length <= 6 ? (

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { useSpring, animated, config } from 'react-spring';
@@ -62,6 +62,10 @@ const Hand = props => {
     },
     [deselectCardFunction, setTrayIsExpanded]
   );
+
+  useEffect(() => {
+    selectedCardInteractionContext === null && setTrayIsExpanded(false);
+  }, [selectedCardInteractionContext]);
 
   return (
     <animated.div

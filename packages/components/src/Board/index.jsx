@@ -17,6 +17,8 @@ const Board = props => {
     cardIsLocked
   } = props;
 
+  const { selectedMinionObject } = G;
+
   return (
     <div className={styles['board']} data-component="Board">
       <TheirBoard
@@ -35,6 +37,7 @@ const Board = props => {
         yourID={yourID}
         cardIsSelected={cardIsSelected}
         cardIsLocked={cardIsLocked}
+        minionIsSelected={selectedMinionObject[yourID] ? true : false}
       />
     </div>
   );

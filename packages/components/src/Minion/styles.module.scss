@@ -38,7 +38,7 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
   [class*='target__other_player'] & {
     box-shadow: $bs-default-hover;
     transform: scale(1.15);
-    transition: transform 100ms cubic-bezier(0.19, 1, 0.22, 1);
+    transition: transform 400ms var(--animation-transition-cubic);
   }
 }
 

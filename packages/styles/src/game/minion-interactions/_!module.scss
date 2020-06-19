@@ -20,9 +20,10 @@
   opacity: 0;
   pointer-events: none;
   position: absolute;
-  transition: opacity 600ms var(--animation-transition-cubic);
+  transition: 600ms var(--animation-transition-cubic);
+  transition-property: opacity, transform;
   width: 100%;
-  will-change: opacity;
+  will-change: opacity, transform;
 
   &:before,
   &:after {
@@ -71,7 +72,6 @@
 
   &:hover + .minion__shadows:before {
     transform: scale(0.875);
-    transition-delay: 200ms;
   }
 
   &:hover + .minion__shadows:after {

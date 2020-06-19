@@ -23,13 +23,13 @@
 
 // prettier-ignore
 .board__slot {
-  &[data-slot='1'] { z-index: 7; }
-  &[data-slot='2'] { z-index: 6; }
-  &[data-slot='3'] { z-index: 5; }
-  &[data-slot='4'] { z-index: 4; }
-  &[data-slot='5'] { z-index: 3; }
-  &[data-slot='6'] { z-index: 2; }
-  &[data-slot='7'] { z-index: 1; }
+  &[data-slot='0'] { z-index: 7; }
+  &[data-slot='1'] { z-index: 6; }
+  &[data-slot='2'] { z-index: 5; }
+  &[data-slot='3'] { z-index: 4; }
+  &[data-slot='4'] { z-index: 3; }
+  &[data-slot='5'] { z-index: 2; }
+  &[data-slot='6'] { z-index: 1; }
 }
 
 .board__slot[data-is-empty='false'] {

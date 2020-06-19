@@ -19,7 +19,7 @@
 
   .board__slot--is-attacking & {
     transform: scale(1.15);
-    transition-duration: 100ms;
+    transition-duration: 600ms;
   }
 
   .minion--is-dead & {
@@ -54,7 +54,7 @@
 
   .board__slot--is-attacking & {
     transform: scale(1.15);
-    transition-duration: 100ms;
+    transition-duration: 600ms;
   }
 
   .minion--is-dead & {
