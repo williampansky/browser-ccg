@@ -1,0 +1,43 @@
+.minion__interaction {
+  // border-radius: var(--minion-border-radius);
+  cursor: pointer;
+  height: 100%;
+  outline: none;
+  pointer-events: auto;
+  position: absolute;
+  width: 100%;
+  @include position-absolute(0, 0, 0, 0, var(--zIndex-MinionInteractionLayer));
+
+  * {
+    pointer-events: none;
+  }
+}
+
+.minion__shadows {
+  animation: fadeIn 1200ms var(--animation-transition-cubic) forwards;
+  border-radius: var(--minion-border-radius);
+  opacity: 0;
+  pointer-events: none;
+
+  &:before,
+  &:after {
+    border-radius: var(--minion-border-radius);
+    content: '';
+    cursor: pointer;
+    height: 100%;
+    outline: none;
+    transition: 600ms ease-in-out;
+    transition-property: box-shadow;
+    width: 100%;
+    will-change: box-shadow;
+    @include position-absolute(0, 0, 0, 0, -1);
+  }
+
+  // prettier-ignore
+  @keyframes fadeIn {
+    from  { opacity: 0; }
+    to    { opacity: 1; }
+  }
+}
+
+@import 'can-attack';

@@ -22,7 +22,7 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
   user-select: none;
   width: calc(var(--minion-height) / 1.25);
   will-change: box-shadow, transform;
-  z-index: 1;
+  z-index: 2;
 
   * {
     user-select: none;

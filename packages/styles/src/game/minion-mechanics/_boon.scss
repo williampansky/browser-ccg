@@ -5,10 +5,9 @@
   opacity: 1;
   width: 100%;
   pointer-events: none;
-  position: absolute;
-  z-index: 0;
   transition: 600ms ease-in-out;
   transition-property: box-shadow, opacity, transform;
+  @include position-absolute(0, 0, 0, 0, 1);
 
   .minion--is-selected ~ & {
     transform: scale(1.15);

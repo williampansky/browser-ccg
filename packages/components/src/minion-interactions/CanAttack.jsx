@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function CanAttack({ moves, data, index }) {
-  const { selectMinion } = moves;
+export default function CanAttack(props) {
+  const { handleCanAttackFunction } = props;
+
   return (
     <div
-      className="board__slot--can-be-selected"
-      data-file="interactions/minions/CanAttack"
-      onClick={() => selectMinion(data, index)}
-      onKeyPress={() => selectMinion(data, index)}
+      className="minion__interaction minion__interaction--can-attack"
+      data-component="minion-interactions/CanAttack"
+      onClick={handleCanAttackFunction}
+      onKeyPress={handleCanAttackFunction}
       role="button"
       tabIndex={0}
     />
@@ -16,7 +17,9 @@ export default function CanAttack({ moves, data, index }) {
 }
 
 CanAttack.propTypes = {
-  moves: PropTypes.object,
-  data: PropTypes.object,
-  index: PropTypes.number
+  handleCanAttackFunction: PropTypes.func
+};
+
+CanAttack.defaultProps = {
+  handleCanAttackFunction: () => {}
 };

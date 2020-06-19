@@ -1,0 +1,3 @@
+.minion__interaction--can-attack + [data-component='minion-shadows']:before {
+  box-shadow: var(--box-shadow-can-be-selected);
+}

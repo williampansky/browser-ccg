@@ -1,0 +1,40 @@
+.player__board {
+  align-items: center;
+  display: flex;
+  flex-flow: column nowrap;
+  height: 50%;
+  justify-content: center;
+  max-width: 100vw;
+  min-width: 100vw;
+  width: 100vw;
+}
+
+.their__board {
+  background: var(--board-theirPlayerArea-background-color);
+  justify-content: flex-end;
+}
+
+.your__board {
+  background: var(--board-yourPlayerArea-background-color);
+  justify-content: flex-start;
+}
+
+.play__area {
+  align-items: flex-start;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  max-width: 100vw;
+  min-width: 100vw;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: calc(var(--minion-height) / 4) 0;
+  width: 100vw;
+
+  @media (min-width: 960px) {
+    align-items: center;
+    justify-content: center;
+    overflow-x: visible;
+    overflow-y: visible;
+  }
+}

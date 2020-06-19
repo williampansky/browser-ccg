@@ -56,7 +56,13 @@ const GameWrapper = props => {
         }}
       />
 
-      <BoardWrapper G={G} ctx={ctx} theirID={theirID} yourID={yourID} />
+      <BoardWrapper
+        G={G}
+        ctx={ctx}
+        moves={moves}
+        theirID={theirID}
+        yourID={yourID}
+      />
 
       <PlayerWrapper
         G={G}

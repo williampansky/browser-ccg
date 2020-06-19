@@ -11,19 +11,25 @@ import {
   Disabled,
   DoubleAttack,
   Elite,
-  Poison
+  Poison,
+  YourMinionInteractions
 } from '@ccg/components';
 
 const BoardSlot = props => {
   const {
+    G,
+    ctx,
+    moves,
     index,
     playerID,
     slotObject,
     slotObject: {
+      canAttack,
       currentAttack,
       currentHealth,
       hasBulwark,
       hasBoon,
+      IsAttacking,
       minionData: {
         active,
         artist,
@@ -77,6 +83,18 @@ const BoardSlot = props => {
           imgSrc={getMechanicImage('BULWARK_FOREGROUND.png')}
         />
       )}
+
+      {/* minion interactions */}
+      <YourMinionInteractions
+        G={G}
+        ctx={ctx}
+        moves={moves}
+        canAttack={canAttack}
+        IsAttacking={IsAttacking}
+      />
+
+      {/* minion box shadows */}
+      <div className="minion__shadows" data-component="minion-shadows" />
 
       {/* visible minion component */}
       <Minion

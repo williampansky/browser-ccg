@@ -25,8 +25,15 @@ export { default as PlayerStatIcon } from './PlayerStatIcon';
 export { default as ReactBurgerMenu } from './ReactBurgerMenu';
 export { default as SelectedCardMobileModal } from './SelectedCardMobileModal';
 export { default as PlayerInteractionLayer } from './PlayerInteractionLayer';
+export { default as YourBoard } from './boards/YourBoard';
+export { default as TheirBoard } from './boards/TheirBoard';
 
-// mechanics
+// minion interactions
+export { default as CanAttack } from './minion-interactions/CanAttack';
+export { default as IsAttacking } from './minion-interactions/IsAttacking';
+export { default as YourMinionInteractions } from './minion-interactions/YourMinionInteractions';
+
+// minion mechanics
 export { default as Boon } from './minion-mechanics/Boon';
 export { default as Bubble } from './minion-mechanics/Bubble';
 export { default as BulwarkBackground } from './minion-mechanics/BulwarkBackground';

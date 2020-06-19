@@ -5,6 +5,7 @@ import { Board } from '@ccg/components';
 
 const BoardWrapper = props => {
   const {
+    G,
     G: {
       boards,
       deckInfo,
@@ -18,6 +19,8 @@ const BoardWrapper = props => {
       selectedCardInteractionContext,
       counts
     },
+    ctx,
+    moves,
     theirID,
     yourID
   } = props;
@@ -28,6 +31,9 @@ const BoardWrapper = props => {
 
   return (
     <Board
+      G={G}
+      ctx={ctx}
+      moves={moves}
       theirID={theirID}
       yourID={yourID}
       theirBoard={boards[theirID]}

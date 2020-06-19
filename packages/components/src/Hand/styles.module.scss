@@ -1,6 +1,6 @@
 $close__btn--size: 40px;
 $close__btn--spacing: calc(calc(var(--card-height) / 10) * 2);
-$close__btn--background-color: red;
+$close__btn--background-color: var(--board-yourHand-background-color);
 $close__btn--icon-color: white;
 
 // prettier-ignore
