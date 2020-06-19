@@ -16,8 +16,13 @@
 .minion__shadows {
   animation: fadeIn 1200ms var(--animation-transition-cubic) forwards;
   border-radius: var(--minion-border-radius);
+  height: 100%;
   opacity: 0;
   pointer-events: none;
+  position: absolute;
+  transition: opacity 600ms var(--animation-transition-cubic);
+  width: 100%;
+  will-change: opacity;
 
   &:before,
   &:after {
@@ -25,11 +30,13 @@
     content: '';
     cursor: pointer;
     height: 100%;
+    opacity: 0;
     outline: none;
-    transition: 600ms ease-in-out;
-    transition-property: box-shadow;
+    transform: scale(1);
+    transition: 600ms var(--animation-transition-cubic);
+    transition-property: box-shadow, opacity, transform;
     width: 100%;
-    will-change: box-shadow;
+    will-change: box-shadow, opacity, transform;
     @include position-absolute(0, 0, 0, 0, -1);
   }
 
@@ -37,6 +44,21 @@
   @keyframes fadeIn {
     from  { opacity: 0; }
     to    { opacity: 1; }
+  }
+}
+
+[data-has-bulwark='true'] .minion__shadows {
+  border-top-left-radius: 4%;
+  border-top-right-radius: 4%;
+  border-bottom-left-radius: calc(var(--minion-border-radius) - 4%);
+  border-bottom-right-radius: calc(var(--minion-border-radius) - 4%);
+
+  &:before,
+  &:after {
+    border-top-left-radius: 4%;
+    border-top-right-radius: 4%;
+    border-bottom-left-radius: calc(var(--minion-border-radius) - 4%);
+    border-bottom-right-radius: calc(var(--minion-border-radius) - 4%);
   }
 }
 

@@ -108,6 +108,7 @@ const BoardSlot = props => {
     <div
       className={styles['board__slot']}
       data-component="BoardSlot"
+      data-has-bulwark={hasBulwark}
       data-is-empty={slotObject === null}
       data-slot={index}
     >

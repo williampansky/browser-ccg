@@ -1,3 +1,10 @@
-.minion__interaction--can-attack + [data-component='minion-shadows']:before {
-  box-shadow: var(--box-shadow-can-be-selected);
+.minion__interaction--can-attack {
+  $color: --box-shadow-can-be-selected;
+  @include targeting-ripple-hover-animation(var(#{$color}-color-ripple));
+
+  & + .minion__shadows:before {
+    box-shadow: var($color);
+    opacity: 1;
+    transform: scale(1);
+  }
 }
