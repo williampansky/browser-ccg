@@ -34,7 +34,7 @@ export default function MinionDev() {
   const [canBeAttackedByMinion, setCanBeAttackedByMinion] = useState(false);
   const [canBeAttackedByPlayer, setCanBeAttackedByPlayer] = useState(false);
   const [canBeAttackedBySpell, setCanBeAttackedBySpell] = useState(false);
-  const [canBeAttackedByWarcry, setCanBeAttackedByWarcry] = useState(false);
+  const [canBeAttackedByOnPlay, setcanBeAttackedByOnPlay] = useState(false);
   const [canBeBuffed, setCanBeBuffed] = useState(false);
   const [canBeDebuffed, setCanBeDebuffed] = useState(false);
   const [canBeExpired, setCanBeExpired] = useState(false);
@@ -172,7 +172,7 @@ export default function MinionDev() {
                   canBeAttackedByMinion: canBeAttackedByMinion,
                   canBeAttackedByPlayer: canBeAttackedByPlayer,
                   canBeAttackedBySpell: canBeAttackedBySpell,
-                  canBeAttackedByWarcry: canBeAttackedByWarcry,
+                  canBeAttackedByOnPlay: canBeAttackedByOnPlay,
                   canBeBuffed: canBeBuffed,
                   canBeDebuffed: canBeDebuffed,
                   canBeExpired: canBeExpired,
@@ -286,14 +286,14 @@ export default function MinionDev() {
             </div>
             <div className="margin-small">
               <button
-                data-active={canBeAttackedByWarcry}
+                data-active={canBeAttackedByOnPlay}
                 onClick={() =>
-                  setCanBeAttackedByWarcry(
-                    !canBeAttackedByWarcry ? true : false
+                  setcanBeAttackedByOnPlay(
+                    !canBeAttackedByOnPlay ? true : false
                   )
                 }
               >
-                canBeAttackedByWarcry
+                canBeAttackedByOnPlay
               </button>
             </div>
             <div className="margin-small">

@@ -39,7 +39,7 @@ export default {
   playerCanBeAttackedByMinion: playerCanBeAttacked.playerCanBeAttackedByMinion,
   playerCanBeAttackedByPlayer: playerCanBeAttacked.playerCanBeAttackedByPlayer,
   playerCanBeAttackedBySpell: playerCanBeAttacked.playerCanBeAttackedBySpell,
-  playerCanBeAttackedByWarcry: playerCanBeAttacked.playerCanBeAttackedByWarcry,
+  playercanBeAttackedByOnPlay: playerCanBeAttacked.playercanBeAttackedByOnPlay,
   playerCanBeHealed: playerCanBeHealed.__DATA_MODEL,
   playerHasAttacked: { '0': false, '1': false },
   playerHealth: playerHealth.__DATA_MODEL,

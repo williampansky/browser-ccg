@@ -60,7 +60,7 @@ const boards = {
     G.boards[player][index].canBeAttackedByMinion = false;
     G.boards[player][index].canBeAttackedByPlayer = false;
     G.boards[player][index].canBeAttackedBySpell = false;
-    G.boards[player][index].canBeAttackedByWarcry = false;
+    G.boards[player][index].canBeAttackedByOnPlay = false;
   },
   // disableAllCanBeAttacked: (G, player) => _dAMCBA(G, player),
   // enableCanBeAttacked: (G, player, index) => _eMCBA(G, player, index),

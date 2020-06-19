@@ -6,7 +6,7 @@ const disableSlotCanBeAttacked = slot => {
   slot.canBeAttackedByMinion = false;
   slot.canBeAttackedByPlayer = false;
   slot.canBeAttackedBySpell = false;
-  slot.canBeAttackedByWarcry = false;
+  slot.canBeAttackedByOnPlay = false;
 };
 
 export default disableSlotCanBeAttacked;

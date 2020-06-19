@@ -66,20 +66,34 @@ const onBegin = (G, ctx) => {
 };
 
 const onEnd = (G, ctx) => {
+  const defaultState = {
+    canAttack: false,
+    canBeAttackedByMinion: false,
+    canBeAttackedByPlayer: false,
+    canBeAttackedBySpell: false,
+    canBeAttackedByOnPlay: false,
+    canBeBuffed: false,
+    canBeDebuffed: false,
+    canBeDestroyed: false,
+    canBeExpired: false,
+    canBeHealed: false,
+    canBeReturned: false,
+    canBeStolen: false,
+    canReceiveBubble: false,
+    canReceiveBulwark: false,
+    canReceiveDoubleAttack: false,
+    canReceiveRush: false,
+    hasAttacked: false,
+    isAttacking: false,
+    isAttackingMinionIndex: null,
+    isAttackingPlayer: false
+  };
+
   // reset player[0] minion states
   G.boards['0'].forEach((slot, i) => {
     G.boards['0'][i] = {
       ...slot,
-      canAttack: false,
-      canBeAttackedByMinion: false,
-      canBeAttackedByPlayer: false,
-      canBeAttackedBySpell: false,
-      canBeAttackedByWarcry: false,
-      canBeBuffed: false,
-      canBeHealed: false,
-      isAttacking: false,
-      isAttackingMinionIndex: null,
-      isAttackingMinionPlayer: false
+      ...defaultState
     };
   });
 
@@ -87,16 +101,7 @@ const onEnd = (G, ctx) => {
   G.boards['1'].forEach((slot, i) => {
     G.boards['1'][i] = {
       ...slot,
-      canAttack: false,
-      canBeAttackedByMinion: false,
-      canBeAttackedByPlayer: false,
-      canBeAttackedBySpell: false,
-      canBeAttackedByWarcry: false,
-      canBeBuffed: false,
-      canBeHealed: false,
-      isAttacking: false,
-      isAttackingMinionIndex: null,
-      isAttackingMinionPlayer: false
+      ...defaultState
     };
   });
 

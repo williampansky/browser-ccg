@@ -27,11 +27,11 @@ export { default as SelectedCardMobileModal } from './SelectedCardMobileModal';
 export { default as PlayerInteractionLayer } from './PlayerInteractionLayer';
 
 // mechanics
-export { default as Boon } from './mechanics/Boon';
-export { default as Bubble } from './mechanics/Bubble';
-export { default as BulwarkBackground } from './mechanics/BulwarkBackground';
-export { default as BulwarkForeground } from './mechanics/BulwarkForeground';
-export { default as Disabled } from './mechanics/Disabled';
-export { default as DoubleAttack } from './mechanics/DoubleAttack';
-export { default as Elite } from './mechanics/Elite';
-export { default as Poison } from './mechanics/Poison';
+export { default as Boon } from './minion-mechanics/Boon';
+export { default as Bubble } from './minion-mechanics/Bubble';
+export { default as BulwarkBackground } from './minion-mechanics/BulwarkBackground';
+export { default as BulwarkForeground } from './minion-mechanics/BulwarkForeground';
+export { default as Disabled } from './minion-mechanics/Disabled';
+export { default as DoubleAttack } from './minion-mechanics/DoubleAttack';
+export { default as Elite } from './minion-mechanics/Elite';
+export { default as Poison } from './minion-mechanics/Poison';

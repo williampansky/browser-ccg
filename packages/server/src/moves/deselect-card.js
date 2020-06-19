@@ -17,7 +17,7 @@ const deselectCard = (G, ctx) => {
     slot.canBeAttackedByMinion = false;
     slot.canBeAttackedByPlayer = false;
     slot.canBeAttackedBySpell = false;
-    slot.canBeAttackedByWarcry = false;
+    slot.canBeAttackedByOnPlay = false;
   });
 
   G.selectedCardType = { '0': null, '1': null };
@@ -30,7 +30,7 @@ const deselectCard = (G, ctx) => {
     slot.canBeAttackedByMinion = false;
     slot.canBeAttackedByPlayer = false;
     slot.canBeAttackedBySpell = false;
-    slot.canBeAttackedByWarcry = false;
+    slot.canBeAttackedByOnPlay = false;
     slot.canBeBuffed = false;
     slot.canBeHealed = false;
     slot.canBeDebuffed = false;
@@ -46,7 +46,7 @@ const deselectCard = (G, ctx) => {
     slot.canBeAttackedByMinion = false;
     slot.canBeAttackedByPlayer = false;
     slot.canBeAttackedBySpell = false;
-    slot.canBeAttackedByWarcry = false;
+    slot.canBeAttackedByOnPlay = false;
     slot.canBeBuffed = false;
     slot.canBeHealed = false;
     slot.canBeDebuffed = false;
