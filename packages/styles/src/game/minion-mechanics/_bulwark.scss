@@ -17,7 +17,7 @@
     transform: scale(0.1);
   }
 
-  .minion--is-attacking & {
+  .board__slot--is-attacking & {
     transform: scale(1.15);
     transition-duration: 100ms;
   }
@@ -52,7 +52,7 @@
     transform: scale(0.1);
   }
 
-  .minion--is-attacking & {
+  .board__slot--is-attacking & {
     transform: scale(1.15);
     transition-duration: 100ms;
   }

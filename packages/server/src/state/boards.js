@@ -18,8 +18,8 @@ import createBoardSlotObject from '../creators/create-board-slot-object';
 const boards = {
   __DATA_MODEL: {
     '0': [
-      { ...createBoardSlotObject('CORE_001'), canAttack: true, isAttacking: true },
-      { ...createBoardSlotObject('CORE_002'), canAttack: true, hasBulwark: true },
+      { ...createBoardSlotObject('CORE_001'), canAttack: true, isAttacking: false },
+      { ...createBoardSlotObject('CORE_002'), canAttack: true, hasBulwark: true, isAttacking: false },
       { ...createBoardSlotObject('CORE_003'), canAttack: true, hasBoon: true },
       // { ...createBoardSlotObject('CORE_004') },
       // { ...createBoardSlotObject('CORE_005') },
