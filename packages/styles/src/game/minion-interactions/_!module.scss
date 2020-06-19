@@ -48,18 +48,37 @@
 }
 
 [data-has-bulwark='true'] .minion__shadows {
-  border-top-left-radius: 4%;
-  border-top-right-radius: 4%;
-  border-bottom-left-radius: calc(var(--minion-border-radius) - 4%);
-  border-bottom-right-radius: calc(var(--minion-border-radius) - 4%);
+  $percent: 8%;
+  border-top-left-radius: $percent;
+  border-top-right-radius: $percent;
+  border-bottom-left-radius: calc(var(--minion-border-radius) - #{$percent});
+  border-bottom-right-radius: calc(var(--minion-border-radius) - #{$percent});
 
   &:before,
   &:after {
-    border-top-left-radius: 4%;
-    border-top-right-radius: 4%;
-    border-bottom-left-radius: calc(var(--minion-border-radius) - 4%);
-    border-bottom-right-radius: calc(var(--minion-border-radius) - 4%);
+    border-top-left-radius: $percent;
+    border-top-right-radius: $percent;
+    border-bottom-left-radius: calc(var(--minion-border-radius) - #{$percent});
+    border-bottom-right-radius: calc(var(--minion-border-radius) - #{$percent});
+  }
+}
+
+.minion__interaction {
+  & + .minion__shadows:before {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &:hover + .minion__shadows:before {
+    transform: scale(0.875);
+    transition-delay: 200ms;
+  }
+
+  &:hover + .minion__shadows:after {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
 @import 'can-attack';
+@import 'is-attacking';

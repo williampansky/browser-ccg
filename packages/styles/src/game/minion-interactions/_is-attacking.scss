@@ -1,16 +1,25 @@
-.minion__interaction--can-attack {
-  $color: --box-shadow-can-be-selected;
+.minion__interaction--is-attacking {
+  $color: --box-shadow-is-selected;
   $hoverColor: var(#{$color}-color-ripple);
 
   & + .minion__shadows:before {
     box-shadow: var($color);
+    transform: scale(1.15);
+  }
+
+  &:hover + .minion__shadows:before {
+    transform: scale(1);
+  }
+
+  &:hover + .minion__shadows:after {
+    transform: scale(1.15);
   }
 
   & + .minion__shadows:after {
-    animation: targeting-ripple-can-attack 600ms linear infinite;
+    animation: targeting-ripple-is-attacking 600ms linear infinite;
   }
 
-  @keyframes targeting-ripple-can-attack {
+  @keyframes targeting-ripple-is-attacking {
     0% {
       box-shadow: 0 4px 10px $hoverColor, 0 0 0 0 $hoverColor,
         0 0 0 5px $hoverColor, 0 0 0 10px $hoverColor;

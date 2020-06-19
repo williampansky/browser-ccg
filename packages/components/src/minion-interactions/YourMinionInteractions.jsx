@@ -88,9 +88,7 @@ export default function YourMinionInteractions(props) {
         handleIsAttackingFunction={() => console.log('IsAttacking')}
       />
     );
-  }
-
-  if (canAttack) {
+  } else if (canAttack) {
     return (
       <CanAttack handleCanAttackFunction={() => console.log('CanAttack')} />
     );

@@ -6,10 +6,10 @@ export default function IsAttacking(props) {
 
   return (
     <div
-      className="minion--is-selected"
-      data-file="interactions/minions/IsAttacking"
-      onClick={() => handleIsAttackingFunction()}
-      onKeyPress={() => handleIsAttackingFunction()}
+      className="minion__interaction minion__interaction--is-attacking"
+      data-component="minion-interactions/IsAttacking"
+      onClick={handleIsAttackingFunction}
+      onKeyPress={handleIsAttackingFunction}
       role="button"
       tabIndex={0}
     />

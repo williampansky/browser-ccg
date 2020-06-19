@@ -106,7 +106,10 @@ const BoardSlot = props => {
 
   return (
     <div
-      className={styles['board__slot']}
+      className={[
+        styles['board__slot'],
+        isAttacking ? 'board__slot--is-attacking' : ''
+      ].join(' ')}
       data-component="BoardSlot"
       data-has-bulwark={hasBulwark}
       data-is-empty={slotObject === null}
@@ -126,7 +129,7 @@ const BoardSlot = props => {
         ctx={ctx}
         moves={moves}
         canAttack={canAttack}
-        IsAttacking={isAttacking}
+        isAttacking={isAttacking}
       />
 
       {/* minion box shadows */}
