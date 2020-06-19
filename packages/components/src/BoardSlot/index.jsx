@@ -25,11 +25,49 @@ const BoardSlot = props => {
     slotObject,
     slotObject: {
       canAttack,
+      canBeAttackedByMinion,
+      canBeAttackedByPlayer,
+      canBeAttackedBySpell,
+      canBeAttackedByOnPlay,
+      canBeBuffed,
+      canBeDebuffed,
+      canBeDestroyed,
+      canBeExpired,
+      canBeHealed,
+      canBeReturned,
+      canBeStolen,
+      canReceiveBubble,
+      canReceiveBulwark,
+      canReceiveDoubleAttack,
+      canReceiveRush,
       currentAttack,
       currentHealth,
-      hasBulwark,
+      hasAttacked,
       hasBoon,
-      IsAttacking,
+      hasBubble,
+      hasBulwark,
+      hasCantTarget,
+      hasDoubleAttack,
+      hasDoubleAttackCount,
+      hasEventListener,
+      hasLifesteal,
+      hasNoAttack,
+      hasOnDeath,
+      hasPoison,
+      hasRush,
+      hasSpellDamage,
+      isAttacking,
+      isAttackingMinionIndex,
+      isAttackingPlayer,
+      isBooned,
+      isBuffed,
+      isDead,
+      isDebuffed,
+      isDisabled,
+      isDisabledFor,
+      isHidden,
+      isImmune,
+      isSilenced,
       minionData: {
         active,
         artist,
@@ -39,16 +77,10 @@ const BoardSlot = props => {
         elite,
         entourage,
         flavor,
-        hasOnDeath,
-        hasBubble,
-        hasEventListener,
-        hasDoubleAttack,
-        hasPoison,
         health,
         howToEarn,
         howToEarnGolden,
         id,
-        isAttacking,
         isGolden,
         mechanics,
         name,
@@ -65,7 +97,10 @@ const BoardSlot = props => {
         text,
         type
       },
-      totalHealth
+      totalAttack,
+      totalHealth,
+      willExpire,
+      willExpireIn
     }
   } = props;
 
@@ -90,7 +125,7 @@ const BoardSlot = props => {
         ctx={ctx}
         moves={moves}
         canAttack={canAttack}
-        IsAttacking={IsAttacking}
+        IsAttacking={isAttacking}
       />
 
       {/* minion box shadows */}

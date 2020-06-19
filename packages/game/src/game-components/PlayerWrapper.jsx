@@ -61,7 +61,7 @@ const PlayerWrapper = props => {
         selectedCardObject[playerID] && selectedCardObject[playerID].uuid
       }
       yourId={playerID}
-      selectedCardContext={selectedCardInteractionContext}
+      selectedCardInteractionContext={selectedCardInteractionContext[playerID]}
     />
   );
 };

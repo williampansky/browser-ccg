@@ -12,7 +12,7 @@ const SelectedCardMobileModal = props => {
     imagesDataCards,
     imagesDataSets,
     selectedCardUuid,
-    selectedCardContext,
+    selectedCardInteractionContext,
     selectCardContextFunction
   } = props;
 
@@ -48,9 +48,11 @@ const SelectedCardMobileModal = props => {
     <div
       className={[
         styles['selected__card__mobile__modal'],
-        selectedCardContext !== null
+        selectedCardInteractionContext !== null
           ? styles[
-              `selected__card__context--${removeSymbols(selectedCardContext)}`
+              `selected__card__context--${removeSymbols(
+                selectedCardInteractionContext
+              )}`
             ]
           : ''
       ].join(' ')}

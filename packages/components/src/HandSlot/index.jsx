@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSpring, animated, config } from 'react-spring';
 import { CardInteractionLayer } from '@ccg/components';
@@ -13,12 +13,20 @@ const HandSlot = props => {
     handleCardInteractionClick,
     selectedCardUuid,
     slotIndex,
-    trayIsExpanded
+    trayIsExpanded,
+    disableInteraction
   } = props;
 
   const [trayIsExpandedState, setTrayIsExpandedState] = useState(false);
+
+  const handleTrayIsExpandedStyle = useCallback(() => {
+    if (disableInteraction) return '-60px';
+    else if (trayIsExpandedState) return '30px';
+    else return '-60px';
+  }, [disableInteraction, trayIsExpandedState]);
+
   const style = useSpring({
-    marginLeft: trayIsExpandedState ? '30px' : '-60px',
+    marginLeft: handleTrayIsExpandedStyle(),
     pointerEvents: trayIsExpandedState ? 'auto' : 'none',
     config: config.default
   });
@@ -31,7 +39,10 @@ const HandSlot = props => {
 
   return (
     <animated.div
-      className={styles['hand__slot']}
+      className={[
+        styles['hand__slot'],
+        disableInteraction ? 'disable-interaction' : ''
+      ].join(' ')}
       data-component="HandSlot"
       style={style}
     >
@@ -44,6 +55,7 @@ const HandSlot = props => {
         isPlayable={true}
         isSelected={selectedCardUuid === cardUuid ? true : false}
         trayIsExpanded={trayIsExpanded}
+        disableInteraction={disableInteraction}
       />
     </animated.div>
   );

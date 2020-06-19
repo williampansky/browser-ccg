@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { TYPE } from '@ccg/enums';
@@ -24,7 +24,7 @@ const SelectedCardMobileModalWrapper = props => {
     images: { CARDS: IMAGES_CARDS, SETS: IMAGES_SETS }
   } = props;
 
-  const { deselectCard } = moves;
+  const { deselectCard, selectCardContext } = moves;
   const { current: currentAP, total: totalAP } = actionPoints[playerID];
   const { hand } = players[playerID];
   const { deckLength, handLength } = counts[playerID];
@@ -65,6 +65,13 @@ const SelectedCardMobileModalWrapper = props => {
     }
   };
 
+  const selectCardContextFunction = useCallback(
+    selectedCardContextString => {
+      return selectCardContext(selectedCardContextString);
+    },
+    [selectCardContext]
+  );
+
   return (
     <SelectedCardMobileModal
       card={selectedCardObject[playerID]}
@@ -72,8 +79,8 @@ const SelectedCardMobileModalWrapper = props => {
       deselectCardFunction={() => deselectCard(null)}
       imagesDataCards={IMAGES_CARDS}
       imagesDataSets={IMAGES_SETS}
-      // selectCardContextFunction={str => setSelectedCardContext(str)}
-      // selectedCardContext={selectedCardContext}
+      selectCardContextFunction={str => selectCardContextFunction(str)}
+      selectedCardInteractionContext={selectedCardInteractionContext[playerID]}
       selectedCardUuid={
         selectedCardObject[playerID] && selectedCardObject[playerID].uuid
       }

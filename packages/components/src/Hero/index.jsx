@@ -34,7 +34,7 @@ const Hero = props => {
     playerHealthTotal,
     playerName,
     playerId,
-    selectedCardContext
+    selectedCardInteractionContext
   } = props;
 
   const [deckMenuOpen, setDeckMenuOpen] = useState(false);
@@ -58,7 +58,7 @@ const Hero = props => {
       <article
         className={[
           styles['hero'],
-          cardIsSelected && !selectedCardContext
+          cardIsSelected && !selectedCardInteractionContext
             ? styles['card--is-selected']
             : ''
         ].join(' ')}

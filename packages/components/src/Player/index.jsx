@@ -27,7 +27,7 @@ const Player = props => {
     selectedCardObject,
     selectedCardUuid,
     yourId,
-    selectedCardContext
+    selectedCardInteractionContext
   } = props;
 
   const handleCardInteractionClick = useCallback(
@@ -40,7 +40,13 @@ const Player = props => {
   );
 
   return (
-    <div className={styles['player']} data-component="Player">
+    <div
+      className={[
+        styles['player'],
+        selectedCardInteractionContext ? 'disable-interaction' : ''
+      ].join(' ')}
+      data-component="Player"
+    >
       <Hero
         abilitiesImageBase={abilitiesImageBase}
         abilitiesImageClose={abilitiesImageClose}
@@ -59,7 +65,7 @@ const Player = props => {
         playerHealthTotal={playerHealthTotal}
         playerName={playerName}
         yourId={yourId}
-        selectedCardContext={selectedCardContext}
+        selectedCardInteractionContext={selectedCardInteractionContext}
       />
       <Hand
         cardsInHand={cardsInHandArray}
@@ -69,7 +75,8 @@ const Player = props => {
         imagesDataSets={imagesDataSets}
         selectedCardObject={selectedCardObject}
         selectedCardUuid={selectedCardUuid}
-        selectedCardContext={selectedCardContext}
+        selectedCardInteractionContext={selectedCardInteractionContext}
+        disableInteraction={selectedCardInteractionContext ? true : false}
       />
     </div>
   );
@@ -97,7 +104,8 @@ Player.propTypes = {
   selectCardFunction: PropTypes.func.isRequired,
   selectedCardObject: PropTypes.object,
   selectedCardUuid: PropTypes.string,
-  yourId: PropTypes.string.isRequired
+  yourId: PropTypes.string.isRequired,
+  selectedCardInteractionContext: PropTypes.string
 };
 
 Player.defaultProps = {
@@ -111,7 +119,8 @@ Player.defaultProps = {
   playerDeck: [],
   selectCardFunction: () => {},
   selectedCardObject: null,
-  selectedCardUuid: ''
+  selectedCardUuid: '',
+  selectedCardInteractionContext: null
 };
 
 export default Player;

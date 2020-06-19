@@ -33,9 +33,6 @@ const BoardDropArea = props => {
 
 BoardDropArea.propTypes = {};
 
-BoardDropArea.defaultProps = {
-  theirBoard: {},
-  yourBoard: {}
-};
+BoardDropArea.defaultProps = {};
 
 export default BoardDropArea;

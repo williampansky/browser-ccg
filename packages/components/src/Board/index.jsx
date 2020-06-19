@@ -14,7 +14,7 @@ const Board = props => {
     yourBoard,
     yourID,
     cardIsSelected,
-    handleDropAreaClick
+    cardIsLocked
   } = props;
 
   return (
@@ -26,13 +26,15 @@ const Board = props => {
         theirBoard={theirBoard}
         theirID={theirID}
       />
+
       <YourBoard
         G={G}
         ctx={ctx}
         moves={moves}
-        handleDropAreaClick={handleDropAreaClick}
         yourBoard={yourBoard}
         yourID={yourID}
+        cardIsSelected={cardIsSelected}
+        cardIsLocked={cardIsLocked}
       />
     </div>
   );
@@ -42,14 +44,12 @@ Board.propTypes = {
   theirID: PropTypes.string.isRequired,
   theirBoard: PropTypes.array,
   yourID: PropTypes.string.isRequired,
-  yourBoard: PropTypes.array,
-  handleDropAreaClick: PropTypes.func
+  yourBoard: PropTypes.array
 };
 
 Board.defaultProps = {
   theirBoard: [],
   yourBoard: [],
-  handleDropAreaClick: () => {},
   cardIsSelected: false
 };
 

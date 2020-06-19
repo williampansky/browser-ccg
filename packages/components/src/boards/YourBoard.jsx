@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { PLAYER_BOARDS } from '@ccg/enums';
 import { BoardDropArea, BoardSlot } from '@ccg/components';
@@ -11,8 +11,12 @@ const YourBoard = props => {
     yourBoard,
     yourID,
     cardIsSelected,
-    handleDropAreaClick
+    cardIsLocked
   } = props;
+
+  const handleDropAreaClick = useCallback(slotIndexClicked => {
+    console.log(slotIndexClicked);
+  }, []);
 
   return (
     <div
@@ -25,11 +29,12 @@ const YourBoard = props => {
         {yourBoard.length <= 6 ? (
           <BoardDropArea
             index={0}
-            boardIsActive={cardIsSelected}
-            areaIsAlone={cardIsSelected && yourBoard.length === 0}
+            boardIsActive={cardIsLocked}
+            areaIsAlone={cardIsLocked && yourBoard.length === 0}
             onClick={() => handleDropAreaClick(0)}
           />
         ) : null}
+
         {yourBoard.map((object, index) => {
           index = index + 1;
           return (
@@ -45,11 +50,12 @@ const YourBoard = props => {
                 playerID={yourID}
                 // onClick={() => handleClick(index)}
               />
+
               {yourBoard.length <= 6 ? (
                 <BoardDropArea
                   index={index + 1}
-                  // boardIsActive={BOARD_IS_ACTIVE}
-                  // onClick={() => dropMinion(index + 1)}
+                  boardIsActive={cardIsLocked}
+                  onClick={() => handleDropAreaClick(index + 1)}
                 />
               ) : null}
             </Fragment>
@@ -70,7 +76,8 @@ YourBoard.propTypes = {
 YourBoard.defaultProps = {
   yourBoard: [],
   handleDropAreaClick: () => {},
-  cardIsSelected: false
+  cardIsSelected: false,
+  cardIsLocked: false
 };
 
 export default YourBoard;

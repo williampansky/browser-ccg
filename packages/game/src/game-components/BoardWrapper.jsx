@@ -39,6 +39,7 @@ const BoardWrapper = props => {
       theirBoard={boards[theirID]}
       yourBoard={boards[yourID]}
       cardIsSelected={selectedCardObject[yourID] ? true : false}
+      cardIsLocked={selectedCardInteractionContext[yourID] ? true : false}
       // handleDropAreaClick={handleDropAreaClick}
     />
   );

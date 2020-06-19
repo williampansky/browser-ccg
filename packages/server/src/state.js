@@ -17,6 +17,7 @@ import players from './state/players';
 import playerShieldPoints from './state/player-shield-points';
 import playerSpellDamage from './state/player-spell-damage';
 import playerWeapon from './state/player-weapon';
+import selectedCardInteractionContext from './state/selected-card-interaction-context';
 import selectedCardIndex from './state/selected-card-index';
 import selectedCardObject from './state/selected-card-object';
 import selectedMinionIndex from './state/selected-minion-index';
@@ -56,6 +57,7 @@ export default {
   selectedCardPlayContext: { '0': null, '1': null },
   selectedCardPlayType: { '0': null, '1': null },
   selectedCardType: { '0': null, '1': null },
+  selectedCardInteractionContext: selectedCardInteractionContext.__DATA_MODEL,
   selectedMinionIndex: selectedMinionIndex.__DATA_MODEL,
   selectedMinionObject: selectedMinionObject.__DATA_MODEL,
   serverConfig: SERVER_CONFIG,

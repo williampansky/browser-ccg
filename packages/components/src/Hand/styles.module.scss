@@ -143,6 +143,14 @@ $close__btn--icon-color: white;
     &:before { border-color: rgba(0, 0, 0, 0.65); }
     &:after { opacity: 0; }
   }
-
+  
   & > div > [data-component='CardInteractionLayer'] { pointer-events: auto; }
+}
+
+// prettier-ignore
+.hand--is-expanded.disable-interaction {
+  &.hand {
+    &:before { border-color: rgba(255, 255, 255, 0.465); }
+    &:after { opacity: 1; }
+  }
 }

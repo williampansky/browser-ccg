@@ -15,7 +15,8 @@ const Hand = props => {
     imagesDataSets,
     selectedCardObject,
     selectedCardUuid,
-    selectedCardContext
+    selectedCardInteractionContext,
+    disableInteraction
   } = props;
 
   const { isDesktop } = useResponsive();
@@ -23,9 +24,9 @@ const Hand = props => {
 
   const handleFilterStyle = useCallback(() => {
     if (isDesktop) return 'blur(0px)';
-    else if (selectedCardUuid && !selectedCardContext) return 'blur(2px)';
+    else if (selectedCardUuid && !disableInteraction) return 'blur(2px)';
     else return 'blur(0px)';
-  }, [isDesktop, selectedCardContext, selectedCardUuid]);
+  }, [isDesktop, disableInteraction, selectedCardUuid]);
 
   const handleTranslateStyle = useCallback(() => {
     if (trayIsExpanded) {
@@ -66,8 +67,11 @@ const Hand = props => {
     <animated.div
       className={[
         styles['hand'],
-        trayIsExpanded ? styles['hand--is-expanded'] : '',
-        selectedCardObject ? styles['card--is-selected'] : ''
+        trayIsExpanded && !disableInteraction
+          ? styles['hand--is-expanded']
+          : '',
+        selectedCardObject ? styles['card--is-selected'] : '',
+        disableInteraction ? 'disable-interaction' : ''
       ].join(' ')}
       data-component="Hand"
       onClick={e => !trayIsExpanded && handleHandTrayClick(e, true)}
@@ -101,6 +105,7 @@ const Hand = props => {
                 selectedCardUuid={selectedCardUuid}
                 slotIndex={index}
                 trayIsExpanded={trayIsExpanded}
+                disableInteraction={disableInteraction}
               />
             );
           })
