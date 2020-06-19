@@ -9,9 +9,31 @@
   width: 100vw;
 }
 
+// used to add left and right space on
+// mobile devices
+.board__slot__spacer {
+  opacity: 0;
+  pointer-events: none;
+  transition: all 200ms ease-in-out;
+  height: 100%;
+  min-width: 0;
+
+  @media (min-width: 960px) {
+    display: none;
+  }
+}
+
+// prettier-ignore
+.your__board.board--is-active .play__area {
+  .board__slot__spacer { min-width: 7.5%; }
+}
+
 .their__board {
   background: var(--board-theirPlayerArea-background-color);
   justify-content: flex-end;
+
+  // prettier-ignore
+  .board__slot__spacer { min-width: 0.25%; }
 }
 
 .your__board {

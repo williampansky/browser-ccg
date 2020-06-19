@@ -26,6 +26,7 @@ const TheirBoard = props => {
             />
           );
         })}
+        <div className="board__slot__spacer" />
       </div>
     </div>
   );

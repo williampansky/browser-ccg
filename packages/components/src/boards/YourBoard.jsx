@@ -20,12 +20,18 @@ const YourBoard = props => {
 
   return (
     <div
-      className="player__board your__board"
+      className={[
+        'player__board',
+        'your__board',
+        cardIsLocked ? 'board--is-active' : ''
+      ].join(' ')}
       data-board={PLAYER_BOARDS[1]}
       data-board-id={yourID}
       data-component="YourBoard"
     >
       <div className="play__area">
+        <div className="board__slot__spacer" />
+
         {yourBoard.length <= 6 ? (
           <BoardDropArea
             index={0}
@@ -61,6 +67,8 @@ const YourBoard = props => {
             </Fragment>
           );
         })}
+
+        <div className="board__slot__spacer" />
       </div>
     </div>
   );
