@@ -1,4 +1,5 @@
 import { replaceConstant } from '@ccg/utils';
+import removeSymbols from './remove-symbols';
 
 function getStringPrefix(primaryKey) {
   // prettier-ignore
@@ -7,7 +8,7 @@ function getStringPrefix(primaryKey) {
     case 'attack':  return 'BADGE_SWORD';
     case 'health':  return 'BADGE_SHIELD';
     case 'rarity':  return 'GEM_RARITY';
-    case 'subtype': return 'SUBTYPE_RACE';
+    case 'subtype': return 'SUBTYPE';
     case 'type':    return 'TYPE';
     default:        return;
   }
@@ -47,12 +48,14 @@ function getImageObject(primaryKey, variable, isElite, images = {}) {
 
 const getCardAssetImage = (primaryKey, variable, isElite, images) => {
   try {
-    const parsedVar = replaceConstant(variable);
+    let parsedVar = replaceConstant(variable);
+    if (primaryKey === 'subtype') parsedVar = removeSymbols(variable);
     const imgObj = getImageObject(primaryKey, parsedVar, isElite, images);
     const { value } = imgObj;
     return value;
   } catch (error) {
-    return console.error(error);
+    return;
+    // return console.error(error);
   }
 };
 

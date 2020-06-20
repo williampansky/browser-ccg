@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
-import { getCardAssetImage, replaceConstant } from '@ccg/utils';
 import { RACE } from '@ccg/enums';
+import {
+  getCardAssetImage,
+  replaceConstant,
+  getMinionFlairImage
+} from '@ccg/utils';
 import {
   CARD_ASSETS as ASSETS,
   MECHANICS,
@@ -14,6 +18,8 @@ import MinionAttack from './elements/MinionAttack';
 import MinionHealth from './elements/MinionHealth';
 import MinionImage from './elements/MinionImage';
 import MechanicIcon from './elements/MechanicIcon';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const Minion = ({
   active,
@@ -26,10 +32,10 @@ const Minion = ({
   elite,
   entourage,
   flavor,
-  hasCurse,
-  hasEnergyShield,
+  hasBubble,
+  hasDoubleAttack,
   hasEventListener,
-  hasOnslaught,
+  hasOnDeath,
   hasPoison,
   health,
   howToEarn,
@@ -53,8 +59,7 @@ const Minion = ({
   targetingArrowText,
   text,
   totalHealth,
-  type,
-  wasAttacked
+  type
 }) => {
   /**
    * Returns minion race in lower case format
@@ -69,27 +74,30 @@ const Minion = ({
       className={[
         styles['minion'],
         styles[getMinionRaceClass(race)],
-        hasEnergyShield ? styles['minion--has-energy-shield'] : '',
+        hasBubble ? styles['minion--has-bubble'] : '',
         isAttacking ? styles['minion--is-attacking'] : '',
-        wasAttacked ? styles['minion--was-attacked'] : '',
         currentHealth < totalHealth ? styles['minion--is-damaged'] : '',
         currentHealth === 0 ? styles['minion--is-dead'] : ''
       ].join(' ')}
       data-component="Minion"
     >
-      <MinionImage
-        id={id}
-        isGolden={isGolden}
-        imgSrc={imageFlairSrc}
-        name={name}
-        placeholderSrc={imagePlaceholderSrc}
-        set={set}
-      />
+      <Suspense fallback={<div className={styles['loader']} />}>
+        <MinionImage
+          id={id}
+          isGolden={isGolden}
+          imgSrc={imageFlairSrc}
+          name={name}
+          placeholderSrc={imagePlaceholderSrc}
+          set={set}
+        />
+      </Suspense>
+
       <MinionAttack
         currentAttack={currentAttack}
         elite={elite}
         imageSrc={getCardAssetImage('attack', null, elite, ASSETS)}
       />
+
       <MinionHealth
         currentHealth={currentHealth}
         elite={elite}
@@ -98,9 +106,9 @@ const Minion = ({
       />
 
       <MechanicIcon
-        hasCurse={hasCurse}
+        hasDoubleAttack={hasDoubleAttack}
         hasEventListener={hasEventListener}
-        hasOnslaught={hasOnslaught}
+        hasOnDeath={hasOnDeath}
         hasPoison={hasPoison}
         mechanicImages={MECHANICS}
       />
@@ -119,10 +127,10 @@ Minion.propTypes = {
   elite: PropTypes.bool,
   entourage: PropTypes.array,
   flavor: PropTypes.string,
-  hasCurse: PropTypes.bool,
-  hasEnergyShield: PropTypes.bool,
+  hasBubble: PropTypes.bool,
+  hasDoubleAttack: PropTypes.bool,
   hasEventListener: PropTypes.bool,
-  hasOnslaught: PropTypes.bool,
+  hasOnDeath: PropTypes.bool,
   hasPoison: PropTypes.bool,
   health: PropTypes.number,
   howToEarn: PropTypes.string,
@@ -146,8 +154,7 @@ Minion.propTypes = {
   targetingArrowText: PropTypes.string,
   text: PropTypes.string,
   totalHealth: PropTypes.number,
-  type: PropTypes.string,
-  wasAttacked: PropTypes.bool
+  type: PropTypes.string
 };
 
 Minion.defaultProps = {

@@ -1,11 +1,12 @@
 @import 'game-wrapper';
-@import 'game-board';
 @import 'cards-wrapper';
 @import 'avatar';
 @import 'player__info';
-@import 'board-slot';
+@import 'boards';
 
 @import 'card-interactions/!module';
+@import 'minion-interactions/!module';
+@import 'minion-mechanics/!module';
 
 // @import 'animations/!module';
 // @import 'interactions/!module';

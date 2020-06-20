@@ -122,6 +122,10 @@
 
   // z-index vars
   // ========================================================================
+  --zIndex-Board:                                   1;
+  --zIndex-Hero:                                   20;
+  --zIndex-Hand:                                   10;
   --zIndex-SelectedCardMobileModal:               100;
   --zIndex-CardInteractionLayer--is-selected:     600;
+  --zIndex-MinionInteractionLayer:                200;
 }

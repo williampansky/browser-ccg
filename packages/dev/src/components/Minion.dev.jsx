@@ -34,7 +34,7 @@ export default function MinionDev() {
   const [canBeAttackedByMinion, setCanBeAttackedByMinion] = useState(false);
   const [canBeAttackedByPlayer, setCanBeAttackedByPlayer] = useState(false);
   const [canBeAttackedBySpell, setCanBeAttackedBySpell] = useState(false);
-  const [canBeAttackedByWarcry, setCanBeAttackedByWarcry] = useState(false);
+  const [canBeAttackedByOnPlay, setcanBeAttackedByOnPlay] = useState(false);
   const [canBeBuffed, setCanBeBuffed] = useState(false);
   const [canBeDebuffed, setCanBeDebuffed] = useState(false);
   const [canBeExpired, setCanBeExpired] = useState(false);
@@ -49,7 +49,7 @@ export default function MinionDev() {
   const [hasCurse, setHasCurse] = useState(false);
   const [hasEnergyShield, setHasEnergyShield] = useState(false);
   const [hasEventListener, setHasEventListener] = useState(false);
-  const [hasGuard, setHasGuard] = useState(false);
+  const [hasBulwark, sethasBulwark] = useState(false);
   const [hasOnslaught, setHasOnslaught] = useState(false);
   const [hasPoison, setHasPoison] = useState(false);
   const [isAttacking, setIsAttacking] = useState(false);
@@ -124,7 +124,7 @@ export default function MinionDev() {
       case 'hasCurse':          return mechanics.includes('%ON_DEATH%');
       case 'hasEnergyShield':   return mechanics.includes('%BUBBLE%');
       case 'hasEventListener':  return mechanics.includes('%EVENT%');
-      case 'hasGuard':          return mechanics.includes('%BULWARK%');
+      case 'hasBulwark':          return mechanics.includes('%BULWARK%');
       case 'hasOnslaught':      return mechanics.includes('%DOUBLE_ATTACK%');
       case 'hasPoison':         return mechanics.includes('%POISON%');
       case 'isConcealed':       return mechanics.includes('%HIDDEN%');
@@ -172,7 +172,7 @@ export default function MinionDev() {
                   canBeAttackedByMinion: canBeAttackedByMinion,
                   canBeAttackedByPlayer: canBeAttackedByPlayer,
                   canBeAttackedBySpell: canBeAttackedBySpell,
-                  canBeAttackedByWarcry: canBeAttackedByWarcry,
+                  canBeAttackedByOnPlay: canBeAttackedByOnPlay,
                   canBeBuffed: canBeBuffed,
                   canBeDebuffed: canBeDebuffed,
                   canBeExpired: canBeExpired,
@@ -197,9 +197,9 @@ export default function MinionDev() {
                   hasEnergyShield: !hasEnergyShield
                     ? initCardMechanics(CARD, 'hasEnergyShield')
                     : hasEnergyShield,
-                  hasGuard: !hasGuard
-                    ? initCardMechanics(CARD, 'hasGuard')
-                    : hasGuard,
+                  hasBulwark: !hasBulwark
+                    ? initCardMechanics(CARD, 'hasBulwark')
+                    : hasBulwark,
                   hasOnslaught: !hasOnslaught
                     ? initCardMechanics(CARD, 'hasOnslaught')
                     : hasOnslaught,
@@ -286,14 +286,14 @@ export default function MinionDev() {
             </div>
             <div className="margin-small">
               <button
-                data-active={canBeAttackedByWarcry}
+                data-active={canBeAttackedByOnPlay}
                 onClick={() =>
-                  setCanBeAttackedByWarcry(
-                    !canBeAttackedByWarcry ? true : false
+                  setcanBeAttackedByOnPlay(
+                    !canBeAttackedByOnPlay ? true : false
                   )
                 }
               >
-                canBeAttackedByWarcry
+                canBeAttackedByOnPlay
               </button>
             </div>
             <div className="margin-small">
@@ -432,10 +432,10 @@ export default function MinionDev() {
             </div>
             <div className="margin-small">
               <button
-                data-active={hasGuard}
-                onClick={() => setHasGuard(!hasGuard ? true : false)}
+                data-active={hasBulwark}
+                onClick={() => sethasBulwark(!hasBulwark ? true : false)}
               >
-                hasGuard
+                hasBulwark
               </button>
             </div>
             <div className="margin-small">

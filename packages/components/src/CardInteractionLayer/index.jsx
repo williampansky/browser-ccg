@@ -13,7 +13,8 @@ const CardInteractionLayer = props => {
     index,
     isPlayable,
     isSelected,
-    trayIsExpanded
+    trayIsExpanded,
+    disableInteraction
   } = props;
 
   const [trayIsExpandedState, setTrayIsExpandedState] = useState(false);
@@ -64,10 +65,11 @@ const CardInteractionLayer = props => {
   } = card;
 
   const handleInteractionClass = useCallback(() => {
-    if (isSelected) return 'card__interaction--is-selected';
+    if (disableInteraction) return 'disable-interaction';
+    else if (isSelected) return 'card__interaction--is-selected';
     else if (isPlayable) return 'card__interaction--is-playable';
     else return '';
-  }, [isPlayable, isSelected]);
+  }, [disableInteraction, isPlayable, isSelected]);
 
   return (
     <animated.div
@@ -77,10 +79,8 @@ const CardInteractionLayer = props => {
       ].join(' ')}
       data-component="CardInteractionLayer"
       data-index={index}
-      onClick={e => handleCardInteractionClick(e, card, isPlayable, isSelected)}
-      onKeyPress={e =>
-        handleCardInteractionClick(e, card, isPlayable, isSelected)
-      }
+      onClick={() => handleCardInteractionClick(card, index)}
+      onKeyPress={() => handleCardInteractionClick(card, index)}
       role={isPlayable ? 'button' : 'presentation'}
       tabIndex={isPlayable ? 'button' : 'presentation'}
       style={style}

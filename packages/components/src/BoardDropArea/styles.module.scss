@@ -7,7 +7,8 @@
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
-  min-height: 150px;
+  // min-height: 150px;
+  min-width: 0;
   opacity: 0;
   pointer-events: none;
   position: relative;
@@ -23,16 +24,34 @@
   cursor: pointer;
   pointer-events: auto;
   width: 1%;
+  margin: 0 1%;
   opacity: 1;
+
+  & + div,
+  & + div [data-component*='minion-interactions'] {
+    pointer-events: none;
+  }
 
   .area--is-alone {
     width: 3.5%;
+    margin: 0 3.5%;
   }
 
-  &:hover {
+  @media (max-width: 959px) {
     background: rgba(255, 255, 255, 0.25);
     border-color: rgba(255, 255, 255, 0.925);
+    min-width: 7.5%;
     width: 7.5%;
+  }
+
+  @media (min-width: 960px) {
+    width: 2.5%;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.925);
+      width: 7.5%;
+    }
   }
 
   @keyframes ants {
@@ -45,3 +64,8 @@
 // .spell-slot ~ .board-is-active .board__drop__area {
 //   opacity: 0;
 // }
+
+.board__drop__area.cant--drop-minion {
+  cursor: default;
+  pointer-events: none;
+}

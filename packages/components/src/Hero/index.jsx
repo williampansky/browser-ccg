@@ -23,8 +23,8 @@ const Hero = props => {
     cardsInDeck,
     cardsInHand,
     costGemImageSrc,
-    energyCurrent,
-    energyTotal,
+    actionPointsCurrent,
+    actionPointsTotal,
     heroAbilities,
     heroSymbol,
     parentComponent,
@@ -33,8 +33,8 @@ const Hero = props => {
     playerHealthCurrent,
     playerHealthTotal,
     playerName,
-    yourId,
-    selectedCardContext
+    playerId,
+    selectedCardInteractionContext
   } = props;
 
   const [deckMenuOpen, setDeckMenuOpen] = useState(false);
@@ -58,18 +58,18 @@ const Hero = props => {
       <article
         className={[
           styles['hero'],
-          cardIsSelected && !selectedCardContext
+          cardIsSelected && !selectedCardInteractionContext
             ? styles['card--is-selected']
             : ''
         ].join(' ')}
         data-component="Hero"
-        style={{
-          transform: parentComponent === 'Opponent' && 'translateY(0)'
-        }}
+        data-player={parentComponent}
       >
         <Avatar
+          handlePlayerInteractionClick={e => console.log(e)}
           heroImageSrc={getHeroImage(heroSymbol, 'AVATAR')}
           heroName={getHeroName(heroSymbol)}
+          parentComponent={parentComponent}
           placeholderImageSrc={avatarPlaceholderImageSrc}
         />
 
@@ -94,23 +94,25 @@ const Hero = props => {
               iconColor="#ccc"
               statColor="white"
               statLabel="Cards in Deck"
-              statValue={energyCurrent}
-              totalEnergy={energyTotal}
+              statValue={actionPointsCurrent}
+              totalEnergy={actionPointsTotal}
             />
           </div>
-          <PlayerName id={yourId} name={playerName} />
+          <PlayerName id={playerId} name={playerName} />
         </header>
 
         {parentComponent === 'Player' ? (
-          <div className={styles['player__fab']}>
-            <HeroAbilityFAB
-              abilitiesImageBase={abilitiesImageBase}
-              abilitiesImageClose={abilitiesImageClose}
-              costImageSrc={costGemImageSrc}
-              heroAbilities={heroAbilities}
-              heroSymbol={heroSymbol}
-            />
-          </div>
+          heroAbilities.length ? (
+            <div className={styles['player__fab']}>
+              <HeroAbilityFAB
+                abilitiesImageBase={abilitiesImageBase}
+                abilitiesImageClose={abilitiesImageClose}
+                costImageSrc={costGemImageSrc}
+                heroAbilities={heroAbilities}
+                heroSymbol={heroSymbol}
+              />
+            </div>
+          ) : null
         ) : null}
 
         <footer className={styles['player__health']}>
@@ -158,7 +160,7 @@ Hero.propTypes = {
   playerDeck: PropTypes.array,
   playerHealthCurrent: PropTypes.number,
   playerHealthTotal: PropTypes.number,
-  yourId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  playerId: PropTypes.string,
   parentComponent: PropTypes.string,
   playerName: PropTypes.string
 };

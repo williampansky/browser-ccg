@@ -2,6 +2,7 @@ import moves from './moves';
 import state from './state';
 import stripSecrets from './strip-secrets';
 import turns from './turns';
+import { initDecksPhase, initHandsPhase, playGamePhase } from './phases';
 
 /**
  * @see https://boardgame.io/documentation/#/
@@ -26,7 +27,7 @@ export default {
    * @name turn
    * @see https://boardgame.io/documentation/#/turn-order
    */
-  turn: turns
+  turn: turns,
 
   /**
    * Most games beyond very simple ones tend to have different behaviors at
@@ -36,5 +37,9 @@ export default {
    * @name phases
    * @see https://boardgame.io/documentation/#/phases
    */
-  // phases: {},
+  phases: {
+    initDecksPhase,
+    initHandsPhase,
+    playGamePhase
+  }
 };

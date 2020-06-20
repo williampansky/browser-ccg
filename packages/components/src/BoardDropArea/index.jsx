@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 
 const BoardDropArea = props => {
-  const { areaIsAlone, boardIsActive, index, onClick } = props;
+  const { areaIsAlone, cantDropMinion, boardIsActive, index, onClick } = props;
 
   return (
     <div
       className={[
         styles['board__drop__area'],
-        boardIsActive ? styles['board--is-active'] : ''
+        boardIsActive ? styles['board--is-active'] : '',
+        cantDropMinion ? styles['cant--drop-minion'] : ''
       ].join(' ')}
       data-component="BoardDropArea"
       data-index={index}
@@ -32,9 +33,6 @@ const BoardDropArea = props => {
 
 BoardDropArea.propTypes = {};
 
-BoardDropArea.defaultProps = {
-  theirBoard: {},
-  yourBoard: {}
-};
+BoardDropArea.defaultProps = {};
 
 export default BoardDropArea;

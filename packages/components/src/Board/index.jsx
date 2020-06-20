@@ -1,68 +1,59 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { PLAYER_BOARDS } from '@ccg/enums';
-import { BoardDropArea } from '@ccg/components';
+import { TheirBoard, YourBoard } from '@ccg/components';
 import styles from './styles.module.scss';
 
 const Board = props => {
   const {
+    G,
+    ctx,
+    moves,
     theirBoard,
-    theirId,
+    theirID,
     yourBoard,
-    yourId,
+    yourID,
     cardIsSelected,
-    handleDropAreaClick
+    cardIsLocked
   } = props;
+
+  const { selectedMinionObject } = G;
 
   return (
     <div className={styles['board']} data-component="Board">
-      <div
-        className={[styles['player__board'], styles['their__board']].join(' ')}
-        data-board={PLAYER_BOARDS[2]}
-        data-board-id={theirId}
-      >
-        {Object.keys(theirBoard).map((key, index) => {
-          index = index + 1;
-          // console.log(index, yourBoard[key]);
-          return <Fragment key={index}>{index}</Fragment>;
-        })}
-      </div>
+      <TheirBoard
+        G={G}
+        ctx={ctx}
+        moves={moves}
+        theirBoard={theirBoard}
+        theirID={theirID}
+      />
 
-      <div
-        className={[styles['player__board'], styles['your__board']].join(' ')}
-        data-board={PLAYER_BOARDS[1]}
-        data-board-id={yourId}
-      >
-        <div className={styles['play__area']}>
-          {yourBoard.length <= 6 ? (
-            <BoardDropArea
-              index={0}
-              boardIsActive={cardIsSelected}
-              areaIsAlone={cardIsSelected && yourBoard.length === 0}
-              onClick={() => handleDropAreaClick(0)}
-            />
-          ) : null}
-          {yourBoard.map((key, index) => {
-            index = index + 1;
-            // console.log(index, yourBoard[key]);
-            return <Fragment key={index}>{index}</Fragment>;
-          })}
-        </div>
-      </div>
+      <YourBoard
+        G={G}
+        ctx={ctx}
+        moves={moves}
+        yourBoard={yourBoard}
+        yourID={yourID}
+        cardIsSelected={cardIsSelected}
+        cardIsLocked={cardIsLocked}
+        minionIsSelected={selectedMinionObject[yourID] ? true : false}
+      />
     </div>
   );
 };
 
 Board.propTypes = {
-  theirId: PropTypes.string.isRequired,
-  theirBoard: PropTypes.object,
-  yourId: PropTypes.string.isRequired,
+  theirID: PropTypes.string.isRequired,
+  theirBoard: PropTypes.array,
+  yourID: PropTypes.string.isRequired,
   yourBoard: PropTypes.array
 };
 
 Board.defaultProps = {
-  theirBoard: {},
-  yourBoard: []
+  theirBoard: [],
+  yourBoard: [],
+  cardIsSelected: false
 };
 
 export default Board;

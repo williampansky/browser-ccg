@@ -67,6 +67,7 @@ base
 
     const constants = JSON.stringify(Object.assign({}, ...map));
     fs.writeFileSync('./packages/data/src/constants.json', constants);
+    fs.writeFileSync('./packages/server/src/data/constants.json', constants);
   });
 
 // MECHANICS
@@ -97,6 +98,7 @@ base
 
     const mechanics = JSON.stringify(Object.assign({}, ...map));
     fs.writeFileSync('./packages/data/src/mechanics.json', mechanics);
+    fs.writeFileSync('./packages/server/src/data/mechanics.json', mechanics);
   });
 
 // HEROS
@@ -146,6 +148,7 @@ base
 
     const heros = JSON.stringify(Object.assign({}, ...map));
     fs.writeFileSync('./packages/data/src/heros.json', heros);
+    fs.writeFileSync('./packages/server/src/data/heros.json', heros);
   });
 
 // ABILITIES
@@ -216,6 +219,7 @@ base
 
     const abilities = JSON.stringify(Object.assign({}, ...map));
     fs.writeFileSync('./packages/data/src/abilities.json', abilities);
+    fs.writeFileSync('./packages/server/src/data/abilities.json', abilities);
   });
 
 // CORE
@@ -227,49 +231,11 @@ base
   .then(resp => {
     const map = resp.records.map(item => {
       const { fields } = item;
-      const { artist, cardClass, id, mechanics, name, text } = fields;
-
-      if (!id) return;
-
-      return {
-        [id]: {
-          ...fields,
-          artist: artist ? artist : null,
-          cardClass: parseCardClass(cardClass),
-          mechanics: GAME_CONFIG.debugData.enableMechanics
-            ? mechanics
-              ? mechanics
-              : []
-            : '',
-          name: name,
-          text: GAME_CONFIG.debugData.enableText ? text : '',
-
-          // required for react-select pkg
-          key: id,
-          value: name
-        }
-      };
-    });
-
-    const game = JSON.stringify(Object.assign({}, ...map));
-    fs.writeFileSync('./packages/data/src/cards.game.json', game);
-  });
-
-// CORE
-base
-  .table('CORE')
-  .list({
-    maxRecords: 200
-  })
-  .then(resp => {
-    const map = resp.records.map(item => {
-      const { fields } = item;
       const {
         active,
         artistName,
         artistUrl,
         attack,
-        cardClass,
         collectible,
         cost,
         description,
@@ -303,7 +269,90 @@ base
           active,
           artist: createArtistLink(artistName, artistUrl),
           attack,
-          cardClass: parseCardClass(cardClass),
+          collectible,
+          cost,
+          description,
+          elite: elite ? true : false,
+          entourage: parseCardEntourage(entourage),
+          flavor,
+          health,
+          howToEarn,
+          howToEarnGolden,
+          mechanics: parseCardMechanics(mechanics),
+          id,
+          name: parseCardName(name, id),
+          numberOvercharge,
+          numberPrimary,
+          numberRNG,
+          numberSecondary,
+          playContext,
+          playType,
+          race,
+          rarity,
+          set,
+          targetingArrowText,
+          text: parseCardText(text),
+          type,
+
+          // required for react-select pkg
+          key: id,
+          value: name
+        }
+      };
+    });
+
+    const game = JSON.stringify(Object.assign({}, ...map));
+    fs.writeFileSync('./packages/data/src/cards.game.json', game);
+    fs.writeFileSync('./packages/server/src/data/cards.game.json', game);
+  });
+
+// CORE
+base
+  .table('CORE')
+  .list({
+    maxRecords: 200
+  })
+  .then(resp => {
+    const map = resp.records.map(item => {
+      const { fields } = item;
+      const {
+        active,
+        artistName,
+        artistUrl,
+        attack,
+        collectible,
+        cost,
+        description,
+        elite,
+        entourage,
+        flavor,
+        health,
+        howToEarn,
+        howToEarnGolden,
+        id,
+        mechanics,
+        name,
+        numberOvercharge,
+        numberPrimary,
+        numberRNG,
+        numberSecondary,
+        playContext,
+        playType,
+        race,
+        rarity,
+        set,
+        targetingArrowText,
+        text,
+        type
+      } = fields;
+
+      if (!id) return;
+
+      return {
+        [id]: {
+          active,
+          artist: createArtistLink(artistName, artistUrl),
+          attack,
           collectible,
           cost,
           description,
@@ -338,6 +387,7 @@ base
 
     const core = JSON.stringify(Object.assign({}, ...map));
     fs.writeFileSync('./packages/data/src/cards.core.json', core);
+    fs.writeFileSync('./packages/server/src/data/cards.core.json', core);
   });
 
 // PRIME
@@ -354,7 +404,6 @@ base
         artistName,
         artistUrl,
         attack,
-        cardClass,
         collectible,
         cost,
         description,
@@ -388,7 +437,6 @@ base
           active,
           artist: createArtistLink(artistName, artistUrl),
           attack,
-          cardClass: parseCardClass(cardClass),
           collectible,
           cost,
           description,
@@ -423,6 +471,7 @@ base
 
     const prime = JSON.stringify(Object.assign({}, ...map));
     fs.writeFileSync('./packages/data/src/cards.prime.json', prime);
+    fs.writeFileSync('./packages/server/src/data/cards.prime.json', prime);
   });
 
 // ENTOURAGE
@@ -439,7 +488,6 @@ base
         artistName,
         artistUrl,
         attack,
-        cardClass,
         collectible,
         cost,
         description,
@@ -473,7 +521,6 @@ base
           active,
           artist: createArtistLink(artistName, artistUrl),
           attack,
-          cardClass: parseCardClass(cardClass),
           collectible,
           cost,
           description,
@@ -508,4 +555,8 @@ base
 
     const entourage = JSON.stringify(Object.assign({}, ...map));
     fs.writeFileSync('./packages/data/src/cards.entourage.json', entourage);
+    fs.writeFileSync(
+      './packages/server/src/data/cards.entourage.json',
+      entourage
+    );
   });

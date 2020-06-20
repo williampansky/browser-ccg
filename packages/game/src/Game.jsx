@@ -2,8 +2,8 @@ import React from 'react';
 import { Client as BoardgameClient } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
 import { ReactCCG } from '@ccg/server';
-import GameWrapper from './components-old/game-wrapper/GameWrapper';
-import GameLoader from './components-old/game-loader';
+import GameWrapper from './game-components/GameWrapper';
+// import GameLoader from './components/game-loader';
 
 const REDUX_DEVTOOLS =
   typeof window !== undefined &&
@@ -13,7 +13,7 @@ const REDUX_DEVTOOLS =
 const Client = BoardgameClient({
   game: ReactCCG,
   board: GameWrapper,
-  loading: GameLoader,
+  // loading: GameLoader,
   debug: true,
   multiplayer: SocketIO({ server: 'localhost:8000' }),
   enhancer: REDUX_DEVTOOLS
@@ -21,10 +21,21 @@ const Client = BoardgameClient({
 
 class App extends React.Component {
   state = {
+    hasError: false,
+    addressBarSize: 0,
     playerID: null,
-    playerName: null,
-    deck: []
+    playerName: null
   };
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    console.error(error, errorInfo);
+  }
 
   componentDidMount() {
     const {
@@ -35,11 +46,18 @@ class App extends React.Component {
       ? this.setState({ playerID: '1' })
       : this.setState({ playerID: '0' });
 
-    if (localStorage.getItem('playerName'))
-      this.setState({ playerName: localStorage.getItem('playerName') });
-
-    if (localStorage.getItem('deck'))
-      this.setState({ deck: JSON.parse(localStorage.getItem('deck')) });
+    /**
+     * Uses html.perspective CSS property, which is set to 100vh, to determine
+     * a mobile browser's address bar height; such as Android Chrome's URL bar.
+     * @see [StackOverflow]{@link https://stackoverflow.com/a/54796813}
+     */
+    if (typeof document !== 'undefined') {
+      this.setState({
+        addressBarSize:
+          parseFloat(getComputedStyle(document.documentElement).perspective) -
+          document.documentElement.clientHeight
+      });
+    }
   }
 
   render() {
@@ -57,9 +75,15 @@ class App extends React.Component {
       );
     }
 
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    }
+
     return (
       <React.Fragment>
         <Client
+          addressBarSize={this.state.addressBarSize}
           playerID={this.state.playerID}
           playerName={this.state.playerName}
         />

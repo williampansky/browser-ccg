@@ -13,8 +13,8 @@ const Player = props => {
     cardsInHandCount,
     costGemImageSrc,
     deselectCardFunction,
-    energyCurrent,
-    energyTotal,
+    actionPointsCurrent,
+    actionPointsTotal,
     heroAbilities,
     heroSymbol,
     imagesDataCards,
@@ -27,21 +27,26 @@ const Player = props => {
     selectedCardObject,
     selectedCardUuid,
     yourId,
-    selectedCardContext
+    selectedCardInteractionContext
   } = props;
 
   const handleCardInteractionClick = useCallback(
-    (event, cardObject, cardIsPlayable, cardIsSelected) => {
-      event.preventDefault();
-      if (cardIsSelected) return deselectCardFunction();
-      else if (cardIsPlayable) return selectCardFunction(cardObject);
-      else return;
+    (cardObject, index) => {
+      if (selectedCardUuid) return console.log('deselect');
+      else return selectCardFunction(cardObject, index);
+      // else if (cardIsPlayable) return selectCardFunction(cardObject, index);
     },
-    [deselectCardFunction, selectCardFunction]
+    [selectedCardUuid, deselectCardFunction, selectCardFunction]
   );
 
   return (
-    <div className={styles['player']} data-component="Player">
+    <div
+      className={[
+        styles['player'],
+        selectedCardInteractionContext ? 'disable-interaction' : ''
+      ].join(' ')}
+      data-component="Player"
+    >
       <Hero
         abilitiesImageBase={abilitiesImageBase}
         abilitiesImageClose={abilitiesImageClose}
@@ -50,8 +55,8 @@ const Player = props => {
         cardsInDeck={cardsInDeckCount}
         cardsInHand={cardsInHandCount}
         costGemImageSrc={costGemImageSrc}
-        energyCurrent={energyCurrent}
-        energyTotal={energyTotal}
+        actionPointsCurrent={actionPointsCurrent}
+        actionPointsTotal={actionPointsTotal}
         heroAbilities={heroAbilities}
         heroSymbol={heroSymbol}
         parentComponent="Player"
@@ -60,7 +65,7 @@ const Player = props => {
         playerHealthTotal={playerHealthTotal}
         playerName={playerName}
         yourId={yourId}
-        selectedCardContext={selectedCardContext}
+        selectedCardInteractionContext={selectedCardInteractionContext}
       />
       <Hand
         cardsInHand={cardsInHandArray}
@@ -70,7 +75,8 @@ const Player = props => {
         imagesDataSets={imagesDataSets}
         selectedCardObject={selectedCardObject}
         selectedCardUuid={selectedCardUuid}
-        selectedCardContext={selectedCardContext}
+        selectedCardInteractionContext={selectedCardInteractionContext}
+        disableInteraction={selectedCardInteractionContext ? true : false}
       />
     </div>
   );
@@ -84,8 +90,8 @@ Player.propTypes = {
   cardsInHandArray: PropTypes.array.isRequired,
   cardsInHandCount: PropTypes.number.isRequired,
   costGemImageSrc: PropTypes.string.isRequired,
-  energyCurrent: PropTypes.number.isRequired,
-  energyTotal: PropTypes.number.isRequired,
+  actionPointsCurrent: PropTypes.number.isRequired,
+  actionPointsTotal: PropTypes.number.isRequired,
   deselectCardFunction: PropTypes.func.isRequired,
   heroAbilities: PropTypes.array.isRequired,
   heroSymbol: PropTypes.string.isRequired,
@@ -98,25 +104,23 @@ Player.propTypes = {
   selectCardFunction: PropTypes.func.isRequired,
   selectedCardObject: PropTypes.object,
   selectedCardUuid: PropTypes.string,
-  yourId: PropTypes.string.isRequired
+  yourId: PropTypes.string.isRequired,
+  selectedCardInteractionContext: PropTypes.string
 };
 
 Player.defaultProps = {
   cardsInHandArray: [],
   cardsInDeckCount: 0,
   cardsInHandCount: 0,
-  // deselectCardFunction: () => {
-  //   console.error('deselectCardFunction() provided as a defaultProp');
-  // },
+  deselectCardFunction: () => {},
   heroAbilities: [],
   imagesDataCards: {},
   imagesDataSets: {},
   playerDeck: [],
-  // selectCardFunction: () => {
-  //   console.error('selectCardFunction() provided as a defaultProp');
-  // },
+  selectCardFunction: () => {},
   selectedCardObject: null,
-  selectedCardUuid: ''
+  selectedCardUuid: '',
+  selectedCardInteractionContext: null
 };
 
 export default Player;

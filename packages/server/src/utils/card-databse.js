@@ -4,7 +4,7 @@ import CARDS_GAME from '../data/cards.game.json';
 import CARDS_PRIME from '../data/cards.prime.json';
 
 const cardDatabase = {
-  // ...CARDS_GAME,
+  ...CARDS_GAME,
   ...CARDS_CORE,
   ...CARDS_PRIME,
   ...CARDS_ENTOURAGE

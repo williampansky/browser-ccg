@@ -1,7 +1,7 @@
 const SERVER_CONFIG = {
   debugData: {
     debugCard: 'CORE_032',
-    enableDebugCard: true,
+    enableDebugCard: false,
     enableAttack: true,
     enableCost: false,
     enableHealth: true,
@@ -11,7 +11,7 @@ const SERVER_CONFIG = {
     enableText: true
   },
   matchConfig: {
-    enableInitHandsStage: true,
+    enableInitHandsStage: false,
     enableRandomTurnOrder: false
   }
 };

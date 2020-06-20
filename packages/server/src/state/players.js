@@ -8,6 +8,14 @@ const players = {
       deck: [],
       hand: []
     }
+  },
+
+  setDeck: (G, player, array) => {
+    G.players[player].deck = array;
+  },
+
+  setHand: (G, player, array) => {
+    G.players[player].hand = array;
   }
 };
 
