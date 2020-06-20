@@ -24,7 +24,7 @@ const boards = {
       { ...createBoardSlotObject('CORE_004') },
       { ...createBoardSlotObject('CORE_005'), hasRush: true },
       { ...createBoardSlotObject('CORE_006') },
-      { ...createBoardSlotObject('CORE_007'), hasNoAttack: true },
+      { ...createBoardSlotObject('CORE_007'), hasNoAttack: true, hasBulwark: true },
       // { ...createBoardSlotObject('CORE_008') },
       // { ...createBoardSlotObject('CORE_009') },
       // { ...createBoardSlotObject('CORE_130') }

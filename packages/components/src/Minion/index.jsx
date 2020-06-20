@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
-import { getCardAssetImage, replaceConstant } from '@ccg/utils';
 import { RACE } from '@ccg/enums';
+import {
+  getCardAssetImage,
+  replaceConstant,
+  getMinionFlairImage
+} from '@ccg/utils';
 import {
   CARD_ASSETS as ASSETS,
   MECHANICS,
@@ -14,6 +18,8 @@ import MinionAttack from './elements/MinionAttack';
 import MinionHealth from './elements/MinionHealth';
 import MinionImage from './elements/MinionImage';
 import MechanicIcon from './elements/MechanicIcon';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const Minion = ({
   active,
@@ -75,19 +81,23 @@ const Minion = ({
       ].join(' ')}
       data-component="Minion"
     >
-      <MinionImage
-        id={id}
-        isGolden={isGolden}
-        imgSrc={imageFlairSrc}
-        name={name}
-        placeholderSrc={imagePlaceholderSrc}
-        set={set}
-      />
+      <Suspense fallback={<div className={styles['loader']} />}>
+        <MinionImage
+          id={id}
+          isGolden={isGolden}
+          imgSrc={imageFlairSrc}
+          name={name}
+          placeholderSrc={imagePlaceholderSrc}
+          set={set}
+        />
+      </Suspense>
+
       <MinionAttack
         currentAttack={currentAttack}
         elite={elite}
         imageSrc={getCardAssetImage('attack', null, elite, ASSETS)}
       />
+
       <MinionHealth
         currentHealth={currentHealth}
         elite={elite}

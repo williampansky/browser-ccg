@@ -7,7 +7,7 @@
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
-  min-height: 150px;
+  // min-height: 150px;
   min-width: 0;
   opacity: 0;
   pointer-events: none;
@@ -24,6 +24,7 @@
   cursor: pointer;
   pointer-events: auto;
   width: 1%;
+  margin: 0 1%;
   opacity: 1;
 
   & + div,
@@ -33,6 +34,7 @@
 
   .area--is-alone {
     width: 3.5%;
+    margin: 0 3.5%;
   }
 
   @media (max-width: 959px) {
@@ -43,6 +45,8 @@
   }
 
   @media (min-width: 960px) {
+    width: 2.5%;
+
     &:hover {
       background: rgba(255, 255, 255, 0.25);
       border-color: rgba(255, 255, 255, 0.925);

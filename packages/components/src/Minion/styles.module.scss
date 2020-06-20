@@ -129,3 +129,9 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
     & > div:nth-child(3) { right: -10px; bottom: -2px; } // health badge
   }
 }
+
+.loader {
+  height: 100%;
+  width: 100%;
+  // @include animation-swipe-card-image;
+}
