@@ -15,15 +15,16 @@
 
 .minion__shadows {
   animation: fadeIn 1200ms var(--animation-transition-cubic) forwards;
+  background: transparent;
   border-radius: var(--minion-border-radius);
   height: 100%;
   opacity: 0;
   pointer-events: none;
   position: absolute;
   transition: 600ms var(--animation-transition-cubic);
-  transition-property: opacity, transform;
+  transition-property: background, opacity, transform;
   width: 100%;
-  will-change: opacity, transform;
+  will-change: background, opacity, transform;
 
   &:before,
   &:after {
@@ -64,7 +65,7 @@
   }
 }
 
-[data-has-bulwark='true'] .minion__shadows.minion__race--location {
+.minion__shadows.minion__race--location {
   $percent: 35%; // 50% - $percent
   border-bottom-left-radius: calc(var(--minion-border-radius) - #{$percent});
   border-bottom-right-radius: calc(var(--minion-border-radius) - #{$percent});

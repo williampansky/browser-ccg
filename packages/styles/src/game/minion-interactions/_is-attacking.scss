@@ -2,17 +2,22 @@
   $color: --box-shadow-is-selected;
   $hoverColor: var(#{$color}-color-ripple);
 
+  & + .minion__shadows {
+    background: var(#{$color}-color);
+    transform: scale(1.15);
+  }
+
   & + .minion__shadows:before {
     box-shadow: var($color);
-    transform: scale(1.15);
+    // transform: scale(1.15);
   }
 
   &:hover + .minion__shadows:before {
-    transform: scale(1);
+    // transform: scale(1);
   }
 
   &:hover + .minion__shadows:after {
-    transform: scale(1.15);
+    // transform: scale(1.15);
   }
 
   & + .minion__shadows:after {

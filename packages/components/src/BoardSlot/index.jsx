@@ -133,6 +133,7 @@ const BoardSlot = props => {
       data-slot={index}
     >
       {/* mechanics (above minion) */}
+      {slotObject && hasBubble && <Bubble />}
       {slotObject && hasBoon && <Boon />}
       {slotObject && hasBulwark && (
         <BulwarkForeground

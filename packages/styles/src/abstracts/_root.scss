@@ -96,6 +96,11 @@
   // ========================================================================
   --weapon-border-radius:               50%;
 
+  // mechanics color vars
+  // ========================================================================
+  --mechanics-color-boon:                     rgb(210, 191, 146);
+  --mechanics-color-bubble:                   rgb(235, 248, 163);
+
   // box-shadow vars
   // ========================================================================
   --box-shadow-can-be-attacked-color-ripple:  rgba(249, 40, 40, 0.5);
@@ -128,4 +133,5 @@
   --zIndex-SelectedCardMobileModal:               100;
   --zIndex-CardInteractionLayer--is-selected:     600;
   --zIndex-MinionInteractionLayer:                200;
+  --zIndex-Mechanics-Bubble:                        3;
 }

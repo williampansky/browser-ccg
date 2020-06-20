@@ -2,6 +2,10 @@
   $color: --box-shadow-can-be-selected;
   $hoverColor: var(#{$color}-color-ripple);
 
+  & + .minion__shadows {
+    background: var(#{$color}-color);
+  }
+
   & + .minion__shadows:before {
     box-shadow: var($color);
   }

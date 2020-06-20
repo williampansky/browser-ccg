@@ -23,6 +23,7 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
   width: calc(var(--minion-height) / 1.25);
   will-change: box-shadow, transform;
   z-index: 2;
+  // opacity: 0;
 
   * {
     user-select: none;
@@ -38,19 +39,19 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
   [class*='target__other_player'] & {
     box-shadow: $bs-default-hover;
     transform: scale(1.15);
-    transition: transform 400ms var(--animation-transition-cubic);
+    transition: box-shadow, transform 400ms var(--animation-transition-cubic);
   }
 }
 
 // prettier-ignore
 .minion.minion--has-bubble {
   & > div:nth-child(2) { // attack badge
-    transform: translateX(10px);
+    transform: translateX(14px);
     transition: transform 200ms ease-out;
   }
   
   & > div:nth-child(3) { // health badge
-    transform: translateX(-10px);
+    transform: translateX(-12px);
     transition: transform 200ms ease-out;
   }
 }
