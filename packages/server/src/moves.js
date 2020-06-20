@@ -4,8 +4,15 @@ import playMinionCard from './moves/play-minion-card';
 import selectCard from './moves/select-card';
 import selectedCardContext from './moves/select-card-context';
 import selectMinion from './moves/select-minion';
+import attackMinionWithMinion from './moves/attack-minion-with-minion';
 
 export default {
+  attackMinionWithMinion: {
+    client: false,
+    move: (G, ctx, index) => {
+      return attackMinionWithMinion(G, ctx, index);
+    }
+  },
   deselectCard: {
     client: false,
     move: (G, ctx) => {

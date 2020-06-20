@@ -4,11 +4,21 @@ import { PLAYER_BOARDS } from '@ccg/enums';
 import { BoardSlot } from '@ccg/components';
 
 const TheirBoard = props => {
-  const { G, ctx, moves, theirBoard, theirID } = props;
+  const {
+    G,
+    ctx,
+    moves,
+    moves: { attackMinionWithMinion },
+    theirBoard,
+    theirID
+  } = props;
 
-  const handleCanBeAttackedByMinionFunction = useCallback(slotIndexClicked => {
-    return console.log(slotIndexClicked);
-  }, []);
+  const handleCanBeAttackedByMinionFunction = useCallback(
+    slotIndexClicked => {
+      return attackMinionWithMinion(slotIndexClicked);
+    },
+    [attackMinionWithMinion]
+  );
 
   return (
     <div

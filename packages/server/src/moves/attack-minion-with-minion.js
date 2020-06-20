@@ -4,11 +4,11 @@ import deselectMinion from '../moves/deselect-minion';
 
 /**
  * Attacks a minion (index) with the current player's selectedMinionObject.
- * @param {{}} G
- * @param {{}} ctx
+ * @param {object} G
+ * @param {object} ctx
  * @param {number} index
  */
-const attackMinion = (G, ctx, index) => {
+const attackMinionWithMinion = (G, ctx, index) => {
   const { selectedMinionIndex, selectedMinionObject, turnOrder } = G;
   const { currentPlayer } = ctx;
   const otherPlayer = turnOrder.find(p => p !== currentPlayer);
@@ -112,4 +112,4 @@ const attackMinion = (G, ctx, index) => {
   // G.attackedMinionIndex = null;
 };
 
-export default attackMinion;
+export default attackMinionWithMinion;
