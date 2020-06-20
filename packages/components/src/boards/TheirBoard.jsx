@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { PLAYER_BOARDS } from '@ccg/enums';
 import { BoardSlot } from '@ccg/components';
 
 const TheirBoard = props => {
   const { G, ctx, moves, theirBoard, theirID } = props;
+
+  const handleCanBeAttackedByMinionFunction = useCallback(slotIndexClicked => {
+    return console.log(slotIndexClicked);
+  }, []);
 
   return (
     <div
@@ -14,14 +18,19 @@ const TheirBoard = props => {
     >
       <div className="play__area">
         {theirBoard.map((object, index) => {
-          index = index + 1;
           return (
             <BoardSlot
+              G={G}
+              ctx={ctx}
+              moves={moves}
               key={`slot_${index}`}
               board={PLAYER_BOARDS[2]}
               slotObject={object}
               index={index}
               playerID={theirID}
+              handleCanBeAttackedByMinionFunction={() =>
+                handleCanBeAttackedByMinionFunction(index)
+              }
               // onClick={() => handleClick(index)}
             />
           );

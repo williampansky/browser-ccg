@@ -29,6 +29,7 @@ const BoardSlot = props => {
     board,
     handleCanAttackFunction,
     handleIsAttackingFunction,
+    handleCanBeAttackedByMinionFunction,
     index,
     playerID,
     slotObject,
@@ -115,9 +116,10 @@ const BoardSlot = props => {
 
   /**
    * Returns minion race in lower case format
-   * @param {string} race
+   * @param {string} str
    */
   function getMinionRaceClass(str) {
+    if (!str) return;
     return `minion__race--${replaceConstant(str).toLowerCase()}`;
   }
 
@@ -157,8 +159,10 @@ const BoardSlot = props => {
           G={G}
           ctx={ctx}
           moves={moves}
-          handleCanBeAttackedByMinionFunction={e => console.log(e)}
           canBeAttackedByMinion={canBeAttackedByMinion}
+          handleCanBeAttackedByMinionFunction={
+            handleCanBeAttackedByMinionFunction
+          }
         />
       )}
 
@@ -183,6 +187,7 @@ const BoardSlot = props => {
         elite={elite}
         entourage={entourage}
         flavor={flavor}
+        getMinionRaceClass={getMinionRaceClass}
         hasBubble={hasBubble}
         hasDoubleAttack={hasDoubleAttack}
         hasEventListener={hasEventListener}

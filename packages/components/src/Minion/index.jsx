@@ -32,6 +32,7 @@ const Minion = ({
   elite,
   entourage,
   flavor,
+  getMinionRaceClass,
   hasBubble,
   hasDoubleAttack,
   hasEventListener,
@@ -61,14 +62,6 @@ const Minion = ({
   totalHealth,
   type
 }) => {
-  /**
-   * Returns minion race in lower case format
-   * @param {string} race
-   */
-  function getMinionRaceClass(race) {
-    return `minion__race--${replaceConstant(race).toLowerCase()}`;
-  }
-
   return (
     <div
       className={[
@@ -127,6 +120,7 @@ Minion.propTypes = {
   elite: PropTypes.bool,
   entourage: PropTypes.array,
   flavor: PropTypes.string,
+  getMinionRaceClass: PropTypes.func,
   hasBubble: PropTypes.bool,
   hasDoubleAttack: PropTypes.bool,
   hasEventListener: PropTypes.bool,
@@ -158,6 +152,7 @@ Minion.propTypes = {
 };
 
 Minion.defaultProps = {
+  getMinionRaceClass: () => {},
   imageFlairSrc: '',
   imagePlaceholderSrc: PLACEHOLDER_IMAGE,
   race: RACE['NONE']

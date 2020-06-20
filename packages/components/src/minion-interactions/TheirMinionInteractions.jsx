@@ -11,7 +11,13 @@ import CanBeExpired from './CanBeExpired';
 import CanBeReturned from './CanBeReturned';
 
 export default function TheirMinionInteractions(props) {
-  const { canBeAttackedByMinion, handleCanBeAttackedByMinionFunction } = props;
+  const {
+    G,
+    ctx,
+    moves,
+    canBeAttackedByMinion,
+    handleCanBeAttackedByMinionFunction
+  } = props;
   // if (canBeAttackedBySpell) {
   //   return <CanBeAttackedBySpell moves={moves} index={index} />;
   // }
