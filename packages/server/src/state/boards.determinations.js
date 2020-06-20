@@ -13,7 +13,7 @@ import { _eMCBH } from './boards.can-be-healed';
  */
 export const _dAMT = (G, player) => {
   const { boards } = G;
-  const MINION_HAS_GUARD = boards[player].find(slot => slot.hasGuard === true)
+  const MINION_HAS_GUARD = boards[player].find(slot => slot.hasBulwark === true)
     ? true
     : false;
 
@@ -24,7 +24,7 @@ export const _dAMT = (G, player) => {
   }
 
   G.boards[player].forEach((slot, i) => {
-    if (slot.hasGuard === true) _eMCBA(G, player, i);
+    if (slot.hasBulwark === true) _eMCBA(G, player, i);
     else if (MINION_HAS_GUARD) _dMCBA(G, player, i);
     else _eMCBA(G, player, i);
   });

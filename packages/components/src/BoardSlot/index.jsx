@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
-import { getMechanicImage, getMinionFlairImage } from '@ccg/utils';
+import { PLAYER_BOARDS } from '@ccg/enums';
+import {
+  getMechanicImage,
+  getMinionFlairImage,
+  replaceConstant
+} from '@ccg/utils';
 import {
   Minion,
   Boon,
@@ -12,7 +17,8 @@ import {
   DoubleAttack,
   Elite,
   Poison,
-  YourMinionInteractions
+  YourMinionInteractions,
+  TheirMinionInteractions
 } from '@ccg/components';
 
 const BoardSlot = props => {
@@ -20,6 +26,7 @@ const BoardSlot = props => {
     G,
     ctx,
     moves,
+    board,
     handleCanAttackFunction,
     handleIsAttackingFunction,
     index,
@@ -106,6 +113,14 @@ const BoardSlot = props => {
     }
   } = props;
 
+  /**
+   * Returns minion race in lower case format
+   * @param {string} race
+   */
+  function getMinionRaceClass(str) {
+    return `minion__race--${replaceConstant(str).toLowerCase()}`;
+  }
+
   return (
     <div
       className={[
@@ -126,18 +141,34 @@ const BoardSlot = props => {
       )}
 
       {/* minion interactions */}
-      <YourMinionInteractions
-        G={G}
-        ctx={ctx}
-        moves={moves}
-        canAttack={canAttack}
-        isAttacking={isAttacking}
-        handleCanAttackFunction={handleCanAttackFunction}
-        handleIsAttackingFunction={handleIsAttackingFunction}
-      />
+      {board === PLAYER_BOARDS[1] ? (
+        <YourMinionInteractions
+          G={G}
+          ctx={ctx}
+          moves={moves}
+          canAttack={canAttack}
+          isAttacking={isAttacking}
+          handleCanAttackFunction={handleCanAttackFunction}
+          handleIsAttackingFunction={handleIsAttackingFunction}
+        />
+      ) : (
+        <TheirMinionInteractions
+          G={G}
+          ctx={ctx}
+          moves={moves}
+          handleCanBeAttackedByMinionFunction={e => console.log(e)}
+          canBeAttackedByMinion={canBeAttackedByMinion}
+        />
+      )}
 
       {/* minion box shadows */}
-      <div className="minion__shadows" data-component="minion-shadows" />
+      <div
+        className={[
+          'minion__shadows',
+          slotObject && race ? getMinionRaceClass(race) : ''
+        ].join(' ')}
+        data-component="minion-shadows"
+      />
 
       {/* visible minion component */}
       <Minion

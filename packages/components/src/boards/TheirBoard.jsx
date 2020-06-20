@@ -18,7 +18,7 @@ const TheirBoard = props => {
           return (
             <BoardSlot
               key={`slot_${index}`}
-              board={PLAYER_BOARDS[1]}
+              board={PLAYER_BOARDS[2]}
               slotObject={object}
               index={index}
               playerID={theirID}

@@ -49,7 +49,7 @@ export default function MinionDev() {
   const [hasCurse, setHasCurse] = useState(false);
   const [hasEnergyShield, setHasEnergyShield] = useState(false);
   const [hasEventListener, setHasEventListener] = useState(false);
-  const [hasGuard, setHasGuard] = useState(false);
+  const [hasBulwark, sethasBulwark] = useState(false);
   const [hasOnslaught, setHasOnslaught] = useState(false);
   const [hasPoison, setHasPoison] = useState(false);
   const [isAttacking, setIsAttacking] = useState(false);
@@ -124,7 +124,7 @@ export default function MinionDev() {
       case 'hasCurse':          return mechanics.includes('%ON_DEATH%');
       case 'hasEnergyShield':   return mechanics.includes('%BUBBLE%');
       case 'hasEventListener':  return mechanics.includes('%EVENT%');
-      case 'hasGuard':          return mechanics.includes('%BULWARK%');
+      case 'hasBulwark':          return mechanics.includes('%BULWARK%');
       case 'hasOnslaught':      return mechanics.includes('%DOUBLE_ATTACK%');
       case 'hasPoison':         return mechanics.includes('%POISON%');
       case 'isConcealed':       return mechanics.includes('%HIDDEN%');
@@ -197,9 +197,9 @@ export default function MinionDev() {
                   hasEnergyShield: !hasEnergyShield
                     ? initCardMechanics(CARD, 'hasEnergyShield')
                     : hasEnergyShield,
-                  hasGuard: !hasGuard
-                    ? initCardMechanics(CARD, 'hasGuard')
-                    : hasGuard,
+                  hasBulwark: !hasBulwark
+                    ? initCardMechanics(CARD, 'hasBulwark')
+                    : hasBulwark,
                   hasOnslaught: !hasOnslaught
                     ? initCardMechanics(CARD, 'hasOnslaught')
                     : hasOnslaught,
@@ -432,10 +432,10 @@ export default function MinionDev() {
             </div>
             <div className="margin-small">
               <button
-                data-active={hasGuard}
-                onClick={() => setHasGuard(!hasGuard ? true : false)}
+                data-active={hasBulwark}
+                onClick={() => sethasBulwark(!hasBulwark ? true : false)}
               >
-                hasGuard
+                hasBulwark
               </button>
             </div>
             <div className="margin-small">

@@ -49,7 +49,7 @@
 }
 
 [data-has-bulwark='true'] .minion__shadows {
-  $percent: 8%;
+  $percent: 8%; // 50% - $percent
   border-top-left-radius: $percent;
   border-top-right-radius: $percent;
   border-bottom-left-radius: calc(var(--minion-border-radius) - #{$percent});
@@ -59,6 +59,18 @@
   &:after {
     border-top-left-radius: $percent;
     border-top-right-radius: $percent;
+    border-bottom-left-radius: calc(var(--minion-border-radius) - #{$percent});
+    border-bottom-right-radius: calc(var(--minion-border-radius) - #{$percent});
+  }
+}
+
+[data-has-bulwark='true'] .minion__shadows.minion__race--location {
+  $percent: 35%; // 50% - $percent
+  border-bottom-left-radius: calc(var(--minion-border-radius) - #{$percent});
+  border-bottom-right-radius: calc(var(--minion-border-radius) - #{$percent});
+
+  &:before,
+  &:after {
     border-bottom-left-radius: calc(var(--minion-border-radius) - #{$percent});
     border-bottom-right-radius: calc(var(--minion-border-radius) - #{$percent});
   }
@@ -81,4 +93,5 @@
 }
 
 @import 'can-attack';
+@import 'can-be-attacked';
 @import 'is-attacking';

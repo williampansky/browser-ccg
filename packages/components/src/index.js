@@ -32,6 +32,7 @@ export { default as TheirBoard } from './boards/TheirBoard';
 export { default as CanAttack } from './minion-interactions/CanAttack';
 export { default as IsAttacking } from './minion-interactions/IsAttacking';
 export { default as YourMinionInteractions } from './minion-interactions/YourMinionInteractions';
+export { default as TheirMinionInteractions } from './minion-interactions/TheirMinionInteractions';
 
 // minion mechanics
 export { default as Boon } from './minion-mechanics/Boon';
