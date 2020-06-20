@@ -1,3 +1,8 @@
+// prettier-ignore
+.player__board {
+  @media (max-width: 959px) { --minion-height: 120px; }
+}
+
 .player__board {
   align-items: center;
   display: flex;
@@ -50,7 +55,7 @@
   min-width: 100vw;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: calc(var(--minion-height) / 4) 0;
+  padding: calc(var(--minion-height) / 2.5) 0;
   width: 100vw;
 
   @media (min-width: 960px) {
@@ -58,5 +63,6 @@
     justify-content: center;
     overflow-x: visible;
     overflow-y: visible;
+    padding: calc(var(--minion-height) / 4) 0;
   }
 }
