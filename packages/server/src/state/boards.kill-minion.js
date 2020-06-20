@@ -4,10 +4,10 @@
 /**
  * Kill Minion
  * Kill a single active minion.
- * @param {{}} G
- * @param {{}} ctx
+ * @param {object} G
+ * @param {object} ctx
  * @param {string} player
- * @param {{}} boardSlot
+ * @param {object} boardSlot
  * @param {number} index
  */
 export const _kM = (G, ctx, player, boardSlot, index) => {
@@ -24,10 +24,10 @@ export const _kM = (G, ctx, player, boardSlot, index) => {
 /**
  * Kill Minion if Health Reaches Zero
  * Kill a single active minion if its currentHealth reaches zero.
- * @param {{}} G
- * @param {{}} ctx
+ * @param {object} G
+ * @param {object} ctx
  * @param {string} player
- * @param {{}} boardSlot
+ * @param {object} boardSlot
  * @param {number} index
  */
 export const _kM0 = (G, ctx, player, boardSlot, index) => {

@@ -95,7 +95,9 @@ const Minion = ({
         currentHealth={currentHealth}
         elite={elite}
         imageSrc={getCardAssetImage('health', null, elite, ASSETS)}
+        isBuffed={currentHealth > totalHealth}
         isDamaged={currentHealth < totalHealth}
+        totalHealth={totalHealth}
       />
 
       <MechanicIcon
