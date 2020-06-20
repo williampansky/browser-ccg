@@ -50,7 +50,7 @@ export default function MinionDev() {
   const [hasBubble, sethasBubble] = useState(false);
   const [hasEventListener, setHasEventListener] = useState(false);
   const [hasBulwark, sethasBulwark] = useState(false);
-  const [hasOnslaught, setHasOnslaught] = useState(false);
+  const [hasDoubleAttack, sethasDoubleAttack] = useState(false);
   const [hasPoison, setHasPoison] = useState(false);
   const [isAttacking, setIsAttacking] = useState(false);
   const [isConcealed, setIsConcealed] = useState(false);
@@ -125,7 +125,7 @@ export default function MinionDev() {
       case 'hasBubble':   return mechanics.includes('%BUBBLE%');
       case 'hasEventListener':  return mechanics.includes('%EVENT%');
       case 'hasBulwark':          return mechanics.includes('%BULWARK%');
-      case 'hasOnslaught':      return mechanics.includes('%DOUBLE_ATTACK%');
+      case 'hasDoubleAttack':      return mechanics.includes('%DOUBLE_ATTACK%');
       case 'hasPoison':         return mechanics.includes('%POISON%');
       case 'isConcealed':       return mechanics.includes('%HIDDEN%');
       default:                  return false;
@@ -200,9 +200,9 @@ export default function MinionDev() {
                   hasBulwark: !hasBulwark
                     ? initCardMechanics(CARD, 'hasBulwark')
                     : hasBulwark,
-                  hasOnslaught: !hasOnslaught
-                    ? initCardMechanics(CARD, 'hasOnslaught')
-                    : hasOnslaught,
+                  hasDoubleAttack: !hasDoubleAttack
+                    ? initCardMechanics(CARD, 'hasDoubleAttack')
+                    : hasDoubleAttack,
                   hasPoison: !hasPoison
                     ? initCardMechanics(CARD, 'hasPoison')
                     : hasPoison,
@@ -438,10 +438,12 @@ export default function MinionDev() {
             </div>
             <div className="margin-small">
               <button
-                data-active={hasOnslaught}
-                onClick={() => setHasOnslaught(!hasOnslaught ? true : false)}
+                data-active={hasDoubleAttack}
+                onClick={() =>
+                  sethasDoubleAttack(!hasDoubleAttack ? true : false)
+                }
               >
-                hasOnslaught
+                hasDoubleAttack
               </button>
             </div>
             <div className="margin-small">

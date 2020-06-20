@@ -18,8 +18,9 @@ const attackMinion = (G, ctx, index) => {
 
   // eject if ATTACKING_MINION can't attack
   if (ATTACKING_MINION && !ATTACKING_MINION.canAttack) return;
-  const ATTACKING_MINION_HAS_ONSLAUGHT = ATTACKING_MINION.hasOnslaught;
-  const ATTACKING_MINION_ONSLAUGHT_COUNT = ATTACKING_MINION.hasOnslaughtAttack;
+  const ATTACKING_MINION_HAS_ONSLAUGHT = ATTACKING_MINION.hasDoubleAttack;
+  const ATTACKING_MINION_ONSLAUGHT_COUNT =
+    ATTACKING_MINION.hasDoubleAttackAttack;
 
   const MINION_BEING_ATTACKED = G.boards[otherPlayer][index];
   const MINION_BEING_ATTACKED_INDEX = index;
@@ -66,11 +67,11 @@ const attackMinion = (G, ctx, index) => {
 
   // handle onslaught mechanic
   if (ATTACKING_MINION_HAS_ONSLAUGHT === true) {
-    // deincrement hasOnslaughtAttack integer
+    // deincrement hasDoubleAttackAttack integer
     G.boards[currentPlayer][
       ATTACKING_MINION_INDEX
-    ].hasOnslaughtAttack = Math.abs(
-      G.boards[currentPlayer][ATTACKING_MINION_INDEX].hasOnslaughtAttack - 1
+    ].hasDoubleAttackAttack = Math.abs(
+      G.boards[currentPlayer][ATTACKING_MINION_INDEX].hasDoubleAttackAttack - 1
     );
 
     if (ATTACKING_MINION_ONSLAUGHT_COUNT === 0) {
