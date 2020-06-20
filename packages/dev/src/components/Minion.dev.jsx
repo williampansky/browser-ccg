@@ -47,7 +47,7 @@ export default function MinionDev() {
   const [canReceiveOnslaught, setCanReceiveOnslaught] = useState(false);
   const [hasBoon, setHasBoon] = useState(false);
   const [hasCurse, setHasCurse] = useState(false);
-  const [hasEnergyShield, setHasEnergyShield] = useState(false);
+  const [hasBubble, sethasBubble] = useState(false);
   const [hasEventListener, setHasEventListener] = useState(false);
   const [hasBulwark, sethasBulwark] = useState(false);
   const [hasOnslaught, setHasOnslaught] = useState(false);
@@ -122,7 +122,7 @@ export default function MinionDev() {
     switch (key) {
       case 'hasBoon':           return mechanics.includes('%BOON%');
       case 'hasCurse':          return mechanics.includes('%ON_DEATH%');
-      case 'hasEnergyShield':   return mechanics.includes('%BUBBLE%');
+      case 'hasBubble':   return mechanics.includes('%BUBBLE%');
       case 'hasEventListener':  return mechanics.includes('%EVENT%');
       case 'hasBulwark':          return mechanics.includes('%BULWARK%');
       case 'hasOnslaught':      return mechanics.includes('%DOUBLE_ATTACK%');
@@ -194,9 +194,9 @@ export default function MinionDev() {
                   hasEventListener: !hasEventListener
                     ? initCardMechanics(CARD, 'hasEventListener')
                     : hasEventListener,
-                  hasEnergyShield: !hasEnergyShield
-                    ? initCardMechanics(CARD, 'hasEnergyShield')
-                    : hasEnergyShield,
+                  hasBubble: !hasBubble
+                    ? initCardMechanics(CARD, 'hasBubble')
+                    : hasBubble,
                   hasBulwark: !hasBulwark
                     ? initCardMechanics(CARD, 'hasBulwark')
                     : hasBulwark,
@@ -412,12 +412,10 @@ export default function MinionDev() {
             </div>
             <div className="margin-small">
               <button
-                data-active={hasEnergyShield}
-                onClick={() =>
-                  setHasEnergyShield(!hasEnergyShield ? true : false)
-                }
+                data-active={hasBubble}
+                onClick={() => sethasBubble(!hasBubble ? true : false)}
               >
-                hasEnergyShield
+                hasBubble
               </button>
             </div>
             <div className="margin-small">
