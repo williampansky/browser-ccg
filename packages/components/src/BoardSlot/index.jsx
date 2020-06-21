@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { PLAYER_BOARDS } from '@ccg/enums';
@@ -26,6 +26,7 @@ const BoardSlot = props => {
     G,
     ctx,
     moves,
+    moves: { killMinion },
     board,
     handleCanAttackFunction,
     handleIsAttackingFunction,
@@ -118,10 +119,23 @@ const BoardSlot = props => {
    * Returns minion race in lower case format
    * @param {string} str
    */
-  function getMinionRaceClass(str) {
+  const getMinionRaceClass = useCallback(str => {
     if (!str) return;
     return `minion__race--${replaceConstant(str).toLowerCase()}`;
-  }
+  }, []);
+
+  const killMinionCallback = useCallback(
+    index => {
+      setTimeout(() => {
+        killMinion(playerID, slotObject, index);
+      }, 600);
+    },
+    [playerID, slotObject, killMinion]
+  );
+
+  useEffect(() => {
+    isDead && killMinionCallback(index);
+  }, [index, isDead, killMinionCallback]);
 
   return (
     <div
@@ -199,6 +213,7 @@ const BoardSlot = props => {
         id={id}
         imageFlairSrc={getMinionFlairImage(id, set, isGolden)}
         isAttacking={isAttacking}
+        isDead={isDead}
         isGolden={isGolden}
         mechanics={mechanics}
         name={name}

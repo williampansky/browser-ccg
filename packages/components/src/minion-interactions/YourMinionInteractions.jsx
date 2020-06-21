@@ -14,9 +14,9 @@ import { CanAttack, IsAttacking } from '@ccg/components';
 // import CanBeReturned from './CanBeReturned';
 // import CanBeSacrificed from './CanBeSacrificed';
 // import CanBeStolen from './CanBeStolen';
-// import CanReceiveEnergyShield from './CanReceiveBubble';
+// import canReceiveBubble from './CanReceiveBubble';
 // import CanReceiveGuard from './CanReceiveBulwark';
-// import CanReceiveOnslaught from './CanReceiveDoubleAttack';
+// import canReceiveDoubleAttack from './CanReceiveDoubleAttack';
 // import IsAttacking from './IsAttacking';
 
 export default function YourMinionInteractions(props) {
@@ -80,16 +80,16 @@ export default function YourMinionInteractions(props) {
   //   return <CanBeStolen moves={moves} index={index} />;
   // }
 
-  // if (canReceiveEnergyShield) {
-  //   return <CanReceiveEnergyShield moves={moves} index={index} />;
+  // if (canReceiveBubble) {
+  //   return <canReceiveBubble moves={moves} index={index} />;
   // }
 
   // if (canReceiveGuard) {
   //   return <CanReceiveGuard G={G} ctx={ctx} moves={moves} index={index} />;
   // }
 
-  // if (canReceiveOnslaught) {
-  //   return <CanReceiveOnslaught G={G} ctx={ctx} moves={moves} index={index} />;
+  // if (canReceiveDoubleAttack) {
+  //   return <canReceiveDoubleAttack G={G} ctx={ctx} moves={moves} index={index} />;
   // }
 
   if (isAttacking) {

@@ -42,9 +42,9 @@ export default function MinionDev() {
   const [canBeReturned, setCanBeReturned] = useState(false);
   const [canBeSacrificed, setCanBeSacrificed] = useState(false);
   const [canBeStolen, setCanBeStolen] = useState(false);
-  const [canReceiveEnergyShield, setCanReceiveEnergyShield] = useState(false);
+  const [canReceiveBubble, setcanReceiveBubble] = useState(false);
   const [canReceiveGuard, setCanReceiveGuard] = useState(false);
-  const [canReceiveOnslaught, setCanReceiveOnslaught] = useState(false);
+  const [canReceiveDoubleAttack, setcanReceiveDoubleAttack] = useState(false);
   const [hasBoon, setHasBoon] = useState(false);
   const [hasCurse, setHasCurse] = useState(false);
   const [hasBubble, sethasBubble] = useState(false);
@@ -180,9 +180,9 @@ export default function MinionDev() {
                   canBeReturned: canBeReturned,
                   canBeSacrificed: canBeSacrificed,
                   canBeStolen: canBeStolen,
-                  canReceiveEnergyShield: canReceiveEnergyShield,
+                  canReceiveBubble: canReceiveBubble,
                   canReceiveGuard: canReceiveGuard,
-                  canReceiveOnslaught: canReceiveOnslaught,
+                  canReceiveDoubleAttack: canReceiveDoubleAttack,
                   currentAttack: CARD.attack,
                   currentHealth: CARD.health,
                   hasBoon: !hasBoon
@@ -356,14 +356,12 @@ export default function MinionDev() {
             </div>
             <div className="margin-small">
               <button
-                data-active={canReceiveEnergyShield}
+                data-active={canReceiveBubble}
                 onClick={() =>
-                  setCanReceiveEnergyShield(
-                    !canReceiveEnergyShield ? true : false
-                  )
+                  setcanReceiveBubble(!canReceiveBubble ? true : false)
                 }
               >
-                canReceiveEnergyShield
+                canReceiveBubble
               </button>
             </div>
             <div className="margin-small">
@@ -378,12 +376,14 @@ export default function MinionDev() {
             </div>
             <div className="margin-small">
               <button
-                data-active={canReceiveOnslaught}
+                data-active={canReceiveDoubleAttack}
                 onClick={() =>
-                  setCanReceiveOnslaught(!canReceiveOnslaught ? true : false)
+                  setcanReceiveDoubleAttack(
+                    !canReceiveDoubleAttack ? true : false
+                  )
                 }
               >
-                canReceiveOnslaught
+                canReceiveDoubleAttack
               </button>
             </div>
             <div className="margin-small">

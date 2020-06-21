@@ -5,6 +5,7 @@ import selectCard from './moves/select-card';
 import selectedCardContext from './moves/select-card-context';
 import selectMinion from './moves/select-minion';
 import attackMinionWithMinion from './moves/attack-minion-with-minion';
+import boards from './state/boards';
 
 export default {
   attackMinionWithMinion: {
@@ -23,6 +24,12 @@ export default {
     client: false,
     move: (G, ctx) => {
       return deselectMinion(G, ctx);
+    }
+  },
+  killMinion: {
+    client: false,
+    move: (G, ctx, player, slotObject, index) => {
+      return boards.killMinion(G, ctx, player, slotObject, index);
     }
   },
   playMinionCard: {

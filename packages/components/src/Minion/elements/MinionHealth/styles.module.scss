@@ -49,6 +49,13 @@
     85%  { transform: scale(1.25); }
     100% { transform: scale(1); }
   }
+
+  .--was-attacked & {
+    animation-name: uk-shake-small;
+    animation-duration: 500ms;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+  }
 }
 
 .badge {

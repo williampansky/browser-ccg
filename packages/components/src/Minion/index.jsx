@@ -60,7 +60,8 @@ const Minion = ({
   targetingArrowText,
   text,
   totalHealth,
-  type
+  type,
+  isDead
 }) => {
   return (
     <div
@@ -70,7 +71,7 @@ const Minion = ({
         hasBubble ? styles['minion--has-bubble'] : '',
         isAttacking ? styles['minion--is-attacking'] : '',
         currentHealth < totalHealth ? styles['minion--is-damaged'] : '',
-        currentHealth === 0 ? styles['minion--is-dead'] : ''
+        isDead ? styles['minion--is-dead'] : ''
       ].join(' ')}
       data-component="Minion"
     >

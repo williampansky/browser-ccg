@@ -28,34 +28,38 @@ const deselectCard = (G, ctx) => {
 
   G.boards[currentPlayer].forEach(slot => {
     slot.canBeAttackedByMinion = false;
+    slot.canBeAttackedByOnPlay = false;
     slot.canBeAttackedByPlayer = false;
     slot.canBeAttackedBySpell = false;
-    slot.canBeAttackedByOnPlay = false;
     slot.canBeBuffed = false;
-    slot.canBeHealed = false;
     slot.canBeDebuffed = false;
+    slot.canBeDestroyed = false;
     slot.canBeExpired = false;
+    slot.canBeHealed = false;
     slot.canBeReturned = false;
-    slot.canBeSacrificed = false;
     slot.canBeStolen = false;
-    slot.canReceiveEnergyShield = false;
-    slot.canReceiveOnslaught = false;
+    slot.canReceiveBubble = false;
+    slot.canReceiveBulwark = false;
+    slot.canReceiveDoubleAttack = false;
+    slot.canReceiveRush = false;
   });
 
   G.boards[otherPlayer].forEach(slot => {
     slot.canBeAttackedByMinion = false;
+    slot.canBeAttackedByOnPlay = false;
     slot.canBeAttackedByPlayer = false;
     slot.canBeAttackedBySpell = false;
-    slot.canBeAttackedByOnPlay = false;
     slot.canBeBuffed = false;
-    slot.canBeHealed = false;
     slot.canBeDebuffed = false;
+    slot.canBeDestroyed = false;
     slot.canBeExpired = false;
+    slot.canBeHealed = false;
     slot.canBeReturned = false;
-    slot.canBeSacrificed = false;
     slot.canBeStolen = false;
-    slot.canReceiveEnergyShield = false;
-    slot.canReceiveOnslaught = false;
+    slot.canReceiveBubble = false;
+    slot.canReceiveBulwark = false;
+    slot.canReceiveDoubleAttack = false;
+    slot.canReceiveRush = false;
   });
 };
 
