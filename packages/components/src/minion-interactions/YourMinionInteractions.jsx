@@ -21,11 +21,6 @@ import { CanAttack, IsAttacking } from '@ccg/components';
 
 export default function YourMinionInteractions(props) {
   const {
-    G,
-    ctx,
-    moves,
-    slotObject,
-    index,
     canAttack,
     isAttacking,
     handleCanAttackFunction,

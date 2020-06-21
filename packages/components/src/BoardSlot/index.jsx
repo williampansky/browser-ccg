@@ -23,10 +23,6 @@ import {
 
 const BoardSlot = props => {
   const {
-    G,
-    ctx,
-    moves,
-    moves: { killMinion },
     board,
     handleCanAttackFunction,
     handleIsAttackingFunction,
@@ -160,9 +156,6 @@ const BoardSlot = props => {
       {/* minion interactions */}
       {board === PLAYER_BOARDS[1] ? (
         <YourMinionInteractions
-          G={G}
-          ctx={ctx}
-          moves={moves}
           canAttack={canAttack}
           isAttacking={isAttacking}
           handleCanAttackFunction={handleCanAttackFunction}
@@ -170,9 +163,6 @@ const BoardSlot = props => {
         />
       ) : (
         <TheirMinionInteractions
-          G={G}
-          ctx={ctx}
-          moves={moves}
           canBeAttackedByMinion={canBeAttackedByMinion}
           handleCanBeAttackedByMinionFunction={
             handleCanBeAttackedByMinionFunction
