@@ -33,6 +33,6 @@ export const _kM = (G, ctx, player, boardSlot, index) => {
 export const _kM0 = (G, ctx, player, boardSlot, index) => {
   if (G.boards[player][index].currentHealth === 0) {
     G.boards[player][index].isDead = true;
-    // _kM(G, ctx, player, boardSlot, index);
+    _kM(G, ctx, player, boardSlot, index);
   }
 };
