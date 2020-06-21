@@ -17,10 +17,10 @@
     transform: scale(0.1);
   }
 
-  .board__slot--is-attacking & {
-    transform: scale(1.15);
-    transition-duration: 600ms;
-  }
+  // .board__slot--is-attacking & {
+  //   transform: scale(1.15);
+  //   transition-duration: 600ms;
+  // }
 
   .minion--is-dead & {
     opacity: 0;
@@ -52,10 +52,10 @@
     transform: scale(0.1);
   }
 
-  .board__slot--is-attacking & {
-    transform: scale(1.15);
-    transition-duration: 600ms;
-  }
+  // .board__slot--is-attacking & {
+  //   transform: scale(1.15);
+  //   transition-duration: 600ms;
+  // }
 
   .minion--is-dead & {
     transform: scale(0.1);

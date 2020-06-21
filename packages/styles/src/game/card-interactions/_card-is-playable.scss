@@ -7,7 +7,7 @@
 .card__effect--is-playable {
   $shadowColor: var(--box-shadow-can-be-selected-color);
   border-radius: calc(var(--card-height) / 28.571428571);
-  box-shadow: 0 0 10px $shadowColor, 0 0 20px $shadowColor;
+  // box-shadow: 0 0 10px $shadowColor, 0 0 20px $shadowColor;
   height: 100%;
   opacity: 0;
   pointer-events: none;
