@@ -16,6 +16,8 @@
 .minion__shadows {
   animation: fadeIn 1200ms var(--animation-transition-cubic) forwards;
   background: transparent;
+  border: 4px solid;
+  border-color: transparent;
   border-radius: var(--minion-border-radius);
   height: 100%;
   opacity: 0;

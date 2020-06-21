@@ -1,8 +1,9 @@
 .minion__interaction--can-attack {
   $color: --box-shadow-can-be-selected;
-  $hoverColor: var(#{$color}-color-ripple);
+  // $hoverColor: var(#{$color}-color-ripple);
 
   & + .minion__shadows {
+    border-color: var(#{$color}-color);
     background: var(#{$color}-color);
   }
 
