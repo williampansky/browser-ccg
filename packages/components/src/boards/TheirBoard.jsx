@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { PLAYER_BOARDS } from '@ccg/enums';
 import { BoardSlot } from '@ccg/components';
+import { usePrevious } from '@ccg/hooks';
 
 const TheirBoard = props => {
   const {
@@ -12,6 +13,20 @@ const TheirBoard = props => {
     theirBoard,
     theirID
   } = props;
+
+  const [theirBoardArray, setTheirBoardArray] = useState([]);
+  const theirPreviousBoardArray = usePrevious(theirBoardArray);
+
+  const handleTheirBoardArrayCallback = useCallback(
+    array => {
+      if (array !== theirPreviousBoardArray) return setTheirBoardArray(array);
+    },
+    [theirPreviousBoardArray]
+  );
+
+  useEffect(() => {
+    handleTheirBoardArrayCallback(theirBoard);
+  }, [handleTheirBoardArrayCallback, theirBoard]);
 
   const handleCanBeAttackedByMinionFunction = useCallback(
     slotIndexClicked => {
@@ -27,12 +42,9 @@ const TheirBoard = props => {
       data-board-id={theirID}
     >
       <div className="play__area">
-        {theirBoard.map((object, index) => {
+        {theirBoardArray.map((object, index) => {
           return (
             <BoardSlot
-              G={G}
-              ctx={ctx}
-              moves={moves}
               key={`slot_${index}`}
               board={PLAYER_BOARDS[2]}
               slotObject={object}
