@@ -16,27 +16,27 @@
     transform: scale(1.15);
   }
 
-  // @keyframes hasBoonGlow {
-  //   0%,
-  //   60% {
-  //     box-shadow: 0 0 0 $color;
-  //     opacity: 0;
-  //   }
-  //   70% {
-  //     box-shadow: 0 0 5px 5px $color;
-  //     opacity: 1;
-  //   }
-  //   80% {
-  //     box-shadow: 0 0 10px 10px $color;
-  //     opacity: 1;
-  //   }
-  //   90% {
-  //     box-shadow: 0 0 30px 15px $color;
-  //     opacity: 0.45;
-  //   }
-  //   100% {
-  //     box-shadow: 0 0 25px 12.5px $color;
-  //     opacity: 0;
-  //   }
-  // }
+  @keyframes hasBoonGlow {
+    0%,
+    60% {
+      box-shadow: 0 0 0 $color;
+      opacity: 0;
+    }
+    70% {
+      box-shadow: 0 0 5px 5px $color;
+      opacity: 1;
+    }
+    80% {
+      box-shadow: 0 0 10px 10px $color;
+      opacity: 1;
+    }
+    90% {
+      box-shadow: 0 0 30px 15px $color;
+      opacity: 0.45;
+    }
+    100% {
+      box-shadow: 0 0 25px 12.5px $color;
+      opacity: 0;
+    }
+  }
 }

@@ -137,6 +137,7 @@ const BoardSlot = props => {
     <div
       className={[
         styles['board__slot'],
+        getMinionRaceClass(race),
         isAttacking ? 'board__slot--is-attacking' : ''
       ].join(' ')}
       data-component="BoardSlot"
@@ -171,13 +172,13 @@ const BoardSlot = props => {
       )}
 
       {/* minion box shadows */}
-      <div
+      {/* <div
         className={[
           'minion__shadows',
           slotObject && race ? getMinionRaceClass(race) : ''
         ].join(' ')}
         data-component="minion-shadows"
-      />
+      /> */}
 
       {/* visible minion component */}
       <Minion

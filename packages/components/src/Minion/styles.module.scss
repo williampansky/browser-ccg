@@ -34,13 +34,13 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
     display: none;
   }
 
-  // &.minion--is-attacking,
-  // [class*='target__slot-'] &,
-  // [class*='target__other_player'] & {
-  //   box-shadow: $bs-default-hover;
-  //   transform: scale(1.15);
-  //   transition: box-shadow, transform 400ms var(--animation-transition-cubic);
-  // }
+  &.minion--is-attacking,
+  [class*='target__slot-'] &,
+  [class*='target__other_player'] & {
+    // box-shadow: $bs-default-hover;
+    transform: scale(1.15);
+    transition: transform 400ms var(--animation-transition-cubic);
+  }
 }
 
 // prettier-ignore

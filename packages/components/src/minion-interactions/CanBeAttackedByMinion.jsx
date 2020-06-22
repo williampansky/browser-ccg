@@ -1,45 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useSpring, animated } from 'react-spring';
 
 export default function CanBeAttackedByMinion(props) {
   const { onClick } = props;
-  // const { selectedMinionIndex } = G;
-  // const { currentPlayer } = ctx;
-  // const {
-  //   attackMinion,
-  //   setAttackedMinionIndex,
-  //   resetMinionIsAttacking,
-  //   resetMinionIsAttackingIndex
-  // } = moves;
+  const [styles, set, stop] = useSpring(() => ({
+    background: 'var(--box-shadow-can-be-attacked-color)',
+    opacity: 0
+  }));
 
-  // function handleClick() {
-  //   attackMinion(index);
-
-  //   setTimeout(() => {
-  //     setAttackedMinionIndex(null);
-  //     resetMinionIsAttacking(selectedMinionIndex[currentPlayer]);
-  //     resetMinionIsAttackingIndex(selectedMinionIndex[currentPlayer]);
-  //   }, 250);
-  // }
+  useEffect(() => {
+    set({ opacity: 1 });
+    return () => stop();
+  }, [set, stop]);
 
   return (
-    <div
+    <animated.div
       className="minion__interaction minion__interaction--can-be-attacked"
       data-file="minion-interactions/CanBeAttackedByMinion"
       onClick={onClick}
       onKeyPress={onClick}
       role="button"
       tabIndex={0}
+      style={styles}
     />
   );
 }
 
-// CanBeAttackedByMinion.propTypes = {
-//   G: PropTypes.object,
-//   ctx: PropTypes.object,
-//   moves: PropTypes.object,
-//   index: PropTypes.number
-// };
+CanBeAttackedByMinion.propTypes = {
+  onClick: PropTypes.func
+};
 
 CanBeAttackedByMinion.defaultProps = {
   onClick: () => {}
