@@ -6,6 +6,7 @@ import {
   ABILITIES_ICON_CLOSE,
   COST_GEM_IMAGE,
   PLACEHOLDER_IMAGE,
+  MECHANICS,
   CARDS,
   SETS
 } from '@ccg/images';
@@ -62,6 +63,9 @@ const GameWrapper = props => {
         moves={moves}
         theirID={theirID}
         yourID={yourID}
+        images={{
+          MECHANICS: MECHANICS
+        }}
       />
 
       <PlayerWrapper

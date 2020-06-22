@@ -28,6 +28,7 @@ const BoardSlot = props => {
     handleIsAttackingFunction,
     handleCanBeAttackedByMinionFunction,
     index,
+    mechanicImages: { hasBoonSrc },
     playerID,
     slotObject,
     slotObject: {
@@ -192,7 +193,8 @@ const BoardSlot = props => {
         elite={elite}
         entourage={entourage}
         flavor={flavor}
-        getMinionRaceClass={getMinionRaceClass}
+        hasBoon={hasBoon}
+        hasBoonSrc={hasBoonSrc}
         hasBubble={hasBubble}
         hasDoubleAttack={hasDoubleAttack}
         hasEventListener={hasEventListener}
@@ -207,6 +209,7 @@ const BoardSlot = props => {
         isDead={isDead}
         isGolden={isGolden}
         mechanics={mechanics}
+        minionRaceClass={getMinionRaceClass(race)}
         name={name}
         numberPrimary={numberPrimary}
         playContext={playContext}

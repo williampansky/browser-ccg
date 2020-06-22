@@ -11,7 +11,8 @@ const TheirBoard = props => {
     moves,
     moves: { attackMinionWithMinion },
     theirBoard,
-    theirID
+    theirID,
+    mechanicImages
   } = props;
 
   const [theirBoardArray, setTheirBoardArray] = useState([]);
@@ -50,6 +51,7 @@ const TheirBoard = props => {
               slotObject={object}
               index={index}
               playerID={theirID}
+              mechanicImages={mechanicImages}
               handleCanBeAttackedByMinionFunction={() =>
                 handleCanBeAttackedByMinionFunction(index)
               }

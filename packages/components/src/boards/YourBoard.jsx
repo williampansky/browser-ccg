@@ -12,7 +12,8 @@ const YourBoard = props => {
     yourID,
     cardIsSelected,
     cardIsLocked,
-    minionIsSelected
+    minionIsSelected,
+    mechanicImages
   } = props;
 
   const { deselectMinion, playMinionCard, selectMinion } = moves;
@@ -61,6 +62,7 @@ const YourBoard = props => {
                 playerID={yourID}
                 handleCanAttackFunction={() => selectMinion(object, index)}
                 handleIsAttackingFunction={() => deselectMinion()}
+                mechanicImages={mechanicImages}
               />
 
               {yourBoard.length <= 6 ? (

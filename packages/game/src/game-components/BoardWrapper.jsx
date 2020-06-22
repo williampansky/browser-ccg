@@ -22,7 +22,8 @@ const BoardWrapper = props => {
     ctx,
     moves,
     theirID,
-    yourID
+    yourID,
+    images: { MECHANICS: mechanicImages }
   } = props;
 
   const { current: currentAP, total: totalAP } = actionPoints[yourID];
@@ -40,6 +41,7 @@ const BoardWrapper = props => {
       yourBoard={boards[yourID]}
       cardIsSelected={selectedCardObject[yourID] ? true : false}
       cardIsLocked={selectedCardInteractionContext[yourID] ? true : false}
+      mechanicImages={mechanicImages}
       // handleDropAreaClick={handleDropAreaClick}
     />
   );
