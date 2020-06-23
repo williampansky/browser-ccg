@@ -44,15 +44,21 @@ export default function TheirMinionInteractions(props) {
 
   // if (canBeAttackedByMinion) {
   return (
-    <CanBeAttackedByMinion
-      race={race}
-      hasBulwark={hasBulwark}
-      activeState={activeState === 'canBeAttackedByMinion' ? true : false}
-      onClick={handleCanBeAttackedByMinionFunction}
-      canBeAttackedSrc={canBeAttackedSrc}
-      canBeAttackedLocSrc={canBeAttackedLocSrc}
-      canBeAttackedLocBulwarkSrc={canBeAttackedLocBulwarkSrc}
-    />
+    <div
+      className="minion__interaction"
+      data-active={activeState !== null ? true : false}
+      data-component="TheirMinionInteractions"
+    >
+      <CanBeAttackedByMinion
+        race={race}
+        hasBulwark={hasBulwark}
+        activeState={activeState === 'canBeAttackedByMinion' ? true : false}
+        onClick={handleCanBeAttackedByMinionFunction}
+        canBeAttackedSrc={canBeAttackedSrc}
+        canBeAttackedLocSrc={canBeAttackedLocSrc}
+        canBeAttackedLocBulwarkSrc={canBeAttackedLocBulwarkSrc}
+      />
+    </div>
   );
   // }
 
