@@ -35,6 +35,7 @@ const Board = props => {
 
   const intImages = {
     canBeAttacked: gII('CanBeAttacked--Default.png'),
+    canBeAttackedBulwark: gII('CanBeAttacked--Default--Bulwark.png'),
     canBeAttackedLocation: gII('CanBeAttacked--Location.png'),
     canBeAttackedLocationBulwark: gII('CanBeAttacked--Location--Bulwark.png'),
     canAttack: gII('CanAttack--Default.png'),
@@ -54,6 +55,7 @@ const Board = props => {
         playerBoard={PLAYER_BOARDS[2]}
         interactionImages={{
           canBeAttackedSrc: intImages.canBeAttacked,
+          canBeAttackedBulwarkSrc: intImages.canBeAttackedBulwark,
           canBeAttackedLocSrc: intImages.canBeAttackedLocation,
           canBeAttackedLocBulwarkSrc: intImages.canBeAttackedLocationBulwark
         }}

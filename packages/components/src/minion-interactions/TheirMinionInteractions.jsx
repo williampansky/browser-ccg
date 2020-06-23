@@ -18,6 +18,7 @@ export default function TheirMinionInteractions(props) {
     handleCanBeAttackedByMinionFunction,
     interactionImages: {
       canBeAttackedSrc,
+      canBeAttackedBulwarkSrc,
       canBeAttackedLocSrc,
       canBeAttackedLocBulwarkSrc
     }
@@ -55,6 +56,7 @@ export default function TheirMinionInteractions(props) {
         activeState={activeState === 'canBeAttackedByMinion' ? true : false}
         onClick={handleCanBeAttackedByMinionFunction}
         canBeAttackedSrc={canBeAttackedSrc}
+        canBeAttackedBulwarkSrc={canBeAttackedBulwarkSrc}
         canBeAttackedLocSrc={canBeAttackedLocSrc}
         canBeAttackedLocBulwarkSrc={canBeAttackedLocBulwarkSrc}
       />

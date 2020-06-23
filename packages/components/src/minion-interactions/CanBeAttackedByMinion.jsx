@@ -12,6 +12,7 @@ export default function CanBeAttackedByMinion(props) {
     race,
     hasBulwark,
     canBeAttackedSrc,
+    canBeAttackedBulwarkSrc,
     canBeAttackedLocSrc,
     canBeAttackedLocBulwarkSrc
   } = props;
@@ -52,6 +53,8 @@ export default function CanBeAttackedByMinion(props) {
         ) : (
           <img alt="" role="presentation" src={canBeAttackedLocSrc} />
         )
+      ) : hasBulwark ? (
+        <img alt="" role="presentation" src={canBeAttackedBulwarkSrc} />
       ) : (
         <img alt="" role="presentation" src={canBeAttackedSrc} />
       )}
