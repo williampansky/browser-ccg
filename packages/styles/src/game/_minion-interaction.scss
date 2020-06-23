@@ -1,9 +1,7 @@
 .minion__interaction {
   background: transparent;
   border-radius: var(--minion-border-radius);
-  cursor: pointer;
   outline: none;
-  pointer-events: auto;
   position: absolute;
 
   // height: 110%;
@@ -16,6 +14,10 @@
 
   * {
     pointer-events: none;
+  }
+
+  & > * {
+    cursor: pointer;
   }
 
   & > img {
@@ -61,7 +63,7 @@
     }
   }
 
-  &:hover + [data-component='Minion']:after {
+  &[data-active='true']:hover + [data-component='Minion']:after {
     opacity: 1;
   }
 }

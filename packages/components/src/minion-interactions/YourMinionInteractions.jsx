@@ -110,7 +110,10 @@ export default function YourMinionInteractions(props) {
   // if (isAttacking) {
   //   return (
   return (
-    <div className="minion__interaction">
+    <div
+      className="minion__interaction"
+      data-active={activeState !== null ? true : false}
+    >
       <IsAttacking
         activeState={activeState === 'IS_ATTACKING' ? true : false}
         handleIsAttackingFunction={handleIsAttackingFunction}
