@@ -5,7 +5,13 @@ import { INTERACTIONS } from '@ccg/images';
 import { getMinionInteractionImage } from '@ccg/utils/src';
 
 export default function IsAttacking(props) {
-  const { activeState, handleIsAttackingFunction, hasBulwark } = props;
+  const {
+    activeState,
+    handleIsAttackingFunction,
+    hasBulwark,
+    isAttackingSrc,
+    isAttackingBulwarkSrc
+  } = props;
   const [styles, set, stop] = useSpring(() => ({
     opacity: 1,
     pointerEvents: 'auto',
@@ -39,9 +45,9 @@ export default function IsAttacking(props) {
       style={styles}
     >
       {hasBulwark ? (
-        <img src={getMinionInteractionImage('IsAttacking--Bulwark.png')} />
+        <img alt="" role="presentation" src={isAttackingBulwarkSrc} />
       ) : (
-        <img src={getMinionInteractionImage('IsAttacking--Default.png')} />
+        <img alt="" role="presentation" src={isAttackingSrc} />
       )}
     </animated.div>
   );
@@ -49,7 +55,9 @@ export default function IsAttacking(props) {
 
 IsAttacking.propTypes = {
   activeState: PropTypes.bool,
-  handleIsAttackingFunction: PropTypes.func
+  handleIsAttackingFunction: PropTypes.func,
+  isAttackingSrc: PropTypes.string,
+  isAttackingSrcBulwark: PropTypes.string
 };
 
 IsAttacking.defaultProps = {

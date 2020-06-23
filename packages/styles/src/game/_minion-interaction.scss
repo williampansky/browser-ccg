@@ -1,4 +1,5 @@
 .minion__interaction {
+  background: transparent;
   border-radius: var(--minion-border-radius);
   cursor: pointer;
   outline: none;
@@ -38,5 +39,29 @@
     border-top-right-radius: $percent;
     border-bottom-left-radius: calc(var(--minion-border-radius) - #{$percent});
     border-bottom-right-radius: calc(var(--minion-border-radius) - #{$percent});
+  }
+
+  // add pseudo elem to minion for hover fx
+  & + [data-component='Minion']:after {
+    background: mix(white, transparent, 25%);
+    border-radius: var(--minion-border-radius);
+    content: '';
+    height: 100%;
+    opacity: 0;
+    width: 100%;
+    pointer-events: none;
+    transition: opacity 600ms var(--animation-transition-cubic);
+    @include position-absolute(0, 0, 0, 0, 2);
+
+    // prettier-ignore
+    .minion__race--location & {
+      $percent: 35%; // 50% - $percent
+      border-bottom-left-radius: calc(var(--minion-border-radius) - #{$percent});
+      border-bottom-right-radius: calc(var(--minion-border-radius) - #{$percent});
+    }
+  }
+
+  &:hover + [data-component='Minion']:after {
+    opacity: 1;
   }
 }

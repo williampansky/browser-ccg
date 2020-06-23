@@ -15,7 +15,12 @@ export default function TheirMinionInteractions(props) {
     race,
     hasBulwark,
     canBeAttackedByMinion,
-    handleCanBeAttackedByMinionFunction
+    handleCanBeAttackedByMinionFunction,
+    interactionImages: {
+      canBeAttackedSrc,
+      canBeAttackedLocSrc,
+      canBeAttackedLocBulwarkSrc
+    }
   } = props;
 
   const [activeState, setActiveState] = useState(null);
@@ -44,6 +49,9 @@ export default function TheirMinionInteractions(props) {
       hasBulwark={hasBulwark}
       activeState={activeState === 'canBeAttackedByMinion' ? true : false}
       onClick={handleCanBeAttackedByMinionFunction}
+      canBeAttackedSrc={canBeAttackedSrc}
+      canBeAttackedLocSrc={canBeAttackedLocSrc}
+      canBeAttackedLocBulwarkSrc={canBeAttackedLocBulwarkSrc}
     />
   );
   // }

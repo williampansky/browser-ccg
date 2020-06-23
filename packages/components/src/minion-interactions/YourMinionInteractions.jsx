@@ -26,7 +26,13 @@ export default function YourMinionInteractions(props) {
     canAttack,
     isAttacking,
     handleCanAttackFunction,
-    handleIsAttackingFunction
+    handleIsAttackingFunction,
+    interactionImages: {
+      canAttackSrc,
+      canAttackBulwarkSrc,
+      isAttackingSrc,
+      isAttackingBulwarkSrc
+    }
   } = props;
 
   const [activeState, setActiveState] = useState(null);
@@ -110,12 +116,16 @@ export default function YourMinionInteractions(props) {
         handleIsAttackingFunction={handleIsAttackingFunction}
         race={race}
         hasBulwark={hasBulwark}
+        isAttackingSrc={isAttackingSrc}
+        isAttackingBulwarkSrc={isAttackingBulwarkSrc}
       />
       <CanAttack
         activeState={activeState === 'CAN_ATTACK' ? true : false}
         handleCanAttackFunction={handleCanAttackFunction}
         race={race}
         hasBulwark={hasBulwark}
+        canAttackSrc={canAttackSrc}
+        canAttackBulwarkSrc={canAttackBulwarkSrc}
       />
     </div>
   );

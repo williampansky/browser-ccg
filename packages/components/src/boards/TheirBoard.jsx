@@ -12,6 +12,7 @@ const TheirBoard = props => {
     moves: { attackMinionWithMinion },
     theirBoard,
     theirID,
+    interactionImages,
     mechanicImages
   } = props;
 
@@ -51,6 +52,7 @@ const TheirBoard = props => {
               slotObject={object}
               index={index}
               playerID={theirID}
+              interactionImages={interactionImages}
               mechanicImages={mechanicImages}
               handleCanBeAttackedByMinionFunction={() =>
                 handleCanBeAttackedByMinionFunction(index)

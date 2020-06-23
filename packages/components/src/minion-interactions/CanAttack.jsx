@@ -5,7 +5,14 @@ import { INTERACTIONS } from '@ccg/images';
 import { getMinionInteractionImage } from '@ccg/utils/src';
 
 export default function CanAttack(props) {
-  const { activeState, handleCanAttackFunction, hasBulwark } = props;
+  const {
+    activeState,
+    handleCanAttackFunction,
+    hasBulwark,
+    canAttackSrc,
+    canAttackBulwarkSrc
+  } = props;
+
   const [styles, set, stop] = useSpring(() => ({
     opacity: 1,
     pointerEvents: 'auto'
@@ -37,9 +44,9 @@ export default function CanAttack(props) {
       style={styles}
     >
       {hasBulwark ? (
-        <img src={getMinionInteractionImage('CanAttack--Bulwark.png')} />
+        <img alt="" role="presentation" src={canAttackBulwarkSrc} />
       ) : (
-        <img src={getMinionInteractionImage('CanAttack--Default.png')} />
+        <img alt="" role="presentation" src={canAttackSrc} />
       )}
     </animated.div>
   );

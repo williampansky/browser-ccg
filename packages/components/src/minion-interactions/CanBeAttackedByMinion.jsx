@@ -6,7 +6,16 @@ import { RACE } from '@ccg/enums/src';
 import { getMinionInteractionImage } from '@ccg/utils/src';
 
 export default function CanBeAttackedByMinion(props) {
-  const { activeState, onClick, race, hasBulwark } = props;
+  const {
+    activeState,
+    onClick,
+    race,
+    hasBulwark,
+    canBeAttackedSrc,
+    canBeAttackedLocSrc,
+    canBeAttackedLocBulwarkSrc
+  } = props;
+
   const [styles, set, stop] = useSpring(() => ({
     opacity: 1,
     pointerEvents: 'auto'
@@ -39,22 +48,12 @@ export default function CanBeAttackedByMinion(props) {
     >
       {race === RACE['LOCATION'] ? (
         hasBulwark ? (
-          <img
-            src={getMinionInteractionImage(
-              'CanBeAttackedByMinion--Location--Bulwark.png'
-            )}
-          />
+          <img alt="" role="presentation" src={canBeAttackedLocBulwarkSrc} />
         ) : (
-          <img
-            src={getMinionInteractionImage(
-              'CanBeAttackedByMinion--Location.png'
-            )}
-          />
+          <img alt="" role="presentation" src={canBeAttackedLocSrc} />
         )
       ) : (
-        <img
-          src={getMinionInteractionImage('CanBeAttackedByMinion--Default.png')}
-        />
+        <img alt="" role="presentation" src={canBeAttackedSrc} />
       )}
     </animated.div>
   );

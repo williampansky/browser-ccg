@@ -28,7 +28,15 @@ const BoardSlot = props => {
     handleIsAttackingFunction,
     handleCanBeAttackedByMinionFunction,
     index,
-    mechanicImages: { hasBoonSrc },
+    interactionImages,
+    mechanicImages: {
+      hasBoonSrc,
+      hasBubbleSrc,
+      hasDoubleAttackSrc,
+      hasEventListenerSrc,
+      hasOnDeathSrc,
+      hasPoisonSrc
+    },
     playerID,
     slotObject,
     slotObject: {
@@ -164,12 +172,14 @@ const BoardSlot = props => {
           isAttacking={isAttacking}
           handleCanAttackFunction={handleCanAttackFunction}
           handleIsAttackingFunction={handleIsAttackingFunction}
+          interactionImages={interactionImages}
         />
       ) : (
         <TheirMinionInteractions
           race={race}
           hasBulwark={hasBulwark}
           canBeAttackedByMinion={canBeAttackedByMinion}
+          interactionImages={interactionImages}
           handleCanBeAttackedByMinionFunction={
             handleCanBeAttackedByMinionFunction
           }
@@ -199,6 +209,11 @@ const BoardSlot = props => {
         flavor={flavor}
         hasBoon={hasBoon}
         hasBoonSrc={hasBoonSrc}
+        hasBubbleSrc={hasBubbleSrc}
+        hasDoubleAttackSrc={hasDoubleAttackSrc}
+        hasEventListenerSrc={hasEventListenerSrc}
+        hasOnDeathSrc={hasOnDeathSrc}
+        hasPoisonSrc={hasPoisonSrc}
         hasBubble={hasBubble}
         hasDoubleAttack={hasDoubleAttack}
         hasEventListener={hasEventListener}
