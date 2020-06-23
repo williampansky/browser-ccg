@@ -1,18 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSpring, animated } from 'react-spring';
+import { INTERACTIONS } from '@ccg/images';
+import { getMinionInteractionImage } from '@ccg/utils/src';
 
 export default function CanAttack(props) {
-  const { handleCanAttackFunction } = props;
+  const { activeState, handleCanAttackFunction, hasBulwark } = props;
   const [styles, set, stop] = useSpring(() => ({
-    background: 'var(--box-shadow-can-be-selected-color)',
-    opacity: 0
+    opacity: 1,
+    pointerEvents: 'auto'
   }));
 
+  const handleStyleSet = useCallback(
+    bool => {
+      set({
+        opacity: bool ? 1 : 0,
+        pointerEvents: bool ? 'auto' : 'none'
+      });
+    },
+    [set]
+  );
+
   useEffect(() => {
-    set({ opacity: 1 });
+    handleStyleSet(activeState);
     return () => stop();
-  }, [set, stop]);
+  }, [handleStyleSet, activeState, stop]);
 
   return (
     <animated.div
@@ -23,7 +35,13 @@ export default function CanAttack(props) {
       role="button"
       tabIndex={0}
       style={styles}
-    />
+    >
+      {hasBulwark ? (
+        <img src={getMinionInteractionImage('CanAttack--Bulwark.png')} />
+      ) : (
+        <img src={getMinionInteractionImage('CanAttack--Default.png')} />
+      )}
+    </animated.div>
   );
 }
 
@@ -32,5 +50,6 @@ CanAttack.propTypes = {
 };
 
 CanAttack.defaultProps = {
-  handleCanAttackFunction: () => {}
+  handleCanAttackFunction: () => {},
+  hasBulwark: false
 };

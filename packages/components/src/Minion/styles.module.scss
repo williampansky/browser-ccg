@@ -9,7 +9,6 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
   animation-timing-function: ease-out;
   background: none;
   border-radius: var(--minion-border-radius);
-  // box-shadow: $bs-default;
   box-sizing: border-box;
   font-family: var(--font-family-card);
   font-size: 20px;
@@ -17,13 +16,10 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
   height: var(--minion-height);
   pointer-events: none;
   position: relative;
-  transition-property: box-shadow, transform;
-  transition: 400ms cubic-bezier(0.19, 1, 0.22, 1);
   user-select: none;
   width: calc(var(--minion-height) / 1.25);
-  will-change: box-shadow, transform;
+  will-change: transform;
   z-index: 2;
-  // opacity: 0;
 
   * {
     user-select: none;
@@ -37,7 +33,6 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
   &.minion--is-attacking,
   [class*='target__slot-'] &,
   [class*='target__other_player'] & {
-    // box-shadow: $bs-default-hover;
     transform: scale(1.15);
     transition: transform 400ms var(--animation-transition-cubic);
   }
@@ -126,8 +121,15 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
   }
 
   &.minion__race--location {
-    & > div:nth-child(2) { left: -10px; bottom: -2px; } // attack badge
-    & > div:nth-child(3) { right: -10px; bottom: -2px; } // health badge
+    // attack badge
+    & > div:nth-child(2) {
+      left: -10px;
+      bottom: -2px;
+      & > img { filter: grayscale(1); }
+    }
+
+    // health badge
+    & > div:nth-child(3) { right: -10px; bottom: -2px; }
   }
 }
 

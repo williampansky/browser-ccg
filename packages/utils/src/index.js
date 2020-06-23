@@ -26,6 +26,7 @@ export { default as getIcon } from './get-icon';
 export { default as getPercentageChange } from './get-percentage-change';
 export { default as getCardDeckImage } from './get-card-deck-image';
 export { default as getMinionRaceClass } from './get-minion-race-class';
+export { default as getMinionInteractionImage } from './get-minion-interaction-image';
 
 // named
 export { getLengthOfString, fontSizeBasedOnCharacterLength } from './text';

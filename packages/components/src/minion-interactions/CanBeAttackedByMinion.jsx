@@ -1,18 +1,31 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSpring, animated } from 'react-spring';
+import { INTERACTIONS } from '@ccg/images';
+import { RACE } from '@ccg/enums/src';
+import { getMinionInteractionImage } from '@ccg/utils/src';
 
 export default function CanBeAttackedByMinion(props) {
-  const { onClick } = props;
+  const { activeState, onClick, race, hasBulwark } = props;
   const [styles, set, stop] = useSpring(() => ({
-    background: 'var(--box-shadow-can-be-attacked-color)',
-    opacity: 0
+    opacity: 1,
+    pointerEvents: 'auto'
   }));
 
+  const handleStyleSet = useCallback(
+    bool => {
+      set({
+        opacity: bool ? 1 : 0,
+        pointerEvents: bool ? 'auto' : 'none'
+      });
+    },
+    [set]
+  );
+
   useEffect(() => {
-    set({ opacity: 1 });
+    handleStyleSet(activeState);
     return () => stop();
-  }, [set, stop]);
+  }, [handleStyleSet, activeState, stop]);
 
   return (
     <animated.div
@@ -23,7 +36,27 @@ export default function CanBeAttackedByMinion(props) {
       role="button"
       tabIndex={0}
       style={styles}
-    />
+    >
+      {race === RACE['LOCATION'] ? (
+        hasBulwark ? (
+          <img
+            src={getMinionInteractionImage(
+              'CanBeAttackedByMinion--Location--Bulwark.png'
+            )}
+          />
+        ) : (
+          <img
+            src={getMinionInteractionImage(
+              'CanBeAttackedByMinion--Location.png'
+            )}
+          />
+        )
+      ) : (
+        <img
+          src={getMinionInteractionImage('CanBeAttackedByMinion--Default.png')}
+        />
+      )}
+    </animated.div>
   );
 }
 

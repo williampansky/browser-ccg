@@ -1,16 +1,30 @@
 .minion__interaction {
   border-radius: var(--minion-border-radius);
   cursor: pointer;
-  height: 110%;
   outline: none;
   pointer-events: auto;
   position: absolute;
-  width: 110%;
-  @include position-absolute(-5%, 0, 0, -5%, 0);
+
+  // height: 110%;
+  // width: 110%;
+  // @include position-absolute(-5%, 0, 0, -5%, 0);
+
+  height: 100%;
+  width: 100%;
+  @include position-absolute(0, 0, 0, 0, 0);
 
   * {
     pointer-events: none;
   }
+
+  & > img {
+    width: 100%;
+    transform: scale(1.35);
+  }
+
+  // .board__slot--is-attacking & {
+  //   transform: scale(1.15);
+  // }
 
   .minion__race--location & {
     $percent: 35%; // 50% - $percent
