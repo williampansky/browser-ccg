@@ -1,19 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { PLAYER_BOARDS } from '@ccg/enums';
+import { PLAYER_BOARDS, THEIR_INTERACTION_KEYS as intKeys } from '@ccg/enums';
 import { BoardSlot } from '@ccg/components';
 import { usePrevious } from '@ccg/hooks';
-
-/**
- * Used as the determining value in the `intClick()` function.
- * @name interactionKeys
- */
-const intKeys = {
-  1: 'canBeAttackedByMinion',
-  2: 'canBeAttackedByOnPlay',
-  3: 'canBeAttackedByPlayer',
-  4: 'canBeAttackedBySpell'
-};
 
 const TheirBoard = props => {
   const {

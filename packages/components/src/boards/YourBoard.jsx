@@ -1,23 +1,7 @@
 import React, { Fragment, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { PLAYER_BOARDS } from '@ccg/enums';
+import { PLAYER_BOARDS, YOUR_INTERACTION_KEYS as intKeys } from '@ccg/enums';
 import { BoardDropArea, BoardSlot } from '@ccg/components';
-
-/**
- * Used as the determining value in the `intClick()` function.
- * @name interactionKeys
- */
-const intKeys = {
-  1: 'canAttack',
-  2: 'isAttacking',
-  3: 'canBeBuffed',
-  4: 'canBeHealed',
-  5: 'canBeReturned',
-  6: 'canReceiveBubble',
-  7: 'canReceiveBulwark',
-  8: 'canReceiveDoubleAttack',
-  9: 'canReceiveRush'
-};
 
 const YourBoard = props => {
   const {
