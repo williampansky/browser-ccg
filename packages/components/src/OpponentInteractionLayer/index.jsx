@@ -10,6 +10,7 @@ import {
 
 const OpponentInteractionLayer = props => {
   const {
+    moves: { attackPlayerWithMinion },
     canBeAttackedByMinion,
     canBeAttackedByOnPlay,
     canBeAttackedByPlayer,
@@ -51,7 +52,7 @@ const OpponentInteractionLayer = props => {
     >
       <OpponentCanBeAttackedByMinion
         activeState={activeState === 'canBeAttackedByMinion' ? true : false}
-        onClick={() => console.log('canBeAttackedByMinion')}
+        onClick={() => attackPlayerWithMinion()}
       />
       <OpponentCanBeAttackedByOnPlay
         activeState={activeState === 'canBeAttackedByOnPlay' ? true : false}

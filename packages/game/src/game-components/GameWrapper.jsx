@@ -46,6 +46,7 @@ const GameWrapper = props => {
       <OpponentWrapper
         G={G}
         ctx={ctx}
+        moves={moves}
         playerID={theirID}
         parentComponent={'Opponent'}
         images={{
