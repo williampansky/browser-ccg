@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
-import useHover from 'react-use-hover';
+import { useHover } from '@ccg/hooks';
 import { PLAYER_BOARDS } from '@ccg/enums';
 import {
   getMechanicImage,
@@ -128,7 +128,7 @@ const BoardSlot = props => {
     }
   } = props;
 
-  const showCardOnHover = false;
+  const showCardOnHover = true;
   const hoveringTimer =
     canBeAttackedByMinion ||
     canBeAttackedByOnPlay ||
@@ -137,10 +137,7 @@ const BoardSlot = props => {
       ? 3000
       : 1400;
 
-  const [isHovering, hoverProps] = useHover({
-    mouseEnterDelayMS: hoveringTimer,
-    mouseLeaveDelayMS: 0
-  });
+  const [hoverRef, isHovered] = useHover();
 
   /**
    * Returns minion race in lower case format
@@ -151,14 +148,17 @@ const BoardSlot = props => {
     return `minion__race--${replaceConstant(str).toLowerCase()}`;
   }, []);
 
-  function determineIfCardHover() {
+  const determineIfCardHover = () => {
+    if (!showCardOnHover) return false;
+    // else
+    // setTimeout(() => {
     let bool = false;
-    if (isHovering) bool = true;
+    if (isHovered) bool = true;
     if (isAttacking) bool = false;
-    if (isHovering && canBeAttackedByMinion) bool = true;
-    if (isHovering && canBeAttackedByPlayer) bool = true;
-    if (isHovering && canBeAttackedBySpell) bool = true;
-    if (isHovering && canBeAttackedByOnPlay) bool = true;
+    if (isHovered && canBeAttackedByMinion) bool = false;
+    if (isHovered && canBeAttackedByPlayer) bool = false;
+    if (isHovered && canBeAttackedBySpell) bool = false;
+    if (isHovered && canBeAttackedByOnPlay) bool = false;
     if (canBeBuffed) bool = false;
     if (canBeDebuffed) bool = false;
     if (canBeExpired) bool = false;
@@ -169,8 +169,10 @@ const BoardSlot = props => {
     if (canReceiveBubble) bool = false;
     if (canReceiveBulwark) bool = false;
     if (canReceiveDoubleAttack) bool = false;
-    return showCardOnHover ? bool : false;
-  }
+
+    return bool;
+    // }, 100);
+  };
 
   // const killMinionCallback = useCallback(
   //   index => {
@@ -198,7 +200,7 @@ const BoardSlot = props => {
       data-slot={index}
       data-for={`${id}--${index}`}
       data-tip={true}
-      {...hoverProps}
+      ref={hoverRef}
     >
       {/* mechanics (above minion) */}
       {slotObject && hasBubble && <Bubble />}

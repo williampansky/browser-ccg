@@ -18,8 +18,8 @@ export default function CanBeAttackedByMinion(props) {
   } = props;
 
   const [styles, set, stop] = useSpring(() => ({
-    opacity: 1,
-    pointerEvents: 'auto'
+    opacity: 0,
+    pointerEvents: 'none'
   }));
 
   const handleStyleSet = useCallback(

@@ -13,8 +13,8 @@ export default function IsAttacking(props) {
     isAttackingBulwarkSrc
   } = props;
   const [styles, set, stop] = useSpring(() => ({
-    opacity: 1,
-    pointerEvents: 'auto',
+    opacity: 0,
+    pointerEvents: 'none',
     transform: 'scale(1.15)'
   }));
 

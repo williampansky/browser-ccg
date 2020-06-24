@@ -31,7 +31,7 @@ export default function CanAttack(props) {
   useEffect(() => {
     handleStyleSet(activeState);
     return () => stop();
-  }, [handleStyleSet, activeState, stop]);
+  }, [handleStyleSet, activeState, set, stop]);
 
   return (
     <animated.div
