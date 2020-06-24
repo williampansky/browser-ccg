@@ -1,7 +1,8 @@
-import { TYPE } from '@ccg/enums';
 import { replaceConstant } from '@ccg/utils';
+import { CARDS } from '@ccg/images';
+import { TYPE } from '@ccg/enums';
 
-function getImageObject(cardRarity, cardType, images = {}, isGold = false) {
+function getImageObject(cardRarity, cardType, isGold = false, images = CARDS) {
   const rarity = replaceConstant(cardRarity).toUpperCase();
 
   const srcString =
@@ -22,9 +23,9 @@ function getImageObject(cardRarity, cardType, images = {}, isGold = false) {
   return imgMatch;
 }
 
-export default function getCardBaseImage(cardRarity, cardType, images, isGold) {
+export default function getCardBaseImage(cardRarity, cardType, isGold) {
   try {
-    const imgObj = getImageObject(cardRarity, cardType, images, isGold);
+    const imgObj = getImageObject(cardRarity, cardType, isGold);
     const { value } = imgObj;
     return value;
   } catch (error) {

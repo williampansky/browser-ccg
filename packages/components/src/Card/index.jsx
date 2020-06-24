@@ -239,7 +239,8 @@ Card.defaultProps = {
   spellDmgBoon: 0,
   targetingArrowText: null,
   text: null,
-  type: TYPE['NONE']
+  type: TYPE['NONE'],
+  uuid: ''
 };
 
 export default Card;

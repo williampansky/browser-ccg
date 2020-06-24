@@ -11,8 +11,6 @@ const Hand = props => {
     cardsInHand,
     deselectCardFunction,
     handleCardInteractionClick,
-    imagesDataCards,
-    imagesDataSets,
     selectedCardObject,
     selectedCardUuid,
     selectedCardInteractionContext,
@@ -93,15 +91,11 @@ const Hand = props => {
       >
         {cardsInHand.length ? (
           cardsInHand.map((object, index) => {
-            const { id, rarity, set, type, uuid } = object;
+            const { id, isGolden, rarity, set, type, uuid } = object;
             return (
               <HandSlot
-                cardImageBaseSrc={getCardBaseImage(
-                  rarity,
-                  type,
-                  imagesDataCards
-                )}
-                cardImageFlairSrc={getCardFlairImage(id, set, imagesDataSets)}
+                cardImageBaseSrc={getCardBaseImage(rarity, type)}
+                cardImageFlairSrc={getCardFlairImage(id, set, isGolden)}
                 cardObject={object}
                 cardUuid={uuid}
                 handleCardInteractionClick={handleCardInteractionClick}
