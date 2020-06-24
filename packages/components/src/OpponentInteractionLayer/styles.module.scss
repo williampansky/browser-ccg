@@ -1,0 +1,13 @@
+.opponent__interaction__layer {
+  background: transparent;
+  display: block;
+  height: 100%;
+  outline: none;
+  position: absolute;
+  width: 100%;
+  z-index: calc(var(--zIndex-Hero) - 1);
+
+  & + [data-component='Hero'] {
+    pointer-events: none;
+  }
+}

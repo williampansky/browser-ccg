@@ -1,0 +1,22 @@
+.opponent__interaction {
+  background: transparent;
+  cursor: pointer;
+  height: 100%;
+  outline: none;
+  position: absolute;
+  width: 100%;
+  @include position-absolute(0, 0, 0, 0, 1);
+
+  * {
+    pointer-events: none;
+  }
+
+  & > * {
+    cursor: pointer;
+  }
+
+  & > img {
+    width: 100%;
+    transform: scale(1.35);
+  }
+}

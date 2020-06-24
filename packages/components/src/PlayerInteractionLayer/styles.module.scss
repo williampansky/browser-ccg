@@ -1,19 +1,9 @@
-$sizeH: 120px;
-$ratio: 1.333333333;
-$offset: 20px;
-
 .player__interaction__layer {
   background: transparent;
-  height: calc(#{$sizeH});
-  width: calc(#{$sizeH} / #{$ratio});
   display: block;
-  position: absolute;
-  top: calc(#{$offset} / -1.75);
-  // box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  z-index: 1;
+  height: 100%;
   outline: none;
-
-  * {
-    pointer-events: none;
-  }
+  position: absolute;
+  width: 100%;
+  z-index: 1;
 }

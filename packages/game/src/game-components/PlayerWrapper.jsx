@@ -20,6 +20,7 @@ const PlayerWrapper = props => {
     ctx,
     moves,
     playerID,
+    parentComponent,
     images: {
       CARDS: IMAGES_CARDS,
       SETS: IMAGES_SETS,
@@ -51,6 +52,7 @@ const PlayerWrapper = props => {
       heroSymbol={playerHero[playerID]}
       imagesDataCards={IMAGES_CARDS}
       imagesDataSets={IMAGES_SETS}
+      parentComponent={parentComponent}
       playerDeck={deckInfo[playerID]}
       playerHealthCurrent={playerHealth[playerID]}
       playerHealthTotal={30}

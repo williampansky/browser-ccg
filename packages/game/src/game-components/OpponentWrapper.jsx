@@ -5,6 +5,7 @@ import { Opponent } from '@ccg/components';
 
 const OpponentWrapper = props => {
   const {
+    G,
     G: {
       deckInfo,
       playerHero,
@@ -17,6 +18,9 @@ const OpponentWrapper = props => {
       selectedCardInteractionContext,
       counts
     },
+    ctx,
+    moves,
+    parentComponent,
     playerID,
     images: {
       CARDS: IMAGES_CARDS,
@@ -34,6 +38,9 @@ const OpponentWrapper = props => {
 
   return (
     <Opponent
+      G={G}
+      ctx={ctx}
+      moves={moves}
       abilitiesImageBase={ABILITIES_ICON}
       abilitiesImageClose={ABILITIES_ICON_CLOSE}
       avatarPlaceholderImageSrc={PLACEHOLDER_IMAGE}
@@ -51,6 +58,7 @@ const OpponentWrapper = props => {
       playerDeck={deckInfo[playerID]}
       playerHealthCurrent={playerHealth[playerID]}
       playerHealthTotal={30}
+      parentComponent={parentComponent}
       playerName={playerName[playerID]}
       // selectCardFunction={obj => setSelectedCardObject(obj)}
       selectedCardObject={selectedCardObject[playerID]}
