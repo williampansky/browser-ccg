@@ -1,21 +1,40 @@
 .board__slot--card-tooltip {
-  --card-height: 350px;
+  --card-height: 250px;
+
+  cursor: default;
   position: absolute;
   pointer-events: none;
   opacity: 0;
   animation-duration: 200ms;
+  animation-delay: 800ms;
   top: calc(var(--card-height) * -0.8);
   right: calc(var(--card-height) * -0.6);
   z-index: 1000;
   @include display-flex(column nowrap, flex-start, flex-start);
+
+  &.show--left {
+    right: auto;
+    left: calc(var(--card-height) * -0.6);
+  }
 }
 
-.board__slot--card-tooltip .tooltip__mechanics__wrapper {
-  margin: calc(var(--card-height) / 40) 0 0 calc(var(--card-height) / 1.315);
-  max-width: calc(var(--card-height) / 2.500263249);
-  // max-width: calc(var(--card-height) / 1.400263249);
-  position: absolute;
-  width: 100%;
+.board__slot--card-tooltip {
+  .tooltip__mechanics__wrapper {
+    margin-bottom: 0;
+    margin-left: calc(var(--card-height) / 1.315);
+    margin-right: 0;
+    margin-top: calc(var(--card-height) / 40);
+    max-width: calc(var(--card-height) / 1.8263249);
+    position: absolute;
+    width: 100%;
+  }
+
+  &.show--left .tooltip__mechanics__wrapper {
+    left: 0;
+    margin-left: calc(calc(var(--card-height) / 1.715) * -1);
+    margin-right: auto;
+    right: auto;
+  }
 }
 
 .board__slot--card-tooltip .tooltip__mechanics__wrapper .mechanic__item {
@@ -27,7 +46,7 @@
   background-size: cover;
   border-radius: 4px;
   border: 2px solid mix(white, $bg, 20%);
-  font-size: 12px;
+  font-size: 11px;
   padding: 8px 10px 10px;
 
   & + .mechanic__item {

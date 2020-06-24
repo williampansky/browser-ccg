@@ -50,6 +50,14 @@ const SETS = importAll(require.context('./sets', true, /\.(jpg)$/));
 const HEROS = importAll(require.context('./heros', true, /\.(jpg)$/));
 const ICONS = importAll(require.context('./icons', true, /\.(svg)$/));
 
+// ui
+const UI_IMAGES = importAll(
+  require.context('./ui', true, /\.(png|jpe?g|svg)$/)
+);
+const UI_TOOLTIP = importAll(require.context('./ui', false, /\.(png)$/))[
+  'UI_Tooltip.png'
+];
+
 export {
   ABILITIES_ICON_CLOSE,
   ABILITIES_ICON,
@@ -62,7 +70,9 @@ export {
   MECHANICS,
   PLACEHOLDER_BASE_IMAGE,
   PLACEHOLDER_IMAGE,
-  SETS
+  SETS,
+  UI_IMAGES,
+  UI_TOOLTIP
 };
 
 export default IMAGES;

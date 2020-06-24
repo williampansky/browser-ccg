@@ -155,10 +155,10 @@ const BoardSlot = props => {
     let bool = false;
     if (isHovered) bool = true;
     if (isAttacking) bool = false;
-    if (isHovered && canBeAttackedByMinion) bool = false;
-    if (isHovered && canBeAttackedByPlayer) bool = false;
-    if (isHovered && canBeAttackedBySpell) bool = false;
-    if (isHovered && canBeAttackedByOnPlay) bool = false;
+    if (isHovered && canBeAttackedByMinion) bool = true;
+    if (isHovered && canBeAttackedByPlayer) bool = true;
+    if (isHovered && canBeAttackedBySpell) bool = true;
+    if (isHovered && canBeAttackedByOnPlay) bool = true;
     if (canBeBuffed) bool = false;
     if (canBeDebuffed) bool = false;
     if (canBeExpired) bool = false;
@@ -201,6 +201,7 @@ const BoardSlot = props => {
       data-for={`${id}--${index}`}
       data-tip={true}
       ref={hoverRef}
+      style={{ zIndex: isHovered ? '100' : '' }}
     >
       {/* mechanics (above minion) */}
       {slotObject && hasBubble && <Bubble />}
@@ -304,9 +305,10 @@ const BoardSlot = props => {
         <div
           className={[
             'board__slot--card-tooltip',
-            determineIfCardHover()
-              ? 'uk-animation-scale-up uk-transform-origin-bottom-left'
-              : ''
+            index === 5 || index === 6
+              ? 'show--left uk-transform-origin-bottom-right'
+              : 'uk-transform-origin-bottom-left',
+            determineIfCardHover() ? 'uk-animation-scale-up' : ''
           ].join(' ')}
           id={`${id}--${index}`}
         >

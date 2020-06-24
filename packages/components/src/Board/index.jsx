@@ -5,7 +5,8 @@ import { TheirBoard, YourBoard } from '@ccg/components';
 import styles from './styles.module.scss';
 import {
   getMechanicImage as gMI,
-  getMinionInteractionImage as gII
+  getMinionInteractionImage as gII,
+  getUiImage
 } from '@ccg/utils';
 
 const Board = props => {
@@ -44,6 +45,8 @@ const Board = props => {
     isAttackingBulwark: gII('IsAttacking--Bulwark.png')
   };
 
+  const uiTooltipImage = getUiImage('UI_Tooltip.png');
+
   return (
     <div className={styles['board']} data-component="Board">
       <TheirBoard
@@ -53,6 +56,7 @@ const Board = props => {
         theirBoard={theirBoard}
         theirID={theirID}
         playerBoard={PLAYER_BOARDS[2]}
+        uiTooltipSrc={uiTooltipImage}
         interactionImages={{
           canBeAttackedSrc: intImages.canBeAttacked,
           canBeAttackedBulwarkSrc: intImages.canBeAttackedBulwark,
@@ -78,6 +82,7 @@ const Board = props => {
         playerBoard={PLAYER_BOARDS[1]}
         cardIsSelected={cardIsSelected}
         cardIsLocked={cardIsLocked}
+        uiTooltipSrc={uiTooltipImage}
         minionIsSelected={selectedMinionObject[yourID] ? true : false}
         interactionImages={{
           canAttackSrc: intImages.canAttack,

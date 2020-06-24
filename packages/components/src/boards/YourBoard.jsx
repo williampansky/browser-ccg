@@ -14,7 +14,8 @@ const YourBoard = props => {
     cardIsLocked,
     minionIsSelected,
     interactionImages,
-    mechanicImages
+    mechanicImages,
+    uiTooltipSrc
   } = props;
 
   const { deselectMinion, playMinionCard, selectMinion } = moves;
@@ -79,6 +80,7 @@ const YourBoard = props => {
                 moves={moves}
                 playerID={yourID}
                 slotObject={object}
+                uiTooltipSrc={uiTooltipSrc}
               />
 
               {yourBoard.length <= 6 ? (

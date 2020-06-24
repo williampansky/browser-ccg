@@ -18,7 +18,8 @@ const TheirBoard = props => {
     theirBoard,
     theirID,
     interactionImages,
-    mechanicImages
+    mechanicImages,
+    uiTooltipSrc
   } = props;
 
   const [theirBoardArray, setTheirBoardArray] = useState([]);
@@ -79,6 +80,7 @@ const TheirBoard = props => {
               mechanicImages={mechanicImages}
               playerID={theirID}
               slotObject={object}
+              uiTooltipSrc={uiTooltipSrc}
             />
           );
         })}
