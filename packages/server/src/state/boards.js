@@ -2,7 +2,7 @@ import { _dMCA, _dAMCA, _eMCA, _eAMCA } from './boards.can-attack';
 import { _dMCBA, _dAMCBA, _eMCBA, _eAMCBA } from './boards.can-be-attacked';
 import { _dMCBB, _dAMCBB, _eMCBB, _eAMCBB } from './boards.can-be-buffed';
 import { _dMCBH, _dAMCBH, _eMCBH, _eAMCBH } from './boards.can-be-healed';
-import { _dAMT, _dBT, _dHT, _dST, _dWT } from './boards.determinations';
+import { _dAMT, _dBT, _dHT, _dOPT, _dST } from './boards.determinations';
 import { _kM, _kM0 } from './boards.kill-minion';
 import { _aTMH, _sFMH } from './boards.minion-health';
 import { _pC } from './boards.place-minion-on-board';
@@ -39,8 +39,8 @@ const boards = {
   determineAttackTargets: (G, player) => _dAMT(G, player),
   determineBuffTargets: (G, player, index) => _dBT(G, player, index),
   determineHealTargets: (G, player, index) => _dHT(G, player, index),
+  determineOnPlayTargets: (G, player) => _dOPT(G, player),
   determineSpellTargets: (G, player) => _dST(G, player),
-  determineWarcryTargets: (G, player) => _dWT(G, player),
 
   // canAttack
   disableCanAttack: (G, player, index) => _dMCA(G, player, index),

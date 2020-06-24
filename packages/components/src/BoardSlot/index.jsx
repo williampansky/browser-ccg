@@ -29,9 +29,9 @@ import {
 const BoardSlot = props => {
   const {
     board,
-    handleCanAttackFunction,
-    handleIsAttackingFunction,
-    handleCanBeAttackedByMinionFunction,
+    handleCanAttackFn,
+    handleIsAttackingFn,
+    handleCanBeAttackedByMinionFn,
     index,
     interactionImages,
     mechanicImages: {
@@ -216,8 +216,8 @@ const BoardSlot = props => {
           hasBulwark={hasBulwark}
           canAttack={canAttack}
           isAttacking={isAttacking}
-          handleCanAttackFunction={handleCanAttackFunction}
-          handleIsAttackingFunction={handleIsAttackingFunction}
+          handleCanAttackFunction={handleCanAttackFn}
+          handleIsAttackingFunction={handleIsAttackingFn}
           interactionImages={interactionImages}
         />
       ) : (
@@ -226,9 +226,7 @@ const BoardSlot = props => {
           hasBulwark={hasBulwark}
           canBeAttackedByMinion={canBeAttackedByMinion}
           interactionImages={interactionImages}
-          handleCanBeAttackedByMinionFunction={
-            handleCanBeAttackedByMinionFunction
-          }
+          handleCanBeAttackedByMinionFunction={handleCanBeAttackedByMinionFn}
         />
       )}
 

@@ -4,12 +4,28 @@ import { PLAYER_BOARDS } from '@ccg/enums';
 import { BoardSlot } from '@ccg/components';
 import { usePrevious } from '@ccg/hooks';
 
+/**
+ * Used as the determining value in the `intClick()` function.
+ * @name interactionKeys
+ */
+const intKeys = {
+  1: 'canBeAttackedByMinion',
+  2: 'canBeAttackedByOnPlay',
+  3: 'canBeAttackedByPlayer',
+  4: 'canBeAttackedBySpell'
+};
+
 const TheirBoard = props => {
   const {
     G,
     ctx,
     moves,
-    moves: { attackMinionWithMinion },
+    moves: {
+      attackMinionWithMinion,
+      attackMinionWithOnPlay,
+      attackMinionWithPlayer,
+      attackMinionWithSpell
+    },
     theirBoard,
     theirID,
     interactionImages,
@@ -30,11 +46,27 @@ const TheirBoard = props => {
     handleTheirBoardArrayCallback(theirBoard);
   }, [handleTheirBoardArrayCallback, theirBoard]);
 
-  const handleCanBeAttackedByMinionFunction = useCallback(
-    slotIndexClicked => {
-      return attackMinionWithMinion(slotIndexClicked);
+  const intClick = useCallback(
+    (key, slotIndexClicked) => {
+      switch (key) {
+        case intKeys[1]:
+          return attackMinionWithMinion(slotIndexClicked);
+        case intKeys[2]:
+          return attackMinionWithOnPlay(slotIndexClicked);
+        case intKeys[3]:
+          return attackMinionWithPlayer(slotIndexClicked);
+        case intKeys[4]:
+          return attackMinionWithSpell(slotIndexClicked);
+        default:
+          return;
+      }
     },
-    [attackMinionWithMinion]
+    [
+      attackMinionWithMinion,
+      attackMinionWithOnPlay,
+      attackMinionWithPlayer,
+      attackMinionWithSpell
+    ]
   );
 
   return (
@@ -47,17 +79,17 @@ const TheirBoard = props => {
         {theirBoardArray.map((object, index) => {
           return (
             <BoardSlot
-              key={`slot_${index}`}
               board={PLAYER_BOARDS[2]}
-              slotObject={object}
+              handleCanBeAttackedByMinionFn={() => intClick(intKeys[1], index)}
+              handleCanBeAttackedByOnPlayFn={() => intClick(intKeys[2], index)}
+              handleCanBeAttackedByPlayerFn={() => intClick(intKeys[3], index)}
+              handleCanBeAttackedBySpellFn={() => intClick(intKeys[4], index)}
               index={index}
-              playerID={theirID}
               interactionImages={interactionImages}
+              key={`slot_${index}`}
               mechanicImages={mechanicImages}
-              handleCanBeAttackedByMinionFunction={() =>
-                handleCanBeAttackedByMinionFunction(index)
-              }
-              // onClick={() => handleClick(index)}
+              playerID={theirID}
+              slotObject={object}
             />
           );
         })}
