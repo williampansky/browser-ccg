@@ -1,4 +1,4 @@
-$enableCssBubblesAnimation: false;
+$enableCssBubblesAnimation: true;
 
 @if $enableCssBubblesAnimation {
   // @see https://codepen.io/artursopelnik/pen/yXogRQ
@@ -55,5 +55,9 @@ $enableCssBubblesAnimation: false;
     100% {
       bottom: 100%;
     }
+  }
+} @else {
+  .css__bubbles {
+    display: none;
   }
 }
