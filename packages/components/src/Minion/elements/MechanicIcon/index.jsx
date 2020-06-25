@@ -33,7 +33,7 @@ const MechanicIcon = props => {
   } else if (hasOnDeath) {
     return (
       <div className={styles['minion__mechanics']}>
-        <img alt="hasOnDeath" src={hasDoubleAttackSrc} />
+        <img alt="hasOnDeath" src={hasOnDeath} />
       </div>
     );
   } else if (hasEventListener) {
@@ -51,7 +51,7 @@ const MechanicIcon = props => {
   } else if (hasDoubleAttack) {
     return (
       <div className={styles['minion__mechanics']}>
-        <img alt="hasDoubleAttack" src={hasOnDeathSrc} />
+        <img alt="hasDoubleAttack" src={hasDoubleAttackSrc} />
       </div>
     );
   } else {

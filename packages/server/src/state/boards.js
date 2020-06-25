@@ -15,7 +15,7 @@ const boards = {
       { ...createBoardSlotObject('CORE_117'), hasBulwark: true },
       { ...createBoardSlotObject('CORE_112'), canAttack: true },
       { ...createBoardSlotObject('CORE_110'), canAttack: true },
-      { ...createBoardSlotObject('CORE_099'), canAttack: true },
+      { ...createBoardSlotObject('CORE_099'), canAttack: true, hasDoubleAttack: true },
       { ...createBoardSlotObject('CORE_085'), hasEventListener: true },
       { ...createBoardSlotObject('CORE_082') },
       { ...createBoardSlotObject('CORE_071'), hasEventListener: true }

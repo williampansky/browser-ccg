@@ -36,7 +36,6 @@ const Minion = props => {
     hasBoon,
     hasBoonSrc,
     hasBubble,
-    hasBubbleSrc,
     hasDoubleAttack,
     hasDoubleAttackSrc,
     hasEventListener,
