@@ -9,6 +9,7 @@ export default function HasBulwarkBackground({ imgSrc, race }) {
   React.useEffect(() => {
     setIsAnimating(true)
     setTimeout(() => { setIsAnimating(false); }, 200);
+    return () => setIsAnimating(false);
   }, []);
 
   return (

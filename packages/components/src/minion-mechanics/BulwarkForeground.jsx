@@ -8,6 +8,7 @@ export default function HasBulwarkForeground({ imgSrc }) {
   React.useEffect(() => {
     setIsAnimating(true)
     setTimeout(() => { setIsAnimating(false); }, 200);
+    return () => setIsAnimating(false);
   }, []);
 
   return (
