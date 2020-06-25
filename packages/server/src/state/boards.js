@@ -12,22 +12,22 @@ import createBoardSlotObject from '../creators/create-board-slot-object';
 const boards = {
   __DATA_MODEL: {
     '0': [
-      { ...createBoardSlotObject('CORE_001'), canAttack: true },
-      { ...createBoardSlotObject('CORE_002'), canAttack: true, hasBulwark: true },
-      { ...createBoardSlotObject('CORE_003'), canAttack: true, hasBoon: true },
-      { ...createBoardSlotObject('CORE_011') },
-      { ...createBoardSlotObject('CORE_005') },
-      { ...createBoardSlotObject('CORE_006') },
-      { ...createBoardSlotObject('CORE_062') }
+      { ...createBoardSlotObject('CORE_117'), hasBulwark: true },
+      { ...createBoardSlotObject('CORE_112'), canAttack: true },
+      { ...createBoardSlotObject('CORE_110'), canAttack: true },
+      { ...createBoardSlotObject('CORE_099'), canAttack: true },
+      { ...createBoardSlotObject('CORE_085'), hasEventListener: true },
+      { ...createBoardSlotObject('CORE_082') },
+      { ...createBoardSlotObject('CORE_071'), hasEventListener: true }
     ],
     '1': [
-      { ...createBoardSlotObject('CORE_004') },
-      { ...createBoardSlotObject('CORE_005'), hasRush: true },
-      { ...createBoardSlotObject('CORE_006') },
-      { ...createBoardSlotObject('CORE_007'), hasNoAttack: true },
-      { ...createBoardSlotObject('CORE_008') },
-      { ...createBoardSlotObject('CORE_009') },
-      { ...createBoardSlotObject('CORE_130'), hasBoon: true, hasNoAttack: true }
+      { ...createBoardSlotObject('CORE_118') },
+      { ...createBoardSlotObject('CORE_062'), hasBoon: true },
+      { ...createBoardSlotObject('CORE_061'), hasEventListener: true },
+      { ...createBoardSlotObject('CORE_059') },
+      { ...createBoardSlotObject('CORE_054') },
+      { ...createBoardSlotObject('CORE_041') },
+      { ...createBoardSlotObject('CORE_039'), hasBulwark: true }
     ]
   },
 

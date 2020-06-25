@@ -12,6 +12,7 @@ import playerCanAttack from './state/player-can-attack';
 import playerCanBeAttacked from './state/player-can-be-attacked';
 import playerCanBeHealed from './state/player-can-be-healed';
 import playerHealth from './state/player-health';
+import playerHero from './state/player-hero';
 import playerHeroAbilities from './state/player-hero-abilities';
 import playerIsAttacking from './state/player-is-attacking';
 import playerIsDisabled from './state/player-is-disabled';
@@ -46,7 +47,7 @@ export default {
   playerCanBeHealed: playerCanBeHealed.__DATA_MODEL,
   playerHasAttacked: { '0': false, '1': false },
   playerHealth: playerHealth.__DATA_MODEL,
-  playerHero: { '0': '%HERO_ZEUS%', '1': '%HERO_EXILE%' },
+  playerHero: playerHero.__DATA_MODEL,
   playerHeroAbilities: playerHeroAbilities.__DATA_MODEL,
   playerIsAttacking: playerIsAttacking.__DATA_MODEL,
   playerIsDisabled: playerIsDisabled.__DATA_MODEL,
