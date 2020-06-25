@@ -8,10 +8,14 @@ import { _aTMH, _sFMH } from './boards.minion-health';
 import { _pC } from './boards.place-minion-on-board';
 import createBoardSlotObject from '../creators/create-board-slot-object';
 
+const boardConfig = {
+  enableDebugSlots: false
+};
+
 // prettier-ignore
 const boards = {
   __DATA_MODEL: {
-    '0': [
+    '0': boardConfig.enableDebugSlots ? [
       { ...createBoardSlotObject('CORE_117'), hasBulwark: true },
       { ...createBoardSlotObject('CORE_112'), canAttack: true },
       { ...createBoardSlotObject('CORE_110'), canAttack: true },
@@ -19,8 +23,8 @@ const boards = {
       { ...createBoardSlotObject('CORE_085'), hasEventListener: true },
       { ...createBoardSlotObject('CORE_082') },
       { ...createBoardSlotObject('CORE_071'), hasEventListener: true }
-    ],
-    '1': [
+    ] : [],
+    '1': boardConfig.enableDebugSlots ? [
       { ...createBoardSlotObject('CORE_118') },
       { ...createBoardSlotObject('CORE_062'), hasBoon: true },
       { ...createBoardSlotObject('CORE_061'), hasEventListener: true },
@@ -28,7 +32,7 @@ const boards = {
       { ...createBoardSlotObject('CORE_054') },
       { ...createBoardSlotObject('CORE_041') },
       { ...createBoardSlotObject('CORE_039'), hasBulwark: true }
-    ]
+    ] : []
   },
 
   // minion health
