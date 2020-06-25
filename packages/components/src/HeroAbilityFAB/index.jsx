@@ -45,7 +45,7 @@ const HeroAbilityFAB = ({
     [onAbilityClick]
   );
 
-  return (
+  return heroAbilities.length ? (
     <div
       className={styles['hero__ability__fab']}
       data-component="HeroAbilityFAB"
@@ -121,7 +121,7 @@ const HeroAbilityFAB = ({
           .reverse()}
       </Fab>
     </div>
-  );
+  ) : null;
 };
 
 HeroAbilityFAB.propTypes = {
