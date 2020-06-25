@@ -1,20 +1,33 @@
+// prettier-ignore
 .board__slot--card-tooltip {
-  --card-height: 250px;
+                                  --card-height: 250px;
+  @include breakpoint('xlarge') { --card-height: 300px; }
+  @include breakpoint('hd')     { --card-height: 350px; }
+}
 
-  cursor: default;
-  position: absolute;
-  pointer-events: none;
-  opacity: 0;
-  animation-duration: 200ms;
+.board__slot--card-tooltip {
   animation-delay: 1200ms;
-  top: calc(var(--card-height) * -0.8);
+  animation-duration: 200ms;
+  cursor: default;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
   right: calc(var(--card-height) * -0.6);
+  top: calc(var(--card-height) * -0.8);
   z-index: 1000;
   @include display-flex(column nowrap, flex-start, flex-start);
 
   &.show--left {
     right: auto;
     left: calc(var(--card-height) * -0.6);
+  }
+
+  @include breakpoint('xlarge') {
+    top: calc(var(--card-height) * -0.7);
+  }
+
+  @include breakpoint('hd') {
+    top: calc(var(--card-height) * -0.7);
   }
 }
 

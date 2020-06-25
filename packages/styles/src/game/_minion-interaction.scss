@@ -55,8 +55,9 @@
     opacity: 0.465;
     width: 100%;
     pointer-events: none;
-    transition: box-shadow 400ms var(--animation-transition-cubic);
-    will-change: box-shadow;
+    transition: 400ms var(--animation-transition-cubic);
+    transition-property: box-shadow, opacity;
+    will-change: box-shadow, opacity;
     @include position-absolute(0, 0, 0, 0, 2);
 
     // prettier-ignore
@@ -69,9 +70,38 @@
 
   &[data-active='true']:hover + [data-component='Minion']:after {
     box-shadow: inset 0px 0px 0px 10px white;
+  }
+}
 
-    .board__slot--is-attacking & {
-      box-shadow: inset 0px 0px 0px 0px white;
-    }
+// canBeAttacked
+[data-can-be-attacked='true'] {
+  .minion__interaction + [data-component='Minion']:after {
+    box-shadow: inset 0px 0px 0px 0px var(--box-shadow-can-be-attacked-color);
+    opacity: 0.75;
+  }
+
+  .minion__interaction[data-active='true']:hover
+    + [data-component='Minion']:after {
+    box-shadow: inset 0px 0px 0px 10px var(--box-shadow-can-be-attacked-color);
+  }
+}
+
+// canAttack
+[data-can-attack='true'] {
+  .minion__interaction + [data-component='Minion']:after {
+    box-shadow: inset 0px 0px 0px 0px var(--box-shadow-can-be-selected-color);
+    opacity: 0.625;
+  }
+
+  .minion__interaction[data-active='true']:hover
+    + [data-component='Minion']:after {
+    box-shadow: inset 0px 0px 0px 10px var(--box-shadow-can-be-selected-color);
+  }
+}
+
+// isAttacking
+.minion__interaction + [data-component='Minion']:after {
+  .board__slot--is-attacking & {
+    opacity: 0;
   }
 }

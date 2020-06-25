@@ -150,8 +150,7 @@ const BoardSlot = props => {
 
   const determineIfCardHover = () => {
     if (!showCardOnHover) return false;
-    // else
-    // setTimeout(() => {
+
     let bool = false;
     if (isHovered) bool = true;
     if (isAttacking) bool = false;
@@ -171,7 +170,15 @@ const BoardSlot = props => {
     if (canReceiveDoubleAttack) bool = false;
 
     return bool;
-    // }, 100);
+  };
+
+  const handleCanBeAttackedAttr = () => {
+    let bool = false;
+    if (canBeAttackedByMinion) bool = true;
+    if (canBeAttackedByPlayer) bool = true;
+    if (canBeAttackedBySpell) bool = true;
+    if (canBeAttackedByOnPlay) bool = true;
+    return bool;
   };
 
   // const killMinionCallback = useCallback(
@@ -195,6 +202,8 @@ const BoardSlot = props => {
         isAttacking ? 'board__slot--is-attacking' : ''
       ].join(' ')}
       data-component="BoardSlot"
+      data-can-attack={canAttack}
+      data-can-be-attacked={handleCanBeAttackedAttr()}
       data-has-bulwark={hasBulwark}
       data-is-empty={slotObject === null}
       data-slot={index}
