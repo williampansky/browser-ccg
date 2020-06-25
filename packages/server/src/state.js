@@ -1,40 +1,42 @@
 import actionPoints from './state/action-points';
 import boards from './state/boards';
-import buffs from './state/buffs';
 import cardBack from './state/card-back';
 import counts from './state/counts';
 import deckInfo from './state/deck-info';
 import hoveringCardIndex from './state/hovering-card-index';
+import onPlayObject from './state/onplay-object';
 import playedCards from './state/played-cards';
 import playerAttackValue from './state/player-attack-value';
+import playerBuffs from './state/player-buffs';
 import playerCanAttack from './state/player-can-attack';
 import playerCanBeAttacked from './state/player-can-be-attacked';
 import playerCanBeHealed from './state/player-can-be-healed';
 import playerHealth from './state/player-health';
+import playerHeroAbilities from './state/player-hero-abilities';
 import playerIsAttacking from './state/player-is-attacking';
 import playerIsDisabled from './state/player-is-disabled';
 import players from './state/players';
 import playerShieldPoints from './state/player-shield-points';
 import playerSpellDamage from './state/player-spell-damage';
 import playerWeapon from './state/player-weapon';
-import selectedCardInteractionContext from './state/selected-card-interaction-context';
 import selectedCardIndex from './state/selected-card-index';
+import selectedCardInteractionContext from './state/selected-card-interaction-context';
 import selectedCardObject from './state/selected-card-object';
 import selectedMinionIndex from './state/selected-minion-index';
 import selectedMinionObject from './state/selected-minion-object';
 import SERVER_CONFIG from './config';
 import spellObject from './state/spell-object';
-import warcryObject from './state/warcry-object';
 
 export default {
   actionPoints: actionPoints.__DATA_MODEL,
   attackedMinionIndex: null,
-  buffs: buffs.__DATA_MODEL,
   cardBack: cardBack.__DATA_MODEL,
   counts: counts.__DATA_MODEL,
   hoveringCardIndex: hoveringCardIndex.__DATA_MODEL,
   lastPlayedCardId: null,
   lastTargeted: { context: null, index: null },
+  onPlayObject: onPlayObject.__DATA_MODEL,
+  playerBuffs: playerBuffs.__DATA_MODEL,
   playerAttackValue: playerAttackValue.__DATA_MODEL,
   playerCanAttack: playerCanAttack.__DATA_MODEL,
   playerCanBeAttackedByMinion: playerCanBeAttacked.playerCanBeAttackedByMinion,
@@ -45,7 +47,7 @@ export default {
   playerHasAttacked: { '0': false, '1': false },
   playerHealth: playerHealth.__DATA_MODEL,
   playerHero: { '0': '%HERO_ZEUS%', '1': '%HERO_EXILE%' },
-  playerHeroAbilities: { '0': [], '1': [] },
+  playerHeroAbilities: playerHeroAbilities.__DATA_MODEL,
   playerIsAttacking: playerIsAttacking.__DATA_MODEL,
   playerIsDisabled: playerIsDisabled.__DATA_MODEL,
   playerName: { '0': 'pantsme', '1': 'anotherPlayer' },
@@ -66,7 +68,6 @@ export default {
     if (!SERVER_CONFIG.matchConfig.enableRandomTurnOrder) return ['0', '1'];
     return Math.random() - 0.5;
   }),
-  warcryObject: warcryObject.__DATA_MODEL,
   winner: null,
   boards: boards.__DATA_MODEL,
   players: players.__DATA_MODEL,

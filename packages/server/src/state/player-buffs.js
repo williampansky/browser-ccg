@@ -1,4 +1,4 @@
-const buffs = {
+const playerBuffs = {
   __DATA_MODEL: {
     '0': {
       attack: 0,
@@ -11,4 +11,4 @@ const buffs = {
   }
 };
 
-export default buffs;
+export default playerBuffs;

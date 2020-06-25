@@ -1,6 +1,7 @@
 import deckInfo from '../state/deck-info';
-import playerHero from '../state/player-hero';
 import players from '../state/players';
+import playerHero from '../state/player-hero';
+import playerHeroAbilities from '../state/player-hero-abilities';
 const testDeck = require('../data/deck.default.001.json');
 const testDeck1 = require('../data/deck.default.001.json');
 const testDeck2 = require('../data/deck.default.002.json');
@@ -21,6 +22,9 @@ export default {
 
     playerHero.set(G, '0', '%HERO_EXILE%');
     playerHero.set(G, '1', '%HERO_ZEUS%');
+
+    playerHeroAbilities.set(G, '0', '%HERO_EXILE%');
+    playerHeroAbilities.set(G, '1', '%HERO_ZEUS%');
   },
 
   // End phase when both player's decks are full (30 cards)
