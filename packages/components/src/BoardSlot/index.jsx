@@ -40,7 +40,8 @@ const BoardSlot = props => {
       hasDoubleAttackSrc,
       hasEventListenerSrc,
       hasOnDeathSrc,
-      hasPoisonSrc
+      hasPoisonSrc,
+      isDisabledSrc
     },
     playerID,
     slotObject,
@@ -220,6 +221,7 @@ const BoardSlot = props => {
           imgSrc={getMechanicImage('BULWARK_FOREGROUND.png')}
         />
       )}
+      {slotObject && <Disabled active={isDisabled} src={isDisabledSrc} />}
 
       {/* minion interactions */}
       {board === PLAYER_BOARDS[1] ? (

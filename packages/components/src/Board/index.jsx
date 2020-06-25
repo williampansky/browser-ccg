@@ -29,6 +29,7 @@ const Board = props => {
     bubbleSrc: gMI('BUBBLE.png'),
     boonSrc: gMI('BOON.png'),
     eventListenerSrc: gMI('EVENT.png'),
+    disabledSrc: gMI('DISABLED.png'),
     doubleAttackSrc: gMI('DOUBLE_ATTACK.png'),
     poisonSrc: gMI('POISON.png'),
     onDeathSrc: gMI('ON_DEATH.png')
@@ -69,7 +70,8 @@ const Board = props => {
           hasDoubleAttackSrc: mechImages.doubleAttackSrc,
           hasEventListenerSrc: mechImages.eventListenerSrc,
           hasOnDeathSrc: mechImages.onDeathSrc,
-          hasPoisonSrc: mechImages.poisonSrc
+          hasPoisonSrc: mechImages.poisonSrc,
+          isDisabledSrc: mechImages.disabledSrc
         }}
       />
 
@@ -96,7 +98,8 @@ const Board = props => {
           hasDoubleAttackSrc: mechImages.doubleAttackSrc,
           hasEventListenerSrc: mechImages.eventListenerSrc,
           hasOnDeathSrc: mechImages.onDeathSrc,
-          hasPoisonSrc: mechImages.poisonSrc
+          hasPoisonSrc: mechImages.poisonSrc,
+          isDisabledSrc: mechImages.disabledSrc
         }}
       />
     </div>
