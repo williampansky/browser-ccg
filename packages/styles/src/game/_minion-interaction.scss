@@ -47,14 +47,16 @@
 
   // add pseudo elem to minion for hover fx
   & + [data-component='Minion']:after {
-    background: mix(white, transparent, 25%);
+    // background: mix(white, transparent, 25%);
+    box-shadow: inset 0px 0px 0px 0px white;
     border-radius: var(--minion-border-radius);
     content: '';
     height: 100%;
-    opacity: 0;
+    opacity: 0.465;
     width: 100%;
     pointer-events: none;
-    transition: opacity 600ms var(--animation-transition-cubic);
+    transition: box-shadow 400ms var(--animation-transition-cubic);
+    will-change: box-shadow;
     @include position-absolute(0, 0, 0, 0, 2);
 
     // prettier-ignore
@@ -66,6 +68,10 @@
   }
 
   &[data-active='true']:hover + [data-component='Minion']:after {
-    opacity: 1;
+    box-shadow: inset 0px 0px 0px 10px white;
+
+    .board__slot--is-attacking & {
+      box-shadow: inset 0px 0px 0px 0px white;
+    }
   }
 }
