@@ -1,4 +1,5 @@
 import ABILITIES_DATABASE from '../data/abilities.json';
+import createHeroAbilityObject from '../creators/create-hero-ability-object';
 
 const playerHeroAbilities = {
   __DATA_MODEL: {
@@ -14,7 +15,8 @@ const playerHeroAbilities = {
       .map(key => ABILITIES_DATABASE[key])
       .filter(obj => obj.key === hero);
 
-    G.playerHeroAbilities[player] = array;
+    const newArray = array.map(obj => createHeroAbilityObject(obj));
+    G.playerHeroAbilities[player] = newArray;
   }
 };
 

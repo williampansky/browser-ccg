@@ -31,6 +31,22 @@ const OpponentSkillsAroundOrb = props => {
 
             return (
               <li className={styles['opponent__skills__list-item']} key={idx}>
+                {abilityLocked ? (
+                  <div
+                    className={[
+                      styles['overlay'],
+                      styles['locked__overlay'],
+                      styles['overlay--in-effect']
+                    ].join(' ')}
+                  >
+                    <AppIcon
+                      color="white"
+                      fileName="icon-uikit-lock"
+                      size="14px"
+                    />
+                  </div>
+                ) : null}
+
                 {!abilityLocked ? (
                   <div
                     className={[
