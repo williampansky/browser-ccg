@@ -107,6 +107,7 @@ const Hand = props => {
                 slotIndex={index}
                 trayIsExpanded={trayIsExpanded}
                 isDesktop={isDesktop}
+                numberOfCardsInHand={cardsInHand.length}
               />
             );
           })

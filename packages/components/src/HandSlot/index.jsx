@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSpring, animated, config } from 'react-spring';
 import { CardInteractionLayer } from '@ccg/components';
+import { limitNumberWithinRange } from '@ccg/utils';
 import styles from './styles.module.scss';
-import { setCartesianDependencies } from 'mathjs';
 
 const HandSlot = props => {
   const {
@@ -16,7 +16,10 @@ const HandSlot = props => {
     slotIndex,
     trayIsExpanded,
     disableInteraction,
-    isDesktop
+    isDesktop,
+    numberOfCardsInHand,
+    handleMouseEnter,
+    handleMouseLeave
   } = props;
 
   const [trayIsExpandedState, setTrayIsExpandedState] = useState(false);
@@ -39,46 +42,79 @@ const HandSlot = props => {
       : setTrayIsExpandedState(false);
   }, [trayIsExpanded]);
 
-  const [desktopStyles, set, stop] = useSpring(() => ({
-    marginLeft: '-150px',
-    paddingBottom: '0px',
-    pointerEvents: 'auto',
-    transform: 'translateY(0px)',
-    config: {
-      ...config.default,
-      easing: 'cubic-bezier(0.19, 1, 0.22, 1)'
-    }
-  }));
+  // abs(($i - ($total - 1) / 2) / ($total - 2) * $offsetRange);
+  // const calcOffset = (index, total = 10, offsetRange = 80) => {
+  //   total = total + 1;
+  //   const MIN = 10;
+  //   const MAX = 60;
 
-  const handleMouseEnter = useCallback(
-    event => {
-      event.preventDefault();
-      if (!isDesktop) return;
-      if (isDesktop) {
-        set({
-          transform: 'translateY(-200px)'
-        });
-      }
-    },
-    [isDesktop, set]
-  );
+  //   const calculation = Math.abs(
+  //     ((index - (total - 1.85) / 2) / (total - 2)) * offsetRange
+  //   );
 
-  const handleMouseLeave = useCallback(
-    event => {
-      event.preventDefault();
-      if (!isDesktop) return;
-      if (isDesktop) {
-        set({
-          transform: 'translateY(0px)'
-        });
-      }
-    },
-    [isDesktop, set]
-  );
+  //   return limitNumberWithinRange(calculation, MAX, MIN) * -1;
+  // };
 
-  useEffect(() => {
-    return () => stop();
-  }, [stop]);
+  // ($i - ($total - 1) / 2) / ($total - 2) * $rotationRange;
+  // const calcRotate = (index, total = 10, rotationRange = 50) => {
+  //   total = total + 1;
+  //   const MIN = -25;
+  //   const MAX = 25;
+  //   const calculation =
+  //     ((index - (total - 1) / 2) / (total - 2)) * rotationRange;
+
+  //   return limitNumberWithinRange(calculation, MAX, MIN) * 0.875;
+  // };
+
+  // const [desktopStyles, set, stop] = useSpring(() => ({
+  //   marginLeft: '-150px',
+  //   marginBottom: '-150px',
+  //   pointerEvents: 'auto',
+  //   paddingBottom: '100px',
+  //   transform: `
+  //     translateY(${calcOffset(slotIndex, numberOfCardsInHand)}px)
+  //     rotate(${calcRotate(slotIndex, numberOfCardsInHand)}deg)
+  //     scale(0.575)
+  //   `,
+  //   config: {
+  //     ...config.default,
+  //     easing: 'cubic-bezier(0.19, 1, 0.22, 1)'
+  //   }
+  // }));
+
+  // const handleMouseEnter = useCallback(
+  //   event => {
+  //     event.preventDefault();
+  //     if (!isDesktop) return;
+  //     if (isDesktop) {
+  //       set({
+  //         transform: `translateY(-75px) rotate(0deg) scale(1)`
+  //       });
+  //     }
+  //   },
+  //   [isDesktop, set]
+  // );
+
+  // const handleMouseLeave = useCallback(
+  //   event => {
+  //     event.preventDefault();
+  //     if (!isDesktop) return;
+  //     if (isDesktop) {
+  //       set({
+  //         transform: `
+  //           translateY(${calcOffset(slotIndex, numberOfCardsInHand)})
+  //           rotate(${calcRotate(slotIndex, numberOfCardsInHand)})
+  //           scale(0.575)
+  //         `
+  //       });
+  //     }
+  //   },
+  //   [isDesktop, set, slotIndex, numberOfCardsInHand]
+  // );
+
+  // useEffect(() => {
+  //   return () => stop();
+  // }, [stop]);
 
   return (
     <animated.div
@@ -88,9 +124,9 @@ const HandSlot = props => {
       ].join(' ')}
       data-component="HandSlot"
       data-index={slotIndex}
-      onMouseEnter={e => handleMouseEnter(e)}
-      onMouseLeave={e => handleMouseLeave(e)}
-      style={isDesktop ? desktopStyles : mobileStyles}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={!isDesktop ? mobileStyles : {}}
     >
       <CardInteractionLayer
         card={cardObject}
@@ -125,7 +161,9 @@ HandSlot.defaultProps = {
   //   );
   // },
   selectedCardUuid: null,
-  trayIsExpanded: false
+  trayIsExpanded: false,
+  handleMouseEnter: () => {},
+  handleMouseLeave: () => {}
 };
 
 export default HandSlot;
