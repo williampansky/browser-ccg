@@ -16,6 +16,11 @@ $ratio: 1.333333333;
   transition-property: filter, opacity, transform;
   width: 100vw;
   z-index: var(--zIndex-Hero);
+
+  @media (min-width: 960px) {
+    max-width: 960px;
+    margin: 0 auto;
+  }
 }
 
 .hero[data-player='Player'].card--is-selected {
@@ -76,7 +81,7 @@ $ratio: 1.333333333;
 
   @media (min-width: 960px) {
     margin-bottom: calc(var(--hero-height) / 3.5);
-    width: 100px;
+    width: 70px;
   }
 }
 

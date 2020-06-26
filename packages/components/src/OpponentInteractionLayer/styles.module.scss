@@ -10,4 +10,11 @@
   & + [data-component='Hero'] {
     pointer-events: none;
   }
+
+  @media (min-width: 960px) {
+    left: 0;
+    right: 0;
+    max-width: 920px;
+    margin: 0 auto;
+  }
 }

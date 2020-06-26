@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSpring, animated, config } from 'react-spring';
 import { CardInteractionLayer } from '@ccg/components';
 import styles from './styles.module.scss';
+import { setCartesianDependencies } from 'mathjs';
 
 const HandSlot = props => {
   const {
@@ -14,7 +15,8 @@ const HandSlot = props => {
     selectedCardUuid,
     slotIndex,
     trayIsExpanded,
-    disableInteraction
+    disableInteraction,
+    isDesktop
   } = props;
 
   const [trayIsExpandedState, setTrayIsExpandedState] = useState(false);
@@ -25,7 +27,7 @@ const HandSlot = props => {
     else return '-60px';
   }, [disableInteraction, trayIsExpandedState]);
 
-  const style = useSpring({
+  const mobileStyles = useSpring({
     marginLeft: handleTrayIsExpandedStyle(),
     pointerEvents: trayIsExpandedState ? 'auto' : 'none',
     config: config.default
@@ -37,6 +39,47 @@ const HandSlot = props => {
       : setTrayIsExpandedState(false);
   }, [trayIsExpanded]);
 
+  const [desktopStyles, set, stop] = useSpring(() => ({
+    marginLeft: '-150px',
+    paddingBottom: '0px',
+    pointerEvents: 'auto',
+    transform: 'translateY(0px)',
+    config: {
+      ...config.default,
+      easing: 'cubic-bezier(0.19, 1, 0.22, 1)'
+    }
+  }));
+
+  const handleMouseEnter = useCallback(
+    event => {
+      event.preventDefault();
+      if (!isDesktop) return;
+      if (isDesktop) {
+        set({
+          transform: 'translateY(-200px)'
+        });
+      }
+    },
+    [isDesktop, set]
+  );
+
+  const handleMouseLeave = useCallback(
+    event => {
+      event.preventDefault();
+      if (!isDesktop) return;
+      if (isDesktop) {
+        set({
+          transform: 'translateY(0px)'
+        });
+      }
+    },
+    [isDesktop, set]
+  );
+
+  useEffect(() => {
+    return () => stop();
+  }, [stop]);
+
   return (
     <animated.div
       className={[
@@ -44,7 +87,10 @@ const HandSlot = props => {
         disableInteraction ? 'disable-interaction' : ''
       ].join(' ')}
       data-component="HandSlot"
-      style={style}
+      data-index={slotIndex}
+      onMouseEnter={e => handleMouseEnter(e)}
+      onMouseLeave={e => handleMouseLeave(e)}
+      style={isDesktop ? desktopStyles : mobileStyles}
     >
       <CardInteractionLayer
         card={cardObject}

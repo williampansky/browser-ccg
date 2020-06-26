@@ -21,19 +21,20 @@ const Hand = props => {
   const [trayIsExpanded, setTrayIsExpanded] = useState(false);
 
   const handleFilterStyle = useCallback(() => {
-    if (isDesktop) return 'blur(0px)';
+    if (isDesktop) return '';
     else if (selectedCardUuid && !disableInteraction) return 'blur(2px)';
     else return 'blur(0px)';
   }, [isDesktop, disableInteraction, selectedCardUuid]);
 
   const handleTranslateStyle = useCallback(() => {
+    if (isDesktop) return '';
     if (trayIsExpanded) {
       if (selectedCardUuid) return 'translateY(180px)';
       else return 'translateY(-100px)';
     } else {
       return 'translateY(180px)';
     }
-  }, [selectedCardUuid, trayIsExpanded]);
+  }, [isDesktop, selectedCardUuid, trayIsExpanded]);
 
   const style = useSpring({
     filter: handleFilterStyle(),
@@ -46,10 +47,11 @@ const Hand = props => {
 
   const handleHandTrayClick = useCallback(
     (event, bool) => {
+      if (isDesktop) return false;
       event.preventDefault();
       setTrayIsExpanded(bool);
     },
-    [setTrayIsExpanded]
+    [isDesktop, setTrayIsExpanded]
   );
 
   const handleCloseTrayClick = useCallback(
@@ -79,8 +81,8 @@ const Hand = props => {
       onClick={e => !trayIsExpanded && handleHandTrayClick(e, true)}
       onKeyPress={e => !trayIsExpanded && handleHandTrayClick(e, true)}
       role={trayIsExpanded ? 'presentation' : 'button'}
-      tabIndex={trayIsExpanded ? -1 : 0}
       style={style}
+      tabIndex={trayIsExpanded ? -1 : 0}
     >
       <div
         className={[
@@ -98,12 +100,13 @@ const Hand = props => {
                 cardImageFlairSrc={getCardFlairImage(id, set, isGolden)}
                 cardObject={object}
                 cardUuid={uuid}
+                disableInteraction={disableInteraction}
                 handleCardInteractionClick={handleCardInteractionClick}
                 key={uuid}
                 selectedCardUuid={selectedCardUuid}
                 slotIndex={index}
                 trayIsExpanded={trayIsExpanded}
-                disableInteraction={disableInteraction}
+                isDesktop={isDesktop}
               />
             );
           })
@@ -119,18 +122,22 @@ const Hand = props => {
         )}
       </div>
 
-      <div
-        className={[
-          styles['close__tray__button'],
-          trayIsExpanded && !selectedCardUuid ? styles['hand--is-expanded'] : ''
-        ].join(' ')}
-        onClick={e => trayIsExpanded && handleCloseTrayClick(e, false)}
-        onKeyPress={e => trayIsExpanded && handleCloseTrayClick(e, false)}
-        role="button"
-        tabIndex={0}
-      >
-        <AppIcon color="inherit" fileName="icon-uikit-close" size="initial" />
-      </div>
+      {!isDesktop ? (
+        <div
+          className={[
+            styles['close__tray__button'],
+            trayIsExpanded && !selectedCardUuid
+              ? styles['hand--is-expanded']
+              : ''
+          ].join(' ')}
+          onClick={e => trayIsExpanded && handleCloseTrayClick(e, false)}
+          onKeyPress={e => trayIsExpanded && handleCloseTrayClick(e, false)}
+          role="button"
+          tabIndex={0}
+        >
+          <AppIcon color="inherit" fileName="icon-uikit-close" size="initial" />
+        </div>
+      ) : null}
     </animated.div>
   );
 };

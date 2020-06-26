@@ -8,8 +8,8 @@ const PlayerInteractionLayer = props => {
 
   const [inlineStyles, set, stop] = useSpring(() => ({
     boxShadow: 'var(--box-shadow-can-be-attacked)',
-    opacity: 1,
-    pointerEvents: 'auto'
+    opacity: 0,
+    pointerEvents: 'none'
   }));
 
   const handleStyleSet = useCallback(
@@ -23,7 +23,7 @@ const PlayerInteractionLayer = props => {
   );
 
   useEffect(() => {
-    handleStyleSet(true);
+    handleStyleSet(false);
     return () => stop();
   }, [handleStyleSet, stop]);
 
