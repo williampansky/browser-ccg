@@ -13,7 +13,8 @@ const Hand = props => {
     selectedCardObject,
     selectedCardUuid,
     selectedCardInteractionContext,
-    disableInteraction
+    disableInteraction,
+    isDesktop
   } = props;
 
   const [trayIsExpanded, setTrayIsExpanded] = useState(false);
@@ -102,6 +103,7 @@ const Hand = props => {
                 slotIndex={index}
                 trayIsExpanded={trayIsExpanded}
                 numberOfCardsInHand={cardsInHand.length}
+                isDesktop={isDesktop}
               />
             );
           })

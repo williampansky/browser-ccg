@@ -14,10 +14,6 @@ const DesktopHandSlot = props => {
     handleCardInteractionClick,
     selectedCardUuid,
     slotIndex,
-    trayIsExpanded,
-    disableInteraction,
-    isDesktop,
-    numberOfCardsInHand,
     handleMouseEnter,
     handleMouseLeave
   } = props;
@@ -98,10 +94,7 @@ const DesktopHandSlot = props => {
 
   return (
     <div
-      className={[
-        styles['hand__slot'],
-        disableInteraction ? 'disable-interaction' : ''
-      ].join(' ')}
+      className={[styles['hand__slot']].join(' ')}
       data-component="DesktopHandSlot"
       data-index={slotIndex}
       onMouseEnter={handleMouseEnter}
@@ -115,8 +108,6 @@ const DesktopHandSlot = props => {
         index={slotIndex}
         isPlayable={true}
         isSelected={selectedCardUuid === cardUuid ? true : false}
-        trayIsExpanded={trayIsExpanded}
-        disableInteraction={disableInteraction}
       />
     </div>
   );

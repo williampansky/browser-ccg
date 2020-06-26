@@ -14,11 +14,7 @@ const HandSlot = props => {
 };
 
 HandSlot.propTypes = {
-  isDesktop: PropTypes.bool
-};
-
-HandSlot.defaultProps = {
-  isDesktop: false
+  isDesktop: PropTypes.bool.isRequired
 };
 
 export default HandSlot;

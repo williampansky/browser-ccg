@@ -136,7 +136,8 @@ CardInteractionLayer.propTypes = {
   index: PropTypes.number.isRequired,
   isPlayable: PropTypes.bool,
   isSelected: PropTypes.bool,
-  trayIsExpanded: PropTypes.bool
+  trayIsExpanded: PropTypes.bool,
+  disableInteraction: PropTypes.bool
 };
 
 CardInteractionLayer.defaultProps = {
@@ -147,7 +148,8 @@ CardInteractionLayer.defaultProps = {
   // },
   isPlayable: false,
   isSelected: false,
-  trayIsExpanded: false
+  trayIsExpanded: false,
+  disableInteraction: false
 };
 
 export default CardInteractionLayer;

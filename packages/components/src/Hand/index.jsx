@@ -9,11 +9,7 @@ const Hand = props => {
 };
 
 Hand.propTypes = {
-  isDesktop: PropTypes.bool
-};
-
-Hand.defaultProps = {
-  isDesktop: false
+  isDesktop: PropTypes.bool.isRequired
 };
 
 export default Hand;

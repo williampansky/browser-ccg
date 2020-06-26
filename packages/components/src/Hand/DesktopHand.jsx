@@ -13,7 +13,8 @@ const DesktopHand = props => {
     selectedCardObject,
     selectedCardUuid,
     selectedCardInteractionContext,
-    disableInteraction
+    disableInteraction,
+    isDesktop
   } = props;
 
   return (
@@ -45,6 +46,7 @@ const DesktopHand = props => {
               selectedCardUuid={selectedCardUuid}
               slotIndex={index}
               numberOfCardsInHand={cardsInHand.length}
+              isDesktop={isDesktop}
             />
           );
         })}
