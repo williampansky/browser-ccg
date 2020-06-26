@@ -54,6 +54,7 @@
     "enzyme-adapter-react-16": "^1.15.1",
     "esm": "^3.2.25",
     "is-promise": "^4.0.0",
+    "lodash-es": "^4.17.15",
     "magic.css": "^1.4.5",
     "mathjs": "^7.0.1",
     "memoize-one": "^5.1.1",

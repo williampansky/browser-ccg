@@ -14,7 +14,8 @@ const MobileHandSlot = props => {
     selectedCardUuid,
     slotIndex,
     trayIsExpanded,
-    disableInteraction
+    disableInteraction,
+    isDesktop
   } = props;
 
   const [trayIsExpandedState, setTrayIsExpandedState] = useState(false);
@@ -57,6 +58,7 @@ const MobileHandSlot = props => {
         isSelected={selectedCardUuid === cardUuid ? true : false}
         trayIsExpanded={trayIsExpanded}
         disableInteraction={disableInteraction}
+        isDesktop={isDesktop}
       />
     </animated.div>
   );
@@ -71,7 +73,8 @@ MobileHandSlot.propTypes = {
   selectedCardUuid: PropTypes.string,
   slotIndex: PropTypes.number.isRequired,
   trayIsExpanded: PropTypes.bool,
-  disableInteraction: PropTypes.bool
+  disableInteraction: PropTypes.bool,
+  isDesktop: PropTypes.bool.isRequired
 };
 
 MobileHandSlot.defaultProps = {

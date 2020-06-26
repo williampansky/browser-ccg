@@ -9,6 +9,7 @@ import { AppIcon } from '@ccg/components';
 const PlayerStatIcon = ({
   iconColor,
   icon,
+  cursor,
   iconSize,
   onClick,
   statColor,
@@ -19,7 +20,7 @@ const PlayerStatIcon = ({
   return (
     <div
       className={styles['player__stats__icon']}
-      style={{ marginTop: `calc(${iconSize} / 1.5)` }}
+      style={{ cursor: cursor, marginTop: `calc(${iconSize} / 1.5)` }}
       onClick={onClick}
       onKeyPress={onClick}
       role="button"
@@ -48,6 +49,7 @@ const PlayerStatIcon = ({
 };
 
 PlayerStatIcon.propTypes = {
+  cursor: PropTypes.string,
   iconColor: PropTypes.string,
   icon: PropTypes.string.isRequired,
   iconSize: PropTypes.string,
@@ -60,6 +62,7 @@ PlayerStatIcon.propTypes = {
 };
 
 PlayerStatIcon.defaultProps = {
+  cursor: 'default',
   iconSize: '20px',
   onClick: () => {},
   statColor: 'white',

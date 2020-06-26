@@ -85,6 +85,7 @@ const Hero = props => {
               statValue={cardsInHand}
             />
             <PlayerStatIcon
+              cursor="pointer"
               iconColor="#ccc"
               icon="DECK"
               onClick={e => handleDeckIconClick(e)}

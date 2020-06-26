@@ -15,7 +15,8 @@ const DesktopHandSlot = props => {
     selectedCardUuid,
     slotIndex,
     handleMouseEnter,
-    handleMouseLeave
+    handleMouseLeave,
+    isDesktop
   } = props;
 
   // abs(($i - ($total - 1) / 2) / ($total - 2) * $offsetRange);
@@ -108,6 +109,7 @@ const DesktopHandSlot = props => {
         index={slotIndex}
         isPlayable={true}
         isSelected={selectedCardUuid === cardUuid ? true : false}
+        isDesktop={isDesktop}
       />
     </div>
   );
@@ -121,7 +123,8 @@ DesktopHandSlot.propTypes = {
   handleCardInteractionClick: PropTypes.func,
   selectedCardUuid: PropTypes.string,
   slotIndex: PropTypes.number.isRequired,
-  trayIsExpanded: PropTypes.bool
+  trayIsExpanded: PropTypes.bool,
+  isDesktop: PropTypes.bool.isRequired
 };
 
 DesktopHandSlot.defaultProps = {

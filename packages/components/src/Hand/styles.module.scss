@@ -29,10 +29,11 @@ $close__btn--icon-color: white;
 
   @media (min-width: 960px) {
     background: none;
-    bottom: calc(var(--card-height) / -3);
+    bottom: 0;
     max-width: 940px;
     margin: 0 auto;
     min-width: 940px;
+    min-height: 0;
     z-index: calc(var(--zIndex-Hero) + 1);
   }
 
@@ -108,6 +109,7 @@ $close__btn--icon-color: white;
     min-width: 100%;
     align-items: center;
     justify-content: center;
+    position: relative;
   }
 }
 
