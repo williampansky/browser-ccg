@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { PLAY_TYPE, RACE, RARITY, SET, TYPE } from '@ccg/enums';
@@ -102,11 +102,13 @@ const Card = ({
         />
       ) : null}
 
-      <CardFlairImage
-        imageSrc={imageFlairSrc}
-        name={name}
-        placeholderSrc={imagePlaceholderSrc}
-      />
+      <Suspense fallback={<div className={styles['loader']} />}>
+        <CardFlairImage
+          imageSrc={imageFlairSrc}
+          name={name}
+          placeholderSrc={imagePlaceholderSrc}
+        />
+      </Suspense>
 
       <CardName
         formatter={fontSizeBasedOnCharacterLength}
@@ -153,12 +155,14 @@ const Card = ({
         </React.Fragment>
       ) : null}
 
-      <CardBaseImage
-        imageAlt={replaceConstant(rarity)}
-        imageSrc={imageBaseSrc}
-        placeholderBaseSrc={PLACEHOLDER_BASE_IMAGE}
-        useReactImage={true}
-      />
+      <Suspense fallback={<div className={styles['loader']} />}>
+        <CardBaseImage
+          imageAlt={replaceConstant(rarity)}
+          imageSrc={imageBaseSrc}
+          placeholderBaseSrc={PLACEHOLDER_BASE_IMAGE}
+          useReactImage={true}
+        />
+      </Suspense>
     </div>
   );
 };

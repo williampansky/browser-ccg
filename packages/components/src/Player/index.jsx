@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { useResponsive } from '@ccg/hooks';
 import styles from './styles.module.scss';
 import { Hand, Hero, PlayerInteractionLayer } from '@ccg/components';
 
@@ -30,6 +31,8 @@ const Player = props => {
     parentComponent,
     selectedCardInteractionContext
   } = props;
+
+  const { isDesktop } = useResponsive();
 
   const handleCardInteractionClick = useCallback(
     (cardObject, index) => {
@@ -84,6 +87,7 @@ const Player = props => {
         selectedCardUuid={selectedCardUuid}
         selectedCardInteractionContext={selectedCardInteractionContext}
         disableInteraction={selectedCardInteractionContext ? true : false}
+        isDesktop={isDesktop}
       />
     </div>
   );
