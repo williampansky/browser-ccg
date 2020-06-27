@@ -42,11 +42,11 @@ const DesktopHand = props => {
   };
 
   // Returns fitting styles for dragged/idle items
-  const fn = (isDown, isHovered, curIndex, x, y) => index => {
+  const fn = (isDown, isHovered, isCanceled, curIndex, x, y) => index => {
     // console.log(x);
     const match = curIndex === index;
 
-    if (isHovered && match)
+    if (isHovered && !isDown && match)
       return {
         x: index * -50,
         y: -150,
@@ -57,16 +57,36 @@ const DesktopHand = props => {
         immediate: n =>
           n === 'x' || n === 'y' || n === 'scale' || n === 'zIndex'
       };
-
-    return {
-      x: index * -50,
-      y: 0,
-      scale: 0.75,
-      zIndex: index * -1,
-      shadow: 1,
-      paddingBottom: 0,
-      immediate: n => n === 'zIndex'
-    };
+    else if (isDown && match)
+      return {
+        x: x,
+        y: y,
+        scale: 1,
+        zIndex: 100,
+        shadow: 15,
+        paddingBottom: 0,
+        immediate: n => n === 'paddingBottom'
+      };
+    else if (isCanceled)
+      return {
+        x: index * -50,
+        y: 0,
+        scale: 0.75,
+        zIndex: index * -1,
+        shadow: 1,
+        paddingBottom: 0,
+        immediate: n => n === 'zIndex'
+      };
+    else
+      return {
+        x: index * -50,
+        y: 0,
+        scale: 0.75,
+        zIndex: index * -1,
+        shadow: 1,
+        paddingBottom: 0,
+        immediate: n => n === 'zIndex'
+      };
   };
 
   // Store indicies as a local ref, this represents the item order
@@ -127,9 +147,43 @@ const DesktopHand = props => {
    */
   const bind = useGesture(
     {
-      // onDrag: state => doSomethingWith(state),
-      // onDragStart: state => doSomethingWith(state),
-      // onDragEnd: state => doSomethingWith(state),
+      onDrag: state => {
+        const {
+          active: isHovered,
+          args: [originalIndex],
+          delta,
+          initial,
+          xy
+        } = state;
+
+        const isDown = true;
+        const isCanceled = false;
+        const curIndex = order.current.indexOf(originalIndex);
+        setSprings(
+          fn(
+            isDown,
+            isHovered,
+            isCanceled,
+            curIndex,
+            xy[0] - initial[0] + delta[0],
+            xy[1] - initial[1] - 150 + delta[1]
+          )
+        );
+      },
+      onDragEnd: state => {
+        const {
+          active: isHovered,
+          args: [originalIndex],
+          canceled: isCanceled,
+          down: isDown,
+          initial
+        } = state;
+
+        const curIndex = order.current.indexOf(originalIndex);
+        setSprings(
+          fn(isDown, isHovered, isCanceled, curIndex, initial[0], initial[1])
+        );
+      },
       // onPinch: state => doSomethingWith(state),
       // onPinchStart: state => doSomethingWith(state),
       // onPinchEnd: state => doSomethingWith(state),
@@ -144,15 +198,15 @@ const DesktopHand = props => {
       // onWheelEnd: state => doSomethingWith(state),
       onHover: state => {
         const {
-          delta: [, y],
-          down,
           active: isHovered,
-          args: [originalIndex]
+          args: [originalIndex],
+          delta: [, y],
+          down: isDown
         } = state;
 
-        // console.log(state.initial);
+        const isCanceled = false;
         const curIndex = order.current.indexOf(originalIndex);
-        setSprings(fn(down, isHovered, curIndex, 0, y));
+        setSprings(fn(isDown, isHovered, isCanceled, curIndex, 0, y));
       }
     }
     // {
