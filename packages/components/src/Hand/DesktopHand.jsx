@@ -41,59 +41,60 @@ const DesktopHand = props => {
     return clamp(calculation, MIN, MAX) * 0.875;
   };
 
+  const enableHover = true;
+
   // Returns fitting styles for dragged/idle items
   const fn = (isDown, isHovered, isCanceled, curIndex, x, y) => index => {
     // console.log(x);
     const match = curIndex === index;
+    const defaultState = {
+      x: index * -85,
+      y: 0,
+      scale: 0.675,
+      zIndex: index * -1,
+      marginTop: 40,
+      paddingBottom: 0,
+      immediate: n => n === 'zIndex'
+    };
 
-    if (isHovered && !isDown && match)
-      return {
-        x: index * -50,
-        y: -150,
-        scale: 1,
-        zIndex: 100,
-        shadow: 15,
-        paddingBottom: 40,
-        immediate: n =>
-          n === 'x' || n === 'y' || n === 'scale' || n === 'zIndex'
-      };
-    else if (isDown && match)
+    if (isHovered && !isDown && match) {
+      if (enableHover)
+        return {
+          x: index * -85,
+          y: -150,
+          scale: 1,
+          zIndex: 100,
+          marginTop: 0,
+          paddingBottom: 40,
+          immediate: n => {
+            return n === 'x' || n === 'y' || n === 'scale' || n === 'zIndex';
+          }
+        };
+    } else if (isDown && match)
       return {
         x: x,
         y: y,
         scale: 1,
         zIndex: 100,
-        shadow: 15,
-        paddingBottom: 0,
+        marginTop: 0,
+        paddingBottom: 40,
         immediate: n => n === 'paddingBottom'
       };
-    else if (isCanceled)
-      return {
-        x: index * -50,
-        y: 0,
-        scale: 0.75,
-        zIndex: index * -1,
-        shadow: 1,
-        paddingBottom: 0,
-        immediate: n => n === 'zIndex'
-      };
-    else
-      return {
-        x: index * -50,
-        y: 0,
-        scale: 0.75,
-        zIndex: index * -1,
-        shadow: 1,
-        paddingBottom: 0,
-        immediate: n => n === 'zIndex'
-      };
+    else if (isCanceled) return defaultState;
+    else return defaultState;
   };
 
   // Store indicies as a local ref, this represents the item order
   const order = useRef(items.map((_, index) => index));
+  const domTarget = useRef(null);
 
-  // Create springs, each corresponds to an item, controlling its transform, scale, etc.
-  const [springs, setSprings] = useSprings(items.length, fn());
+  // Create springs, each corresponds to an item,
+  // controlling its transform, scale, etc.
+  const [springs, setSprings] = useSprings(items.length, fn(), {
+    ...config.default,
+    easing: 'cubic-bezier(0.19, 1, 0.22, 1)'
+  });
+  const [isDragging, setIsDragging] = useState(false);
 
   // /**
   //  * @see https://use-gesture.netlify.app/docs/state
@@ -147,25 +148,33 @@ const DesktopHand = props => {
    */
   const bind = useGesture(
     {
+      onDragStart: () => setIsDragging(true),
       onDrag: state => {
         const {
           active: isHovered,
           args: [originalIndex],
           delta,
           initial,
+          offset,
           xy
         } = state;
 
         const isDown = true;
         const isCanceled = false;
         const curIndex = order.current.indexOf(originalIndex);
+
+        // console.clear();
+        // console.log('xy[0]', xy[0]);
+        // console.log('initial[0]', initial[0]);
+        // console.log('offset[0]', offset[0]);
+
         setSprings(
           fn(
             isDown,
             isHovered,
             isCanceled,
             curIndex,
-            xy[0] - initial[0] + delta[0],
+            curIndex * -85,
             xy[1] - initial[1] - 150 + delta[1]
           )
         );
@@ -180,6 +189,7 @@ const DesktopHand = props => {
         } = state;
 
         const curIndex = order.current.indexOf(originalIndex);
+        setIsDragging(false);
         setSprings(
           fn(isDown, isHovered, isCanceled, curIndex, initial[0], initial[1])
         );
@@ -208,11 +218,8 @@ const DesktopHand = props => {
         const curIndex = order.current.indexOf(originalIndex);
         setSprings(fn(isDown, isHovered, isCanceled, curIndex, 0, y));
       }
-    }
-    // {
-    //   ...config.default,
-    //   easing: 'cubic-bezier(0.19, 1, 0.22, 1)'
-    // }
+    },
+    { eventOptions: { passive: false } }
   );
 
   return (
@@ -229,7 +236,7 @@ const DesktopHand = props => {
           selectedCardObject ? styles['card--is-selected'] : ''
         ].join(' ')}
       >
-        {springs.map(({ zIndex, shadow, x, y, scale, paddingBottom }, i) => {
+        {springs.map(({ marginTop, paddingBottom, scale, zIndex, x, y }, i) => {
           const { id, isGolden, rarity, set, type, uuid } = items[i];
           return (
             <animated.div
@@ -237,12 +244,11 @@ const DesktopHand = props => {
               key={i}
               style={{
                 zIndex,
+                cursor: isDragging ? 'grabbing' : 'grab',
+                marginTop: marginTop.interpolate(mT => `${mT}px`),
                 paddingBottom: paddingBottom.interpolate(pB => `${pB}px`),
                 position: 'absolute',
                 pointerEvents: 'auto',
-                boxShadow: shadow.interpolate(sh => {
-                  return `rgba(0, 0, 0, 0.25) 0px ${sh}px ${2 * sh}px 0px`;
-                }),
                 transform: interpolate([x, y, scale], (x, y, sc) => {
                   return `translate3d(${x}px, ${y}px, 0) scale(${sc})`;
                 })
