@@ -81,7 +81,7 @@ $close__btn--icon-color: white;
   padding-bottom: calc(var(--card-height) / 10);
   padding-top: calc(var(--card-height) / 10);
 
-  & > div {
+  & > div[data-component='MobileHandSlot'] {
     // prettier-ignore
     &:first-child {
       margin-left: 0 !important;
@@ -96,7 +96,9 @@ $close__btn--icon-color: white;
     }
   }
 
-  & > div > [data-component='CardInteractionLayer'] {
+  &
+    > div[data-component='MobileHandSlot']
+    > [data-component='CardInteractionLayer'] {
     pointer-events: none;
   }
 

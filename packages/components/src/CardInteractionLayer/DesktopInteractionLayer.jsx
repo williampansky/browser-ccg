@@ -59,13 +59,13 @@ const DesktopInteractionLayer = props => {
   return (
     <div
       className={[
-        styles['card__interaction__layer'],
-        handleInteractionClass()
+        styles['card__interaction__layer']
+        // handleInteractionClass()
       ].join(' ')}
       data-component="DesktopInteractionLayer"
       data-index={index}
-      onClick={() => console.log(card, index)}
-      onKeyPress={() => console.log(card, index)}
+      // onClick={() => console.log(card, index)}
+      // onKeyPress={() => console.log(card, index)}
       role={isPlayable ? 'button' : 'presentation'}
       tabIndex={isPlayable ? 'button' : 'presentation'}
     >
