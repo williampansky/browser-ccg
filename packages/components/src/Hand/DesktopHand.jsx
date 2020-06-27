@@ -42,31 +42,31 @@ const DesktopHand = props => {
   };
 
   // Returns fitting styles for dragged/idle items
-  const fn = (downOrActive, curIndex, x, y) => index => {
-    console.log(x);
-    return downOrActive && curIndex === index
-      ? {
-          x: index * -50,
-          y: -150,
-          scale: 1,
-          zIndex: 100,
-          shadow: 15,
-          paddingBottom: 40,
-          immediate: n => {
-            return n === 'x' || n === 'y' || n === 'scale' || n === 'zIndex'
-              ? true
-              : false;
-          }
-        }
-      : {
-          x: index * -50,
-          y: 0,
-          scale: 0.75,
-          zIndex: index * -1,
-          shadow: 1,
-          paddingBottom: 0,
-          immediate: n => n === 'zIndex'
-        };
+  const fn = (isDown, isHovered, curIndex, x, y) => index => {
+    // console.log(x);
+    const match = curIndex === index;
+
+    if (isHovered && match)
+      return {
+        x: index * -50,
+        y: -150,
+        scale: 1,
+        zIndex: 100,
+        shadow: 15,
+        paddingBottom: 40,
+        immediate: n =>
+          n === 'x' || n === 'y' || n === 'scale' || n === 'zIndex'
+      };
+
+    return {
+      x: index * -50,
+      y: 0,
+      scale: 0.75,
+      zIndex: index * -1,
+      shadow: 1,
+      paddingBottom: 0,
+      immediate: n => n === 'zIndex'
+    };
   };
 
   // Store indicies as a local ref, this represents the item order
@@ -145,13 +145,14 @@ const DesktopHand = props => {
       onHover: state => {
         const {
           delta: [, y],
-          active,
+          down,
+          active: isHovered,
           args: [originalIndex]
         } = state;
 
         // console.log(state.initial);
         const curIndex = order.current.indexOf(originalIndex);
-        setSprings(fn(active, curIndex, 0, y));
+        setSprings(fn(down, isHovered, curIndex, 0, y));
       }
     }
     // {
