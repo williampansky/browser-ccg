@@ -57,8 +57,12 @@ const DesktopHand = props => {
         scale: 1,
         zIndex: 100,
         cursor: 'grab',
-        immediate: n => n === 'x' || n === 'y' || n === 'scale',
-        config: config.default
+        immediate: true,
+        config: {
+          ...config.default,
+          tension: 500,
+          friction: 38
+        }
       };
     else
       return {
