@@ -47,7 +47,8 @@ const DesktopHand = props => {
         scale: 1,
         zIndex: 100,
         cursor: 'grabbing',
-        immediate: n => n === 'x' || n === 'y' || n === 'scale'
+        immediate: n => n === 'x' || n === 'y' || n === 'scale',
+        config: config.default
       };
     else if (context() === 'isHovered' && match)
       return {
@@ -56,7 +57,8 @@ const DesktopHand = props => {
         scale: 1,
         zIndex: 100,
         cursor: 'grab',
-        immediate: n => n === 'x' || n === 'y' || n === 'scale'
+        immediate: n => n === 'x' || n === 'y' || n === 'scale',
+        config: config.default
       };
     else
       return {
@@ -66,16 +68,14 @@ const DesktopHand = props => {
         scale: 0.525,
         zIndex: index * -1,
         cursor: 'grab',
-        immediate: n => n === 'zIndex'
+        immediate: n => n === 'zIndex',
+        config: config.default
       };
   };
 
   // Create springs, each corresponds to an item,
   // controlling its transform, scale, etc.
-  const [springs, setSprings] = useSprings(items.length, fn(), {
-    ...config.default,
-    easing: 'cubic-bezier(0.19, 1, 0.22, 1)'
-  });
+  const [springs, setSprings] = useSprings(items.length, fn());
 
   /**
    * @see https://use-gesture.netlify.app/docs/state
@@ -114,7 +114,7 @@ const DesktopHand = props => {
         enabled: true,
         initial: [0, 0],
         threshold: undefined,
-        rubberband: 1, // 0.15
+        rubberband: 0.15, // 0.15
 
         // [xy] gestures specific options
         axis: undefined,
