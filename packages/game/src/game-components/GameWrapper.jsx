@@ -41,6 +41,14 @@ const GameWrapper = props => {
   const theirID = playerID === '0' ? '1' : '0';
   const yourID = playerID === '0' ? '0' : '1';
 
+  // log bools
+  const logSelectedCardObject = true;
+
+  React.useEffect(() => {
+    if (logSelectedCardObject && G.selectedCardObject[yourID] !== null)
+      console.log(G.selectedCardObject[yourID]);
+  }, [G, logSelectedCardObject, yourID]);
+
   return (
     <div>
       <OpponentWrapper
@@ -98,6 +106,10 @@ const GameWrapper = props => {
       />
     </div>
   );
+};
+
+GameWrapper.propTypes = {
+  G: PropTypes.object
 };
 
 export default GameWrapper;

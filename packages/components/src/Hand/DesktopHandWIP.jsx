@@ -7,8 +7,8 @@ import clamp from 'lodash-es/clamp';
 import { useGesture } from 'react-use-gesture';
 import { useSprings, animated, config, interpolate } from 'react-spring';
 
-document.addEventListener('gesturestart', e => e.preventDefault());
-document.addEventListener('gesturechange', e => e.preventDefault());
+// document.addEventListener('gesturestart', e => e.preventDefault());
+// document.addEventListener('gesturechange', e => e.preventDefault());
 
 const DesktopHand = props => {
   const {
@@ -38,7 +38,6 @@ const DesktopHand = props => {
       if (isDown || isDragging) return 'isDown';
       else if (isHovered && !isDragging) return 'isHovered';
       return 'none';
-      // return isDown ? 'isDown' : isHovered ? 'isHovered' : 'none'
     };
 
     if (context() === 'isDown' && match)
@@ -83,68 +82,33 @@ const DesktopHand = props => {
    */
   const bind = useGesture(
     {
-      onDrag: state => {
-        const {
-          active: isHovered,
-          args: [originalIndex],
-          down: isDown,
-          dragging: isDragging,
-          first,
-          movement: [x, y]
-        } = state;
-
+      onDrag: ({
+        active,
+        args: [originalIndex],
+        down,
+        dragging,
+        first,
+        movement: [x, y],
+        tap
+      }) => {
+        if (tap) return;
         const curIndex = order.current.indexOf(originalIndex);
         setSprings(
-          fn(
-            isDown,
-            isDragging,
-            isHovered,
-            curIndex,
-            first ? 0 : x,
-            first ? 0 : y
-          )
+          fn(down, dragging, active, curIndex, first ? 0 : x, first ? 0 : y)
         );
       },
 
-      onDragEnd: state => {
-        const {
-          active: isHovered,
-          args: [originalIndex],
-          down: isDown,
-          dragging: isDragging
-        } = state;
-
+      onDragEnd: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current.indexOf(originalIndex);
-        setSprings(fn(isDown, isDragging, isHovered, curIndex));
+        setSprings(fn(down, dragging, active, curIndex));
       },
-      // onPinch: state => doSomethingWith(state),
-      // onPinchStart: state => doSomethingWith(state),
-      // onPinchEnd: state => doSomethingWith(state),
-      // onScroll: state => doSomethingWith(state),
-      // onScrollStart: state => doSomethingWith(state),
-      // onScrollEnd: state => doSomethingWith(state),
-      // onMove: state => doSomethingWith(state),
-      // onMoveStart: state => doSomethingWith(state),
-      // onMoveEnd: state => doSomethingWith(state),
-      // onWheel: state => doSomethingWith(state),
-      // onWheelStart: state => doSomethingWith(state),
-      // onWheelEnd: state => doSomethingWith(state),
-      onHover: state => {
-        const {
-          active: isHovered,
-          args: [originalIndex],
-          down: isDown,
-          dragging: isDragging,
-          initial
-        } = state;
-
+      onHover: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current.indexOf(originalIndex);
-        setSprings(fn(isDown, isDragging, isHovered, curIndex));
+        setSprings(fn(down, dragging, active, curIndex));
       }
     },
     {
       order,
-      eventOptions: { capture: false, passive: false },
       drag: {
         // Gesture common options
         enabled: true,
@@ -155,19 +119,12 @@ const DesktopHand = props => {
         // [xy] gestures specific options
         axis: undefined,
         lockDirection: false,
-        // bounds: { top: 200, bottom: -50, left: 100, right: 100 }
 
         // drag specific options
-        filterTaps: false,
+        filterTaps: true,
         delay: 0,
         swipeDistance: [60, 60],
         swipeVelocity: [0.5, 0.5]
-
-        //   initial: () => {
-        //     console.log(springs);
-        //     return [0, 0];
-        //     // return [springs[0].x.get(), springs[0].y.get()];
-        //   }
       }
     }
   );
