@@ -44,6 +44,7 @@ const DesktopHand = props => {
       return {
         x: x,
         y: y + hoverOffsetY,
+        rotate: 0,
         scale: 1,
         zIndex: 100,
         cursor: 'grabbing',
@@ -54,6 +55,7 @@ const DesktopHand = props => {
       return {
         x: 0,
         y: hoverOffsetY,
+        rotate: 0,
         scale: 1,
         zIndex: 100,
         cursor: 'grab',
@@ -69,6 +71,7 @@ const DesktopHand = props => {
         x: 0,
         y: 0,
         marginLeft: index * -85,
+        rotate: 0,
         scale: 0.525,
         zIndex: index * -1,
         cursor: 'grab',
@@ -147,50 +150,55 @@ const DesktopHand = props => {
           selectedCardObject ? styles['card--is-selected'] : ''
         ].join(' ')}
       >
-        {springs.map(({ cursor, marginLeft, scale, zIndex, x, y }, i) => {
-          const {
-            id,
-            isGolden,
-            isEnhanced,
-            isPlayable,
-            rarity,
-            set,
-            type,
-            uuid
-          } = items[i];
+        {springs.map(
+          ({ cursor, marginLeft, rotate, scale, zIndex, x, y }, i) => {
+            const {
+              id,
+              isGolden,
+              isEnhanced,
+              isPlayable,
+              rarity,
+              set,
+              type,
+              uuid
+            } = items[i];
 
-          return (
-            <animated.div
-              {...bind(i)}
-              key={i}
-              style={{
-                zIndex,
-                cursor: isPlayable ? cursor : 'default',
-                marginLeft: marginLeft.interpolate(mL => `${mL}px`),
-                position: 'absolute',
-                pointerEvents: 'auto',
-                transform: interpolate([x, y, scale], (x, y, sc) => {
-                  return `translate3d(${x}px, ${y}px, 0) scale(${sc})`;
-                })
-              }}
-            >
-              <HandSlot
-                cardImageBaseSrc={getCardBaseImage(rarity, type)}
-                cardImageFlairSrc={getCardFlairImage(id, set, isGolden)}
-                cardObject={items[i]}
-                cardUuid={uuid}
-                handleCardInteractionClick={handleCardInteractionClick}
-                key={uuid}
-                selectedCardUuid={selectedCardUuid}
-                slotIndex={i}
-                numberOfCardsInHand={items.length}
-                isDesktop={isDesktop}
-                isEnhanced={isEnhanced}
-                isPlayable={isPlayable}
-              />
-            </animated.div>
-          );
-        })}
+            return (
+              <animated.div
+                {...bind(i)}
+                key={i}
+                style={{
+                  zIndex,
+                  cursor: isPlayable ? cursor : 'default',
+                  marginLeft: marginLeft.interpolate(mL => `${mL}px`),
+                  position: 'absolute',
+                  pointerEvents: 'auto',
+                  transform: interpolate(
+                    [x, y, rotate, scale],
+                    (x, y, rt, sc) => {
+                      return `translate3d(${x}px, ${y}px, 0) rotate(${rt}deg) scale(${sc})`;
+                    }
+                  )
+                }}
+              >
+                <HandSlot
+                  cardImageBaseSrc={getCardBaseImage(rarity, type)}
+                  cardImageFlairSrc={getCardFlairImage(id, set, isGolden)}
+                  cardObject={items[i]}
+                  cardUuid={uuid}
+                  handleCardInteractionClick={handleCardInteractionClick}
+                  key={uuid}
+                  selectedCardUuid={selectedCardUuid}
+                  slotIndex={i}
+                  numberOfCardsInHand={items.length}
+                  isDesktop={isDesktop}
+                  isEnhanced={isEnhanced}
+                  isPlayable={isPlayable}
+                />
+              </animated.div>
+            );
+          }
+        )}
       </div>
     </div>
   );
