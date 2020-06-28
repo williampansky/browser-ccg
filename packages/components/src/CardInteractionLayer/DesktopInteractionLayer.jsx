@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSpring, animated, config } from 'react-spring';
-import { Card } from '@ccg/components';
 import styles from './styles.module.scss';
+import { Card } from '@ccg/components';
+import CardIsPlayableEffect from '../card-interaction-effects/CardIsPlayableEffect';
+import CardIsEnhancedEffect from '../card-interaction-effects/CardIsEnhancedEffect';
 
 const DesktopInteractionLayer = props => {
   const {
@@ -46,8 +48,25 @@ const DesktopInteractionLayer = props => {
     index,
     isPlayable,
     isSelected,
+    isEnhanced,
     disableInteraction
   } = props;
+
+  const [activeState, setActiveState] = useState(null);
+
+  const handleActiveStateCallback = useCallback(
+    (isPlayable, isSelected, isEnhanced) => {
+      if (isPlayable) return setActiveState('isPlayable');
+      if (isSelected) return setActiveState('isSelected');
+      if (isEnhanced) return setActiveState('isEnhanced');
+      else return setActiveState(null);
+    },
+    []
+  );
+
+  useEffect(() => {
+    handleActiveStateCallback(isPlayable, isSelected, isEnhanced);
+  }, [handleActiveStateCallback, isPlayable, isSelected, isEnhanced]);
 
   const handleInteractionClass = useCallback(() => {
     if (disableInteraction) return 'disable-interaction';
@@ -68,6 +87,7 @@ const DesktopInteractionLayer = props => {
       // onKeyPress={() => console.log(card, index)}
       role={isPlayable ? 'button' : 'presentation'}
       tabIndex={isPlayable ? 'button' : 'presentation'}
+      style={{ pointerEvents: isPlayable ? 'auto' : 'none' }}
     >
       <Card
         active={active}
@@ -106,8 +126,12 @@ const DesktopInteractionLayer = props => {
         uuid={uuid}
       />
 
-      <div className="card__effect--is-playable" />
-      <div className="card__effect--is-selected" />
+      <CardIsPlayableEffect
+        activeState={activeState === 'isPlayable' ? true : false}
+      />
+      <CardIsEnhancedEffect
+        activeState={activeState === 'isEnhanced' ? true : false}
+      />
     </div>
   );
 };

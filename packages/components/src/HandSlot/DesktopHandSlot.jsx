@@ -12,7 +12,9 @@ const DesktopHandSlot = props => {
     handleCardInteractionClick,
     selectedCardUuid,
     slotIndex,
-    isDesktop
+    isDesktop,
+    isEnhanced,
+    isPlayable
   } = props;
 
   return (
@@ -27,7 +29,7 @@ const DesktopHandSlot = props => {
         cardImageFlairSrc={cardImageFlairSrc}
         handleCardInteractionClick={handleCardInteractionClick}
         index={slotIndex}
-        isPlayable={true}
+        isPlayable={isPlayable}
         isSelected={selectedCardUuid === cardUuid ? true : false}
         isDesktop={isDesktop}
       />

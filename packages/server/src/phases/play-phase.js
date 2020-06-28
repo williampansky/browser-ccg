@@ -5,6 +5,7 @@ import drawCardAtStartOfTurn from '../utils/draw-turn-start-card';
 import getCardByID from '../utils/get-card-by-id';
 import playerCanAttack from '../state/player-can-attack';
 import playerIsDisabled from '../state/player-is-disabled';
+import handleCardPlayability from '../utils/handle-card-playability';
 
 // onBegin methods used
 import {
@@ -44,6 +45,9 @@ const onBegin = (G, ctx) => {
 
   // reset isDisabled state back to false
   playerIsDisabled.disable(G, currentPlayer);
+
+  // handle card playability
+  handleCardPlayability(G, currentPlayer);
 
   // // either set attack value to weapon's attack
   // if (G.playerWeapon[currentPlayer] !== null) {
