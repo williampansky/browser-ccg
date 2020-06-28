@@ -7,6 +7,9 @@ import clamp from 'lodash-es/clamp';
 import { useGesture } from 'react-use-gesture';
 import { useSprings, animated, config, interpolate } from 'react-spring';
 
+document.addEventListener('gesturestart', e => e.preventDefault());
+document.addEventListener('gesturechange', e => e.preventDefault());
+
 const DesktopHand = props => {
   const {
     cardsInHand: items,
@@ -19,56 +22,53 @@ const DesktopHand = props => {
 
   // Store indicies as a local ref, this represents the item order
   const order = useRef(items.map((_, index) => index));
-  // for cursor effects
-  const [isDragging, setIsDragging] = useState(false);
-
-  const dragConfig = {
-    enableDrag: true,
-    enableScale: true,
-    enableHover: false,
-    enableRotation: false
-  };
-
-  const determineMouseCursor = useCallback((isDragging, isPlayable) => {
-    if (!isPlayable) return 'default';
-    return isDragging ? 'grabbing' : 'grab';
-  }, []);
-
-  const determineTransform = useCallback((sc, rt, x, y) => {
-    return `
-        translate3d(${x}px, ${y}px, 0)
-        scale(${sc})
-        rotate(${rt}deg)
-      `;
-  }, []);
 
   // Returns fitting styles for dragged/idle items
-  const fn = (isDown, isHovered, curIndex, x, y) => index => {
+  const fn = (isDown, isDragging, isHovered, curIndex, x, y) => index => {
+    const logMatch = false;
     const match = curIndex === index;
+    const hoverOffsetY = -160;
 
-    // if (match)
-    //   console.log(
-    //     `isDown:(${isDown}), isHovered:(${isHovered}), xy:(${x},${y})`
-    //   );
+    if (match && logMatch)
+      console.log(
+        `isDown:(${isDown}), isHovered:(${isHovered}), xy:(${x},${y})`
+      );
 
-    if (isDown && match) {
+    const context = () => {
+      if (isDown || isDragging) return 'isDown';
+      else if (isHovered && !isDragging) return 'isHovered';
+      return 'none';
+      // return isDown ? 'isDown' : isHovered ? 'isHovered' : 'none'
+    };
+
+    if (context() === 'isDown' && match)
       return {
         x: x,
-        y: y,
+        y: y + hoverOffsetY,
         scale: 1,
         zIndex: 100,
-        immediate: n => n === 'paddingBottom'
+        cursor: 'grabbing',
+        immediate: n => n === 'x' || n === 'y' || n === 'scale'
       };
-    } else {
+    else if (context() === 'isHovered' && match)
+      return {
+        x: 0,
+        y: hoverOffsetY,
+        scale: 1,
+        zIndex: 100,
+        cursor: 'grab',
+        immediate: n => n === 'x' || n === 'y' || n === 'scale'
+      };
+    else
       return {
         x: 0,
         y: 0,
         marginLeft: index * -85,
         scale: 0.525,
         zIndex: index * -1,
+        cursor: 'grab',
         immediate: n => n === 'zIndex'
       };
-    }
   };
 
   // Create springs, each corresponds to an item,
@@ -88,23 +88,16 @@ const DesktopHand = props => {
           active: isHovered,
           args: [originalIndex],
           down: isDown,
+          dragging: isDragging,
           first,
-          // delta: [dX, dY],
-          initial: [iX, iY],
-          previous: [pX, pY],
-          memo,
           movement: [x, y]
         } = state;
 
-        console.log(pX);
-
         const curIndex = order.current.indexOf(originalIndex);
-        setIsDragging(true);
-
-        // prettier-ignore
         setSprings(
           fn(
             isDown,
+            isDragging,
             isHovered,
             curIndex,
             first ? 0 : x,
@@ -118,13 +111,12 @@ const DesktopHand = props => {
           active: isHovered,
           args: [originalIndex],
           down: isDown,
-          initial
+          dragging: isDragging
         } = state;
 
         const curIndex = order.current.indexOf(originalIndex);
-        setIsDragging(false);
-        setSprings(fn(isDown, isHovered, curIndex, initial[0], initial[1]));
-      }
+        setSprings(fn(isDown, isDragging, isHovered, curIndex));
+      },
       // onPinch: state => doSomethingWith(state),
       // onPinchStart: state => doSomethingWith(state),
       // onPinchEnd: state => doSomethingWith(state),
@@ -137,10 +129,22 @@ const DesktopHand = props => {
       // onWheel: state => doSomethingWith(state),
       // onWheelStart: state => doSomethingWith(state),
       // onWheelEnd: state => doSomethingWith(state),
+      onHover: state => {
+        const {
+          active: isHovered,
+          args: [originalIndex],
+          down: isDown,
+          dragging: isDragging,
+          initial
+        } = state;
+
+        const curIndex = order.current.indexOf(originalIndex);
+        setSprings(fn(isDown, isDragging, isHovered, curIndex));
+      }
     },
     {
       order,
-      // eventOptions: { capture: false, passive: true }
+      eventOptions: { capture: false, passive: false },
       drag: {
         // Gesture common options
         enabled: true,
@@ -182,7 +186,7 @@ const DesktopHand = props => {
           selectedCardObject ? styles['card--is-selected'] : ''
         ].join(' ')}
       >
-        {springs.map(({ marginLeft, scale, zIndex, x, y }, i) => {
+        {springs.map(({ cursor, marginLeft, scale, zIndex, x, y }, i) => {
           const {
             id,
             isGolden,
@@ -200,7 +204,7 @@ const DesktopHand = props => {
               key={i}
               style={{
                 zIndex,
-                cursor: determineMouseCursor(isDragging, isPlayable),
+                cursor: isPlayable ? cursor : 'default',
                 marginLeft: marginLeft.interpolate(mL => `${mL}px`),
                 position: 'absolute',
                 pointerEvents: 'auto',
