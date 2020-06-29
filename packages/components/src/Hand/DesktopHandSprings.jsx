@@ -27,6 +27,10 @@ const DesktopHand = props => {
   const fn = (isDown, isDragging, isHovered, curIndex, x, y) => index => {
     const logMatch = false;
     const match = curIndex === index;
+    const nextMatch = curIndex === index + 1;
+    const prevMatch = curIndex === index - 1;
+    const gtMatch = curIndex > index;
+    const ltMatch = index < index;
     const hoverOffsetY = -150;
 
     if (match && logMatch)
@@ -81,8 +85,8 @@ const DesktopHand = props => {
         if (index === 2) return index + 86;
         if (index === 3) return 0;
         if (index === 4) return index - 86;
-        if (index === 5) return index - 170;
-        if (index === 6) return index - 254;
+        if (index === 5) return index - 120;
+        if (index === 6) return index - 184;
       }
 
       if (total === 8) {
@@ -139,7 +143,7 @@ const DesktopHand = props => {
         if (index === 3) return -50;
         if (index === 4) return -40.5;
         if (index === 5) return -10;
-        if (index === 6) return 0;
+        if (index === 6) return 20;
       }
 
       return 0;
@@ -224,6 +228,22 @@ const DesktopHand = props => {
           friction: 38
         }
       };
+    // else if (context() === 'isHovered' && gtMatch)
+    //   return {
+    //     x: 0,
+    //     y: 0,
+    //     rotate: calcRotate(index) + 10,
+    //     scale: 0.665,
+    //     marginLeft: calcOffsetX(index) + 40,
+    //     marginTop: calcOffsetY(index) + 20,
+    //     zIndex: index * -1,
+    //     immediate: true,
+    //     config: {
+    //       ...config.default,
+    //       tension: 500,
+    //       friction: 38
+    //     }
+    //   };
     else
       return {
         x: 0,
