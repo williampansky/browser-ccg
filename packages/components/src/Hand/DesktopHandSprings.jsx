@@ -7,6 +7,9 @@ import clamp from 'lodash-es/clamp';
 import { useGesture } from 'react-use-gesture';
 import { useSprings, animated, config, interpolate } from 'react-spring';
 
+// document.addEventListener('gesturestart', e => e.preventDefault());
+// document.addEventListener('gesturechange', e => e.preventDefault());
+
 const DesktopHand = props => {
   const {
     cardsInHand: items,
@@ -17,209 +20,278 @@ const DesktopHand = props => {
     isDesktop
   } = props;
 
-  // abs(($i - ($total - 1) / 2) / ($total - 2) * $offsetRange);
-  const calcOffset = (index, total = 10, offsetRange = 80) => {
-    total = total + 1;
-    const MIN = 10;
-    const MAX = 60;
-
-    const calculation = Math.abs(
-      ((index - (total - 1.85) / 2) / (total - 2)) * offsetRange
-    );
-
-    return clamp(calculation, MIN, MAX) * -1;
-  };
-
-  // ($i - ($total - 1) / 2) / ($total - 2) * $rotationRange;
-  const calcRotate = (index, total = 10, rotationRange = 50) => {
-    total = total + 1;
-    const MIN = -25;
-    const MAX = 25;
-    const calculation =
-      ((index - (total - 1) / 2) / (total - 2)) * rotationRange;
-
-    return clamp(calculation, MIN, MAX) * 0.875;
-  };
-
-  const enableHover = true;
-
-  // Returns fitting styles for dragged/idle items
-  const fn = (isDown, isHovered, isCanceled, curIndex, x, y) => index => {
-    // console.log(x);
-    const match = curIndex === index;
-    const defaultState = {
-      x: index * -85,
-      y: 0,
-      scale: 0.675,
-      zIndex: index * -1,
-      marginTop: 40,
-      paddingBottom: 0,
-      immediate: n => n === 'zIndex'
-    };
-
-    if (isHovered && !isDown && match) {
-      if (enableHover)
-        return {
-          x: index * -85,
-          y: -150,
-          scale: 1,
-          zIndex: 100,
-          marginTop: 0,
-          paddingBottom: 40,
-          immediate: n => {
-            return n === 'x' || n === 'y' || n === 'scale' || n === 'zIndex';
-          }
-        };
-    } else if (isDown && match)
-      return {
-        x: x,
-        y: y,
-        scale: 1,
-        zIndex: 100,
-        marginTop: 0,
-        paddingBottom: 40,
-        immediate: n => n === 'paddingBottom'
-      };
-    else if (isCanceled) return defaultState;
-    else return defaultState;
-  };
-
   // Store indicies as a local ref, this represents the item order
   const order = useRef(items.map((_, index) => index));
-  const domTarget = useRef(null);
+
+  // Returns fitting styles for dragged/idle items
+  const fn = (isDown, isDragging, isHovered, curIndex, x, y) => index => {
+    const logMatch = false;
+    const match = curIndex === index;
+    const hoverOffsetY = -150;
+
+    if (match && logMatch)
+      console.log(
+        `isDown:(${isDown}), isHovered:(${isHovered}), xy:(${x},${y})`
+      );
+
+    const calcOffsetX = (index, total = items.length) => {
+      let calc = 50;
+
+      if (total === 2) {
+        if (index === 0) return calc;
+        if (index === 1) return -calc;
+      }
+
+      if (total === 3) {
+        calc = 115;
+        if (index === 0) return calc;
+        if (index === 1) return 0;
+        if (index === 2) return -calc;
+      }
+
+      if (total === 4) {
+        calc = 40;
+        if (index === 0) return calc + 100;
+        if (index === 1) return calc;
+        if (index === 2) return calc - 105;
+        if (index === 3) return calc - 105 - 100;
+      }
+
+      if (total === 5) {
+        calc = 100;
+        if (index === 0) return 200;
+        if (index === 1) return 100;
+        if (index === 2) return 0;
+        if (index === 3) return -100;
+        if (index === 4) return -200;
+      }
+
+      if (total === 6) {
+        if (index === 0) return index + 200;
+        if (index === 1) return index + 120;
+        if (index === 2) return index + 40;
+        if (index === 3) return index - 40;
+        if (index === 4) return index - 120;
+        if (index === 5) return index - 200;
+      }
+
+      if (total === 7) {
+        if (index === 0) return index + 274;
+        if (index === 1) return index + 180;
+        if (index === 2) return index + 86;
+        if (index === 3) return 0;
+        if (index === 4) return index - 86;
+        if (index === 5) return index - 170;
+        if (index === 6) return index - 254;
+      }
+
+      if (total === 8) {
+        if (index === 0) return index + 300;
+        if (index === 1) return index + 200;
+        if (index === 2) return index + 100;
+        if (index === 3) return 0;
+        if (index === 4) return index - 100;
+        if (index === 5) return index - 200;
+        if (index === 6) return index - 300;
+        if (index === 7) return index - 300;
+      }
+
+      return index * -85;
+    };
+
+    const calcOffsetY = (index, total = items.length) => {
+      if (total === 1 || total === 2) return 0;
+
+      if (total === 3) {
+        if (index === 0) return index + 10;
+        if (index === 1) return 0;
+        if (index === 2) return index + 10;
+      }
+
+      if (total === 4) {
+        if (index === 0) return index + 10;
+        if (index === 1) return 0;
+        if (index === 2) return 0;
+        if (index === 3) return index + 10;
+      }
+
+      if (total === 5) {
+        if (index === 0) return 10;
+        if (index === 1) return -10;
+        if (index === 2) return -20;
+        if (index === 3) return -10;
+        if (index === 4) return 10;
+      }
+
+      if (total === 6) {
+        if (index === 0) return 10;
+        if (index === 1) return 0;
+        if (index === 2) return -10;
+        if (index === 3) return -10;
+        if (index === 4) return 0;
+        if (index === 5) return 10;
+      }
+
+      if (total === 7) {
+        if (index === 0) return 0;
+        if (index === 1) return -20;
+        if (index === 2) return -40.5;
+        if (index === 3) return -50;
+        if (index === 4) return -40.5;
+        if (index === 5) return -10;
+        if (index === 6) return 0;
+      }
+
+      return 0;
+      return index * 10;
+    };
+
+    const calcRotate = (index, total = items.length) => {
+      if (total === 3) {
+        if (index === 0) return 10;
+        if (index === 1) return 0;
+        if (index === 2) return -10;
+      }
+
+      if (total === 4) {
+        if (index === 0) return 6;
+        if (index === 1) return 0;
+        if (index === 2) return -6;
+        if (index === 3) return -15;
+      }
+
+      if (total === 5) {
+        if (index === 0) return 10;
+        if (index === 1) return 5;
+        if (index === 2) return 0;
+        if (index === 3) return -5;
+        if (index === 4) return -10;
+      }
+
+      if (total === 6) {
+        if (index === 0) return 15;
+        if (index === 1) return 10;
+        if (index === 2) return 5;
+        if (index === 3) return -5;
+        if (index === 4) return -10;
+        if (index === 5) return -15;
+      }
+
+      if (total === 7) {
+        if (index === 0) return 10;
+        if (index === 1) return 10;
+        if (index === 2) return 5;
+        if (index === 3) return 0;
+        if (index === 4) return -10;
+        if (index === 5) return -20;
+        if (index === 6) return -22;
+      }
+
+      return 0;
+    };
+
+    const context = () => {
+      if (isDown || isDragging) return 'isDown';
+      else if (isHovered && !isDragging) return 'isHovered';
+      return 'none';
+    };
+
+    if (context() === 'isDown' && match)
+      return {
+        x: x,
+        y: y + hoverOffsetY,
+        rotate: 0,
+        scale: 1,
+        marginTop: 0,
+        zIndex: 100,
+        cursor: 'grabbing',
+        immediate: n => n === 'x' || n === 'y' || n === 'scale',
+        config: config.default
+      };
+    else if (context() === 'isHovered' && match)
+      return {
+        x: 0,
+        y: hoverOffsetY,
+        rotate: 0,
+        scale: 1,
+        marginTop: 0,
+        zIndex: 100,
+        cursor: 'grab',
+        immediate: true,
+        config: {
+          ...config.default,
+          tension: 500,
+          friction: 38
+        }
+      };
+    else
+      return {
+        x: 0,
+        y: 0,
+        rotate: calcRotate(index),
+        scale: 0.665,
+        marginLeft: calcOffsetX(index),
+        marginTop: calcOffsetY(index),
+        zIndex: index * -1,
+        cursor: 'grab',
+        immediate: n => n === 'zIndex',
+        config: config.default
+      };
+  };
 
   // Create springs, each corresponds to an item,
   // controlling its transform, scale, etc.
-  const [springs, setSprings] = useSprings(items.length, fn(), {
-    ...config.default,
-    easing: 'cubic-bezier(0.19, 1, 0.22, 1)'
-  });
-  const [isDragging, setIsDragging] = useState(false);
-
-  // /**
-  //  * @see https://use-gesture.netlify.app/docs/state
-  //  */
-  // const bind = useGesture(state => {
-  //   // prettier-ignore
-  //   const {
-  //     event,                  // the source event
-  //     xy,                     // [x,y] values (pointer position or scroll offset)
-  //     previous,               // previous xy
-  //     initial,                // xy value when the gesture started
-  //     movement,               // last gesture offset (xy - initial)
-  //     delta: [, y],           // movement delta (movement - previous movement)
-  //     offset,                 // offset since the first gesture
-  //     lastOffset,             // offset when the last gesture started
-  //     vxvy,                   // momentum of the gesture per axis
-  //     velocity,               // absolute velocity of the gesture
-  //     distance,               // offset distance
-  //     direction,              // direction per axis
-  //     startTime,              // gesture start time
-  //     elapsedTime,            // gesture elapsed time
-  //     timeStamp,              // timestamp of the event
-  //     first,                  // true when it's the first event
-  //     last,                   // true when it's the last event
-  //     active,                 // true when the gesture is active
-  //     memo,                   // value returned by your handler on its previous run
-  //     cancel,                 // function you can call to interrupt some gestures
-  //     canceled,               // whether the gesture was canceled (drag and pinch)
-  //     down,                   // true when a mouse button or touch is down
-  //     buttons,                // number of buttons pressed
-  //     touches,                // number of fingers touching the screen
-  //     args: [originalIndex],  // arguments you passed to bind
-  //     ctrlKey,                // true when control key is pressed
-  //     altKey,                 // "      "  alt     "      "
-  //     shiftKey,               // "      "  shift   "      "
-  //     metaKey,                // "      "  meta    "      "
-  //     dragging,               // is the component currently being dragged
-  //     moving,                 // "              "              "  moved
-  //     scrolling,              // "              "              "  scrolled
-  //     wheeling,               // "              "              "  wheeled
-  //     pinching                // "              "              "  pinched
-  //   } = state;
-
-  //   console.log(active);
-  //   const curIndex = order.current.indexOf(originalIndex);
-  //   setSprings(fn(down, curIndex, y));
-  // });
+  const [springs, setSprings] = useSprings(items.length, fn());
 
   /**
    * @see https://use-gesture.netlify.app/docs/state
    */
   const bind = useGesture(
     {
-      onDragStart: () => setIsDragging(true),
-      onDrag: state => {
-        const {
-          active: isHovered,
-          args: [originalIndex],
-          delta,
-          initial,
-          offset,
-          xy
-        } = state;
-
-        const isDown = true;
-        const isCanceled = false;
+      onDrag: ({
+        active,
+        args: [originalIndex],
+        down,
+        dragging,
+        first,
+        movement: [x, y],
+        tap
+      }) => {
+        if (tap) return;
         const curIndex = order.current.indexOf(originalIndex);
-
-        // console.clear();
-        // console.log('xy[0]', xy[0]);
-        // console.log('initial[0]', initial[0]);
-        // console.log('offset[0]', offset[0]);
-
         setSprings(
-          fn(
-            isDown,
-            isHovered,
-            isCanceled,
-            curIndex,
-            curIndex * -85,
-            xy[1] - initial[1] - 150 + delta[1]
-          )
+          fn(down, dragging, active, curIndex, first ? 0 : x, first ? 0 : y)
         );
       },
-      onDragEnd: state => {
-        const {
-          active: isHovered,
-          args: [originalIndex],
-          canceled: isCanceled,
-          down: isDown,
-          initial
-        } = state;
-
+      onDragEnd: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current.indexOf(originalIndex);
-        setIsDragging(false);
-        setSprings(
-          fn(isDown, isHovered, isCanceled, curIndex, initial[0], initial[1])
-        );
+        setSprings(fn(down, dragging, active, curIndex));
       },
-      // onPinch: state => doSomethingWith(state),
-      // onPinchStart: state => doSomethingWith(state),
-      // onPinchEnd: state => doSomethingWith(state),
-      // onScroll: state => doSomethingWith(state),
-      // onScrollStart: state => doSomethingWith(state),
-      // onScrollEnd: state => doSomethingWith(state),
-      // onMove: state => doSomethingWith(state),
-      // onMoveStart: state => doSomethingWith(state),
-      // onMoveEnd: state => doSomethingWith(state),
-      // onWheel: state => doSomethingWith(state),
-      // onWheelStart: state => doSomethingWith(state),
-      // onWheelEnd: state => doSomethingWith(state),
-      onHover: state => {
-        const {
-          active: isHovered,
-          args: [originalIndex],
-          delta: [, y],
-          down: isDown
-        } = state;
-
-        const isCanceled = false;
+      onHover: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current.indexOf(originalIndex);
-        setSprings(fn(isDown, isHovered, isCanceled, curIndex, 0, y));
+        setSprings(fn(down, dragging, active, curIndex));
       }
     },
-    { eventOptions: { passive: false } }
+    {
+      order,
+      drag: {
+        // Gesture common options
+        enabled: true,
+        initial: [0, 0],
+        threshold: undefined,
+        rubberband: 0.15, // 0.15
+
+        // [xy] gestures specific options
+        axis: undefined,
+        lockDirection: false,
+
+        // drag specific options
+        filterTaps: true,
+        delay: 0,
+        swipeDistance: [60, 60],
+        swipeVelocity: [0.5, 0.5]
+      }
+    }
   );
 
   return (
@@ -235,40 +307,61 @@ const DesktopHand = props => {
           styles['card__tray'],
           selectedCardObject ? styles['card--is-selected'] : ''
         ].join(' ')}
+        data-length={items.length}
       >
-        {springs.map(({ marginTop, paddingBottom, scale, zIndex, x, y }, i) => {
-          const { id, isGolden, rarity, set, type, uuid } = items[i];
-          return (
-            <animated.div
-              {...bind(i)}
-              key={i}
-              style={{
-                zIndex,
-                cursor: isDragging ? 'grabbing' : 'grab',
-                marginTop: marginTop.interpolate(mT => `${mT}px`),
-                paddingBottom: paddingBottom.interpolate(pB => `${pB}px`),
-                position: 'absolute',
-                pointerEvents: 'auto',
-                transform: interpolate([x, y, scale], (x, y, sc) => {
-                  return `translate3d(${x}px, ${y}px, 0) scale(${sc})`;
-                })
-              }}
-            >
-              <HandSlot
-                cardImageBaseSrc={getCardBaseImage(rarity, type)}
-                cardImageFlairSrc={getCardFlairImage(id, set, isGolden)}
-                cardObject={items[i]}
-                cardUuid={uuid}
-                handleCardInteractionClick={handleCardInteractionClick}
-                key={uuid}
-                selectedCardUuid={selectedCardUuid}
-                slotIndex={i}
-                numberOfCardsInHand={items.length}
-                isDesktop={isDesktop}
-              />
-            </animated.div>
-          );
-        })}
+        {springs.map(
+          (
+            { cursor, marginLeft, marginTop, rotate, scale, zIndex, x, y },
+            i
+          ) => {
+            const {
+              id,
+              isGolden,
+              isEnhanced,
+              isPlayable,
+              rarity,
+              set,
+              type,
+              uuid
+            } = items[i];
+
+            return (
+              <animated.div
+                {...bind(i)}
+                key={i}
+                style={{
+                  zIndex,
+                  cursor: isPlayable ? cursor : 'default',
+                  marginLeft: marginLeft.interpolate(mL => `${mL}px`),
+                  marginTop: marginTop.interpolate(mT => `${mT}px`),
+                  position: 'absolute',
+                  pointerEvents: 'auto',
+                  transform: interpolate(
+                    [x, y, rotate, scale],
+                    (x, y, rt, sc) => {
+                      return `translate3d(${x}px, ${y}px, 0) rotate(${rt}deg) scale(${sc})`;
+                    }
+                  )
+                }}
+              >
+                <HandSlot
+                  cardImageBaseSrc={getCardBaseImage(rarity, type)}
+                  cardImageFlairSrc={getCardFlairImage(id, set, isGolden)}
+                  cardObject={items[i]}
+                  cardUuid={uuid}
+                  handleCardInteractionClick={handleCardInteractionClick}
+                  key={uuid}
+                  selectedCardUuid={selectedCardUuid}
+                  slotIndex={i}
+                  numberOfCardsInHand={items.length}
+                  isDesktop={isDesktop}
+                  isEnhanced={isEnhanced}
+                  isPlayable={isPlayable}
+                />
+              </animated.div>
+            );
+          }
+        )}
       </div>
     </div>
   );

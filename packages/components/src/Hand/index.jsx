@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DesktopHand from './DesktopHandWIP';
+import DesktopHand from './DesktopHandSprings';
 import MobileHand from './MobileHand';
 
 const Hand = props => {
