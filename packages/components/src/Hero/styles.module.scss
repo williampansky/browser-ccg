@@ -25,6 +25,10 @@ $ratio: 1.333333333;
   @media (min-width: 1200px) {
     max-width: 90vw;
   }
+
+  @media (min-width: 1440px) {
+    max-width: 1366px;
+  }
 }
 
 .hero[data-player='Player'].card--is-selected {

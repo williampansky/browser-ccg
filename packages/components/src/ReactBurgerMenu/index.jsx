@@ -9,7 +9,8 @@ import styles from './styles.module.scss';
  * @requires react-burger-menu
  * @see https://github.com/negomi/react-burger-menu
  */
-const ReactBurgerMenu = ({ children, isOpen, onStateChange, side }) => {
+const ReactBurgerMenu = props => {
+  const { children, isDesktop, isOpen, onStateChange, side } = props;
   return (
     <Fragment>
       <Menu

@@ -44,9 +44,10 @@ const Hero = props => {
   const handleDeckIconClick = useCallback(
     event => {
       event.preventDefault();
+      if (isDesktop) return setDeckMenuOpen(true);
       !deckMenuOpen ? setDeckMenuOpen(true) : setDeckMenuOpen(false);
     },
-    [deckMenuOpen, setDeckMenuOpen]
+    [deckMenuOpen, isDesktop, setDeckMenuOpen]
   );
 
   // This keeps the deckMenuOpen state in sync
@@ -140,6 +141,7 @@ const Hero = props => {
 
       {parentComponent === 'Player' ? (
         <ReactBurgerMenu
+          isDesktop={isDesktop}
           isOpen={deckMenuOpen}
           onStateChange={state => handleDeckMenuStateChange(state)}
           side="right"
