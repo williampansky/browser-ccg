@@ -21,6 +21,10 @@ $ratio: 1.333333333;
     max-width: 960px;
     margin: 0 auto;
   }
+
+  @media (min-width: 1200px) {
+    max-width: 90vw;
+  }
 }
 
 .hero[data-player='Player'].card--is-selected {

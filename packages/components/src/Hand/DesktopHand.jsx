@@ -30,6 +30,7 @@ const DesktopHand = props => {
           styles['card__tray'],
           selectedCardObject ? styles['card--is-selected'] : ''
         ].join(' ')}
+        data-length={cardsInHand.length}
       >
         {cardsInHand.map((card, i) => {
           const {
