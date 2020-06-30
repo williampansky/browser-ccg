@@ -10,4 +10,9 @@
   min-width: 100vw;
   width: 100vw;
   z-index: var(--zIndex-Board);
+
+  @media (min-width: 960px) {
+    height: calc(100vh - calc(var(--hero-height) * 2));
+    margin-bottom: 0;
+  }
 }

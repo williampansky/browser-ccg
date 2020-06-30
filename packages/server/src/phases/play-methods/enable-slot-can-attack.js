@@ -3,7 +3,8 @@
  * @param {object} slot Board slot
  */
 const enableSlotCanAttack = slot => {
-  if (slot.currentAttack >= 1 && !slot.isDisabled) slot.canAttack = true;
+  if (slot.currentAttack >= 1 && !slot.isDisabled && !slot.hasNoAttack)
+    slot.canAttack = true;
 };
 
 export default enableSlotCanAttack;

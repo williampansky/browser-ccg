@@ -9,7 +9,7 @@
   // box shadow
   &:before {
     border-radius: var(--card-border-radius);
-    box-shadow: -5px 5px 5px hsla(0, 0%, 0%, 0.925);
+    // box-shadow: -5px 5px 5px hsla(0, 0%, 0%, 0.925);
     content: '';
     height: var(--card-height);
     left: 0;

@@ -36,7 +36,7 @@ export default {
       G.initHandsSelection[G.turnOrder['1']].ready = true;
 
       // Draw three cards from the first player's deck into their hand.
-      drawCard(G, ctx, FIRST_PLAYER, 3);
+      drawCard(G, ctx, FIRST_PLAYER, 9); // orig 3
 
       // Draw four cards from the first player's deck into their hand;
       // they get four cards since they are not the starting player.

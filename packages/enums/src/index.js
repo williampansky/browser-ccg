@@ -8,3 +8,7 @@ export { default as RARITY } from './rarity.enums';
 export { default as SET } from './set.enums';
 export { default as TARGET_CONTEXT } from './target-context.enums';
 export { default as TYPE } from './type.enums';
+export {
+  THEIR_INTERACTION_KEYS,
+  YOUR_INTERACTION_KEYS
+} from './interaction-keys.enums';

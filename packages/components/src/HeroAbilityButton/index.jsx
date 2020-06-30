@@ -108,27 +108,19 @@ const HeroAbilityButton = props => {
 };
 
 HeroAbilityButton.propTypes = {
-  abilityLocked: PropTypes.bool.isRequired,
-  cooldown: PropTypes.number.isRequired,
-  cooldownCurrentCount: PropTypes.number.isRequired,
-  cooldownInEffect: PropTypes.bool.isRequired,
-  cost: PropTypes.number.isRequired,
-  costImageSrc: PropTypes.string.isRequired,
-  heroSymbol: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
-  mechanics: PropTypes.array.isRequired,
-  name: PropTypes.string.isRequired,
-  playContext: PropTypes.string.isRequired,
-  playType: PropTypes.string.isRequired,
-  ultimate: PropTypes.bool.isRequired
-};
-
-HeroAbilityButton.defaultProps = {
-  abilityLocked: true,
-  cooldown: 0,
-  cooldownCurrentCount: 0,
-  cooldownInEffect: false,
-  ultimate: false
+  abilityLocked: PropTypes.bool,
+  cooldown: PropTypes.number,
+  cooldownCurrentCount: PropTypes.number,
+  cooldownInEffect: PropTypes.bool,
+  cost: PropTypes.number,
+  costImageSrc: PropTypes.string,
+  heroSymbol: PropTypes.string,
+  index: PropTypes.number,
+  mechanics: PropTypes.array,
+  name: PropTypes.string,
+  playContext: PropTypes.string,
+  playType: PropTypes.string,
+  ultimate: PropTypes.bool
 };
 
 export default HeroAbilityButton;

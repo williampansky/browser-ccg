@@ -8,7 +8,9 @@ const getCardObjectFromDatabase = (id, database = CARD_DATABASE) => {
 const getCardByID = cardId => {
   return {
     ...getCardObjectFromDatabase(cardId),
-    uuid: uuidv4()
+    uuid: uuidv4(),
+    isPlayable: false,
+    isEnhanced: false
   };
 };
 

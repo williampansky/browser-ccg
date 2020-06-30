@@ -2,7 +2,7 @@ import moves from './moves';
 import state from './state';
 import stripSecrets from './strip-secrets';
 import turns from './turns';
-import { initDecksPhase, initHandsPhase, playGamePhase } from './phases';
+import { initGamePhase, initHandsPhase, playGamePhase } from './phases';
 
 /**
  * @see https://boardgame.io/documentation/#/
@@ -38,7 +38,7 @@ export default {
    * @see https://boardgame.io/documentation/#/phases
    */
   phases: {
-    initDecksPhase,
+    initGamePhase,
     initHandsPhase,
     playGamePhase
   }

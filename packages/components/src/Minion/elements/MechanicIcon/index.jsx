@@ -1,15 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
-import { getMechanicImage } from '@ccg/utils';
 
-const MechanicIcon = ({
-  hasDoubleAttack,
-  hasEventListener,
-  hasOnDeath,
-  hasPoison,
-  mechanicImages
-}) => {
+const MechanicIcon = props => {
+  const {
+    hasBoon,
+    hasBoonSrc,
+    hasDoubleAttack,
+    hasDoubleAttackSrc,
+    hasEventListener,
+    hasEventListenerSrc,
+    hasOnDeath,
+    hasOnDeathSrc,
+    hasPoison,
+    hasPoisonSrc
+  } = props;
+
   function getDataLength() {
     let num = 0;
     if (hasOnDeath) num = num + 1;
@@ -18,79 +24,59 @@ const MechanicIcon = ({
     return num;
   }
 
-  if (hasOnDeath) {
+  if (hasBoon) {
     return (
       <div className={styles['minion__mechanics']}>
-        <img
-          alt="hasOnDeath"
-          src={getMechanicImage('ON_DEATH.png', mechanicImages)}
-        />
+        <img alt="hasBoon" src={hasBoonSrc} />
+      </div>
+    );
+  } else if (hasOnDeath) {
+    return (
+      <div className={styles['minion__mechanics']}>
+        <img alt="hasOnDeath" src={hasOnDeath} />
       </div>
     );
   } else if (hasEventListener) {
     return (
       <div className={styles['minion__mechanics']}>
-        <img
-          alt="hasEventListener"
-          src={getMechanicImage('EVENT.png', mechanicImages)}
-        />
+        <img alt="hasEventListener" src={hasEventListenerSrc} />
       </div>
     );
   } else if (hasPoison) {
     return (
       <div className={styles['minion__mechanics']}>
-        <img
-          alt="hasPoison"
-          src={getMechanicImage('POISON.png', mechanicImages)}
-        />
+        <img alt="hasPoison" src={hasPoisonSrc} />
       </div>
     );
   } else if (hasDoubleAttack) {
     return (
       <div className={styles['minion__mechanics']}>
-        <img
-          alt="hasDoubleAttack"
-          src={getMechanicImage('DOUBLE_ATTACK.png', mechanicImages)}
-        />
+        <img alt="hasDoubleAttack" src={hasDoubleAttackSrc} />
       </div>
     );
   } else {
     return null;
   }
-
-  // return (
-  //   <div className={styles.component} data-length={getDataLength()}>
-  //     {hasOnDeath ? (
-  //       <img alt="hasOnDeath" src="/images/mechanics/ON_DEATH.png" />
-  //     ) : null}
-
-  //     {hasEventListener ? (
-  //       <img alt="hasEventListener" src="/images/mechanics/EVENT.png" />
-  //     ) : null}
-
-  //     {hasPoison ? (
-  //       <img alt="hasPoison" src="/images/mechanics/POISON.png" />
-  //     ) : null}
-
-  //     {hasDoubleAttack ? (
-  //       <img alt="hasDoubleAttack" src="/images/mechanics/DOUBLE_ATTACK.png" />
-  //     ) : null}
-  //   </div>
-  // );
 };
 
 MechanicIcon.propTypes = {
-  hasOnDeath: PropTypes.bool,
-  hasEventListener: PropTypes.bool,
+  hasBoon: PropTypes.bool,
+  hasBoonSrc: PropTypes.string,
   hasDoubleAttack: PropTypes.bool,
+  hasDoubleAttackSrc: PropTypes.string,
+  hasEventListener: PropTypes.bool,
+  hasEventListenerSrc: PropTypes.string,
+  hasOnDeath: PropTypes.bool,
+  hasOnDeathSrc: PropTypes.string,
   hasPoison: PropTypes.bool,
-  mechanicImages: PropTypes.object.isRequired
+  hasPoisonSrc: PropTypes.string
 };
 
 MechanicIcon.defaultProps = {
-  hasOnDeath: false,
-  hasEventListener: false,
+  hasBoon: false,
   hasDoubleAttack: false,
+  hasEventListener: false,
+  hasOnDeath: false,
   hasPoison: false
 };
 

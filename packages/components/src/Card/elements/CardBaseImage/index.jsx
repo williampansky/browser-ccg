@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Img } from 'react-image';
+import { useImage } from 'react-image';
 import styles from './styles.module.scss';
 
 const CardBaseImage = ({
@@ -9,20 +9,13 @@ const CardBaseImage = ({
   placeholderBaseSrc,
   useReactImage
 }) => {
+  const { src } = useImage({ srcList: imageSrc });
   return useReactImage ? (
-    <Img
-      alt={`${imageAlt} Card`}
+    <img
+      alt={imageAlt}
       className={styles['card__base__image']}
-      decode={false}
-      src={imageSrc}
-      loader={<div className={styles['card__base__image__loader']} />}
-      unloader={
-        <img
-          alt=""
-          className={styles['card__base__image']}
-          src={placeholderBaseSrc}
-        />
-      }
+      role="presentation"
+      src={src}
     />
   ) : (
     <img

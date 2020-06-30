@@ -2,33 +2,37 @@ import { _dMCA, _dAMCA, _eMCA, _eAMCA } from './boards.can-attack';
 import { _dMCBA, _dAMCBA, _eMCBA, _eAMCBA } from './boards.can-be-attacked';
 import { _dMCBB, _dAMCBB, _eMCBB, _eAMCBB } from './boards.can-be-buffed';
 import { _dMCBH, _dAMCBH, _eMCBH, _eAMCBH } from './boards.can-be-healed';
-import { _dAMT, _dBT, _dHT, _dST, _dWT } from './boards.determinations';
+import { _dAMT, _dBT, _dHT, _dOPT, _dST } from './boards.determinations';
 import { _kM, _kM0 } from './boards.kill-minion';
 import { _aTMH, _sFMH } from './boards.minion-health';
 import { _pC } from './boards.place-minion-on-board';
 import createBoardSlotObject from '../creators/create-board-slot-object';
 
+const boardConfig = {
+  enableDebugSlots: false
+};
+
 // prettier-ignore
 const boards = {
   __DATA_MODEL: {
-    '0': [
-      { ...createBoardSlotObject('CORE_001'), canAttack: true },
-      { ...createBoardSlotObject('CORE_002'), canAttack: true, hasBulwark: true },
-      { ...createBoardSlotObject('CORE_003'), canAttack: true, hasBoon: true },
-      // { ...createBoardSlotObject('CORE_004') },
-      // { ...createBoardSlotObject('CORE_005') },
-      // { ...createBoardSlotObject('CORE_006') },
-      // { ...createBoardSlotObject('CORE_062') }
-    ],
-    '1': [
-      { ...createBoardSlotObject('CORE_004') },
-      { ...createBoardSlotObject('CORE_005'), hasRush: true },
-      { ...createBoardSlotObject('CORE_006') },
-      { ...createBoardSlotObject('CORE_007'), hasNoAttack: true },
-      // { ...createBoardSlotObject('CORE_008') },
-      // { ...createBoardSlotObject('CORE_009') },
-      // { ...createBoardSlotObject('CORE_130') }
-    ]
+    '0': boardConfig.enableDebugSlots ? [
+      { ...createBoardSlotObject('CORE_117'), hasBulwark: true },
+      { ...createBoardSlotObject('CORE_112'), canAttack: true },
+      { ...createBoardSlotObject('CORE_110'), canAttack: true },
+      { ...createBoardSlotObject('CORE_099'), canAttack: true, hasDoubleAttack: true },
+      { ...createBoardSlotObject('CORE_085'), hasEventListener: true },
+      { ...createBoardSlotObject('CORE_082') },
+      { ...createBoardSlotObject('CORE_071'), hasEventListener: true }
+    ] : [],
+    '1': boardConfig.enableDebugSlots ? [
+      { ...createBoardSlotObject('CORE_118') },
+      { ...createBoardSlotObject('CORE_062'), hasBoon: true },
+      { ...createBoardSlotObject('CORE_061'), hasEventListener: true },
+      { ...createBoardSlotObject('CORE_059') },
+      { ...createBoardSlotObject('CORE_054') },
+      { ...createBoardSlotObject('CORE_041') },
+      { ...createBoardSlotObject('CORE_039'), hasBulwark: true }
+    ] : []
   },
 
   // minion health
@@ -39,8 +43,8 @@ const boards = {
   determineAttackTargets: (G, player) => _dAMT(G, player),
   determineBuffTargets: (G, player, index) => _dBT(G, player, index),
   determineHealTargets: (G, player, index) => _dHT(G, player, index),
+  determineOnPlayTargets: (G, player) => _dOPT(G, player),
   determineSpellTargets: (G, player) => _dST(G, player),
-  determineWarcryTargets: (G, player) => _dWT(G, player),
 
   // canAttack
   disableCanAttack: (G, player, index) => _dMCA(G, player, index),

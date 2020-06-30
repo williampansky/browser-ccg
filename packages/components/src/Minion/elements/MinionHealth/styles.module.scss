@@ -29,9 +29,32 @@
     color: #ff4800;
   }
 
+  &[data--is-buffed='true'] {
+    color: chartreuse;
+  }
+
+  &[data--is-animating='true'] {
+    animation: animateHealth 150ms var(--animation-transition-cubic) forwards;
+  }
+
   & > div {
+    color: inherit;
     left: 1px;
     top: 0;
+  }
+
+  // prettier-ignore
+  @keyframes animateHealth {
+    0%   { transform: scale(1); }
+    85%  { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+
+  .--was-attacked & {
+    animation-name: uk-shake-small;
+    animation-duration: 500ms;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
   }
 }
 

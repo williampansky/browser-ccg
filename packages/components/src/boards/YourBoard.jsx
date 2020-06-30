@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { PLAYER_BOARDS } from '@ccg/enums';
+import { PLAYER_BOARDS, YOUR_INTERACTION_KEYS as intKeys } from '@ccg/enums';
 import { BoardDropArea, BoardSlot } from '@ccg/components';
 
 const YourBoard = props => {
@@ -12,7 +12,10 @@ const YourBoard = props => {
     yourID,
     cardIsSelected,
     cardIsLocked,
-    minionIsSelected
+    minionIsSelected,
+    interactionImages,
+    mechanicImages,
+    uiTooltipSrc
   } = props;
 
   const { deselectMinion, playMinionCard, selectMinion } = moves;
@@ -22,6 +25,20 @@ const YourBoard = props => {
       return playMinionCard(slotIndexClicked);
     },
     [playMinionCard]
+  );
+
+  const intClick = useCallback(
+    (key, slotObjectClicked, slotIndexClicked) => {
+      switch (key) {
+        case intKeys[1]:
+          return selectMinion(slotObjectClicked, slotIndexClicked);
+        case intKeys[2]:
+          return deselectMinion();
+        default:
+          return;
+      }
+    },
+    [selectMinion, deselectMinion]
   );
 
   return (
@@ -51,16 +68,19 @@ const YourBoard = props => {
           return (
             <Fragment key={`fragment_${index}`}>
               <BoardSlot
-                G={G}
-                ctx={ctx}
-                moves={moves}
-                key={`slot_${index}`}
                 board={PLAYER_BOARDS[1]}
-                slotObject={object}
+                ctx={ctx}
+                G={G}
+                handleCanAttackFn={() => intClick(intKeys[1], object, index)}
+                handleIsAttackingFn={() => intClick(intKeys[2])}
                 index={index}
+                interactionImages={interactionImages}
+                key={`slot_${index}`}
+                mechanicImages={mechanicImages}
+                moves={moves}
                 playerID={yourID}
-                handleCanAttackFunction={() => selectMinion(object, index)}
-                handleIsAttackingFunction={() => deselectMinion()}
+                slotObject={object}
+                uiTooltipSrc={uiTooltipSrc}
               />
 
               {yourBoard.length <= 6 ? (

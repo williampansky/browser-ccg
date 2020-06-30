@@ -58,11 +58,15 @@
   padding: calc(var(--minion-height) / 2.5) 0;
   width: 100vw;
 
-  @media (min-width: 960px) {
+  @include breakpoint('medium') {
     align-items: center;
     justify-content: center;
     overflow-x: visible;
     overflow-y: visible;
-    padding: calc(var(--minion-height) / 4) 0;
+    padding: calc(var(--minion-height) / 6) 0;
+  }
+
+  @include breakpoint('large') {
+    padding: calc(var(--minion-height) / 8) 0;
   }
 }

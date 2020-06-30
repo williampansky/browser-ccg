@@ -6,6 +6,7 @@ import {
   ABILITIES_ICON_CLOSE,
   COST_GEM_IMAGE,
   PLACEHOLDER_IMAGE,
+  MECHANICS,
   CARDS,
   SETS
 } from '@ccg/images';
@@ -40,12 +41,22 @@ const GameWrapper = props => {
   const theirID = playerID === '0' ? '1' : '0';
   const yourID = playerID === '0' ? '0' : '1';
 
+  // log bools
+  const logSelectedCardObject = true;
+
+  React.useEffect(() => {
+    if (logSelectedCardObject && G.selectedCardObject[yourID] !== null)
+      console.log(G.selectedCardObject[yourID]);
+  }, [G, logSelectedCardObject, yourID]);
+
   return (
     <div>
       <OpponentWrapper
         G={G}
         ctx={ctx}
+        moves={moves}
         playerID={theirID}
+        parentComponent={'Opponent'}
         images={{
           CARDS: CARDS,
           SETS: SETS,
@@ -62,6 +73,9 @@ const GameWrapper = props => {
         moves={moves}
         theirID={theirID}
         yourID={yourID}
+        images={{
+          MECHANICS: MECHANICS
+        }}
       />
 
       <PlayerWrapper
@@ -69,6 +83,7 @@ const GameWrapper = props => {
         ctx={ctx}
         moves={moves}
         playerID={yourID}
+        parentComponent={'Player'}
         images={{
           CARDS: CARDS,
           SETS: SETS,
@@ -91,6 +106,10 @@ const GameWrapper = props => {
       />
     </div>
   );
+};
+
+GameWrapper.propTypes = {
+  G: PropTypes.object
 };
 
 export default GameWrapper;

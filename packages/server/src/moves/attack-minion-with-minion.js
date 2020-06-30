@@ -18,9 +18,8 @@ const attackMinionWithMinion = (G, ctx, index) => {
 
   // eject if ATTACKING_MINION can't attack
   if (ATTACKING_MINION && !ATTACKING_MINION.canAttack) return;
-  const ATTACKING_MINION_HAS_ONSLAUGHT = ATTACKING_MINION.hasDoubleAttack;
-  const ATTACKING_MINION_ONSLAUGHT_COUNT =
-    ATTACKING_MINION.hasDoubleAttackAttack;
+  const ATTACKING_MINION_HAS_DBLATK = ATTACKING_MINION.hasDoubleAttack;
+  const ATTACKING_MINION_DBLATK_COUNT = ATTACKING_MINION.hasDoubleAttackCount;
 
   const MINION_BEING_ATTACKED = G.boards[otherPlayer][index];
   const MINION_BEING_ATTACKED_INDEX = index;
@@ -65,16 +64,16 @@ const attackMinionWithMinion = (G, ctx, index) => {
     );
   }
 
-  // handle onslaught mechanic
-  if (ATTACKING_MINION_HAS_ONSLAUGHT === true) {
-    // deincrement hasDoubleAttackAttack integer
+  // handle double attack mechanic
+  if (ATTACKING_MINION_HAS_DBLATK === true) {
+    // deincrement hasDoubleAttackCount integer
     G.boards[currentPlayer][
       ATTACKING_MINION_INDEX
-    ].hasDoubleAttackAttack = Math.abs(
-      G.boards[currentPlayer][ATTACKING_MINION_INDEX].hasDoubleAttackAttack - 1
+    ].hasDoubleAttackCount = Math.abs(
+      G.boards[currentPlayer][ATTACKING_MINION_INDEX].hasDoubleAttackCount - 1
     );
 
-    if (ATTACKING_MINION_ONSLAUGHT_COUNT === 0) {
+    if (ATTACKING_MINION_DBLATK_COUNT === 0) {
       boards.disableCanAttack(G, currentPlayer, ATTACKING_MINION_INDEX);
       G.boards[currentPlayer][ATTACKING_MINION_INDEX].hasAttacked = true;
     }
@@ -86,6 +85,11 @@ const attackMinionWithMinion = (G, ctx, index) => {
 
   // remove concealed once you attack
   G.boards[currentPlayer][ATTACKING_MINION_INDEX].isConcealed = false;
+
+  // handle minions that disable target when attacking event mechanic
+  if (ATTACKING_MINION.minionData.id === 'CORE_071') {
+    G.boards[otherPlayer][index].isDisabled = true;
+  }
 
   // disable MINION_BEING_ATTACKED's ability to be attacked
   boards.disableCanBeAttacked(G, currentPlayer, MINION_BEING_ATTACKED_INDEX);

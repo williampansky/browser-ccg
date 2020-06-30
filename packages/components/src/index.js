@@ -27,6 +27,7 @@ export { default as SelectedCardMobileModal } from './SelectedCardMobileModal';
 export { default as PlayerInteractionLayer } from './PlayerInteractionLayer';
 export { default as YourBoard } from './boards/YourBoard';
 export { default as TheirBoard } from './boards/TheirBoard';
+export { default as OpponentInteractionLayer } from './OpponentInteractionLayer';
 
 // minion interactions
 export { default as CanAttack } from './minion-interactions/CanAttack';
@@ -43,3 +44,9 @@ export { default as Disabled } from './minion-mechanics/Disabled';
 export { default as DoubleAttack } from './minion-mechanics/DoubleAttack';
 export { default as Elite } from './minion-mechanics/Elite';
 export { default as Poison } from './minion-mechanics/Poison';
+
+// opponent interactions
+export { default as OpponentCanBeAttackedByMinion } from './opponent-interactions/OpponentCanBeAttackedByMinion';
+export { default as OpponentCanBeAttackedByOnPlay } from './opponent-interactions/OpponentCanBeAttackedByOnPlay';
+export { default as OpponentCanBeAttackedByPlayer } from './opponent-interactions/OpponentCanBeAttackedByPlayer';
+export { default as OpponentCanBeAttackedBySpell } from './opponent-interactions/OpponentCanBeAttackedBySpell';

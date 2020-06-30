@@ -94,12 +94,12 @@
   .green {
     .progress {
       border: 5px solid $color__Green--Border;
-      box-shadow: 0 0 20px $color__Green--BoxShadow;
+      // box-shadow: 0 0 20px $color__Green--BoxShadow;
     }
 
     .water {
       background: $color__Green--WaterBackground;
-      box-shadow: 0 0 20px $color__Green--WaterBoxShadow;
+      // box-shadow: 0 0 20px $color__Green--WaterBoxShadow;
       top: 25%;
     }
 
@@ -111,13 +111,13 @@
   .orange {
     .progress {
       border: 5px solid $color__Orange--Border;
-      box-shadow: 0 0 20px $color__Orange--BoxShadow;
+      // box-shadow: 0 0 20px $color__Orange--BoxShadow;
     }
 
     .water {
       top: 50%;
       background: $color__Orange--WaterBackground;
-      box-shadow: 0 0 20px $color__Orange--WaterBoxShadow;
+      // box-shadow: 0 0 20px $color__Orange--WaterBoxShadow;
     }
 
     .glare {
@@ -128,12 +128,12 @@
   .red {
     .progress {
       border: 5px solid $color__Red--Border;
-      box-shadow: 0 0 20px $color__Red--BoxShadow;
+      // box-shadow: 0 0 20px $color__Red--BoxShadow;
     }
 
     .water {
       background: $color__Red--WaterBackground;
-      box-shadow: 0 5px 0 $color__Red--WaterBoxShadow;
+      // box-shadow: 0 5px 0 $color__Red--WaterBoxShadow;
       top: 75%;
     }
 

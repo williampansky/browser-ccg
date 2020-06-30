@@ -1,36 +1,68 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 // child components
 import CanBeAttackedByMinion from './CanBeAttackedByMinion';
 import CanBeAttackedByPlayer from './CanBeAttackedByPlayer';
 import CanBeAttackedBySpell from './CanBeAttackedBySpell';
-import CanBeAttackedByWarcry from './CanBeAttackedByWarcry';
+import CanBeAttackedByOnPlay from './CanBeAttackedByOnPlay';
 import CanBeDebuffed from './CanBeDebuffed';
 import CanBeExpired from './CanBeExpired';
 import CanBeReturned from './CanBeReturned';
 
 export default function TheirMinionInteractions(props) {
   const {
-    G,
-    ctx,
-    moves,
+    race,
+    hasBulwark,
     canBeAttackedByMinion,
-    handleCanBeAttackedByMinionFunction
+    handleCanBeAttackedByMinionFunction,
+    interactionImages: {
+      canBeAttackedSrc,
+      canBeAttackedBulwarkSrc,
+      canBeAttackedLocSrc,
+      canBeAttackedLocBulwarkSrc
+    }
   } = props;
+
+  const [activeState, setActiveState] = useState(null);
+
+  const handleActiveStateCallback = useCallback(byMinion => {
+    if (byMinion) return setActiveState('canBeAttackedByMinion');
+    else return setActiveState(null);
+  }, []);
+
+  useEffect(() => {
+    handleActiveStateCallback(canBeAttackedByMinion);
+  }, [handleActiveStateCallback, canBeAttackedByMinion]);
+
   // if (canBeAttackedBySpell) {
   //   return <CanBeAttackedBySpell moves={moves} index={index} />;
   // }
 
-  // if (canBeAttackedByWarcry) {
-  //   return <CanBeAttackedByWarcry moves={moves} index={index} />;
+  // if (CanBeAttackedByOnPlay) {
+  //   return <CanBeAttackedByOnPlay moves={moves} index={index} />;
   // }
 
-  if (canBeAttackedByMinion) {
-    return (
-      <CanBeAttackedByMinion onClick={handleCanBeAttackedByMinionFunction} />
-    );
-  }
+  // if (canBeAttackedByMinion) {
+  return (
+    <div
+      className="minion__interaction"
+      data-active={activeState !== null ? true : false}
+      data-component="TheirMinionInteractions"
+    >
+      <CanBeAttackedByMinion
+        race={race}
+        hasBulwark={hasBulwark}
+        activeState={activeState === 'canBeAttackedByMinion' ? true : false}
+        onClick={handleCanBeAttackedByMinionFunction}
+        canBeAttackedSrc={canBeAttackedSrc}
+        canBeAttackedBulwarkSrc={canBeAttackedBulwarkSrc}
+        canBeAttackedLocSrc={canBeAttackedLocSrc}
+        canBeAttackedLocBulwarkSrc={canBeAttackedLocBulwarkSrc}
+      />
+    </div>
+  );
+  // }
 
   // if (canBeAttackedByPlayer) {
   //   return <CanBeAttackedByPlayer moves={moves} index={index} />;
@@ -47,8 +79,6 @@ export default function TheirMinionInteractions(props) {
   // if (canBeExpired) {
   //   return <CanBeExpired moves={moves} index={index} />;
   // }
-
-  return null;
 }
 
 TheirMinionInteractions.propTypes = {

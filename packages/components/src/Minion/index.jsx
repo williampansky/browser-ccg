@@ -21,56 +21,65 @@ import MechanicIcon from './elements/MechanicIcon';
 import { useEffect } from 'react';
 import { useState } from 'react';
 
-const Minion = ({
-  active,
-  artist,
-  attack,
-  collectible,
-  cost,
-  currentAttack,
-  currentHealth,
-  elite,
-  entourage,
-  flavor,
-  getMinionRaceClass,
-  hasBubble,
-  hasDoubleAttack,
-  hasEventListener,
-  hasOnDeath,
-  hasPoison,
-  health,
-  howToEarn,
-  howToEarnGolden,
-  id,
-  imageFlairSrc,
-  imagePlaceholderSrc,
-  isAttacking,
-  isGolden,
-  mechanics,
-  name,
-  numberPrimary,
-  playContext,
-  playRequirements,
-  playType,
-  race,
-  rarity,
-  set,
-  slot,
-  sounds,
-  targetingArrowText,
-  text,
-  totalHealth,
-  type
-}) => {
+const Minion = props => {
+  const {
+    active,
+    artist,
+    attack,
+    collectible,
+    cost,
+    currentAttack,
+    currentHealth,
+    elite,
+    entourage,
+    flavor,
+    hasBoon,
+    hasBoonSrc,
+    hasBubble,
+    hasDoubleAttack,
+    hasDoubleAttackSrc,
+    hasEventListener,
+    hasEventListenerSrc,
+    hasOnDeath,
+    hasOnDeathSrc,
+    hasPoison,
+    hasPoisonSrc,
+    health,
+    howToEarn,
+    howToEarnGolden,
+    id,
+    imageFlairSrc,
+    imagePlaceholderSrc,
+    isAttacking,
+    isDead,
+    isGolden,
+    mechanics,
+    minionRaceClass,
+    name,
+    numberPrimary,
+    playContext,
+    playRequirements,
+    playType,
+    race,
+    rarity,
+    set,
+    slot,
+    sounds,
+    targetingArrowText,
+    text,
+    totalHealth,
+    type
+  } = props;
+
   return (
     <div
       className={[
         styles['minion'],
-        styles[getMinionRaceClass(race)],
+        styles[minionRaceClass],
         hasBubble ? styles['minion--has-bubble'] : '',
         isAttacking ? styles['minion--is-attacking'] : '',
         currentHealth < totalHealth ? styles['minion--is-damaged'] : '',
-        currentHealth === 0 ? styles['minion--is-dead'] : ''
+        isDead ? styles['minion--is-dead'] : ''
       ].join(' ')}
       data-component="Minion"
     >
@@ -95,15 +104,22 @@ const Minion = ({
         currentHealth={currentHealth}
         elite={elite}
         imageSrc={getCardAssetImage('health', null, elite, ASSETS)}
+        isBuffed={currentHealth > totalHealth}
         isDamaged={currentHealth < totalHealth}
+        totalHealth={totalHealth}
       />
 
       <MechanicIcon
+        hasBoon={hasBoon}
+        hasBoonSrc={hasBoonSrc}
         hasDoubleAttack={hasDoubleAttack}
+        hasDoubleAttackSrc={hasDoubleAttackSrc}
         hasEventListener={hasEventListener}
+        hasEventListenerSrc={hasEventListenerSrc}
         hasOnDeath={hasOnDeath}
+        hasOnDeathSrc={hasOnDeathSrc}
         hasPoison={hasPoison}
-        mechanicImages={MECHANICS}
+        hasPoisonSrc={hasPoisonSrc}
       />
     </div>
   );
@@ -120,7 +136,7 @@ Minion.propTypes = {
   elite: PropTypes.bool,
   entourage: PropTypes.array,
   flavor: PropTypes.string,
-  getMinionRaceClass: PropTypes.func,
+  hasBoon: PropTypes.bool,
   hasBubble: PropTypes.bool,
   hasDoubleAttack: PropTypes.bool,
   hasEventListener: PropTypes.bool,
@@ -135,6 +151,7 @@ Minion.propTypes = {
   isAttacking: PropTypes.bool,
   isGolden: PropTypes.bool,
   mechanics: PropTypes.array,
+  minionRaceClass: PropTypes.string,
   name: PropTypes.string,
   numberPrimary: PropTypes.number,
   playContext: PropTypes.string,
@@ -152,7 +169,6 @@ Minion.propTypes = {
 };
 
 Minion.defaultProps = {
-  getMinionRaceClass: () => {},
   imageFlairSrc: '',
   imagePlaceholderSrc: PLACEHOLDER_IMAGE,
   race: RACE['NONE']

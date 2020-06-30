@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TARGET_CONTEXT } from '@ccg/enums';
 
-export default function CanReceiveOnslaught({ G, ctx, moves, index }) {
+export default function canReceiveDoubleAttack({ G, ctx, moves, index }) {
   const { castTargetedSpell, castTargetedWarcry } = moves;
 
   function handleClick() {
@@ -15,7 +15,7 @@ export default function CanReceiveOnslaught({ G, ctx, moves, index }) {
   return (
     <div
       className="minion--can-be-buffed"
-      data-file="interactions/minions/CanReceiveOnslaught"
+      data-file="interactions/minions/canReceiveDoubleAttack"
       onClick={() => handleClick()}
       role="button"
       tabIndex={0}
@@ -23,7 +23,7 @@ export default function CanReceiveOnslaught({ G, ctx, moves, index }) {
   );
 }
 
-CanReceiveOnslaught.propTypes = {
+canReceiveDoubleAttack.propTypes = {
   G: PropTypes.object,
   ctx: PropTypes.object,
   moves: PropTypes.object,

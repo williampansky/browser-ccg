@@ -1,6 +1,8 @@
 import React, { Fragment, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
+import { getHeroImage, getHeroName } from '@ccg/utils';
+import { useResponsive } from '@ccg/hooks';
 import {
   Avatar,
   HeroAbilityFAB,
@@ -12,7 +14,6 @@ import {
   PlayerStatIcon,
   ReactBurgerMenu
 } from '@ccg/components';
-import { getHeroImage, getHeroName } from '@ccg/utils';
 
 const Hero = props => {
   const {
@@ -37,14 +38,16 @@ const Hero = props => {
     selectedCardInteractionContext
   } = props;
 
+  const { isDesktop } = useResponsive();
   const [deckMenuOpen, setDeckMenuOpen] = useState(false);
 
   const handleDeckIconClick = useCallback(
     event => {
       event.preventDefault();
+      if (isDesktop) return setDeckMenuOpen(true);
       !deckMenuOpen ? setDeckMenuOpen(true) : setDeckMenuOpen(false);
     },
-    [deckMenuOpen, setDeckMenuOpen]
+    [deckMenuOpen, isDesktop, setDeckMenuOpen]
   );
 
   // This keeps the deckMenuOpen state in sync
@@ -73,46 +76,51 @@ const Hero = props => {
           placeholderImageSrc={avatarPlaceholderImageSrc}
         />
 
-        <header className={styles['player__info']}>
-          <div className={styles['player__stats']}>
-            <PlayerStatIcon
-              iconColor="#ccc"
-              icon="HAND"
-              statColor="white"
-              statLabel="Cards in Hand"
-              statValue={cardsInHand}
-            />
-            <PlayerStatIcon
-              iconColor="#ccc"
-              icon="DECK"
-              onClick={e => handleDeckIconClick(e)}
-              statColor="white"
-              statLabel="Cards in Deck"
-              statValue={cardsInDeck}
-            />
-            <PlayerStatEnergy
-              iconColor="#ccc"
-              statColor="white"
-              statLabel="Cards in Deck"
-              statValue={actionPointsCurrent}
-              totalEnergy={actionPointsTotal}
-            />
-          </div>
-          <PlayerName id={playerId} name={playerName} />
-        </header>
-
-        {parentComponent === 'Player' ? (
-          heroAbilities.length ? (
-            <div className={styles['player__fab']}>
-              <HeroAbilityFAB
-                abilitiesImageBase={abilitiesImageBase}
-                abilitiesImageClose={abilitiesImageClose}
-                costImageSrc={costGemImageSrc}
-                heroAbilities={heroAbilities}
-                heroSymbol={heroSymbol}
+        {!isDesktop ? (
+          <header className={styles['player__info']}>
+            <div className={styles['player__stats']}>
+              <PlayerStatIcon
+                iconColor="#ccc"
+                icon="HAND"
+                statColor="white"
+                statLabel="Cards in Hand"
+                statValue={cardsInHand}
+              />
+              <PlayerStatIcon
+                cursor="pointer"
+                iconColor="#ccc"
+                icon="DECK"
+                onClick={e => handleDeckIconClick(e)}
+                statColor="white"
+                statLabel="Cards in Deck"
+                statValue={cardsInDeck}
+              />
+              <PlayerStatEnergy
+                iconColor="#ccc"
+                statColor="white"
+                statLabel="Cards in Deck"
+                statValue={actionPointsCurrent}
+                totalEnergy={actionPointsTotal}
               />
             </div>
-          ) : null
+            <PlayerName id={playerId} name={playerName} />
+          </header>
+        ) : null}
+
+        {parentComponent === 'Player' && !isDesktop ? (
+          <div className={styles['player__fab']}>
+            <HeroAbilityFAB
+              abilitiesImageBase={abilitiesImageBase}
+              abilitiesImageClose={abilitiesImageClose}
+              costImageSrc={costGemImageSrc}
+              heroAbilities={heroAbilities}
+              heroSymbol={heroSymbol}
+            />
+          </div>
+        ) : null}
+
+        {isDesktop ? (
+          <div className={styles['player__desktop__bar']}>Desktop Bar</div>
         ) : null}
 
         <footer className={styles['player__health']}>
@@ -133,6 +141,7 @@ const Hero = props => {
 
       {parentComponent === 'Player' ? (
         <ReactBurgerMenu
+          isDesktop={isDesktop}
           isOpen={deckMenuOpen}
           onStateChange={state => handleDeckMenuStateChange(state)}
           side="right"

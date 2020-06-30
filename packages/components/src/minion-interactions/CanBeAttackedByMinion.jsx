@@ -1,45 +1,70 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useSpring, animated } from 'react-spring';
+import { INTERACTIONS } from '@ccg/images';
+import { RACE } from '@ccg/enums/src';
+import { getMinionInteractionImage } from '@ccg/utils/src';
 
 export default function CanBeAttackedByMinion(props) {
-  const { onClick } = props;
-  // const { selectedMinionIndex } = G;
-  // const { currentPlayer } = ctx;
-  // const {
-  //   attackMinion,
-  //   setAttackedMinionIndex,
-  //   resetMinionIsAttacking,
-  //   resetMinionIsAttackingIndex
-  // } = moves;
+  const {
+    activeState,
+    onClick,
+    race,
+    hasBulwark,
+    canBeAttackedSrc,
+    canBeAttackedBulwarkSrc,
+    canBeAttackedLocSrc,
+    canBeAttackedLocBulwarkSrc
+  } = props;
 
-  // function handleClick() {
-  //   attackMinion(index);
+  const [styles, set, stop] = useSpring(() => ({
+    opacity: 0,
+    pointerEvents: 'none'
+  }));
 
-  //   setTimeout(() => {
-  //     setAttackedMinionIndex(null);
-  //     resetMinionIsAttacking(selectedMinionIndex[currentPlayer]);
-  //     resetMinionIsAttackingIndex(selectedMinionIndex[currentPlayer]);
-  //   }, 250);
-  // }
+  const handleStyleSet = useCallback(
+    bool => {
+      set({
+        opacity: bool ? 1 : 0,
+        pointerEvents: bool ? 'auto' : 'none'
+      });
+    },
+    [set]
+  );
+
+  useEffect(() => {
+    handleStyleSet(activeState);
+    return () => stop();
+  }, [handleStyleSet, activeState, stop]);
 
   return (
-    <div
+    <animated.div
       className="minion__interaction minion__interaction--can-be-attacked"
       data-file="minion-interactions/CanBeAttackedByMinion"
       onClick={onClick}
       onKeyPress={onClick}
       role="button"
       tabIndex={0}
-    />
+      style={styles}
+    >
+      {race === RACE['LOCATION'] ? (
+        hasBulwark ? (
+          <img alt="" role="presentation" src={canBeAttackedLocBulwarkSrc} />
+        ) : (
+          <img alt="" role="presentation" src={canBeAttackedLocSrc} />
+        )
+      ) : hasBulwark ? (
+        <img alt="" role="presentation" src={canBeAttackedBulwarkSrc} />
+      ) : (
+        <img alt="" role="presentation" src={canBeAttackedSrc} />
+      )}
+    </animated.div>
   );
 }
 
-// CanBeAttackedByMinion.propTypes = {
-//   G: PropTypes.object,
-//   ctx: PropTypes.object,
-//   moves: PropTypes.object,
-//   index: PropTypes.number
-// };
+CanBeAttackedByMinion.propTypes = {
+  onClick: PropTypes.func
+};
 
 CanBeAttackedByMinion.defaultProps = {
   onClick: () => {}

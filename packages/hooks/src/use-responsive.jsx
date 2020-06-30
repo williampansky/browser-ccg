@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
+/**
+ * ```
+ * isMobile: maxWidth(424)
+ * isSmall: minWidth(425) && maxWidth(759)
+ * isTablet: minWidth(760) && maxWidth(959)
+ * isDesktop: minWidth(960)
+ * ```
+ */
 function useResponsive() {
   const [isClient, setIsClient] = useState(false);
 
@@ -10,11 +18,11 @@ function useResponsive() {
 
   const isSmall = useMediaQuery({
     minWidth: 425,
-    maxWidth: 757
+    maxWidth: 759
   });
 
   const isTablet = useMediaQuery({
-    minWidth: 759,
+    minWidth: 760,
     maxWidth: 959
   });
 

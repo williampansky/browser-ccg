@@ -8,7 +8,7 @@
   }
 
   & + .minion__shadows:before {
-    box-shadow: var($color);
+    // box-shadow: var($color);
     // transform: scale(1.15);
   }
 
@@ -24,14 +24,14 @@
     animation: targeting-ripple-is-attacking 600ms linear infinite;
   }
 
-  @keyframes targeting-ripple-is-attacking {
-    0% {
-      box-shadow: 0 4px 10px $hoverColor, 0 0 0 0 $hoverColor,
-        0 0 0 5px $hoverColor, 0 0 0 10px $hoverColor;
-    }
-    100% {
-      box-shadow: 0 4px 10px $hoverColor, 0 0 0 5px $hoverColor,
-        0 0 0 10px $hoverColor, 0 0 0 20px rgba(0, 0, 0, 0);
-    }
-  }
+  // @keyframes targeting-ripple-is-attacking {
+  //   0% {
+  //     box-shadow: 0 4px 10px $hoverColor, 0 0 0 0 $hoverColor,
+  //       0 0 0 5px $hoverColor, 0 0 0 10px $hoverColor;
+  //   }
+  //   100% {
+  //     box-shadow: 0 4px 10px $hoverColor, 0 0 0 5px $hoverColor,
+  //       0 0 0 10px $hoverColor, 0 0 0 20px rgba(0, 0, 0, 0);
+  //   }
+  // }
 }

@@ -1,28 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
-import { Hero } from '@ccg/components';
+import { Hero, OpponentInteractionLayer } from '@ccg/components';
 
 const Opponent = props => {
   const {
+    G,
+    G: {
+      playerCanBeAttackedByMinion,
+      playercanBeAttackedByOnPlay,
+      playerCanBeAttackedByPlayer,
+      playerCanBeAttackedBySpell
+    },
+    ctx,
+    moves,
+    actionPointsCurrent,
+    actionPointsTotal,
     avatarPlaceholderImageSrc,
     cardIsSelected,
     cardsInDeckCount,
     cardsInHandCount,
     costGemImageSrc,
-    actionPointsCurrent,
-    actionPointsTotal,
     heroAbilities,
     heroSymbol,
+    parentComponent,
     playerHealthCurrent,
     playerHealthTotal,
     playerName,
-    theirID,
-    selectedCardContext
+    selectedCardContext,
+    theirID
   } = props;
 
   return (
     <div className={styles['opponent']} data-component="Opponent">
+      <OpponentInteractionLayer
+        G={G}
+        ctx={ctx}
+        moves={moves}
+        canBeAttackedByMinion={playerCanBeAttackedByMinion[theirID]}
+        canBeAttackedByOnPlay={playercanBeAttackedByOnPlay[theirID]}
+        canBeAttackedByPlayer={playerCanBeAttackedByPlayer[theirID]}
+        canBeAttackedBySpell={playerCanBeAttackedBySpell[theirID]}
+      />
+
       <Hero
         avatarPlaceholderImageSrc={avatarPlaceholderImageSrc}
         cardIsSelected={cardIsSelected}
@@ -33,7 +53,7 @@ const Opponent = props => {
         actionPointsTotal={actionPointsTotal}
         heroAbilities={heroAbilities}
         heroSymbol={heroSymbol}
-        parentComponent="Opponent"
+        parentComponent={parentComponent}
         playerHealthCurrent={playerHealthCurrent}
         playerHealthTotal={playerHealthTotal}
         playerName={playerName}
@@ -45,13 +65,13 @@ const Opponent = props => {
 };
 
 Opponent.propTypes = {
+  actionPointsCurrent: PropTypes.number.isRequired,
+  actionPointsTotal: PropTypes.number.isRequired,
   avatarPlaceholderImageSrc: PropTypes.string.isRequired,
   cardIsSelected: PropTypes.bool,
   cardsInDeckCount: PropTypes.number,
   cardsInHandCount: PropTypes.number,
   costGemImageSrc: PropTypes.string.isRequired,
-  actionPointsCurrent: PropTypes.number.isRequired,
-  actionPointsTotal: PropTypes.number.isRequired,
   heroAbilities: PropTypes.array,
   heroSymbol: PropTypes.string.isRequired,
   playerHealthCurrent: PropTypes.number.isRequired,

@@ -17,9 +17,9 @@ const playerHealth = {
  * @requires limitNumberWithinRange()
  */
 export const addToPlayerHealth = (G, player, amount) => {
-  const calculation = G.health[player] + amount;
+  const calculation = G.playerHealth[player] + amount;
   const newHealth = limitNumberWithinRange(calculation, 30, 0);
-  G.health[player] = newHealth;
+  G.playerHealth[player] = newHealth;
 };
 
 /**
@@ -30,9 +30,9 @@ export const addToPlayerHealth = (G, player, amount) => {
  * @requires limitNumberWithinRange()
  */
 export const subtractFromPlayerHealth = (G, player, amount) => {
-  const calculation = G.health[player] - amount;
+  const calculation = G.playerHealth[player] - amount;
   const newHealth = limitNumberWithinRange(calculation, 30, 0);
-  G.health[player] = newHealth;
+  G.playerHealth[player] = newHealth;
 };
 
 export default playerHealth;

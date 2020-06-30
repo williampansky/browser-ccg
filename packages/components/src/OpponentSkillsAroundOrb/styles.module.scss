@@ -18,7 +18,6 @@
 .opponent__skills__list-item {
   background: #111;
   border-radius: 50%;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
   height: calc(var(--player-fab-size) * 0.675);
   margin: 0;
   position: relative;
@@ -43,8 +42,8 @@
   }
 
   &:after {
-    border-top: 4px solid rgba(255, 255, 255, 0.25);
-    border-bottom: 4px solid rgba(0, 0, 0, 0.425);
+    border-top: 2px solid rgba(255, 255, 255, 0.25);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.425);
     border-radius: 50%;
     content: '';
     width: 100%;
@@ -154,4 +153,37 @@
       stroke-width: 2.1;
     }
   }
+}
+
+.overlay {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.675);
+  border-radius: 50%;
+  bottom: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 44px;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  visibility: hidden;
+  width: 100%;
+  z-index: 1;
+
+  &.overlay--in-effect {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// prettier-ignore
+.locked__overlay {
+  svg path { fill: transparent; }
+  svg rect { stroke: white; }
 }

@@ -11,4 +11,10 @@
     line-height: inherit;
     width: 100%;
   }
+
+  @media (min-width: 960px) {
+    min-width: 100px;
+    position: absolute;
+    bottom: calc(var(--hero-height) / 7);
+  }
 }

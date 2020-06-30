@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { useResponsive } from '@ccg/hooks';
 import styles from './styles.module.scss';
-import { Hand, Hero } from '@ccg/components';
+import { Hand, Hero, PlayerInteractionLayer } from '@ccg/components';
 
 const Player = props => {
   const {
@@ -27,8 +28,11 @@ const Player = props => {
     selectedCardObject,
     selectedCardUuid,
     yourId,
+    parentComponent,
     selectedCardInteractionContext
   } = props;
+
+  const { isDesktop } = useResponsive();
 
   const handleCardInteractionClick = useCallback(
     (cardObject, index) => {
@@ -36,7 +40,7 @@ const Player = props => {
       else return selectCardFunction(cardObject, index);
       // else if (cardIsPlayable) return selectCardFunction(cardObject, index);
     },
-    [selectedCardUuid, deselectCardFunction, selectCardFunction]
+    [selectedCardUuid, selectCardFunction]
   );
 
   return (
@@ -45,28 +49,34 @@ const Player = props => {
         styles['player'],
         selectedCardInteractionContext ? 'disable-interaction' : ''
       ].join(' ')}
-      data-component="Player"
+      data-component={parentComponent}
     >
+      <PlayerInteractionLayer
+        handlePlayerInteractionClick={e => console.log(e)}
+        parentComponent={parentComponent}
+      />
+
       <Hero
         abilitiesImageBase={abilitiesImageBase}
         abilitiesImageClose={abilitiesImageClose}
+        actionPointsCurrent={actionPointsCurrent}
+        actionPointsTotal={actionPointsTotal}
         avatarPlaceholderImageSrc={avatarPlaceholderImageSrc}
         cardIsSelected={selectedCardUuid ? true : false}
         cardsInDeck={cardsInDeckCount}
         cardsInHand={cardsInHandCount}
         costGemImageSrc={costGemImageSrc}
-        actionPointsCurrent={actionPointsCurrent}
-        actionPointsTotal={actionPointsTotal}
         heroAbilities={heroAbilities}
         heroSymbol={heroSymbol}
-        parentComponent="Player"
+        parentComponent={parentComponent}
         playerDeck={playerDeck}
         playerHealthCurrent={playerHealthCurrent}
         playerHealthTotal={playerHealthTotal}
         playerName={playerName}
-        yourId={yourId}
         selectedCardInteractionContext={selectedCardInteractionContext}
+        yourId={yourId}
       />
+
       <Hand
         cardsInHand={cardsInHandArray}
         deselectCardFunction={deselectCardFunction}
@@ -77,6 +87,7 @@ const Player = props => {
         selectedCardUuid={selectedCardUuid}
         selectedCardInteractionContext={selectedCardInteractionContext}
         disableInteraction={selectedCardInteractionContext ? true : false}
+        isDesktop={isDesktop}
       />
     </div>
   );

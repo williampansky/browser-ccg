@@ -20,6 +20,7 @@
     "dotenv": "^8.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
+    "lodash-es": "^4.17.15",
     "magic.css": "^1.4.5",
     "mathjs": "^7.0.1",
     "react": "^16.10.2",
