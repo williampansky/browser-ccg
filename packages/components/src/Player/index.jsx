@@ -25,6 +25,7 @@ const Player = props => {
     playerHealthTotal,
     playerName,
     selectCardFunction,
+    selectCardContextFunction,
     selectedCardObject,
     selectedCardUuid,
     yourId,
@@ -80,6 +81,7 @@ const Player = props => {
       <Hand
         cardsInHand={cardsInHandArray}
         deselectCardFunction={deselectCardFunction}
+        selectCardFunction={selectCardFunction}
         handleCardInteractionClick={handleCardInteractionClick}
         imagesDataCards={imagesDataCards}
         imagesDataSets={imagesDataSets}
@@ -88,6 +90,7 @@ const Player = props => {
         selectedCardInteractionContext={selectedCardInteractionContext}
         disableInteraction={selectedCardInteractionContext ? true : false}
         isDesktop={isDesktop}
+        selectCardContextFunction={selectCardContextFunction}
       />
     </div>
   );

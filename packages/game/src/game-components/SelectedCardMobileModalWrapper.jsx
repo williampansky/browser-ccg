@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-
+import { useResponsive } from '@ccg/hooks';
 import { TYPE } from '@ccg/enums';
 import { SelectedCardMobileModal } from '@ccg/components';
 
@@ -24,6 +24,7 @@ const SelectedCardMobileModalWrapper = props => {
     images: { CARDS: IMAGES_CARDS, SETS: IMAGES_SETS }
   } = props;
 
+  const { isDesktop } = useResponsive();
   const { deselectCard, selectCardContext } = moves;
   const { current: currentAP, total: totalAP } = actionPoints[playerID];
   const { hand } = players[playerID];
@@ -72,7 +73,7 @@ const SelectedCardMobileModalWrapper = props => {
     [selectCardContext]
   );
 
-  return (
+  return !isDesktop ? (
     <SelectedCardMobileModal
       card={selectedCardObject[playerID]}
       contextActions={handleContextActions(selectedCardObject[playerID])}
@@ -85,7 +86,7 @@ const SelectedCardMobileModalWrapper = props => {
         selectedCardObject[playerID] && selectedCardObject[playerID].uuid
       }
     />
-  );
+  ) : null;
 };
 
 export default SelectedCardMobileModalWrapper;

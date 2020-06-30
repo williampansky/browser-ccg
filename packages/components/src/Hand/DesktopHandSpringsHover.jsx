@@ -14,7 +14,9 @@ const DesktopHand = props => {
   const {
     cardsInHand: items,
     deselectCardFunction,
+    selectCardFunction,
     handleCardInteractionClick,
+    selectCardContextFunction,
     selectedCardObject,
     selectedCardUuid,
     isDesktop
@@ -300,7 +302,8 @@ const DesktopHand = props => {
       return 'none';
     };
 
-    if (context() === 'isDown' && match)
+    if (context() === 'isDown' && match) {
+      // if (isPlayable) selectCardFunction(items[index], index);
       return {
         x: x,
         y: y + hoverOffsetY,
@@ -312,7 +315,7 @@ const DesktopHand = props => {
         immediate: n => n === 'x' || n === 'y' || n === 'scale',
         config: config.default
       };
-    else if (context() === 'isHovered' && match) {
+    } else if (context() === 'isHovered' && match) {
       return {
         display: 'none', // disables hidden hover listener div
         x: 0,
@@ -329,7 +332,7 @@ const DesktopHand = props => {
           friction: 38
         }
       };
-    } else
+    } else {
       return {
         x: 0,
         y: 0,
@@ -343,6 +346,7 @@ const DesktopHand = props => {
         immediate: n => n === 'zIndex',
         config: config.default
       };
+    }
   };
 
   // Create springs, each corresponds to an item,
@@ -354,6 +358,21 @@ const DesktopHand = props => {
    */
   const bind = useGesture(
     {
+      onDragStart: ({
+        active,
+        args: [originalIndex, isPlayable],
+        down,
+        dragging
+      }) => {
+        const curIndex = order.current.indexOf(originalIndex);
+
+        if (isPlayable) {
+          selectCardFunction(items[curIndex], curIndex);
+          selectCardContextFunction('%SUMMON%');
+        }
+
+        setSprings(fn(down, dragging, active, curIndex));
+      },
       onDrag: ({
         active,
         args: [originalIndex],
@@ -371,6 +390,8 @@ const DesktopHand = props => {
       },
       onDragEnd: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current.indexOf(originalIndex);
+        deselectCardFunction();
+        selectCardContextFunction(null);
         setSprings(fn(down, dragging, active, curIndex));
       },
       onHover: ({ active, args: [originalIndex], down, dragging }) => {
@@ -452,7 +473,7 @@ const DesktopHand = props => {
             return (
               <React.Fragment key={i}>
                 <animated.div
-                  {...bindHover(i)}
+                  {...bindHover(i, isPlayable)}
                   className={styles['hover__slot__block']}
                   style={{
                     display,
@@ -463,7 +484,7 @@ const DesktopHand = props => {
                 />
 
                 <animated.div
-                  {...bind(i)}
+                  {...bind(i, isPlayable)}
                   key={i}
                   style={{
                     zIndex,

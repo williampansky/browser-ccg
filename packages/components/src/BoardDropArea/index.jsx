@@ -21,7 +21,7 @@ const BoardDropArea = props => {
     >
       {areaIsAlone ? (
         <div
-          className={styles['area area--is-alone']}
+          className={[styles['area'], styles['area--is-alone']].join(' ')}
           data-context="area--is-alone"
         />
       ) : (
