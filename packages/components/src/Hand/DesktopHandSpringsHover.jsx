@@ -102,6 +102,33 @@ const DesktopHand = props => {
         if (index === 7) return calc * -7;
       }
 
+      if (total === 9) {
+        calc = 30;
+        if (index === 0) return calc * 8;
+        if (index === 1) return calc * 6;
+        if (index === 2) return calc * 4;
+        if (index === 3) return calc * 2;
+        if (index === 4) return 0;
+        if (index === 5) return calc * -2;
+        if (index === 6) return calc * -4;
+        if (index === 7) return calc * -6;
+        if (index === 8) return calc * -8;
+      }
+
+      if (total === 10) {
+        calc = 25;
+        if (index === 0) return calc * 9;
+        if (index === 1) return calc * 7;
+        if (index === 2) return calc * 5;
+        if (index === 3) return calc * 3;
+        if (index === 4) return calc;
+        if (index === 5) return -calc;
+        if (index === 6) return calc * -3;
+        if (index === 7) return calc * -5;
+        if (index === 8) return calc * -7;
+        if (index === 9) return calc * -9;
+      }
+
       return index * -85;
     };
 
@@ -149,18 +176,42 @@ const DesktopHand = props => {
       }
 
       if (total === 8) {
-        if (index === 0) return 10;
+        if (index === 0) return 20;
         if (index === 1) return 0;
         if (index === 2) return -10;
         if (index === 3) return -20;
         if (index === 4) return -20.5;
         if (index === 5) return -10.5;
         if (index === 6) return 0;
-        if (index === 7) return 10;
+        if (index === 7) return 20;
+      }
+
+      if (total === 9) {
+        if (index === 0) return 30;
+        if (index === 1) return 0;
+        if (index === 2) return -20;
+        if (index === 3) return -30;
+        if (index === 4) return -40;
+        if (index === 5) return -30;
+        if (index === 6) return -20;
+        if (index === 7) return 0;
+        if (index === 8) return 30;
+      }
+
+      if (total === 10) {
+        if (index === 0) return 20;
+        if (index === 1) return 10;
+        if (index === 2) return 0;
+        if (index === 3) return -10;
+        if (index === 4) return -21;
+        if (index === 5) return -20;
+        if (index === 6) return -10;
+        if (index === 7) return 0;
+        if (index === 8) return 20;
+        if (index === 9) return 40;
       }
 
       return 0;
-      return index * 10;
     };
 
     const calcRotate = (index, total = items.length) => {
@@ -213,6 +264,31 @@ const DesktopHand = props => {
         if (index === 5) return -5;
         if (index === 6) return -10;
         if (index === 7) return -20;
+      }
+
+      if (total === 9) {
+        if (index === 0) return 20;
+        if (index === 1) return 10;
+        if (index === 2) return 5;
+        if (index === 3) return 2.5;
+        if (index === 4) return 0;
+        if (index === 5) return -5;
+        if (index === 6) return -10;
+        if (index === 7) return -20;
+        if (index === 8) return -20;
+      }
+
+      if (total === 10) {
+        if (index === 0) return 20;
+        if (index === 1) return 10;
+        if (index === 2) return 5;
+        if (index === 3) return 2.5;
+        if (index === 4) return 0;
+        if (index === 5) return -5;
+        if (index === 6) return -10;
+        if (index === 7) return -20;
+        if (index === 8) return -20;
+        if (index === 9) return -20;
       }
 
       return 0;

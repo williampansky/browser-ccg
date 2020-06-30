@@ -15,6 +15,10 @@ $offset: 20px;
     width: $sizeDesktop;
     margin-left: calc(var(--class-skill-button-size) / -4.375);
   }
+
+  @media (min-width: 1140px) {
+    margin-left: calc(var(--class-skill-button-size) / -6.375);
+  }
 }
 
 .avatar__position__block {
