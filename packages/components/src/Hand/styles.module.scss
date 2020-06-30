@@ -173,3 +173,31 @@ $close__btn--icon-color: white;
     &:after { opacity: 1; }
   }
 }
+
+// invisible hover div for better card interaction/scrolling
+// thru your hand
+.hover__slot__block {
+  height: calc(var(--card-height) / 1.5);
+  // width: calc(calc(var(--card-height) / var(--card-width-division)) / 2);
+  position: absolute;
+  opacity: 0.45;
+  background: red;
+}
+
+// prettier-ignore
+@mixin hoverSlotWidth($width, $division: 2.25) {
+  &[data-length='#{$width}'] .hover__slot__block {
+    width: calc(
+      calc(var(--card-height) / var(--card-width-division)) / #{$division}
+    );
+  }
+}
+
+// prettier-ignore
+.card__tray {
+  @include hoverSlotWidth(2, 2.25);
+  @include hoverSlotWidth(3, 2);
+  @include hoverSlotWidth(4, 2.25);
+  @include hoverSlotWidth(5, 2.5);
+  @include hoverSlotWidth(6, 3);
+}
