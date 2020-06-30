@@ -81,24 +81,25 @@ const DesktopHand = props => {
       }
 
       if (total === 7) {
-        if (index === 0) return index + 274;
-        if (index === 1) return index + 180;
-        if (index === 2) return index + 86;
+        if (index === 0) return index + 200;
+        if (index === 1) return index + 132;
+        if (index === 2) return index + 64;
         if (index === 3) return 0;
-        if (index === 4) return index - 86;
-        if (index === 5) return index - 120;
-        if (index === 6) return index - 184;
+        if (index === 4) return index - 70;
+        if (index === 5) return index - 136.5;
+        if (index === 6) return index - 204;
       }
 
       if (total === 8) {
-        if (index === 0) return index + 300;
-        if (index === 1) return index + 200;
-        if (index === 2) return index + 100;
-        if (index === 3) return 0;
-        if (index === 4) return index - 100;
-        if (index === 5) return index - 200;
-        if (index === 6) return index - 300;
-        if (index === 7) return index - 300;
+        calc = 30;
+        if (index === 0) return calc * 7;
+        if (index === 1) return calc * 5;
+        if (index === 2) return calc * 3;
+        if (index === 3) return calc;
+        if (index === 4) return -calc;
+        if (index === 5) return calc * -3;
+        if (index === 6) return calc * -5;
+        if (index === 7) return calc * -7;
       }
 
       return index * -85;
@@ -147,6 +148,17 @@ const DesktopHand = props => {
         if (index === 6) return 20;
       }
 
+      if (total === 8) {
+        if (index === 0) return 10;
+        if (index === 1) return 0;
+        if (index === 2) return -10;
+        if (index === 3) return -20;
+        if (index === 4) return -20.5;
+        if (index === 5) return -10.5;
+        if (index === 6) return 0;
+        if (index === 7) return 10;
+      }
+
       return 0;
       return index * 10;
     };
@@ -188,8 +200,19 @@ const DesktopHand = props => {
         if (index === 2) return 5;
         if (index === 3) return 0;
         if (index === 4) return -10;
-        if (index === 5) return -20;
-        if (index === 6) return -22;
+        if (index === 5) return -15;
+        if (index === 6) return -20;
+      }
+
+      if (total === 8) {
+        if (index === 0) return 20;
+        if (index === 1) return 10;
+        if (index === 2) return 5;
+        if (index === 3) return 2.5;
+        if (index === 4) return -2.5;
+        if (index === 5) return -5;
+        if (index === 6) return -10;
+        if (index === 7) return -20;
       }
 
       return 0;

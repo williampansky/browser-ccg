@@ -76,25 +76,25 @@ const Hero = props => {
           placeholderImageSrc={avatarPlaceholderImageSrc}
         />
 
-        <header className={styles['player__info']}>
-          <div className={styles['player__stats']}>
-            <PlayerStatIcon
-              iconColor="#ccc"
-              icon="HAND"
-              statColor="white"
-              statLabel="Cards in Hand"
-              statValue={cardsInHand}
-            />
-            <PlayerStatIcon
-              cursor="pointer"
-              iconColor="#ccc"
-              icon="DECK"
-              onClick={e => handleDeckIconClick(e)}
-              statColor="white"
-              statLabel="Cards in Deck"
-              statValue={cardsInDeck}
-            />
-            {!isDesktop ? (
+        {!isDesktop ? (
+          <header className={styles['player__info']}>
+            <div className={styles['player__stats']}>
+              <PlayerStatIcon
+                iconColor="#ccc"
+                icon="HAND"
+                statColor="white"
+                statLabel="Cards in Hand"
+                statValue={cardsInHand}
+              />
+              <PlayerStatIcon
+                cursor="pointer"
+                iconColor="#ccc"
+                icon="DECK"
+                onClick={e => handleDeckIconClick(e)}
+                statColor="white"
+                statLabel="Cards in Deck"
+                statValue={cardsInDeck}
+              />
               <PlayerStatEnergy
                 iconColor="#ccc"
                 statColor="white"
@@ -102,10 +102,10 @@ const Hero = props => {
                 statValue={actionPointsCurrent}
                 totalEnergy={actionPointsTotal}
               />
-            ) : null}
-          </div>
-          <PlayerName id={playerId} name={playerName} />
-        </header>
+            </div>
+            <PlayerName id={playerId} name={playerName} />
+          </header>
+        ) : null}
 
         {parentComponent === 'Player' && !isDesktop ? (
           <div className={styles['player__fab']}>

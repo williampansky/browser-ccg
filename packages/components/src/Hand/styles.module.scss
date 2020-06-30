@@ -177,10 +177,11 @@ $close__btn--icon-color: white;
 // invisible hover div for better card interaction/scrolling
 // thru your hand
 .hover__slot__block {
-  height: calc(var(--card-height) / 1.5);
+  height: calc(var(--card-height) / 1.25);
   // width: calc(calc(var(--card-height) / var(--card-width-division)) / 2);
   position: absolute;
-  opacity: 0.45;
+  opacity: 0;
+  // opacity: 0.6245;
   background: red;
 }
 
@@ -200,4 +201,6 @@ $close__btn--icon-color: white;
   @include hoverSlotWidth(4, 2.25);
   @include hoverSlotWidth(5, 2.5);
   @include hoverSlotWidth(6, 3);
+  @include hoverSlotWidth(7, 3.5);
+  @include hoverSlotWidth(8, 3.95);
 }
