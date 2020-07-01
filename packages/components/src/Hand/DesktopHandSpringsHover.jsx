@@ -21,6 +21,9 @@ const DesktopHand = props => {
     selectedCardUuid,
     isDesktop
   } = props;
+  const [isDragging, setIsDragging] = useState(false);
+  const [isDraggingIndex, setIsDraggingIndex] = useState(null);
+
   // Store indicies as a local ref, this represents the item order
   const order = useRef(items.map((_, index) => index));
 
@@ -364,12 +367,10 @@ const DesktopHand = props => {
         dragging
       }) => {
         const curIndex = order.current.indexOf(originalIndex);
-
         if (isPlayable) {
-          selectCardFunction(items[curIndex], curIndex);
-          selectCardContextFunction('%SUMMON%');
+          setIsDragging(true);
+          setIsDraggingIndex(curIndex);
         }
-
         setSprings(fn(down, dragging, active, curIndex));
       },
       onDrag: ({
@@ -389,8 +390,10 @@ const DesktopHand = props => {
       },
       onDragEnd: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current.indexOf(originalIndex);
-        deselectCardFunction();
-        selectCardContextFunction(null);
+        // deselectCardFunction();
+        // selectCardContextFunction(null);
+        setIsDragging(false);
+        setIsDraggingIndex(null);
         setSprings(fn(down, dragging, active, curIndex));
       },
       onHover: ({ active, args: [originalIndex], down, dragging }) => {
@@ -427,6 +430,28 @@ const DesktopHand = props => {
     },
     { order }
   );
+
+  const handleDraggingCallbacks = useCallback(() => {
+    if (isDragging && typeof items[isDraggingIndex] !== 'undefined') {
+      selectCardFunction(items[isDraggingIndex], isDraggingIndex);
+      selectCardContextFunction('%SUMMON%');
+    } else {
+      deselectCardFunction();
+      selectCardContextFunction(null);
+    }
+  }, [
+    isDragging,
+    items,
+    isDraggingIndex,
+    selectCardFunction,
+    selectCardContextFunction,
+    deselectCardFunction
+  ]);
+
+  // DO NOT USE — max stack call / lags out
+  // useEffect(() => {
+  //   handleDraggingCallbacks();
+  // }, [handleDraggingCallbacks]);
 
   return (
     <div

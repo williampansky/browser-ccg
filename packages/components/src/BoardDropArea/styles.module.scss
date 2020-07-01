@@ -62,7 +62,7 @@
     &:not(.area--is-alone):hover {
       // background: rgba(255, 255, 255, 0.25);
       // border-color: rgba(255, 255, 255, 0.925);
-      width: 20%;
+      width: calc(calc(var(--minion-height) / 1.25) + 50px);
     }
   }
 
