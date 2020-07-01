@@ -50,6 +50,7 @@ const YourBoard = props => {
       ].join(' ')}
       data-board={PLAYER_BOARDS[1]}
       data-board-id={yourID}
+      data-board-length={yourBoard.length}
       data-component="YourBoard"
     >
       <div className="play__area">
@@ -59,7 +60,7 @@ const YourBoard = props => {
           <BoardDropArea
             index={0}
             boardIsActive={cardIsLocked}
-            areaIsAlone={cardIsLocked && yourBoard.length === 0}
+            areaIsAlone={yourBoard.length === 0}
             onClick={() => handleDropAreaClick(0)}
           />
         ) : null}
@@ -83,13 +84,14 @@ const YourBoard = props => {
                 uiTooltipSrc={uiTooltipSrc}
               />
 
-              {yourBoard.length <= 6 ? (
-                <BoardDropArea
-                  index={index + 1}
-                  boardIsActive={cardIsLocked}
-                  onClick={() => handleDropAreaClick(index + 1)}
-                />
-              ) : null}
+              {/* {yourBoard.length <= 6 ? ( */}
+              <BoardDropArea
+                index={index + 1}
+                boardIsActive={cardIsLocked}
+                cantDropMinion={yourBoard.length >= 7}
+                onClick={() => handleDropAreaClick(index + 1)}
+              />
+              {/* ) : null} */}
             </Fragment>
           );
         })}

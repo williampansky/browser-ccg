@@ -10,24 +10,17 @@ const BoardDropArea = props => {
       className={[
         styles['board__drop__area'],
         boardIsActive ? styles['board--is-active'] : '',
+        areaIsAlone ? styles['area--is-alone'] : '',
         cantDropMinion ? styles['cant--drop-minion'] : ''
       ].join(' ')}
       data-component="BoardDropArea"
       data-index={index}
-      onClick={onClick}
-      onKeyPress={onClick}
+      // onClick={onClick}
+      // onKeyPress={onClick}
+      onMouseUp={onClick}
       role="button"
       tabIndex={0}
-    >
-      {areaIsAlone ? (
-        <div
-          className={[styles['area'], styles['area--is-alone']].join(' ')}
-          data-context="area--is-alone"
-        />
-      ) : (
-        <div className={styles['area']} data-context="area" />
-      )}
-    </div>
+    />
   );
 };
 

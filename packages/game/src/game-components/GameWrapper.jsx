@@ -42,7 +42,7 @@ const GameWrapper = props => {
   const yourID = playerID === '0' ? '0' : '1';
 
   // log bools
-  const logSelectedCardObject = true;
+  const logSelectedCardObject = false;
 
   React.useEffect(() => {
     if (logSelectedCardObject && G.selectedCardObject[yourID] !== null)

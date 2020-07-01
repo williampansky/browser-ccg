@@ -303,7 +303,6 @@ const DesktopHand = props => {
     };
 
     if (context() === 'isDown' && match) {
-      // if (isPlayable) selectCardFunction(items[index], index);
       return {
         x: x,
         y: y + hoverOffsetY,

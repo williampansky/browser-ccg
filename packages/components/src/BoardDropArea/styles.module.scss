@@ -1,7 +1,7 @@
 .board__drop__area {
   align-items: center;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px dashed rgba(255, 255, 255, 0.25);
+  border: 0px dashed rgba(255, 255, 255, 0.25);
   box-sizing: border-box;
   color: white;
   display: flex;
@@ -18,13 +18,17 @@
   transition: all 200ms ease-in-out;
   height: 100%;
   outline: none;
+
+  @media (min-width: 960px) {
+    width: 2.5%;
+  }
 }
 
 .board--is-active.board__drop__area {
   cursor: pointer;
   pointer-events: auto;
   width: 1%;
-  margin: 0 1%;
+  margin: 0;
   opacity: 1;
 
   & + div,
@@ -32,26 +36,33 @@
     pointer-events: none;
   }
 
-  .area--is-alone {
-    width: 3.5%;
-    min-height: 150px;
-    margin: 0 3.5%;
+  &.area--is-alone {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    // background: red;
+    // opacity: 1;
   }
 
   @media (max-width: 959px) {
     background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.925);
+    border: 1px dashed rgba(255, 255, 255, 0.925);
     min-width: 7.5%;
     width: 7.5%;
   }
 
   @media (min-width: 960px) {
     width: 2.5%;
+    opacity: 0;
+    z-index: 9000;
 
-    &:hover {
-      background: rgba(255, 255, 255, 0.25);
-      border-color: rgba(255, 255, 255, 0.925);
-      width: 7.5%;
+    &:not(.area--is-alone):hover {
+      // background: rgba(255, 255, 255, 0.25);
+      // border-color: rgba(255, 255, 255, 0.925);
+      width: 20%;
     }
   }
 

@@ -20,9 +20,13 @@
     margin: 0 2.25%;
   }
 
+  // prettier-ignore
   @media (min-width: 960px) {
     overflow: visible;
-    margin: 0 1.25%;
+    margin: 0;
+
+    // [data-board-length='7'] & { margin: 0 1.25%; }
+    [data-board='TheirBoard'] & { margin: 0 1.25%; }
   }
 }
 
