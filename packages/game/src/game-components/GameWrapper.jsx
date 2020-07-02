@@ -45,8 +45,11 @@ const GameWrapper = props => {
   const logSelectedCardObject = true;
 
   React.useEffect(() => {
-    if (logSelectedCardObject && G.selectedCardObject[yourID] !== null)
-      console.log(G.selectedCardObject[yourID]);
+    if (logSelectedCardObject)
+      console.log(
+        'G.selectedCardObject[yourID]: ',
+        G.selectedCardObject[yourID]
+      );
   }, [G, logSelectedCardObject, yourID]);
 
   return (

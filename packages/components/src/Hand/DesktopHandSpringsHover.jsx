@@ -18,8 +18,6 @@ const DesktopHand = props => {
     selectedCardUuid,
     isDesktop
   } = props;
-  const [isDragging, setIsDragging] = useState(false);
-  const [isDraggingIndex, setIsDraggingIndex] = useState(null);
 
   // Store indicies as a local ref, this represents the item order
   const order = useRef(items.map((_, index) => index));
@@ -356,17 +354,8 @@ const DesktopHand = props => {
    */
   const bind = useGesture(
     {
-      onDragStart: ({
-        active,
-        args: [originalIndex, isPlayable],
-        down,
-        dragging
-      }) => {
+      onDragStart: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current.indexOf(originalIndex);
-        if (dragging && isPlayable) {
-          setIsDragging(true);
-          setIsDraggingIndex(curIndex);
-        }
         setSprings(fn(down, dragging, active, curIndex));
       },
       onDrag: ({
@@ -388,10 +377,6 @@ const DesktopHand = props => {
       },
       onDragEnd: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current.indexOf(originalIndex);
-        // deselectCardFunction();
-        // selectCardContextFunction(null);
-        setIsDragging(false);
-        setIsDraggingIndex(null);
         setSprings(fn(down, dragging, active, curIndex));
       },
       onHover: ({ active, args: [originalIndex], down, dragging }) => {
@@ -406,7 +391,7 @@ const DesktopHand = props => {
         enabled: true,
         initial: [0, 0],
         threshold: undefined,
-        rubberband: 0.15, // 0.15
+        rubberband: 0.915, // 0.15
 
         // [xy] gestures specific options
         axis: undefined,
@@ -440,10 +425,14 @@ const DesktopHand = props => {
     [items, selectCardFunction, selectCardContextFunction]
   );
 
-  const handleMouseUp = useCallback(() => {
-    deselectCardFunction();
-    selectCardContextFunction(null);
-  }, [deselectCardFunction, selectCardContextFunction]);
+  const handleMouseUp = useCallback(
+    e => {
+      // console.log(e);
+      deselectCardFunction();
+      selectCardContextFunction(null);
+    },
+    [deselectCardFunction, selectCardContextFunction]
+  );
 
   return (
     <div
@@ -505,14 +494,23 @@ const DesktopHand = props => {
                   className={styles['drag__slot__block']}
                   key={`DragSlot_${i}`}
                   onMouseDownCapture={e => handleMouseDown(e, isPlayable, i)}
-                  onMouseUpCapture={() => handleMouseUp()}
+                  onMouseUpCapture={e => handleMouseUp(e)}
                   style={{
                     zIndex: 110 - i,
                     display: 'block',
                     cursor: isPlayable ? cursor : 'default',
                     marginLeft: marginLeft.interpolate(mL => `${mL}px`),
                     pointerEvents: 'auto',
-                    position: 'absolute'
+                    position: 'absolute',
+                    top: 40,
+                    transform: interpolate(
+                      [x, y, rotate, scale],
+                      (x, y, rt, sc) => {
+                        return `
+                        translate3d(${x}px, ${y}px, 0) 
+                      `;
+                      }
+                    )
                   }}
                 />
 
