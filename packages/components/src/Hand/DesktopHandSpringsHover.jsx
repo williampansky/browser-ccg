@@ -1,14 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
-import { AppIcon, HandSlot } from '@ccg/components';
-import clamp from 'lodash-es/clamp';
+import { HandSlot } from '@ccg/components';
 import { useHover, useGesture } from 'react-use-gesture';
 import { useSprings, animated, config, interpolate } from 'react-spring';
-
-// document.addEventListener('gesturestart', e => e.preventDefault());
-// document.addEventListener('gesturechange', e => e.preventDefault());
 
 const DesktopHand = props => {
   const {
@@ -305,7 +301,7 @@ const DesktopHand = props => {
       return 'none';
     };
 
-    if (context() === 'isDown' && match) {
+    if (context() === 'isDown' && match)
       return {
         x: x,
         y: y + hoverOffsetY,
@@ -317,7 +313,7 @@ const DesktopHand = props => {
         immediate: n => n === 'x' || n === 'y' || n === 'scale',
         config: config.default
       };
-    } else if (context() === 'isHovered' && match) {
+    else if (context() === 'isHovered' && match)
       return {
         display: 'none', // disables hidden hover listener div
         x: 0,
@@ -334,7 +330,7 @@ const DesktopHand = props => {
           friction: 38
         }
       };
-    } else {
+    else
       return {
         x: 0,
         y: 0,
@@ -348,7 +344,6 @@ const DesktopHand = props => {
         immediate: n => n === 'zIndex',
         config: config.default
       };
-    }
   };
 
   // Create springs, each corresponds to an item,
@@ -438,22 +433,14 @@ const DesktopHand = props => {
         selectCardFunction(items[i], i);
         selectCardContextFunction('%SUMMON%');
       }
-      // deselectCardFunction();
-      // selectCardContextFunction(null);
     },
     [items, selectCardFunction, selectCardContextFunction]
   );
 
   const handleMouseUp = useCallback(() => {
-    // e.preventDefault();
     deselectCardFunction();
     selectCardContextFunction(null);
   }, [deselectCardFunction, selectCardContextFunction]);
-
-  // DO NOT USE — max stack call / lags out
-  // useEffect(() => {
-  //   isDragging && handleDraggingCallbacks();
-  // }, [isDragging, handleDraggingCallbacks]);
 
   return (
     <div
@@ -513,7 +500,7 @@ const DesktopHand = props => {
                   {...bind(i, isPlayable)}
                   key={i}
                   onMouseDownCapture={e => handleMouseDown(e, isPlayable, i)}
-                  onMouseUpCapture={e => handleMouseUp()}
+                  onMouseUpCapture={() => handleMouseUp()}
                   style={{
                     zIndex,
                     display: 'block',
@@ -562,6 +549,8 @@ DesktopHand.propTypes = {
   cardsInHand: PropTypes.array,
   deselectCardFunction: PropTypes.func.isRequired,
   handleCardInteractionClick: PropTypes.func.isRequired,
+  selectCardFunction: PropTypes.func.isRequired,
+  selectCardContextFunction: PropTypes.func.isRequired,
   imagesDataCards: PropTypes.object.isRequired,
   imagesDataSets: PropTypes.object.isRequired,
   selectedCardObject: PropTypes.object,

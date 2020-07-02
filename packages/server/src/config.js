@@ -3,9 +3,10 @@ const SERVER_CONFIG = {
     debugCard: 'CORE_010',
     enableDebugCard: false,
     enableAttack: true,
-    enableCost: false,
+    enableCost: true,
     enableHealth: true,
     enableMechanics: true,
+    enableRemoveCardFromHand: true,
     enableSet: true,
     enableSpellType: true,
     enableText: true
