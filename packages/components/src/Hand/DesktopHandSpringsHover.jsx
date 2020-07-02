@@ -370,7 +370,8 @@ const DesktopHand = props => {
       },
       onDrag: ({
         active,
-        args: [originalIndex],
+        args: [originalIndex, isPlayable],
+        cancel,
         down,
         dragging,
         first,
@@ -378,6 +379,7 @@ const DesktopHand = props => {
         tap
       }) => {
         if (tap) return;
+        if (!isPlayable && y <= -150) cancel();
         const curIndex = order.current.indexOf(originalIndex);
         setSprings(
           fn(down, dragging, active, curIndex, first ? 0 : x, first ? 0 : y)
