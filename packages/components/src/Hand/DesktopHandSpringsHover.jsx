@@ -431,27 +431,29 @@ const DesktopHand = props => {
     { order }
   );
 
-  const handleDraggingCallbacks = useCallback(() => {
-    if (isDragging && typeof items[isDraggingIndex] !== 'undefined') {
-      selectCardFunction(items[isDraggingIndex], isDraggingIndex);
-      selectCardContextFunction('%SUMMON%');
-    } else {
-      deselectCardFunction();
-      selectCardContextFunction(null);
-    }
-  }, [
-    isDragging,
-    items,
-    isDraggingIndex,
-    selectCardFunction,
-    selectCardContextFunction,
-    deselectCardFunction
-  ]);
+  const handleMouseDown = useCallback(
+    (e, bool, i) => {
+      e.preventDefault();
+      if (bool) {
+        selectCardFunction(items[i], i);
+        selectCardContextFunction('%SUMMON%');
+      }
+      // deselectCardFunction();
+      // selectCardContextFunction(null);
+    },
+    [items, selectCardFunction, selectCardContextFunction]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    // e.preventDefault();
+    deselectCardFunction();
+    selectCardContextFunction(null);
+  }, [deselectCardFunction, selectCardContextFunction]);
 
   // DO NOT USE — max stack call / lags out
   // useEffect(() => {
-  //   handleDraggingCallbacks();
-  // }, [handleDraggingCallbacks]);
+  //   isDragging && handleDraggingCallbacks();
+  // }, [isDragging, handleDraggingCallbacks]);
 
   return (
     <div
@@ -510,6 +512,8 @@ const DesktopHand = props => {
                 <animated.div
                   {...bind(i, isPlayable)}
                   key={i}
+                  onMouseDownCapture={e => handleMouseDown(e, isPlayable, i)}
+                  onMouseUpCapture={e => handleMouseUp()}
                   style={{
                     zIndex,
                     display: 'block',
