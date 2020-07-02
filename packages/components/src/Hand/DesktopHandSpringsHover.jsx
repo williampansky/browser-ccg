@@ -5,6 +5,7 @@ import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { HandSlot } from '@ccg/components';
 import { useHover, useGesture } from 'react-use-gesture';
 import { useSprings, animated, config, interpolate } from 'react-spring';
+import { useEffect } from 'react';
 
 const DesktopHand = props => {
   const {
@@ -362,7 +363,7 @@ const DesktopHand = props => {
         dragging
       }) => {
         const curIndex = order.current.indexOf(originalIndex);
-        if (isPlayable) {
+        if (dragging && isPlayable) {
           setIsDragging(true);
           setIsDraggingIndex(curIndex);
         }
