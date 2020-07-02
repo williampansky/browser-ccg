@@ -8,6 +8,7 @@ const handleCardPlayability = (G, player) => {
   G.players[player].hand.forEach(card => {
     const { cost } = card;
     if (curAP >= cost) card.isPlayable = true;
+    else card.isPlayable = false;
   });
 };
 

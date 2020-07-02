@@ -5,8 +5,12 @@ import selectedCardObject from '../state/selected-card-object';
 import createBoardSlotObject from '../creators/create-board-slot-object';
 import initCardMechanics from '../mechanics/init-mechanics';
 import actionPoints from '../state/action-points';
+import counts from '../state/counts';
 import copyCardToPlayedCards from '../utils/copy-card-to-played-cards';
 import removeCardFromHand from '../utils/remove-card-from-hand';
+import { RACE } from '@ccg/enums/src';
+import drawCard from './draw-card';
+import handleCardPlayability from '../utils/handle-card-playability';
 
 /**
  * @param {object} G
@@ -31,17 +35,43 @@ const playMinionCard = (G, ctx, index) => {
   if (serverConfig.debugData.enableMechanics)
     initCardMechanics(G, ctx, slotObject, index);
 
-  // move to your playerCards array
-  copyCardToPlayedCards(G, currentPlayer, id);
-
-  // and then remove card from your hand
-  if (serverConfig.debugData.enableRemoveCardFromHand)
+  if (serverConfig.debugData.enableRemoveCardFromHand) {
+    // move to your playerCards array
+    copyCardToPlayedCards(G, currentPlayer, id);
+    // and then remove card from your hand
     removeCardFromHand(G, currentPlayer, uuid);
+    // then deincrement your hand count
+    counts.deincrementHand(G, currentPlayer);
+  }
 
   // reset states
   selectedCardIndex.reset(G, currentPlayer);
   selectedCardObject.reset(G, currentPlayer);
   selectedCardInteractionContext.reset(G, currentPlayer);
+
+  // loop thru your board and check for
+  // event listener mechanic minions
+  G.boards[currentPlayer].forEach((slot, i) => {
+    const {
+      minionData: { id }
+    } = slot;
+
+    switch (id) {
+      case 'CORE_061':
+        if (race === RACE[1] && i !== index) drawCard(G, ctx, currentPlayer, 1);
+        break;
+
+      case 'CORE_062':
+        if (race === RACE[1]) G.boards[currentPlayer][index].canAttack = true;
+        break;
+
+      default:
+        break;
+    }
+  });
+
+  // loop thru your hand and recalculate actionPoints/costs
+  handleCardPlayability(G, currentPlayer);
 };
 
 export default playMinionCard;
