@@ -32,7 +32,7 @@ const DesktopHand = props => {
     const prevMatch = curIndex === index - 1;
     const gtMatch = curIndex > index;
     const ltMatch = curIndex < index;
-    const hoverOffsetY = -150;
+    const hoverOffsetY = -160;
 
     // if (nextMatch) console.log(isHovered);
 

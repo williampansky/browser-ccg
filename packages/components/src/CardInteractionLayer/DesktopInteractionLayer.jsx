@@ -87,7 +87,7 @@ const DesktopInteractionLayer = props => {
       // onKeyPress={() => console.log(card, index)}
       role={isPlayable ? 'button' : 'presentation'}
       tabIndex={isPlayable ? 'button' : 'presentation'}
-      style={{ pointerEvents: isPlayable ? 'auto' : 'none' }}
+      // style={{ pointerEvents: isPlayable ? 'auto' : 'none' }}
     >
       <Card
         active={active}

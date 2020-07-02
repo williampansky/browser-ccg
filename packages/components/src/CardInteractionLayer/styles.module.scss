@@ -1,5 +1,6 @@
 .card__interaction__layer {
   position: relative;
+  pointer-events: none;
   border-radius: calc(var(--card-height) / 28.571428571);
   font-family: var(--font-family-card);
   height: var(--card-height);
