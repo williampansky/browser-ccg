@@ -3,6 +3,10 @@ $close__btn--spacing: calc(calc(var(--card-height) / 10) * 2);
 $close__btn--background-color: var(--board-yourHand-background-color);
 $close__btn--icon-color: white;
 
+// slot debugging
+$displayDragSlotBlocks: false;
+$displayHoverSlotBlocks: false;
+
 // prettier-ignore
 .hand {
   --card-height: 200px;
@@ -174,20 +178,32 @@ $close__btn--icon-color: white;
   }
 }
 
-// invisible hover div for better card interaction/scrolling
-// thru your hand
+// invisible hover div for better card interaction/scrolling thru your hand
 .hover__slot__block {
-  // height: calc(var(--card-height) / 2.5);
-  // width: calc(calc(var(--card-height) / var(--card-width-division)) / 2);
   position: absolute;
   opacity: 0;
-  // opacity: 0.245;
-  background: red;
+
+  @if $displayHoverSlotBlocks == true {
+    opacity: 0.245;
+    background: red;
+  }
+}
+
+// invisible drag div for better card interaction
+.drag__slot__block {
+  position: absolute;
+  opacity: 0;
+
+  @if $displayDragSlotBlocks == true {
+    opacity: 0.245;
+    background: yellow;
+  }
 }
 
 // prettier-ignore
 @mixin hoverSlotWidth($length, $height: 2.5, $division: 2.25) {
-  &[data-length='#{$length}'] .hover__slot__block {
+  &[data-length='#{$length}'] .hover__slot__block,
+  &[data-length='#{$length}'] .drag__slot__block {
     height: calc(var(--card-height) / #{$height});
     width: calc(
       calc(var(--card-height) / var(--card-width-division)) / #{$division}

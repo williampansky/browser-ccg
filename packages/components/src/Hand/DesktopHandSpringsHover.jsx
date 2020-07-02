@@ -488,6 +488,7 @@ const DesktopHand = props => {
                 <animated.div
                   {...bindHover(i, isPlayable)}
                   className={styles['hover__slot__block']}
+                  key={`HoverSlot_${i}`}
                   style={{
                     display,
                     cursor: isPlayable ? cursor : 'default',
@@ -498,16 +499,30 @@ const DesktopHand = props => {
 
                 <animated.div
                   {...bind(i, isPlayable)}
-                  key={i}
+                  className={styles['drag__slot__block']}
+                  key={`DragSlot_${i}`}
                   onMouseDownCapture={e => handleMouseDown(e, isPlayable, i)}
                   onMouseUpCapture={() => handleMouseUp()}
+                  style={{
+                    zIndex: 110 - i,
+                    display: 'block',
+                    cursor: isPlayable ? cursor : 'default',
+                    marginLeft: marginLeft.interpolate(mL => `${mL}px`),
+                    pointerEvents: 'auto',
+                    position: 'absolute'
+                  }}
+                />
+
+                <animated.div
+                  {...bind(i, isPlayable)}
+                  key={`HandSlot_${i}`}
                   style={{
                     zIndex,
                     display: 'block',
                     cursor: isPlayable ? cursor : 'default',
                     marginLeft: marginLeft.interpolate(mL => `${mL}px`),
                     marginTop: marginTop.interpolate(mT => `${mT}px`),
-                    pointerEvents: 'auto',
+                    pointerEvents: 'none',
                     position: 'absolute',
                     transform: interpolate(
                       [x, y, rotate, scale],
