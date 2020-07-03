@@ -1,12 +1,12 @@
+import attackMinionWithMinion from './moves/attack-minion-with-minion';
+import attackPlayerWithMinion from './moves/attack-player-with-minion';
+import boards from './state/boards';
 import deselectCard from './moves/deselect-card';
 import deselectMinion from './moves/deselect-minion';
 import playMinionCard from './moves/play-minion-card';
 import selectCard from './moves/select-card';
 import selectedCardContext from './moves/select-card-context';
 import selectMinion from './moves/select-minion';
-import attackMinionWithMinion from './moves/attack-minion-with-minion';
-import attackPlayerWithMinion from './moves/attack-player-with-minion';
-import boards from './state/boards';
 
 export default {
   attackMinionWithMinion: {

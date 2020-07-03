@@ -1,10 +1,10 @@
+import { _aTMH, _sFMH } from './boards.minion-health';
+import { _dAMT, _dBT, _dHT, _dOPT, _dST } from './boards.determinations';
 import { _dMCA, _dAMCA, _eMCA, _eAMCA } from './boards.can-attack';
 import { _dMCBA, _dAMCBA, _eMCBA, _eAMCBA } from './boards.can-be-attacked';
 import { _dMCBB, _dAMCBB, _eMCBB, _eAMCBB } from './boards.can-be-buffed';
 import { _dMCBH, _dAMCBH, _eMCBH, _eAMCBH } from './boards.can-be-healed';
-import { _dAMT, _dBT, _dHT, _dOPT, _dST } from './boards.determinations';
 import { _kM, _kM0 } from './boards.kill-minion';
-import { _aTMH, _sFMH } from './boards.minion-health';
 import { _pC } from './boards.place-minion-on-board';
 import createBoardSlotObject from '../creators/create-board-slot-object';
 
