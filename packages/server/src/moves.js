@@ -7,6 +7,7 @@ import playMinionCard from './moves/play-minion-card';
 import selectCard from './moves/select-card';
 import selectedCardContext from './moves/select-card-context';
 import selectMinion from './moves/select-minion';
+import playGlobalSpellCard from './moves/play-global-spell-card';
 
 export default {
   attackMinionWithMinion: {
@@ -37,6 +38,12 @@ export default {
     client: false,
     move: (G, ctx, player, slotObject, index) => {
       return boards.killMinion(G, ctx, player, slotObject, index);
+    }
+  },
+  playGlobalSpellCard: {
+    client: false,
+    move: (G, ctx, uuid, cardId, cardCost) => {
+      return playGlobalSpellCard(G, ctx, uuid, cardId, cardCost);
     }
   },
   playMinionCard: {
