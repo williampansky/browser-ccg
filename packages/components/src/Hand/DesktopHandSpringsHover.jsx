@@ -326,7 +326,8 @@ const DesktopHand = props => {
         config: {
           ...config.default,
           tension: 500,
-          friction: 38
+          friction: 38,
+          duration: 75
         }
       };
     else
@@ -427,7 +428,7 @@ const DesktopHand = props => {
 
   const handleMouseUp = useCallback(
     e => {
-      // console.log(e);
+      e.preventDefault();
       deselectCardFunction();
       selectCardContextFunction(null);
     },
@@ -503,14 +504,9 @@ const DesktopHand = props => {
                     pointerEvents: 'auto',
                     position: 'absolute',
                     top: 40,
-                    transform: interpolate(
-                      [x, y, rotate, scale],
-                      (x, y, rt, sc) => {
-                        return `
-                        translate3d(${x}px, ${y}px, 0) 
-                      `;
-                      }
-                    )
+                    transform: interpolate([x, y], (x, y) => {
+                      return `translate3d(${x}px, ${y}px, 0)`;
+                    })
                   }}
                 />
 
