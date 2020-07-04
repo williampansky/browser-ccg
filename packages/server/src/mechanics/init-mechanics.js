@@ -2,6 +2,7 @@
 // import initBuffs from 'lib/mechanics/init-buffs';
 // import initCurses from 'lib/mechanics/init-curses';
 import hasBulwark from './has-bulwark';
+import initRush from './rush';
 // import initStampede from 'lib/mechanics/init-stampede';
 // import initWarcrys from 'lib/mechanics/init-warcrys';
 // import initEnergyShield from 'lib/mechanics/init-energy-shield';
@@ -33,7 +34,7 @@ const initCardMechanics = (G, ctx, slotObject, index) => {
   // if (mechanics.find(m => m === MECHANICS[3])) initCurses(G, ctx, index);
   // if (mechanics.find(m => m === MECHANICS['BULWARK'])) hasBulwark.enable(G, currentPlayer, index);
   if (has(mechanics, 'BULWARK')) hasBulwark.enable(G, currentPlayer, index);
-  // if (mechanics.find(m => m === MECHANICS[5])) initStampede(G, ctx, index);
+  if (has(mechanics, 'RUSH')) initRush(G, ctx, index);
   // if (mechanics.find(m => m === MECHANICS[6])) initWarcrys(G, ctx, card, index);
   // if (mechanics.find(m => m === MECHANICS[9])) initEnergyShield(G, ctx, index);
 };
