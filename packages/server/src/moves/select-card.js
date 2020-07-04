@@ -19,6 +19,23 @@ const selectCard = (G, ctx, cardObject = null, index = null) => {
   selectedCardObject.set(G, currentPlayer, cardObject);
 
   if (cardObject === null) return;
+
+  const {
+    id,
+    playContext,
+    playType,
+    type,
+    numberOvercharge,
+    numberPrimary,
+    numberRNG,
+    numberSecondary
+  } = cardObject;
+
+  G.selectedCardType[currentPlayer] = type;
+  G.selectedCardPlayType[currentPlayer] = playType;
+  G.selectedCardPlayContext[currentPlayer] = playContext;
+
+  // console.log(playType, playContext);
 };
 
 export default selectCard;

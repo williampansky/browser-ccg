@@ -42,8 +42,8 @@ export default {
   },
   playGlobalSpellCard: {
     client: false,
-    move: (G, ctx, uuid, cardId, cardCost) => {
-      return playGlobalSpellCard(G, ctx, uuid, cardId, cardCost);
+    move: (G, ctx, cost, id, set, uuid) => {
+      return playGlobalSpellCard(G, ctx, cost, id, set, uuid);
     }
   },
   playMinionCard: {

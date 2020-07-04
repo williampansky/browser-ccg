@@ -1,11 +1,16 @@
 import React, { Fragment, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { PLAYER_BOARDS, YOUR_INTERACTION_KEYS as intKeys } from '@ccg/enums';
+import {
+  PLAYER_BOARDS,
+  YOUR_INTERACTION_KEYS as intKeys,
+  TYPE
+} from '@ccg/enums';
 import { BoardDropArea, BoardSlot } from '@ccg/components';
 
 const YourBoard = props => {
   const {
     G,
+    G: { selectedCardObject },
     ctx,
     moves,
     yourBoard,
@@ -59,7 +64,11 @@ const YourBoard = props => {
         {yourBoard.length <= 6 ? (
           <BoardDropArea
             index={0}
-            boardIsActive={cardIsLocked}
+            boardIsActive={
+              cardIsLocked ||
+              (selectedCardObject[yourID] &&
+                selectedCardObject[yourID].type === TYPE['MINION'])
+            }
             areaIsAlone={yourBoard.length === 0}
             onClick={() => handleDropAreaClick(0)}
           />

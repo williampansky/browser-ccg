@@ -7,6 +7,7 @@ import deckInfo from '../state/deck-info';
  * @param {string} cardId
  */
 const copyCardToPlayedCards = (G, player, cardId) => {
+  // debugger;
   const cardToPushId = G.players[player].hand.find(c => c.id === cardId).id;
   G.playedCards[player].push(cardToPushId);
   G.allPlayedCards.push(cardToPushId);

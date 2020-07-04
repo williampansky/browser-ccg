@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { PLAYER_BOARDS } from '@ccg/enums';
-import { TheirBoard, YourBoard } from '@ccg/components';
+import { PLAYER_BOARDS, PLAY_TYPE } from '@ccg/enums';
+import { TheirBoard, YourBoard, CardPlayArea } from '@ccg/components';
 import styles from './styles.module.scss';
 import {
   getMechanicImage as gMI,
@@ -12,8 +12,10 @@ import {
 const Board = props => {
   const {
     G,
+    G: { selectedCardPlayType, selectedMinionObject, selectedCardObject },
     ctx,
     moves,
+    moves: { playGlobalSpellCard },
     theirBoard,
     theirID,
     yourBoard,
@@ -23,7 +25,11 @@ const Board = props => {
     mechanicImages
   } = props;
 
-  const { selectedMinionObject } = G;
+  const handleCardPlay = () => {
+    if (selectedCardObject[yourID] === null) return;
+    const { cost, id, set, uuid } = selectedCardObject[yourID];
+    return playGlobalSpellCard(cost, id, set, uuid);
+  };
 
   const mechImages = {
     bubbleSrc: gMI('BUBBLE.png'),
@@ -101,6 +107,11 @@ const Board = props => {
           hasPoisonSrc: mechImages.poisonSrc,
           isDisabledSrc: mechImages.disabledSrc
         }}
+      />
+
+      <CardPlayArea
+        active={selectedCardPlayType[yourID] === PLAY_TYPE['GLOBAL']}
+        onMouseUp={() => handleCardPlay()}
       />
     </div>
   );

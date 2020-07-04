@@ -41,7 +41,7 @@ export const incrementTotalAP = (G, player) => {
  * Sets the `current` value to the `total`; which allows the
  * `ctx.currentPlayer` to spend actionPoints on card play moves.
  *
- * @param {{}} G Game state object.
+ * @param {object} G Game state object.
  * @param {string} player Player to match.
  */
 export const matchCurrentWithTotalAP = (G, player) => {
@@ -54,7 +54,7 @@ export const matchCurrentWithTotalAP = (G, player) => {
  * Sets the `current` actionPoints value of the
  * `player` param to the specified `amount`.
  *
- * @param {{}} G Game state object.
+ * @param {object} G Game state object.
  * @param {string} player Player to set.
  * @param {number} amount Value to set.
  */
@@ -66,7 +66,7 @@ export const setCurrentAP = (G, player, amount) => {
  * Sets the `total` actionPoints value of the
  * `player` param to the specified `amount`.
  *
- * @param {{}} G Game state object.
+ * @param {object} G Game state object.
  * @param {string} player Player to set.
  * @param {number} amount Value to set.
  */
@@ -77,7 +77,7 @@ export const setTotalAP = (G, player, amount) => {
 /**
  * Subtracts amount from player's current actionPoints value.
  *
- * @param {{}} G Game state object.
+ * @param {object} G Game state object.
  * @param {string} player
  * @param {number} amount
  * @requires mathjs::subtract()

@@ -21,8 +21,8 @@ const deselectCard = (G, ctx) => {
   });
 
   G.selectedCardType = { '0': null, '1': null };
-  G.selectedCardSpellType = { '0': null, '1': null };
-  G.selectedCardSpellContext = { '0': null, '1': null };
+  G.selectedCardPlayType = { '0': null, '1': null };
+  G.selectedCardPlayContext = { '0': null, '1': null };
   G.playerCanBeAttackedBySpell = { '0': false, '1': false };
   G.playerSpellDamage = { '0': 0, '1': 0 };
 

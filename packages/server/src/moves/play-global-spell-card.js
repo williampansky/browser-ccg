@@ -9,22 +9,21 @@ import removeCardFromHand from '../utils/remove-card-from-hand';
 import selectedCardIndex from '../state/selected-card-index';
 import selectedCardInteractionContext from '../state/selected-card-interaction-context';
 import selectedCardObject from '../state/selected-card-object';
-import playSpellByCardId from '../spells';
+import castGlobalSpell from '../spells/cast-global-spell';
 
-const playGlobalSpellCard = (G, ctx, index, uuid, cardId, cardCost) => {
+const playGlobalSpellCard = (G, ctx, cost, id, set, uuid) => {
   const { serverConfig } = G;
   const { currentPlayer } = ctx;
 
   if (serverConfig.debugData.enableCost)
-    actionPoints.subtract(G, currentPlayer, cardCost);
+    actionPoints.subtract(G, currentPlayer, cost);
 
-  playSpellByCardId(G, ctx, cardId, index);
+  castGlobalSpell(G, ctx, set, id);
   // logMessage(G, ctx, 'playGlobalSpellCard');
-  deselectCard(G, ctx);
 
   if (serverConfig.debugData.enableRemoveCardFromHand) {
     // move to your playerCards array
-    copyCardToPlayedCards(G, currentPlayer, cardId);
+    copyCardToPlayedCards(G, currentPlayer, id);
     // and then remove card from your hand
     removeCardFromHand(G, currentPlayer, uuid);
     // then deincrement your hand count
@@ -51,6 +50,9 @@ const playGlobalSpellCard = (G, ctx, index, uuid, cardId, cardCost) => {
 
   // loop thru your hand and recalculate actionPoints/costs
   handleCardPlayability(G, currentPlayer);
+
+  // reset all selectedCard state
+  deselectCard(G, ctx);
 };
 
 export default playGlobalSpellCard;

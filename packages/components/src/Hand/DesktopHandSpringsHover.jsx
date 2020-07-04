@@ -420,19 +420,17 @@ const DesktopHand = props => {
       e.preventDefault();
       if (bool) {
         selectCardFunction(items[i], i);
-        selectCardContextFunction('%SUMMON%');
       }
     },
-    [items, selectCardFunction, selectCardContextFunction]
+    [items, selectCardFunction]
   );
 
   const handleMouseUp = useCallback(
     e => {
       e.preventDefault();
       deselectCardFunction();
-      selectCardContextFunction(null);
     },
-    [deselectCardFunction, selectCardContextFunction]
+    [deselectCardFunction]
   );
 
   return (
