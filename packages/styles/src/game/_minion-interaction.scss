@@ -50,7 +50,7 @@
     // background: mix(white, transparent, 25%);
     box-shadow: inset 0px 0px 0px 0px white;
     border-radius: var(--minion-border-radius);
-    content: '';
+    // content: '';
     height: 100%;
     opacity: 0.465;
     width: 100%;
@@ -70,6 +70,18 @@
 
   &[data-active='true']:hover + [data-component='Minion']:after {
     box-shadow: inset 0px 0px 0px 10px white;
+  }
+
+  &[data-active='false']
+    + [data-component='Minion']
+    > [data-file='Minion/image'] {
+    border-color: rgb(182, 180, 180);
+  }
+
+  &[data-active='true']:hover
+    + [data-component='Minion']
+    > [data-file='Minion/image'] {
+    border-color: white;
   }
 }
 
