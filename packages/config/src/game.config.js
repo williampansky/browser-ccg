@@ -9,17 +9,17 @@ const GAME_CONFIG = {
     SET_PRIME: true,
     SET_ENTOURAGE: true
   },
-  debugData: {
-    debugCard: 'CORE_032',
-    enableDebugCard: true,
-    enableAttack: true,
-    enableCost: false,
-    enableHealth: true,
-    enableMechanics: true,
-    enableSet: true,
-    enableSpellType: true,
-    enableText: true
-  },
+  // debugData: {
+  //   debugCard: 'CORE_032',
+  //   enableDebugCard: true,
+  //   enableAttack: true,
+  //   enableCost: false,
+  //   enableHealth: true,
+  //   enableMechanics: true,
+  //   enableSet: true,
+  //   enableSpellType: true,
+  //   enableText: true
+  // },
   matchConfig: {
     enableInitHandsStage: true,
     enableRandomTurnOrder: false

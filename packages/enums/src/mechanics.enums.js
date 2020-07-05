@@ -33,6 +33,7 @@ const MECHANICS = {
   NO_ATTACK: '%NO_ATTACK%',
   ON_DEATH: '%ON_DEATH%',
   ON_END: '%ON_END%',
+  ON_PLAY: '%ON_PLAY%',
   OVERLOAD: '%OVERLOAD%',
   POISON: '%POISON%',
   RANDOM: '%RANDOM%',

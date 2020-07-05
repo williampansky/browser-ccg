@@ -37,7 +37,10 @@ const initCardMechanics = (G, ctx, slotObject, index) => {
   if (has(mechanics, 'BULWARK')) hasBulwark.enable(G, currentPlayer, index);
   if (has(mechanics, 'CANT_TARGET')) hasCantTarget.enable(G, currentPlayer, index);
   if (has(mechanics, 'DISCOVER')) initDiscover(G, currentPlayer);
-  if (has(mechanics, 'DOUBLE_ATTACK')) hasDoubleAttack.enable(G, currentPlayer, index);
+
+  if (has(mechanics, 'DOUBLE_ATTACK') && !has(mechanics, 'ON_PLAY')) 
+    hasDoubleAttack.enable(G, currentPlayer, index);
+
   if (has(mechanics, 'EVENT')) hasEventListener.enable(G, currentPlayer, index);
   if (has(mechanics, 'HIDDEN')) isHidden.enable(G, currentPlayer, index);
   if (has(mechanics, 'LIFESTEAL')) hasLifesteal.enable(G, currentPlayer, index);

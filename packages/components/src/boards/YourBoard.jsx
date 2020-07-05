@@ -96,7 +96,11 @@ const YourBoard = props => {
               {/* {yourBoard.length <= 6 ? ( */}
               <BoardDropArea
                 index={index + 1}
-                boardIsActive={cardIsLocked}
+                boardIsActive={
+                  cardIsLocked ||
+                  (selectedCardObject[yourID] &&
+                    selectedCardObject[yourID].type === TYPE['MINION'])
+                }
                 cantDropMinion={yourBoard.length >= 7}
                 onClick={() => handleDropAreaClick(index + 1)}
               />

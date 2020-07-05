@@ -4,10 +4,13 @@
  * @param {string} player
  */
 const handleCardPlayability = (G, player) => {
-  const { current } = G.actionPoints[player];
+  const { actionPoints, serverConfig } = G;
+  const { current } = actionPoints[player];
+
   G.players[player].hand.forEach(card => {
     const { cost } = card;
-    if (current >= cost) card.isPlayable = true;
+    if (!serverConfig.debugData.enableCost) card.isPlayable = true;
+    else if (current >= cost) card.isPlayable = true;
     else card.isPlayable = false;
   });
 };

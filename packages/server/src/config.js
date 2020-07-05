@@ -1,9 +1,9 @@
 const SERVER_CONFIG = {
   debugData: {
-    debugCard: 'GAME_001',
-    enableDebugCard: false,
+    debugCard: 'CORE_099',
+    enableDebugCard: true,
     enableAttack: true,
-    enableCost: true,
+    enableCost: false,
     enableHealth: true,
     enableMechanics: true,
     enableRemoveCardFromHand: true,
