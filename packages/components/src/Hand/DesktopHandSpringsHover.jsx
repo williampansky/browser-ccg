@@ -1,11 +1,10 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { HandSlot } from '@ccg/components';
 import { useHover, useGesture } from 'react-use-gesture';
 import { useSprings, animated, config, interpolate } from 'react-spring';
-import { useEffect } from 'react';
 
 const DesktopHand = props => {
   const {
@@ -13,11 +12,14 @@ const DesktopHand = props => {
     deselectCardFunction,
     selectCardFunction,
     handleCardInteractionClick,
+    handleCardHoverFunction,
     selectCardContextFunction,
     selectedCardObject,
     selectedCardUuid,
     isDesktop
   } = props;
+
+  const [hoveringCard, setHoveringCard] = useState(null);
 
   // Store indicies as a local ref, this represents the item order
   const order = useRef(items.map((_, index) => index));
@@ -411,6 +413,7 @@ const DesktopHand = props => {
     ({ active, args: [originalIndex] }) => {
       const curIndex = order.current.indexOf(originalIndex);
       setSprings(fn(false, false, active, curIndex));
+      // setHoveringCard(curIndex); // WIP. has huge perf issues
     },
     { order }
   );
@@ -561,6 +564,7 @@ DesktopHand.propTypes = {
   handleCardInteractionClick: PropTypes.func.isRequired,
   selectCardFunction: PropTypes.func.isRequired,
   selectCardContextFunction: PropTypes.func.isRequired,
+  handleCardHoverFunction: PropTypes.func.isRequired,
   imagesDataCards: PropTypes.object.isRequired,
   imagesDataSets: PropTypes.object.isRequired,
   selectedCardObject: PropTypes.object,
@@ -572,6 +576,9 @@ DesktopHand.defaultProps = {
   cardsInHand: [],
   deselectCardFunction: () => {
     console.error('deselectCardFunction() provided as a defaultProp');
+  },
+  handleCardHoverFunction: () => {
+    console.error('handleCardHoverFunction() provided as a defaultProp');
   },
   selectedCardObject: null,
   selectedCardUuid: null

@@ -3,7 +3,8 @@ const hoveringCardIndex = {
     '0': null,
     '1': null
   },
-  set: (G, ctx, index) => setHoveringCardIndex(G, ctx, index)
+  set: (G, ctx, index) => setHoveringCardIndex(G, ctx, index),
+  reset: (G, ctx) => (G.hoveringCardIndex[ctx.currentPlayer] = null)
 };
 
 /**
