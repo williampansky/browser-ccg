@@ -4,8 +4,8 @@ $close__btn--background-color: var(--board-yourHand-background-color);
 $close__btn--icon-color: white;
 
 // slot debugging
-$displayDragSlotBlocks: false;
-$displayHoverSlotBlocks: false;
+$displayDragSlotBlocks: true;
+$displayHoverSlotBlocks: true;
 
 // prettier-ignore
 .hand {

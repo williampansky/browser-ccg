@@ -5,6 +5,8 @@ import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { HandSlot } from '@ccg/components';
 import { useHover, useGesture } from 'react-use-gesture';
 import { useSprings, animated, config, interpolate } from 'react-spring';
+import { usePrevious } from '@ccg/hooks';
+import { isEqual, sortBy } from 'lodash-es';
 
 const DesktopHand = props => {
   const {
@@ -19,10 +21,28 @@ const DesktopHand = props => {
     isDesktop
   } = props;
 
+  // const [items, setItems] = useState([]);
+  // const previousItems = usePrevious(items);
   const [hoveringCard, setHoveringCard] = useState(null);
+
+  // const handleItemsCallback = useCallback(
+  //   incomingItems => {
+  //     const result = isEqual(sortBy(incomingItems), sortBy(previousItems));
+  //     !result && setItems(incomingItems);
+  //   },
+  //   [previousItems]
+  // );
+
+  // useEffect(() => {
+  //   console.log(hoveringCard);
+  // }, [hoveringCard]);
 
   // Store indicies as a local ref, this represents the item order
   const order = useRef(items.map((_, index) => index));
+
+  useEffect(() => {
+    console.log(order.current);
+  }, [items]);
 
   // Returns fitting styles for dragged/idle items
   const fn = (isDown, isDragging, isHovered, curIndex, x, y) => index => {
@@ -314,7 +334,8 @@ const DesktopHand = props => {
         immediate: n => n === 'x' || n === 'y' || n === 'scale',
         config: config.default
       };
-    else if (context() === 'isHovered' && match)
+    else if (context() === 'isHovered' && match) {
+      // setHoveringCard(index);
       return {
         display: 'none', // disables hidden hover listener div
         x: 0,
@@ -332,7 +353,7 @@ const DesktopHand = props => {
           duration: 75
         }
       };
-    else
+    } else {
       return {
         x: 0,
         y: 0,
@@ -346,6 +367,7 @@ const DesktopHand = props => {
         immediate: n => n === 'zIndex',
         config: config.default
       };
+    }
   };
 
   // Create springs, each corresponds to an item,
@@ -413,6 +435,7 @@ const DesktopHand = props => {
     ({ active, args: [originalIndex] }) => {
       const curIndex = order.current.indexOf(originalIndex);
       setSprings(fn(false, false, active, curIndex));
+      console.log(originalIndex);
       // setHoveringCard(curIndex); // WIP. has huge perf issues
     },
     { order }
