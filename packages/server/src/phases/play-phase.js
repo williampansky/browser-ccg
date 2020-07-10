@@ -27,7 +27,7 @@ const onBegin = (G, ctx) => {
   const otherPlayer = turnOrder.find(p => p !== currentPlayer);
 
   incrementAndSetTotalActionPoints(G, currentPlayer);
-  drawCardAtStartOfTurn(G, ctx);
+  // drawCardAtStartOfTurn(G, ctx);
 
   G.boards[currentPlayer].forEach((slot, i) => {
     disableSlotCanBeAttacked(slot);

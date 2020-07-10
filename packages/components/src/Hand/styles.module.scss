@@ -213,6 +213,7 @@ $displayHoverSlotBlocks: true;
 
 // prettier-ignore
 .card__tray {
+  @include hoverSlotWidth(1, 2.5, 2.25);
   @include hoverSlotWidth(2, 2.5, 2.25);
   @include hoverSlotWidth(3, 2.5, 2);
   @include hoverSlotWidth(4, 2.5, 2.25);

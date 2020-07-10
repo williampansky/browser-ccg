@@ -21,28 +21,12 @@ const DesktopHand = props => {
     isDesktop
   } = props;
 
-  // const [items, setItems] = useState([]);
-  // const previousItems = usePrevious(items);
-  const [hoveringCard, setHoveringCard] = useState(null);
-
-  // const handleItemsCallback = useCallback(
-  //   incomingItems => {
-  //     const result = isEqual(sortBy(incomingItems), sortBy(previousItems));
-  //     !result && setItems(incomingItems);
-  //   },
-  //   [previousItems]
-  // );
-
-  // useEffect(() => {
-  //   console.log(hoveringCard);
-  // }, [hoveringCard]);
-
   // Store indicies as a local ref, this represents the item order
   const order = useRef(items.map((_, index) => index));
 
   useEffect(() => {
     console.log(order.current);
-  }, [items]);
+  }, [items, order]);
 
   // Returns fitting styles for dragged/idle items
   const fn = (isDown, isDragging, isHovered, curIndex, x, y) => index => {
@@ -435,7 +419,8 @@ const DesktopHand = props => {
     ({ active, args: [originalIndex] }) => {
       const curIndex = order.current.indexOf(originalIndex);
       setSprings(fn(false, false, active, curIndex));
-      console.log(originalIndex);
+
+      // console.log(originalIndex);
       // setHoveringCard(curIndex); // WIP. has huge perf issues
     },
     { order }
@@ -505,6 +490,8 @@ const DesktopHand = props => {
                 <animated.div
                   {...bindHover(i, isPlayable)}
                   className={styles['hover__slot__block']}
+                  data-hover-slot={i}
+                  data-hover-order={order.current.indexOf(i)}
                   key={`HoverSlot_${i}`}
                   style={{
                     display,
@@ -517,6 +504,8 @@ const DesktopHand = props => {
                 <animated.div
                   {...bind(i, isPlayable)}
                   className={styles['drag__slot__block']}
+                  data-drag-slot={i}
+                  data-drag-order={order.current.indexOf(i)}
                   key={`DragSlot_${i}`}
                   onMouseDownCapture={e => handleMouseDown(e, isPlayable, i)}
                   onMouseUpCapture={e => handleMouseUp(e)}
@@ -537,6 +526,8 @@ const DesktopHand = props => {
                 <animated.div
                   {...bind(i, isPlayable)}
                   key={`HandSlot_${i}`}
+                  data-hand-slot={i}
+                  data-hand-order={order.current.indexOf(i)}
                   style={{
                     zIndex,
                     display: 'block',
