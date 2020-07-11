@@ -80,7 +80,7 @@ $displayHoverSlotBlocks: false;
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row-reverse nowrap;
   justify-content: flex-start;
   align-items: flex-start;
   padding-bottom: calc(var(--card-height) / 10);
