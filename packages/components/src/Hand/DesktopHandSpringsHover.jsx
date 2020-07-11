@@ -24,10 +24,6 @@ const DesktopHand = props => {
   // Store indicies as a local ref, this represents the item order
   const order = useRef(items.map((_, index) => index));
 
-  useEffect(() => {
-    console.log(order.current);
-  }, [items, order]);
-
   // Returns fitting styles for dragged/idle items
   const fn = (isDown, isDragging, isHovered, curIndex, x, y) => index => {
     const logMatch = false;

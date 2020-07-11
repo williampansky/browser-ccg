@@ -31,7 +31,7 @@ const playMinionCard = (G, ctx, index) => {
   if (serverConfig.debugData.enableCost)
     actionPoints.subtract(G, currentPlayer, cost);
 
-  // check and init and mechanics
+  // check and init any mechanics
   if (serverConfig.debugData.enableMechanics)
     initCardMechanics(G, ctx, slotObject, index);
 

@@ -11,6 +11,7 @@ import hasSpellDamage from './has-spell-damage';
 import initDiscover from './discover';
 import initRush from './has-rush';
 import isHidden from './is-hidden';
+import drawCard from '../moves/draw-card';
 
 /**
  * Initialize card mechanics on the targeted slotObject.
@@ -33,21 +34,44 @@ const initCardMechanics = (G, ctx, slotObject, index) => {
    */
   const has = (array, key) => array.find(m => m === ENUMS[key]) ? true : false;
 
-  if (has(mechanics, 'BUBBLE')) hasBubble.enable(G, currentPlayer, index);
-  if (has(mechanics, 'BULWARK')) hasBulwark.enable(G, currentPlayer, index);
-  if (has(mechanics, 'CANT_TARGET')) hasCantTarget.enable(G, currentPlayer, index);
-  if (has(mechanics, 'DISCOVER')) initDiscover(G, currentPlayer);
+  if (has(mechanics, 'BUBBLE'))
+    hasBubble.enable(G, currentPlayer, index);
+
+  if (has(mechanics, 'BULWARK'))
+    hasBulwark.enable(G, currentPlayer, index);
+
+  if (has(mechanics, 'CANT_TARGET'))
+    hasCantTarget.enable(G, currentPlayer, index);
+
+  if (has(mechanics, 'DISCOVER'))
+    initDiscover(G, currentPlayer);
 
   if (has(mechanics, 'DOUBLE_ATTACK') && !has(mechanics, 'ON_PLAY')) 
     hasDoubleAttack.enable(G, currentPlayer, index);
 
-  if (has(mechanics, 'EVENT')) hasEventListener.enable(G, currentPlayer, index);
-  if (has(mechanics, 'HIDDEN')) isHidden.enable(G, currentPlayer, index);
-  if (has(mechanics, 'LIFESTEAL')) hasLifesteal.enable(G, currentPlayer, index);
-  if (has(mechanics, 'ON_DEATH')) hasOnDeath.enable(G, currentPlayer, index);
-  if (has(mechanics, 'POISON')) hasPoison.enable(G, currentPlayer, index);
-  if (has(mechanics, 'RUSH')) initRush(G, currentPlayer, index);
-  if (has(mechanics, 'SPELL_DAMAGE')) hasSpellDamage.enable(G, currentPlayer, index);
+  if (has(mechanics, 'DRAW_CARD'))
+    drawCard(G, ctx, currentPlayer, 1);
+
+  if (has(mechanics, 'EVENT'))
+    hasEventListener.enable(G, currentPlayer, index);
+
+  if (has(mechanics, 'HIDDEN'))
+    isHidden.enable(G, currentPlayer, index);
+
+  if (has(mechanics, 'LIFESTEAL'))
+    hasLifesteal.enable(G, currentPlayer, index);
+
+  if (has(mechanics, 'ON_DEATH'))
+    hasOnDeath.enable(G, currentPlayer, index);
+
+  if (has(mechanics, 'POISON'))
+    hasPoison.enable(G, currentPlayer, index);
+
+  if (has(mechanics, 'RUSH'))
+    initRush(G, currentPlayer, index);
+
+  if (has(mechanics, 'SPELL_DAMAGE'))
+    hasSpellDamage.enable(G, currentPlayer, index);
 };
 
 export default initCardMechanics;
