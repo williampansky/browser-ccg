@@ -27,7 +27,7 @@ const DesktopHand = props => {
   // Returns fitting styles for dragged/idle items
   const fn = (isDown, isDragging, isHovered, curIndex, x, y) => index => {
     const logMatch = false;
-    const disableRotation = true;
+    const disableRotation = false;
     const match = curIndex === index;
     const nextMatch = curIndex === index + 1;
     const prevMatch = curIndex === index - 1;
@@ -162,20 +162,20 @@ const DesktopHand = props => {
       }
 
       if (total === 6) {
-        if (index === 0) return 10;
+        if (index === 0) return 25;
         if (index === 1) return 0;
         if (index === 2) return -10;
         if (index === 3) return -10;
         if (index === 4) return 0;
-        if (index === 5) return 10;
+        if (index === 5) return 25;
       }
 
       if (total === 7) {
         if (index === 0) return 0;
         if (index === 1) return -20;
-        if (index === 2) return -40.5;
-        if (index === 3) return -50;
-        if (index === 4) return -40.5;
+        if (index === 2) return -25;
+        if (index === 3) return -30;
+        if (index === 4) return -25;
         if (index === 5) return -10;
         if (index === 6) return 20;
       }
@@ -223,79 +223,79 @@ const DesktopHand = props => {
       if (disableRotation) return 0;
 
       if (total === 3) {
-        if (index === 0) return 10;
+        if (index === 0) return -10;
         if (index === 1) return 0;
-        if (index === 2) return -10;
+        if (index === 2) return 10;
       }
 
       if (total === 4) {
-        if (index === 0) return 6;
-        if (index === 1) return 0;
-        if (index === 2) return -6;
-        if (index === 3) return -15;
+        if (index === 0) return -15;
+        if (index === 1) return -6;
+        if (index === 2) return 0;
+        if (index === 3) return 6;
       }
 
       if (total === 5) {
-        if (index === 0) return 10;
-        if (index === 1) return 5;
+        if (index === 0) return -10;
+        if (index === 1) return -5;
         if (index === 2) return 0;
-        if (index === 3) return -5;
-        if (index === 4) return -10;
+        if (index === 3) return 5;
+        if (index === 4) return 10;
       }
 
       if (total === 6) {
-        if (index === 0) return 15;
-        if (index === 1) return 10;
-        if (index === 2) return 5;
-        if (index === 3) return -5;
-        if (index === 4) return -10;
-        if (index === 5) return -15;
+        if (index === 0) return -15;
+        if (index === 1) return -10;
+        if (index === 2) return -5;
+        if (index === 3) return 5;
+        if (index === 4) return 10;
+        if (index === 5) return 15;
       }
 
       if (total === 7) {
-        if (index === 0) return 10;
-        if (index === 1) return 10;
-        if (index === 2) return 5;
+        if (index === 0) return -15;
+        if (index === 1) return -10;
+        if (index === 2) return -5;
         if (index === 3) return 0;
-        if (index === 4) return -10;
-        if (index === 5) return -15;
-        if (index === 6) return -20;
+        if (index === 4) return 10;
+        if (index === 5) return 15;
+        if (index === 6) return 20;
       }
 
       if (total === 8) {
-        if (index === 0) return 20;
-        if (index === 1) return 10;
-        if (index === 2) return 5;
-        if (index === 3) return 2.5;
-        if (index === 4) return -2.5;
-        if (index === 5) return -5;
-        if (index === 6) return -10;
-        if (index === 7) return -20;
+        if (index === 0) return -20;
+        if (index === 1) return -10;
+        if (index === 2) return -5;
+        if (index === 3) return -2.5;
+        if (index === 4) return 2.5;
+        if (index === 5) return 5;
+        if (index === 6) return 10;
+        if (index === 7) return 20;
       }
 
       if (total === 9) {
-        if (index === 0) return 20;
-        if (index === 1) return 10;
-        if (index === 2) return 5;
-        if (index === 3) return 2.5;
+        if (index === 0) return -20;
+        if (index === 1) return -15;
+        if (index === 2) return -5;
+        if (index === 3) return -2.5;
         if (index === 4) return 0;
-        if (index === 5) return -5;
-        if (index === 6) return -10;
-        if (index === 7) return -20;
-        if (index === 8) return -20;
+        if (index === 5) return 5;
+        if (index === 6) return 10;
+        if (index === 7) return 15;
+        if (index === 8) return 20;
       }
 
       if (total === 10) {
-        if (index === 0) return 20;
-        if (index === 1) return 10;
-        if (index === 2) return 5;
-        if (index === 3) return 2.5;
+        if (index === 0) return -20;
+        if (index === 1) return -10;
+        if (index === 2) return -5;
+        if (index === 3) return -2.5;
         if (index === 4) return 0;
-        if (index === 5) return -5;
-        if (index === 6) return -10;
-        if (index === 7) return -20;
-        if (index === 8) return -20;
-        if (index === 9) return -20;
+        if (index === 5) return 5;
+        if (index === 6) return 10;
+        if (index === 7) return 14;
+        if (index === 8) return 16;
+        if (index === 9) return 18;
       }
 
       return 0;
