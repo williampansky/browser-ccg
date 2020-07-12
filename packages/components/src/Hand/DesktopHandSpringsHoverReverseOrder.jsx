@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
+import { useSprings, animated, config, interpolate } from 'react-spring';
+import { useCallbackRef } from 'use-callback-ref';
+import { useHover, useGesture } from 'react-use-gesture';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { HandSlot } from '@ccg/components';
-import { useHover, useGesture } from 'react-use-gesture';
-import { useSprings, animated, config, interpolate } from 'react-spring';
-import { usePrevious } from '@ccg/hooks';
-import { isEqual, sortBy } from 'lodash-es';
 
 const DesktopHand = props => {
   const {
@@ -22,7 +22,12 @@ const DesktopHand = props => {
   } = props;
 
   // Store indicies as a local ref, this represents the item order
-  const order = useRef(items.map((_, index) => index));
+  const [_, update] = useState(null);
+
+  const order = useCallbackRef(
+    Array.from(Array(10)).map((_, index) => index),
+    () => update({})
+  );
 
   // Returns fitting styles for dragged/idle items
   const fn = (isDown, isDragging, isHovered, curIndex, x, y) => index => {
@@ -34,8 +39,6 @@ const DesktopHand = props => {
     const gtMatch = curIndex > index;
     const ltMatch = curIndex < index;
     const hoverOffsetY = -160;
-
-    // if (nextMatch) console.log(isHovered);
 
     if (match && logMatch)
       console.log(
@@ -486,7 +489,7 @@ const DesktopHand = props => {
               uuid
             } = items[i];
 
-            return (
+            return order && order.current[i] === i ? (
               <React.Fragment key={i}>
                 <animated.div
                   {...bindHover(i, isPlayable)}
@@ -565,7 +568,7 @@ const DesktopHand = props => {
                   />
                 </animated.div>
               </React.Fragment>
-            );
+            ) : null;
           }
         )}
       </div>
@@ -576,15 +579,15 @@ const DesktopHand = props => {
 DesktopHand.propTypes = {
   cardsInHand: PropTypes.array,
   deselectCardFunction: PropTypes.func.isRequired,
-  handleCardInteractionClick: PropTypes.func.isRequired,
-  selectCardFunction: PropTypes.func.isRequired,
-  selectCardContextFunction: PropTypes.func.isRequired,
   handleCardHoverFunction: PropTypes.func.isRequired,
+  handleCardInteractionClick: PropTypes.func.isRequired,
   imagesDataCards: PropTypes.object.isRequired,
   imagesDataSets: PropTypes.object.isRequired,
+  isDesktop: PropTypes.bool.isRequired,
+  selectCardContextFunction: PropTypes.func.isRequired,
+  selectCardFunction: PropTypes.func.isRequired,
   selectedCardObject: PropTypes.object,
-  selectedCardUuid: PropTypes.string,
-  isDesktop: PropTypes.bool.isRequired
+  selectedCardUuid: PropTypes.string
 };
 
 DesktopHand.defaultProps = {
