@@ -494,8 +494,6 @@ const DesktopHand = props => {
                 <animated.div
                   {...bindHover(i, isPlayable)}
                   className={styles['hover__slot__block']}
-                  data-hover-slot={i}
-                  data-hover-order={order.current.indexOf(i)}
                   key={`HoverSlot_${i}`}
                   style={{
                     display,
@@ -508,8 +506,6 @@ const DesktopHand = props => {
                 <animated.div
                   {...bind(i, isPlayable)}
                   className={styles['drag__slot__block']}
-                  data-drag-slot={i}
-                  data-drag-order={order.current.indexOf(i)}
                   key={`DragSlot_${i}`}
                   onMouseDownCapture={e => handleMouseDown(e, isPlayable, i)}
                   onMouseUpCapture={e => handleMouseUp(e)}
@@ -530,8 +526,9 @@ const DesktopHand = props => {
                 <animated.div
                   {...bind(i, isPlayable)}
                   key={`HandSlot_${i}`}
-                  data-hand-slot={i}
-                  data-hand-order={order.current.indexOf(i)}
+                  data-card-id={id}
+                  // data-hand-slot={i}
+                  // data-hand-order={order.current.indexOf(i)}
                   style={{
                     zIndex,
                     display: 'block',

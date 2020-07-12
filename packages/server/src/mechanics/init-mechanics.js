@@ -12,6 +12,7 @@ import initDiscover from './discover';
 import initRush from './has-rush';
 import isHidden from './is-hidden';
 import drawCard from '../moves/draw-card';
+import summonEntourageMinion from './summon';
 
 /**
  * Initialize card mechanics on the targeted slotObject.
@@ -22,7 +23,7 @@ import drawCard from '../moves/draw-card';
  */
 // prettier-ignore
 const initCardMechanics = (G, ctx, slotObject, index) => {
-  const { minionData: { mechanics } } = slotObject;
+  const { minionData: { entourage, id, mechanics } } = slotObject;
   const { currentPlayer } = ctx;
 
   /**
@@ -72,6 +73,9 @@ const initCardMechanics = (G, ctx, slotObject, index) => {
 
   if (has(mechanics, 'SPELL_DAMAGE'))
     hasSpellDamage.enable(G, currentPlayer, index);
+
+  if (has(mechanics, 'SUMMON'))
+    summonEntourageMinion(G, ctx, id, entourage);
 };
 
 export default initCardMechanics;
