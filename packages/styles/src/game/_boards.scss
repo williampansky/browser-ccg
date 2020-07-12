@@ -65,6 +65,16 @@
     overflow-x: visible;
     overflow-y: visible;
     padding: calc(var(--minion-height) / 6) 0;
+
+    .their__board & {
+      align-items: flex-end;
+      height: 100%;
+    }
+
+    .your__board & {
+      align-items: flex-start;
+      height: 100%;
+    }
   }
 
   @include breakpoint('large') {

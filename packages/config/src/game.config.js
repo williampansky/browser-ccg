@@ -20,6 +20,9 @@ const GAME_CONFIG = {
   //   enableSpellType: true,
   //   enableText: true
   // },
+  devConfig: {
+    autoCloseDebugPanel: false
+  },
   matchConfig: {
     enableInitHandsStage: true,
     enableRandomTurnOrder: false

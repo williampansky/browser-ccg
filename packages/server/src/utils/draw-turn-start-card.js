@@ -14,7 +14,7 @@ const drawCardAtStartOfTurn = (G, ctx) => {
   const { currentPlayer } = ctx;
   const currentPlayerDeckLength = G.players[currentPlayer].deck.length;
   const currentPlayerHandLength = G.players[currentPlayer].hand.length;
-  const currentPlayerHasLessThan10Cards = currentPlayerHandLength <= 9;
+  const currentPlayerHasLessThan10Cards = currentPlayerHandLength < 10;
 
   if (currentPlayerHasLessThan10Cards) drawCard(G, ctx, currentPlayer);
   else discardCard(G, ctx, currentPlayer);

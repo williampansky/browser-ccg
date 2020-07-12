@@ -2,6 +2,7 @@ import React from 'react';
 import { Client as BoardgameClient } from 'boardgame.io/react';
 import { Local } from 'boardgame.io/multiplayer';
 import { ReactCCG } from '@ccg/server';
+import { GAME_CONFIG } from '@ccg/config';
 import GameWrapper from './game-components/GameWrapper';
 // import GameLoader from './components/game-loader';
 
@@ -39,6 +40,9 @@ class App extends React.Component {
 
   componentDidMount() {
     const {
+      devConfig: { autoCloseDebugPanel }
+    } = GAME_CONFIG;
+    const {
       location: { href }
     } = window;
 
@@ -62,7 +66,7 @@ class App extends React.Component {
     /**
      * Auto closes the Boardgame.io debug panel on refreshes.
      */
-    if (typeof window !== 'undefined') {
+    if (autoCloseDebugPanel && typeof window !== 'undefined') {
       setTimeout(() => {
         window.dispatchEvent(
           new KeyboardEvent('keypress', {
