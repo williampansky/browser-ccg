@@ -15,8 +15,8 @@
   user-select: none;
   width: 0;
   overflow: hidden;
-  transition: all 200ms ease-in-out;
   height: 100%;
+  transition: all 200ms ease-in-out;
   outline: none;
 
   &.area--is-alone {
@@ -53,6 +53,7 @@
     display: block;
     // background: red;
     // opacity: 1;
+    // transition: none;
   }
 
   @media (max-width: 959px) {
