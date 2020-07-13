@@ -13,6 +13,7 @@ import initRush from './has-rush';
 import isHidden from './is-hidden';
 import drawCard from '../moves/draw-card';
 import summonEntourageMinion from './summon';
+import initOnPlayMechanic from '../on-plays/init-on-play-mechanic';
 
 /**
  * Initialize card mechanics on the targeted slotObject.
@@ -64,6 +65,9 @@ const initCardMechanics = (G, ctx, slotObject, index) => {
 
   if (has(mechanics, 'ON_DEATH'))
     hasOnDeath.enable(G, currentPlayer, index);
+
+  if (has(mechanics, 'ON_PLAY'))
+    initOnPlayMechanic(G, currentPlayer, index);
 
   if (has(mechanics, 'POISON'))
     hasPoison.enable(G, currentPlayer, index);
