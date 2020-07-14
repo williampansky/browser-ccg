@@ -67,6 +67,7 @@ const Minion = props => {
     sounds,
     targetingArrowText,
     text,
+    totalAttack,
     totalHealth,
     type
   } = props;
@@ -98,6 +99,8 @@ const Minion = props => {
         currentAttack={currentAttack}
         elite={elite}
         imageSrc={getCardAssetImage('attack', null, elite, ASSETS)}
+        isBuffed={currentAttack > totalAttack}
+        isDebuffed={currentAttack < totalAttack}
       />
 
       <MinionHealth
@@ -164,6 +167,7 @@ Minion.propTypes = {
   sounds: PropTypes.object,
   targetingArrowText: PropTypes.string,
   text: PropTypes.string,
+  totalAttack: PropTypes.number,
   totalHealth: PropTypes.number,
   type: PropTypes.string
 };

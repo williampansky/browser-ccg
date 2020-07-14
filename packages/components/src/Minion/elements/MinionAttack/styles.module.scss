@@ -14,6 +14,7 @@
 .text {
   align-items: center;
   bottom: 0;
+  color: white;
   display: flex;
   flex-flow: column nowrap;
   height: calc(var(--minion-height) / 4);
@@ -25,7 +26,16 @@
   width: calc(var(--minion-height) / 3.85);
   z-index: 1;
 
+  &[data--is-damaged='true'] {
+    color: white;
+  }
+
+  &[data--is-buffed='true'] {
+    color: chartreuse;
+  }
+
   & > div {
+    color: inherit;
     left: 4px;
     top: 0;
   }

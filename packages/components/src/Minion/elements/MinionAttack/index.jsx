@@ -2,14 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 
-const MinionAttack = ({ currentAttack, elite, imageSrc }) => {
+const MinionAttack = ({
+  currentAttack,
+  elite,
+  imageSrc,
+  isDebuffed,
+  isBuffed
+}) => {
   return (
     <div
       className={styles['attack__wrapper']}
       data-component="MinionAttack"
       data-value={currentAttack}
     >
-      <div className={[styles['text'], elite ? styles['elite'] : ''].join(' ')}>
+      <div
+        className={[styles['text'], elite ? styles['elite'] : ''].join(' ')}
+        data--is-buffed={isBuffed}
+        data--is-debuffed={isDebuffed}
+      >
         <div className="text__value">{currentAttack}</div>
       </div>
       {elite ? (
