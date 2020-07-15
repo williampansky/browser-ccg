@@ -30,7 +30,7 @@ $displayHoverSlotBlocks: false;
   right: 0;
   top: auto;
   width: 100vw;
-  z-index: var(--zIndex-Hand);
+  z-index: calc(var(--zIndex-Hero) - 1);
 
   @media (min-width: 960px) {
     background: none;
