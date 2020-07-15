@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
-import { useHover } from '@ccg/hooks';
+import { useHover, usePrevious } from '@ccg/hooks';
 import { PLAYER_BOARDS } from '@ccg/enums';
 import { GAME_CONFIG } from '@ccg/config';
 import {
@@ -48,7 +48,7 @@ const BoardSlot = props => {
       hasPoisonSrc,
       isDisabledSrc
     },
-    moves: { setSlotIsNew },
+    moves: { setSlotIsNew: setSlotIsNewMove },
     playerID,
     slotObject,
     slotObject: {
@@ -128,14 +128,15 @@ const BoardSlot = props => {
         text,
         type
       },
-      slotIsNew,
       totalAttack,
       totalHealth,
+      uuid,
       willExpire,
       willExpireIn
     }
   } = props;
 
+  const debugSlotIsNew = true;
   const showCardOnHover = true;
   const hoveringTimer =
     canBeAttackedByMinion ||
@@ -146,17 +147,24 @@ const BoardSlot = props => {
       : 1400;
 
   const [hoverRef, isHovered] = useHover();
+  const previousUuid = usePrevious(uuid);
+  const [slotIsNew, setSlotIsNew] = useState(false);
 
-  const handleSlotIsNew = useCallback(() => {
-    if (enableEntranceAnimations)
-      setTimeout(() => {
-        setSlotIsNew(playerID, index, false);
-      }, 600);
-  }, [enableEntranceAnimations, setSlotIsNew, playerID, index]);
+  const handleSlotIsNew = useCallback(
+    uniqueID => {
+      if (enableEntranceAnimations) {
+        setTimeout(() => {
+          // setSlotIsNewMove(playerID, index, false);
+          // uniqueID !== previousUuid ? setSlotIsNew(true) : setSlotIsNew(false);
+        }, 600);
+      }
+    },
+    [enableEntranceAnimations, setSlotIsNew, playerID, previousUuid, index]
+  );
 
   useEffect(() => {
-    handleSlotIsNew();
-  }, [handleSlotIsNew]);
+    handleSlotIsNew(uuid);
+  }, [handleSlotIsNew, uuid]);
 
   /**
    * Returns minion race in lower case format
@@ -232,6 +240,9 @@ const BoardSlot = props => {
       ref={hoverRef}
       style={{ zIndex: isHovered ? '100' : '' }}
     >
+      {/* debug is new state */}
+      {slotObject && debugSlotIsNew ? <Bubble /> : null}
+
       {/* mechanics (above minion) */}
       {slotObject && hasBubble && <Bubble />}
       {slotObject && hasBoon && <Boon />}

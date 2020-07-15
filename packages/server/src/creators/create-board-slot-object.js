@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import createMinionObject from './create-minion-object';
 
 const createBoardSlotObject = cardId => {
@@ -55,6 +56,7 @@ const createBoardSlotObject = cardId => {
     slotIsNew: true,
     totalAttack: attack,
     totalHealth: health,
+    uuid: uuidv4(),
     wasAttacked: false,
     willExpire: false,
     willExpireIn: 2

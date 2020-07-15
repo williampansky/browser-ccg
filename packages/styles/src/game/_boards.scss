@@ -26,6 +26,13 @@
 
   @media (min-width: 960px) {
     display: none;
+
+    // on desktops to align minions correctly
+    // when your board is full
+    [data-board-length='7'] & {
+      display: block;
+      width: 2.5%;
+    }
   }
 }
 

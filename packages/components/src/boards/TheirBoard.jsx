@@ -64,6 +64,7 @@ const TheirBoard = props => {
       className="player__board their__board"
       data-board={PLAYER_BOARDS[2]}
       data-board-id={theirID}
+      data-board-length={theirBoardArray.length}
     >
       <div className="play__area">
         {theirBoardArray.map((object, index) => {

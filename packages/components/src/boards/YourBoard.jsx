@@ -93,7 +93,6 @@ const YourBoard = props => {
                 uiTooltipSrc={uiTooltipSrc}
               />
 
-              {/* {yourBoard.length <= 6 ? ( */}
               <BoardDropArea
                 index={index + 1}
                 boardIsActive={
@@ -104,7 +103,6 @@ const YourBoard = props => {
                 cantDropMinion={yourBoard.length >= 7}
                 onClick={() => handleDropAreaClick(index + 1)}
               />
-              {/* ) : null} */}
             </Fragment>
           );
         })}
