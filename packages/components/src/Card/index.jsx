@@ -28,6 +28,7 @@ import CardSubTypeBadge from './elements/CardSubTypeBadge';
 import CardText from './elements/CardText';
 import CardTypeBadge from './elements/CardTypeBadge';
 import CardTypeLabel from './elements/CardTypeLabel';
+import { useCallback } from 'react';
 
 const Card = ({
   active,
@@ -68,6 +69,15 @@ const Card = ({
   type,
   uuid
 }) => {
+  const formattedCardText = useCallback(() => {
+    return formatCardText(
+      replaceConstant(text),
+      numberPrimary,
+      numberSecondary,
+      spellDmgBoon
+    );
+  }, [numberPrimary, numberSecondary, spellDmgBoon, text]);
+
   return (
     <div
       className={[
@@ -131,13 +141,7 @@ const Card = ({
         />
       ) : null}
 
-      {text ? (
-        <CardText
-          text={createMarkup(
-            formatCardText(text, numberPrimary, numberSecondary, spellDmgBoon)
-          )}
-        />
-      ) : null}
+      {text ? <CardText text={createMarkup(formattedCardText())} /> : null}
 
       {type === TYPE['MINION'] || type === TYPE['WEAPON'] ? (
         <React.Fragment>

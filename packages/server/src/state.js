@@ -26,7 +26,7 @@ import selectedCardInteractionContext from './state/selected-card-interaction-co
 import selectedCardObject from './state/selected-card-object';
 import selectedMinionIndex from './state/selected-minion-index';
 import selectedMinionObject from './state/selected-minion-object';
-import SERVER_CONFIG from './config';
+import SERVER_CONFIG from './server.config';
 import spellObject from './state/spell-object';
 
 export default {

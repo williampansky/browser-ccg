@@ -1,6 +1,6 @@
 const SERVER_CONFIG = {
   debugData: {
-    debugCard: 'CORE_095',
+    debugCard: 'CORE_109',
     enableDebugCard: true,
     enableAttack: true,
     enableCost: false,
