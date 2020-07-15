@@ -16,6 +16,8 @@ const attackMinionWithMinion = (G, ctx, index) => {
   const ATTACKING_MINION = selectedMinionObject[currentPlayer];
   const ATTACKING_MINION_INDEX = selectedMinionIndex[currentPlayer];
 
+  if (!ATTACKING_MINION) return;
+
   // eject if ATTACKING_MINION can't attack
   if (ATTACKING_MINION && !ATTACKING_MINION.canAttack) return;
   const ATTACKING_MINION_HAS_DBLATK = ATTACKING_MINION.hasDoubleAttack;

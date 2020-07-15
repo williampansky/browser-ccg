@@ -21,7 +21,7 @@ const castGlobalSet002Spell = (G, ctx, cardId) => {
   } = G;
   const { currentPlayer, random } = ctx;
   const otherPlayer = turnOrder.find(p => p !== currentPlayer);
-  const { entourage } = getCardByID(cardId);
+  const { entourage, numberPrimary } = getCardByID(cardId);
 
   const theirBoard = gBoards[otherPlayer];
   const theirBoardLength = gBoards[otherPlayer].length;
@@ -29,7 +29,9 @@ const castGlobalSet002Spell = (G, ctx, cardId) => {
 
   const yourBaseSpellDmg = playerSpellDamage[currentPlayer];
   const yourSpellDamageBuff = playerBuffs[currentPlayer].spellDamage;
-  const yourTotalSpellDmg = Math.abs(yourBaseSpellDmg + yourSpellDamageBuff);
+  const yourTotalSpellDmg = Math.abs(
+    numberPrimary + yourBaseSpellDmg + yourSpellDamageBuff
+  );
 
   const getRandomIndex = length => {
     return Math.floor(Math.random() * (length - 0) + 0);

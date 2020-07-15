@@ -20,6 +20,9 @@ const attackPlayerWithMinion = (G, ctx) => {
   const PLAYER_BEING_ATTACKED = otherPlayer;
   const ATTACKING_MINION = selectedMinionObject[currentPlayer];
   const ATTACKING_MINION_INDEX = selectedMinionIndex[currentPlayer];
+
+  if (!ATTACKING_MINION) return;
+
   const ATTACKING_MINION_HAS_DBLATK = ATTACKING_MINION.hasDoubleAttack;
   const ATTACKING_MINION_DBLATK_COUNT = ATTACKING_MINION.hasDoubleAttackCount;
 

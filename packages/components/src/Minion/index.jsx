@@ -101,6 +101,7 @@ const Minion = props => {
         imageSrc={getCardAssetImage('attack', null, elite, ASSETS)}
         isBuffed={currentAttack > totalAttack}
         isDebuffed={currentAttack < totalAttack}
+        totalAttack={totalAttack}
       />
 
       <MinionHealth

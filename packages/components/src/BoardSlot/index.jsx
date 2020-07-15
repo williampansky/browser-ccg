@@ -28,6 +28,7 @@ import {
 
 const BoardSlot = props => {
   const {
+    ctx: { currentPlayer },
     board,
     handleCanAttackFn,
     handleIsAttackingFn,
@@ -142,11 +143,15 @@ const BoardSlot = props => {
 
   const [hoverRef, isHovered] = useHover();
 
-  useEffect(() => {
+  const handleSlotIsNew = useCallback(() => {
     setTimeout(() => {
-      setSlotIsNew(index, false);
+      setSlotIsNew(playerID, index, false);
     }, 600);
-  }, []);
+  }, [setSlotIsNew, playerID, index]);
+
+  useEffect(() => {
+    handleSlotIsNew();
+  }, [handleSlotIsNew]);
 
   /**
    * Returns minion race in lower case format
@@ -308,6 +313,7 @@ const BoardSlot = props => {
         sounds={sounds}
         targetingArrowText={targetingArrowText}
         text={text}
+        totalAttack={totalAttack}
         totalHealth={totalHealth}
         type={type}
       />

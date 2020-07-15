@@ -79,9 +79,12 @@ export default {
     }
   },
   setSlotIsNew: {
-    client: false,
-    move: (G, ctx, index, bool) => {
-      G.boards[ctx.currentPlayer][index].slotIsNew = bool;
+    client: true,
+    move: (G, player, index, bool) => {
+      if (!player || !index) return;
+      else if (!G.boards[player]) return;
+      else if (!G.boards[player][index]) return;
+      else G.boards[player][index].slotIsNew = bool ? bool : false;
     }
   }
 };

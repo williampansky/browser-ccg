@@ -69,6 +69,9 @@ const TheirBoard = props => {
         {theirBoardArray.map((object, index) => {
           return (
             <BoardSlot
+              G={G}
+              ctx={ctx}
+              moves={moves}
               board={PLAYER_BOARDS[2]}
               handleCanBeAttackedByMinionFn={() => intClick(intKeys[1], index)}
               handleCanBeAttackedByOnPlayFn={() => intClick(intKeys[2], index)}

@@ -7,13 +7,15 @@ const MinionAttack = ({
   elite,
   imageSrc,
   isDebuffed,
-  isBuffed
+  isBuffed,
+  totalAttack
 }) => {
   return (
     <div
       className={styles['attack__wrapper']}
       data-component="MinionAttack"
       data-value={currentAttack}
+      data-total-value={totalAttack}
     >
       <div
         className={[styles['text'], elite ? styles['elite'] : ''].join(' ')}
