@@ -225,7 +225,7 @@ const BoardSlot = props => {
       data-can-be-attacked={handleCanBeAttackedAttr()}
       data-has-bulwark={hasBulwark}
       data-is-empty={slotObject === null}
-      data-is-new={slotIsNew}
+      data-is-new={enableEntranceAnimations && slotIsNew}
       data-slot={index}
       data-for={`${id}--${index}`}
       data-tip={true}
