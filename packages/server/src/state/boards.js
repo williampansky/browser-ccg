@@ -9,7 +9,7 @@ import { _pC } from './boards.place-minion-on-board';
 import createBoardSlotObject from '../creators/create-board-slot-object';
 
 const boardConfig = {
-  enableDebugSlots: false
+  enableDebugSlots: true
 };
 
 // prettier-ignore

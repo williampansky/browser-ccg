@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import { useHover } from '@ccg/hooks';
 import { PLAYER_BOARDS } from '@ccg/enums';
+import { GAME_CONFIG } from '@ccg/config';
 import {
   getMechanicImage,
   getMinionFlairImage,
@@ -27,6 +28,9 @@ import {
 } from '@ccg/components';
 
 const BoardSlot = props => {
+  const {
+    gameAestheticConfig: { enableEntranceAnimations }
+  } = GAME_CONFIG;
   const {
     ctx: { currentPlayer },
     board,
@@ -144,10 +148,11 @@ const BoardSlot = props => {
   const [hoverRef, isHovered] = useHover();
 
   const handleSlotIsNew = useCallback(() => {
-    setTimeout(() => {
-      setSlotIsNew(playerID, index, false);
-    }, 600);
-  }, [setSlotIsNew, playerID, index]);
+    if (enableEntranceAnimations)
+      setTimeout(() => {
+        setSlotIsNew(playerID, index, false);
+      }, 600);
+  }, [enableEntranceAnimations, setSlotIsNew, playerID, index]);
 
   useEffect(() => {
     handleSlotIsNew();

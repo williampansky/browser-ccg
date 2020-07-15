@@ -23,6 +23,9 @@ const GAME_CONFIG = {
   devConfig: {
     autoCloseDebugPanel: false
   },
+  gameAestheticConfig: {
+    enableEntranceAnimations: false
+  },
   matchConfig: {
     enableInitHandsStage: true,
     enableRandomTurnOrder: false
