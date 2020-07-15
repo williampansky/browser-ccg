@@ -77,5 +77,11 @@ export default {
     move: (G, ctx, slotObject, index) => {
       return selectMinion(G, ctx, slotObject, index);
     }
+  },
+  setSlotIsNew: {
+    client: false,
+    move: (G, ctx, index, bool) => {
+      G.boards[ctx.currentPlayer][index].slotIsNew = bool;
+    }
   }
 };

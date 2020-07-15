@@ -52,6 +52,7 @@ const createBoardSlotObject = cardId => {
     isImmune: false,
     isSilenced: false,
     minionData: minionObject,
+    slotIsNew: true,
     totalAttack: attack,
     totalHealth: health,
     wasAttacked: false,

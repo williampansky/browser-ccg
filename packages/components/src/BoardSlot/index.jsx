@@ -43,6 +43,7 @@ const BoardSlot = props => {
       hasPoisonSrc,
       isDisabledSrc
     },
+    moves: { setSlotIsNew },
     playerID,
     slotObject,
     slotObject: {
@@ -122,6 +123,7 @@ const BoardSlot = props => {
         text,
         type
       },
+      slotIsNew,
       totalAttack,
       totalHealth,
       willExpire,
@@ -139,6 +141,12 @@ const BoardSlot = props => {
       : 1400;
 
   const [hoverRef, isHovered] = useHover();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setSlotIsNew(index, false);
+    }, 600);
+  }, []);
 
   /**
    * Returns minion race in lower case format
@@ -207,6 +215,7 @@ const BoardSlot = props => {
       data-can-be-attacked={handleCanBeAttackedAttr()}
       data-has-bulwark={hasBulwark}
       data-is-empty={slotObject === null}
+      data-is-new={slotIsNew}
       data-slot={index}
       data-for={`${id}--${index}`}
       data-tip={true}
