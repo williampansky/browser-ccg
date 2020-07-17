@@ -14,7 +14,11 @@ export default function CanBeAttackedByMinion(props) {
     canBeAttackedSrc,
     canBeAttackedBulwarkSrc,
     canBeAttackedLocSrc,
-    canBeAttackedLocBulwarkSrc
+    canBeAttackedLocBulwarkSrc,
+    canSetHoverTarget,
+    handleHoverTargetFunction,
+    index,
+    slotObject
   } = props;
 
   const [styles, set, stop] = useSpring(() => ({
@@ -46,6 +50,8 @@ export default function CanBeAttackedByMinion(props) {
       role="button"
       tabIndex={0}
       style={styles}
+      onMouseOverCapture={() => handleHoverTargetFunction(slotObject, index)}
+      onMouseOutCapture={() => handleHoverTargetFunction(null, null)}
     >
       {race === RACE['LOCATION'] ? (
         hasBulwark ? (

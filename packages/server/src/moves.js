@@ -9,6 +9,7 @@ import selectedCardContext from './moves/select-card-context';
 import selectMinion from './moves/select-minion';
 import playGlobalSpellCard from './moves/play-global-spell-card';
 import hoverCard from './moves/hover-card';
+import hoverTarget from './moves/hover-target';
 
 export default {
   attackMinionWithMinion: {
@@ -39,6 +40,12 @@ export default {
     client: false,
     move: (G, ctx, index) => {
       return hoverCard(G, ctx, index);
+    }
+  },
+  hoverTarget: {
+    client: false,
+    move: (G, ctx, slotObject, index) => {
+      return hoverTarget(G, ctx, slotObject, index);
     }
   },
   killMinion: {

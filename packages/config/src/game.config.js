@@ -22,7 +22,7 @@ const GAME_CONFIG = {
     autoCloseDebugPanel: false
   },
   gameAestheticConfig: {
-    enableEntranceAnimations: true
+    enableEntranceAnimations: false
   },
   matchConfig: {
     enableInitHandsStage: true,

@@ -28,6 +28,7 @@ import selectedMinionIndex from './state/selected-minion-index';
 import selectedMinionObject from './state/selected-minion-object';
 import SERVER_CONFIG from './server.config';
 import spellObject from './state/spell-object';
+import hoveringTarget from './state/hovering-target';
 
 export default {
   actionPoints: actionPoints.__DATA_MODEL,
@@ -35,6 +36,8 @@ export default {
   cardBack: cardBack.__DATA_MODEL,
   counts: counts.__DATA_MODEL,
   hoveringCardIndex: hoveringCardIndex.__DATA_MODEL,
+  hoveringTargetIndex: hoveringTarget.__DATA_MODEL,
+  hoveringTargetObject: hoveringTarget.__DATA_MODEL,
   lastPlayedCardId: null,
   lastTargeted: { context: null, index: null },
   onPlayObject: onPlayObject.__DATA_MODEL,

@@ -23,6 +23,7 @@ import {
   Elite,
   Poison,
   Card,
+  WillDieOverlay,
   YourMinionInteractions,
   TheirMinionInteractions
 } from '@ccg/components';
@@ -32,6 +33,12 @@ const BoardSlot = props => {
     gameAestheticConfig: { enableEntranceAnimations }
   } = GAME_CONFIG;
   const {
+    G: {
+      hoveringTargetIndex,
+      hoveringTargetObject,
+      selectedMinionObject,
+      selectedMinionIndex
+    },
     ctx: { currentPlayer },
     board,
     handleCanAttackFn,
@@ -39,6 +46,7 @@ const BoardSlot = props => {
     handleCanBeAttackedByMinionFn,
     index,
     interactionImages,
+    interactionImages: { willDieSrc },
     mechanicImages: {
       hasBoonSrc,
       hasBubbleSrc,
@@ -48,7 +56,7 @@ const BoardSlot = props => {
       hasPoisonSrc,
       isDisabledSrc
     },
-    moves: { setSlotIsNew: setSlotIsNewMove },
+    moves: { hoverTarget, setSlotIsNew: setSlotIsNewMove },
     playerID,
     slotObject,
     slotObject: {
@@ -149,6 +157,7 @@ const BoardSlot = props => {
   const [hoverRef, isHovered] = useHover();
   const previousUuid = usePrevious(uuid);
   const [slotIsNew, setSlotIsNew] = useState(false);
+  const [willDie, setWillDie] = useState(false);
 
   const handleSlotIsNew = useCallback(
     uniqueID => {
@@ -159,12 +168,60 @@ const BoardSlot = props => {
         }, 600);
       }
     },
-    [enableEntranceAnimations, setSlotIsNew, playerID, previousUuid, index]
+    [enableEntranceAnimations]
   );
 
   useEffect(() => {
     handleSlotIsNew(uuid);
   }, [handleSlotIsNew, uuid]);
+
+  const handleSelectedWillDieState = useCallback(
+    targetObject => {
+      if (board === PLAYER_BOARDS[1]) {
+        if (targetObject === null) return setWillDie(false);
+        else if (selectedMinionIndex[playerID] !== index)
+          return setWillDie(false);
+        else {
+          const { currentAttack: targetAttack } = targetObject;
+          return targetAttack >= currentHealth
+            ? setWillDie(true)
+            : setWillDie(false);
+        }
+      }
+    },
+    [board, currentHealth, index, playerID, selectedMinionIndex]
+  );
+
+  useEffect(() => {
+    handleSelectedWillDieState(hoveringTargetObject[playerID]);
+  }, [handleSelectedWillDieState, hoveringTargetObject, playerID]);
+
+  const handleHoveredWillDieState = useCallback(
+    (targetObject, targetIndex) => {
+      if (board === PLAYER_BOARDS[2]) {
+        const currentPlayerID = playerID === '0' ? '1' : '0';
+
+        // send to server
+        hoverTarget(targetObject, targetIndex);
+
+        // handle local target willDie state
+        if (targetIndex === null || targetObject === null)
+          return setWillDie(false);
+        else if (index !== targetIndex) return setWillDie(false);
+        else if (selectedMinionObject[currentPlayerID] === null)
+          return setWillDie(false);
+        else {
+          const {
+            currentAttack: selectedMinionCurrentAttack
+          } = selectedMinionObject[currentPlayerID];
+          return selectedMinionCurrentAttack >= currentHealth
+            ? setWillDie(true)
+            : setWillDie(false);
+        }
+      }
+    },
+    [board, hoverTarget, index, selectedMinionObject, playerID, currentHealth]
+  );
 
   /**
    * Returns minion race in lower case format
@@ -241,9 +298,12 @@ const BoardSlot = props => {
       style={{ zIndex: isHovered ? '100' : '' }}
     >
       {/* debug is new state */}
-      {slotObject && debugSlotIsNew ? <Bubble /> : null}
+      {/* {slotObject && debugSlotIsNew ? <Bubble /> : null} */}
 
       {/* mechanics (above minion) */}
+      {slotObject && (
+        <WillDieOverlay activeState={willDie} willDieSrc={willDieSrc} />
+      )}
       {slotObject && hasBubble && <Bubble />}
       {slotObject && hasBoon && <Boon />}
       {slotObject && hasBulwark && (
@@ -271,6 +331,12 @@ const BoardSlot = props => {
           canBeAttackedByMinion={canBeAttackedByMinion}
           interactionImages={interactionImages}
           handleCanBeAttackedByMinionFunction={handleCanBeAttackedByMinionFn}
+          handleHoverTargetFunction={(obj, idx) =>
+            handleHoveredWillDieState(obj, idx)
+          }
+          canSetHoverTarget={selectedMinionObject[playerID] ? true : false}
+          index={index}
+          slotObject={slotObject}
         />
       )}
 

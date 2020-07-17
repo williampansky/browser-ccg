@@ -70,11 +70,8 @@ const Card = ({
   uuid
 }) => {
   const formattedCardText = useCallback(() => {
-    return formatCardText(
-      replaceConstant(text),
-      numberPrimary,
-      numberSecondary,
-      spellDmgBoon
+    return replaceConstant(
+      formatCardText(text, numberPrimary, numberSecondary, spellDmgBoon)
     );
   }, [numberPrimary, numberSecondary, spellDmgBoon, text]);
 

@@ -112,8 +112,13 @@
 }
 
 // isAttacking
-.minion__interaction + [data-component='Minion']:after {
-  .board__slot--is-attacking & {
-    opacity: 0;
+// prettier-ignore
+.minion__interaction {
+  & + [data-component='Minion']:after {
+    .board__slot--is-attacking & { opacity: 0; }
+  }
+
+  & + [data-component='Minion'] > [data-file='Minion/image'] {
+    .board__slot--is-attacking & { border-color: white; }
   }
 }

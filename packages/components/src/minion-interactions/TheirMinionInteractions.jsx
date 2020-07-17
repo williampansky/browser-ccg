@@ -15,7 +15,11 @@ export default function TheirMinionInteractions(props) {
     race,
     hasBulwark,
     canBeAttackedByMinion,
+    canSetHoverTarget,
+    handleHoverTargetFunction,
     handleCanBeAttackedByMinionFunction,
+    index,
+    slotObject,
     interactionImages: {
       canBeAttackedSrc,
       canBeAttackedBulwarkSrc,
@@ -59,6 +63,10 @@ export default function TheirMinionInteractions(props) {
         canBeAttackedBulwarkSrc={canBeAttackedBulwarkSrc}
         canBeAttackedLocSrc={canBeAttackedLocSrc}
         canBeAttackedLocBulwarkSrc={canBeAttackedLocBulwarkSrc}
+        handleHoverTargetFunction={handleHoverTargetFunction}
+        canSetHoverTarget={canSetHoverTarget}
+        index={index}
+        slotObject={slotObject}
       />
     </div>
   );

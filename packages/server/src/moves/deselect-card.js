@@ -1,3 +1,4 @@
+import hoveringTarget from '../state/hovering-target';
 import selectedCardIndex from '../state/selected-card-index';
 import selectedCardObject from '../state/selected-card-object';
 
@@ -12,6 +13,7 @@ const deselectCard = (G, ctx) => {
 
   selectedCardIndex.reset(G, currentPlayer);
   selectedCardObject.reset(G, currentPlayer);
+  hoveringTarget.reset(G, currentPlayer);
 
   G.boards[otherPlayer].forEach(slot => {
     slot.canBeAttackedByMinion = false;

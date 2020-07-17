@@ -29,9 +29,9 @@ const boards = {
       { ...createBoardSlotObject('CORE_062'), hasBoon: true },
       { ...createBoardSlotObject('CORE_061'), hasEventListener: true },
       { ...createBoardSlotObject('CORE_059') },
+      { ...createBoardSlotObject('CORE_039'), hasBulwark: true },
       { ...createBoardSlotObject('CORE_054') },
-      { ...createBoardSlotObject('CORE_041') },
-      { ...createBoardSlotObject('CORE_039'), hasBulwark: true }
+      { ...createBoardSlotObject('CORE_041') }
     ] : []
   },
 

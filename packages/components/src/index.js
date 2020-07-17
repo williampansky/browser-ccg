@@ -33,6 +33,7 @@ export { default as CardPlayArea } from './CardPlayArea';
 // minion interactions
 export { default as CanAttack } from './minion-interactions/CanAttack';
 export { default as IsAttacking } from './minion-interactions/IsAttacking';
+export { default as WillDieOverlay } from './minion-interactions/WillDieOverlay';
 export { default as YourMinionInteractions } from './minion-interactions/YourMinionInteractions';
 export { default as TheirMinionInteractions } from './minion-interactions/TheirMinionInteractions';
 
