@@ -91,6 +91,7 @@ const YourBoard = props => {
                 playerID={yourID}
                 slotObject={object}
                 uiTooltipSrc={uiTooltipSrc}
+                boardLength={yourBoard.length}
               />
 
               <BoardDropArea

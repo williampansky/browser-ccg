@@ -41,6 +41,7 @@ const BoardSlot = props => {
     },
     ctx: { currentPlayer },
     board,
+    boardLength,
     handleCanAttackFn,
     handleIsAttackingFn,
     handleCanBeAttackedByMinionFn,
@@ -278,6 +279,28 @@ const BoardSlot = props => {
   //   isDead && killMinionCallback(index);
   // }, [index, isDead, killMinionCallback]);
 
+  const determineCardHoverSide = useCallback(
+    idx => {
+      const left = 'left';
+      const right = 'right';
+
+      switch (boardLength) {
+        case 4:
+          if (idx === 3) return left;
+          return right;
+        case 5:
+          if (idx === 3 || idx === 4) return left;
+          return right;
+        case 6:
+          if (idx === 4 || idx === 5) return left;
+          return right;
+        default:
+          return right;
+      }
+    },
+    [boardLength]
+  );
+
   return (
     <div
       className={[
@@ -418,7 +441,7 @@ const BoardSlot = props => {
         <div
           className={[
             'board__slot--card-tooltip',
-            index === 5 || index === 6
+            determineCardHoverSide(index) === 'left'
               ? 'show--left uk-transform-origin-bottom-right'
               : 'uk-transform-origin-bottom-left',
             determineIfCardHover() ? 'uk-animation-scale-up' : ''

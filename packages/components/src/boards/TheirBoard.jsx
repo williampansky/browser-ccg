@@ -85,6 +85,7 @@ const TheirBoard = props => {
               playerID={theirID}
               slotObject={object}
               uiTooltipSrc={uiTooltipSrc}
+              boardLength={theirBoardArray.length}
             />
           );
         })}
