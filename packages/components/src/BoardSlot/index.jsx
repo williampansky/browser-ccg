@@ -308,6 +308,7 @@ const BoardSlot = props => {
       {slotObject && (
         <WillDieOverlay
           activeState={willDie}
+          isAttacking={isAttacking}
           willDieSrc={
             board === PLAYER_BOARDS[1] ? willDieYourSrc : willDieTheirSrc
           }

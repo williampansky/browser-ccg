@@ -5,7 +5,7 @@ import { INTERACTIONS } from '@ccg/images';
 import { getMinionInteractionImage } from '@ccg/utils/src';
 
 export default function WillDieOverlay(props) {
-  const { activeState, willDieSrc } = props;
+  const { activeState, isAttacking, willDieSrc } = props;
   const [styles, set, stop] = useSpring(() => ({
     opacity: 0,
     pointerEvents: 'none',
@@ -20,10 +20,14 @@ export default function WillDieOverlay(props) {
     bool => {
       set({
         opacity: bool ? 1 : 0,
-        transform: bool ? 'scale(1)' : 'scale(0)'
+        transform: bool
+          ? isAttacking
+            ? 'scale(1.15)'
+            : 'scale(1)'
+          : 'scale(0)'
       });
     },
-    [set]
+    [isAttacking, set]
   );
 
   useEffect(() => {
@@ -41,7 +45,7 @@ export default function WillDieOverlay(props) {
         alt=""
         role="presentation"
         src={willDieSrc}
-        style={{ transform: 'scale(1)' }}
+        style={{ imageRendering: 'pixelated', transform: 'scale(1)' }}
       />
     </animated.div>
   );
@@ -49,9 +53,11 @@ export default function WillDieOverlay(props) {
 
 WillDieOverlay.propTypes = {
   activeState: PropTypes.bool,
+  isAttacking: PropTypes.bool,
   willDieSrc: PropTypes.string.isRequired
 };
 
 WillDieOverlay.defaultProps = {
-  activeState: false
+  activeState: false,
+  isAttacking: false
 };
