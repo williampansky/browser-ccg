@@ -28,6 +28,9 @@ import {
   TheirMinionInteractions
 } from '@ccg/components';
 
+// board slot react methods
+import determineCardHoverSide from './determine-card-hover-side';
+
 const BoardSlot = props => {
   const {
     gameAestheticConfig: { enableEntranceAnimations }
@@ -279,28 +282,6 @@ const BoardSlot = props => {
   //   isDead && killMinionCallback(index);
   // }, [index, isDead, killMinionCallback]);
 
-  const determineCardHoverSide = useCallback(
-    idx => {
-      const left = 'left';
-      const right = 'right';
-
-      switch (boardLength) {
-        case 4:
-          if (idx === 3) return left;
-          return right;
-        case 5:
-          if (idx === 3 || idx === 4) return left;
-          return right;
-        case 6:
-          if (idx === 4 || idx === 5) return left;
-          return right;
-        default:
-          return right;
-      }
-    },
-    [boardLength]
-  );
-
   return (
     <div
       className={[
@@ -441,7 +422,7 @@ const BoardSlot = props => {
         <div
           className={[
             'board__slot--card-tooltip',
-            determineCardHoverSide(index) === 'left'
+            determineCardHoverSide(boardLength, index) === 'left'
               ? 'show--left uk-transform-origin-bottom-right'
               : 'uk-transform-origin-bottom-left',
             determineIfCardHover() ? 'uk-animation-scale-up' : ''
