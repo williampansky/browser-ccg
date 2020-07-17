@@ -17,4 +17,12 @@
     max-width: 920px;
     margin: 0 auto;
   }
+
+  @media (min-width: 1300px) {
+    max-width: 1100px;
+  }
+
+  @media (min-width: 1440px) {
+    max-width: 1200px;
+  }
 }
