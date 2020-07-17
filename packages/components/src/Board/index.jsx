@@ -50,7 +50,8 @@ const Board = props => {
     canAttackBulwark: gII('CanAttack--Bulwark.png'),
     isAttacking: gII('IsAttacking--Default.png'),
     isAttackingBulwark: gII('IsAttacking--Bulwark.png'),
-    willDieOverlayIcon: gII('WillDie.png')
+    willDieOverlayTheirs: gII('WillDie-TheirBoard.png'),
+    willDieOverlayYours: gII('WillDie-YourBoard.png')
   };
 
   const uiTooltipImage = getUiImage('UI_Tooltip.png');
@@ -70,7 +71,8 @@ const Board = props => {
           canBeAttackedBulwarkSrc: intImages.canBeAttackedBulwark,
           canBeAttackedLocSrc: intImages.canBeAttackedLocation,
           canBeAttackedLocBulwarkSrc: intImages.canBeAttackedLocationBulwark,
-          willDieSrc: intImages.willDieOverlayIcon
+          willDieTheirSrc: intImages.willDieOverlayTheirs,
+          willDieYourSrc: intImages.willDieOverlayYours
         }}
         mechanicImages={{
           hasBoonSrc: mechImages.boonSrc,
@@ -99,7 +101,8 @@ const Board = props => {
           canAttackBulwarkSrc: intImages.canAttackBulwark,
           isAttackingSrc: intImages.isAttacking,
           isAttackingBulwarkSrc: intImages.isAttackingBulwark,
-          willDieSrc: intImages.willDieOverlayIcon
+          willDieTheirSrc: intImages.willDieOverlayTheirs,
+          willDieYourSrc: intImages.willDieOverlayYours
         }}
         mechanicImages={{
           hasBoonSrc: mechImages.boonSrc,

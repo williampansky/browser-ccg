@@ -46,7 +46,7 @@ const BoardSlot = props => {
     handleCanBeAttackedByMinionFn,
     index,
     interactionImages,
-    interactionImages: { willDieSrc },
+    interactionImages: { willDieTheirSrc, willDieYourSrc },
     mechanicImages: {
       hasBoonSrc,
       hasBubbleSrc,
@@ -302,7 +302,12 @@ const BoardSlot = props => {
 
       {/* mechanics (above minion) */}
       {slotObject && (
-        <WillDieOverlay activeState={willDie} willDieSrc={willDieSrc} />
+        <WillDieOverlay
+          activeState={willDie}
+          willDieSrc={
+            board === PLAYER_BOARDS[1] ? willDieYourSrc : willDieTheirSrc
+          }
+        />
       )}
       {slotObject && hasBubble && <Bubble />}
       {slotObject && hasBoon && <Boon />}

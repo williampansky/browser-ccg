@@ -10,7 +10,10 @@ export default function WillDieOverlay(props) {
     opacity: 0,
     pointerEvents: 'none',
     transform: 'scale(0)',
-    zIndex: 100
+    zIndex: 100,
+    config: {
+      duration: 160
+    }
   }));
 
   const handleStyleSet = useCallback(
