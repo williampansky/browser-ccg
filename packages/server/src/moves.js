@@ -1,4 +1,5 @@
 import attackMinionWithMinion from './moves/attack-minion-with-minion';
+import attackMinionWithSpell from './moves/attack-minion-with-spell';
 import attackPlayerWithMinion from './moves/attack-player-with-minion';
 import boards from './state/boards';
 import deselectCard from './moves/deselect-card';
@@ -10,6 +11,7 @@ import selectMinion from './moves/select-minion';
 import playGlobalSpellCard from './moves/play-global-spell-card';
 import hoverCard from './moves/hover-card';
 import hoverTarget from './moves/hover-target';
+import initTargetedCard from './moves/init-targeted-card';
 
 export default {
   attackMinionWithMinion: {
@@ -22,6 +24,12 @@ export default {
     client: false,
     move: (G, ctx, index) => {
       return attackPlayerWithMinion(G, ctx, index);
+    }
+  },
+  attackMinionWithSpell: {
+    client: false,
+    move: (G, ctx, index) => {
+      return attackMinionWithSpell(G, ctx, index);
     }
   },
   deselectCard: {
@@ -46,6 +54,12 @@ export default {
     client: false,
     move: (G, ctx, slotObject, index) => {
       return hoverTarget(G, ctx, slotObject, index);
+    }
+  },
+  initTargetedCard: {
+    client: false,
+    move: (G, ctx, card, index) => {
+      return initTargetedCard(G, ctx, card, index);
     }
   },
   killMinion: {

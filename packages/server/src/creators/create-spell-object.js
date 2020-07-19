@@ -6,8 +6,8 @@ import getCardByID from '../utils/get-card-by-id';
  * @returns {{
  *  id: string
  *  amount: number
- *  spellType: string
- *  spellContext: string
+ *  playType: string
+ *  playContext: string
  *  targetingArrowText: string
  * }}
  */
@@ -19,8 +19,11 @@ const createSpellObject = cardId => {
     name: CARD_OBJECT.name,
     rarity: CARD_OBJECT.rarity,
     set: CARD_OBJECT.set,
-    spellType: CARD_OBJECT.spellType,
-    spellContext: CARD_OBJECT.spellContext,
+    entourage: CARD_OBJECT.entourage,
+    numberPrimary: CARD_OBJECT.numberPrimary,
+    numberSecondary: CARD_OBJECT.numberSecondary,
+    playType: CARD_OBJECT.playType,
+    playContext: CARD_OBJECT.playContext,
     targetingArrowText: CARD_OBJECT.targetingArrowText
   };
 };

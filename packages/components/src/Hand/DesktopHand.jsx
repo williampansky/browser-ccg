@@ -7,6 +7,7 @@ import { useCallbackRef } from 'use-callback-ref';
 import { useHover, useGesture } from 'react-use-gesture';
 import { getCardBaseImage, getCardFlairImage } from '@ccg/utils';
 import { HandSlot } from '@ccg/components';
+import { PLAY_TYPE, TYPE } from '@ccg/enums/src';
 
 const DesktopHand = props => {
   const {
@@ -16,9 +17,12 @@ const DesktopHand = props => {
     handleCardInteractionClick,
     handleCardHoverFunction,
     selectCardContextFunction,
+    handleInitTargetedCardFunction,
     selectedCardObject,
+    selectedCardIndex,
     selectedCardUuid,
-    isDesktop
+    isDesktop,
+    yourId
   } = props;
 
   // Store indicies as a local ref, this represents the item order
@@ -323,7 +327,6 @@ const DesktopHand = props => {
         config: config.default
       };
     else if (context() === 'isHovered' && match) {
-      // setHoveringCard(index);
       return {
         display: 'none', // disables hidden hover listener div
         x: 0,
@@ -373,7 +376,7 @@ const DesktopHand = props => {
       },
       onDrag: ({
         active,
-        args: [originalIndex, isPlayable],
+        args: [originalIndex, isPlayable, playType, type],
         cancel,
         down,
         dragging,
@@ -381,12 +384,23 @@ const DesktopHand = props => {
         movement: [x, y],
         tap
       }) => {
-        if (tap) return;
-        if (!isPlayable && y <= -150) cancel();
         const curIndex = order.current.indexOf(originalIndex);
-        setSprings(
-          fn(down, dragging, active, curIndex, first ? 0 : x, first ? 0 : y)
-        );
+
+        if (tap) return;
+        else if (!isPlayable && y <= -150) cancel();
+        else if (
+          playType === PLAY_TYPE['TARGETED'] &&
+          (type === TYPE['SPELL'] || type === TYPE['ITEM']) &&
+          y <= -150
+        ) {
+          if (selectedCardObject === null) return;
+          // @TODO init spellObject targeting functionality
+          handleInitTargetedCardFunction(selectedCardObject, curIndex);
+        } else {
+          setSprings(
+            fn(down, dragging, active, curIndex, first ? 0 : x, first ? 0 : y)
+          );
+        }
       },
       onDragEnd: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current.indexOf(originalIndex);
@@ -483,6 +497,8 @@ const DesktopHand = props => {
               isGolden,
               isEnhanced,
               isPlayable,
+              isPlaying,
+              playType,
               rarity,
               set,
               type,
@@ -504,7 +520,7 @@ const DesktopHand = props => {
                 />
 
                 <animated.div
-                  {...bind(i, isPlayable)}
+                  {...bind(i, isPlayable, playType, type)}
                   className={styles['drag__slot__block']}
                   key={`DragSlot_${i}`}
                   onMouseDownCapture={e => handleMouseDown(e, isPlayable, i)}
@@ -524,7 +540,7 @@ const DesktopHand = props => {
                 />
 
                 <animated.div
-                  {...bind(i, isPlayable)}
+                  {...bind(i, isPlayable, playType, type)}
                   key={`HandSlot_${i}`}
                   data-card-id={id}
                   // data-hand-slot={i}
@@ -535,6 +551,11 @@ const DesktopHand = props => {
                     cursor: isPlayable ? cursor : 'default',
                     marginLeft: marginLeft.interpolate(mL => `${mL}px`),
                     marginTop: marginTop.interpolate(mT => `${mT}px`),
+                    opacity:
+                      playType === PLAY_TYPE['TARGETED'] &&
+                      selectedCardIndex === i
+                        ? 0
+                        : 1,
                     pointerEvents: 'none',
                     position: 'absolute',
                     transform: interpolate(

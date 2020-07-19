@@ -1,0 +1,69 @@
+/* eslint-disable no-case-declarations */
+import { add } from 'mathjs';
+import actionPoints from '../state/action-points';
+import drawCard from '../moves/draw-card';
+import getCardByID from '../utils/get-card-by-id';
+import createBoardSlotObject from '../creators/create-board-slot-object';
+import playerHealth from '../state/player-health';
+import boards from '../state/boards';
+import playerCanAttack from '../state/player-can-attack';
+import playerAttackValue from '../state/player-attack-value';
+import playerShieldPoints from '../state/player-shield-points';
+import counts from '../state/counts';
+
+const castTargetedSet002SpellAtMinion = (
+  G,
+  ctx,
+  cardId,
+  targetSlotObject,
+  targetSlotIndex
+) => {
+  const {
+    boards: gBoards,
+    playedCards,
+    playerBuffs,
+    playerSpellDamage,
+    turnOrder
+  } = G;
+  const { currentPlayer, random } = ctx;
+  const otherPlayer = turnOrder.find(p => p !== currentPlayer);
+  const { entourage, numberPrimary } = getCardByID(cardId);
+
+  const theirBoard = gBoards[otherPlayer];
+  const theirBoardLength = gBoards[otherPlayer].length;
+  const theirPlayedCards = playedCards[otherPlayer];
+
+  const yourBaseSpellDmg = playerSpellDamage[currentPlayer];
+  const yourSpellDamageBuff = playerBuffs[currentPlayer].spellDamage;
+  const yourTotalSpellDmg = Math.abs(
+    numberPrimary + yourBaseSpellDmg + yourSpellDamageBuff
+  );
+
+  const getRandomIndex = length => {
+    return Math.floor(Math.random() * (length - 0) + 0);
+  };
+
+  const getRandomCardId = array => {
+    return random.Shuffle(array)[0];
+  };
+
+  const theirRandomIdx1 = getRandomIndex(theirBoardLength);
+  const theirRandomIdx2 = getRandomIndex(theirBoardLength);
+  const theirRandomIdx3 = getRandomIndex(theirBoardLength);
+
+  switch (cardId) {
+    // %TRANSFORM% a minion into a 0/1 %RACE_DEMONIC% with %BULWARK%
+    case 'CORE_109':
+      G.boards[otherPlayer][targetSlotIndex] = {
+        ...createBoardSlotObject(entourage[0]),
+        hasBulwark: true
+      };
+      break;
+
+    // eject
+    default:
+      return;
+  }
+};
+
+export default castTargetedSet002SpellAtMinion;

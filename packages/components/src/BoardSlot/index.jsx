@@ -48,6 +48,7 @@ const BoardSlot = props => {
     handleCanAttackFn,
     handleIsAttackingFn,
     handleCanBeAttackedByMinionFn,
+    handleCanBeAttackedBySpellFn,
     index,
     interactionImages,
     interactionImages: { willDieTheirSrc, willDieYourSrc },
@@ -242,10 +243,10 @@ const BoardSlot = props => {
     let bool = false;
     if (isHovered) bool = true;
     if (isAttacking) bool = false;
-    if (isHovered && canBeAttackedByMinion) bool = true;
-    if (isHovered && canBeAttackedByPlayer) bool = true;
-    if (isHovered && canBeAttackedBySpell) bool = true;
-    if (isHovered && canBeAttackedByOnPlay) bool = true;
+    if (isHovered && canBeAttackedByMinion) bool = false;
+    if (isHovered && canBeAttackedByPlayer) bool = false;
+    if (isHovered && canBeAttackedBySpell) bool = false;
+    if (isHovered && canBeAttackedByOnPlay) bool = false;
     if (canBeBuffed) bool = false;
     if (canBeDebuffed) bool = false;
     if (canBeExpired) bool = false;
@@ -339,8 +340,10 @@ const BoardSlot = props => {
           race={race}
           hasBulwark={hasBulwark}
           canBeAttackedByMinion={canBeAttackedByMinion}
+          canBeAttackedBySpell={canBeAttackedBySpell}
           interactionImages={interactionImages}
           handleCanBeAttackedByMinionFunction={handleCanBeAttackedByMinionFn}
+          handleCanBeAttackedBySpellFunction={handleCanBeAttackedBySpellFn}
           handleHoverTargetFunction={(obj, idx) =>
             handleHoveredWillDieState(obj, idx)
           }

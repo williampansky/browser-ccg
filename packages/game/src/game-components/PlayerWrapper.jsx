@@ -14,6 +14,7 @@ const PlayerWrapper = props => {
       playerName,
       playerHeroAbilities,
       selectedCardObject,
+      selectedCardIndex,
       selectedCardInteractionContext,
       counts
     },
@@ -34,7 +35,13 @@ const PlayerWrapper = props => {
   const { current: currentAP, total: totalAP } = actionPoints[playerID];
   const { hand } = players[playerID];
   const { deck: deckLength, hand: handLength } = counts[playerID];
-  const { deselectCard, selectCard, selectCardContext, hoverCard } = moves;
+  const {
+    deselectCard,
+    selectCard,
+    selectCardContext,
+    hoverCard,
+    initTargetedCard
+  } = moves;
 
   return (
     <Player
@@ -59,8 +66,10 @@ const PlayerWrapper = props => {
       playerName={playerName[playerID]}
       selectCardFunction={(obj, idx) => selectCard(obj, idx)}
       handleCardHoverFunction={idx => hoverCard(idx)}
+      handleInitTargetedCardFunction={(obj, idx) => initTargetedCard(obj, idx)}
       selectCardContextFunction={str => selectCardContext(str)}
       selectedCardObject={selectedCardObject[playerID]}
+      selectedCardIndex={selectedCardIndex[playerID]}
       selectedCardUuid={
         selectedCardObject[playerID] && selectedCardObject[playerID].uuid
       }

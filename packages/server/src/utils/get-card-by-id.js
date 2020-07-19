@@ -10,6 +10,7 @@ const getCardByID = cardId => {
     ...getCardObjectFromDatabase(cardId),
     uuid: uuidv4(),
     isPlayable: false,
+    isPlaying: false,
     isEnhanced: false
   };
 };

@@ -27,7 +27,9 @@ const Player = props => {
     selectCardFunction,
     selectCardContextFunction,
     handleCardHoverFunction,
+    handleInitTargetedCardFunction,
     selectedCardObject,
+    selectedCardIndex,
     selectedCardUuid,
     yourId,
     parentComponent,
@@ -93,6 +95,9 @@ const Player = props => {
         isDesktop={isDesktop}
         handleCardHoverFunction={handleCardHoverFunction}
         selectCardContextFunction={selectCardContextFunction}
+        yourId={yourId}
+        selectedCardIndex={selectedCardIndex}
+        handleInitTargetedCardFunction={handleInitTargetedCardFunction}
       />
     </div>
   );

@@ -15,9 +15,11 @@ export default function TheirMinionInteractions(props) {
     race,
     hasBulwark,
     canBeAttackedByMinion,
+    canBeAttackedBySpell,
     canSetHoverTarget,
     handleHoverTargetFunction,
     handleCanBeAttackedByMinionFunction,
+    handleCanBeAttackedBySpellFunction,
     index,
     slotObject,
     interactionImages: {
@@ -30,14 +32,15 @@ export default function TheirMinionInteractions(props) {
 
   const [activeState, setActiveState] = useState(null);
 
-  const handleActiveStateCallback = useCallback(byMinion => {
+  const handleActiveStateCallback = useCallback((byMinion, bySpell) => {
     if (byMinion) return setActiveState('canBeAttackedByMinion');
+    if (bySpell) return setActiveState('canBeAttackedBySpell');
     else return setActiveState(null);
   }, []);
 
   useEffect(() => {
-    handleActiveStateCallback(canBeAttackedByMinion);
-  }, [handleActiveStateCallback, canBeAttackedByMinion]);
+    handleActiveStateCallback(canBeAttackedByMinion, canBeAttackedBySpell);
+  }, [handleActiveStateCallback, canBeAttackedByMinion, canBeAttackedBySpell]);
 
   // if (canBeAttackedBySpell) {
   //   return <CanBeAttackedBySpell moves={moves} index={index} />;
@@ -59,6 +62,20 @@ export default function TheirMinionInteractions(props) {
         hasBulwark={hasBulwark}
         activeState={activeState === 'canBeAttackedByMinion' ? true : false}
         onClick={handleCanBeAttackedByMinionFunction}
+        canBeAttackedSrc={canBeAttackedSrc}
+        canBeAttackedBulwarkSrc={canBeAttackedBulwarkSrc}
+        canBeAttackedLocSrc={canBeAttackedLocSrc}
+        canBeAttackedLocBulwarkSrc={canBeAttackedLocBulwarkSrc}
+        handleHoverTargetFunction={handleHoverTargetFunction}
+        canSetHoverTarget={canSetHoverTarget}
+        index={index}
+        slotObject={slotObject}
+      />
+      <CanBeAttackedBySpell
+        race={race}
+        hasBulwark={hasBulwark}
+        activeState={activeState === 'canBeAttackedBySpell' ? true : false}
+        onClick={handleCanBeAttackedBySpellFunction}
         canBeAttackedSrc={canBeAttackedSrc}
         canBeAttackedBulwarkSrc={canBeAttackedBulwarkSrc}
         canBeAttackedLocSrc={canBeAttackedLocSrc}
