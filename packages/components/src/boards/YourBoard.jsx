@@ -23,27 +23,18 @@ const YourBoard = props => {
     uiTooltipSrc
   } = props;
 
-  const { deselectMinion, playMinionCard, selectMinion } = moves;
+  const {
+    deselectMinion,
+    playMinionCard,
+    selectMinion,
+    targetMinionWithSpell
+  } = moves;
 
   const handleDropAreaClick = useCallback(
     slotIndexClicked => {
       return playMinionCard(slotIndexClicked);
     },
     [playMinionCard]
-  );
-
-  const intClick = useCallback(
-    (key, slotObjectClicked, slotIndexClicked) => {
-      switch (key) {
-        case intKeys[1]:
-          return selectMinion(slotObjectClicked, slotIndexClicked);
-        case intKeys[2]:
-          return deselectMinion();
-        default:
-          return;
-      }
-    },
-    [selectMinion, deselectMinion]
   );
 
   return (
@@ -81,8 +72,6 @@ const YourBoard = props => {
                 board={PLAYER_BOARDS[1]}
                 ctx={ctx}
                 G={G}
-                handleCanAttackFn={() => intClick(intKeys[1], object, index)}
-                handleIsAttackingFn={() => intClick(intKeys[2])}
                 index={index}
                 interactionImages={interactionImages}
                 key={`slot_${index}`}
@@ -92,6 +81,7 @@ const YourBoard = props => {
                 slotObject={object}
                 uiTooltipSrc={uiTooltipSrc}
                 boardLength={yourBoard.length}
+                {...props}
               />
 
               <BoardDropArea

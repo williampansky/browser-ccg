@@ -327,13 +327,10 @@ const BoardSlot = props => {
       {/* minion interactions */}
       {board === PLAYER_BOARDS[1] ? (
         <YourMinionInteractions
-          race={race}
-          hasBulwark={hasBulwark}
           canAttack={canAttack}
           isAttacking={isAttacking}
-          handleCanAttackFunction={handleCanAttackFn}
-          handleIsAttackingFunction={handleIsAttackingFn}
-          interactionImages={interactionImages}
+          canBeBuffed={canBeBuffed}
+          {...props}
         />
       ) : (
         <TheirMinionInteractions

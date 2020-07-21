@@ -7,11 +7,16 @@ import { getMinionInteractionImage } from '@ccg/utils/src';
 export default function IsAttacking(props) {
   const {
     activeState,
-    handleIsAttackingFunction,
     hasBulwark,
-    isAttackingSrc,
-    isAttackingBulwarkSrc
+    interactionImages: {
+      canAttackSrc,
+      canAttackBulwarkSrc,
+      isAttackingSrc,
+      isAttackingBulwarkSrc
+    },
+    onClick
   } = props;
+
   const [styles, set, stop] = useSpring(() => ({
     opacity: 0,
     pointerEvents: 'none',
@@ -38,8 +43,8 @@ export default function IsAttacking(props) {
     <animated.div
       className="minion__interaction minion__interaction--is-attacking"
       data-component="minion-interactions/IsAttacking"
-      onClick={handleIsAttackingFunction}
-      onKeyPress={handleIsAttackingFunction}
+      onClick={onClick}
+      onKeyPress={onClick}
       role="button"
       tabIndex={0}
       style={styles}
@@ -55,13 +60,10 @@ export default function IsAttacking(props) {
 
 IsAttacking.propTypes = {
   activeState: PropTypes.bool,
-  handleIsAttackingFunction: PropTypes.func,
-  isAttackingSrc: PropTypes.string,
-  isAttackingSrcBulwark: PropTypes.string
+  onClick: PropTypes.func
 };
 
 IsAttacking.defaultProps = {
   activeState: false,
-  handleIsAttackingFunction: () => {},
-  hasBulwark: false
+  onClick: () => {}
 };

@@ -17,30 +17,28 @@ import boards from '../state/boards';
  * @param {object} ctx
  * @param {number} index
  */
-const attackMinionWithSpell = (G, ctx, player, index) => {
+const targetMinionWithSpell = (G, ctx, index) => {
   const {
     selectedCardObject: selectedCardObjectG,
     serverConfig,
-    spellObject,
-    turnOrder
+    spellObject
   } = G;
   const { currentPlayer } = ctx;
-  const otherPlayer = turnOrder.find(p => p !== currentPlayer);
 
   // eject if spellObject or cardObject is null
   const SPELL_OBJECT = spellObject[currentPlayer];
   if (!SPELL_OBJECT)
-    return console.error('Error in attackMinionWithSpell: !SPELL_OBJECT');
+    return console.error('Error in targetMinionWithSpell: !SPELL_OBJECT');
   const CARD_OBJECT = selectedCardObjectG[currentPlayer];
   if (!CARD_OBJECT)
-    return console.error('Error in attackMinionWithSpell: !CARD_OBJECT');
+    return console.error('Error in targetMinionWithSpell: !CARD_OBJECT');
 
   // eject if MINION_BEING_ATTACKED can't be attacked
-  const MINION_BEING_ATTACKED = G.boards[otherPlayer][index];
-  const MINION_BEING_ATTACKED_INDEX = index;
-  if (MINION_BEING_ATTACKED && !MINION_BEING_ATTACKED.canBeAttackedBySpell)
+  const MINION_BEING_TARGETED = G.boards[currentPlayer][index];
+  const MINION_BEING_TARGETED_INDEX = index;
+  if (MINION_BEING_TARGETED && !MINION_BEING_TARGETED.canBeBuffed)
     return console.error(
-      'Error in attackMinionWithSpell: !MINION_BEING_ATTACKED.canBeAttackedBySpell'
+      'Error in attackMinionWithSpell: !MINION_BEING_ATTACKED.canBeBuffed'
     );
 
   // logMessage(G, ctx, 'attackMinion', null, MINION_BEING_ATTACKED_INDEX);
@@ -52,8 +50,8 @@ const attackMinionWithSpell = (G, ctx, player, index) => {
         G,
         ctx,
         SPELL_OBJECT.id,
-        MINION_BEING_ATTACKED,
-        MINION_BEING_ATTACKED_INDEX
+        MINION_BEING_TARGETED,
+        MINION_BEING_TARGETED_INDEX
       );
       break;
 
@@ -79,7 +77,7 @@ const attackMinionWithSpell = (G, ctx, player, index) => {
   selectedCardIndex.reset(G, currentPlayer);
   selectedCardObject.reset(G, currentPlayer);
   selectedCardInteractionContext.reset(G, currentPlayer);
-  boards.disableAllCanBeAttacked(G, otherPlayer);
+  boards.disableAllCanBeBuffed(G, currentPlayer);
 
   // loop thru your board and check for
   // event listener mechanic minions
@@ -98,4 +96,4 @@ const attackMinionWithSpell = (G, ctx, player, index) => {
   handleCardPlayability(G, currentPlayer);
 };
 
-export default attackMinionWithSpell;
+export default targetMinionWithSpell;

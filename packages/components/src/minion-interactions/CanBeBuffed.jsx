@@ -1,34 +1,67 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { TARGET_CONTEXT } from '@ccg/enums';
+import { useSpring, animated } from 'react-spring';
+import { INTERACTIONS } from '@ccg/images';
+import { RACE } from '@ccg/enums/src';
+import { getMinionInteractionImage } from '@ccg/utils/src';
 
-export default function CanBeBuffed({ G, ctx, moves, index }) {
-  const { selectedCardObject, warcryObject } = G;
-  const { currentPlayer } = ctx;
-  const { castTargetedSpell, castTargetedWarcry } = moves;
+export default function CanBeBuffed(props) {
+  const {
+    activeState,
+    onClick,
+    race,
+    hasBulwark,
+    interactionImages: {
+      canBeBuffedSrc,
+      canBeBuffedBulwarkSrc,
+      canBeBuffedLocation,
+      canBeBuffedLocationBulwarkSrc
+    }
+  } = props;
 
-  function handleClick() {
-    if (selectedCardObject[currentPlayer] !== null) {
-      return castTargetedSpell(TARGET_CONTEXT['SELF'], index);
-    } else if (warcryObject[currentPlayer] !== null)
-      return castTargetedWarcry(TARGET_CONTEXT['SELF'], index);
-  }
+  const [styles, set, stop] = useSpring(() => ({
+    opacity: 0,
+    pointerEvents: 'none'
+  }));
+
+  const handleStyleSet = useCallback(
+    bool => {
+      set({
+        opacity: bool ? 1 : 0,
+        pointerEvents: bool ? 'auto' : 'none'
+      });
+    },
+    [set]
+  );
+
+  useEffect(() => {
+    handleStyleSet(activeState);
+    return () => stop();
+  }, [handleStyleSet, activeState, stop]);
 
   return (
-    <div
-      className="minion--can-be-buffed"
-      data-file="interactions/minions/CanBeBuffed"
-      onClick={() => handleClick()}
+    <animated.div
+      className="minion__interaction minion__interaction--can-be-buffed"
+      data-file="minion-interactions/CanBeBuffed"
+      onClick={onClick}
+      onKeyPress={onClick}
       role="button"
       tabIndex={0}
-    />
+      style={styles}
+    >
+      {race === RACE['LOCATION'] ? (
+        hasBulwark ? (
+          <img alt="" role="presentation" src={canBeBuffedLocationBulwarkSrc} />
+        ) : (
+          <img alt="" role="presentation" src={canBeBuffedLocation} />
+        )
+      ) : hasBulwark ? (
+        <img alt="" role="presentation" src={canBeBuffedBulwarkSrc} />
+      ) : (
+        <img alt="" role="presentation" src={canBeBuffedSrc} />
+      )}
+    </animated.div>
   );
 }
 
-CanBeBuffed.propTypes = {
-  G: PropTypes.object,
-  ctx: PropTypes.object,
-  moves: PropTypes.object,
-  index: PropTypes.number
-};
+CanBeBuffed.propTypes = {};

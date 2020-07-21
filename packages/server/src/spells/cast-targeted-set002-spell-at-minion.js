@@ -52,6 +52,36 @@ const castTargetedSet002SpellAtMinion = (
   const theirRandomIdx3 = getRandomIndex(theirBoardLength);
 
   switch (cardId) {
+    // Deal 1 damage to a selected target.
+    case 'CORE_044':
+      boards.subtractFromMinionHealth(
+        G,
+        otherPlayer,
+        targetSlotIndex,
+        yourTotalSpellDmg
+      );
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+      break;
+
+    // %BUFF% a minion with %BULWARK% and +2/+2
+    case 'CORE_046':
+      G.boards[currentPlayer][targetSlotIndex] = {
+        ...targetSlotObject,
+        currentAttack: Math.abs(targetSlotObject.currentAttack + 2),
+        currentHealth: Math.abs(targetSlotObject.currentHealth + 2),
+        hasBulwark: true,
+        isHidden: false,
+        totalAttack: Math.abs(targetSlotObject.totalAttack + 2),
+        totalHealth: Math.abs(targetSlotObject.totalHealth + 2)
+      };
+      break;
+
     // %TRANSFORM% a minion into a 0/1 %RACE_DEMONIC% with %BULWARK%
     case 'CORE_109':
       G.boards[otherPlayer][targetSlotIndex] = {
@@ -62,7 +92,7 @@ const castTargetedSet002SpellAtMinion = (
 
     // eject
     default:
-      return;
+      break;
   }
 };
 

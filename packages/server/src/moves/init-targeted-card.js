@@ -1,4 +1,4 @@
-import { RACE } from '@ccg/enums';
+import { RACE, PLAY_CONTEXT } from '@ccg/enums';
 import actionPoints from '../state/action-points';
 import boards from '../state/boards';
 import copyCardToPlayedCards from '../utils/copy-card-to-played-cards';
@@ -11,6 +11,7 @@ import removeCardFromHand from '../utils/remove-card-from-hand';
 import selectedCardIndex from '../state/selected-card-index';
 import selectedCardInteractionContext from '../state/selected-card-interaction-context';
 import selectedCardObject from '../state/selected-card-object';
+import spellObject from '../state/spell-object';
 
 /**
  * @param {object} G
@@ -22,11 +23,33 @@ const initTargetedCard = (G, ctx, object, index) => {
   const { selectedCardObject: selectedCardObj, serverConfig, turnOrder } = G;
   const { currentPlayer } = ctx;
   const otherPlayer = turnOrder.find(p => p !== currentPlayer);
-  const { cost, id, race, uuid } = selectedCardObj[currentPlayer];
+  const { cost, id, playContext, race, uuid } = selectedCardObj[currentPlayer];
 
-  G.boards[otherPlayer].forEach((slot, i) => {
-    slot.canBeAttackedBySpell = true;
-  });
+  if (!id) return console.error('initTargetedCard() id is not defined.');
+  spellObject.set(G, currentPlayer, id);
+
+  switch (playContext) {
+    case PLAY_CONTEXT['DAMAGE']:
+      G.boards[otherPlayer].forEach(slot => {
+        if (!slot.isHidden) slot.canBeAttackedBySpell = true;
+      });
+      break;
+
+    case PLAY_CONTEXT['BUFF']:
+      G.boards[currentPlayer].forEach(slot => {
+        slot.canBeBuffed = true;
+      });
+      break;
+
+    default:
+      G.boards[currentPlayer].forEach(slot => {
+        slot.canBeAttackedBySpell = false;
+      });
+      G.boards[otherPlayer].forEach(slot => {
+        slot.canBeAttackedBySpell = false;
+      });
+      break;
+  }
 };
 
 export default initTargetedCard;

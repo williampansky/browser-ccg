@@ -7,10 +7,9 @@ import { getMinionInteractionImage } from '@ccg/utils/src';
 export default function CanAttack(props) {
   const {
     activeState,
-    handleCanAttackFunction,
     hasBulwark,
-    canAttackSrc,
-    canAttackBulwarkSrc
+    interactionImages: { canAttackSrc, canAttackBulwarkSrc },
+    onClick
   } = props;
 
   const [styles, set, stop] = useSpring(() => ({
@@ -37,8 +36,8 @@ export default function CanAttack(props) {
     <animated.div
       className="minion__interaction minion__interaction--can-attack"
       data-component="minion-interactions/CanAttack"
-      onClick={handleCanAttackFunction}
-      onKeyPress={handleCanAttackFunction}
+      onClick={onClick}
+      onKeyPress={onClick}
       role="button"
       tabIndex={0}
       style={styles}
@@ -53,10 +52,10 @@ export default function CanAttack(props) {
 }
 
 CanAttack.propTypes = {
-  handleCanAttackFunction: PropTypes.func
+  onClick: PropTypes.func
 };
 
 CanAttack.defaultProps = {
-  handleCanAttackFunction: () => {},
+  onClick: () => {},
   hasBulwark: false
 };

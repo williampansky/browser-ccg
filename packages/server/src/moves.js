@@ -1,5 +1,6 @@
 import attackMinionWithMinion from './moves/attack-minion-with-minion';
 import attackMinionWithSpell from './moves/attack-minion-with-spell';
+import targetMinionWithSpell from './moves/target-minion-with-spell';
 import attackPlayerWithMinion from './moves/attack-player-with-minion';
 import boards from './state/boards';
 import deselectCard from './moves/deselect-card';
@@ -30,6 +31,12 @@ export default {
     client: false,
     move: (G, ctx, index) => {
       return attackMinionWithSpell(G, ctx, index);
+    }
+  },
+  targetMinionWithSpell: {
+    client: false,
+    move: (G, ctx, index) => {
+      return targetMinionWithSpell(G, ctx, index);
     }
   },
   deselectCard: {
