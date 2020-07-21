@@ -41,6 +41,12 @@ const initTargetedCard = (G, ctx, object, index) => {
       });
       break;
 
+    case PLAY_CONTEXT['DEBUFF']:
+      G.boards[otherPlayer].forEach(slot => {
+        if (!slot.isHidden) slot.canBeDebuffed = true;
+      });
+      break;
+
     default:
       G.boards[currentPlayer].forEach(slot => {
         slot.canBeAttackedBySpell = false;

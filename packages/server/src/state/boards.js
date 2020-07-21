@@ -3,6 +3,7 @@ import { _dAMT, _dBT, _dHT, _dOPT, _dST } from './boards.determinations';
 import { _dMCA, _dAMCA, _eMCA, _eAMCA } from './boards.can-attack';
 import { _dMCBA, _dAMCBA, _eMCBA, _eAMCBA } from './boards.can-be-attacked';
 import { _dMCBB, _dAMCBB, _eMCBB, _eAMCBB } from './boards.can-be-buffed';
+import { _dMCBDb, _dAMCBDb, _eMCBDb, _eAMCBDb } from './boards.can-be-debuffed';
 import { _dMCBH, _dAMCBH, _eMCBH, _eAMCBH } from './boards.can-be-healed';
 import { _kM, _kM0 } from './boards.kill-minion';
 import { _pC } from './boards.place-minion-on-board';
@@ -16,22 +17,14 @@ const boardConfig = {
 const boards = {
   __DATA_MODEL: {
     '0': boardConfig.enableDebugSlots ? [
-      { ...createBoardSlotObject('CORE_117'), hasBulwark: true },
-      { ...createBoardSlotObject('CORE_112'), canAttack: true },
-      { ...createBoardSlotObject('CORE_110'), canAttack: true },
-      { ...createBoardSlotObject('CORE_099'), canAttack: true },
-      { ...createBoardSlotObject('CORE_085'), hasEventListener: true },
+      { ...createBoardSlotObject('CORE_052'), hasBulwark: true },
       { ...createBoardSlotObject('CORE_082') },
-      { ...createBoardSlotObject('CORE_071'), hasEventListener: true }
+      { ...createBoardSlotObject('CORE_038') },
     ] : [],
     '1': boardConfig.enableDebugSlots ? [
-      { ...createBoardSlotObject('CORE_118') },
-      { ...createBoardSlotObject('CORE_062'), hasBoon: true },
-      { ...createBoardSlotObject('CORE_061'), hasEventListener: true },
-      { ...createBoardSlotObject('CORE_059') },
-      { ...createBoardSlotObject('CORE_039'), hasBulwark: true },
-      { ...createBoardSlotObject('CORE_054') },
-      { ...createBoardSlotObject('CORE_041') }
+      { ...createBoardSlotObject('CORE_122') },
+      { ...createBoardSlotObject('CORE_108'), hasBoon: true },
+      { ...createBoardSlotObject('CORE_042') },
     ] : []
   },
 
@@ -63,6 +56,12 @@ const boards = {
   disableAllCanBeBuffed: (G, player) => _dAMCBB(G, player),
   enableCanBeBuffed: (G, player, index) => _eMCBB(G, player, index),
   enableAllCanBeBuffed: (G, player) => _eAMCBB(G, player),
+  
+  // canBeDebuffed
+  disableCanBeDebuffed: (G, player, index) => _dMCBDb(G, player, index),
+  disableAllCanBeDebuffed: (G, player) => _dAMCBDb(G, player),
+  enableCanBeDebuffed: (G, player, index) => _eMCBDb(G, player, index),
+  enableAllCanBeDebuffed: (G, player) => _eAMCBDb(G, player),
 
   // canBeHealed
   disableCanBeHealed: (G, player, index) => _dMCBH(G, player, index),

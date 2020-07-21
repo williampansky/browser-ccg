@@ -1,7 +1,7 @@
 .minion--has-boon {
   $color: var(--mechanics-color-boon);
 
-  // animation: hasBoonGlow 4000ms linear infinite;
+  animation: hasBoonGlow 4000ms linear infinite;
   background: transparent;
   border-radius: var(--minion-border-radius);
   height: 100%;
@@ -11,6 +11,12 @@
   transition: 600ms ease-in-out;
   transition-property: box-shadow, opacity, transform;
   @include position-absolute(0, 0, 0, 0, 1);
+
+  .minion__race--location & {
+    $percent: 35%; // 50% - $percent
+    border-bottom-left-radius: calc(var(--minion-border-radius) - #{$percent});
+    border-bottom-right-radius: calc(var(--minion-border-radius) - #{$percent});
+  }
 
   .minion--is-selected ~ & {
     transform: scale(1.15);

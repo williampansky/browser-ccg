@@ -17,7 +17,7 @@ import boards from '../state/boards';
  * @param {object} ctx
  * @param {number} index
  */
-const attackMinionWithSpell = (G, ctx, player, index) => {
+const attackMinionWithSpell = (G, ctx, index) => {
   const {
     selectedCardObject: selectedCardObjectG,
     serverConfig,
@@ -35,13 +35,22 @@ const attackMinionWithSpell = (G, ctx, player, index) => {
   if (!CARD_OBJECT)
     return console.error('Error in attackMinionWithSpell: !CARD_OBJECT');
 
-  // eject if MINION_BEING_ATTACKED can't be attacked
-  const MINION_BEING_ATTACKED = G.boards[otherPlayer][index];
+  // eject if minion doesn't exist
   const MINION_BEING_ATTACKED_INDEX = index;
-  if (MINION_BEING_ATTACKED && !MINION_BEING_ATTACKED.canBeAttackedBySpell)
+  const MINION_BEING_ATTACKED = G.boards[otherPlayer][index];
+  if (!MINION_BEING_ATTACKED)
     return console.error(
-      'Error in attackMinionWithSpell: !MINION_BEING_ATTACKED.canBeAttackedBySpell'
+      'Error in attackMinionWithSpell: !MINION_BEING_ATTACKED'
     );
+
+  // eject if MINION_BEING_ATTACKED can't be attacked or debuffed or etc...
+  // if (
+  //   !MINION_BEING_ATTACKED.canBeAttackedBySpell ||
+  //   !MINION_BEING_ATTACKED.canBeDebuffed
+  // )
+  //   return console.error(
+  //     'Error in attackMinionWithSpell: !canBeAttackedBySpell || !canBeDebuffed'
+  //   );
 
   // logMessage(G, ctx, 'attackMinion', null, MINION_BEING_ATTACKED_INDEX);
 
@@ -80,6 +89,7 @@ const attackMinionWithSpell = (G, ctx, player, index) => {
   selectedCardObject.reset(G, currentPlayer);
   selectedCardInteractionContext.reset(G, currentPlayer);
   boards.disableAllCanBeAttacked(G, otherPlayer);
+  boards.disableAllCanBeDebuffed(G, otherPlayer);
 
   // loop thru your board and check for
   // event listener mechanic minions

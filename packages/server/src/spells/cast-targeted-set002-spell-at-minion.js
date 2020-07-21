@@ -52,7 +52,7 @@ const castTargetedSet002SpellAtMinion = (
   const theirRandomIdx3 = getRandomIndex(theirBoardLength);
 
   switch (cardId) {
-    // Deal 1 damage to a selected target.
+    // Deal 1 damage to a minion
     case 'CORE_044':
       boards.subtractFromMinionHealth(
         G,
@@ -69,7 +69,7 @@ const castTargetedSet002SpellAtMinion = (
       );
       break;
 
-    // %BUFF% a minion with %BULWARK% and +2/+2
+    // Buff a minion with taunt and +2/+2
     case 'CORE_046':
       G.boards[currentPlayer][targetSlotIndex] = {
         ...targetSlotObject,
@@ -82,7 +82,17 @@ const castTargetedSet002SpellAtMinion = (
       };
       break;
 
-    // %TRANSFORM% a minion into a 0/1 %RACE_DEMONIC% with %BULWARK%
+    // Change a minion's HP to 1
+    case 'CORE_056':
+      G.boards[otherPlayer][targetSlotIndex] = {
+        ...targetSlotObject,
+        currentHealth: 1,
+        isDebuffed: true,
+        totalHealth: 1
+      };
+      break;
+
+    // change minion into a 0/1 demon thing with guard shield
     case 'CORE_109':
       G.boards[otherPlayer][targetSlotIndex] = {
         ...createBoardSlotObject(entourage[0]),

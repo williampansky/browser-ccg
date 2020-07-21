@@ -326,12 +326,7 @@ const BoardSlot = props => {
 
       {/* minion interactions */}
       {board === PLAYER_BOARDS[1] ? (
-        <YourMinionInteractions
-          canAttack={canAttack}
-          isAttacking={isAttacking}
-          canBeBuffed={canBeBuffed}
-          {...props}
-        />
+        <YourMinionInteractions {...props} />
       ) : (
         <TheirMinionInteractions
           race={race}
@@ -347,6 +342,7 @@ const BoardSlot = props => {
           canSetHoverTarget={selectedMinionObject[playerID] ? true : false}
           index={index}
           slotObject={slotObject}
+          {...props}
         />
       )}
 

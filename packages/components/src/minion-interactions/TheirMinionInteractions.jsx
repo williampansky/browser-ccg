@@ -12,6 +12,7 @@ import CanBeReturned from './CanBeReturned';
 
 export default function TheirMinionInteractions(props) {
   const {
+    moves: { attackMinionWithSpell },
     race,
     hasBulwark,
     canBeAttackedByMinion,
@@ -22,6 +23,7 @@ export default function TheirMinionInteractions(props) {
     handleCanBeAttackedBySpellFunction,
     index,
     slotObject,
+    slotObject: { canBeDebuffed },
     interactionImages: {
       canBeAttackedSrc,
       canBeAttackedBulwarkSrc,
@@ -32,15 +34,28 @@ export default function TheirMinionInteractions(props) {
 
   const [activeState, setActiveState] = useState(null);
 
-  const handleActiveStateCallback = useCallback((byMinion, bySpell) => {
-    if (byMinion) return setActiveState('canBeAttackedByMinion');
-    if (bySpell) return setActiveState('canBeAttackedBySpell');
-    else return setActiveState(null);
-  }, []);
+  const handleActiveStateCallback = useCallback(
+    (byMinion, bySpell, byDebuff) => {
+      if (byDebuff) return setActiveState('canBeDebuffed');
+      else if (byMinion) return setActiveState('canBeAttackedByMinion');
+      else if (bySpell) return setActiveState('canBeAttackedBySpell');
+      else return setActiveState(null);
+    },
+    []
+  );
 
   useEffect(() => {
-    handleActiveStateCallback(canBeAttackedByMinion, canBeAttackedBySpell);
-  }, [handleActiveStateCallback, canBeAttackedByMinion, canBeAttackedBySpell]);
+    handleActiveStateCallback(
+      canBeAttackedByMinion,
+      canBeAttackedBySpell,
+      canBeDebuffed
+    );
+  }, [
+    handleActiveStateCallback,
+    canBeAttackedByMinion,
+    canBeAttackedBySpell,
+    canBeDebuffed
+  ]);
 
   // if (canBeAttackedBySpell) {
   //   return <CanBeAttackedBySpell moves={moves} index={index} />;
@@ -84,6 +99,11 @@ export default function TheirMinionInteractions(props) {
         canSetHoverTarget={canSetHoverTarget}
         index={index}
         slotObject={slotObject}
+      />
+      <CanBeDebuffed
+        activeState={activeState === 'canBeDebuffed' ? true : false}
+        onClick={() => attackMinionWithSpell(index)}
+        {...props}
       />
     </div>
   );

@@ -32,26 +32,30 @@ const Board = props => {
   };
 
   const mechImages = {
-    bubbleSrc: gMI('BUBBLE.png'),
     boonSrc: gMI('BOON.png'),
-    eventListenerSrc: gMI('EVENT.png'),
+    bubbleSrc: gMI('BUBBLE.png'),
     disabledSrc: gMI('DISABLED.png'),
     doubleAttackSrc: gMI('DOUBLE_ATTACK.png'),
-    poisonSrc: gMI('POISON.png'),
-    onDeathSrc: gMI('ON_DEATH.png')
+    eventListenerSrc: gMI('EVENT.png'),
+    onDeathSrc: gMI('ON_DEATH.png'),
+    poisonSrc: gMI('POISON.png')
   };
 
   const intImages = {
+    canAttack: gII('CanAttack--Default.png'),
+    canAttackBulwark: gII('CanAttack--Bulwark.png'),
     canBeAttacked: gII('CanBeAttacked--Default.png'),
     canBeAttackedBulwark: gII('CanBeAttacked--Default--Bulwark.png'),
     canBeAttackedLocation: gII('CanBeAttacked--Location.png'),
     canBeAttackedLocationBulwark: gII('CanBeAttacked--Location--Bulwark.png'),
-    canAttack: gII('CanAttack--Default.png'),
-    canAttackBulwark: gII('CanAttack--Bulwark.png'),
     canBeBuffed: gII('CanBeBuffed--Default.png'),
     canBeBuffedBulwark: gII('CanBeBuffed--Bulwark.png'),
     canBeBuffedLocation: gII('CanBeBuffed--Location.png'),
     canBeBuffedLocationBulwark: gII('CanBeBuffed--Location--Bulwark.png'),
+    canBeDebuffed: gII('CanBeDebuffed--Default.png'),
+    canBeDebuffedBulwark: gII('CanBeDebuffed--Default--Bulwark.png'),
+    canBeDebuffedLocation: gII('CanBeDebuffed--Location.png'),
+    canBeDebuffedLocationBulwark: gII('CanBeDebuffed--Location--Bulwark.png'),
     isAttacking: gII('IsAttacking--Default.png'),
     isAttackingBulwark: gII('IsAttacking--Bulwark.png'),
     willDieOverlayTheirs: gII('WillDie-TheirBoard.png'),
@@ -71,10 +75,14 @@ const Board = props => {
         playerBoard={PLAYER_BOARDS[2]}
         uiTooltipSrc={uiTooltipImage}
         interactionImages={{
-          canBeAttackedSrc: intImages.canBeAttacked,
           canBeAttackedBulwarkSrc: intImages.canBeAttackedBulwark,
-          canBeAttackedLocSrc: intImages.canBeAttackedLocation,
           canBeAttackedLocBulwarkSrc: intImages.canBeAttackedLocationBulwark,
+          canBeAttackedLocSrc: intImages.canBeAttackedLocation,
+          canBeAttackedSrc: intImages.canBeAttacked,
+          canBeDebuffedBulwarkSrc: intImages.canBeDebuffedBulwark,
+          canBeDebuffedLocBulwarkSrc: intImages.canBeDebuffedLocationBulwark,
+          canBeDebuffedLocSrc: intImages.canBeDebuffedLocation,
+          canBeDebuffedSrc: intImages.canBeDebuffed,
           willDieTheirSrc: intImages.willDieOverlayTheirs,
           willDieYourSrc: intImages.willDieOverlayYours
         }}
@@ -101,14 +109,14 @@ const Board = props => {
         uiTooltipSrc={uiTooltipImage}
         minionIsSelected={selectedMinionObject[yourID] ? true : false}
         interactionImages={{
-          canAttackSrc: intImages.canAttack,
           canAttackBulwarkSrc: intImages.canAttackBulwark,
-          canBeBuffedSrc: intImages.canBeBuffed,
+          canAttackSrc: intImages.canAttack,
           canBeBuffedBulwarkSrc: intImages.canBeBuffedBulwark,
-          canBeBuffedLocationSrc: intImages.canBeBuffedLocation,
           canBeBuffedLocationBulwarkSrc: intImages.canBeBuffedLocationBulwark,
-          isAttackingSrc: intImages.isAttacking,
+          canBeBuffedLocationSrc: intImages.canBeBuffedLocation,
+          canBeBuffedSrc: intImages.canBeBuffed,
           isAttackingBulwarkSrc: intImages.isAttackingBulwark,
+          isAttackingSrc: intImages.isAttacking,
           willDieTheirSrc: intImages.willDieOverlayTheirs,
           willDieYourSrc: intImages.willDieOverlayYours
         }}
