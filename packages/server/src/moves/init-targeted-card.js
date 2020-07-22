@@ -30,11 +30,13 @@ const initTargetedCard = (G, ctx, object, index) => {
 
   switch (playContext) {
     case PLAY_CONTEXT['DAMAGE']:
+    case PLAY_CONTEXT['DESTROY']:
       G.boards[otherPlayer].forEach(slot => {
         if (!slot.isHidden) slot.canBeAttackedBySpell = true;
       });
       break;
 
+    case PLAY_CONTEXT['BOON']:
     case PLAY_CONTEXT['BUFF']:
       G.boards[currentPlayer].forEach(slot => {
         slot.canBeBuffed = true;

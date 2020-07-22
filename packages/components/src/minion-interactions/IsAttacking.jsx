@@ -7,13 +7,8 @@ import { getMinionInteractionImage } from '@ccg/utils/src';
 export default function IsAttacking(props) {
   const {
     activeState,
-    hasBulwark,
-    interactionImages: {
-      canAttackSrc,
-      canAttackBulwarkSrc,
-      isAttackingSrc,
-      isAttackingBulwarkSrc
-    },
+    slotObject: { hasBulwark },
+    interactionImages: { isAttackingSrc, isAttackingBulwarkSrc },
     onClick
   } = props;
 

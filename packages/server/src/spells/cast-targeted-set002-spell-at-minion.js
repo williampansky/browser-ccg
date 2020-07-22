@@ -10,6 +10,7 @@ import playerCanAttack from '../state/player-can-attack';
 import playerAttackValue from '../state/player-attack-value';
 import playerShieldPoints from '../state/player-shield-points';
 import counts from '../state/counts';
+import { discardCardFromHandByIndex } from '../moves/discard-card';
 
 const castTargetedSet002SpellAtMinion = (
   G,
@@ -52,8 +53,11 @@ const castTargetedSet002SpellAtMinion = (
   const theirRandomIdx3 = getRandomIndex(theirBoardLength);
 
   switch (cardId) {
-    // Deal 1 damage to a minion
     case 'CORE_044':
+    case 'CORE_058':
+    case 'CORE_069':
+    case 'CORE_083':
+    case 'CORE_120':
       boards.subtractFromMinionHealth(
         G,
         otherPlayer,
@@ -92,12 +96,343 @@ const castTargetedSet002SpellAtMinion = (
       };
       break;
 
+    // Deal 3 damage to a character and Disable it
+    case 'CORE_066':
+      boards.subtractFromMinionHealth(
+        G,
+        otherPlayer,
+        targetSlotIndex,
+        yourTotalSpellDmg
+      );
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+      G.boards[otherPlayer][targetSlotIndex].isDisabled = true;
+      break;
+
+    // Transform a minion into a 1/1 Creature.
+    case 'CORE_070':
+      const CORE070slot = createBoardSlotObject(entourage[0]);
+      G.boards[otherPlayer][targetSlotIndex] = CORE070slot;
+      break;
+
+    // Give a minion +3 Attack.
+    case 'CORE_073':
+      const newCurAtk = Math.abs(targetSlotObject.currentAttack + 3);
+      const newTotAtk = Math.abs(targetSlotObject.totalAttack + 3);
+      G.boards[currentPlayer][targetSlotIndex].currentAttack = newCurAtk;
+      G.boards[currentPlayer][targetSlotIndex].totalAttack = newTotAtk;
+      break;
+
+    // Give a minion bubble
+    case 'CORE_074':
+      G.boards[currentPlayer][targetSlotIndex].hasBubble = true;
+      break;
+
+    // Change a minion's attack to 1
+    case 'CORE_075':
+      G.boards[otherPlayer][targetSlotIndex] = {
+        ...targetSlotObject,
+        currentAttack: 1,
+        totalAttack: 1
+      };
+      break;
+
+    // Restore 6 Health to yourself or a friendly minion.
+    case 'CORE_077':
+      boards.addToMinionHealth(
+        G,
+        currentPlayer,
+        targetSlotIndex,
+        yourTotalSpellDmg
+      );
+      break;
+
+    // Give a minion +4 Attack and +4 Health
+    case 'CORE_078':
+      G.boards[currentPlayer][targetSlotIndex] = {
+        ...targetSlotObject,
+        currentAttack: Math.abs(targetSlotObject.currentAttack + 4),
+        currentHealth: Math.abs(targetSlotObject.currentHealth + 4),
+        totalAttack: Math.abs(targetSlotObject.totalAttack + 4),
+        totalHealth: Math.abs(targetSlotObject.totalHealth + 4)
+      };
+      break;
+
+    // Attack something for 3 damage and then draw a card
+    case 'CORE_080':
+      boards.subtractFromMinionHealth(
+        G,
+        otherPlayer,
+        targetSlotIndex,
+        yourTotalSpellDmg
+      );
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+      drawCard(G, ctx, currentPlayer, 1);
+      break;
+
+    // Give a minion +2 Health points and then draw a card
+    case 'CORE_086':
+      G.boards[currentPlayer][targetSlotIndex] = {
+        ...targetSlotObject,
+        currentAttack: Math.abs(targetSlotObject.currentAttack + 2),
+        currentHealth: Math.abs(targetSlotObject.currentHealth + 2),
+        totalAttack: Math.abs(targetSlotObject.totalAttack + 2),
+        totalHealth: Math.abs(targetSlotObject.totalHealth + 2)
+      };
+      drawCard(G, ctx, currentPlayer, 1);
+      break;
+
+    // Double a minion's current Health value
+    case 'CORE_088':
+      G.boards[currentPlayer][targetSlotIndex].currentHealth = Math.abs(
+        G.boards[currentPlayer][targetSlotIndex].currentHealth + 2
+      );
+      break;
+
+    // Kill an enemy minion that has 3 or less Attack.
+    case 'CORE_089':
+      boards.subtractFromMinionHealth(G, otherPlayer, targetSlotIndex, 9000);
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+      break;
+
+    // Kill an enemy minion that has 5 or more Attack.
+    case 'CORE_090':
+      boards.subtractFromMinionHealth(G, otherPlayer, targetSlotIndex, 9000);
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+      break;
+
+    // Take control of over one of your opponent's minions.
+    case 'CORE_092':
+      if (G.boards[currentPlayer].length === 7) {
+        return;
+      } else {
+        const MINION = G.boards[otherPlayer].splice(targetSlotIndex, 1);
+        G.boards[currentPlayer].push(MINION[0]);
+      }
+      break;
+
+    // Deal 2 damage to one of your enemy's undamaged minions
+    case 'CORE_093':
+      boards.subtractFromMinionHealth(
+        G,
+        otherPlayer,
+        targetSlotIndex,
+        yourTotalSpellDmg
+      );
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+      break;
+
+    // <em>Disable</em> an enemy minion.
+    case 'CORE_096':
+      G.boards[otherPlayer][targetSlotIndex].isDisabled = true;
+      break;
+
+    // Deal 1 targeted damage and then draw a card.
+    case 'CORE_097':
+      boards.subtractFromMinionHealth(
+        G,
+        otherPlayer,
+        targetSlotIndex,
+        yourTotalSpellDmg
+      );
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+      drawCard(G, ctx, currentPlayer, 1);
+      break;
+
+    // Kill an any enemy minion.
+    case 'CORE_101':
+      boards.subtractFromMinionHealth(G, otherPlayer, targetSlotIndex, 9000);
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+      break;
+
+    // Restore a minion to full Health and give it <strong>Guard</strong>.
+    case 'CORE_103':
+      G.boards[currentPlayer][targetSlotIndex] = {
+        ...G.boards[currentPlayer][targetSlotIndex],
+        currentHealth: targetSlotObject.totalHealth,
+        hasBulwark: true,
+        isHidden: false
+      };
+      break;
+
+    // Deal 1 damage to an enemy character and Disable it.
+    case 'CORE_105':
+      G.boards[otherPlayer][targetSlotIndex].isDisabled = true;
+      boards.subtractFromMinionHealth(
+        G,
+        otherPlayer,
+        targetSlotIndex,
+        yourTotalSpellDmg
+      );
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+      break;
+
+    // Give a friendly character +3 Attack this turn.
+    case 'CORE_106':
+      G.boards[currentPlayer][targetSlotIndex] = {
+        ...G.boards[currentPlayer][targetSlotIndex],
+        currentAttack: targetSlotObject.currentAttack + 3
+      };
+      break;
+
+    // Give a minion Onslaught
+    case 'CORE_107':
+      G.boards[currentPlayer][targetSlotIndex].hasDoubleAttack = true;
+      break;
+
     // change minion into a 0/1 demon thing with guard shield
     case 'CORE_109':
       G.boards[otherPlayer][targetSlotIndex] = {
         ...createBoardSlotObject(entourage[0]),
-        hasBulwark: true
+        hasBulwark: true,
+        isHidden: false
       };
+      break;
+
+    // Gain 5 health by sacrificing one of your Undead minions
+    case 'CORE_113':
+      boards.killMinion(
+        G,
+        ctx,
+        currentPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+      playerHealth.add(G, currentPlayer, 5);
+      break;
+
+    // Choose an enemy minion; kill it at the start of your next turn
+    case 'CORE_114':
+      G.boards[otherPlayer][targetSlotIndex].canBeExpired = false;
+      G.boards[otherPlayer][targetSlotIndex].willExpire = true;
+      break;
+
+    // Deal 1 damage to a minion. If that kills it, draw a card.
+    case 'CORE_115':
+      boards.subtractFromMinionHealth(
+        G,
+        otherPlayer,
+        targetSlotIndex,
+        yourTotalSpellDmg
+      );
+
+      if (targetSlotObject.currentHealth === 0) {
+        drawCard(G, ctx, currentPlayer, 1);
+      }
+
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+      break;
+
+    // Deal 4 damage. Discard a random card.
+    case 'CORE_116':
+      boards.subtractFromMinionHealth(
+        G,
+        otherPlayer,
+        targetSlotIndex,
+        yourTotalSpellDmg
+      );
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+
+      discardCardFromHandByIndex(
+        G,
+        currentPlayer,
+        random.Die(G.players[currentPlayer].hand.length)
+      );
+      break;
+
+    // Deal 2 damage and heal yourself for that amount.
+    case 'CORE_119':
+      boards.subtractFromMinionHealth(
+        G,
+        otherPlayer,
+        targetSlotIndex,
+        yourTotalSpellDmg
+      );
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
+
+      playerHealth.add(G, currentPlayer, yourTotalSpellDmg);
+      break;
+
+    // Give a friendly minion stampede
+    case 'CORE_123':
+      G.boards[currentPlayer][targetSlotIndex].canAttack = true;
+      break;
+
+    // Obliterate an already damaged minion.
+    case 'CORE_126':
+      boards.subtractFromMinionHealth(G, otherPlayer, targetSlotIndex, 9000);
+      boards.killMinionIfHealthIsZero(
+        G,
+        ctx,
+        otherPlayer,
+        targetSlotObject,
+        targetSlotIndex
+      );
       break;
 
     // eject

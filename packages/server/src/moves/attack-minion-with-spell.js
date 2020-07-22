@@ -9,6 +9,7 @@ import selectedCardInteractionContext from '../state/selected-card-interaction-c
 import selectedCardObject from '../state/selected-card-object';
 import handleCardPlayability from '../utils/handle-card-playability';
 import boards from '../state/boards';
+import deselectCard from './deselect-card';
 // import logMessage from '../match-history/log-message';
 
 /**
@@ -85,6 +86,7 @@ const attackMinionWithSpell = (G, ctx, index) => {
   }
 
   // reset states
+  deselectCard(G, ctx);
   selectedCardIndex.reset(G, currentPlayer);
   selectedCardObject.reset(G, currentPlayer);
   selectedCardInteractionContext.reset(G, currentPlayer);
