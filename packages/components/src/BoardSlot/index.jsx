@@ -16,11 +16,14 @@ import {
   Minion,
   Boon,
   Bubble,
+  WillExpire,
+  isHidden,
   BulwarkBackground,
   BulwarkForeground,
   Disabled,
   DoubleAttack,
   Elite,
+  Hidden,
   Poison,
   Card,
   WillDieOverlay,
@@ -59,7 +62,8 @@ const BoardSlot = props => {
       hasEventListenerSrc,
       hasOnDeathSrc,
       hasPoisonSrc,
-      isDisabledSrc
+      isDisabledSrc,
+      isHiddenSrc
     },
     moves: { hoverTarget, setSlotIsNew: setSlotIsNewMove },
     playerID,
@@ -294,6 +298,7 @@ const BoardSlot = props => {
       data-can-attack={canAttack}
       data-can-be-attacked={handleCanBeAttackedAttr()}
       data-has-bulwark={hasBulwark}
+      data-will-expire={willExpire}
       data-is-empty={slotObject === null}
       data-is-new={enableEntranceAnimations && slotIsNew}
       data-slot={index}
@@ -316,7 +321,7 @@ const BoardSlot = props => {
         />
       )}
       {slotObject && hasBubble && <Bubble />}
-      {slotObject && hasBoon && <Boon />}
+      {slotObject && isHidden && <Hidden />}
       {slotObject && hasBulwark && (
         <BulwarkForeground
           imgSrc={getMechanicImage('BULWARK_FOREGROUND.png')}
@@ -386,6 +391,7 @@ const BoardSlot = props => {
         imageFlairSrc={getMinionFlairImage(id, set, isGolden)}
         isAttacking={isAttacking}
         isDead={isDead}
+        isHidden={isHidden}
         isGolden={isGolden}
         mechanics={mechanics}
         minionRaceClass={getMinionRaceClass(race)}
@@ -404,6 +410,9 @@ const BoardSlot = props => {
         totalAttack={totalAttack}
         totalHealth={totalHealth}
         type={type}
+        willExpire={willExpire}
+        willExpireIn={willExpireIn}
+        isHiddenSrc={isHiddenSrc}
       />
 
       {/* mechanics (behind minion) */}
@@ -413,6 +422,7 @@ const BoardSlot = props => {
           race={race}
         />
       )}
+      {slotObject && hasBoon && <Boon />}
 
       {/* visible minion component */}
       {slotObject ? (

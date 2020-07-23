@@ -47,6 +47,8 @@ export { default as Disabled } from './minion-mechanics/Disabled';
 export { default as DoubleAttack } from './minion-mechanics/DoubleAttack';
 export { default as Elite } from './minion-mechanics/Elite';
 export { default as Poison } from './minion-mechanics/Poison';
+export { default as WillExpire } from './minion-mechanics/WillExpire';
+export { default as Hidden } from './minion-mechanics/Hidden';
 
 // opponent interactions
 export { default as OpponentCanBeAttackedByMinion } from './opponent-interactions/OpponentCanBeAttackedByMinion';

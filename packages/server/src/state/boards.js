@@ -18,7 +18,7 @@ const boards = {
   __DATA_MODEL: {
     '0': boardConfig.enableDebugSlots ? [
       { ...createBoardSlotObject('CORE_052'), hasBulwark: true },
-      { ...createBoardSlotObject('CORE_082') },
+      { ...createBoardSlotObject('CORE_082'), isHidden: true },
       { ...createBoardSlotObject('CORE_038') },
     ] : [],
     '1': boardConfig.enableDebugSlots ? [

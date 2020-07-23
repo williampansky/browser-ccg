@@ -69,7 +69,11 @@ const Minion = props => {
     text,
     totalAttack,
     totalHealth,
-    type
+    type,
+    willExpire,
+    willExpireIn,
+    isHidden,
+    isHiddenSrc
   } = props;
 
   return (
@@ -92,6 +96,9 @@ const Minion = props => {
           name={name}
           placeholderSrc={imagePlaceholderSrc}
           set={set}
+          willExpire={willExpire}
+          isHidden={isHidden}
+          isHiddenSrc={isHiddenSrc}
         />
       </Suspense>
 
@@ -124,6 +131,8 @@ const Minion = props => {
         hasOnDeathSrc={hasOnDeathSrc}
         hasPoison={hasPoison}
         hasPoisonSrc={hasPoisonSrc}
+        willExpire={willExpire}
+        willExpireIn={willExpireIn}
       />
     </div>
   );
@@ -176,7 +185,9 @@ Minion.propTypes = {
 Minion.defaultProps = {
   imageFlairSrc: '',
   imagePlaceholderSrc: PLACEHOLDER_IMAGE,
-  race: RACE['NONE']
+  race: RACE['NONE'],
+  willExpire: false,
+  willExpireIn: 2
 };
 
 export default Minion;

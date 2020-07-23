@@ -13,7 +13,9 @@ const MechanicIcon = props => {
     hasOnDeath,
     hasOnDeathSrc,
     hasPoison,
-    hasPoisonSrc
+    hasPoisonSrc,
+    willExpire,
+    willExpireIn
   } = props;
 
   function getDataLength() {
@@ -24,7 +26,18 @@ const MechanicIcon = props => {
     return num;
   }
 
-  if (hasBoon) {
+  if (willExpire) {
+    return (
+      <div
+        className={[
+          styles['minion__mechanics'],
+          styles['minion__mechanics--will-expire']
+        ].join(' ')}
+      >
+        <span className="text__value">{willExpireIn}</span>
+      </div>
+    );
+  } else if (hasBoon) {
     return (
       <div className={styles['minion__mechanics']}>
         <img alt="hasBoon" src={hasBoonSrc} />

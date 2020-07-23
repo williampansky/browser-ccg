@@ -38,7 +38,8 @@ const Board = props => {
     doubleAttackSrc: gMI('DOUBLE_ATTACK.png'),
     eventListenerSrc: gMI('EVENT.png'),
     onDeathSrc: gMI('ON_DEATH.png'),
-    poisonSrc: gMI('POISON.png')
+    poisonSrc: gMI('POISON.png'),
+    isHiddenSrc: gMI('HIDDEN.png')
   };
 
   const intImages = {
@@ -93,7 +94,8 @@ const Board = props => {
           hasEventListenerSrc: mechImages.eventListenerSrc,
           hasOnDeathSrc: mechImages.onDeathSrc,
           hasPoisonSrc: mechImages.poisonSrc,
-          isDisabledSrc: mechImages.disabledSrc
+          isDisabledSrc: mechImages.disabledSrc,
+          isHiddenSrc: mechImages.isHiddenSrc
         }}
       />
 
@@ -127,7 +129,8 @@ const Board = props => {
           hasEventListenerSrc: mechImages.eventListenerSrc,
           hasOnDeathSrc: mechImages.onDeathSrc,
           hasPoisonSrc: mechImages.poisonSrc,
-          isDisabledSrc: mechImages.disabledSrc
+          isDisabledSrc: mechImages.disabledSrc,
+          isHiddenSrc: mechImages.isHiddenSrc
         }}
       />
 

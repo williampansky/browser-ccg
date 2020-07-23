@@ -391,7 +391,7 @@ const DesktopHand = props => {
         else if (
           playType === PLAY_TYPE['TARGETED'] &&
           (type === TYPE['SPELL'] || type === TYPE['ITEM']) &&
-          y <= -150
+          y <= -100
         ) {
           if (selectedCardObject === null) return;
           // @TODO init spellObject targeting functionality

@@ -34,13 +34,13 @@ const onBegin = (G, ctx) => {
     enableSlotCanAttack(slot);
     resetSlotAttackBoon(slot);
     handleDisabledMechanic(slot);
-    handleExpirationMechanic(slot);
+    handleExpirationMechanic(G, ctx, currentPlayer, slot, i);
   });
 
   G.boards[otherPlayer].forEach((slot, i) => {
     resetSlotAttackBoon(slot);
     handleDisabledMechanic(slot);
-    handleExpirationMechanic(slot);
+    handleExpirationMechanic(G, ctx, otherPlayer, slot, i);
   });
 
   // reset isDisabled state back to false

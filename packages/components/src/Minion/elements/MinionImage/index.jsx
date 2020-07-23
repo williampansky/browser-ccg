@@ -2,14 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Img, useImage } from 'react-image';
 import styles from './styles.module.scss';
+import { WillExpire, Hidden } from '@ccg/components';
 
 const MinionImage = props => {
-  const { imgSrc, name, placeholderSrc } = props;
+  const {
+    imgSrc,
+    name,
+    placeholderSrc,
+    isHidden,
+    isHiddenSrc,
+    willExpire
+  } = props;
   const { src } = useImage({ srcList: imgSrc });
 
   return (
     <div className={styles['image__wrapper']} data-file="Minion/image">
       <div className="concealed__clouds" style={{ display: 'none' }} />
+      <Hidden active={isHidden} src={isHiddenSrc} />
+      <WillExpire active={willExpire} />
       <img
         alt={name}
         className={styles['image']}

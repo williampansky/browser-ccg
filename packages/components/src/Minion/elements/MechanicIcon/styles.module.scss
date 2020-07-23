@@ -20,6 +20,20 @@
     z-index: 1;
   }
 
+  &.minion__mechanics--will-expire {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    & > span {
+      font-size: 1.45em;
+      display: block;
+      text-align: center;
+      margin: 0 auto;
+    }
+  }
+
   // prettier-ignore
   // &[data-length='2'] {
   //   & > img { position: absolute; }
