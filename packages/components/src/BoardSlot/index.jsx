@@ -471,21 +471,43 @@ const BoardSlot = props => {
             text={text}
             type={type}
           />
-          {mechanics && mechanics.length ? (
-            <div className="tooltip__mechanics__wrapper">
+          {(mechanics && mechanics.length) || isDisabled || willExpire ? (
+            <ul className="tooltip__mechanics__wrapper">
               {mechanics.map((m, i) => {
                 return (
-                  <div className="mechanic__item" key={m}>
+                  <li className="mechanic__item" key={m}>
                     <div className="mechanic__item-title">
                       {replaceConstant(m)}
                     </div>
                     <div className="mechanic__item-description">
                       {getMechanicShortDescription(m)}
                     </div>
-                  </div>
+                  </li>
                 );
               })}
-            </div>
+              {isDisabled && (
+                <li className="mechanic__item is--debuff">
+                  <div className="mechanic__item-title">
+                    {replaceConstant('%DISABLE%')}
+                  </div>
+                  <div className="mechanic__item-description">
+                    {getMechanicShortDescription('%DISABLE%')}
+                  </div>
+                </li>
+              )}
+              {willExpire && (
+                <li className="mechanic__item is--debuff">
+                  <div className="mechanic__item-title">
+                    {replaceConstant('%EXPIRATION%')}
+                  </div>
+                  <div className="mechanic__item-description">
+                    {getMechanicShortDescription('%EXPIRATION%')}
+                    <span>{` `}</span>
+                    <span>Will activate in {willExpireIn} turn(s).</span>
+                  </div>
+                </li>
+              )}
+            </ul>
           ) : null}
         </div>
       ) : null}

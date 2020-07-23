@@ -40,6 +40,8 @@
     max-width: calc(var(--card-height) / 1.8263249);
     position: absolute;
     width: 100%;
+    list-style-type: none;
+    padding: 0;
   }
 
   &.show--left .tooltip__mechanics__wrapper {
@@ -53,13 +55,11 @@
 .board__slot--card-tooltip .tooltip__mechanics__wrapper .mechanic__item {
   $bg: #333;
   background-color: $bg;
-  // background-image: url('/images/card-assets/binding_dark.jpg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 4px;
   border: 2px solid mix(white, $bg, 20%);
-  font-size: 11px;
   padding: 8px 10px 10px;
 
   & + .mechanic__item {
@@ -84,10 +84,24 @@
     line-height: 1.1;
     letter-spacing: -0.015em;
   }
+
+  &.is--debuff {
+    $bg: rgb(100, 20, 20);
+    background-color: $bg;
+    border-color: mix(white, $bg, 60%);
+  }
 }
 
 // prettier-ignore
 .board__slot--card-tooltip {
   display: none;
   @media (min-width: 960px) { display: flex; }
+}
+
+// prettier-ignore
+.board__slot--card-tooltip {
+  font-size: 10px;
+  @media (min-width: 1100px) { font-size: 11px; }
+  @media (min-width: 1200px) { font-size: 12px; }
+  @media (min-width: 1360px) { font-size: 13px; }
 }

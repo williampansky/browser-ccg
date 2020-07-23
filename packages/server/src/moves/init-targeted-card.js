@@ -45,6 +45,7 @@ const initTargetedCard = (G, ctx, object, index) => {
       break;
 
     case PLAY_CONTEXT['DEBUFF']:
+    case PLAY_CONTEXT['DISABLE']:
       G.boards[otherPlayer].forEach(slot => {
         if (!slot.isHidden) slot.canBeDebuffed = true;
       });
