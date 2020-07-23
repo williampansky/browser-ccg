@@ -106,7 +106,7 @@ const castGlobalSet002Spell = (G, ctx, cardId) => {
       if (randomEntourageID[0] === 'CORE_057c') {
         G.boards[currentPlayer].push({
           ...randomEntourage,
-          isConcealed: true
+          isHidden: true
         });
       }
 

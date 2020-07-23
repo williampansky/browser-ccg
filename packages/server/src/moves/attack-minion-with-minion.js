@@ -86,7 +86,7 @@ const attackMinionWithMinion = (G, ctx, index) => {
   }
 
   // remove concealed once you attack
-  G.boards[currentPlayer][ATTACKING_MINION_INDEX].isConcealed = false;
+  G.boards[currentPlayer][ATTACKING_MINION_INDEX].isHidden = false;
 
   // handle minions that disable target when attacking event mechanic
   if (ATTACKING_MINION.minionData.id === 'CORE_071') {

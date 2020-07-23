@@ -107,7 +107,7 @@ const initCoreSpell = (G, ctx, cardId, index) => {
         if (randomEntourageID[0] === 'CORE_057c') {
           G.boards[currentPlayer].push({
             ...randomEntourage,
-            isConcealed: true
+            isHidden: true
           });
         }
       }

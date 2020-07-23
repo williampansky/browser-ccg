@@ -78,7 +78,7 @@ const attackPlayerWithMinion = (G, ctx) => {
   }
 
   // remove concealed once you attack
-  G.boards[currentPlayer][ATTACKING_MINION_INDEX].isConcealed = false;
+  G.boards[currentPlayer][ATTACKING_MINION_INDEX].isHidden = false;
 
   // reset currentPlayer's selectedMinionIndex & selectedMinionObject value
   deselectMinion(G, ctx);
