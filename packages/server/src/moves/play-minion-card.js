@@ -11,6 +11,7 @@ import removeCardFromHand from '../utils/remove-card-from-hand';
 import selectedCardIndex from '../state/selected-card-index';
 import selectedCardInteractionContext from '../state/selected-card-interaction-context';
 import selectedCardObject from '../state/selected-card-object';
+import handleBoons from '../boons/handle-boons';
 
 /**
  * @param {object} G
@@ -19,13 +20,14 @@ import selectedCardObject from '../state/selected-card-object';
  * @param {number} index
  */
 const playMinionCard = (G, ctx, index) => {
-  const { selectedCardObject: selectedCardObj, serverConfig } = G;
+  const { selectedCardObject: selectedCardObj, serverConfig, turnOrder } = G;
   const { currentPlayer } = ctx;
+  const otherPlayer = turnOrder.find(p => p !== currentPlayer);
   const { cost, id, race, uuid } = selectedCardObj[currentPlayer];
   const slotObject = createBoardSlotObject(id);
 
   // play card into board
-  boards.placeCardOnBoard(G, currentPlayer, slotObject, index);
+  boards.placeCardOnBoard(G, ctx, currentPlayer, slotObject, index);
 
   // subtract the card's cost from player's current actionPoints count
   if (serverConfig.debugData.enableCost)
@@ -43,6 +45,10 @@ const playMinionCard = (G, ctx, index) => {
     // then deincrement your hand count
     counts.deincrementHand(G, currentPlayer);
   }
+
+  // handle boons after minion is placed
+  handleBoons(G, ctx, currentPlayer);
+  handleBoons(G, ctx, otherPlayer);
 
   // reset states
   selectedCardIndex.reset(G, currentPlayer);

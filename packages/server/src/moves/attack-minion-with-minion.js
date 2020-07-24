@@ -1,5 +1,7 @@
 import boards from '../state/boards';
 import deselectMinion from '../moves/deselect-minion';
+import handleBoons from '../boons/handle-boons';
+import moves from '../moves';
 // import logMessage from '../match-history/log-message';
 
 /**
@@ -116,6 +118,8 @@ const attackMinionWithMinion = (G, ctx, index) => {
   );
 
   // G.attackedMinionIndex = null;
+  handleBoons(G, ctx, currentPlayer);
+  handleBoons(G, ctx, otherPlayer);
 };
 
 export default attackMinionWithMinion;

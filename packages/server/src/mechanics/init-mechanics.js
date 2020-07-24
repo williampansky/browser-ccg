@@ -1,4 +1,5 @@
 import { MECHANICS as ENUMS } from '@ccg/enums';
+import hasBoon from './has-boon';
 import hasBubble from './has-bubble';
 import hasBulwark from './has-bulwark';
 import hasCantTarget from './has-cant-target';
@@ -14,6 +15,7 @@ import isHidden from './is-hidden';
 import drawCard from '../moves/draw-card';
 import summonEntourageMinion from './summon';
 import initOnPlayMechanic from '../on-plays/init-on-play-mechanic';
+import handleBoons from '../boons/handle-boons';
 
 /**
  * Initialize card mechanics on the targeted slotObject.
@@ -35,6 +37,10 @@ const initCardMechanics = (G, ctx, slotObject, index) => {
    * @memberof initCardMechanics
    */
   const has = (array, key) => array.find(m => m === ENUMS[key]) ? true : false;
+
+  if (has(mechanics, 'BOON')) {
+    hasBoon.enable(G, currentPlayer, index);
+  }
 
   if (has(mechanics, 'BUBBLE'))
     hasBubble.enable(G, currentPlayer, index);

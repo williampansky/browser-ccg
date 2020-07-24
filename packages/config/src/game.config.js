@@ -19,7 +19,7 @@ const GAME_CONFIG = {
     enableText: true
   },
   devConfig: {
-    autoCloseDebugPanel: false
+    autoCloseDebugPanel: true
   },
   gameAestheticConfig: {
     enableEntranceAnimations: false

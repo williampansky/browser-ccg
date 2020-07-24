@@ -6,6 +6,7 @@ import getCardByID from '../utils/get-card-by-id';
 import playerCanAttack from '../state/player-can-attack';
 import playerIsDisabled from '../state/player-is-disabled';
 import handleCardPlayability from '../utils/handle-card-playability';
+import handleBoons from '../boons/handle-boons';
 
 // onBegin methods used
 import {
@@ -28,6 +29,9 @@ const onBegin = (G, ctx) => {
 
   incrementAndSetTotalActionPoints(G, currentPlayer);
   drawCardAtStartOfTurn(G, ctx);
+
+  handleBoons(G, ctx, currentPlayer);
+  handleBoons(G, ctx, otherPlayer);
 
   G.boards[currentPlayer].forEach((slot, i) => {
     disableSlotCanBeAttacked(slot);
@@ -69,7 +73,20 @@ const onBegin = (G, ctx) => {
   handleDebugStates(G, currentPlayer);
 };
 
+const onMove = (G, ctx) => {
+  const { turnOrder } = G;
+  const { currentPlayer } = ctx;
+  const otherPlayer = turnOrder.find(p => p !== currentPlayer);
+
+  handleBoons(G, ctx, currentPlayer);
+  handleBoons(G, ctx, otherPlayer);
+};
+
 const onEnd = (G, ctx) => {
+  const { turnOrder } = G;
+  const { currentPlayer } = ctx;
+  const otherPlayer = turnOrder.find(p => p !== currentPlayer);
+
   const defaultState = {
     canAttack: false,
     canBeAttackedByMinion: false,
@@ -109,6 +126,9 @@ const onEnd = (G, ctx) => {
     };
   });
 
+  handleBoons(G, ctx, currentPlayer);
+  handleBoons(G, ctx, otherPlayer);
+
   resetInteractionStatesOnEnd(G);
 
   // reset animation states
@@ -120,6 +140,7 @@ export default {
   turn: {
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
     onBegin: (G, ctx) => onBegin(G, ctx),
+    onMove: (G, ctx) => onMove(G, ctx),
     onEnd: (G, ctx) => onEnd(G, ctx)
   }
 };

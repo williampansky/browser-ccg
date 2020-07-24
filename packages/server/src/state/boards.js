@@ -10,7 +10,7 @@ import { _pC } from './boards.place-minion-on-board';
 import createBoardSlotObject from '../creators/create-board-slot-object';
 
 const boardConfig = {
-  enableDebugSlots: true
+  enableDebugSlots: false
 };
 
 // prettier-ignore
@@ -74,7 +74,9 @@ const boards = {
   killMinionIfHealthIsZero: (G, ctx, player, boardSlot, index) => _kM0(G, ctx, player, boardSlot, index),
 
   // card placement
-  placeCardOnBoard: (G, player, boardSlotObject, index = 0) => _pC(G, player, boardSlotObject, index),
+  placeCardOnBoard: (G, ctx, player, boardSlotObject, index = 0) => {
+    return _pC(G, ctx, player, boardSlotObject, index);
+  },
 };
 
 export default boards;

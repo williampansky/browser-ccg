@@ -53,18 +53,21 @@ export default {
   },
   hoverCard: {
     client: false,
+    redact: true,
     move: (G, ctx, index) => {
       return hoverCard(G, ctx, index);
     }
   },
   hoverTarget: {
     client: false,
+    redact: true,
     move: (G, ctx, slotObject, index) => {
       return hoverTarget(G, ctx, slotObject, index);
     }
   },
   initTargetedCard: {
     client: false,
+    redact: true,
     move: (G, ctx, card, index) => {
       return initTargetedCard(G, ctx, card, index);
     }
@@ -73,6 +76,12 @@ export default {
     client: false,
     move: (G, ctx, player, slotObject, index) => {
       return boards.killMinion(G, ctx, player, slotObject, index);
+    }
+  },
+  killMinionIfHealthIsZero: {
+    client: false,
+    move: (G, ctx, player, slotObject, index) => {
+      return boards.killMinionIfHealthIsZero(G, ctx, player, slotObject, index);
     }
   },
   playGlobalSpellCard: {
@@ -89,6 +98,7 @@ export default {
   },
   selectCard: {
     client: false,
+    redact: true,
     move: (G, ctx, cardObject, index) => {
       deselectCard(G, ctx);
       return selectCard(G, ctx, cardObject, index);
@@ -96,6 +106,7 @@ export default {
   },
   selectCardContext: {
     client: false,
+    redact: true,
     move: (G, ctx, string) => {
       return selectedCardContext(G, ctx, string);
     }
@@ -108,6 +119,7 @@ export default {
   },
   setSlotIsNew: {
     client: true,
+    redact: true,
     move: (G, player, index, bool) => {
       if (!player || !index) return;
       else if (!G.boards[player]) return;
