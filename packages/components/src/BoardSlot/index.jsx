@@ -471,44 +471,59 @@ const BoardSlot = props => {
             text={text}
             type={type}
           />
-          {(mechanics && mechanics.length) || isDisabled || willExpire ? (
-            <ul className="tooltip__mechanics__wrapper">
-              {mechanics.map((m, i) => {
-                return (
-                  <li className="mechanic__item" key={m}>
+          {
+            ((mechanics && mechanics.length) || isBuffed,
+            isDisabled || willExpire ? (
+              <ul className="tooltip__mechanics__wrapper">
+                {mechanics.map((m, i) => {
+                  return (
+                    <li className="mechanic__item" key={m}>
+                      <div className="mechanic__item-title">
+                        {replaceConstant(m)}
+                      </div>
+                      <div className="mechanic__item-description">
+                        {getMechanicShortDescription(m)}
+                      </div>
+                    </li>
+                  );
+                })}
+                {/* @TODO: integrate buff tooltip listings */}
+                {/* https://github.com/williampansky/react-ccg/issues/5 */}
+                {/* {isBuffed && (
+                  <li className="mechanic__item is--buff">
                     <div className="mechanic__item-title">
-                      {replaceConstant(m)}
+                      {replaceConstant('%DISABLE%')}
                     </div>
                     <div className="mechanic__item-description">
-                      {getMechanicShortDescription(m)}
+                      {getMechanicShortDescription('%DISABLE%')}
                     </div>
                   </li>
-                );
-              })}
-              {isDisabled && (
-                <li className="mechanic__item is--debuff">
-                  <div className="mechanic__item-title">
-                    {replaceConstant('%DISABLE%')}
-                  </div>
-                  <div className="mechanic__item-description">
-                    {getMechanicShortDescription('%DISABLE%')}
-                  </div>
-                </li>
-              )}
-              {willExpire && (
-                <li className="mechanic__item is--debuff">
-                  <div className="mechanic__item-title">
-                    {replaceConstant('%EXPIRATION%')}
-                  </div>
-                  <div className="mechanic__item-description">
-                    {getMechanicShortDescription('%EXPIRATION%')}
-                    <span>{` `}</span>
-                    <span>Will activate in {willExpireIn} turn(s).</span>
-                  </div>
-                </li>
-              )}
-            </ul>
-          ) : null}
+                )} */}
+                {isDisabled && (
+                  <li className="mechanic__item is--debuff">
+                    <div className="mechanic__item-title">
+                      {replaceConstant('%DISABLE%')}
+                    </div>
+                    <div className="mechanic__item-description">
+                      {getMechanicShortDescription('%DISABLE%')}
+                    </div>
+                  </li>
+                )}
+                {willExpire && (
+                  <li className="mechanic__item is--debuff">
+                    <div className="mechanic__item-title">
+                      {replaceConstant('%EXPIRATION%')}
+                    </div>
+                    <div className="mechanic__item-description">
+                      {getMechanicShortDescription('%EXPIRATION%')}
+                      <span>{` `}</span>
+                      <span>Will activate in {willExpireIn} turn(s).</span>
+                    </div>
+                  </li>
+                )}
+              </ul>
+            ) : null)
+          }
         </div>
       ) : null}
     </div>

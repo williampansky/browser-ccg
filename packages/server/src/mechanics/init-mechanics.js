@@ -26,7 +26,7 @@ import handleBoons from '../boons/handle-boons';
  */
 // prettier-ignore
 const initCardMechanics = (G, ctx, slotObject, index) => {
-  const { minionData: { entourage, id, mechanics } } = slotObject;
+  const { minionData: { entourage, id, mechanics, set } } = slotObject;
   const { currentPlayer } = ctx;
 
   /**
@@ -38,12 +38,14 @@ const initCardMechanics = (G, ctx, slotObject, index) => {
    */
   const has = (array, key) => array.find(m => m === ENUMS[key]) ? true : false;
 
-  if (has(mechanics, 'BOON')) {
+  if (has(mechanics, 'BOON'))
     hasBoon.enable(G, currentPlayer, index);
-  }
 
   if (has(mechanics, 'BUBBLE'))
     hasBubble.enable(G, currentPlayer, index);
+
+  // if (has(mechanics, 'BUFF'))
+  //   hasBubble.enable(G, currentPlayer, index);
 
   if (has(mechanics, 'BULWARK'))
     hasBulwark.enable(G, currentPlayer, index);
@@ -73,7 +75,7 @@ const initCardMechanics = (G, ctx, slotObject, index) => {
     hasOnDeath.enable(G, currentPlayer, index);
 
   if (has(mechanics, 'ON_PLAY'))
-    initOnPlayMechanic(G, currentPlayer, index);
+    initOnPlayMechanic(G, ctx, slotObject, id, set, index);
 
   if (has(mechanics, 'POISON'))
     hasPoison.enable(G, currentPlayer, index);
