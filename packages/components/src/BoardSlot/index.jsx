@@ -11,7 +11,9 @@ import {
   replaceConstant,
   getMechanicShortDescription,
   getCardBaseImage,
-  getCardFlairImage
+  getCardFlairImage,
+  formatCardText,
+  createMarkup
 } from '@ccg/utils';
 import {
   Minion,
@@ -45,7 +47,8 @@ const BoardSlot = props => {
       hoveringTargetObject,
       selectedMinionObject,
       selectedMinionIndex,
-      spellObject
+      spellObject,
+      playerSpellDamage
     },
     ctx: { currentPlayer },
     board,
@@ -289,6 +292,25 @@ const BoardSlot = props => {
   //   isDead && killMinionCallback(index);
   // }, [index, isDead, killMinionCallback]);
 
+  const handleTargetingTooltip = useCallback(() => {
+    if (!spellObject[playerID]) return false;
+    const { targetingArrowText } = spellObject[playerID];
+    return replaceConstant(
+      formatCardText(
+        targetingArrowText,
+        numberPrimary,
+        numberSecondary,
+        playerSpellDamage[playerID]
+      )
+    );
+  }, [
+    numberPrimary,
+    numberSecondary,
+    playerID,
+    playerSpellDamage,
+    spellObject
+  ]);
+
   return (
     <div
       className={[
@@ -305,9 +327,7 @@ const BoardSlot = props => {
       data-is-new={enableEntranceAnimations && slotIsNew}
       data-slot={index}
       data-for={`${id}--${index}`}
-      data-tip={
-        spellObject[playerID] ? spellObject[playerID].targetingArrowText : false
-      }
+      data-tip={spellObject[playerID] ? true : false}
       ref={hoverRef}
       style={{ zIndex: isHovered ? '100' : '' }}
     >
@@ -428,14 +448,19 @@ const BoardSlot = props => {
       )}
       {slotObject && hasBoon && <Boon />}
 
-      {canBeBuffed ? (
+      {canBeBuffed && spellObject[playerID] ? (
         <ReactTooltip
           id={`${id}--${index}`}
           place="top"
           type="dark"
           effect="solid"
           multiline={true}
-        />
+        >
+          <p
+            className="text__value"
+            dangerouslySetInnerHTML={createMarkup(handleTargetingTooltip())}
+          />
+        </ReactTooltip>
       ) : null}
 
       {/* visible minion component */}
