@@ -2,7 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 // child components
-import { CanAttack, CanBeBuffed, IsAttacking } from '@ccg/components';
+import {
+  CanAttack,
+  CanBeBuffed,
+  CanBeHealed,
+  IsAttacking
+} from '@ccg/components';
 // import CanBeAttackedByMinion from './CanBeAttackedByMinion';
 // import CanBeAttackedByPlayer from './CanBeAttackedByPlayer';
 // import CanBeAttackedBySpell from './CanBeAttackedBySpell';
@@ -23,14 +28,15 @@ export default function YourMinionInteractions(props) {
   const {
     moves: { selectMinion, deselectMinion, targetMinionWithSpell },
     slotObject,
-    slotObject: { canAttack, isAttacking, canBeBuffed },
+    slotObject: { canAttack, isAttacking, canBeBuffed, canBeHealed },
     index
   } = props;
 
   const [activeState, setActiveState] = useState(null);
 
   const handleActiveStateCallback = useCallback(
-    (canAttack, isAttacking, canBeBuffed) => {
+    (canAttack, isAttacking, canBeBuffed, canBeHealed) => {
+      if (canBeHealed) return setActiveState('canBeHealed');
       if (canBeBuffed) return setActiveState('canBeBuffed');
       else if (isAttacking) return setActiveState('isAttacking');
       else if (canAttack) return setActiveState('canAttack');
@@ -40,8 +46,14 @@ export default function YourMinionInteractions(props) {
   );
 
   useEffect(() => {
-    handleActiveStateCallback(canAttack, isAttacking, canBeBuffed);
-  }, [handleActiveStateCallback, canAttack, isAttacking, canBeBuffed]);
+    handleActiveStateCallback(canAttack, isAttacking, canBeBuffed, canBeHealed);
+  }, [
+    handleActiveStateCallback,
+    canAttack,
+    isAttacking,
+    canBeBuffed,
+    canBeHealed
+  ]);
 
   return (
     <div
@@ -60,6 +72,11 @@ export default function YourMinionInteractions(props) {
       />
       <CanBeBuffed
         activeState={activeState === 'canBeBuffed' ? true : false}
+        onClick={() => targetMinionWithSpell(index)}
+        {...props}
+      />
+      <CanBeHealed
+        activeState={activeState === 'canBeHealed' ? true : false}
         onClick={() => targetMinionWithSpell(index)}
         {...props}
       />

@@ -28,7 +28,7 @@ const castTargetedSet002SpellAtMinion = (
   } = G;
   const { currentPlayer, random } = ctx;
   const otherPlayer = turnOrder.find(p => p !== currentPlayer);
-  const { entourage, numberPrimary } = getCardByID(cardId);
+  const { entourage, numberPrimary, numberSecondary } = getCardByID(cardId);
 
   const theirBoard = gBoards[otherPlayer];
   const theirBoardLength = gBoards[otherPlayer].length;
@@ -48,11 +48,20 @@ const castTargetedSet002SpellAtMinion = (
     return random.Shuffle(array)[0];
   };
 
+  // heal method
+  const healTarget = (G, player, index, n2 = 0) => {
+    boards.addToMinionHealth(G, player, index, n2);
+  };
+
   const theirRandomIdx1 = getRandomIndex(theirBoardLength);
   const theirRandomIdx2 = getRandomIndex(theirBoardLength);
   const theirRandomIdx3 = getRandomIndex(theirBoardLength);
 
   switch (cardId) {
+    case 'CORE_006':
+      healTarget(G, currentPlayer, targetSlotIndex, numberSecondary);
+      break;
+
     case 'CORE_044':
     case 'CORE_058':
     case 'CORE_069':

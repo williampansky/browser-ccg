@@ -1,44 +1,67 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { PLAYER_BOARDS, TARGET_CONTEXT } from '@ccg/enums';
+import { useSpring, animated } from 'react-spring';
+import { INTERACTIONS } from '@ccg/images';
+import { RACE } from '@ccg/enums/src';
+import { getMinionInteractionImage } from '@ccg/utils/src';
 
-export default function CanBeHealed({ G, ctx, moves, board, index }) {
-  const { warcryObject } = G;
-  const { currentPlayer } = ctx;
-  const { castTargetedSpell, castTargetedWarcry } = moves;
+export default function CanBeHealed(props) {
+  const {
+    activeState,
+    onClick,
+    race,
+    hasBulwark,
+    interactionImages: {
+      canBeBuffedSrc,
+      canBeBuffedBulwarkSrc,
+      canBeBuffedLocation,
+      canBeBuffedLocationBulwarkSrc
+    }
+  } = props;
 
-  function handleClick() {
-    if (warcryObject[currentPlayer] !== null)
-      return castTargetedWarcry(
-        board === PLAYER_BOARDS[1]
-          ? TARGET_CONTEXT['SELF']
-          : TARGET_CONTEXT['OPPONENT'],
-        index
-      );
-    else
-      return castTargetedSpell(
-        board === PLAYER_BOARDS[1]
-          ? TARGET_CONTEXT['SELF']
-          : TARGET_CONTEXT['OPPONENT'],
-        index
-      );
-  }
+  const [styles, set, stop] = useSpring(() => ({
+    opacity: 0,
+    pointerEvents: 'none'
+  }));
+
+  const handleStyleSet = useCallback(
+    bool => {
+      set({
+        opacity: bool ? 1 : 0,
+        pointerEvents: bool ? 'auto' : 'none'
+      });
+    },
+    [set]
+  );
+
+  useEffect(() => {
+    handleStyleSet(activeState);
+    return () => stop();
+  }, [handleStyleSet, activeState, stop]);
 
   return (
-    <div
-      className="minion--can-be-buffed"
-      data-file="interactions/minions/CanBeHealed"
-      onClick={() => handleClick()}
-    />
+    <animated.div
+      className="minion__interaction minion__interaction--can-be-buffed"
+      data-file="minion-interactions/CanBeHealed"
+      onClick={onClick}
+      onKeyPress={onClick}
+      role="button"
+      tabIndex={0}
+      style={styles}
+    >
+      {race === RACE['LOCATION'] ? (
+        hasBulwark ? (
+          <img alt="" role="presentation" src={canBeBuffedLocationBulwarkSrc} />
+        ) : (
+          <img alt="" role="presentation" src={canBeBuffedLocation} />
+        )
+      ) : hasBulwark ? (
+        <img alt="" role="presentation" src={canBeBuffedBulwarkSrc} />
+      ) : (
+        <img alt="" role="presentation" src={canBeBuffedSrc} />
+      )}
+    </animated.div>
   );
 }
 
-CanBeHealed.propTypes = {
-  G: PropTypes.object,
-  ctx: PropTypes.object,
-  moves: PropTypes.object,
-  board: PropTypes.string,
-  index: PropTypes.number
-};
+CanBeHealed.propTypes = {};

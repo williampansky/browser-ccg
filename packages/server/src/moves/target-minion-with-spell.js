@@ -36,10 +36,13 @@ const targetMinionWithSpell = (G, ctx, index) => {
   // eject if MINION_BEING_ATTACKED can't be attacked
   const MINION_BEING_TARGETED = G.boards[currentPlayer][index];
   const MINION_BEING_TARGETED_INDEX = index;
-  if (MINION_BEING_TARGETED && !MINION_BEING_TARGETED.canBeBuffed)
-    return console.error(
-      'Error in attackMinionWithSpell: !MINION_BEING_ATTACKED.canBeBuffed'
-    );
+  // if (
+  //   MINION_BEING_TARGETED &&
+  //   (!MINION_BEING_TARGETED.canBeBuffed || !MINION_BEING_TARGETED.canBeHealed)
+  // )
+  //   return console.error(
+  //     'Error in attackMinionWithSpell: !MINION_BEING_ATTACKED.canBeBuffed'
+  //   );
 
   // logMessage(G, ctx, 'attackMinion', null, MINION_BEING_ATTACKED_INDEX);
 
@@ -78,6 +81,7 @@ const targetMinionWithSpell = (G, ctx, index) => {
   selectedCardObject.reset(G, currentPlayer);
   selectedCardInteractionContext.reset(G, currentPlayer);
   boards.disableAllCanBeBuffed(G, currentPlayer);
+  boards.disableAllCanBeHealed(G, currentPlayer);
 
   // loop thru your board and check for
   // event listener mechanic minions

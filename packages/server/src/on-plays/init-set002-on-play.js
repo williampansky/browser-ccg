@@ -19,16 +19,27 @@ const initSet002OnPlay = (G, ctx, slotObject, cardId, index) => {
   /**
    * Bool to determine if an ON_PLAY slot needs to be generated or not
    */
-  let createObj = false;
+  let createSpellObj = false;
 
   switch (cardId) {
+    case 'CORE_006':
+      if (G.boards[currentPlayer].length === 1) return;
+
+      G.boards[currentPlayer].forEach((slot, i) => {
+        if (index !== i) {
+          slot.canBeHealed = true;
+          createSpellObj = true;
+        }
+      });
+      break;
+
     case 'CORE_019':
     case 'CORE_041':
       // enhance all minions except itself
       G.boards[currentPlayer].forEach((_, i) => {
         if (index !== i) {
-          // ................................. attack ....... health
-          transformTarget(G, currentPlayer, i, numberPrimary, numberSecondary);
+          // ............................ attack ....... health
+          buffTarget(G, currentPlayer, i, numberPrimary, numberSecondary);
         }
       });
       break;
@@ -39,22 +50,22 @@ const initSet002OnPlay = (G, ctx, slotObject, cardId, index) => {
       G.boards[currentPlayer].forEach((slot, i) => {
         if (index !== i) {
           slot.canBeBuffed = true;
-          createObj = true;
+          createSpellObj = true;
         }
       });
-
-      if (createObj === true)
-        G.spellObject[currentPlayer] = createOnPlayObject(cardId);
       break;
 
     // eject
     default:
-      return;
+      break;
   }
+
+  if (createSpellObj === true)
+    G.spellObject[currentPlayer] = createOnPlayObject(cardId);
 };
 
 // transformation method
-function transformTarget(G, player, index, n1 = 0, n2 = 0) {
+function buffTarget(G, player, index, n1 = 0, n2 = 0) {
   const AP = parseInt(G.boards[player][index].currentAttack);
   const HP = parseInt(G.boards[player][index].currentHealth);
 

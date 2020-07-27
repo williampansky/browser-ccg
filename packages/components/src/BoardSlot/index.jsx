@@ -446,8 +446,8 @@ const BoardSlot = props => {
       )}
       {slotObject && hasBoon && <Boon />}
 
-      {(canBeBuffed && !canBeAttackedBySpell) ||
-      (!canBeBuffed && canBeAttackedBySpell) ? (
+      {((canBeBuffed || canBeHealed) && !canBeAttackedBySpell) ||
+      ((!canBeBuffed || !canBeHealed) && canBeAttackedBySpell) ? (
         <ReactTooltip
           id={`${id}--${index}`}
           place="top"
