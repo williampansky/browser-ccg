@@ -394,7 +394,6 @@ const DesktopHand = props => {
           y <= -100
         ) {
           if (selectedCardObject === null) return;
-          // @TODO init spellObject targeting functionality
           handleInitTargetedCardFunction(selectedCardObject, curIndex);
         } else {
           setSprings(
