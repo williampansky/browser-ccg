@@ -64,6 +64,10 @@
   }
 }
 
-.board__slot [data-id='tooltip'] p {
-  margin: 0;
+// prettier-ignore
+.board__slot [data-id='tooltip'] {
+  max-width: 220px;
+  text-align: center;
+
+  p { margin: 0; }
 }

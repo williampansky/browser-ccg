@@ -17,6 +17,7 @@ const TheirBoard = props => {
     },
     theirBoard,
     theirID,
+    yourID,
     interactionImages,
     mechanicImages,
     uiTooltipSrc
@@ -86,6 +87,7 @@ const TheirBoard = props => {
               slotObject={object}
               uiTooltipSrc={uiTooltipSrc}
               boardLength={theirBoardArray.length}
+              {...props}
             />
           );
         })}

@@ -73,6 +73,7 @@ const Board = props => {
         moves={moves}
         theirBoard={theirBoard}
         theirID={theirID}
+        yourID={yourID}
         playerBoard={PLAYER_BOARDS[2]}
         uiTooltipSrc={uiTooltipImage}
         interactionImages={{

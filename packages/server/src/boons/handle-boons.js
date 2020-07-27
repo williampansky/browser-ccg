@@ -13,7 +13,6 @@ const handleBoons = (G, ctx, player) => {
 };
 
 export const handleHasBoon = (G, ctx, player, index, indexIncrement) => {
-  console.log('handleHasBoon');
   // if (!G.boards[player][indexIncrement])
   //   return resetBoon(G, ctx, player, index);
 
