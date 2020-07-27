@@ -553,6 +553,7 @@ const DesktopHand = props => {
                     marginTop: marginTop.interpolate(mT => `${mT}px`),
                     opacity:
                       playType === PLAY_TYPE['TARGETED'] &&
+                      (type === TYPE['ITEM'] || type === TYPE['SPELL']) &&
                       selectedCardIndex === i
                         ? 0
                         : 1,

@@ -6,6 +6,7 @@ import getCardByID from '../utils/get-card-by-id';
 import createBoardSlotObject from '../creators/create-board-slot-object';
 import playerHealth from '../state/player-health';
 import boards from '../state/boards';
+import createOnPlayObject from '../creators/create-onplay-object';
 
 const initSet002OnPlay = (G, ctx, slotObject, cardId, index) => {
   const { turnOrder } = G;
@@ -15,14 +16,35 @@ const initSet002OnPlay = (G, ctx, slotObject, cardId, index) => {
     minionData: { entourage, numberPrimary, numberSecondary }
   } = slotObject;
 
+  /**
+   * Bool to determine if an ON_PLAY slot needs to be generated or not
+   */
+  let createObj = false;
+
   switch (cardId) {
+    case 'CORE_019':
     case 'CORE_041':
       // enhance all minions except itself
       G.boards[currentPlayer].forEach((_, i) => {
         if (index !== i) {
+          // ................................. attack ....... health
           transformTarget(G, currentPlayer, i, numberPrimary, numberSecondary);
         }
       });
+      break;
+
+    case 'CORE_054':
+      if (G.boards[currentPlayer].length === 1) return;
+
+      G.boards[currentPlayer].forEach((slot, i) => {
+        if (index !== i) {
+          slot.canBeBuffed = true;
+          createObj = true;
+        }
+      });
+
+      if (createObj === true)
+        G.spellObject[currentPlayer] = createOnPlayObject(cardId);
       break;
 
     // eject
@@ -33,7 +55,6 @@ const initSet002OnPlay = (G, ctx, slotObject, cardId, index) => {
 
 // transformation method
 function transformTarget(G, player, index, n1 = 0, n2 = 0) {
-  console.log(G.boards[player][index].currentAttack);
   const AP = parseInt(G.boards[player][index].currentAttack);
   const HP = parseInt(G.boards[player][index].currentHealth);
 

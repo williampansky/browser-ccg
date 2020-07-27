@@ -30,8 +30,8 @@ const targetMinionWithSpell = (G, ctx, index) => {
   if (!SPELL_OBJECT)
     return console.error('Error in targetMinionWithSpell: !SPELL_OBJECT');
   const CARD_OBJECT = selectedCardObjectG[currentPlayer];
-  if (!CARD_OBJECT)
-    return console.error('Error in targetMinionWithSpell: !CARD_OBJECT');
+  // if (!CARD_OBJECT)
+  //   return console.error('Error in targetMinionWithSpell: !CARD_OBJECT');
 
   // eject if MINION_BEING_ATTACKED can't be attacked
   const MINION_BEING_TARGETED = G.boards[currentPlayer][index];
@@ -61,10 +61,10 @@ const targetMinionWithSpell = (G, ctx, index) => {
   }
 
   // subtract the card's cost from player's current actionPoints count
-  if (serverConfig.debugData.enableCost)
+  if (serverConfig.debugData.enableCost && CARD_OBJECT)
     actionPoints.subtract(G, currentPlayer, CARD_OBJECT.cost);
 
-  if (serverConfig.debugData.enableRemoveCardFromHand) {
+  if (serverConfig.debugData.enableRemoveCardFromHand && CARD_OBJECT) {
     // move to your playerCards array
     copyCardToPlayedCards(G, currentPlayer, CARD_OBJECT.id);
     // and then remove card from your hand

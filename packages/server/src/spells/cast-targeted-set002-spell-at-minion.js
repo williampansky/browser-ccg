@@ -86,6 +86,16 @@ const castTargetedSet002SpellAtMinion = (
       };
       break;
 
+    // Buff an extra health point
+    case 'CORE_054':
+      G.boards[currentPlayer][targetSlotIndex] = {
+        ...targetSlotObject,
+        currentHealth: Math.abs(targetSlotObject.currentHealth + 1),
+        isBuffed: true,
+        totalHealth: Math.abs(targetSlotObject.totalHealth + 1)
+      };
+      break;
+
     // Change a minion's HP to 1
     case 'CORE_056':
       G.boards[otherPlayer][targetSlotIndex] = {

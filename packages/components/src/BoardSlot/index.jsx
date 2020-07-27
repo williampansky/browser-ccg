@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
+import ReactTooltip from 'react-tooltip';
 import { useHover, usePrevious } from '@ccg/hooks';
 import { PLAYER_BOARDS } from '@ccg/enums';
 import { GAME_CONFIG } from '@ccg/config';
@@ -43,7 +44,8 @@ const BoardSlot = props => {
       hoveringTargetIndex,
       hoveringTargetObject,
       selectedMinionObject,
-      selectedMinionIndex
+      selectedMinionIndex,
+      spellObject
     },
     ctx: { currentPlayer },
     board,
@@ -303,7 +305,9 @@ const BoardSlot = props => {
       data-is-new={enableEntranceAnimations && slotIsNew}
       data-slot={index}
       data-for={`${id}--${index}`}
-      data-tip={true}
+      data-tip={
+        spellObject[playerID] ? spellObject[playerID].targetingArrowText : false
+      }
       ref={hoverRef}
       style={{ zIndex: isHovered ? '100' : '' }}
     >
@@ -423,6 +427,16 @@ const BoardSlot = props => {
         />
       )}
       {slotObject && hasBoon && <Boon />}
+
+      {canBeBuffed ? (
+        <ReactTooltip
+          id={`${id}--${index}`}
+          place="top"
+          type="dark"
+          effect="solid"
+          multiline={true}
+        />
+      ) : null}
 
       {/* visible minion component */}
       {slotObject ? (
