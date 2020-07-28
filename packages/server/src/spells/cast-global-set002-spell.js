@@ -290,10 +290,19 @@ const castGlobalSet002Spell = (G, ctx, cardId) => {
       });
       break;
 
-    // Attack two random enemy minions for 2 damage each.
+    /**
+     * Attack two random enemy minions for 2 damage each
+     * @bug
+     * @see https://github.com/williampansky/react-ccg/issues/16
+     */
     case 'CORE_125':
       G.boards[otherPlayer].forEach((slot, i) => {
-        if (i === theirRandomIdx1 || i === theirRandomIdx2) {
+        if (i === theirRandomIdx1 && i !== theirRandomIdx2) {
+          boards.subtractFromMinionHealth(G, otherPlayer, i, yourTotalSpellDmg);
+          boards.killMinionIfHealthIsZero(G, ctx, otherPlayer, slot, i);
+        }
+
+        if (i === theirRandomIdx2 && i !== theirRandomIdx1) {
           boards.subtractFromMinionHealth(G, otherPlayer, i, yourTotalSpellDmg);
           boards.killMinionIfHealthIsZero(G, ctx, otherPlayer, slot, i);
         }
