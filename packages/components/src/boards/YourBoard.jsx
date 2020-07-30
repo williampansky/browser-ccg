@@ -92,7 +92,7 @@ const YourBoard = props => {
                 selectedMinionIndex={selectedMinionIndex}
                 selectedMinionObject={selectedMinionObject}
                 slotObject={object}
-                spellObject={spellObject}
+                spellObject={spellObject[yourID]}
                 uiTooltipSrc={uiTooltipSrc}
                 yourID={yourID}
               />

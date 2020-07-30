@@ -449,6 +449,13 @@ const castTargetedSet002SpellAtMinion = (
     default:
       break;
   }
+
+  G.boards[currentPlayer].forEach(slot => {
+    slot.showTooltip = false;
+  });
+  G.boards[otherPlayer].forEach(slot => {
+    slot.showTooltip = false;
+  });
 };
 
 export default castTargetedSet002SpellAtMinion;

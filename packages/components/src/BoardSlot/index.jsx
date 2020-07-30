@@ -149,6 +149,7 @@ const BoardSlot = props => {
         text,
         type
       },
+      showTooltip,
       totalAttack,
       totalHealth,
       uuid,
@@ -293,7 +294,7 @@ const BoardSlot = props => {
 
   const handleTargetingTooltip = useCallback(
     spellObj => {
-      if (!spellObj) return false;
+      if (!spellObj) return;
       const { numberPrimary, numberSecondary, targetingArrowText } = spellObj;
       return replaceConstant(
         formatCardText(
@@ -444,8 +445,7 @@ const BoardSlot = props => {
       )}
       {slotObject && hasBoon && <Boon />}
 
-      {((canBeBuffed || canBeHealed) && !canBeAttackedBySpell) ||
-      ((!canBeBuffed || !canBeHealed) && canBeAttackedBySpell) ? (
+      {showTooltip ? (
         <ReactTooltip
           id={`${id}--${index}`}
           place="top"

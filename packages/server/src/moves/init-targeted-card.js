@@ -35,6 +35,7 @@ const initTargetedCard = (G, ctx, object, index) => {
     case PLAY_CONTEXT['TRANSFORM']:
       G.boards[otherPlayer].forEach(slot => {
         if (!slot.isHidden) slot.canBeAttackedBySpell = true;
+        if (!slot.isHidden) slot.showTooltip = true;
       });
       break;
 
@@ -43,6 +44,7 @@ const initTargetedCard = (G, ctx, object, index) => {
     case PLAY_CONTEXT['RUSH']:
       G.boards[currentPlayer].forEach(slot => {
         slot.canBeBuffed = true;
+        slot.showTooltip = true;
       });
       break;
 
@@ -50,15 +52,18 @@ const initTargetedCard = (G, ctx, object, index) => {
     case PLAY_CONTEXT['DISABLE']:
       G.boards[otherPlayer].forEach(slot => {
         if (!slot.isHidden) slot.canBeDebuffed = true;
+        if (!slot.isHidden) slot.showTooltip = true;
       });
       break;
 
     default:
       G.boards[currentPlayer].forEach(slot => {
         slot.canBeAttackedBySpell = false;
+        slot.showTooltip = false;
       });
       G.boards[otherPlayer].forEach(slot => {
         slot.canBeAttackedBySpell = false;
+        slot.showTooltip = false;
       });
       break;
   }
