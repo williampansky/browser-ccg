@@ -55,6 +55,7 @@ export default {
     client: false,
     redact: true,
     move: (G, ctx, index) => {
+      deselectCard(G, ctx);
       return hoverCard(G, ctx, index);
     }
   },

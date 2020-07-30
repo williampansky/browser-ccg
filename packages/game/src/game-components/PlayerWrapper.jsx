@@ -66,7 +66,10 @@ const PlayerWrapper = props => {
       playerHealthTotal={30}
       playerName={playerName[playerID]}
       selectCardFunction={(obj, idx) => selectCard(obj, idx)}
-      handleCardHoverFunction={idx => hoverCard(idx)}
+      handleCardHoverFunction={idx => {
+        console.log(idx);
+        hoverCard(idx);
+      }}
       handleInitTargetedCardFunction={(obj, idx) => initTargetedCard(obj, idx)}
       selectCardContextFunction={str => selectCardContext(str)}
       selectedCardObject={selectedCardObject[playerID]}

@@ -577,15 +577,15 @@ const DesktopHand = props => {
                     cardObject={items[i]}
                     cardUuid={uuid}
                     handleCardInteractionClick={handleCardInteractionClick}
-                    key={uuid}
-                    selectedCardUuid={selectedCardUuid}
-                    slotIndex={i}
-                    numberOfCardsInHand={items.length}
                     isDesktop={isDesktop}
                     isEnhanced={isEnhanced}
                     isPlayable={isPlayable}
-                    yourID={yourId}
+                    key={uuid}
+                    numberOfCardsInHand={items.length}
                     playerSpellDamage={playerSpellDamage}
+                    selectedCardUuid={selectedCardUuid}
+                    slotIndex={i}
+                    yourID={yourId}
                   />
                 </animated.div>
               </React.Fragment>

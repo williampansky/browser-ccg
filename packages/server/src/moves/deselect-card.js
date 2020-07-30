@@ -1,6 +1,8 @@
 import hoveringTarget from '../state/hovering-target';
 import selectedCardIndex from '../state/selected-card-index';
 import selectedCardObject from '../state/selected-card-object';
+import spellObject from '../state/spell-object';
+import boards from '../state/boards';
 
 /**
  * @param {object} G
@@ -14,55 +16,16 @@ const deselectCard = (G, ctx) => {
   selectedCardIndex.reset(G, currentPlayer);
   selectedCardObject.reset(G, currentPlayer);
   hoveringTarget.reset(G, currentPlayer);
-
-  G.boards[otherPlayer].forEach(slot => {
-    slot.canBeAttackedByMinion = false;
-    slot.canBeAttackedByPlayer = false;
-    slot.canBeAttackedBySpell = false;
-    slot.canBeAttackedByOnPlay = false;
-  });
+  spellObject.reset(G, currentPlayer);
 
   G.selectedCardType = { '0': null, '1': null };
   G.selectedCardPlayType = { '0': null, '1': null };
   G.selectedCardPlayContext = { '0': null, '1': null };
   G.playerCanBeAttackedBySpell = { '0': false, '1': false };
-  G.playerSpellDamage = { '0': 0, '1': 0 };
+  // G.playerSpellDamage = { '0': 0, '1': 0 };
 
-  G.boards[currentPlayer].forEach(slot => {
-    slot.canBeAttackedByMinion = false;
-    slot.canBeAttackedByOnPlay = false;
-    slot.canBeAttackedByPlayer = false;
-    slot.canBeAttackedBySpell = false;
-    slot.canBeBuffed = false;
-    slot.canBeDebuffed = false;
-    slot.canBeDestroyed = false;
-    slot.canBeExpired = false;
-    slot.canBeHealed = false;
-    slot.canBeReturned = false;
-    slot.canBeStolen = false;
-    slot.canReceiveBubble = false;
-    slot.canReceiveBulwark = false;
-    slot.canReceiveDoubleAttack = false;
-    slot.canReceiveRush = false;
-  });
-
-  G.boards[otherPlayer].forEach(slot => {
-    slot.canBeAttackedByMinion = false;
-    slot.canBeAttackedByOnPlay = false;
-    slot.canBeAttackedByPlayer = false;
-    slot.canBeAttackedBySpell = false;
-    slot.canBeBuffed = false;
-    slot.canBeDebuffed = false;
-    slot.canBeDestroyed = false;
-    slot.canBeExpired = false;
-    slot.canBeHealed = false;
-    slot.canBeReturned = false;
-    slot.canBeStolen = false;
-    slot.canReceiveBubble = false;
-    slot.canReceiveBulwark = false;
-    slot.canReceiveDoubleAttack = false;
-    slot.canReceiveRush = false;
-  });
+  boards.disableAllEverything(G, currentPlayer);
+  boards.disableAllEverything(G, otherPlayer);
 };
 
 export default deselectCard;

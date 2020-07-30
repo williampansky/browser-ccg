@@ -42,21 +42,15 @@ const BoardSlot = props => {
     gameAestheticConfig: { enableEntranceAnimations }
   } = GAME_CONFIG;
   const {
-    G: {
-      hoveringTargetIndex,
-      hoveringTargetObject,
-      selectedMinionObject,
-      selectedMinionIndex,
-      spellObject,
-      playerSpellDamage
-    },
     ctx: { currentPlayer },
     board,
     boardLength,
     handleCanAttackFn,
-    handleIsAttackingFn,
     handleCanBeAttackedByMinionFn,
     handleCanBeAttackedBySpellFn,
+    handleIsAttackingFn,
+    hoveringTargetIndex,
+    hoveringTargetObject,
     index,
     interactionImages,
     interactionImages: { willDieTheirSrc, willDieYourSrc },
@@ -72,6 +66,10 @@ const BoardSlot = props => {
     },
     moves: { hoverTarget, setSlotIsNew: setSlotIsNewMove },
     playerID,
+    playerSpellDamage,
+    selectedMinionIndex,
+    selectedMinionObject,
+    spellObject,
     yourID,
     slotObject,
     slotObject: {
@@ -294,19 +292,19 @@ const BoardSlot = props => {
   // }, [index, isDead, killMinionCallback]);
 
   const handleTargetingTooltip = useCallback(
-    (spellObj, pID) => {
+    spellObj => {
       if (!spellObj) return false;
-      const { targetingArrowText } = spellObj;
+      const { numberPrimary, numberSecondary, targetingArrowText } = spellObj;
       return replaceConstant(
         formatCardText(
           targetingArrowText,
           numberPrimary,
           numberSecondary,
-          playerSpellDamage[pID]
+          playerSpellDamage
         )
       );
     },
-    [numberPrimary, numberSecondary, playerSpellDamage]
+    [playerSpellDamage]
   );
 
   return (
@@ -325,7 +323,7 @@ const BoardSlot = props => {
       data-is-new={enableEntranceAnimations && slotIsNew}
       data-slot={index}
       data-for={`${id}--${index}`}
-      data-tip={spellObject[yourID] ? true : false}
+      data-tip={spellObject ? true : false}
       ref={hoverRef}
       style={{ zIndex: isHovered ? '100' : '' }}
     >
@@ -458,7 +456,7 @@ const BoardSlot = props => {
           <p
             className="text__value"
             dangerouslySetInnerHTML={createMarkup(
-              handleTargetingTooltip(spellObject[yourID], yourID)
+              handleTargetingTooltip(spellObject)
             )}
           />
         </ReactTooltip>

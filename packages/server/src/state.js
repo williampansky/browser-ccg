@@ -4,7 +4,7 @@ import cardBack from './state/card-back';
 import counts from './state/counts';
 import deckInfo from './state/deck-info';
 import hoveringCardIndex from './state/hovering-card-index';
-import onPlayObject from './state/onplay-object';
+// import onPlayObject from './state/onplay-object';
 import playedCards from './state/played-cards';
 import playerAttackValue from './state/player-attack-value';
 import playerCanAttack from './state/player-can-attack';
@@ -39,7 +39,6 @@ export default {
   hoveringTargetObject: hoveringTarget.__DATA_MODEL,
   lastPlayedCardId: null,
   lastTargeted: { context: null, index: null },
-  onPlayObject: onPlayObject.__DATA_MODEL,
   playerAttackValue: playerAttackValue.__DATA_MODEL,
   playerCanAttack: playerCanAttack.__DATA_MODEL,
   playerCanBeAttackedByMinion: playerCanBeAttacked.playerCanBeAttackedByMinion,

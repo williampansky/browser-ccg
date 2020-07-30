@@ -10,17 +10,25 @@ import { BoardDropArea, BoardSlot } from '@ccg/components';
 const YourBoard = props => {
   const {
     G,
-    G: { selectedCardObject },
+    G: {
+      selectedCardObject,
+      hoveringTargetIndex,
+      hoveringTargetObject,
+      selectedMinionObject,
+      selectedMinionIndex,
+      spellObject,
+      playerSpellDamage
+    },
     ctx,
     moves,
-    yourBoard,
-    yourID,
-    cardIsSelected,
     cardIsLocked,
-    minionIsSelected,
+    cardIsSelected,
     interactionImages,
     mechanicImages,
-    uiTooltipSrc
+    minionIsSelected,
+    uiTooltipSrc,
+    yourBoard,
+    yourID
   } = props;
 
   const {
@@ -71,17 +79,22 @@ const YourBoard = props => {
               <BoardSlot
                 board={PLAYER_BOARDS[1]}
                 ctx={ctx}
-                G={G}
+                moves={moves}
+                boardLength={yourBoard.length}
+                hoveringTargetIndex={hoveringTargetIndex}
+                hoveringTargetObject={hoveringTargetObject}
                 index={index}
                 interactionImages={interactionImages}
                 key={`slot_${index}`}
                 mechanicImages={mechanicImages}
-                moves={moves}
                 playerID={yourID}
+                playerSpellDamage={playerSpellDamage[yourID]}
+                selectedMinionIndex={selectedMinionIndex}
+                selectedMinionObject={selectedMinionObject}
                 slotObject={object}
+                spellObject={spellObject}
                 uiTooltipSrc={uiTooltipSrc}
-                boardLength={yourBoard.length}
-                {...props}
+                yourID={yourID}
               />
 
               <BoardDropArea

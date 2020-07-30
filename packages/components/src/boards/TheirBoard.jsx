@@ -7,6 +7,15 @@ import { usePrevious } from '@ccg/hooks';
 const TheirBoard = props => {
   const {
     G,
+    G: {
+      selectedCardObject,
+      hoveringTargetIndex,
+      hoveringTargetObject,
+      selectedMinionObject,
+      selectedMinionIndex,
+      spellObject,
+      playerSpellDamage
+    },
     ctx,
     moves,
     moves: {
@@ -71,23 +80,28 @@ const TheirBoard = props => {
         {theirBoardArray.map((object, index) => {
           return (
             <BoardSlot
-              G={G}
               ctx={ctx}
               moves={moves}
               board={PLAYER_BOARDS[2]}
+              boardLength={theirBoardArray.length}
               handleCanBeAttackedByMinionFn={() => intClick(intKeys[1], index)}
               handleCanBeAttackedByOnPlayFn={() => intClick(intKeys[2], index)}
               handleCanBeAttackedByPlayerFn={() => intClick(intKeys[3], index)}
               handleCanBeAttackedBySpellFn={() => intClick(intKeys[4], index)}
+              hoveringTargetIndex={hoveringTargetIndex}
+              hoveringTargetObject={hoveringTargetObject}
               index={index}
               interactionImages={interactionImages}
               key={`slot_${index}`}
               mechanicImages={mechanicImages}
               playerID={theirID}
+              playerSpellDamage={playerSpellDamage[yourID]}
+              selectedCardObject={selectedCardObject}
+              selectedMinionIndex={selectedMinionIndex}
+              selectedMinionObject={selectedMinionObject}
               slotObject={object}
+              spellObject={spellObject[yourID]}
               uiTooltipSrc={uiTooltipSrc}
-              boardLength={theirBoardArray.length}
-              {...props}
             />
           );
         })}
