@@ -22,7 +22,8 @@ const DesktopHand = props => {
     selectedCardIndex,
     selectedCardUuid,
     isDesktop,
-    yourId
+    yourId,
+    playerSpellDamage
   } = props;
 
   // Store indicies as a local ref, this represents the item order
@@ -583,6 +584,8 @@ const DesktopHand = props => {
                     isDesktop={isDesktop}
                     isEnhanced={isEnhanced}
                     isPlayable={isPlayable}
+                    yourID={yourId}
+                    playerSpellDamage={playerSpellDamage}
                   />
                 </animated.div>
               </React.Fragment>

@@ -7,7 +7,6 @@ import hoveringCardIndex from './state/hovering-card-index';
 import onPlayObject from './state/onplay-object';
 import playedCards from './state/played-cards';
 import playerAttackValue from './state/player-attack-value';
-import playerBuffs from './state/player-buffs';
 import playerCanAttack from './state/player-can-attack';
 import playerCanBeAttacked from './state/player-can-be-attacked';
 import playerCanBeHealed from './state/player-can-be-healed';
@@ -41,7 +40,6 @@ export default {
   lastPlayedCardId: null,
   lastTargeted: { context: null, index: null },
   onPlayObject: onPlayObject.__DATA_MODEL,
-  playerBuffs: playerBuffs.__DATA_MODEL,
   playerAttackValue: playerAttackValue.__DATA_MODEL,
   playerCanAttack: playerCanAttack.__DATA_MODEL,
   playerCanBeAttackedByMinion: playerCanBeAttacked.playerCanBeAttackedByMinion,

@@ -12,13 +12,7 @@ import playerShieldPoints from '../state/player-shield-points';
 import counts from '../state/counts';
 
 const castGlobalSet002Spell = (G, ctx, cardId) => {
-  const {
-    boards: gBoards,
-    playedCards,
-    playerBuffs,
-    playerSpellDamage,
-    turnOrder
-  } = G;
+  const { boards: gBoards, playedCards, playerSpellDamage, turnOrder } = G;
   const { currentPlayer, random } = ctx;
   const otherPlayer = turnOrder.find(p => p !== currentPlayer);
   const { entourage, numberPrimary } = getCardByID(cardId);
@@ -28,10 +22,7 @@ const castGlobalSet002Spell = (G, ctx, cardId) => {
   const theirPlayedCards = playedCards[otherPlayer];
 
   const yourBaseSpellDmg = playerSpellDamage[currentPlayer];
-  const yourSpellDamageBuff = playerBuffs[currentPlayer].spellDamage;
-  const yourTotalSpellDmg = Math.abs(
-    numberPrimary + yourBaseSpellDmg + yourSpellDamageBuff
-  );
+  const yourTotalSpellDmg = Math.abs(numberPrimary + yourBaseSpellDmg);
 
   const getRandomIndex = length => {
     return Math.floor(Math.random() * (length - 0) + 0);

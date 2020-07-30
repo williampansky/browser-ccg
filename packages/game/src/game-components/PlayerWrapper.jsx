@@ -16,7 +16,8 @@ const PlayerWrapper = props => {
       selectedCardObject,
       selectedCardIndex,
       selectedCardInteractionContext,
-      counts
+      counts,
+      playerSpellDamage
     },
     ctx,
     moves,
@@ -75,6 +76,7 @@ const PlayerWrapper = props => {
       }
       yourId={playerID}
       selectedCardInteractionContext={selectedCardInteractionContext[playerID]}
+      playerSpellDamage={playerSpellDamage[playerID]}
     />
   );
 };

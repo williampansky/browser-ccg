@@ -49,7 +49,9 @@ const DesktopInteractionLayer = props => {
     isPlayable,
     isSelected,
     isEnhanced,
-    disableInteraction
+    disableInteraction,
+    yourId,
+    playerSpellDamage
   } = props;
 
   const [activeState, setActiveState] = useState(null);
@@ -124,6 +126,7 @@ const DesktopInteractionLayer = props => {
         text={text}
         type={type}
         uuid={uuid}
+        spellDmgBoon={playerSpellDamage}
       />
 
       <CardIsPlayableEffect

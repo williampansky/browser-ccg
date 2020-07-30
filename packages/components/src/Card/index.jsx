@@ -73,7 +73,7 @@ const Card = ({
     return replaceConstant(
       formatCardText(text, numberPrimary, numberSecondary, spellDmgBoon)
     );
-  }, [numberPrimary, numberSecondary, spellDmgBoon, text]);
+  }, [text, numberPrimary, numberSecondary, spellDmgBoon]);
 
   return (
     <div

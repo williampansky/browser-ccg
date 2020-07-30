@@ -33,7 +33,8 @@ const Player = props => {
     selectedCardUuid,
     yourId,
     parentComponent,
-    selectedCardInteractionContext
+    selectedCardInteractionContext,
+    playerSpellDamage
   } = props;
 
   const { isDesktop } = useResponsive();
@@ -96,6 +97,7 @@ const Player = props => {
         handleCardHoverFunction={handleCardHoverFunction}
         selectCardContextFunction={selectCardContextFunction}
         yourId={yourId}
+        playerSpellDamage={playerSpellDamage}
         selectedCardIndex={selectedCardIndex}
         handleInitTargetedCardFunction={handleInitTargetedCardFunction}
       />

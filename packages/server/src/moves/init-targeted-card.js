@@ -40,6 +40,7 @@ const initTargetedCard = (G, ctx, object, index) => {
 
     case PLAY_CONTEXT['BOON']:
     case PLAY_CONTEXT['BUFF']:
+    case PLAY_CONTEXT['RUSH']:
       G.boards[currentPlayer].forEach(slot => {
         slot.canBeBuffed = true;
       });

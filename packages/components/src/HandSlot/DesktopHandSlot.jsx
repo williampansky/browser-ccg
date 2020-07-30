@@ -32,6 +32,7 @@ const DesktopHandSlot = props => {
         isPlayable={isPlayable}
         isSelected={selectedCardUuid === cardUuid ? true : false}
         isDesktop={isDesktop}
+        {...props}
       />
     </div>
   );
