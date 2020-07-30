@@ -22,7 +22,8 @@ export const _dE = (G, player, index) => {
     canReceiveBubble: false,
     canReceiveBulwark: false,
     canReceiveDoubleAttack: false,
-    canReceiveRush: false
+    canReceiveRush: false,
+    showTooltip: false
   };
 };
 

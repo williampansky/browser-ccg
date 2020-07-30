@@ -20,8 +20,10 @@ const GameWrapper = props => {
   // boardgame props
   const {
     G,
+    G: { selectedCardObject, selectedMinionObject },
     ctx,
     moves,
+    moves: { deselectCard, deselectMinion },
     events,
     reset,
     undo,
@@ -41,6 +43,10 @@ const GameWrapper = props => {
   const theirID = playerID === '0' ? '1' : '0';
   const yourID = playerID === '0' ? '0' : '1';
 
+  // top-level game objects
+  const yourSelectedCard = selectedCardObject[yourID];
+  const yourSelectedMinion = selectedMinionObject[yourID];
+
   // log bools
   const logSelectedCardObject = false;
 
@@ -51,6 +57,21 @@ const GameWrapper = props => {
         G.selectedCardObject[yourID]
       );
   }, [G, logSelectedCardObject, yourID]);
+
+  const handleRightClick = React.useCallback(
+    event => {
+      event.preventDefault();
+      if (yourSelectedMinion) return deselectMinion();
+      else if (yourSelectedCard) return deselectCard();
+      else return;
+    },
+    [deselectCard, deselectMinion, yourSelectedCard, yourSelectedMinion]
+  );
+
+  React.useEffect(() => {
+    document.addEventListener('contextmenu', handleRightClick);
+    return () => document.removeEventListener('contextmenu', handleRightClick);
+  }, [handleRightClick]);
 
   return (
     <div>

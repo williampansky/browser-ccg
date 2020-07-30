@@ -1,6 +1,6 @@
 const playerSpellDamage = {
   __DATA_MODEL: {
-    '0': 6,
+    '0': 0,
     '1': 0
   }
 };
