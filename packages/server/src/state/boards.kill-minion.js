@@ -12,12 +12,13 @@ import recalculateCardMechanics from '../mechanics/recalculate-mechanics';
  */
 export const _kM = (G, ctx, player, boardSlot, index) => {
   if (!G.boards[player][index]) return;
-  const { minionData } = boardSlot;
+  const { minionData, uuid } = boardSlot;
 
   if (G.boards[player][index].isDead) {
     // logMessage(G, ctx, 'killMinion', player, index);
-    G.boards[player].splice(index, 1);
-    // recalculateCardMechanics(G, ctx, player, minionData, index);
+    const newBoard = G.boards[player].filter(obj => obj.uuid !== uuid);
+    G.boards[player] = newBoard;
+    // recalculateCardMechanics(G, ctx, player, boardSlot, index);
   }
 };
 
@@ -33,7 +34,6 @@ export const _kM = (G, ctx, player, boardSlot, index) => {
 export const _kM0 = (G, ctx, player, boardSlot, index) => {
   if (G.boards[player][index].currentHealth === 0) {
     G.boards[player][index].isDead = true;
-    _kM(G, ctx, player, boardSlot, index);
-    recalculateCardMechanics(G, ctx, player, boardSlot, index);
+    // _kM(G, ctx, player, boardSlot, index);
   }
 };

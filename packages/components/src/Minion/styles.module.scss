@@ -105,11 +105,11 @@ $bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
   color: #ff4800;
 }
 
-.minion.minion--is-dead {
-  opacity: 0;
-  transform: scale(0.1);
-  transition: 600ms cubic-bezier(0.19, 1, 0.22, 1);
-}
+// .minion.minion--is-dead {
+//   opacity: 0;
+//   transform: scale(0.1);
+//   transition: 600ms cubic-bezier(0.19, 1, 0.22, 1);
+// }
 
 // prettier-ignore
 .minion {

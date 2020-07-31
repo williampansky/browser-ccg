@@ -42,6 +42,7 @@ const recalculateCardMechanics = (G, ctx, player, slotObject, index) => {
 
   if (has(mechanics, 'BOON'))
     hasBoon.enable(G, player, index);
+    // console.log(has(mechanics, 'BOON'))
 
   if (has(mechanics, 'EVENT'))
     hasEventListener.enable(G, player, index);

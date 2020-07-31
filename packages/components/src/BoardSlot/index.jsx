@@ -64,7 +64,7 @@ const BoardSlot = props => {
       isDisabledSrc,
       isHiddenSrc
     },
-    moves: { hoverTarget, setSlotIsNew: setSlotIsNewMove },
+    moves: { hoverTarget, killMinion, setSlotIsNew: setSlotIsNewMove },
     playerID,
     playerSpellDamage,
     selectedMinionIndex,
@@ -281,18 +281,18 @@ const BoardSlot = props => {
     return bool;
   };
 
-  // const killMinionCallback = useCallback(
-  //   index => {
-  //     setTimeout(() => {
-  //       killMinion(playerID, slotObject, index);
-  //     }, 400);
-  //   },
-  //   [playerID, slotObject, killMinion]
-  // );
+  const killMinionCallback = useCallback(
+    index => {
+      setTimeout(() => {
+        killMinion(playerID, slotObject, index);
+      }, 400);
+    },
+    [playerID, slotObject, killMinion]
+  );
 
-  // useEffect(() => {
-  //   isDead && killMinionCallback(index);
-  // }, [index, isDead, killMinionCallback]);
+  useEffect(() => {
+    isDead && killMinionCallback(index);
+  }, [index, isDead, killMinionCallback]);
 
   const handleTargetingTooltip = useCallback(
     spellObj => {
@@ -315,6 +315,7 @@ const BoardSlot = props => {
       className={[
         styles['board__slot'],
         getMinionRaceClass(race),
+        isDead ? styles['minion--is-dead'] : '',
         isAttacking ? 'board__slot--is-attacking' : '',
         // wasAttacked ? '--was-attacked' : '',
         isAttackingPlayer === true ? `target__other_player` : '',
