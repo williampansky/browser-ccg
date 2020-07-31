@@ -194,11 +194,9 @@ const castTargetedSet002SpellAtMinion = (
     // Give a minion +2 Health points and then draw a card
     case 'CORE_086':
       G.boards[currentPlayer][targetSlotIndex] = {
-        ...targetSlotObject,
-        currentAttack: Math.abs(targetSlotObject.currentAttack + 2),
-        currentHealth: Math.abs(targetSlotObject.currentHealth + 2),
-        totalAttack: Math.abs(targetSlotObject.totalAttack + 2),
-        totalHealth: Math.abs(targetSlotObject.totalHealth + 2)
+        ...G.boards[currentPlayer][targetSlotIndex],
+        currentHealth: add(targetSlotObject.currentHealth, 2),
+        totalHealth: add(targetSlotObject.totalHealth, 2)
       };
       drawCard(G, ctx, currentPlayer, 1);
       break;
@@ -206,7 +204,7 @@ const castTargetedSet002SpellAtMinion = (
     // Double a minion's current Health value
     case 'CORE_088':
       G.boards[currentPlayer][targetSlotIndex].currentHealth = Math.abs(
-        G.boards[currentPlayer][targetSlotIndex].currentHealth + 2
+        G.boards[currentPlayer][targetSlotIndex].currentHealth * 2
       );
       break;
 

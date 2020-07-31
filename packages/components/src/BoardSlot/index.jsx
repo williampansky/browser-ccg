@@ -195,6 +195,7 @@ const BoardSlot = props => {
         if (targetObject === null) return setWillDie(false);
         else if (selectedMinionIndex[playerID] !== index)
           return setWillDie(false);
+        else if (hasBubble) return setWillDie(false);
         else {
           const { currentAttack: targetAttack } = targetObject;
           return targetAttack >= currentHealth
@@ -203,7 +204,7 @@ const BoardSlot = props => {
         }
       }
     },
-    [board, currentHealth, index, playerID, selectedMinionIndex]
+    [board, currentHealth, hasBubble, index, playerID, selectedMinionIndex]
   );
 
   useEffect(() => {
@@ -224,6 +225,7 @@ const BoardSlot = props => {
         else if (index !== targetIndex) return setWillDie(false);
         else if (selectedMinionObject[currentPlayerID] === null)
           return setWillDie(false);
+        else if (targetObject.hasBubble) return setWillDie(false);
         else {
           const {
             currentAttack: selectedMinionCurrentAttack
