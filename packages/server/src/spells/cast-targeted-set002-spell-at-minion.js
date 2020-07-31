@@ -76,7 +76,7 @@ const castTargetedSet002SpellAtMinion = (
     // Buff a minion with taunt and +2/+2
     case 'CORE_046':
       G.boards[currentPlayer][targetSlotIndex] = {
-        ...targetSlotObject,
+        ...G.boards[currentPlayer][targetSlotIndex],
         currentAttack: Math.abs(targetSlotObject.currentAttack + 2),
         currentHealth: Math.abs(targetSlotObject.currentHealth + 2),
         hasBulwark: true,
@@ -89,7 +89,7 @@ const castTargetedSet002SpellAtMinion = (
     // Buff an extra health point
     case 'CORE_054':
       G.boards[currentPlayer][targetSlotIndex] = {
-        ...targetSlotObject,
+        ...G.boards[currentPlayer][targetSlotIndex],
         currentHealth: Math.abs(targetSlotObject.currentHealth + 1),
         isBuffed: true,
         totalHealth: Math.abs(targetSlotObject.totalHealth + 1)

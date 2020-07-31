@@ -22,9 +22,17 @@ const initSet002OnPlay = (G, ctx, slotObject, cardId, index) => {
   let createSpellObj = false;
 
   switch (cardId) {
+    case 'CORE_001':
+      if (G.boards[otherPlayer].length === 1) return;
+      G.boards[otherPlayer].forEach((slot, i) => {
+        if (!slot.isHidden) slot.canBeAttackedByOnPlay = true;
+        if (!slot.isHidden) slot.showTooltip = true;
+        createSpellObj = true;
+      });
+      break;
+
     case 'CORE_006':
       if (G.boards[currentPlayer].length === 1) return;
-
       G.boards[currentPlayer].forEach((slot, i) => {
         if (index !== i) {
           slot.canBeHealed = true;
@@ -46,7 +54,6 @@ const initSet002OnPlay = (G, ctx, slotObject, cardId, index) => {
 
     case 'CORE_054':
       if (G.boards[currentPlayer].length === 1) return;
-
       G.boards[currentPlayer].forEach((slot, i) => {
         if (index !== i) {
           slot.canBeBuffed = true;

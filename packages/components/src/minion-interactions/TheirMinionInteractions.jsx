@@ -17,10 +17,12 @@ export default function TheirMinionInteractions(props) {
     hasBulwark,
     canBeAttackedByMinion,
     canBeAttackedBySpell,
+    canBeAttackedByOnPlay,
     canSetHoverTarget,
     handleHoverTargetFunction,
     handleCanBeAttackedByMinionFunction,
     handleCanBeAttackedBySpellFunction,
+    handleCanBeAttackedByOnPlayFn,
     index,
     slotObject,
     slotObject: { canBeDebuffed },
@@ -35,10 +37,11 @@ export default function TheirMinionInteractions(props) {
   const [activeState, setActiveState] = useState(null);
 
   const handleActiveStateCallback = useCallback(
-    (byMinion, bySpell, byDebuff) => {
+    (byMinion, bySpell, byOnPlay, byDebuff) => {
       if (byDebuff) return setActiveState('canBeDebuffed');
       else if (byMinion) return setActiveState('canBeAttackedByMinion');
       else if (bySpell) return setActiveState('canBeAttackedBySpell');
+      else if (byOnPlay) return setActiveState('canBeAttackedByOnPlay');
       else return setActiveState(null);
     },
     []
@@ -48,12 +51,14 @@ export default function TheirMinionInteractions(props) {
     handleActiveStateCallback(
       canBeAttackedByMinion,
       canBeAttackedBySpell,
+      canBeAttackedByOnPlay,
       canBeDebuffed
     );
   }, [
     handleActiveStateCallback,
     canBeAttackedByMinion,
     canBeAttackedBySpell,
+    canBeAttackedByOnPlay,
     canBeDebuffed
   ]);
 
@@ -91,6 +96,20 @@ export default function TheirMinionInteractions(props) {
         hasBulwark={hasBulwark}
         activeState={activeState === 'canBeAttackedBySpell' ? true : false}
         onClick={handleCanBeAttackedBySpellFunction}
+        canBeAttackedSrc={canBeAttackedSrc}
+        canBeAttackedBulwarkSrc={canBeAttackedBulwarkSrc}
+        canBeAttackedLocSrc={canBeAttackedLocSrc}
+        canBeAttackedLocBulwarkSrc={canBeAttackedLocBulwarkSrc}
+        handleHoverTargetFunction={handleHoverTargetFunction}
+        canSetHoverTarget={canSetHoverTarget}
+        index={index}
+        slotObject={slotObject}
+      />
+      <CanBeAttackedBySpell
+        race={race}
+        hasBulwark={hasBulwark}
+        activeState={activeState === 'canBeAttackedByOnPlay' ? true : false}
+        onClick={handleCanBeAttackedByOnPlayFn}
         canBeAttackedSrc={canBeAttackedSrc}
         canBeAttackedBulwarkSrc={canBeAttackedBulwarkSrc}
         canBeAttackedLocSrc={canBeAttackedLocSrc}

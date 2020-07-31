@@ -359,6 +359,7 @@ const BoardSlot = props => {
           hasBulwark={hasBulwark}
           canBeAttackedByMinion={canBeAttackedByMinion}
           canBeAttackedBySpell={canBeAttackedBySpell}
+          canBeAttackedByOnPlay={canBeAttackedByOnPlay}
           interactionImages={interactionImages}
           handleCanBeAttackedByMinionFunction={handleCanBeAttackedByMinionFn}
           handleCanBeAttackedBySpellFunction={handleCanBeAttackedBySpellFn}

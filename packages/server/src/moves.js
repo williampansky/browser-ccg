@@ -1,4 +1,5 @@
 import attackMinionWithMinion from './moves/attack-minion-with-minion';
+import attackMinionWithOnPlay from './moves/attack-minion-with-onplay';
 import attackMinionWithSpell from './moves/attack-minion-with-spell';
 import targetMinionWithSpell from './moves/target-minion-with-spell';
 import attackPlayerWithMinion from './moves/attack-player-with-minion';
@@ -25,6 +26,12 @@ export default {
     client: false,
     move: (G, ctx, index) => {
       return attackPlayerWithMinion(G, ctx, index);
+    }
+  },
+  attackMinionWithOnPlay: {
+    client: false,
+    move: (G, ctx, index) => {
+      return attackMinionWithOnPlay(G, ctx, index);
     }
   },
   attackMinionWithSpell: {
