@@ -17,12 +17,16 @@ const TheirBoard = props => {
       playerSpellDamage
     },
     ctx,
+    ctx: { currentPlayer },
     moves,
     moves: {
       attackMinionWithMinion,
       attackMinionWithOnPlay,
       attackMinionWithPlayer,
-      attackMinionWithSpell
+      attackMinionWithSpell,
+      resetAttackedMinionIndex,
+      resetMinionIsAttacking,
+      resetMinionIsAttackingIndex
     },
     theirBoard,
     theirID,
@@ -45,6 +49,20 @@ const TheirBoard = props => {
   useEffect(() => {
     handleTheirBoardArrayCallback(theirBoard);
   }, [handleTheirBoardArrayCallback, theirBoard]);
+
+  const handleAnimationCallback = useCallback(() => {
+    // setTimeout(() => {
+    //   resetAttackedMinionIndex();
+    //   resetMinionIsAttacking(selectedMinionIndex[currentPlayer]);
+    //   resetMinionIsAttackingIndex(selectedMinionIndex[currentPlayer]);
+    // }, 250);
+  }, [
+    currentPlayer,
+    resetMinionIsAttacking,
+    resetMinionIsAttackingIndex,
+    selectedMinionIndex,
+    resetAttackedMinionIndex
+  ]);
 
   const intClick = useCallback(
     (key, slotIndexClicked) => {
@@ -75,6 +93,7 @@ const TheirBoard = props => {
       data-board={PLAYER_BOARDS[2]}
       data-board-id={theirID}
       data-board-length={theirBoardArray.length}
+      data-their-board-length={theirBoardArray.length}
     >
       <div className="play__area">
         {theirBoardArray.map((object, index) => {

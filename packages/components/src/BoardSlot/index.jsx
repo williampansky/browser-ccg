@@ -315,7 +315,12 @@ const BoardSlot = props => {
       className={[
         styles['board__slot'],
         getMinionRaceClass(race),
-        isAttacking ? 'board__slot--is-attacking' : ''
+        isAttacking ? 'board__slot--is-attacking' : '',
+        // wasAttacked ? '--was-attacked' : '',
+        isAttackingPlayer === true ? `target__other_player` : '',
+        isAttackingMinionIndex !== null
+          ? `target__slot-${isAttackingMinionIndex}`
+          : ''
       ].join(' ')}
       data-component="BoardSlot"
       data-can-attack={canAttack}

@@ -101,6 +101,9 @@ const attackMinionWithMinion = (G, ctx, index) => {
   // reset currentPlayer's selectedMinionIndex & selectedMinionObject value
   deselectMinion(G, ctx);
 
+  // remove isAttackingMinionIndex prop from attacking minion
+  G.boards[currentPlayer][ATTACKING_MINION_INDEX].isAttackingMinionIndex = null;
+
   // kill ANY minions with health <= 0 and reset states
   boards.killMinionIfHealthIsZero(
     G,

@@ -27,6 +27,7 @@ const YourBoard = props => {
     mechanicImages,
     minionIsSelected,
     uiTooltipSrc,
+    theirBoardLength,
     yourBoard,
     yourID
   } = props;
@@ -55,6 +56,8 @@ const YourBoard = props => {
       data-board={PLAYER_BOARDS[1]}
       data-board-id={yourID}
       data-board-length={yourBoard.length}
+      data-your-board-length={yourBoard.length}
+      data-their-board-length={theirBoardLength}
       data-component="YourBoard"
     >
       <div className="play__area">

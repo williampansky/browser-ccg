@@ -10,7 +10,14 @@ import {
 
 const OpponentInteractionLayer = props => {
   const {
-    moves: { attackPlayerWithMinion },
+    G: { selectedMinionIndex },
+    ctx: { currentPlayer },
+    moves: {
+      attackPlayerWithMinion,
+      resetAttackedMinionIndex,
+      resetMinionIsAttacking,
+      resetMinionIsAttackingPlayer
+    },
     canBeAttackedByMinion,
     canBeAttackedByOnPlay,
     canBeAttackedByPlayer,
@@ -45,6 +52,30 @@ const OpponentInteractionLayer = props => {
     canBeAttackedBySpell
   ]);
 
+  const handleAnimationCallback = useCallback(() => {
+    setTimeout(() => {
+      resetAttackedMinionIndex();
+      resetMinionIsAttacking(selectedMinionIndex[currentPlayer]);
+      resetMinionIsAttackingPlayer(selectedMinionIndex[currentPlayer]);
+    }, 250);
+  }, [
+    currentPlayer,
+    resetMinionIsAttacking,
+    resetMinionIsAttackingPlayer,
+    selectedMinionIndex,
+    resetAttackedMinionIndex
+  ]);
+
+  const handleInteractionClick = useCallback(
+    state => {
+      if (state === 'canBeAttackedByMinion') {
+        attackPlayerWithMinion();
+        return handleAnimationCallback();
+      }
+    },
+    [attackPlayerWithMinion, handleAnimationCallback]
+  );
+
   return (
     <div
       className={[styles['opponent__interaction__layer']].join(' ')}
@@ -52,7 +83,7 @@ const OpponentInteractionLayer = props => {
     >
       <OpponentCanBeAttackedByMinion
         activeState={activeState === 'canBeAttackedByMinion' ? true : false}
-        onClick={() => attackPlayerWithMinion()}
+        onClick={() => handleInteractionClick(activeState)}
       />
       <OpponentCanBeAttackedByOnPlay
         activeState={activeState === 'canBeAttackedByOnPlay' ? true : false}

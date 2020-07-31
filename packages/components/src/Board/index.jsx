@@ -110,6 +110,7 @@ const Board = props => {
         cardIsSelected={cardIsSelected}
         cardIsLocked={cardIsLocked}
         uiTooltipSrc={uiTooltipImage}
+        theirBoardLength={theirBoard.length}
         minionIsSelected={selectedMinionObject[yourID] ? true : false}
         interactionImages={{
           canAttackBulwarkSrc: intImages.canAttackBulwark,

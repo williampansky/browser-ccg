@@ -24,8 +24,8 @@ export default {
   },
   attackPlayerWithMinion: {
     client: false,
-    move: (G, ctx, index) => {
-      return attackPlayerWithMinion(G, ctx, index);
+    move: (G, ctx) => {
+      return attackPlayerWithMinion(G, ctx);
     }
   },
   attackMinionWithOnPlay: {
@@ -102,6 +102,34 @@ export default {
     client: false,
     move: (G, ctx, index) => {
       return playMinionCard(G, ctx, index);
+    }
+  },
+  resetAttackedMinionIndex: {
+    client: false,
+    redact: true,
+    move: G => {
+      G.attackedMinionIndex = null;
+    }
+  },
+  resetMinionIsAttacking: {
+    client: false,
+    redact: true,
+    move: (G, ctx, index) => {
+      G.boards[ctx.currentPlayer][index].isAttacking = false;
+    }
+  },
+  resetMinionIsAttackingIndex: {
+    client: false,
+    redact: true,
+    move: (G, ctx, index) => {
+      G.boards[ctx.currentPlayer][index].isAttackingMinionIndex = null;
+    }
+  },
+  resetMinionIsAttackingPlayer: {
+    client: false,
+    redact: true,
+    move: (G, ctx, index) => {
+      G.boards[ctx.currentPlayer][index].isAttackingPlayer = false;
     }
   },
   selectCard: {
