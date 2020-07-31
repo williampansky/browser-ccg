@@ -1,4 +1,4 @@
-// import recalculateCardMechanics from 'lib/mechanics/recalculate-mechanics';
+import recalculateCardMechanics from '../mechanics/recalculate-mechanics';
 // import logMessage from 'lib/match-history/log-message';
 
 /**
@@ -34,5 +34,6 @@ export const _kM0 = (G, ctx, player, boardSlot, index) => {
   if (G.boards[player][index].currentHealth === 0) {
     G.boards[player][index].isDead = true;
     _kM(G, ctx, player, boardSlot, index);
+    recalculateCardMechanics(G, ctx, player, boardSlot, index);
   }
 };

@@ -16,6 +16,7 @@ import drawCard from '../moves/draw-card';
 import summonEntourageMinion from './summon';
 import initOnPlayMechanic from '../on-plays/init-on-play-mechanic';
 import handleBoons from '../boons/handle-boons';
+import playerSpellDamage from '../state/player-spell-damage';
 
 /**
  * Initialize card mechanics on the targeted slotObject.
@@ -26,7 +27,9 @@ import handleBoons from '../boons/handle-boons';
  */
 // prettier-ignore
 const initCardMechanics = (G, ctx, slotObject, index) => {
-  const { minionData: { entourage, id, mechanics, set } } = slotObject;
+  const { 
+    minionData: { entourage, id, mechanics, numberPrimary, set }
+  } = slotObject;
   const { currentPlayer } = ctx;
 
   /**
@@ -83,8 +86,10 @@ const initCardMechanics = (G, ctx, slotObject, index) => {
   if (has(mechanics, 'RUSH'))
     initRush(G, currentPlayer, index);
 
-  if (has(mechanics, 'SPELL_DAMAGE'))
+  if (has(mechanics, 'SPELL_DAMAGE')) {
     hasSpellDamage.enable(G, currentPlayer, index);
+    playerSpellDamage.add(G, currentPlayer, numberPrimary);
+  }
 
   if (has(mechanics, 'SUMMON'))
     summonEntourageMinion(G, ctx, id, entourage);
