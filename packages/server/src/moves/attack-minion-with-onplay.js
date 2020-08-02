@@ -10,7 +10,7 @@ import selectedCardObject from '../state/selected-card-object';
 import handleCardPlayability from '../utils/handle-card-playability';
 import boards from '../state/boards';
 import deselectCard from './deselect-card';
-// import logMessage from '../match-history/log-message';
+import logMessage from '../match-history/log-message';
 
 /**
  * Interacts with a minion (index) via the current player's spellObject.
@@ -41,7 +41,7 @@ const attackMinionWithOnPlay = (G, ctx, index) => {
       'Error in attackMinionWithSpell: !MINION_BEING_ATTACKED'
     );
 
-  // logMessage(G, ctx, 'attackMinion', null, MINION_BEING_ATTACKED_INDEX);
+  logMessage(G, ctx, 'attackMinion', null, MINION_BEING_ATTACKED_INDEX);
 
   switch (SPELL_OBJECT.set) {
     // core

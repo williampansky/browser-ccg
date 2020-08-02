@@ -1,5 +1,5 @@
 import recalculateCardMechanics from '../mechanics/recalculate-mechanics';
-// import logMessage from 'lib/match-history/log-message';
+import logMessage from '../match-history/log-message';
 
 /**
  * Kill Minion
@@ -15,7 +15,7 @@ export const _kM = (G, ctx, player, boardSlot, index) => {
   const { minionData, uuid } = boardSlot;
 
   if (G.boards[player][index].isDead) {
-    // logMessage(G, ctx, 'killMinion', player, index);
+    logMessage(G, ctx, 'killMinion', player, index);
     const newBoard = G.boards[player].filter(obj => obj.uuid !== uuid);
     G.boards[player] = newBoard;
     // recalculateCardMechanics(G, ctx, player, boardSlot, index);

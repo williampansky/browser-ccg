@@ -1,8 +1,7 @@
 import boards from '../state/boards';
 import deselectMinion from '../moves/deselect-minion';
 import handleBoons from '../boons/handle-boons';
-import moves from '../moves';
-// import logMessage from '../match-history/log-message';
+import logMessage from '../match-history/log-message';
 
 /**
  * Attacks a minion (index) with the current player's selectedMinionObject.
@@ -32,7 +31,7 @@ const attackMinionWithMinion = (G, ctx, index) => {
   if (MINION_BEING_ATTACKED && !MINION_BEING_ATTACKED.canBeAttackedByMinion)
     return;
 
-  // logMessage(G, ctx, 'attackMinion', null, MINION_BEING_ATTACKED_INDEX);
+  logMessage(G, ctx, 'attackMinion', null, MINION_BEING_ATTACKED_INDEX);
 
   // set attacked minion index for animation
   G.attackedMinionIndex = MINION_BEING_ATTACKED_INDEX;

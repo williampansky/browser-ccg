@@ -12,6 +12,7 @@ import selectedCardIndex from '../state/selected-card-index';
 import selectedCardInteractionContext from '../state/selected-card-interaction-context';
 import selectedCardObject from '../state/selected-card-object';
 import handleBoons from '../boons/handle-boons';
+import logMessage from '../match-history/log-message';
 
 /**
  * @param {object} G
@@ -49,6 +50,9 @@ const playMinionCard = (G, ctx, index) => {
   // handle boons after minion is placed
   handleBoons(G, ctx, currentPlayer);
   handleBoons(G, ctx, otherPlayer);
+
+  // log message
+  logMessage(G, ctx, 'playMinionCard');
 
   // reset states
   selectedCardIndex.reset(G, currentPlayer);

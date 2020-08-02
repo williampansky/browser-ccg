@@ -2,7 +2,7 @@ import { ActivePlayers } from 'boardgame.io/core';
 import counts from '../state/counts';
 import drawCard, { drawSpecificCard } from '../moves/draw-card';
 import getCardByID from '../utils/get-card-by-id';
-// import logMessage from 'lib/match-history/log-message';
+import logMessage from '../match-history/log-message';
 
 function getStartingHand(cards, discard) {
   let newArray = [];
@@ -20,7 +20,7 @@ export default {
     const FIRST_PLAYER = G.turnOrder['0'];
     const SECOND_PLAYER = G.turnOrder['1'];
 
-    // logMessage(G, ctx, 'matchStart');
+    logMessage(G, ctx, 'matchStart');
 
     if (G.serverConfig.matchConfig.enableInitHandsStage) {
       // get the first few cards from each player's deck

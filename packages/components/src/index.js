@@ -29,6 +29,7 @@ export { default as YourBoard } from './boards/YourBoard';
 export { default as TheirBoard } from './boards/TheirBoard';
 export { default as OpponentInteractionLayer } from './OpponentInteractionLayer';
 export { default as CardPlayArea } from './CardPlayArea';
+export { default as MatchHistory } from './MatchHistory';
 
 // minion interactions
 export { default as CanAttack } from './minion-interactions/CanAttack';

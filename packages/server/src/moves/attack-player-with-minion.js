@@ -4,7 +4,7 @@ import playerCanBeHealed from '../state/player-can-be-healed';
 import playerHealth from '../state/player-health';
 import playerShieldPoints from '../state/player-shield-points';
 import deselectMinion from './deselect-minion';
-// import logMessage from '../match-history/log-message';
+import logMessage from '../match-history/log-message';
 
 /**
  * Attacks a player with the current player's selectedMinionObject.
@@ -34,7 +34,7 @@ const attackPlayerWithMinion = (G, ctx) => {
     if (G.boards[otherPlayer][i] && G.boards[otherPlayer][i].hasBulwark) return;
   }
 
-  // logMessage(G, ctx, 'attackPlayer');
+  logMessage(G, ctx, 'attackPlayer');
 
   // set attacked minion index for animation
   G.boards[currentPlayer][ATTACKING_MINION_INDEX].isAttackingPlayer = true;

@@ -15,6 +15,7 @@ import BoardWrapper from './BoardWrapper';
 import OpponentWrapper from './OpponentWrapper';
 import PlayerWrapper from './PlayerWrapper';
 import SelectedCardMobileModalWrapper from './SelectedCardMobileModalWrapper';
+import { MatchHistory } from '@ccg/components';
 
 const GameWrapper = props => {
   // boardgame props
@@ -75,6 +76,8 @@ const GameWrapper = props => {
 
   return (
     <div>
+      <MatchHistory G={G} ctx={ctx} />
+
       <OpponentWrapper
         G={G}
         ctx={ctx}

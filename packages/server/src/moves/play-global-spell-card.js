@@ -10,6 +10,7 @@ import selectedCardIndex from '../state/selected-card-index';
 import selectedCardInteractionContext from '../state/selected-card-interaction-context';
 import selectedCardObject from '../state/selected-card-object';
 import castGlobalSpell from '../spells/cast-global-spell';
+import logMessage from '../match-history/log-message';
 
 const playGlobalSpellCard = (G, ctx, cost, id, set, uuid) => {
   const { serverConfig } = G;
@@ -19,7 +20,7 @@ const playGlobalSpellCard = (G, ctx, cost, id, set, uuid) => {
     actionPoints.subtract(G, currentPlayer, cost);
 
   castGlobalSpell(G, ctx, set, id);
-  // logMessage(G, ctx, 'playGlobalSpellCard');
+  logMessage(G, ctx, 'playGlobalSpellCard');
 
   if (serverConfig.debugData.enableRemoveCardFromHand) {
     // move to your playerCards array

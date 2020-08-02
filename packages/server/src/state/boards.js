@@ -14,7 +14,6 @@ const boardConfig = {
   enableDebugSlots: true,
   player0DebugSlots: [
     { ...createBoardSlotObject('CORE_052'), hasBulwark: true },
-    { ...createBoardSlotObject('CORE_082'), isHidden: true },
     { ...createBoardSlotObject('CORE_038'), currentHealth: 5 }
   ],
   player1DebugSlots: [

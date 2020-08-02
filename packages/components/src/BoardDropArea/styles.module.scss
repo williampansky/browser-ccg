@@ -91,3 +91,7 @@
   cursor: default;
   pointer-events: none;
 }
+
+[data-your-board-length='7'] .board__drop__area[data-index='7'] {
+  display: none;
+}

@@ -87,4 +87,10 @@
   @include breakpoint('large') {
     padding: calc(var(--minion-height) / 8) 0;
   }
+
+  @media (min-width: 1600px) {
+    width: calc(100vw - 600px);
+    max-width: calc(100vw - 600px);
+    min-width: calc(100vw - 600px);
+  }
 }
