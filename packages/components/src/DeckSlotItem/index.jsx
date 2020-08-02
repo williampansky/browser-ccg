@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
+import { replaceConstant } from '@ccg/utils/src';
 
 const DeckSlotItem = ({
   amount,
@@ -27,7 +28,7 @@ const DeckSlotItem = ({
 
       <div className={styles['item__info']}>
         <div className={styles['item__name']}>
-          <div className="text__value">{name}</div>
+          <div className="text__value">{replaceConstant(name)}</div>
         </div>
 
         {amount === 2 ? (
