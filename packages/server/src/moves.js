@@ -13,7 +13,7 @@ import selectMinion from './moves/select-minion';
 import playGlobalSpellCard from './moves/play-global-spell-card';
 import hoverCard from './moves/hover-card';
 import hoverTarget from './moves/hover-target';
-import initTargetedCard from './moves/init-targeted-card';
+import { initTargetedCard } from './moves/index';
 
 export default {
   attackMinionWithMinion: {
