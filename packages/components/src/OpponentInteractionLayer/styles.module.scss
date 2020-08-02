@@ -14,11 +14,15 @@
   @media (min-width: 960px) {
     left: 0;
     right: 0;
-    max-width: 920px;
+    max-width: 1025px;
     margin: 0 auto;
   }
 
-  @media (min-width: 1300px) {
-    max-width: 1050px;
+  @media (min-width: 1100px) {
+    max-width: 1025px;
   }
+
+  // @media (min-width: 1300px) {
+  //   max-width: 1050px;
+  // }
 }

@@ -18,17 +18,21 @@ $ratio: 1.333333333;
   z-index: var(--zIndex-Hero);
 
   @media (min-width: 960px) {
-    max-width: 960px;
+    max-width: 860px;
     margin: 0 auto;
   }
 
-  @media (min-width: 1200px) {
-    max-width: 90vw;
+  @media (min-width: 1100px) {
+    max-width: 1025px;
   }
 
-  @media (min-width: 1440px) {
-    max-width: 1100px;
-  }
+  // @media (min-width: 1200px) {
+  //   max-width: 90vw;
+  // }
+
+  // @media (min-width: 1440px) {
+  //   max-width: 1100px;
+  // }
 }
 
 .hero[data-player='Player'].card--is-selected {

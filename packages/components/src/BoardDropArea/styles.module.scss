@@ -30,7 +30,7 @@
   }
 
   @media (min-width: 960px) {
-    width: 2.5%;
+    width: 30px;
   }
 }
 
@@ -64,7 +64,8 @@
   }
 
   @media (min-width: 960px) {
-    width: 2.5%;
+    width: 30px;
+    max-width: none;
     opacity: 0;
     z-index: 9000;
 
