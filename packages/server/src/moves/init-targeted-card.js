@@ -119,6 +119,21 @@ const initTargetedCard = (G, ctx, object, index) => {
       });
       return;
 
+    case PLAY_CONTEXT['HEAL']:
+      G.boards[currentPlayer].forEach(slot => {
+        slot.canBeHealed = true;
+        slot.showTooltip = true;
+      });
+      return;
+
+    case PLAY_CONTEXT['STEAL']:
+      G.boards[otherPlayer].forEach(slot => {
+        slot.canBeDebuffed = true;
+        slot.canBeStolen = true;
+        slot.showTooltip = true;
+      });
+      return;
+
     default:
       G.boards[currentPlayer].forEach(slot => {
         slot.canBeAttackedBySpell = false;

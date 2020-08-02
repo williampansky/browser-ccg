@@ -22,7 +22,8 @@ const initSet002OnPlay = (G, ctx, slotObject, cardId, index) => {
   let createSpellObj = false;
 
   switch (cardId) {
-    case 'CORE_001':
+    case 'CORE_001': // Deal 1 dmg
+    case 'CORE_016': // Deal 1 damage
       if (G.boards[otherPlayer].length === 1) return;
       G.boards[otherPlayer].forEach((slot, i) => {
         if (!slot.isHidden) slot.canBeAttackedByOnPlay = true;
@@ -52,7 +53,8 @@ const initSet002OnPlay = (G, ctx, slotObject, cardId, index) => {
       });
       break;
 
-    case 'CORE_054':
+    case 'CORE_021': // buff with +1/+1
+    case 'CORE_054': // buff with +1 hp
       if (G.boards[currentPlayer].length === 1) return;
       G.boards[currentPlayer].forEach((slot, i) => {
         if (index !== i) {

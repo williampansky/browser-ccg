@@ -15,12 +15,12 @@ const boardConfig = {
   player0DebugSlots: [
     { ...createBoardSlotObject('CORE_052'), hasBulwark: true },
     { ...createBoardSlotObject('CORE_082'), isHidden: true },
-    { ...createBoardSlotObject('CORE_038') }
+    { ...createBoardSlotObject('CORE_038'), currentHealth: 5 }
   ],
   player1DebugSlots: [
     { ...createBoardSlotObject('CORE_122') },
     { ...createBoardSlotObject('CORE_108'), hasBoon: true },
-    { ...createBoardSlotObject('CORE_042'), currentHealth: 5 }
+    { ...createBoardSlotObject('CORE_042') }
   ]
 };
 
