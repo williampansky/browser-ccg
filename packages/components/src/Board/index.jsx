@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { PLAYER_BOARDS, PLAY_TYPE } from '@ccg/enums';
+import { PLAYER_BOARDS, PLAY_TYPE, TYPE } from '@ccg/enums';
 import { TheirBoard, YourBoard, CardPlayArea } from '@ccg/components';
 import styles from './styles.module.scss';
 import {
@@ -12,7 +12,12 @@ import {
 const Board = props => {
   const {
     G,
-    G: { selectedCardPlayType, selectedMinionObject, selectedCardObject },
+    G: {
+      selectedCardPlayType,
+      selectedCardType,
+      selectedMinionObject,
+      selectedCardObject
+    },
     ctx,
     moves,
     moves: { playGlobalSpellCard },
@@ -137,7 +142,10 @@ const Board = props => {
       />
 
       <CardPlayArea
-        active={selectedCardPlayType[yourID] === PLAY_TYPE['GLOBAL']}
+        active={
+          selectedCardPlayType[yourID] === PLAY_TYPE['GLOBAL'] &&
+          selectedCardType[yourID] !== TYPE['MINION']
+        }
         onMouseUp={() => handleCardPlay()}
       />
     </div>
