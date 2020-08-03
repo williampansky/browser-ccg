@@ -1,3 +1,9 @@
+// prettier-ignore
+.match__history {
+  display: none;
+  @media (min-width: 1200px) { display: block; }
+}
+
 .match__history {
   background: #373a47;
   pointer-events: auto;
