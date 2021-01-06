@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.3.6",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "boardgame.io": "^0.39.12",
     "cloudinary-react": "^1.5.0",
     "core-js": "3",
