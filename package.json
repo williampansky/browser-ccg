@@ -58,7 +58,7 @@
     "magic.css": "^1.4.5",
     "mathjs": "^7.0.1",
     "memoize-one": "^5.1.1",
-    "next": "^9.4.4",
+    "next": "^11.1.0",
     "node-fetch": "^2.6.0",
     "nodemon": "^2.0.4",
     "pure-react-carousel": "^1.27.1",
