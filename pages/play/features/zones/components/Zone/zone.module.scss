@@ -1,0 +1,52 @@
+.wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  font-size: 14px;
+  margin: 0 0.35em;
+  opacity: 1;
+  position: relative;
+
+  &.disabled {
+    opacity: 0.5;
+  }
+}
+
+.zone-side {
+  display: grid;
+  grid-gap: 0.3em;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  grid-template: repeat(3, 3.5em) / repeat(2, 2.75em);
+
+  &.opponent-side {
+    transform: scaleY(-1);
+  }
+}
+
+.player-side-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.zone-center {
+  position: relative;
+  height: 8em;
+  width: 8em;
+  border-radius: 50%;
+  background: gray;
+  border-color: gray;
+  margin: 1em auto;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.5em;
+}

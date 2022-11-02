@@ -1,0 +1,39 @@
+/**
+ * A Facebook-style loading placeholder animation.
+ * 
+ * @mixin animation-swipe
+ * @see [CodePen]{@link https://codepen.io/pjosh/pen/kXwaWZ}
+ */
+@mixin animation-swipe {
+  @keyframes placeHolderSwipe {
+    0%    { background-position: -600px 0; }
+    100%  { background-position: 600px 0; }
+  }
+
+  animation: placeHolderSwipe 1s infinite linear forwards;
+  background: #ebebec;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(to right,
+    #ebebec 0%,
+    #e0e0e2 20%,
+    #ebebec 40%,
+    #ebebec 100%
+  );
+}
+
+@mixin animation-swipe-card-image {
+  @keyframes placeHolderSwipe {
+    0%    { background-position: -600px 0; }
+    100%  { background-position: 600px 0; }
+  }
+
+  animation: placeHolderSwipe 2s infinite linear forwards;
+  background: #191919;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(to right,
+    #191919 0%,
+    #202020 20%,
+    #191919 40%,
+    #191919 100%
+  );
+}

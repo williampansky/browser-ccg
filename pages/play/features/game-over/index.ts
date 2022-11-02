@@ -1,0 +1,1 @@
+export { default as gameOverSlice } from './game-over.slice'

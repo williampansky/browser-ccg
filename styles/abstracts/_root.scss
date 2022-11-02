@@ -1,0 +1,137 @@
+// prettier-ignore
+:root {
+  // breakpoint vars
+  // ========================================================================
+  --breakpoint-xsmall:  410px;
+  --breakpoint-small:   640px;
+  --breakpoint-medium:  960px;
+  --breakpoint-large:   1200px;
+  --breakpoint-xlarge:  1440px;
+  --breakpoint-xxlarge: 1600px;
+  --breakpoint-hd:      1920px;
+  --breakpoint-imac:    5120px;
+
+  // font vars
+  // ========================================================================
+  --font-family-card:   'Carter One', Arial, Helvetica, sans-serif;
+
+  // color rarity vars
+  // ========================================================================
+  --color-rarity-FREE:                          #a4bed3;
+  --color-rarity-COMMON:                        #81ff85;
+  --color-rarity-SUPERIOR:                      #7ad5ff;
+  --color-rarity-REMARKABLE:                    #a465ff;
+  --color-rarity-MYTHIC:                        #ff6941;
+  --color-rarity-GOLDEN:                        #fbef31;
+
+  // layout vars
+  // ========================================================================
+  --game-wrapper-background-color:              #333;
+  --board-board-background-color:               #151515;
+  --board-theirHand-background-color:           #151515;
+  --board-theirHand-height:                     45px;
+  --board-theirHand-zIndex:                     200;
+  --board-theirPlayerArea-background-color:     #8c8273;
+  --board-theirPlayerArea-height:               85px;
+  --board-theirPlayerArea-zIndex:               190;
+  --board-yourHand-background-color:            #2c2b2b;
+  --board-yourHand-height:                      45px;
+  --board-yourHand-zIndex:                      200;
+  --board-yourPlayerArea-background-color:      #8c8273;
+  --board-yourPlayerArea-height:                85px;
+  --board-yourPlayerArea-zIndex:                190;
+  --board-hands-height: calc(
+    var(--board-theirHand-height) + var(--board-yourHand-height)
+  );
+  --board-playerAreas-height: calc(
+    var(--board-theirHand-height) + var(--board-yourHand-height)
+  );
+
+  // animation vars
+  // ========================================================================
+  --animation-transition-cubic:         cubic-bezier(0.19, 1, 0.22, 1);
+
+  // card vars
+  // ========================================================================
+  --card-background-color:            #0d0a08;
+  --card-border-radius:                 14px;
+  --card-height:                        400px;
+  --card-width-division:                1.400266051;
+  --card-width:                         calc(var(--card-height) / var(--card-width-division));
+
+  // minion vars
+  // ========================================================================
+  --minion-height:                      150px;
+  --minion-border-radius:               50%;
+  --minion-stat-offset:                 0;
+
+  // avatar vars
+  // ========================================================================
+  --avatar-border-radius:               65%;
+  --avatar-height:                      50px;
+  --avatar-width:                       50px;
+
+  // player FAB vars
+  // ========================================================================
+  --player-fab-size:                    56px;
+
+  // player health vars
+  // ========================================================================
+  --player-health-size:                 175px;
+  --player-health-size-division:        1.166666667;
+
+  // deck vars
+  // ========================================================================
+  --deck-offset:                        100px;
+
+  // hero vars
+  // ========================================================================
+  --hero-height:                        100px;
+
+  // class skill vars
+  // ========================================================================
+  --class-skill-button-size:            175px;
+
+  // weapon vars
+  // ========================================================================
+  --weapon-border-radius:               50%;
+
+  // mechanics color vars
+  // ========================================================================
+  --mechanics-color-boon:                     rgb(210, 191, 146);
+  --mechanics-color-bubble:                   rgb(235, 248, 163);
+
+  // box-shadow vars
+  // ========================================================================
+  --box-shadow-can-be-attacked-color-ripple:  rgba(249, 40, 40, 0.5);
+  --box-shadow-can-be-attacked-color:         rgba(249, 40, 40, 0.865);
+  
+  --box-shadow-can-be-buffed-color-ripple:    rgba(45, 243, 216, 0.5);
+  --box-shadow-can-be-buffed-color:           rgba(45, 243, 216, 0.865);
+  
+  --box-shadow-can-be-debuffed-color-ripple:  rgba(255, 173, 22, 0.5);
+  --box-shadow-can-be-debuffed-color:         rgba(255, 173, 22, 0.865);
+  
+  --box-shadow-can-be-selected-color-ripple:  rgba(0, 196, 105, 0.5);
+  --box-shadow-can-be-selected-color:         rgba(0, 196, 105, 0.865);
+
+  --box-shadow-is-selected-color-ripple:      rgba(236, 210, 79, 0.5);
+  --box-shadow-is-selected-color:             rgba(236, 210, 79, 0.865);
+  
+  --box-shadow-dimensions:      0px 0px 10px 10px;
+  --box-shadow-can-be-attacked: var(--box-shadow-dimensions) var(--box-shadow-can-be-attacked-color);
+  --box-shadow-can-be-buffed:   var(--box-shadow-dimensions) var(--box-shadow-can-be-buffed-color);
+  --box-shadow-can-be-debuffed: var(--box-shadow-dimensions) var(--box-shadow-can-be-debuffed-color);
+  --box-shadow-can-be-selected: var(--box-shadow-dimensions) var(--box-shadow-can-be-selected-color);
+  --box-shadow-is-selected:     var(--box-shadow-dimensions) var(--box-shadow-is-selected-color);
+
+  // z-index vars
+  // ========================================================================
+  --zIndex-Board:                                  50;
+  --zIndex-Hero:                                   20;
+  --zIndex-Hand:                                   60;
+  --zIndex-SelectedCardMobileModal:               100;
+  --zIndex-CardInteractionLayer--is-selected:     600;
+  --zIndex-MinionInteractionLayer:                200;
+  --zIndex-Mechanics-Bubble:                        3;
+}

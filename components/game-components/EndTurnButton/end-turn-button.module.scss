@@ -1,0 +1,17 @@
+.component {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  border-radius: 0;
+  border: 0;
+  height: 17.5px;
+  min-width: 95px;
+  background-color: yellow;
+
+  &[disabled] {
+    background-color: darkgray;
+  }
+}

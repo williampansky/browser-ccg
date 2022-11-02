@@ -1,0 +1,22 @@
+.component {
+  font-size: 12px;
+  font-style: italic;
+  font-weight: normal;
+  line-height: 0.925;
+  opacity: 1;
+  transition: 100ms ease-out;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  touch-action: none;
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+
+  &.revealed {
+    opacity: 0;
+  }
+}

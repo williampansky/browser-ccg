@@ -1,0 +1,38 @@
+.zone-power {
+  align-items: center;
+  background-color: black;
+  border-color: white;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 2px;
+  bottom: auto;
+  box-sizing: content-box;
+  color: white;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 1em;
+  font-weight: bold;
+  height: 1.5em;
+  justify-content: center;
+  left: auto;
+  position: absolute;
+  right: auto;
+  top: -8px;
+  width: 1.5em;
+
+  &.power-opponent {
+    bottom: auto;
+    top: -8px;
+  }
+
+  &.power-player {
+    top: auto;
+    bottom: -8px;
+  }
+
+  &.leader {
+    background-color: yellow;
+    color: black;
+    border-color: yellow;
+  }
+}

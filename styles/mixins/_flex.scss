@@ -1,0 +1,12 @@
+/* stylelint-disable */
+@mixin display-flex(
+    $flow:    inherit,
+    $align:   inherit,
+    $justify: inherit
+) {
+    display: flex;
+
+    @if $flow { flex-flow: $flow; }
+    @if $align { align-items: $align; }
+    @if $justify { justify-content: $justify; }
+}

@@ -1,0 +1,74 @@
+/**
+ * @name position-absolute
+ * @param top, right, bottom, left, zIndex
+ * 
+ * @description
+ * Applies `position: absolute` and any supplied positioning parameters;
+ * note that params are optional and will default to `auto` if not supplied.
+ */
+@mixin position-absolute(
+    $top:    auto, 
+    $right:  auto, 
+    $bottom: auto, 
+    $left:   auto,
+    $zIndex: 0
+) {
+    position: absolute;
+
+    top: $top;
+    right: $right;
+    bottom: $bottom;
+    left: $left;
+    z-index: $zIndex;
+}
+
+
+
+/**
+ * @name position-fixed
+ * @param top, right, bottom, left, zIndex
+ * 
+ * @description
+ * Applies `position: absolute` and any supplied positioning parameters;
+ * note that params are optional and will default to `auto` if not supplied.
+ */
+@mixin position-fixed(
+    $top:    auto, 
+    $right:  auto, 
+    $bottom: auto, 
+    $left:   auto,
+    $zIndex: 0
+) {
+    position: fixed;
+
+    top: $top;
+    right: $right;
+    bottom: $bottom;
+    left: $left;
+    z-index: $zIndex;
+}
+
+
+
+/**
+ * @name position-icon
+ * @param $direction {String} — top, right, bottom, left
+ * @param $amount {String} — Offset to apply to $direction; default 1
+ * 
+ * @description
+ * Relative icon 1px fix. Tweaks positioning of icons for visual aesthetics; 
+ * ie: moves icon 1px in the provided $direction to better align it with its 
+ * sibling label — as most of the time, the icon will appear slightly 
+ * misaligned when placed next to text. Defaults to `bottom`.
+ */
+@mixin position-icon(
+    $direction: bottom,
+    $amount: 1px
+) {
+    position: relative;
+
+    @if $direction == top { top: #{$amount}; }
+    @if $direction == right { right: #{$amount}; }
+    @if $direction == bottom { bottom: #{$amount}; }
+    @if $direction == left { left: #{$amount}; }
+}
