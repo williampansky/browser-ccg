@@ -1,0 +1,5 @@
+.player-hand {
+  --card-height: 100px;
+  --card-width-division: 1.400266051;
+  --card-width: calc(var(--card-height) / var(--card-width-division));
+}

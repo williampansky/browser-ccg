@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { Card as CardProps } from '../../interfaces';
+import { Card as CardProps } from '../../../types';
 
 export interface ReactCardProps extends CardProps {
   isSelected: boolean;
@@ -10,15 +10,41 @@ export const CardInHand = ({
   ...card
 }: ReactCardProps): ReactElement => {
   const {
+    artist,
     baseCost,
     basePower,
     canPlay,
+    collectible,
     currentCost,
+    description,
     displayPower,
+    elite,
+    entourage,
+    flavorText,
+    howToEarn,
+    howToEarnGolden,
+    id,
+    imageBaseSrc,
+    imageFlairSrc,
+    imagePlaceholderSrc,
+    isGolden,
+    mechanic,
+    mechanics,
     name,
+    numberPrimary,
+    numberRNG,
+    numberSecondary,
     powerOverride,
     powerStream,
+    race,
+    rarity,
+    revealed,
+    revealedOnTurn,
+    set,
+    sounds,
+    type,
     uuid,
+    zonePowerAdjustment,
   } = card;
 
   return (

@@ -3,6 +3,7 @@ import { Ctx } from 'boardgame.io';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import type { Card, GameState, PlayerID } from '../../../../../../types';
+import { Minion } from '../../../../../../components/game-components/Minion/Minion';
 import { showCardModal } from '../../../card-modal/card-modal.slice';
 
 interface ReactZoneSlot {
@@ -77,8 +78,8 @@ export const PlayerZoneSlot = ({
       <div
       onClick={onUnrevealedClick}
       style={{
-        height: '3.5em',
-        width: '2.75em',
+        height: 'var(--card-height)',
+        width: 'calc(var(--minion-height) / 1.25)',
         transition: '100ms ease-in',
         opacity: 0.65,
         border: '1px solid orange',
@@ -155,8 +156,8 @@ export const PlayerZoneSlot = ({
     <div
       onClick={() => objData && dispatch(showCardModal(objData))}
       style={{
-        height: '3.5em',
-        width: '2.75em',
+        height: 'var(--card-height)',
+        width: 'calc(var(--minion-height) / 1.25)',
         transition: '250ms ease-in',
         position: objData ? 'relative' : 'relative',
         opacity: objData ? '1' : '0',
@@ -166,68 +167,8 @@ export const PlayerZoneSlot = ({
         // filter: objData ? 'blur(0)' : 'blur(1px)'
       }}
     >
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column nowrap',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0.25em',
-          textAlign: 'center',
-          position: 'relative',
-          border: '1px solid black',
-          borderRadius: '1.25em 1.25em 0 0',
-          background: 'white',
-          height: '100%',
-          width: '100%',
-          transform: 'scale(95%)',
-        }}
-      >
-        <div
-          style={{
-            fontSize: '0.85em',
-            fontWeight: 'bold',
-            display: 'flex',
-            flexFlow: 'column nowrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '1.195em',
-            width: '1.15em',
-            position: 'absolute',
-            top: '-0.35em',
-            right: 'auto',
-            bottom: 'auto',
-            left: '-0.35em',
-            background: 'lightgreen',
-            borderRadius: '50%',
-          }}
-        >
-          {objData?.currentCost}
-        </div>
-        <div
-          style={{
-            fontSize: '0.85em',
-            fontWeight: 'bold',
-            display: 'flex',
-            flexFlow: 'column nowrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '1.195em',
-            width: '1.15em',
-            position: 'absolute',
-            top: '-0.35em',
-            right: '-0.35em',
-            bottom: 'auto',
-            left: 'auto',
-            color: 'white',
-            background: 'red',
-            borderRadius: '50%',
-          }}
-        >
-          {objData?.displayPower}
-        </div>
-        <div style={{ fontSize: '0.5em' }}>{objData?.name}</div>
-      </div>
+      {/* @ts-ignore */}
+      <Minion {...objData} />
     </div>
   );
 };

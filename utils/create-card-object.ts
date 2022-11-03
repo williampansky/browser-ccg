@@ -23,6 +23,7 @@ const createCardObject = (obj: CardBase): Card => {
     type: type ? type : 'CARD',
     uuid: uuid(),
     zonePowerAdjustment: 0,
+    imageFlairSrc: `sets/SET_002/${id}-CARD.jpg`
   } as Card;
 };
 

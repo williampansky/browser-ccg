@@ -1,0 +1,1 @@
+export { Minion } from './Minion'

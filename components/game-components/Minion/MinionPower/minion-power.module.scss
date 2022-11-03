@@ -1,0 +1,72 @@
+.attack__wrapper {
+  border-radius: 50%;
+  bottom: var(--minion-stat-offset);
+  font-size: 1em;
+  font-weight: 600;
+  height: calc(var(--minion-height) / 3.5);
+  right: calc(var(--minion-height) / -25);
+  top: calc(var(--minion-height) / -10);
+  line-height: 1;
+  position: absolute;
+  width: calc(var(--minion-height) / 3.5);
+  z-index: 5;
+}
+
+.text {
+  align-items: center;
+  bottom: 0;
+  color: white;
+  display: flex;
+  flex-flow: column nowrap;
+  height: calc(var(--minion-height) / 4);
+  justify-content: center;
+  right: -1px;
+  position: absolute;
+  left: 0;
+  top: auto;
+  width: calc(var(--minion-height) / 3.85);
+  z-index: 1;
+
+  &[data--is-damaged='true'] {
+    color: white;
+  }
+
+  &[data--is-buffed='true'] {
+    color: chartreuse;
+  }
+
+  & > div {
+    color: inherit;
+    right: 3.85px;
+    top: auto;
+    bottom: 2px;
+    position: absolute;
+  }
+}
+
+.minion__race--location .text > div {
+  color: black;
+  text-shadow: none;
+}
+
+.text.elite > div {
+  right: 1.5px;
+}
+
+.badge {
+  bottom: -2px;
+  height: calc(var(--minion-height) / 3.15);
+  image-rendering: pixelated;
+  right: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: auto;
+  z-index: 0;
+}
+
+.badge.elite {
+  height: calc(var(--minion-height) / 2.75);
+  right: -5px;
+  top: -9px;
+}

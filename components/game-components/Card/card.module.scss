@@ -1,0 +1,25 @@
+.card {
+  border-radius: calc(var(--card-height) / 28.571428571);
+  font-family: var(--font-family-card);
+  height: var(--card-height);
+  width: calc(var(--card-height) / var(--card-width-division));
+  margin: 0 auto;
+  position: relative;
+
+  * {
+    user-select: none;
+  }
+}
+
+.card {
+  &.card--type-ITEM,
+  &.card--type-MINION,
+  &.card--type-SPELL,
+  &.card--type-WEAPON {
+    box-sizing: border-box;
+  }
+}
+
+.card.dev {
+  --card-height: 400px;
+}

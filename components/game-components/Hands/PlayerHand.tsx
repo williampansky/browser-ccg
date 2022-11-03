@@ -1,11 +1,12 @@
-// @ts-nocheck
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
-import { Card, GameState } from '../../interfaces';
+import { Card, GameState } from '../../../types';
 import { CardInHand } from '../Card/CardInHand';
+import { Card as CardComponent } from '../Card/Card';
 import { useGesture } from '@use-gesture/react';
 import { useCallbackRef } from 'use-callback-ref';
 import { useSprings, animated, config as springConfig, to } from 'react-spring';
+import styles from './player-hand.module.scss';
 
 interface PlayerHandProps {
   G: GameState;
@@ -24,6 +25,8 @@ export const PlayerHand = ({
   onCardDeselect,
   onCardSlotDrop,
 }: PlayerHandProps): ReactElement => {
+  const handLength = G.players['0'].cards.hand.length;
+
   // Store indicies as a local ref, this represents the item order
   const [_, update] = React.useState<{} | null>(null);
 
@@ -45,12 +48,105 @@ export const PlayerHand = ({
       const prevMatch = curIndex === index - 1;
       const gtMatch = curIndex > index;
       const ltMatch = curIndex < index;
-      const hoverOffsetY = 0;
+      const hoverOffsetY = -60;
 
       if (match && logMatch)
         console.log(
           `isDown:(${isDown}), isHovered:(${isHovered}), xy:(${x},${y})`
         );
+
+      const calcOffsetX = (index: number, total = handLength) => {
+        let calc = 50;
+
+        if (total === 2) {
+          if (index === 0) return -calc;
+          if (index === 1) return calc;
+        }
+
+        if (total === 3) {
+          calc = 115;
+          if (index === 0) return -calc;
+          if (index === 1) return 0;
+          if (index === 2) return calc;
+        }
+
+        if (total === 4) {
+          calc = 40;
+          if (index === 0) return calc - 105 - 100;
+          if (index === 1) return calc - 105;
+          if (index === 2) return calc;
+          if (index === 3) return calc + 100;
+        }
+
+        if (total === 5) {
+          calc = 100;
+          if (index === 0) return -200;
+          if (index === 1) return -100;
+          if (index === 2) return 0;
+          if (index === 3) return 100;
+          if (index === 4) return 200;
+        }
+
+        if (total === 6) {
+          if (index === 0) return index - 200;
+          if (index === 1) return index - 120;
+          if (index === 2) return index - 40;
+          if (index === 3) return index + 40;
+          if (index === 4) return index + 120;
+          if (index === 5) return index + 200;
+        }
+
+        if (total === 7) {
+          if (index === 0) return index - 200;
+          if (index === 1) return index - 132;
+          if (index === 2) return index - 64;
+          if (index === 3) return 0;
+          if (index === 4) return index + 70;
+          if (index === 5) return index + 136.5;
+          if (index === 6) return index + 204;
+        }
+
+        if (total === 8) {
+          calc = 30;
+          if (index === 0) return calc * -7;
+          if (index === 1) return calc * -5;
+          if (index === 2) return calc * -3;
+          if (index === 3) return -calc;
+          if (index === 4) return calc;
+          if (index === 5) return calc * 3;
+          if (index === 6) return calc * 5;
+          if (index === 7) return calc * 7;
+        }
+
+        if (total === 9) {
+          calc = 30;
+          if (index === 0) return calc * -8;
+          if (index === 1) return calc * -6;
+          if (index === 2) return calc * -4;
+          if (index === 3) return calc * -2;
+          if (index === 4) return 0;
+          if (index === 5) return calc * 2;
+          if (index === 6) return calc * 4;
+          if (index === 7) return calc * 6;
+          if (index === 8) return calc * 8;
+        }
+
+        if (total === 10) {
+          calc = 25;
+          if (index === 0) return calc * -9;
+          if (index === 1) return calc * -7;
+          if (index === 2) return calc * -5;
+          if (index === 3) return calc * -3;
+          if (index === 4) return -calc;
+          if (index === 5) return calc;
+          if (index === 6) return calc * 3;
+          if (index === 7) return calc * 5;
+          if (index === 8) return calc * 7;
+          if (index === 9) return calc * 9;
+        }
+
+        return index * -85;
+      };
 
       const context = () => {
         if (isDown || isDragging) return 'isDown';
@@ -63,7 +159,7 @@ export const PlayerHand = ({
           x: x,
           y: y + hoverOffsetY,
           rotate: 0,
-          scale: 2,
+          scale: 1.465,
           marginTop: 0,
           zIndex: 100,
           cursor: 'grabbing',
@@ -76,7 +172,7 @@ export const PlayerHand = ({
           x: 0,
           y: hoverOffsetY,
           rotate: 0,
-          scale: 1,
+          scale: 0.865,
           marginTop: 0,
           zIndex: 100,
           cursor: 'grab',
@@ -93,8 +189,9 @@ export const PlayerHand = ({
           x: 0,
           y: 0,
           rotate: 0,
-          scale: 0.665,
+          scale: 0.565,
           marginLeft: 0,
+          // marginLeft: calcOffsetX(index),
           marginTop: 0,
           zIndex: index * 1,
           cursor: 'grab',
@@ -107,19 +204,23 @@ export const PlayerHand = ({
 
   // Create springs, each corresponds to an item,
   // controlling its transform, scale, etc.
-  const [springs, setSprings] = useSprings(G.players['0'].hand.length, fn());
+  const [springs, setSprings] = useSprings(handLength, fn());
 
   const order = useCallbackRef(
-    Array.from(Array(G.Config.gameConfig.cardsPerHand)).map((_, index) => index),
+    Array.from(Array(G.gameConfig.numerics.cardsPerHand)).map(
+      (_, index) => index
+    ),
     () => update({})
   );
 
   const bind: any = useGesture(
     {
+      // ts-ignore
       onDragStart: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current?.indexOf(originalIndex);
         setSprings(fn(down, dragging, active, curIndex));
       },
+      // ts-ignore
       onDrag: ({
         active,
         args: [originalIndex, canPlay],
@@ -133,7 +234,7 @@ export const PlayerHand = ({
         const curIndex = order.current?.indexOf(originalIndex);
 
         if (tap) {
-          return onCardClick(G.players['0'].hand[originalIndex]);
+          return onCardClick(G.players['0'].cards.hand[originalIndex]);
         } else if (!canPlay) {
           cancel();
         } else {
@@ -142,6 +243,7 @@ export const PlayerHand = ({
           );
         }
       },
+      // ts-ignore
       onDragEnd: ({ active, args: [originalIndex], down, dragging, xy }) => {
         const curIndex = order.current?.indexOf(originalIndex);
         const elem = document.elementFromPoint(xy[0], xy[1]);
@@ -153,6 +255,7 @@ export const PlayerHand = ({
           onCardSlotDrop('0', Number(elem.getAttribute('data-index')));
         }
       },
+      // ts-ignore
       onHover: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current?.indexOf(originalIndex);
         setSprings(fn(down, dragging, active, curIndex));
@@ -160,16 +263,12 @@ export const PlayerHand = ({
     },
     {
       // @ts-ignore
-      // order,
-      // domTarget: order.current,
       drag: {
-        // preventDefault: true,
         enabled: true,
         mouseOnly: false,
         from: [0, 0],
         threshold: undefined,
         rubberband: 0.915, // 0.15
-        // preventScroll: true,
         eventOptions: { passive: true },
         filterTaps: true,
         delay: 0,
@@ -180,9 +279,9 @@ export const PlayerHand = ({
 
   const handleSelect = React.useCallback(
     (e: MouseEvent, canPlay: boolean, i: number) => {
-      if (canPlay) onCardSelect('0', G.players['0'].hand[i].uuid);
+      if (canPlay) onCardSelect('0', G.players['0'].cards.hand[i].uuid);
     },
-    [G.players['0'].hand, onCardSelect]
+    [G.players['0'].cards.hand, onCardSelect]
   );
 
   const handleDeselect = React.useCallback(
@@ -195,6 +294,7 @@ export const PlayerHand = ({
   return (
     <React.Fragment>
       <div
+        className={styles['player-hand']}
         style={{
           width: '100%',
           position: 'absolute',
@@ -204,17 +304,23 @@ export const PlayerHand = ({
           right: 0,
           maxWidth: '100%',
           minHeight: '54px',
+          maxHeight: '54px',
           padding: '0 1em',
         }}
       >
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(8, 1fr)',
-            gridGap: '0',
+            // display: 'grid',
+            // gridTemplateColumns: 'repeat(8, 1fr)',
+            // gridGap: '0',
             width: '100%',
             position: 'relative',
             minHeight: '54px',
+            maxHeight: '54px',
+            display: 'flex',
+            flexFlow: 'row nowrap',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           {springs?.map(
@@ -233,7 +339,7 @@ export const PlayerHand = ({
               }: any,
               i
             ) => {
-              const { canPlay } = G.players['0'].hand[i];
+              const { canPlay } = G.players['0'].cards.hand[i];
               return order && order.current![i] === i ? (
                 <React.Fragment key={i}>
                   {/* <animated.div
@@ -280,6 +386,7 @@ export const PlayerHand = ({
                       flexFlow: 'column nowrap',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      opacity: canPlay ? 1 : 0.45,
                       cursor: canPlay ? cursor : 'default',
                       marginLeft: marginLeft.to((mL: number) => `${mL}px`),
                       marginTop: marginTop.to((mT: number) => `${mT}px`),
@@ -296,13 +403,13 @@ export const PlayerHand = ({
                       }),
                     }}
                   >
-                    <CardInHand
-                      {...G.players['0'].hand[i]}
-                      key={G.players['0'].hand[i].uuid}
+                    <CardComponent
+                      {...G.players['0'].cards.hand[i]}
+                      key={G.players['0'].cards.hand[i].uuid}
                       // onClick={(c: Card) => onCardClick(c)}
                       isSelected={
-                        G.SelectedCardData[0]?.uuid ===
-                        G.players['0'].hand[i].uuid
+                        G.selectedCardData[0]?.uuid ===
+                        G.players['0'].cards.hand[i].uuid
                       }
                     />
                   </animated.div>

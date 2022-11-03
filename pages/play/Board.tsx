@@ -275,14 +275,14 @@ export const Board = (props: GameProps) => {
           opponent={playerID === '0' ? '1' : '0'}
         />
 
-        {/* <PlayerHand
+        <PlayerHand
           G={G}
           ctx={ctx}
           onCardClick={onCardClick}
           onCardSelect={onCardSelect}
           onCardDeselect={onCardDeselect}
           onCardSlotDrop={onCardSlotDrop}
-        /> */}
+        />
         
         <div
           style={{

@@ -1,10 +1,11 @@
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, CardPowerStream, GameState } from '../../interfaces';
+import { Card, CardPowerStream, GameState } from '../../../../types';
 import type { RootState } from '../../store';
 import { hideCardModal } from './card-modal.slice';
 import type { CardModal as ICardModal } from './card-modal.slice';
+import { Card as CardComponent } from '../../../../components/game-components/Card/Card';
 
 export const CardModal = (): ReactElement | null => {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ export const CardModal = (): ReactElement | null => {
     ({ cardModal }: RootState) => cardModal
   ) as ICardModal;
 
-  return cardModalData ? (
+  return (
     <div
       onClick={onClick}
       style={{
@@ -32,7 +33,8 @@ export const CardModal = (): ReactElement | null => {
         flexFlow: 'column nowrap',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'rgba(0,0,0,0.65)',
+        // background: 'rgba(255,255,255,0.65)',
+        background: 'rgba(0,0,0,0.865)',
       }}
     >
       <div
@@ -184,69 +186,20 @@ export const CardModal = (): ReactElement | null => {
           padding: '1em',
           textAlign: 'center',
           position: 'relative',
-          border: '1px solid black',
-          borderRadius: '1.25em',
-          background: 'white',
-          height: '80vw',
-          width: '60vw',
-          maxHeight: `600px`,
-          maxWidth: `400px`,
+          // border: '1px solid black',
+          // borderRadius: '1.25em',
+          // background: 'white',
+          // height: '80vw',
+          // width: '60vw',
+          // maxHeight: `600px`,
+          // maxWidth: `400px`,
           transform: cardModalData ? 'scale(100%)' : 'scale(0%)',
           transition: '150ms ease-in',
         }}
       >
-        <div
-          style={{
-            fontSize: '2vh',
-            fontWeight: 'bold',
-            display: 'flex',
-            flexFlow: 'column nowrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '10vw',
-            width: '10vw',
-            maxHeight: '60px',
-            maxWidth: '60px',
-            position: 'absolute',
-            top: '-5%',
-            right: 'auto',
-            bottom: 'auto',
-            left: '-5%',
-            background: 'lightgreen',
-            borderRadius: '50%',
-          }}
-        >
-          {cardModalData?.currentCost}
-        </div>
-        <div
-          style={{
-            fontSize: '2vh',
-            fontWeight: 'bold',
-            display: 'flex',
-            flexFlow: 'column nowrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '10vw',
-            width: '10vw',
-            maxHeight: '60px',
-            maxWidth: '60px',
-            position: 'absolute',
-            top: '-5%',
-            right: '-5%',
-            bottom: 'auto',
-            left: 'auto',
-            color: 'white',
-            background: 'red',
-            borderRadius: '50%',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {cardModalData?.displayPower}
-        </div>
-        <div style={{ fontSize: '1.5vh' }}>{cardModalData?.__id}</div>
-        <div style={{ fontSize: '4vh' }}>{cardModalData?.name}</div>
-        <div style={{ fontSize: '2vh' }}>{cardModalData?.description}</div>
+        {/* @ts-ignore */}
+        <CardComponent {...cardModalData} />
       </div>
     </div>
-  ) : null;
+  );
 };
