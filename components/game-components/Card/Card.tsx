@@ -10,7 +10,7 @@ import { createMarkup, fontSizeBasedOnCharacterLength } from '../../../utils';
 import { CardRarityGem } from './CardRarityGem/CardRarityGem';
 import { CardText } from './CardText/CardText';
 
-import NONE from '../../../images/cards/fronts/NONE.png'
+import NONE from '../../../images/cards/fronts/NONE.png';
 import { CardSubTypeBadge } from './CardSubTypeBadge/CardSubTypeBadge';
 import { CardTypeBadge } from './CardTypeBadge/CardTypeBadge';
 import { CardTypeLabel } from './CardTypeLabel/CardTypeLabel';
@@ -62,17 +62,48 @@ export const Card = ({
   } = card;
 
   return (
-    <div className={[styles['card']].join(' ')} data-component='Card' id={uuid}>
+    <div
+      className={[styles['card'], !canPlay ? styles['cant-play'] : ''].join(' ')}
+      data-component='Card'
+      id={uuid}
+    >
       <CardCost cost={currentCost} />
-      <CardPower power={displayPower} elite={elite} badgeImgSrc={'../../../images/card-assets/BADGE_SWORD.png'} />
+      
+      <CardPower
+        power={displayPower}
+        elite={elite}
+        badgeImgSrc={'../../../images/card-assets/BADGE_SWORD.png'}
+      />
+
       <CardRarityGem rarity={rarity} />
+
       <CardName name={name} formatter={fontSizeBasedOnCharacterLength} />
+
       <CardText text={createMarkup(description)} />
+
       <CardTypeLabel race={race} type={type} formatter={(val: any) => val} />
-      <CardTypeBadge race={race} type={type} badgeImgSrc={'../../../images/card-assets/TYPE_WRAPPER.png'} />
-      <CardSubTypeBadge race={race} type={type} badgeImgSrc={'../../../images/card-assets/SUBTYPE_WRAPPER.png'} />
-      <CardFlairImage name={name} imageSrc={`../../../images/${imageFlairSrc}`} />
-      <CardBaseImage imageAlt={rarity} imageSrc={'../../../images/cards/fronts/NONE.png'} />
+
+      <CardTypeBadge
+        race={race}
+        type={type}
+        badgeImgSrc={'../../../images/card-assets/TYPE_WRAPPER.png'}
+      />
+
+      <CardSubTypeBadge
+        race={race}
+        type={type}
+        badgeImgSrc={'../../../images/card-assets/SUBTYPE_WRAPPER.png'}
+      />
+
+      <CardFlairImage
+        name={name}
+        imageSrc={`../../../images/${imageFlairSrc}`}
+      />
+
+      <CardBaseImage
+        imageAlt={rarity}
+        imageSrc={'../../../images/cards/fronts/NONE.png'}
+      />
     </div>
   );
 };

@@ -1,12 +1,15 @@
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
-import { Card, GameState } from '../../../types';
+import { Card, GameState, PlayerID } from '../../../types';
 import { CardInHand } from '../Card/CardInHand';
 import { Card as CardComponent } from '../Card/Card';
 import { useGesture } from '@use-gesture/react';
 import { useCallbackRef } from 'use-callback-ref';
 import { useSprings, animated, config as springConfig, to } from 'react-spring';
 import styles from './player-hand.module.scss';
+import calcOffsetX from './calc-offset-x';
+import calcScale from './calc-scale';
+import fn from './fn';
 
 interface PlayerHandProps {
   G: GameState;
@@ -15,6 +18,7 @@ interface PlayerHandProps {
   onCardSelect: (playerId: string, uuid: string) => void;
   onCardDeselect: (playerId: string) => void;
   onCardSlotDrop: (playerId: string, zoneNumber: number) => void;
+  player: PlayerID;
 }
 
 export const PlayerHand = ({
@@ -24,184 +28,14 @@ export const PlayerHand = ({
   onCardSelect,
   onCardDeselect,
   onCardSlotDrop,
+  player
 }: PlayerHandProps): ReactElement => {
-  const handLength = G.players['0'].cards.hand.length;
+  const handLength = G.players[player].cards.hand.length;
 
   // Store indicies as a local ref, this represents the item order
   const [_, update] = React.useState<{} | null>(null);
 
-  // Returns fitting styles for dragged/idle items
-  const fn =
-    (
-      isDown?: any,
-      isDragging?: any,
-      isHovered?: any,
-      curIndex?: any,
-      x?: any,
-      y?: any
-    ) =>
-    (index: number) => {
-      const logMatch = false;
-      const disableRotation = false;
-      const match = curIndex === index;
-      const nextMatch = curIndex === index + 1;
-      const prevMatch = curIndex === index - 1;
-      const gtMatch = curIndex > index;
-      const ltMatch = curIndex < index;
-      const hoverOffsetY = -40;
-
-      if (match && logMatch)
-        console.log(
-          `isDown:(${isDown}), isHovered:(${isHovered}), xy:(${x},${y})`
-        );
-
-      const calcOffsetX = (index: number, total = handLength) => {
-        let calc = 50;
-
-        if (total === 2) {
-          if (index === 0) return -calc;
-          if (index === 1) return calc;
-        }
-
-        if (total === 3) {
-          calc = 115;
-          if (index === 0) return -calc;
-          if (index === 1) return 0;
-          if (index === 2) return calc;
-        }
-
-        if (total === 4) {
-          calc = 40;
-          if (index === 0) return calc - 105 - 100;
-          if (index === 1) return calc - 105;
-          if (index === 2) return calc;
-          if (index === 3) return calc + 100;
-        }
-
-        if (total === 5) {
-          calc = 100;
-          if (index === 0) return -200;
-          if (index === 1) return -100;
-          if (index === 2) return 0;
-          if (index === 3) return 100;
-          if (index === 4) return 200;
-        }
-
-        if (total === 6) {
-          if (index === 0) return index - 200;
-          if (index === 1) return index - 120;
-          if (index === 2) return index - 40;
-          if (index === 3) return index + 40;
-          if (index === 4) return index + 120;
-          if (index === 5) return index + 200;
-        }
-
-        if (total === 7) {
-          if (index === 0) return index - 200;
-          if (index === 1) return index - 132;
-          if (index === 2) return index - 64;
-          if (index === 3) return 0;
-          if (index === 4) return index + 70;
-          if (index === 5) return index + 136.5;
-          if (index === 6) return index + 204;
-        }
-
-        if (total === 8) {
-          calc = 30;
-          if (index === 0) return calc * -7;
-          if (index === 1) return calc * -5;
-          if (index === 2) return calc * -3;
-          if (index === 3) return -calc;
-          if (index === 4) return calc;
-          if (index === 5) return calc * 3;
-          if (index === 6) return calc * 5;
-          if (index === 7) return calc * 7;
-        }
-
-        if (total === 9) {
-          calc = 30;
-          if (index === 0) return calc * -8;
-          if (index === 1) return calc * -6;
-          if (index === 2) return calc * -4;
-          if (index === 3) return calc * -2;
-          if (index === 4) return 0;
-          if (index === 5) return calc * 2;
-          if (index === 6) return calc * 4;
-          if (index === 7) return calc * 6;
-          if (index === 8) return calc * 8;
-        }
-
-        if (total === 10) {
-          calc = 25;
-          if (index === 0) return calc * -9;
-          if (index === 1) return calc * -7;
-          if (index === 2) return calc * -5;
-          if (index === 3) return calc * -3;
-          if (index === 4) return -calc;
-          if (index === 5) return calc;
-          if (index === 6) return calc * 3;
-          if (index === 7) return calc * 5;
-          if (index === 8) return calc * 7;
-          if (index === 9) return calc * 9;
-        }
-
-        return index * -85;
-      };
-
-      const context = () => {
-        if (isDown || isDragging) return 'isDown';
-        else if (isHovered && !isDragging) return 'isHovered';
-        return 'none';
-      };
-
-      if (context() === 'isDown' && match)
-        return {
-          x: x,
-          y: y + hoverOffsetY,
-          rotate: 0,
-          scale: 1.465,
-          marginTop: 0,
-          zIndex: 100,
-          cursor: 'grabbing',
-          immediate: (n: string) => n === 'x' || n === 'y' || n === 'scale',
-          config: springConfig.default,
-        };
-      else if (context() === 'isHovered' && match) {
-        return {
-          display: 'none', // disables hidden hover listener div
-          x: 0,
-          y: hoverOffsetY,
-          rotate: 0,
-          scale: 0.865,
-          marginTop: 0,
-          zIndex: 100,
-          cursor: 'grab',
-          immediate: true,
-          config: {
-            ...springConfig.default,
-            tension: 500,
-            friction: 38,
-            duration: 75,
-          },
-        };
-      } else {
-        return {
-          x: 0,
-          y: 0,
-          rotate: 0,
-          scale: 0.565,
-          marginLeft: 0,
-          // marginLeft: calcOffsetX(index),
-          marginTop: 0,
-          zIndex: index * 1,
-          cursor: 'grab',
-          display: 'block',
-          immediate: (n: string) => n === 'zIndex',
-          config: springConfig.default,
-        };
-      }
-    };
-
+  
   // Create springs, each corresponds to an item,
   // controlling its transform, scale, etc.
   const [springs, setSprings] = useSprings(handLength, fn());
@@ -218,7 +52,7 @@ export const PlayerHand = ({
       // ts-ignore
       onDragStart: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current?.indexOf(originalIndex);
-        setSprings(fn(down, dragging, active, curIndex));
+        setSprings(fn(handLength, down, dragging, active, curIndex));
       },
       // ts-ignore
       onDrag: ({
@@ -234,12 +68,12 @@ export const PlayerHand = ({
         const curIndex = order.current?.indexOf(originalIndex);
 
         if (tap) {
-          return onCardClick(G.players['0'].cards.hand[originalIndex]);
+          return onCardClick(G.players[player].cards.hand[originalIndex]);
         } else if (!canPlay) {
           cancel();
         } else {
           setSprings(
-            fn(down, dragging, active, curIndex, first ? 0 : x, first ? 0 : y)
+            fn(handLength, down, dragging, active, curIndex, first ? 0 : x, first ? 0 : y)
           );
         }
       },
@@ -247,18 +81,18 @@ export const PlayerHand = ({
       onDragEnd: ({ active, args: [originalIndex], down, dragging, xy }) => {
         const curIndex = order.current?.indexOf(originalIndex);
         const elem = document.elementFromPoint(xy[0], xy[1]);
-        setSprings(fn(down, dragging, active, curIndex));
+        setSprings(fn(handLength, down, dragging, active, curIndex));
 
         // @ts-ignore
         if (elem && elem.dataset.receive) {
           // console.log('🚀 target', elem);
-          onCardSlotDrop('0', Number(elem.getAttribute('data-index')));
+          onCardSlotDrop(player, Number(elem.getAttribute('data-index')));
         }
       },
       // ts-ignore
       onHover: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current?.indexOf(originalIndex);
-        setSprings(fn(down, dragging, active, curIndex));
+        setSprings(fn(handLength, down, dragging, active, curIndex));
       },
     },
     {
@@ -278,15 +112,15 @@ export const PlayerHand = ({
   );
 
   const handleSelect = React.useCallback(
-    (e: MouseEvent, canPlay: boolean, i: number) => {
-      if (canPlay) onCardSelect('0', G.players['0'].cards.hand[i].uuid);
+    (e: MouseEvent | TouchEvent, canPlay: boolean, i: number) => {
+      if (canPlay) onCardSelect(player, G.players[player].cards.hand[i].uuid);
     },
-    [G.players['0'].cards.hand, onCardSelect]
+    [G.players[player].cards.hand, onCardSelect]
   );
 
   const handleDeselect = React.useCallback(
-    (e: MouseEvent) => {
-      onCardDeselect('0');
+    (e: MouseEvent | TouchEvent) => {
+      onCardDeselect(player);
     },
     [onCardDeselect]
   );
@@ -342,57 +176,56 @@ export const PlayerHand = ({
               const { canPlay } = G.players['0'].cards.hand[i];
               return order && order.current![i] === i ? (
                 <React.Fragment key={i}>
-                  {/* <animated.div
-                    {...bind(i, canPlay)}
-                    key={`DragSlot_${i}`}
-                    onMouseDownCapture={(e: MouseEvent) => handleSelect(e, canPlay, i)}
-                    onMouseUpCapture={(e: MouseEvent) => handleMouseUp(e)}
-                    style={{
-                      zIndex: 110 - i,
-                      opacity: 0.45,
-                      background: 'yellow',
-                      display: 'block',
-                      cursor: canPlay ? cursor : 'default',
-                      marginLeft: marginLeft.to((mL: number) => `${mL}px`),
-                      pointerEvents: 'auto',
-                      position: 'relative',
-                      height: '3.5em',
-                      width: '2.45em',
-                      top: 0,
-                      transform: to([x, y], (x, y) => {
-                        return `translate3d(${x}px, ${y}px, 0)`;
-                      }),
-                    }}
-                  /> */}
-
                   <animated.div
                     {...bind(i, canPlay)}
-                    key={`HandSlot_${i}`}
+                    key={`DragSlot_${i}`}
                     onMouseDownCapture={(e: MouseEvent) => {
-                      return handleSelect(e, canPlay, i);
-                    }}
-                    onTouchStartCapture={(e: MouseEvent) => {
                       return handleSelect(e, canPlay, i);
                     }}
                     onMouseUpCapture={(e: MouseEvent) => {
                       return handleDeselect(e);
                     }}
-                    onTouchEndCapture={(e: MouseEvent) => {
+                    onTouchStartCapture={(e: TouchEvent) => {
+                      return handleSelect(e, canPlay, i);
+                    }}
+                    onTouchEndCapture={(e: TouchEvent) => {
                       return handleDeselect(e);
                     }}
+                    style={{
+                      zIndex: 110 - i,
+                      opacity: 0.25,
+                      background: 'yellow',
+                      display: 'block',
+                      cursor: canPlay ? cursor : 'default',
+                      marginLeft: marginLeft.to((mL: number) => `${mL}px`),
+                      pointerEvents: 'auto',
+                      position: 'absolute',
+                      height: 'var(--card-height)',
+                      width: 'calc(var(--card-width) / 2)',
+                      top: -15,
+                      // transform: to([x, y], (x, y) => {
+                      //   return `translate3d(${x}px, ${y}px, 0)`;
+                      // }),
+                    }}
+                  />
+
+                  <animated.div
+                    {...bind(i, canPlay)}
+                    key={`HandSlot_${i}`}
                     style={{
                       zIndex,
                       display: 'flex',
                       flexFlow: 'column nowrap',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      opacity: canPlay ? 1 : 0.45,
-                      cursor: canPlay ? cursor : 'default',
+                      opacity: 1,
+                      // cursor: canPlay ? cursor : 'default',
+                      cursor: 'none',
                       marginLeft: marginLeft.to((mL: number) => `${mL}px`),
                       marginTop: marginTop.to((mT: number) => `${mT}px`),
                       // opacity: G.SelectedCardIndex['0'] === i ? 0.795 : 1,
-                      // pointerEvents: 'none',
-                      position: 'relative',
+                      pointerEvents: 'none',
+                      position: 'absolute',
                       touchAction: 'none',
                       transform: to([x, y, rotate, scale], (x, y, rt, sc) => {
                         return `
@@ -406,9 +239,8 @@ export const PlayerHand = ({
                     <CardComponent
                       {...G.players['0'].cards.hand[i]}
                       key={G.players['0'].cards.hand[i].uuid}
-                      // onClick={(c: Card) => onCardClick(c)}
                       isSelected={
-                        G.selectedCardData[0]?.uuid ===
+                        G.selectedCardData['0']?.uuid ===
                         G.players['0'].cards.hand[i].uuid
                       }
                     />

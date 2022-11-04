@@ -29,6 +29,9 @@ export const Board = (props: GameProps) => {
     playerID,
   } = props;
 
+  const yourID = playerID === '0' ? '0' : '1';
+  const opponentID = playerID === '0' ? '1' : '0';
+
   // state
   const [addressBarSize, setAddressBarSize] = useState<number>(0);
 
@@ -271,8 +274,8 @@ export const Board = (props: GameProps) => {
         </div>
 
         <Zones
-          player={playerID === '0' ? '0' : '1'}
-          opponent={playerID === '0' ? '1' : '0'}
+          player={yourID}
+          opponent={opponentID}
         />
 
         <PlayerHand
@@ -282,6 +285,7 @@ export const Board = (props: GameProps) => {
           onCardSelect={onCardSelect}
           onCardDeselect={onCardDeselect}
           onCardSlotDrop={onCardSlotDrop}
+          player={yourID}
         />
         
         <div

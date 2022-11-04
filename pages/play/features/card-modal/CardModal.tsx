@@ -198,7 +198,7 @@ export const CardModal = (): ReactElement | null => {
         }}
       >
         {/* @ts-ignore */}
-        <CardComponent {...cardModalData} />
+        <CardComponent {...cardModalData} canPlay={true} />
       </div>
     </div>
   );

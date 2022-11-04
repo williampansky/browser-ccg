@@ -42,9 +42,9 @@ export const OpponentZoneSlot = ({
   const getAnimationDirection = (zoneNumber: number, data?: Card): string => {
     const scaleEnd = 'scale(1, -1)';
     const scaleStart = 'scale(5, -5)';
-    const translateStart0 = 'translate(-50%, -50%)';
+    const translateStart0 = 'translate(-100%, -100%)';
     const translateStart1 = 'translate(0, -100%)';
-    const translateStart2 = 'translate(50%, -50%)';
+    const translateStart2 = 'translate(100%, -100%)';
   
     switch (zoneNumber) {
       case 0:
@@ -93,6 +93,7 @@ export const OpponentZoneSlot = ({
           opacity: 0.65,
           border: '1px solid orange',
           borderRadius: '1.25em 1.25em 0 0',
+          transitionDelay: '200ms'
         }}
       />
     );
@@ -106,10 +107,10 @@ export const OpponentZoneSlot = ({
         width: 'calc(var(--minion-height) / 1.25)',
         transition: '250ms ease-in',
         position: objData ? 'relative' : 'relative',
-        opacity: objData ? '1' : '0',
+        opacity: objData ? 1 : 0,
         zIndex: objData ? '1' : '-1',
         transform: `${getAnimationDirection(zoneNumber, objData)} rotate(${rotation}deg)`,
-        transitionDelay: objData?.revealed ? `${slotIndex * 100}ms` : '0ms',
+        transitionDelay: objData?.revealed ? `${slotIndex * 200}ms` : '0ms',
         // filter: objData ? 'blur(0)' : 'blur(1px)'
       }}
     >

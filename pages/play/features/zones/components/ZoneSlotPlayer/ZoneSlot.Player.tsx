@@ -1,30 +1,10 @@
-import { useEffectListener } from 'bgio-effects/react';
-import { Ctx } from 'boardgame.io';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import type { Card, GameState, PlayerID } from '../../../../../../types';
+import type { Card, PlayerID } from '../../../../../../types';
 import { Minion } from '../../../../../../components/game-components/Minion/Minion';
 import { showCardModal } from '../../../card-modal/card-modal.slice';
 import { getRandomNumberBetween } from '../../../../../../utils';
-
-
-const getAnimationStart = (zoneNumber: number): string => {
-  const scaleStart = 'scale(5)';
-  const translateStart0 = 'translate(-50%, 50%)';
-  const translateStart1 = 'translate(0, 100%)';
-  const translateStart2 = 'translate(50%, 50%)';
-  
-  switch (zoneNumber) {
-    case 0:
-      return `${scaleStart} ${translateStart0}`;
-    case 1:
-      return `${scaleStart} ${translateStart1}`;
-    case 2:
-      return `${scaleStart} ${translateStart2}`;
-    default:
-      return '';
-  }
-};
+import styles from './zoneslot-player.module.scss';
 
 interface ReactZoneSlot {
   data?: Card;
@@ -47,9 +27,54 @@ export const PlayerZoneSlot = ({
   const [objData, setObjData] = useState<Card | undefined>(undefined);
   const [incoming, setIncoming] = useState<boolean>(false);
 
-  const animationStart = useState<string>(getAnimationStart(zoneNumber));
-  const animationEnd = useState<string>(`scale(1) translate(0, 0)`);
   const [rotation, setRotation] = useState<number>(0);
+
+  const getAnimationDirection = (
+    zoneNumber: number,
+    incoming: boolean = false,
+    data?: Card
+  ): string => {
+    const scaleEnd = 'scale(1)';
+    const scaleStart = 'scale(5)';
+    const translateStart0 = 'translate(-100%, 100%)';
+    const translateStart1 = 'translate(0, 100%)';
+    const translateStart2 = 'translate(100%, 100%)';
+
+    if (incoming)
+      switch (zoneNumber) {
+        case 0:
+          return data
+            ? `${scaleStart} ${translateStart0}`
+            : `${scaleEnd} translate(0,0)`;
+        case 1:
+          return data
+            ? `${scaleStart} ${translateStart1}`
+            : `${scaleEnd} translate(0,0)`;
+        case 2:
+          return data
+            ? `${scaleStart} ${translateStart2}`
+            : `${scaleEnd} translate(0,0)`;
+        default:
+          return '';
+      }
+
+    switch (zoneNumber) {
+      case 0:
+        return data
+          ? `${scaleEnd} translate(0,0)`
+          : `${scaleStart} ${translateStart0}`;
+      case 1:
+        return data
+          ? `${scaleEnd} translate(0,0)`
+          : `${scaleStart} ${translateStart1}`;
+      case 2:
+        return data
+          ? `${scaleEnd} translate(0,0)`
+          : `${scaleStart} ${translateStart2}`;
+      default:
+        return '';
+    }
+  };
 
   useEffect(() => {
     if (zoneRef[player]?.length && zoneRef[player][slotIndex]) {
@@ -69,36 +94,25 @@ export const PlayerZoneSlot = ({
       setIncoming(false);
     }
   }, [data]);
-  
+
   useEffect(() => {
     setRotation(getRandomNumberBetween(-2, 2));
   }, []);
 
-  // if (G?.ZonesCardsReference[zoneNumber]['0'][slotIndex]) {
-  // if (objData?.revealed === false) {
   if (incoming) {
     return (
       <div
         onClick={onUnrevealedClick}
+        className={styles['incoming-wrapper']}
         style={{
-          height: 'var(--minion-height)',
-          width: 'calc(var(--minion-height) / 1.25)',
-          transition: '100ms ease-in',
-          border: '1px solid orange',
-          borderRadius: '10px',
-          transform: `rotate(${rotation}deg)`,
+          transform: `${getAnimationDirection(
+            zoneNumber,
+            incoming,
+            objData
+          )} rotate(${rotation}deg)`,
         }}
       >
-        <div
-          style={{
-            transform: 'scale(0.8)',
-            position: 'relative',
-            top: -0.5,
-            left: -1,
-            opacity: 0.65,
-            transition: '100ms ease-in',
-          }}
-        >
+        <div className={styles['incoming-minion-wrapper']}>
           {/* @ts-ignore */}
           <Minion {...zoneRef[player][slotIndex]} />
         </div>
@@ -113,12 +127,15 @@ export const PlayerZoneSlot = ({
         height: 'var(--minion-height)',
         width: 'calc(var(--minion-height) / 1.25)',
         transition: '250ms ease-in',
-        position: objData ? 'relative' : 'relative',
-        opacity: objData ? '1' : '0',
+        position: 'relative',
+        opacity: objData ? 1 : 0,
         zIndex: objData ? '1' : '-1',
-        transform: `${objData?.revealed ? animationEnd.toString() : animationStart.toString()} rotate(${rotation}deg)`,
-        transitionDelay: objData?.revealed ? `${slotIndex * 100}ms` : '0ms',
-        // filter: objData ? 'blur(0)' : 'blur(1px)'
+        transform: `${getAnimationDirection(
+          zoneNumber,
+          incoming,
+          objData
+        )} rotate(${rotation}deg)`,
+        transitionDelay: objData?.revealed ? `${slotIndex * 200}ms` : '0ms',
       }}
     >
       {/* @ts-ignore */}
