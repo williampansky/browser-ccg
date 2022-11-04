@@ -3,7 +3,7 @@
   bottom: calc(var(--card-height) / -50);
   display: flex;
   flex-flow: column nowrap;
-  font-size: calc(var(--card-height) / 12.5);
+  font-size: var(--card-power-font-size);
   height: calc(var(--card-height) / 5.714285714);
   justify-content: center;
   right: calc(var(--card-height) / -21.666666667);

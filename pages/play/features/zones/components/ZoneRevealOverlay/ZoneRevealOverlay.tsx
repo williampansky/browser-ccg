@@ -12,10 +12,22 @@ export const ZoneRevealOverlay = ({
   turn,
   zoneNumber,
 }: ZoneRevealOverlay): ReactElement => {
+  const getRevealText = (): string => {
+    // if (turn === 1 && zoneNumber === 1) return '1 turn';
+    if (turn === 1 && zoneNumber === 2) return '2 turns';
+    else if (turn === 2 && zoneNumber === 2) return '1 turn';
+    return '1 turn';
+  };
+
   return (
-    <div className={[styles['component'], isRevealed ? styles['revealed'] : ''].join(' ')}>
+    <div
+      className={[
+        styles['component'],
+        isRevealed ? styles['revealed'] : '',
+      ].join(' ')}
+    >
       <div>Reveals in</div>
-      <div>{turn === 1 && zoneNumber === 1 ? '1 turn' : '2 turns'}</div>
+      <div>{getRevealText()}</div>
     </div>
   );
 };

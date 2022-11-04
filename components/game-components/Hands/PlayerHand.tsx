@@ -48,7 +48,7 @@ export const PlayerHand = ({
       const prevMatch = curIndex === index - 1;
       const gtMatch = curIndex > index;
       const ltMatch = curIndex < index;
-      const hoverOffsetY = -60;
+      const hoverOffsetY = -40;
 
       if (match && logMatch)
         console.log(

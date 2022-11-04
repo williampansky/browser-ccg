@@ -74,7 +74,10 @@ export const Zone = ({
               slotIndex={idx}
               opponent={opponent}
             />
-          );
+          )
+          //  : (
+          //   <div key={idx} className={styles['blank-slot']} />
+          // );
         })}
       </div>
 
@@ -110,7 +113,7 @@ export const Zone = ({
 
         <div className={[styles['zone-side'], styles['player-side']].join(' ')}>
           {[...Array.from(Array(6))].map((_, idx: number) => {
-            return (
+            return  (
               <PlayerZoneSlot
                 key={idx}
                 data={zone.sides[player][idx]}
@@ -120,7 +123,7 @@ export const Zone = ({
                 slotIndex={idx}
                 player={player}
               />
-            );
+            )
           })}
         </div>
       </div>

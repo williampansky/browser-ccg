@@ -5,8 +5,8 @@ import { GameState, Zone } from '../../../../../../types';
 import type { RootState } from '../../../../store';
 import { useSelector, useDispatch } from 'react-redux';
 import { Zone as ZoneComponent } from '../Zone';
-import { useLatestPropsOnEffect } from 'bgio-effects/react';
-import { initZone } from '../../zones.slice';
+import { useEffectListener, useLatestPropsOnEffect } from 'bgio-effects/react';
+import { initZone, updateZoneSide } from '../../zones.slice';
 import { updateZonesRef } from '../../zones-ref.slice';
 import styles from './zones.wrapper.module.scss';
 import { Ctx } from 'boardgame.io';
@@ -37,7 +37,8 @@ export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
 
   useEffect(() => {
     G.zones.forEach((z: Zone, i: number) => {
-      if (z.revealed) dispatch(initZone({
+      // if (z.revealed) 
+      dispatch(initZone({
         zoneData: G.zones[i],
         zoneNumber: i
       }))
@@ -47,6 +48,14 @@ export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
   useEffect(() => {
     dispatch(updateZonesRef(G.zonesCardsReference));
   }, [G.zonesCardsReference]);
+
+  // useEffectListener('revealCard', (effectPayload: any, boardProps: any) => {
+  //   dispatch(updateZoneSide({
+  //     zoneNumber: effectPayload.zoneNumber,
+  //     cardData: effectPayload.card,
+  //     player: effectPayload.player
+  //   }))
+  // }, [G.zones]);
 
   useEffect(() => {
     setZonesAreActive(G.selectedCardData[player] !== undefined);

@@ -15,6 +15,9 @@
   touch-action: none;
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
+  background: #494949;
+  border-radius: 50%;
+  color: white;
 
   &.revealed {
     opacity: 0;

@@ -1,15 +1,23 @@
 .attack__wrapper {
   border-radius: 50%;
   bottom: var(--minion-stat-offset);
-  font-size: 1em;
+  font-size: 1.25em;
   font-weight: 600;
-  height: calc(var(--minion-height) / 3.5);
-  right: calc(var(--minion-height) / -25);
+  height: calc(var(--minion-height) / 2.75);
+  right: calc(var(--minion-height) / -10);
   top: calc(var(--minion-height) / -10);
   line-height: 1;
   position: absolute;
-  width: calc(var(--minion-height) / 3.5);
+  width: calc(var(--minion-height) / 2.75);
   z-index: 5;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+
+  &.alternate {
+    font-size: 1.85em;
+  }
 }
 
 .text {
@@ -18,14 +26,18 @@
   color: white;
   display: flex;
   flex-flow: column nowrap;
-  height: calc(var(--minion-height) / 4);
+  height: 100%;
   justify-content: center;
-  right: -1px;
-  position: absolute;
+  right: 0;
+  position: relative;
   left: 0;
-  top: auto;
-  width: calc(var(--minion-height) / 3.85);
+  top: 2px;
+  width: 100%;
   z-index: 1;
+
+  .alternate & {
+    top: 0;
+  }
 
   &[data--is-damaged='true'] {
     color: white;
@@ -37,10 +49,14 @@
 
   & > div {
     color: inherit;
-    right: 3.85px;
-    top: auto;
-    bottom: 2px;
-    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -55,7 +71,7 @@
 
 .badge {
   bottom: -2px;
-  height: calc(var(--minion-height) / 3.15);
+  height: calc(var(--minion-height) / 2.75);
   image-rendering: pixelated;
   right: 0;
   position: absolute;

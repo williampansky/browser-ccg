@@ -31,7 +31,7 @@ const MultiplayerSetup = (isMultiplayer: boolean = false) => {
 
   return Local({
     bots: { 1: MCTSBot },
-    persist: typeof window !== 'undefined' ? true : false,
+    persist: false,
     storageKey: 'bgio',
   });
 };

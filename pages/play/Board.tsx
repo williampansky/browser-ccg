@@ -336,6 +336,10 @@ export const Board = (props: GameProps) => {
               <div>
                 Deck: <strong>{G.counts['0'].deck}</strong>
               </div>
+              <div>&nbsp;|&nbsp;</div>
+              <div>
+                AP: <strong>{G.actionPoints['0'].current}</strong> / <strong>{G.actionPoints['0'].total}</strong>
+              </div>
             </div>
           </div>
           <div

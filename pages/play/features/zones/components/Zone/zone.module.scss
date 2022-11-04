@@ -18,7 +18,7 @@
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
-  grid-template: repeat(3, 3.5em) / repeat(2, 2.75em);
+  grid-template: repeat(3, var(--minion-height)) / repeat(2, auto);
 
   &.opponent-side {
     transform: scaleY(-1);
@@ -49,4 +49,9 @@
   justify-content: center;
   text-align: center;
   padding: 0.5em;
+}
+
+.blank-slot {
+  height: var(--minion-height);
+  width: calc(var(--minion-height) / 1.25);
 }

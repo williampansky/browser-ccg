@@ -58,6 +58,8 @@
   --card-height:                        400px;
   --card-width-division:                1.400266051;
   --card-width:                         calc(var(--card-height) / var(--card-width-division));
+  --card-cost-font-size:                calc(var(--card-height) / 15.384615385);
+  --card-power-font-size:               calc(var(--card-height) / 12.5);
 
   // minion vars
   // ========================================================================

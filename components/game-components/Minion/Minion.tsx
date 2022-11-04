@@ -53,10 +53,34 @@ export const Minion = ({
   } = card;
 
   return (
-    <div className={[styles['minion']].join(' ')} data-component='Minion' id={uuid}>
-      <MinionCost cost={currentCost} elite={elite} imageSrc={'../../../images/card-assets/BADGE_GEM.png'} />
-      <MinionPower power={displayPower} elite={elite} imageSrc={'../../../images/card-assets/BADGE_SWORD.png'} />
-      <MinionImage name={name} imageSrc={`../../../images/sets/SET_002/${id}-MINION.jpg`} />
+    <div
+      className={[styles['minion']].join(' ')}
+      data-component='Minion'
+      id={uuid}
+    >
+      {/* <MinionCost
+        cost={currentCost}
+        elite={elite}
+        imageSrc={'../../../images/card-assets/BADGE_GEM.png'}
+      /> */}
+
+      {/* <MinionPower
+        elite={elite}
+        power={displayPower}
+        imageSrc={'../../../images/card-assets/BADGE_SWORD.png'}
+      /> */}
+
+      <MinionPower
+        alternate={true}
+        elite={elite}
+        power={displayPower}
+        imageSrc={'../../../images/card-assets/TYPE_WRAPPER.png'}
+      />
+      
+      <MinionImage
+        imageSrc={`../../../images/sets/SET_002/${id}-MINION.jpg`}
+        name={name}
+      />
     </div>
   );
 };

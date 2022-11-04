@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import type { Card, GameState, PlayerID } from '../../../../../../types';
 import { showCardModal } from '../../../card-modal/card-modal.slice';
 import { Minion } from '../../../../../../components/game-components/Minion/Minion';
+import { getRandomNumberBetween } from '../../../../../../utils';
+
 
 interface ReactZoneSlot {
   G?: GameState;
@@ -27,6 +29,8 @@ export const OpponentZoneSlot = ({
   const dispatch = useDispatch();
   const [objData, setObjData] = useState<Card | undefined>(undefined);
   const [incoming, setIncoming] = useState<boolean>(false);
+  const [animation, setAnimation] = useState<string>('');
+  const [rotation, setRotation] = useState<number>(0);
 
   // useEffect(() => {
   //   if (zoneRef[opponent]?.length && zoneRef[opponent][slotIndex]) {
@@ -35,6 +39,31 @@ export const OpponentZoneSlot = ({
   //   }
   // }, [zoneRef]);
 
+  const getAnimationDirection = (zoneNumber: number, data?: Card): string => {
+    const scaleEnd = 'scale(1, -1)';
+    const scaleStart = 'scale(5, -5)';
+    const translateStart0 = 'translate(-50%, -50%)';
+    const translateStart1 = 'translate(0, -100%)';
+    const translateStart2 = 'translate(50%, -50%)';
+  
+    switch (zoneNumber) {
+      case 0:
+        return data
+          ? `${scaleEnd} translate(0,0)`
+          : `${scaleStart} ${translateStart0}`;
+      case 1:
+        return data
+          ? `${scaleEnd} translate(0,0)`
+          : `${scaleStart} ${translateStart1}`;
+      case 2:
+        return data
+          ? `${scaleEnd} translate(0,0)`
+          : `${scaleStart} ${translateStart2}`;
+      default:
+        return '';
+    }
+  };
+
   useEffect(() => {
     if (data?.revealed) {
       setObjData(data);
@@ -42,30 +71,9 @@ export const OpponentZoneSlot = ({
     }
   }, [data]);
 
-  const getAnimationDirection = (zoneNumber: number): string => {
-    const scaleEnd = 'scale(1, -1)';
-    const scaleStart = 'scale(5, -5)';
-    const translateStart0 = 'translate(-50%, -50%)';
-    const translateStart1 = 'translate(0, -100%)';
-    const translateStart2 = 'translate(50%, -50%)';
-
-    switch (zoneNumber) {
-      case 0:
-        return objData
-          ? `${scaleEnd} translate(0,0)`
-          : `${scaleStart} ${translateStart0}`;
-      case 1:
-        return objData
-          ? `${scaleEnd} translate(0,0)`
-          : `${scaleStart} ${translateStart1}`;
-      case 2:
-        return objData
-          ? `${scaleEnd} translate(0,0)`
-          : `${scaleStart} ${translateStart2}`;
-      default:
-        return '';
-    }
-  };
+  useEffect(() => {
+    setRotation(getRandomNumberBetween(-3, 3));
+  }, []);
 
   const onUnrevealedClick = () => {
     if (!incoming) return;
@@ -79,7 +87,7 @@ export const OpponentZoneSlot = ({
       <div
         onClick={onUnrevealedClick}
         style={{
-          height: 'var(--card-height)',
+          height: 'var(--minion-height)',
           width: 'calc(var(--minion-height) / 1.25)',
           transition: '100ms ease-in',
           opacity: 0.65,
@@ -94,13 +102,13 @@ export const OpponentZoneSlot = ({
     <div
       onClick={() => objData && dispatch(showCardModal(objData))}
       style={{
-        height: 'var(--card-height)',
+        height: 'var(--minion-height)',
         width: 'calc(var(--minion-height) / 1.25)',
         transition: '250ms ease-in',
         position: objData ? 'relative' : 'relative',
         opacity: objData ? '1' : '0',
-        zIndex: objData ? 'auto' : '-1',
-        transform: getAnimationDirection(zoneNumber),
+        zIndex: objData ? '1' : '-1',
+        transform: `${getAnimationDirection(zoneNumber, objData)} rotate(${rotation}deg)`,
         transitionDelay: objData?.revealed ? `${slotIndex * 100}ms` : '0ms',
         // filter: objData ? 'blur(0)' : 'blur(1px)'
       }}
