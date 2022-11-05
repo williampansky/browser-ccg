@@ -40,12 +40,14 @@ export const Layout = ({ children, title = 'BCG' }: Props) => (
           <li style={{ margin: '0 0.25em', color: 'lightgray' }}>|</li>
           <li>
             <Link href='/users'>
-              <a>Users List</a>
+              <a>Users</a>
             </Link>
           </li>
           <li style={{ margin: '0 0.25em', color: 'lightgray' }}>|</li>
           <li>
-            <a href='/api/users'>Users API</a>
+            <Link href='/api-list'>
+              <a>Api List</a>
+            </Link>
           </li>
           <li style={{ margin: '0 0.25em', color: 'lightgray' }}>|</li>
           <li>
