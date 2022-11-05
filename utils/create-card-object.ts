@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import { CardType } from '../enums';
 import { Card, CardBase } from '../types';
 
 /**
@@ -20,7 +21,7 @@ const createCardObject = (obj: CardBase): Card => {
     powerStream: [],
     revealed: false,
     revealedOnTurn: 0,
-    type: type ? type : 'CARD',
+    type: type ? type : CardType.Card,
     uuid: uuid(),
     zonePowerAdjustment: 0,
     imageFlairSrc: `sets/SET_002/${id}-CARD.jpg`

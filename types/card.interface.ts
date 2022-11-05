@@ -1,3 +1,5 @@
+import { CardType } from "../enums";
+
 export declare type CardId = string;
 
 /**
@@ -12,7 +14,7 @@ export interface CardBase {
   mechanic?: string;
   name: string;
   power: number;
-  type?: 'CARD' | 'MINION' | 'SPELL' | 'WEAPON';
+  type?: CardType.Card | CardType.Minion | CardType.Spell | CardType.Weapon;
 }
 
 /**
@@ -68,7 +70,7 @@ export interface Card {
   revealedOnTurn: number;
   set?: string;
   sounds?: Record<string, string>;
-  type: 'CARD' | 'MINION' | 'SPELL' | 'WEAPON';
+  type: CardType.Card | CardType.Minion | CardType.Spell | CardType.Weapon;
   uuid: string;
   zonePowerAdjustment: number;
 }
