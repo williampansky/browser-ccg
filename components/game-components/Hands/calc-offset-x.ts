@@ -61,34 +61,8 @@ const calcOffsetX = (index: number, total: number) => {
     if (index === 7) return calc * 7;
   }
 
-  if (total === 9) {
-    calc = 30;
-    if (index === 0) return calc * -8;
-    if (index === 1) return calc * -6;
-    if (index === 2) return calc * -4;
-    if (index === 3) return calc * -2;
-    if (index === 4) return 0;
-    if (index === 5) return calc * 2;
-    if (index === 6) return calc * 4;
-    if (index === 7) return calc * 6;
-    if (index === 8) return calc * 8;
-  }
-
-  if (total === 10) {
-    calc = 25;
-    if (index === 0) return calc * -9;
-    if (index === 1) return calc * -7;
-    if (index === 2) return calc * -5;
-    if (index === 3) return calc * -3;
-    if (index === 4) return -calc;
-    if (index === 5) return calc;
-    if (index === 6) return calc * 3;
-    if (index === 7) return calc * 5;
-    if (index === 8) return calc * 7;
-    if (index === 9) return calc * 9;
-  }
-
   return index * -85;
+  // return calc;
 };
 
 export default calcOffsetX;

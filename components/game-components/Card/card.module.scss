@@ -6,6 +6,8 @@
   width: calc(var(--card-height) / var(--card-width-division));
   margin: 0 auto;
   position: relative;
+  pointer-events: none;
+  touch-action: none;
 
   p {
     color: black;

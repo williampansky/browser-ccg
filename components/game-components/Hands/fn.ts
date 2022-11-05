@@ -8,12 +8,12 @@ import { config as springConfig } from 'react-spring';
 const fn =
   (
     items: number = 0,
-    isDown?: any,
-    isDragging?: any,
-    isHovered?: any,
-    curIndex?: any,
-    x?: any,
-    y?: any
+    isDown: any = false,
+    isDragging: any = false,
+    isHovered: any = false,
+    curIndex: any = 0,
+    x: any = 0,
+    y: any = 0
   ) =>
   (index: number) => {
     const logMatch = false;
@@ -77,7 +77,7 @@ const fn =
         zIndex: index * 1,
         cursor: 'grab',
         display: 'block',
-        immediate: (n: string) => n === 'zIndex',
+        immediate: (n: string) => n === 'zIndex' || n === 'marginLeft',
         config: springConfig.default,
       };
   };

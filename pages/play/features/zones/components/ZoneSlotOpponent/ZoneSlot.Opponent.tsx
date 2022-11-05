@@ -41,7 +41,7 @@ export const OpponentZoneSlot = ({
 
   const getAnimationDirection = (zoneNumber: number, data?: Card): string => {
     const scaleEnd = 'scale(1, -1)';
-    const scaleStart = 'scale(5, -5)';
+    const scaleStart = 'scale(3, -3)';
     const translateStart0 = 'translate(-100%, -100%)';
     const translateStart1 = 'translate(0, -100%)';
     const translateStart2 = 'translate(100%, -100%)';

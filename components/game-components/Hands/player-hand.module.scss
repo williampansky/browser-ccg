@@ -4,4 +4,50 @@
   --card-width: calc(var(--card-height) / var(--card-width-division));
   --card-cost-font-size: 1.65em;
   --card-power-font-size: 1.65em;
+
+  width: 100%;
+  position: absolute;
+  top: auto;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  max-width: 100%;
+  min-height: 54px;
+  max-height: 54px;
+  padding: 0 1em;
+  touch-action: none;
+}
+
+.grid {
+  width: 100%;
+  position: relative;
+  min-height: 54px;
+  max-height: 54px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+
+.drag-slot {
+  opacity: 0.25;
+  background: yellow;
+  display: block;
+  pointer-events: auto;
+  touch-action: auto;
+  position: absolute;
+  top: 0;
+}
+
+.hand-slot {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  cursor: none;
+  pointer-events: none;
+  touch-action: none;
+  position: absolute;
 }

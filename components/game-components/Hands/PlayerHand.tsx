@@ -1,5 +1,11 @@
 import { Ctx } from 'boardgame.io';
-import React, { ReactElement } from 'react';
+import React, {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { Card, GameState, PlayerID } from '../../../types';
 import { CardInHand } from '../Card/CardInHand';
 import { Card as CardComponent } from '../Card/Card';
@@ -10,6 +16,7 @@ import styles from './player-hand.module.scss';
 import calcOffsetX from './calc-offset-x';
 import calcScale from './calc-scale';
 import fn from './fn';
+import { usePrevious } from '../../../hooks';
 
 interface PlayerHandProps {
   G: GameState;
@@ -28,24 +35,59 @@ export const PlayerHand = ({
   onCardSelect,
   onCardDeselect,
   onCardSlotDrop,
-  player
+  player,
 }: PlayerHandProps): ReactElement => {
-  const handLength = G.players[player].cards.hand.length;
+  const {
+    gameConfig: {
+      numerics: { cardsPerHand },
+    },
+    selectedCardData,
+  } = G;
+
+  const playerHand = G.players[player].cards.hand;
+  const selectedCard = selectedCardData[player];
+
+  const [handLength, setHandLength] = useState<number>(0);
+  const prevHandLength = usePrevious(handLength);
+  const [cardHeight, setCardHeight] = useState<number>(0);
+  const [cardWidth, setCardWidth] = useState<number>(0);
+
+  useEffect(() => {
+    const hString = '--card-height';
+    const dString = '--card-width-division';
+    const doc = document?.documentElement;
+    const hand = document?.getElementById('PlayerHand');
+
+    if (hand !== null && typeof hand !== undefined) {
+      const h = getComputedStyle(hand!).getPropertyValue(hString);
+      const d = getComputedStyle(doc).getPropertyValue(dString);
+      const p1 = parseInt(h, 10);
+      const p2 = Number(d);
+      setCardWidth(Number(p1 / p2 / 2));
+      setCardHeight(p1);
+    }
+  }, [document]);
 
   // Store indicies as a local ref, this represents the item order
   const [_, update] = React.useState<{} | null>(null);
 
-  
   // Create springs, each corresponds to an item,
   // controlling its transform, scale, etc.
-  const [springs, setSprings] = useSprings(handLength, fn());
+  const [springs, setSprings] = useSprings(handLength, fn(), [handLength]);
 
   const order = useCallbackRef(
-    Array.from(Array(G.gameConfig.numerics.cardsPerHand)).map(
-      (_, index) => index
-    ),
+    [...Array.from(Array(cardsPerHand))].map((_, index) => index),
     () => update({})
   );
+
+  useEffect(() => {
+    setHandLength(playerHand.length);
+  }, [playerHand, setHandLength]);
+
+  // rerenders hand correctly based on new array length
+  useEffect(() => {
+    setSprings(fn(handLength));
+  }, [handLength]);
 
   const bind: any = useGesture(
     {
@@ -68,12 +110,20 @@ export const PlayerHand = ({
         const curIndex = order.current?.indexOf(originalIndex);
 
         if (tap) {
-          return onCardClick(G.players[player].cards.hand[originalIndex]);
+          return onCardClick(playerHand[originalIndex]);
         } else if (!canPlay) {
           cancel();
         } else {
           setSprings(
-            fn(handLength, down, dragging, active, curIndex, first ? 0 : x, first ? 0 : y)
+            fn(
+              handLength,
+              down,
+              dragging,
+              active,
+              curIndex,
+              first ? 0 : x,
+              first ? 0 : y
+            )
           );
         }
       },
@@ -111,52 +161,51 @@ export const PlayerHand = ({
     }
   );
 
-  const handleSelect = React.useCallback(
-    (e: MouseEvent | TouchEvent, canPlay: boolean, i: number) => {
-      if (canPlay) onCardSelect(player, G.players[player].cards.hand[i].uuid);
+  /**
+   * Selects card
+   */
+  const select = useCallback(
+    (canPlay: boolean, i: number) => {
+      if (canPlay) onCardSelect(player, playerHand[i].uuid);
     },
-    [G.players[player].cards.hand, onCardSelect]
+    [playerHand, onCardSelect]
   );
 
-  const handleDeselect = React.useCallback(
-    (e: MouseEvent | TouchEvent) => {
-      onCardDeselect(player);
-    },
-    [onCardDeselect]
-  );
+  /**
+   * Deselects card
+   */
+  const deselect = useCallback(() => {
+    onCardDeselect(player);
+  }, [onCardDeselect]);
+
+  /**
+   * Returns card's canPlay boolean value if the object
+   * exists in playerHand[i]; otherwise returns false.
+   * 
+   * Note that this avoids breaking crashes when playing cards
+   * and running `setSprings(fn(handLength));`
+   */
+  const getCanPlay = useCallback((i: number) => {
+    if (playerHand[i]) return playerHand[i].canPlay;
+    return false;
+  }, [playerHand]);
+
+  /**
+   * Returns card's uuid string value if the object
+   * exists in playerHand[i]; otherwise returns `''`.
+   * 
+   * Note that this avoids breaking crashes when playing cards
+   * and running `setSprings(fn(handLength));`
+   */
+  const getUuid = useCallback((i: number) => {
+    if (playerHand[i]) return playerHand[i].uuid;
+    return '';
+  }, [playerHand]);
 
   return (
-    <React.Fragment>
-      <div
-        className={styles['player-hand']}
-        style={{
-          width: '100%',
-          position: 'absolute',
-          top: 'auto',
-          bottom: '10px',
-          left: 0,
-          right: 0,
-          maxWidth: '100%',
-          minHeight: '54px',
-          maxHeight: '54px',
-          padding: '0 1em',
-        }}
-      >
-        <div
-          style={{
-            // display: 'grid',
-            // gridTemplateColumns: 'repeat(8, 1fr)',
-            // gridGap: '0',
-            width: '100%',
-            position: 'relative',
-            minHeight: '54px',
-            maxHeight: '54px',
-            display: 'flex',
-            flexFlow: 'row nowrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+    <Fragment>
+      <div id='PlayerHand' className={styles['player-hand']}>
+        <div className={styles['grid']}>
           {springs?.map(
             (
               {
@@ -173,36 +222,27 @@ export const PlayerHand = ({
               }: any,
               i
             ) => {
-              const { canPlay } = G.players['0'].cards.hand[i];
+              // const { canPlay, uuid } = playerHand[i];
+              const canPlay = getCanPlay(i);
+              const uuid = getUuid(i);
               return order && order.current![i] === i ? (
-                <React.Fragment key={i}>
+                <Fragment key={i}>
                   <animated.div
                     {...bind(i, canPlay)}
                     key={`DragSlot_${i}`}
-                    onMouseDownCapture={(e: MouseEvent) => {
-                      return handleSelect(e, canPlay, i);
-                    }}
-                    onMouseUpCapture={(e: MouseEvent) => {
-                      return handleDeselect(e);
-                    }}
-                    onTouchStartCapture={(e: TouchEvent) => {
-                      return handleSelect(e, canPlay, i);
-                    }}
-                    onTouchEndCapture={(e: TouchEvent) => {
-                      return handleDeselect(e);
-                    }}
+                    className={styles['drag-slot']}
+                    data-index={i}
+                    onMouseDownCapture={() => select(canPlay, i)}
+                    onMouseUpCapture={() => deselect()}
+                    onTouchStartCapture={() => select(canPlay, i)}
+                    onTouchEndCapture={() => deselect()}
                     style={{
                       zIndex: 110 - i,
-                      opacity: 0.25,
-                      background: 'yellow',
-                      display: 'block',
                       cursor: canPlay ? cursor : 'default',
-                      marginLeft: marginLeft.to((mL: number) => `${mL}px`),
-                      pointerEvents: 'auto',
-                      position: 'absolute',
-                      height: 'var(--card-height)',
-                      width: 'calc(var(--card-width) / 2)',
-                      top: -15,
+                      marginLeft,
+                      // marginLeft: marginLeft.to((mL: number) => `${mL}px`),
+                      height: `${cardHeight}px`,
+                      width: `${cardWidth}px`,
                       // transform: to([x, y], (x, y) => {
                       //   return `translate3d(${x}px, ${y}px, 0)`;
                       // }),
@@ -212,21 +252,13 @@ export const PlayerHand = ({
                   <animated.div
                     {...bind(i, canPlay)}
                     key={`HandSlot_${i}`}
+                    className={styles['hand-slot']}
+                    data-index={i}
                     style={{
                       zIndex,
-                      display: 'flex',
-                      flexFlow: 'column nowrap',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      opacity: 1,
-                      // cursor: canPlay ? cursor : 'default',
-                      cursor: 'none',
-                      marginLeft: marginLeft.to((mL: number) => `${mL}px`),
+                      marginLeft,
+                      // marginLeft: marginLeft.to((mL: number) => `${mL}px`),
                       marginTop: marginTop.to((mT: number) => `${mT}px`),
-                      // opacity: G.SelectedCardIndex['0'] === i ? 0.795 : 1,
-                      pointerEvents: 'none',
-                      position: 'absolute',
-                      touchAction: 'none',
                       transform: to([x, y, rotate, scale], (x, y, rt, sc) => {
                         return `
                           translate3d(${x}px, ${y}px, 0) 
@@ -237,20 +269,17 @@ export const PlayerHand = ({
                     }}
                   >
                     <CardComponent
-                      {...G.players['0'].cards.hand[i]}
-                      key={G.players['0'].cards.hand[i].uuid}
-                      isSelected={
-                        G.selectedCardData['0']?.uuid ===
-                        G.players['0'].cards.hand[i].uuid
-                      }
+                      {...playerHand[i]}
+                      key={uuid}
+                      isSelected={selectedCard?.uuid === uuid}
                     />
                   </animated.div>
-                </React.Fragment>
+                </Fragment>
               ) : null;
             }
           )}
         </div>
       </div>
-    </React.Fragment>
+    </Fragment>
   );
 };
