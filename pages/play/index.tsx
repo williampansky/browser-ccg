@@ -13,6 +13,7 @@ import { store } from './store';
 import { Provider } from 'react-redux';
 import Head from 'next/head';
 import { noOverlayWorkaroundScript } from '../_app';
+// import '../../styles/game.scss';
 
 // @todo figure out better solution here
 declare global {
@@ -52,14 +53,6 @@ const BrowserCcgClient = BoardgameClient({
 const BrowserCcgPage: FunctionComponent = () => {
   return (
     <Fragment>
-      <Head>
-        {process.env.NODE_ENV !== 'production' && (
-          <script
-            dangerouslySetInnerHTML={{ __html: noOverlayWorkaroundScript }}
-          />
-        )}
-      </Head>
-
       <Provider store={store}>
         <BrowserCcgClient playerID='0' matchID={uuid()} />
       </Provider>
