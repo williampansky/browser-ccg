@@ -10,6 +10,7 @@ const calcScale = (total: number) => {
     case 5:   return scale * 1.15;
     case 6:   return scale * 1.05;
     case 7:   return scale * 0.95;
+    case 8:   return scale * 0.75;
     default:  return scale;
   }
 };

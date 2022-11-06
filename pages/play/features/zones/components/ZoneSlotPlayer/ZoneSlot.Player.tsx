@@ -28,6 +28,7 @@ export const PlayerZoneSlot = ({
   const [incoming, setIncoming] = useState<boolean>(false);
 
   const [rotation, setRotation] = useState<number>(0);
+  const [offsetY, setOffsetY] = useState<number>(0);
 
   const getAnimationDirection = (
     zoneNumber: number,
@@ -96,7 +97,8 @@ export const PlayerZoneSlot = ({
   }, [data]);
 
   useEffect(() => {
-    setRotation(getRandomNumberBetween(-2, 2));
+    setRotation(getRandomNumberBetween(-3, 3));
+    setOffsetY(getRandomNumberBetween(-2, 2));
   }, []);
 
   if (incoming) {
@@ -105,6 +107,7 @@ export const PlayerZoneSlot = ({
         onClick={onUnrevealedClick}
         className={styles['incoming-wrapper']}
         style={{
+          top: `${offsetY}px`,
           transform: `${getAnimationDirection(
             zoneNumber,
             incoming,
@@ -128,6 +131,7 @@ export const PlayerZoneSlot = ({
         width: 'calc(var(--minion-height) / 1.25)',
         transition: '250ms ease-in',
         position: 'relative',
+        top: `${offsetY}px`,
         opacity: objData ? 1 : 0,
         zIndex: objData ? '1' : '-1',
         transform: `${getAnimationDirection(

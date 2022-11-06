@@ -21,43 +21,45 @@ const mobile = (index: number, total: number): number => {
   }
 
   if (total === 5) {
-    calc = 100;
-    if (index === 0) return -200;
-    if (index === 1) return -100;
+    calc = 78;
+    if (index === 0) return calc * -3.15;
+    if (index === 1) return calc * -1.65;
     if (index === 2) return 0;
-    if (index === 3) return 100;
-    if (index === 4) return 200;
+    if (index === 3) return calc * 1.65;
+    if (index === 4) return calc * 3.15;
   }
 
   if (total === 6) {
-    if (index === 0) return index - 200;
-    if (index === 1) return index - 120;
-    if (index === 2) return index - 40;
-    if (index === 3) return index + 40;
-    if (index === 4) return index + 120;
-    if (index === 5) return index + 200;
+    calc = 72;
+    if (index === 0) return calc * -3.75;
+    if (index === 1) return calc * -2.25;
+    if (index === 2) return calc * -0.75;
+    if (index === 3) return calc * 0.75;
+    if (index === 4) return calc * 2.25;
+    if (index === 5) return calc * 3.75;
   }
 
   if (total === 7) {
-    if (index === 0) return index - 200;
-    if (index === 1) return index - 132;
-    if (index === 2) return index - 64;
+    calc = 64;
+    if (index === 0) return calc * -4.75;
+    if (index === 1) return calc * -3.15;
+    if (index === 2) return calc * -1.55;
     if (index === 3) return 0;
-    if (index === 4) return index + 70;
-    if (index === 5) return index + 136.5;
-    if (index === 6) return index + 204;
+    if (index === 4) return calc * 1.55;
+    if (index === 5) return calc * 3.15;
+    if (index === 6) return calc * 4.75;
   }
 
   if (total === 8) {
-    calc = 30;
-    if (index === 0) return calc * -7;
-    if (index === 1) return calc * -5;
-    if (index === 2) return calc * -3;
-    if (index === 3) return -calc;
-    if (index === 4) return calc;
-    if (index === 5) return calc * 3;
-    if (index === 6) return calc * 5;
-    if (index === 7) return calc * 7;
+    calc = 50;
+    if (index === 0) return calc * -6.25;
+    if (index === 1) return calc * -4.485;
+    if (index === 2) return calc * -2.7;
+    if (index === 3) return -calc + 5;
+    if (index === 4) return calc -5;
+    if (index === 5) return calc * 2.7;
+    if (index === 6) return calc * 4.485;
+    if (index === 7) return calc * 6.25;
   }
 
   return index * -85;
@@ -134,9 +136,9 @@ const calcOffsetX = (
   total: number,
   windowWidth: number
 ): number => {
-  if (windowWidth >= 1024) {
-    return desktop(index, total);
-  }
+  // if (windowWidth >= 1024) {
+  //   return desktop(index, total);
+  // }
 
   return mobile(index, total);
 };

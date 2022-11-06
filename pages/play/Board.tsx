@@ -302,7 +302,7 @@ export const Board = (props: GameProps) => {
             justifyContent: 'flex-start',
             width: '100%',
             height: '22px',
-            zIndex: 20,
+            zIndex: 200,
             position: 'absolute',
             top: 'auto',
             bottom: 0,

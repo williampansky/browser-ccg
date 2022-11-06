@@ -31,6 +31,7 @@ export const OpponentZoneSlot = ({
   const [incoming, setIncoming] = useState<boolean>(false);
   const [animation, setAnimation] = useState<string>('');
   const [rotation, setRotation] = useState<number>(0);
+  const [offsetY, setOffsetY] = useState<number>(0);
 
   // useEffect(() => {
   //   if (zoneRef[opponent]?.length && zoneRef[opponent][slotIndex]) {
@@ -73,6 +74,7 @@ export const OpponentZoneSlot = ({
 
   useEffect(() => {
     setRotation(getRandomNumberBetween(-3, 3));
+    setOffsetY(getRandomNumberBetween(-2, 2));
   }, []);
 
   const onUnrevealedClick = () => {
@@ -107,6 +109,7 @@ export const OpponentZoneSlot = ({
         width: 'calc(var(--minion-height) / 1.25)',
         transition: '250ms ease-in',
         position: objData ? 'relative' : 'relative',
+        top: `${offsetY}px`,
         opacity: objData ? 1 : 0,
         zIndex: objData ? '1' : '-1',
         transform: `${getAnimationDirection(zoneNumber, objData)} rotate(${rotation}deg)`,

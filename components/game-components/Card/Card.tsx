@@ -97,7 +97,7 @@ export const Card = ({
 
       <CardFlairImage
         name={name}
-        imageSrc={`../../../images/${imageFlairSrc}`}
+        imageSrc={imageFlairSrc ? `../../../images/${imageFlairSrc}` : `../../../images/sets/PLACEHOLDER.jpg`}
       />
 
       <CardBaseImage
