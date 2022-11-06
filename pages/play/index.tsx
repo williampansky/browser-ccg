@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 import { BrowserCCG } from '../../game';
 import { Board } from './Board';
 import { store } from './store';
-import useGlobalGameStyles from './useGlobalGameStyles';
+import useGlobalGameStyles from './play-hooks/useGlobalGameStyles';
 
 const MultiplayerSetup = (isMultiplayer: boolean = false) => {
   if (isMultiplayer) return SocketIO();

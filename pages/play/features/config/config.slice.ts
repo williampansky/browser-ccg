@@ -1,21 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { gameConfig } from '../../../../config.app';
 import type { AppConfig } from '../../../../types';
-import { defaultState } from '../../../../game/state';
+import appConfig from '../../../../config.app';
 
-const initialState: any = null;
+const initialState: AppConfig = appConfig;
 
 export const configSlice = createSlice({
-  name: 'configPoints',
+  name: 'config',
   initialState,
   reducers: {
-    setConfig: (state, { payload }: PayloadAction<any>) => {
+    setConfig: (state, { payload }: PayloadAction<AppConfig>) => {
       return payload;
     },
   },
 });
 
 export const { setConfig } = configSlice.actions;
-
 export default configSlice.reducer;

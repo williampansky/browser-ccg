@@ -5,12 +5,12 @@ import type { RootState } from '../../store';
 import styles from './game-over-overlay.module.scss';
 
 interface GameOverOverlayComponent {
-  playerId: PlayerID | null;
+  playerID: PlayerID | null;
   reset?: any;
 }
 
 export const GameOverOverlay = ({
-  playerId,
+  playerID,
   reset,
 }: GameOverOverlayComponent): ReactElement => {
   const gameOver = useSelector(({ gameOver }: RootState) => gameOver);
@@ -20,12 +20,12 @@ export const GameOverOverlay = ({
     if (ctxGameOver.draw) return 'Draw...';
 
     if (ctxGameOver.winner === '0') {
-      if (playerId === '0') return 'Victory!';
+      if (playerID === '0') return 'Victory!';
       else return 'Defeat...';
     }
 
     if (ctxGameOver.winner === '1') {
-      if (playerId === '1') return 'Victory!';
+      if (playerID === '1') return 'Victory!';
       else return 'Defeat...';
     }
   };

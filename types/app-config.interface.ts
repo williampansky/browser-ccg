@@ -2,6 +2,7 @@ export interface GameConfig {
   debugConfig: {
     debugCardId: string;
     logPhaseToConsole: boolean;
+    showDebugBar: boolean;
   };
   numerics: {
     actionPointsPerTurn: number;

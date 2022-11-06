@@ -1,1 +1,1 @@
-export { default as configSlice } from './config.slice'
+export { default as configSlice, setConfig } from './config.slice'

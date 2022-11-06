@@ -8,7 +8,7 @@ const initialState: GameOver = {
 };
 
 export const gameOverSlice = createSlice({
-  name: 'gameOverSlice',
+  name: 'gameOver',
   initialState,
   reducers: {
     setGameOver: (state, { payload }: PayloadAction<any>) => {

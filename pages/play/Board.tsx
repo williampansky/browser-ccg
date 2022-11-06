@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import { BoardProps, Client } from 'boardgame.io/react';
 import { Ctx } from 'boardgame.io';
 import { Card, GameState, Zone } from '../../types';
@@ -13,6 +18,7 @@ import useEndPhase from '../../hooks/useEndPhase';
 import { useGameOver, useWindowSize } from '../../hooks';
 import { setWindowSize } from './features/windowSize';
 import { GameOverOverlay } from './features/game-over';
+import { DebugBar } from './play-components/DebugBar';
 
 const showDebug = false;
 
@@ -92,36 +98,14 @@ export const Board = (props: GameProps) => {
 
   return (
     <>
-      <GameOverOverlay playerId={playerID} reset={reset} />
+      <DebugBar
+        G={G}
+        ctx={ctx}
+        playerID={playerID}
+        addressBarSize={addressBarSize}
+      />
 
-      {/* debug stuff */}
-      {showDebug && (
-        <div
-          style={{
-            display: 'flex',
-            flexFlow: 'column nowrap',
-            alignItems: 'flex-start',
-            justifyContent: 'flex-start',
-            width: '100%',
-            position: 'absolute',
-            top: 0,
-            bottom: 'auto',
-            left: 0,
-            right: 0,
-            zIndex: 9000,
-            padding: '0.15em',
-            background: 'dark#333',
-            fontSize: 10,
-          }}
-        >
-          <div>addressBarSize: {addressBarSize}px</div>
-          <div>
-            ctx.turn: {ctx.turn} / singleTurn: {Math.round(ctx.turn / 2)}
-          </div>
-          <div>SelectedCardData: {G.selectedCardData['0']?.id}</div>
-          <div>SelectedCardIndex: {G.selectedCardIndex['0']}</div>
-        </div>
-      )}
+      <GameOverOverlay playerID={playerID} reset={reset} />
 
       <main
         style={{
@@ -240,10 +224,7 @@ export const Board = (props: GameProps) => {
           </div>
         </div>
 
-        <Zones
-          player={yourID}
-          opponent={opponentID}
-        />
+        <Zones player={yourID} opponent={opponentID} />
 
         <PlayerHand
           G={G}
@@ -254,7 +235,7 @@ export const Board = (props: GameProps) => {
           onCardSlotDrop={onCardSlotDrop}
           player={yourID}
         />
-        
+
         <div
           style={{
             display: 'flex',
@@ -309,7 +290,8 @@ export const Board = (props: GameProps) => {
               </div>
               <div>&nbsp;|&nbsp;</div>
               <div>
-                AP: <strong>{G.actionPoints['0'].current}</strong> / <strong>{G.actionPoints['0'].total}</strong>
+                AP: <strong>{G.actionPoints['0'].current}</strong> /{' '}
+                <strong>{G.actionPoints['0'].total}</strong>
               </div>
             </div>
           </div>
