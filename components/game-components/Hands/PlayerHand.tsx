@@ -1,4 +1,5 @@
 import { Ctx } from 'boardgame.io';
+import { useSelector } from 'react-redux';
 import React, {
   Fragment,
   ReactElement,
@@ -6,17 +7,18 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Card, GameState, PlayerID } from '../../../types';
-import { CardInHand } from '../Card/CardInHand';
-import { Card as CardComponent } from '../Card/Card';
-import { useGesture } from '@use-gesture/react';
+import { useSprings, animated, to } from 'react-spring';
 import { useCallbackRef } from 'use-callback-ref';
-import { useSprings, animated, config as springConfig, to } from 'react-spring';
-import styles from './player-hand.module.scss';
-import calcOffsetX from './calc-offset-x';
-import calcScale from './calc-scale';
-import fn from './fn';
+import { useGesture } from '@use-gesture/react';
+
 import { usePrevious } from '../../../hooks';
+import { Card as CardComponent } from '../Card/Card';
+
+import type { RootState } from '../../../pages/play/store';
+import type { Card, GameState, PlayerID } from '../../../types';
+
+import fn from './fn';
+import styles from './player-hand.module.scss';
 
 interface PlayerHandProps {
   G: GameState;
@@ -43,6 +45,10 @@ export const PlayerHand = ({
     },
     selectedCardData,
   } = G;
+
+  const { height, width } = useSelector(
+    ({ windowSize }: RootState) => windowSize
+  );
 
   const playerHand = G.players[player].cards.hand;
   const selectedCard = selectedCardData[player];
@@ -94,7 +100,7 @@ export const PlayerHand = ({
       // ts-ignore
       onDragStart: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current?.indexOf(originalIndex);
-        setSprings(fn(handLength, down, dragging, active, curIndex));
+        setSprings(fn(handLength, width, down, dragging, active, curIndex));
       },
       // ts-ignore
       onDrag: ({
@@ -117,6 +123,7 @@ export const PlayerHand = ({
           setSprings(
             fn(
               handLength,
+              width,
               down,
               dragging,
               active,
@@ -131,7 +138,7 @@ export const PlayerHand = ({
       onDragEnd: ({ active, args: [originalIndex], down, dragging, xy }) => {
         const curIndex = order.current?.indexOf(originalIndex);
         const elem = document.elementFromPoint(xy[0], xy[1]);
-        setSprings(fn(handLength, down, dragging, active, curIndex));
+        setSprings(fn(handLength, width, down, dragging, active, curIndex));
 
         // @ts-ignore
         if (elem && elem.dataset.receive) {
@@ -142,7 +149,7 @@ export const PlayerHand = ({
       // ts-ignore
       onHover: ({ active, args: [originalIndex], down, dragging }) => {
         const curIndex = order.current?.indexOf(originalIndex);
-        setSprings(fn(handLength, down, dragging, active, curIndex));
+        setSprings(fn(handLength, width, down, dragging, active, curIndex));
       },
     },
     {
@@ -181,26 +188,32 @@ export const PlayerHand = ({
   /**
    * Returns card's canPlay boolean value if the object
    * exists in playerHand[i]; otherwise returns false.
-   * 
+   *
    * Note that this avoids breaking crashes when playing cards
    * and running `setSprings(fn(handLength));`
    */
-  const getCanPlay = useCallback((i: number) => {
-    if (playerHand[i]) return playerHand[i].canPlay;
-    return false;
-  }, [playerHand]);
+  const getCanPlay = useCallback(
+    (i: number) => {
+      if (playerHand[i]) return playerHand[i].canPlay;
+      return false;
+    },
+    [playerHand]
+  );
 
   /**
    * Returns card's uuid string value if the object
    * exists in playerHand[i]; otherwise returns `''`.
-   * 
+   *
    * Note that this avoids breaking crashes when playing cards
    * and running `setSprings(fn(handLength));`
    */
-  const getUuid = useCallback((i: number) => {
-    if (playerHand[i]) return playerHand[i].uuid;
-    return '';
-  }, [playerHand]);
+  const getUuid = useCallback(
+    (i: number) => {
+      if (playerHand[i]) return playerHand[i].uuid;
+      return '';
+    },
+    [playerHand]
+  );
 
   return (
     <Fragment>

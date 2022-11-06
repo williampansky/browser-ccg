@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { BoardProps, Client } from 'boardgame.io/react';
 import { Ctx } from 'boardgame.io';
 import { Card, GameState, Zone } from '../../types';
@@ -10,7 +10,8 @@ import { Zones } from './features/zones/components/Zones/Zones.Wrapper';
 import { showCardModal } from './features/card-modal/card-modal.slice';
 import useEndTurnButton from '../../hooks/useEndTurnButton';
 import useEndPhase from '../../hooks/useEndPhase';
-import { useGameOver } from '../../hooks';
+import { useGameOver, useWindowSize } from '../../hooks';
+import { setWindowSize } from './features/windowSize';
 
 const showDebug = false;
 
@@ -36,6 +37,7 @@ export const Board = (props: GameProps) => {
   const [addressBarSize, setAddressBarSize] = useState<number>(0);
 
   // hooks
+  const { height, width } = useWindowSize();
   const endTurnIsDisabled = useEndTurnButton(phase, G.playerTurnDone);
   const showGameOver = useGameOver(ctx?.gameover);
   const dispatch = useDispatch();
@@ -46,7 +48,7 @@ export const Board = (props: GameProps) => {
    * a mobile browser's address bar height; such as Android Chrome's URL bar.
    * @see [StackOverflow]{@link https://stackoverflow.com/a/54796813}
    */
-  const addressBarCallback = React.useCallback(() => {
+  const addressBarCallback = useCallback(() => {
     if (typeof document !== 'undefined') {
       setAddressBarSize(
         parseFloat(getComputedStyle(document.documentElement).perspective) -
@@ -55,7 +57,11 @@ export const Board = (props: GameProps) => {
     }
   }, []);
 
-  React.useLayoutEffect(() => {
+  useEffect(() => {
+    dispatch(setWindowSize({ height, width }));
+  }, [height, width]);
+
+  useLayoutEffect(() => {
     addressBarCallback();
   }, [addressBarCallback]);
 

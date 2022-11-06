@@ -8,6 +8,7 @@ import { config as springConfig } from 'react-spring';
 const fn =
   (
     items: number = 0,
+    windowWidth: number = 0,
     isDown: any = false,
     isDragging: any = false,
     isHovered: any = false,
@@ -72,7 +73,7 @@ const fn =
         y: 0,
         rotate: 0,
         scale: calcScale(items),
-        marginLeft: calcOffsetX(index, items),
+        marginLeft: calcOffsetX(index, items, windowWidth),
         marginTop: 0,
         zIndex: index * 1,
         cursor: 'grab',

@@ -3,6 +3,7 @@ import {
   cardModalSlice,
   configSlice,
   gameOverSlice,
+  windowSizeSlice,
   zonesRefSlice,
   zonesSlice,
 } from './features';
@@ -12,6 +13,7 @@ export const store = configureStore({
     cardModal: cardModalSlice,
     config: configSlice,
     gameOver: gameOverSlice,
+    windowSize: windowSizeSlice,
     zones: zonesSlice,
     zonesRef: zonesRefSlice,
   },

@@ -3,6 +3,7 @@ const calcScale = (total: number) => {
 
   // prettier-ignore
   switch (total) {
+    case 1:   return scale * 1.65;
     case 2:   return scale * 1.5;
     case 3:   return scale * 1.35;
     case 4:   return scale * 1.25;
