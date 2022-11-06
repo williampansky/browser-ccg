@@ -12,6 +12,7 @@ import useEndTurnButton from '../../hooks/useEndTurnButton';
 import useEndPhase from '../../hooks/useEndPhase';
 import { useGameOver, useWindowSize } from '../../hooks';
 import { setWindowSize } from './features/windowSize';
+import { GameOverOverlay } from './features/game-over';
 
 const showDebug = false;
 
@@ -39,9 +40,9 @@ export const Board = (props: GameProps) => {
   // hooks
   const { height, width } = useWindowSize();
   const endTurnIsDisabled = useEndTurnButton(phase, G.playerTurnDone);
-  const showGameOver = useGameOver(ctx?.gameover);
   const dispatch = useDispatch();
   useEndPhase(events, phase, G.playerTurnDone);
+  useGameOver(ctx?.gameover);
 
   /**
    * Uses html.perspective CSS property, which is set to 100vh, to determine
@@ -69,18 +70,6 @@ export const Board = (props: GameProps) => {
     return moves.setDone('0');
   };
 
-  const resetGame = () => {
-    reset();
-    setTimeout(() => window.location.reload());
-  };
-
-  const getWinner = (ctx: Ctx): string | null => {
-    if (!ctx.gameover) return null;
-    if (ctx.gameover.draw) return 'Draw...';
-    if (ctx.gameover.winner === '0') return 'Victory!';
-    else return 'Defeat...';
-  };
-
   const onCardClick = (obj: Card) => {
     dispatch(showCardModal(obj));
   };
@@ -103,35 +92,7 @@ export const Board = (props: GameProps) => {
 
   return (
     <>
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-          zIndex: 999,
-          background: 'rgba(0, 0, 0, 0.825)',
-          display: showGameOver ? 'flex' : 'none',
-          flexFlow: 'column nowrap',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <h2 style={{ color: 'white' }}>{getWinner(ctx)}</h2>
-        <div
-          style={{
-            display: 'flex',
-            flexFlow: 'column nowrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <h3>
-            <button onClick={() => resetGame()}>Replay?</button>
-          </h3>
-        </div>
-      </div>
+      <GameOverOverlay playerId={playerID} reset={reset} />
 
       {/* debug stuff */}
       {showDebug && (
@@ -167,7 +128,7 @@ export const Board = (props: GameProps) => {
           width: '100vw',
           maxWidth: '100vw',
           minWidth: '100vw',
-          filter: showGameOver ? 'blur(2px)' : 'none',
+          // filter: ctx?.gameover ? 'blur(2px)' : 'none',
           height: `calc(100vh - ${addressBarSize}px)`,
           maxHeight: `calc(100vh - ${addressBarSize}px)`,
           minHeight: `calc(100vh - ${addressBarSize}px)`,

@@ -14,6 +14,7 @@ export type {
 } from './card.interface';
 
 export type {
+  GameOver,
   GameState,
   Counts,
   CardIndex,
