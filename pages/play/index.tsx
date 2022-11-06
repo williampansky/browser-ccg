@@ -1,31 +1,15 @@
 import { Fragment, FunctionComponent } from 'react';
-import { Client } from 'boardgame.io/react';
-import { BrowserCCG } from '../../game';
-import { SocketIO } from 'boardgame.io/multiplayer';
-
-import { Client as BoardgameClient } from 'boardgame.io/react';
 import { EffectsBoardWrapper } from 'bgio-effects/react';
-import { Local } from 'boardgame.io/multiplayer';
+import { Client as BoardgameClient } from 'boardgame.io/react';
+import { Local, SocketIO } from 'boardgame.io/multiplayer';
 import { MCTSBot } from 'boardgame.io/ai';
-import { Board } from './Board';
-import { v4 as uuid } from 'uuid';
-import { store } from './store';
 import { Provider } from 'react-redux';
-import Head from 'next/head';
-import { noOverlayWorkaroundScript } from '../_app';
-// import '../../styles/game.scss';
+import { v4 as uuid } from 'uuid';
 
-// @todo figure out better solution here
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION__?: any;
-  }
-}
-
-// const REDUX_DEVTOOLS =
-//   typeof window !== 'undefined' &&
-//   window?.__REDUX_DEVTOOLS_EXTENSION__ &&
-//   window?.__REDUX_DEVTOOLS_EXTENSION__();
+import { BrowserCCG } from '../../game';
+import { Board } from './Board';
+import { store } from './store';
+import useGlobalGameStyles from './useGlobalGameStyles';
 
 const MultiplayerSetup = (isMultiplayer: boolean = false) => {
   if (isMultiplayer) return SocketIO();
@@ -47,10 +31,11 @@ const BrowserCcgClient = BoardgameClient({
   multiplayer: MultiplayerSetup(),
   numPlayers: 1,
   debug: false,
-  // enhancer: REDUX_DEVTOOLS,
 });
 
 const BrowserCcgPage: FunctionComponent = () => {
+  useGlobalGameStyles();
+
   return (
     <Fragment>
       <Provider store={store}>
