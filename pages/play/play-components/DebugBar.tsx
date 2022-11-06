@@ -32,6 +32,10 @@ export const DebugBar = ({
       </div>
 
       <div>
+        zone1: <code>{G.zones[0]?.name}</code> / zone2: <code>{G.zones[1]?.name}</code> / zone3: <code>{G.zones[2]?.name}</code>
+      </div>
+
+      <div>
         selectedCardData: <code>{G.selectedCardData[pID]?.id}</code>
       </div>
       

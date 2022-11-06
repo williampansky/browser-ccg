@@ -22,11 +22,11 @@ const mobile = (index: number, total: number): number => {
 
   if (total === 5) {
     calc = 78;
-    if (index === 0) return calc * -3.15;
-    if (index === 1) return calc * -1.65;
+    if (index === 0) return calc * -3.35;
+    if (index === 1) return calc * -1.7;
     if (index === 2) return 0;
-    if (index === 3) return calc * 1.65;
-    if (index === 4) return calc * 3.15;
+    if (index === 3) return calc * 1.7;
+    if (index === 4) return calc * 3.35;
   }
 
   if (total === 6) {
