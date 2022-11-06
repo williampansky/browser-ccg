@@ -21,7 +21,8 @@ const createCardObject = (obj: CardBase): Card => {
     powerStream: [],
     revealed: false,
     revealedOnTurn: 0,
-    type: type ? type : CardType.Card,
+    // type: type ? type : CardType.Card,
+    type: type ? type : 'CARD',
     uuid: uuid(),
     zonePowerAdjustment: 0,
     imageFlairSrc: `sets/SET_002/${id}-CARD.jpg`

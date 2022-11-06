@@ -3,9 +3,10 @@ export { default as counts } from './counts.state';
 export { default as defaultState } from './default.state';
 export { default as firstRevealer } from './first-revealer.state';
 export { default as playedCards } from './played-cards.state';
+export { default as players } from './players.state';
 export { default as playerTurnDone } from './player-turn-done.state';
 export { default as selectedCardData } from './selected-card-data.state';
 export { default as selectedCardIndex } from './selected-card-index.state';
-export { default as zonesCardsReference } from './zones-cards-reference.state'
-export { default as zones } from './zones.state';
 export { default as turn } from './turn.state';
+export { default as zones } from './zones.state';
+export { default as zonesCardsReference } from './zones-cards-reference.state';

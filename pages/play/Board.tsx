@@ -8,7 +8,7 @@ import { BoardProps, Client } from 'boardgame.io/react';
 import { Ctx } from 'boardgame.io';
 import { Card, GameState, Zone } from '../../types';
 import { CardModal } from './features/card-modal/CardModal';
-import { EndTurnButton, PlayerHand } from '../../components';
+import { EndTurnButton, Player, PlayerHand } from '../../components';
 import type { RootState } from './store';
 import { useSelector, useDispatch } from 'react-redux';
 import { Zones } from './features/zones/components/Zones/Zones.Wrapper';
@@ -221,6 +221,8 @@ export const Board = (props: GameProps) => {
         </div>
 
         <Zones player={yourID} opponent={opponentID} />
+
+        <Player player={G.players[yourID]} />
 
         <PlayerHand
           G={G}

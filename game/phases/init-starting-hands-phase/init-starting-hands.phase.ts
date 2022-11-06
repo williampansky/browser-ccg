@@ -24,8 +24,8 @@ const initStartingHandsPhase: PhaseConfig = {
     }
 
     // set decks
-    G.players['0'].cards.deck = createRandomDeck(G, ctx, CARD_DATABASE);
-    G.players['1'].cards.deck = createRandomDeck(G, ctx, CARD_DATABASE);
+    // G.players['0'].cards.deck = createRandomDeck(G, ctx, CARD_DATABASE);
+    // G.players['1'].cards.deck = createRandomDeck(G, ctx, CARD_DATABASE);
 
     // init hands
     [...Array(G.gameConfig.numerics.cardsPerStartingHand)].forEach(() => {
@@ -34,15 +34,11 @@ const initStartingHandsPhase: PhaseConfig = {
     });
   },
   endIf: (G: GameState) => {
-    // end phase when both players have cards in hand and in deck
-    const perDeck = G.gameConfig.numerics.cardsPerDeck;
+    // end phase when both players have cards in hand
     const perStartingHand = G.gameConfig.numerics.cardsPerStartingHand;
-    const startingDeckLength = Math.abs(perDeck - perStartingHand);
 
     return (
-      G.players['0'].cards.deck.length === startingDeckLength &&
       G.players['0'].cards.hand.length === perStartingHand &&
-      G.players['1'].cards.deck.length === startingDeckLength &&
       G.players['1'].cards.hand.length === perStartingHand
     );
   },

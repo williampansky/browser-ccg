@@ -1,3 +1,4 @@
+export { default as initPlayersPhase } from './init-players.phase';
 export { default as initZoneInteractionsPhase } from './init-zone-interactions.phase';
 export { default as revealCardsFaceDownPhase } from './reveal-cards-face-down.phase';
 export { default as revealCardsPhase } from './reveal-cards.phase';

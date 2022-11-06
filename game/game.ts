@@ -9,6 +9,7 @@ import {
   handleZonePowerCalculationsPhase,
   incrementGameTurnPhase,
   initCardMechanicsPhase,
+  initPlayersPhase,
   initStartingHandsPhase,
   initZoneInteractionsPhase,
   initZonesPhase,
@@ -48,6 +49,7 @@ const BrowserCCG: Game<GameState, Ctx & EffectsCtxMixin<typeof bgioEffectsConfig
    * @see https://boardgame.io/documentation/#/phases
    *
    * Order of Phases:
+   *  - initPlayers
    *  - initZones
    *  - initStartingHands
    *
@@ -67,10 +69,14 @@ const BrowserCCG: Game<GameState, Ctx & EffectsCtxMixin<typeof bgioEffectsConfig
    *  - etc... loop until game ends
    */
   phases: {
+    initPlayers: {
+      ...initPlayersPhase,
+      next: 'initZones',
+      start: true,
+    },
     initZones: {
       ...initZonesPhase,
       next: 'initStartingHands',
-      start: true,
     },
     initStartingHands: {
       ...initStartingHandsPhase,

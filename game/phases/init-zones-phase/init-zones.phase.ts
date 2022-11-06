@@ -5,7 +5,6 @@ import { createZoneObject, logPhaseToConsole } from '../../../utils';
 import ZONE_DATABASE from '../../../tempZonesDatabase';
 
 const initZonesPhase: PhaseConfig = {
-  start: true,
   onBegin(G: GameState, ctx: Ctx) {
     const { random } = ctx;
     const randomZonesArray = random?.Shuffle(ZONE_DATABASE);
@@ -25,8 +24,6 @@ const initZonesPhase: PhaseConfig = {
     ctx.effects.effectsEnd();
 
     if (G.gameConfig.debugConfig.logPhaseToConsole) {
-      console.clear();
-
       const zone0 = `${newZones[0].name} (${newZones[0].id})`;
       const zone1 = `${newZones[1].name} (${newZones[1].id})`;
       const zone2 = `${newZones[2].name} (${newZones[2].id})`;

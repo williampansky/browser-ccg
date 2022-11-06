@@ -1,6 +1,11 @@
-import { CardType } from "../enums";
+import { CardType as CardTypeEnums } from '../enums';
 
 export declare type CardId = string;
+export declare type CardType =
+  | CardTypeEnums.Card
+  | CardTypeEnums.Minion
+  | CardTypeEnums.Spell
+  | CardTypeEnums.Weapon;
 
 /**
  * Base card information from the database/API, which gets
@@ -14,7 +19,7 @@ export interface CardBase {
   mechanic?: string;
   name: string;
   power: number;
-  type?: CardType.Card | CardType.Minion | CardType.Spell | CardType.Weapon;
+  type?: CardType | string;
 }
 
 /**
@@ -70,7 +75,7 @@ export interface Card {
   revealedOnTurn: number;
   set?: string;
   sounds?: Record<string, string>;
-  type: CardType.Card | CardType.Minion | CardType.Spell | CardType.Weapon;
+  type?: CardType | string;
   uuid: string;
   zonePowerAdjustment: number;
 }
