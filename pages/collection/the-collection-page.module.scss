@@ -1,0 +1,21 @@
+.page {
+  --card-height: 100px;
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1em;
+  justify-items: center;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.grid-item {
+  width: fit-content;
+
+  div[data-component="Card"] {
+    margin: 0 !important;
+  }
+}

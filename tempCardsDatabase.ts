@@ -89,7 +89,7 @@ export default [
     rarity: 'FREE',
   },
   {
-    id: 'CORE_011',
+    id: 'CORE_020',
     name: 'Mercenaries',
     cost: 5,
     power: 5,
@@ -97,7 +97,7 @@ export default [
     description: 'Add a 1/1 card to each other zone',
     rarity: 'SUPERIOR',
   },
-  { id: 'CORE_011', name: 'Generic Blob', cost: 5, power: 9, rarity: 'FREE' },
+  { id: 'CORE_020a', name: 'Generic Blob', cost: 5, power: 9, rarity: 'FREE' },
   {
     id: 'CORE_012',
     name: 'Whiz Kid',
@@ -172,7 +172,7 @@ export default [
     rarity: 'MYTHIC',
   },
   {
-    id: 'CORE_020',
+    id: 'CORE_109',
     name: 'Horrific Primordial',
     cost: 8,
     power: 3,
