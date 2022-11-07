@@ -78,8 +78,10 @@ export const Minion = ({
       />
       
       <MinionImage
-        imageSrc={id ? `../../../images/sets/SET_002/${id}-MINION.jpg` : `../../../images/sets/PLACEHOLDER.jpg`}
+        id={id}
         name={name}
+        set={set}
+        rarity={rarity}
       />
     </div>
   );

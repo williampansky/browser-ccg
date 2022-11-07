@@ -1,6 +1,6 @@
 $useFullBorder: true;
 
-.image__wrapper {
+.wrapper {
   align-items: center;
   background-color: #191919;
   border-bottom-left-radius: var(--minion-border-radius);
@@ -19,11 +19,51 @@ $useFullBorder: true;
 
   @if $useFullBorder {
     border: 1px solid transparent;
-    border-top-color: #fff;
-    border-left-color: rgb(214, 209, 209);
-    border-right-color: rgb(214, 209, 209);
-    border-bottom-color: #777;
     will-change: border-color;
+
+    &,
+    &.FREE {
+      border-top-color: #fff;
+      border-left-color: rgb(214, 209, 209);
+      border-right-color: rgb(214, 209, 209);
+      border-bottom-color: #777;
+    }
+
+    &,
+    &.COMMON {
+      border-top-color: #b0ffb3;
+      border-left-color: var(--color-rarity-COMMON);
+      border-right-color: var(--color-rarity-COMMON);
+      border-bottom-color: rgb(99, 229, 103);
+    }
+    
+    &.SUPERIOR {
+      border-top-color: #c7edff;
+      border-left-color: var(--color-rarity-SUPERIOR);
+      border-right-color: var(--color-rarity-SUPERIOR);
+      border-bottom-color: #2885b1;
+    }
+    
+    &.REMARKABLE {
+      border-top-color: #c8a0ff;
+      border-left-color: var(--color-rarity-REMARKABLE);
+      border-right-color: var(--color-rarity-REMARKABLE);
+      border-bottom-color: #7f37e4;
+    }
+    
+    &.MYTHIC {
+      border-top-color: #ffb8a5;
+      border-left-color: var(--color-rarity-MYTHIC);
+      border-right-color: var(--color-rarity-MYTHIC);
+      border-bottom-color: #af3d1f;
+    }
+    
+    &.GOLDEN {
+      border-top-color: #fff897;
+      border-left-color: var(--color-rarity-GOLDEN);
+      border-right-color: var(--color-rarity-GOLDEN);
+      border-bottom-color: #ccbf10;
+    }
   } @else {
     border-top: 1px solid rgba(255, 255, 255, 0.65);
     border-bottom: 1px solid rgba(0, 0, 0, 0.875);

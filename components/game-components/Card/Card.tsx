@@ -1,9 +1,6 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { Card as CardProps } from '../../../types';
-import {
-  createMarkup,
-  fontSizeBasedOnCharacterLength,
-} from '../../../utils';
+import { createMarkup, fontSizeBasedOnCharacterLength } from '../../../utils';
 
 import { CardBaseImage } from './CardBaseImage/CardBaseImage';
 import { CardCost } from './CardCost/CardCost';
@@ -64,6 +61,19 @@ export const Card = ({
     zonePowerAdjustment,
   } = card;
 
+  // const [textWidth, setTextWidth] = useState<number>(0);
+
+  // useEffect(() => {
+  //   const cardElem = document?.getElementById(uuid);
+  //   const textElem = cardElem?.querySelector('[data-component="CardText"] svg');
+
+  //   if (cardElem) {
+  //     // @ts-ignore
+  //     const width = textElem.width.baseVal.value;
+  //     setTextWidth(width);
+  //   }
+  // }, [card]);
+
   return (
     <div
       className={[
@@ -82,7 +92,7 @@ export const Card = ({
         badgeImgSrc={'/images/card-assets/BADGE_SWORD.png'}
       />
 
-      <CardRarityGem rarity={rarity} />
+      {/* <CardRarityGem rarity={rarity} /> */}
       <CardName name={name} formatter={fontSizeBasedOnCharacterLength} />
       <CardText text={createMarkup(description)} />
       <CardTypeLabel race={race} type={type} formatter={(val: any) => val} />
@@ -99,16 +109,8 @@ export const Card = ({
         badgeImgSrc={'/images/card-assets/SUBTYPE_WRAPPER.png'}
       />
 
-      <CardFlairImage
-        name={name}
-        set={set}
-        id={id}
-      />
-
-      <CardBaseImage
-        imageAlt={rarity}
-        imageSrc={'/images/cards/fronts/NONE.png'}
-      />
+      <CardFlairImage name={name} set={set} id={id} />
+      <CardBaseImage rarity={rarity} type={type} />
     </div>
   );
 };

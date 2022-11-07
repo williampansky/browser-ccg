@@ -1,24 +1,40 @@
-import { ReactElement } from 'react';
+import Image from 'next/image';
 import styles from './minion-image.module.scss';
+import PLACEHOLDER from '../../../../public/images/sets/PLACEHOLDER.jpg';
 
 export interface ReactMinionImageProps {
   imageSrc?: string;
   name?: string;
+  id?: string;
+  set?: string;
+  rarity?: string;
   placeholderSrc?: string;
 }
 
 export const MinionImage = ({
   imageSrc,
   name,
+  id,
+  set,
+  rarity,
   placeholderSrc,
-}: ReactMinionImageProps): ReactElement => {
+}: ReactMinionImageProps) => {
+  const tempset = 'SET_002';
+  const src = id ? `/images/sets/${tempset}/${id}-MINION.jpg` : PLACEHOLDER;
+  const rare = rarity ? rarity : 'NONE';
+
   return (
-    <div className={styles['image__wrapper']} data-file='Minion/image'>
-      <img
+    <div
+      className={[styles['wrapper'], styles[rare]].join(' ')}
+      data-component='MinionImage'
+    >
+      <Image
         alt={name}
-        className={styles['image']}
+        className={styles['component']}
+        layout='fill'
+        priority
         role='presentation'
-        src={imageSrc}
+        src={src}
       />
     </div>
   );

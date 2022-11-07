@@ -1,6 +1,7 @@
 .card__text {
   align-items: center;
   bottom: 0;
+  color: white;
   display: flex;
   flex-flow: column nowrap;
   font-size: calc(var(--card-height) / 26.666666667);
@@ -31,5 +32,10 @@
   small {
     display: inline-block;
     line-height: 1.1;
+  }
+
+  svg {
+    position: relative;
+    width: inherit;
   }
 }

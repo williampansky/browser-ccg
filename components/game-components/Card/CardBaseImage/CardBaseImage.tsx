@@ -1,23 +1,29 @@
-import { ReactElement } from 'react';
-import styles from './card-base-image.module.scss'
+import Image from 'next/image';
+import styles from './card-base-image.module.scss';
 
 interface CardBaseImageProps {
-  imageAlt?: string;
-  imageSrc?: any;
+  type?: string;
+  rarity?: string;
   placeholderBaseSrc?: string;
 }
 
 export const CardBaseImage = ({
-  imageAlt,
-  imageSrc,
+  type,
+  rarity,
   placeholderBaseSrc,
-}: CardBaseImageProps): ReactElement => {
+}: CardBaseImageProps) => {
+  const src = rarity
+    ? `/images/cards/fronts/${rarity}.png`
+    : '/images/cards/fronts/NONE.png';
+
   return (
-    <img
-      alt={imageAlt}
-      className={styles['base__image']}
-      role="presentation"
-      src={imageSrc}
+    <Image
+      alt={rarity}
+      className={styles['component']}
+      layout='fill'
+      priority
+      role='presentation'
+      src={src}
     />
   );
 };
