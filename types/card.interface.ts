@@ -19,6 +19,7 @@ export interface CardBase {
   mechanic?: string;
   name: string;
   power: number;
+  set?: string;
   type?: CardType | string;
 }
 

@@ -6,7 +6,7 @@ import { Card, CardBase } from '../types';
  * Creates a playable `Card` object from the provided card base info.
  */
 const createCardObject = (obj: CardBase): Card => {
-  const { id, cost, power, description, mechanic, name, type } = obj;
+  const { id, cost, power, description, mechanic, name, set, type } = obj;
 
   return {
     id,
@@ -21,11 +21,13 @@ const createCardObject = (obj: CardBase): Card => {
     powerStream: [],
     revealed: false,
     revealedOnTurn: 0,
-    // type: type ? type : CardType.Card,
-    type: type ? type : 'CARD',
+    set: set ? set : 'CORE_002',
+    type: type ? type : CardType.Card,
+    // type: type ? type : 'CARD',
     uuid: uuid(),
     zonePowerAdjustment: 0,
-    imageFlairSrc: `sets/SET_002/${id}-CARD.jpg`
+    // imageFlairSrc: `sets/SET_002/${id}-CARD.jpg`
+    imageFlairSrc: `/images/sets/${set}/${id}-CARD.jpg`
   } as Card;
 };
 

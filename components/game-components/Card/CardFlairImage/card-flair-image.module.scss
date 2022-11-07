@@ -1,4 +1,4 @@
-.card__flair__image__wrapper {
+.component {
   background-color: #191919;
   border-radius: var(--card-border-radius);
   height: calc(var(--card-height) / 1.739130435);
@@ -12,7 +12,7 @@
   z-index: 0;
 }
 
-.card__flair__image {
+.image {
   animation: img-fade 500ms linear forwards;
   image-rendering: pixelated;
   position: relative;
@@ -25,7 +25,7 @@
   }
 }
 
-.card__flair__loader {
+.loader {
   animation: placeHolderSwipe 2s infinite linear forwards;
   background: #191919;
   background-repeat: no-repeat;
