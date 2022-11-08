@@ -28,6 +28,10 @@ export const Header = () => {
         />
       </button>
       <Nav />
+
+      <div className='semver'>
+        <code>{`v${siteConfig.version}`}</code>
+      </div>
     </header>
   );
 };

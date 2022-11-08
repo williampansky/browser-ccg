@@ -13,7 +13,7 @@
 
 .site__nav ul {
   @include display-flex(column nowrap, center, center);
-  // list-style-type: none;
+  list-style-type: none;
   // width: fit-content;
   // padding: 0 1em;
   margin: 0 0 auto;

@@ -1,9 +1,12 @@
-.page {
+.collection__page {
   --card-height: 100px;
   width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  padding-bottom: 22vh;
 }
 
-.grid {
+.collection__page .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 1em;
@@ -12,7 +15,7 @@
   margin: 0 auto;
 }
 
-.grid-item {
+.collection__page .grid-item {
   width: fit-content;
 
   div[data-component="Card"] {

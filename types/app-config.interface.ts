@@ -57,12 +57,14 @@ export interface Page {
 
 export type PageId = string;
 export type Pages = Record<PageId, Page>;
+export type Version = string;
 
 export interface SiteConfig {
   shortName: string;
   longName: string;
   pages: Pages;
   footerButtons: Pages;
+  version: Version;
 }
 
 export interface AppConfig {

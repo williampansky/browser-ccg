@@ -1,3 +1,4 @@
+export { Card } from './Card';
 export { EndTurnButton } from './EndTurnButton';
-export { PlayerHand } from './Hands';
 export { Player } from './Player';
+export { PlayerHand } from './Hands';

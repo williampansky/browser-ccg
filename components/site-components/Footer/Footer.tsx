@@ -1,9 +1,23 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Fragment } from 'react';
+import { FaRss, FaStoreAlt } from 'react-icons/fa';
+import { GiCardPick } from 'react-icons/gi';
+import { RiPlayCircleFill, RiAccountCircleFill } from 'react-icons/ri';
 import { siteConfig } from '../../../config.app';
 const { footerButtons } = siteConfig;
 
+const getFooterIcon = (name: string) => {
+  // prettier-ignore
+  switch (name) {
+    case 'Store': return <FaStoreAlt />;
+    case 'Cards': return <GiCardPick />;
+    case 'Play': return <RiPlayCircleFill />;
+    case 'News': return <FaRss />;
+    case 'Profile': return <RiAccountCircleFill />;
+  }
+}
+
+// FaStoreAlt
 export const Footer = () => (
   <footer className='site__footer'>
     <nav className='footer__nav'>
@@ -17,16 +31,17 @@ export const Footer = () => (
             <li key={key}>
               <Link href={page.route}>
                 <a className='item'>
-                  <Image
+                  {/* <Image
                     alt={page.name}
                     className='item__icon'
                     color='inherit'
-                    height={isPlayPage ? 40 : 20}
-                    width={isPlayPage ? 40 : 20}
+                    height={isPlayPage ? 20 : 20}
+                    width={isPlayPage ? 20 : 20}
                     priority
                     role='presentation'
                     src={`/images/icons/${page.icon}.svg`}
-                  />
+                  /> */}
+                  {getFooterIcon(page.name)}
                   <span className='item__text'>{page.name}</span>
                 </a>
               </Link>

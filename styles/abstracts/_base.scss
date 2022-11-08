@@ -2,6 +2,7 @@ html,
 body,
 #__next,
 #__next > main {
+  color: #d1d1d1;
   background: #151515;
   width: 100vw;
   min-width: 100vw;
@@ -30,4 +31,8 @@ body {
   box-sizing: border-box;
   text-rendering: optimizeLegibility;
   user-select: none;
+}
+
+a {
+  color: #8cc8ff;
 }

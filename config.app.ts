@@ -46,7 +46,7 @@ export const sitePages: Pages = {
   },
   collection: {
     description: '',
-    name: 'Collection',
+    name: 'Cards',
     route: '/collection',
   },
   faq: {
@@ -106,6 +106,7 @@ export const siteConfig: SiteConfig = {
   longName: 'Browser-CCG',
   pages: sitePages,
   footerButtons: footerButtons,
+  version: '0.0.1'
 };
 
 const appConfig: AppConfig = {

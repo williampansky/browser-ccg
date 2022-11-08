@@ -1,15 +1,13 @@
-import { GetStaticProps } from 'next';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Card as CardComponent } from '../../components/game-components/Card/Card';
-import { Layout } from '../../components/site-components';
-import tempCardsDatabase from '../../tempCardsDatabase';
-import { tempUsers } from '../../tempUsers';
-import { Account, Card, CardBase } from '../../types';
+import { Container, Layout } from '../../components/site-components';
+import { Card as CardComponent } from '../../components/game-components';
 import { createCardObject } from '../../utils';
-import styles from './the-collection-page.module.scss';
+import type { Card, CardBase } from '../../types';
+import { siteConfig } from '../../config.app';
+import tempCardsDatabase from '../../tempCardsDatabase';
 
 export default function TheCollectionPage() {
+  const page = siteConfig.pages.changelog;
   const [cards, setCards] = useState<Card[]>([]);
 
   useEffect(() => {
@@ -22,29 +20,21 @@ export default function TheCollectionPage() {
   }, [tempCardsDatabase]);
 
   return (
-    <Layout title='Collection'>
-      <h1>Collection</h1>
-      <div className={styles['page']}>
-        <div className={styles['grid']}>
-          {cards.map((c: Card) => {
-            return c ? (
-              <div key={c.uuid} className={styles['grid-item']}>
-                <CardComponent {...c} canPlay={true} />
-              </div>
-            ) : null;
-          })}
-        </div>
+    <Layout title={page.name} description={page.description}>
+      <div className={`${page.name.toLocaleLowerCase()}__page`}>
+        <Container>
+          <h1>{page.name}</h1>
+          <div className='grid'>
+            {cards.map((c: Card) => {
+              return c ? (
+                <div key={c.uuid} className='grid-item'>
+                  <CardComponent {...c} canPlay={true} />
+                </div>
+              ) : null;
+            })}
+          </div>
+        </Container>
       </div>
     </Layout>
   );
 }
-
-// export const getStaticProps: GetStaticProps = async () => {
-//   // Example for including static props in a Next.js function component page.
-//   // Don't forget to include the respective types for any props passed into
-//   // the component.
-//   const items: Account[] = tempUsers;
-//   return { props: { items } };
-// };
-
-// export default WithStaticProps;

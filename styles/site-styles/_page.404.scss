@@ -1,0 +1,6 @@
+.custom404__page {
+  @include display-flex(column nowrap, center, center);
+  height: 50%;
+  width: 100%;
+  text-align: center;
+}

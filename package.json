@@ -1,6 +1,6 @@
 {
   "name": "browser-ccg",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -20,6 +20,7 @@
     "next": "^12.3.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-icons": "^4.6.0",
     "react-redux": "^8.0.4",
     "react-scripts": "5.0.1",
     "react-spring": "^9.5.5",
@@ -36,6 +37,7 @@
     "@types/node": "^16.11.62",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
+    "@types/semver": "^7.3.13",
     "@types/uuid": "^8.3.4",
     "@types/webpack-env": "^1.18.0",
     "jest-matcher-one-of": "^1.0.2",
