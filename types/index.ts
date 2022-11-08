@@ -4,6 +4,9 @@ export type {
   AppConfig,
   GameConfig,
   SiteConfig,
+  Page,
+  Pages,
+  PageId
 } from './app-config.interface';
 
 export type {

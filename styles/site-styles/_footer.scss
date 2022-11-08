@@ -1,0 +1,46 @@
+.site__footer {
+  @include position-fixed(auto, 0, 0, 0, 100);
+}
+
+.footer__nav {
+  ul {
+    @include display-flex(row nowrap, flex-end, space-evenly);
+    list-style-type: none;
+    width: 100vw;
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+  }
+
+  a {
+    @include display-flex(column nowrap, center, flex-end);
+    color: white;
+    // height: 40px;
+    // min-height: 40px;
+    // max-height: 40px;
+    white-space: nowrap;
+    line-height: 1;
+    font-family: var(--font-family-card);
+    font-size: 0.625em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1em 2em;
+  }
+
+  a[href='/play'] {
+    // height: 80px;
+    // min-height: 80px;
+    // max-height: 80px;
+  }
+
+  a span {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  a .item__text {
+    margin-top: 0.5em;
+    white-space: nowrap;
+  }
+}

@@ -1,67 +1,31 @@
-import React, { ReactNode } from 'react';
+import React, { Fragment, ReactNode } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
+
+import { Footer } from '../Footer';
+import { Header } from '../Header';
 
 type Props = {
   children?: ReactNode;
   title?: string;
+  description?: string;
 };
 
-export const Layout = ({ children, title = 'BCG' }: Props) => (
-  <div>
+export const Layout = ({ children, title, description }: Props) => (
+  <Fragment>
     <Head>
       <title>{`BCG | ${title}`}</title>
       <meta charSet='utf-8' />
       <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      <meta
+        name='description'
+        property='og:description'
+        content={description}
+      />
     </Head>
-    <header>
-      <nav>
-        <ul
-          style={{
-            display: 'flex',
-            flexFlow: 'row nowrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            listStyleType: 'none',
-            padding: 0
-          }}
-        >
-          <li>
-            <Link href='/'>
-              <a>Home</a>
-            </Link>
-          </li>
-          <li style={{ margin: '0 0.25em', color: 'lightgray' }}>|</li>
-          <li>
-            <Link href='/about'>
-              <a>About</a>
-            </Link>
-          </li>
-          <li style={{ margin: '0 0.25em', color: 'lightgray' }}>|</li>
-          <li>
-            <Link href='/users'>
-              <a>Users</a>
-            </Link>
-          </li>
-          <li style={{ margin: '0 0.25em', color: 'lightgray' }}>|</li>
-          <li>
-            <Link href='/api-list'>
-              <a>Api List</a>
-            </Link>
-          </li>
-          <li style={{ margin: '0 0.25em', color: 'lightgray' }}>|</li>
-          <li>
-            <Link href='/play'>
-              <a>Play</a>
-            </Link>
-          </li>
-        </ul>
-      </nav>
-    </header>
-    {children}
-    <footer>
-      <hr />
-      <span>I'm here to stay (Footer)</span>
-    </footer>
-  </div>
+    
+    <Header />
+    <main className='site__main'>{children}</main>
+    <Footer />
+  </Fragment>
 );

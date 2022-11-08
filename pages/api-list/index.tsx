@@ -1,9 +1,12 @@
 import Link from 'next/link';
+import { siteConfig } from '../../config.app';
 import { Layout } from '../../components/site-components';
+
+const { pages: { apiList } } = siteConfig;
 
 export default function ApiList() {
   return (
-    <Layout title='Api List | Next.js + TypeScript Example'>
+    <Layout title={apiList.name} description={apiList.description}>
       <h1>Apis List</h1>
       <p>
         Example fetching data from inside <code>getStaticProps()</code>.
