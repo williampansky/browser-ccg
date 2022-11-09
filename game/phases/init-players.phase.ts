@@ -2,7 +2,7 @@ import { Ctx, PhaseConfig } from 'boardgame.io';
 import tempCardsDatabase from '../../tempCardsDatabase';
 import { GameState } from '../../types';
 import { createRandomDeck, logPhaseToConsole } from '../../utils';
-import { actionPoints, players } from '../state';
+import { actionPoints, playerNames, players } from '../state';
 
 const initPlayersPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
@@ -11,6 +11,7 @@ const initPlayersPhase: PhaseConfig = {
       logPhaseToConsole(G.turn, ctx.phase);
     }
 
+    playerNames.set(G, '0', 'Player');
     players.set(G, '0', {
       actionPoints: actionPoints.defaultState['0'],
       cards: {
@@ -24,6 +25,7 @@ const initPlayersPhase: PhaseConfig = {
       playerId: '0',
     });
 
+    playerNames.set(G, '1', 'Opponent');
     players.set(G, '1', {
       actionPoints: actionPoints.defaultState['1'],
       cards: {

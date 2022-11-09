@@ -1,6 +1,6 @@
 import type { GameConfig } from './app-config.interface';
 import type { Card } from './card.interface';
-import type { ActionPoints, PlayerID } from './player.interface';
+import type { ActionPoints, PlayerID, PlayerName } from './player.interface';
 import type {Player} from './player.interface';
 import type {Zone} from './zone.interface';
 
@@ -27,6 +27,7 @@ export interface GameState {
   firstRevealer: PlayerID;
   playedCards: Record<PlayerID, Card[]>;
   players: Record<PlayerID, Player>;
+  playerNames: Record<PlayerID, PlayerName>;
   playerTurnDone: Record<PlayerID, boolean>;
   selectedCardData: Record<PlayerID, Card | undefined>;
   selectedCardIndex: SelectedCardIndex;

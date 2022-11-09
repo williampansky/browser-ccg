@@ -142,7 +142,7 @@ export const Board = (props: GameProps) => {
               color: 'white',
             }}
           >
-            {G.players['1']?.displayName}
+            {G.playerNames['1']}
           </div>
           <div
             style={{
@@ -261,7 +261,7 @@ export const Board = (props: GameProps) => {
               color: 'white',
             }}
           >
-            {G.players['0']?.displayName}
+            {G.playerNames['0']}
           </div>
           {/* <ActionPoints player={playerID} /> */}
           <div

@@ -3,10 +3,10 @@ export type { Account } from './account.interface';
 export type {
   AppConfig,
   GameConfig,
-  SiteConfig,
   Page,
+  PageId,
   Pages,
-  PageId
+  SiteConfig,
 } from './app-config.interface';
 
 export type {
@@ -17,18 +17,19 @@ export type {
 } from './card.interface';
 
 export type {
+  CardIndex,
+  Counts,
   GameOver,
   GameState,
-  Counts,
-  CardIndex,
   SelectedCardIndex,
 } from './g.interface';
 
 export type {
-  Player,
   ActionPoints,
+  Player,
   PlayerCards,
   PlayerID,
+  PlayerName,
 } from './player.interface';
 
 export type {

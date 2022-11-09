@@ -3,6 +3,7 @@ export { default as counts } from './counts.state';
 export { default as defaultState } from './default.state';
 export { default as firstRevealer } from './first-revealer.state';
 export { default as playedCards } from './played-cards.state';
+export { default as playerNames } from './player-names.state';
 export { default as players } from './players.state';
 export { default as playerTurnDone } from './player-turn-done.state';
 export { default as selectedCardData } from './selected-card-data.state';
