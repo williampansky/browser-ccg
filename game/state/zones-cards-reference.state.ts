@@ -1,4 +1,4 @@
-import { gameConfig } from '../../config.app';
+import { gameConfig } from '../../app.config';
 import { GameState, PlayerID } from '../../types';
 
 const zonesCardsReference = {

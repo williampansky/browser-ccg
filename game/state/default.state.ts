@@ -1,4 +1,4 @@
-import { gameConfig } from '../../config.app';
+import { gameConfig } from '../../app.config';
 import actionPoints from './action-points.state';
 import counts from './counts.state';
 import firstRevealer from './first-revealer.state';

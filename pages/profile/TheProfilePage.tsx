@@ -1,5 +1,5 @@
 import { Container, Layout } from '../../components/site-components';
-import { siteConfig } from '../../config.app';
+import { siteConfig } from '../../app.config';
 
 export default function TheProfilePage() {
   const page = siteConfig.pages.profile;

@@ -1,5 +1,5 @@
 import { counts, defaultState } from '../';
-import { gameConfig } from '../../../config.app';
+import { gameConfig } from '../../../app.config';
 import { mockGameState } from '../../test-utils';
 
 describe('Handles G.counts state manipulation', () => {

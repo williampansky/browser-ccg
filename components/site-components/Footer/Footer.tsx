@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FaRss, FaStoreAlt } from 'react-icons/fa';
 import { GiCardPick } from 'react-icons/gi';
 import { RiPlayCircleFill, RiAccountCircleFill } from 'react-icons/ri';
-import { siteConfig } from '../../../config.app';
+import { siteConfig } from '../../../app.config';
 const { footerButtons } = siteConfig;
 
 const getFooterIcon = (name: string) => {

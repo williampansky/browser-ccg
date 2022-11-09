@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
-import { siteConfig } from '../../../config.app';
+import { siteConfig } from '../../../app.config';
 const { pages } = siteConfig;
 
 export const Nav = () => (

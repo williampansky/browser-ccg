@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment, ReactNode } from 'react';
-import { siteConfig } from '../../../config.app';
+import { siteConfig } from '../../../app.config';
 // const { breakpoints } = siteConfig;
 
 interface ContainerProps {

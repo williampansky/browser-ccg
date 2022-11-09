@@ -3,7 +3,7 @@ import { Container, Layout } from '../../components/site-components';
 import { Card as CardComponent } from '../../components/game-components';
 import { createCardObject } from '../../utils';
 import type { Card, CardBase } from '../../types';
-import { siteConfig } from '../../config.app';
+import { siteConfig } from '../../app.config';
 import tempCardsDatabase from '../../tempCardsDatabase';
 
 export default function TheCollectionPage() {

@@ -1,4 +1,4 @@
-import { gameConfig } from '../../config.app';
+import { gameConfig } from '../../app.config';
 import { GameState, Zone, ZoneBase } from '../../types';
 import tempZonesDatabase from '../../tempZonesDatabase';
 import createZoneObject from '../../utils/create-zone-object';

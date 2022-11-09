@@ -1,7 +1,7 @@
 import { e } from 'mathjs';
 import Link from 'next/link';
 import { Fragment, useState } from 'react';
-import { siteConfig } from '../../../config.app';
+import { siteConfig } from '../../../app.config';
 import { Nav } from '../Nav';
 const { pages } = siteConfig;
 

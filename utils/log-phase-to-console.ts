@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { gameConfig } from '../config.app';
+import { gameConfig } from '../app.config';
 
 const log = console.log;
 const key = chalk.gray;

@@ -1,4 +1,4 @@
-import { gameConfig } from '../../config.app';
+import { gameConfig } from '../../app.config';
 import { Counts, GameState, PlayerID } from '../../types';
 
 const counts = {

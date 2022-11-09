@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { Layout } from '../components';
 
-import { siteConfig } from '../config.app';
+import { siteConfig } from '../app.config';
 const {
   pages: { home },
 } = siteConfig;

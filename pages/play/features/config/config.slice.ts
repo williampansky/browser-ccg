@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { AppConfig } from '../../../../types';
-import appConfig from '../../../../config.app';
+import appConfig from '../../../../app.config';
 
 const initialState: AppConfig = appConfig;
 

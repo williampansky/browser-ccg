@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { siteConfig } from '../../config.app';
+import { siteConfig } from '../../app.config';
 import { Layout } from '../../components/site-components';
 
 const { pages: { apiList } } = siteConfig;
