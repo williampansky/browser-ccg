@@ -1,5 +1,5 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { GameState } from '../../../types';
+import { CardBase, GameState } from '../../../types';
 import {
   drawCardFromPlayersDeck,
   logPhaseToConsole,
@@ -14,12 +14,13 @@ const initStartingHandsPhase: PhaseConfig = {
     const { random } = ctx;
     logPhaseToConsole(G.turn, ctx.phase);
 
-    // debug opponents side interactions of CARD_10
+    // debug opponents side interactions of CARD_002
     if (G.gameConfig.debugConfig.debugCardId !== '') {
-      let randomCard3 = random!.Shuffle(CARD_DATABASE)[0];
-      let randomCard3Obj = createCardObject(randomCard3);
-      for (let index = 0; index < 2; index++) {
-        G.zones[0].sides['1'].push(randomCard3Obj);
+      for (let index = 0; index < 1; index++) {
+        // let debugCardBase = random!.Shuffle(CARD_DATABASE)[index];
+        let debugCardBase = CARD_DATABASE.find(obj => obj.id === 'CORE_008') as CardBase;
+        let debugCard = createCardObject(debugCardBase);
+        G.zones[0].sides['0'].push({ ...debugCard, revealed: true });
       }
     }
 

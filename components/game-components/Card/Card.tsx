@@ -87,7 +87,8 @@ export const Card = ({
       <CardCost cost={currentCost} />
 
       <CardPower
-        power={displayPower}
+        basePower={basePower}
+        currentPower={displayPower}
         elite={elite}
         badgeImgSrc={'/images/card-assets/BADGE_SWORD.png'}
       />

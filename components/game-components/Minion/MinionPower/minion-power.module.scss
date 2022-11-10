@@ -86,3 +86,13 @@
   right: -5px;
   top: -9px;
 }
+
+.attack__wrapper {
+  &.power--buffed .text  {
+    color: #1aff1a;
+  }
+
+  &.power--debuffed .text {
+    color: #ff5555;
+  }
+}

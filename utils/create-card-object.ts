@@ -6,7 +6,7 @@ import { Card, CardBase } from '../types';
  * Creates a playable `Card` object from the provided card base info.
  */
 const createCardObject = (obj: CardBase): Card => {
-  const { id, cost, power, description, mechanic, name, rarity, set, type } =
+  const { id, cost, elite, power, description, mechanic, name, rarity, set, type } =
     obj;
 
   return {
@@ -23,6 +23,7 @@ const createCardObject = (obj: CardBase): Card => {
     revealed: false,
     revealedOnTurn: 0,
     rarity: rarity ? rarity : 'NONE',
+    elite: elite ? elite : false,
     set: set ? set : 'CORE_002',
     type: type ? type : CardType.Card,
     // type: type ? type : 'CARD',

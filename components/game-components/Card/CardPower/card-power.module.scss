@@ -34,4 +34,12 @@
     position: absolute;
     image-rendering: pixelated;
   }
+
+  &--buffed {
+    color: #1aff1a;
+  }
+
+  &--debuffed {
+    color: #ff5555;
+  }
 }

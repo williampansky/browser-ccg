@@ -73,7 +73,8 @@ export const Minion = ({
       <MinionPower
         alternate={true}
         elite={elite}
-        power={displayPower}
+        basePower={basePower}
+        currentPower={displayPower}
         imageSrc={'../../../images/card-assets/TYPE_WRAPPER.png'}
       />
       

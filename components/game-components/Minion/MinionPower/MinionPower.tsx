@@ -2,14 +2,16 @@ import { ReactElement } from 'react';
 import styles from './minion-power.module.scss';
 
 export interface ReactMinionPowerProps {
-  power: number;
+  basePower: number;
+  currentPower: number;
   elite?: boolean;
   imageSrc?: string;
   alternate?: boolean;
 }
 
 export const MinionPower = ({
-  power,
+  basePower,
+  currentPower,
   elite = false,
   imageSrc,
   alternate = false,
@@ -19,12 +21,14 @@ export const MinionPower = ({
       className={[
         styles['attack__wrapper'],
         alternate ? styles['alternate'] : '',
+        currentPower > basePower ? styles['power--buffed'] : '',
+        basePower > currentPower ? styles['power--debuffed'] : '',
       ].join(' ')}
       data-component='MinionPower'
-      data-value={power}
+      data-value={currentPower}
     >
       <div className={[styles['text'], elite ? styles['elite'] : ''].join(' ')}>
-        <div className='text__value'>{power}</div>
+        <div className='text__value'>{currentPower}</div>
       </div>
       {elite ? (
         <img

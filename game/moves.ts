@@ -126,13 +126,13 @@ const revealCard = async (
 
   G.zones[zoneNumber].sides[playerId][objIndex] = cardToPush;
 
-  console.log(`
-      MOVE: revealCard()
-      CARD: [${cardToPush.id}] ${cardToPush.name}
-     ZONE#: ${zoneNumber}
-     SLOT#: ${objIndex}
-    PLAYER: ${playerId}
-  `);
+  // console.log(`
+  //     MOVE: revealCard()
+  //     CARD: [${cardToPush.id}] ${cardToPush.name}
+  //    ZONE#: ${zoneNumber}
+  //    SLOT#: ${objIndex}
+  //   PLAYER: ${playerId}
+  // `);
 
   // @ts-ignore
   ctx.effects.revealCard({

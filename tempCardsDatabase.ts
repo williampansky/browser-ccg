@@ -11,7 +11,7 @@ export default [
     id: 'CORE_002',
     name: 'Rookie Lancer',
     cost: 0,
-    power: 2,
+    power: 4,
     mechanic: '%ON_PLAY%',
     description: 'Give your other cards here -1 Power',
     rarity: 'FREE',

@@ -5,6 +5,7 @@ import type { EffectsCtxMixin } from 'bgio-effects/dist/types';
 import type { GameState, PlayerID } from '../types';
 
 import {
+  calculateCardMechanicsPhase,
   drawCardPhase,
   handleZonePowerCalculationsPhase,
   incrementGameTurnPhase,
@@ -60,7 +61,9 @@ const BrowserCCG: Game<GameState, Ctx & EffectsCtxMixin<typeof bgioEffectsConfig
    *  - revealCardsFaceDown
    *  - revealCards
    *  - initCardMechanics
+   *  - calculateCardMechanics
    *  - initZoneInteractions
+   *  - calculateZoneInteractions
    *  - handleZonePowerCalculations
    *
    *  - incrementGameTurn
@@ -108,6 +111,10 @@ const BrowserCCG: Game<GameState, Ctx & EffectsCtxMixin<typeof bgioEffectsConfig
     },
     initCardMechanics: {
       ...initCardMechanicsPhase,
+      next: 'calculateCardMechanics',
+    },
+    calculateCardMechanics: {
+      ...calculateCardMechanicsPhase,
       next: 'initZoneInteractions',
     },
     initZoneInteractions: {

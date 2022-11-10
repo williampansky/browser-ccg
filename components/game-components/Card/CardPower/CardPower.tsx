@@ -2,13 +2,15 @@ import { ReactElement } from 'react';
 import styles from './card-power.module.scss'
 
 interface CardPowerProps {
-  power: number;
+  basePower: number;
+  currentPower: number;
   elite?: boolean;
   badgeImgSrc?: string;
 }
 
 export const CardPower = ({
-  power,
+  basePower,
+  currentPower,
   elite = false,
   badgeImgSrc,
 }: CardPowerProps): ReactElement => {
@@ -17,10 +19,12 @@ export const CardPower = ({
       className={[
         styles['power'],
         elite ? styles['power__elite'] : '',
+        currentPower > basePower ? styles['power--buffed'] : '',
+        currentPower < basePower ? styles['power--debuffed'] : '',
       ].join(' ')}
     >
-      <div className='text__value' data-value={power}>
-        {power}
+      <div className='text__value' data-value={currentPower}>
+        {currentPower}
       </div>
       <img
         alt=''

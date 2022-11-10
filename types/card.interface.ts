@@ -21,6 +21,7 @@ export interface CardBase {
   power: number;
   rarity?: string;
   set?: string;
+  elite?: boolean;
   type?: CardType | string;
 }
 
