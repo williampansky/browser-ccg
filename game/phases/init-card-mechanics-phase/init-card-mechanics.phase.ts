@@ -6,6 +6,7 @@ import {
   createCardObject,
   drawCardFromPlayersDeck,
   getCardPower,
+  getContextualPlayerIds,
   logPhaseToConsole,
 } from '../../../utils';
 import { counts, firstRevealer } from '../../state';
@@ -47,16 +48,19 @@ function mechs(
   const {
     gameConfig,
     gameConfig: {
-      numerics: { cardsPerHand },
+      numerics: { cardsPerHand, numberOfSlotsPerZone },
     },
   } = G;
+
+  const { opponent } = getContextualPlayerIds(player);
 
   switch (card.id) {
     case 'CORE_002':
       G.zones[zoneIdx].sides[player].forEach((c: Card, i: number) => {
         const isNotCardPlayed = card.uuid !== c.uuid;
+        const cardIsBeforeCardPlayed = cardIdx > i;
 
-        if (isNotCardPlayed) {
+        if (isNotCardPlayed && cardIsBeforeCardPlayed) {
           c.powerStream.push({
             blame: 'CORE_002',
             adjustment: -1,
@@ -125,15 +129,39 @@ function mechs(
       break;
 
     case 'CORE_008':
-      if (G.players['0'].cards.hand.length >= 1) {
-        const randomCard = ctx.random?.Shuffle(G.players['0'].cards.hand)[0];
-        G.players['0'].cards.hand.forEach((c) => {
-          if (c.uuid === randomCard!.uuid) {
+      if (G.players[opponent].cards.hand.length >= 1) {
+        const rCard = ctx.random?.Shuffle(G.players[opponent].cards.hand)[0];
+        G.players[opponent].cards.hand.forEach((c) => {
+          if (c.uuid === rCard!.uuid) {
             c.currentCost = add(c.currentCost, 1);
-            console.log(randomCard?.currentCost, c.currentCost)
           }
         });
       }
+      break;
+
+    case 'CORE_010':
+      if (G.zones[zoneIdx].sides[opponent].length >= 2) {
+        card.powerStream.push({
+          blame: 'CORE_010',
+          adjustment: 2,
+          currentPower: add(card.displayPower, 2),
+        });
+
+        card.displayPower = getCardPower(card);
+      }
+      break;
+
+    case 'CORE_020':
+      G.zones.forEach((z, i) => {
+        if (zoneIdx !== i) {
+          if (z.sides[player].length < numberOfSlotsPerZone) {
+            const entourageCard = createCardObject(card.entourage![0]);
+            const entCardObj = { ... entourageCard, revealed: true };
+            z.sides[player].push(entCardObj);
+            G.zonesCardsReference[i][player].push(entCardObj);
+          }
+        }
+      });
       break;
 
     default:

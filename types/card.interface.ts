@@ -15,6 +15,7 @@ export declare type CardType =
 export interface CardBase {
   cost: number;
   description?: string;
+  entourage?: CardBase[];
   id: CardId;
   mechanic?: string;
   name: string;
@@ -55,7 +56,7 @@ export interface Card {
   description?: string;
   displayPower: number;
   elite?: boolean;
-  entourage?: string[];
+  entourage?: CardBase[];
   flavorText?: string;
   howToEarn?: string;
   howToEarnGolden?: string;

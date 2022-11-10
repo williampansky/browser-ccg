@@ -13,7 +13,8 @@
     // color: black;
   }
 
-  * {
+  *,
+  & * {
     user-select: none;
   }
 
@@ -38,6 +39,11 @@
 
   &.cant-play {
     color: #626262;
+
+    *,
+    & * {
+      // filter: brightness(0.5);
+    }
 
     p {
       color: #626262;

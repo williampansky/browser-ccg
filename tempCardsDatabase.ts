@@ -96,8 +96,10 @@ export default [
     mechanic: '%ON_PLAY%',
     description: 'Add a 1/1 card to each other zone',
     rarity: 'SUPERIOR',
+    entourage: [
+      { id: 'CORE_020a', name: 'Generic Blob', cost: 1, power: 1, rarity: 'FREE' },
+    ]
   },
-  { id: 'CORE_020a', name: 'Generic Blob', cost: 5, power: 9, rarity: 'FREE' },
   {
     id: 'CORE_012',
     name: 'Whiz Kid',

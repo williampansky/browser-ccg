@@ -19,3 +19,4 @@ export { default as logPhaseToConsole } from './log-phase-to-console';
 export { default as removeSymbols } from './remove-symbols';
 export { default as replaceAllConstants } from './replace-all-constants';
 export { default as replaceDynamicText } from './replace-dynamic-text';
+export { default as getContextualPlayerIds } from './get-contextual-player-ids';
