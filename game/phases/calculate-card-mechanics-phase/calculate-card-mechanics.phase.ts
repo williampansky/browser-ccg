@@ -10,15 +10,20 @@ const calculateCardMechanicsPhase: PhaseConfig = {
     logPhaseToConsole(G.turn, ctx.phase);
     const { first, second } = firstRevealer.getRevealOrder(G);
 
-    G.zones.forEach((zone: Zone, zoneIdx: number) => {
-      zone.sides['0'].forEach((card: Card, cardIdx: number) => {
-        if (cardIdx < zone.sides['0'].length - 1) {
-          card.displayPower = getCardPower(card); 
-        }
-      });
-    });
+    // G.zones.forEach((zone: Zone, zoneIdx: number) => {
+    //   zone.sides[first].forEach((card: Card, cardIdx: number) => {
+    //     if (cardIdx < zone.sides[first].length - 1) {
+    //       card.displayPower = getCardPower(card);
+    //     }
+    //   });
 
-    console.table(current(G.zones[0].sides['0']));
+    //   zone.sides[second].forEach((card: Card, cardIdx: number) => {
+    //     if (cardIdx < zone.sides[second].length - 1) {
+    //       card.displayPower = getCardPower(card);
+    //     }
+    //   });
+    // });
+
     ctx.events?.endPhase();
   },
 };

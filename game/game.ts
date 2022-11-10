@@ -111,12 +111,12 @@ const BrowserCCG: Game<GameState, Ctx & EffectsCtxMixin<typeof bgioEffectsConfig
     },
     initCardMechanics: {
       ...initCardMechanicsPhase,
-      next: 'calculateCardMechanics',
-    },
-    calculateCardMechanics: {
-      ...calculateCardMechanicsPhase,
       next: 'initZoneInteractions',
     },
+    // calculateCardMechanics: {
+    //   ...calculateCardMechanicsPhase,
+    //   next: 'initZoneInteractions',
+    // },
     initZoneInteractions: {
       ...initZoneInteractionsPhase,
       next: 'handleZonePowerCalculations',

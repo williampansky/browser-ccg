@@ -24,7 +24,7 @@ const createCardObject = (obj: CardBase): Card => {
     revealedOnTurn: 0,
     rarity: rarity ? rarity : 'NONE',
     elite: elite ? elite : false,
-    set: set ? set : 'CORE_002',
+    set: set ? set : 'SET_002',
     type: type ? type : CardType.Card,
     // type: type ? type : 'CARD',
     uuid: uuid(),

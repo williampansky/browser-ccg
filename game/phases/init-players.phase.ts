@@ -1,7 +1,7 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
 import tempCardsDatabase from '../../tempCardsDatabase';
-import { GameState } from '../../types';
-import { createRandomDeck, logPhaseToConsole } from '../../utils';
+import { Card, GameState } from '../../types';
+import { createCardObject, createRandomDeck, logPhaseToConsole } from '../../utils';
 import { actionPoints, playerNames, players } from '../state';
 
 const initPlayersPhase: PhaseConfig = {
@@ -30,6 +30,7 @@ const initPlayersPhase: PhaseConfig = {
       actionPoints: actionPoints.defaultState['1'],
       cards: {
         deck: createRandomDeck(G, ctx, tempCardsDatabase),
+        // deck: debugCards(),
         destroyed: [],
         discarded: [],
         hand: [],
@@ -54,5 +55,15 @@ const initPlayersPhase: PhaseConfig = {
     );
   },
 };
+
+function debugCards(): Card[] {
+  let arr: Card[] = [];
+
+  for (let index = 0; index < 20; index++) {
+    arr.push(createCardObject(tempCardsDatabase.find(obj => obj.id === 'CORE_008')!))
+  }
+
+  return arr;
+}
 
 export default initPlayersPhase;

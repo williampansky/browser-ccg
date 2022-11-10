@@ -84,7 +84,7 @@ export const Card = ({
       data-component='Card'
       id={uuid}
     >
-      <CardCost cost={currentCost} />
+      <CardCost baseCost={baseCost} currentCost={currentCost} />
 
       <CardPower
         basePower={basePower}

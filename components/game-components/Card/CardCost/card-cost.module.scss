@@ -14,4 +14,12 @@
   & > div {
     top: calc(var(--card-height) / 400);
   }
+
+  &.cost--decreased > div {
+    color: #1aff1a;
+  }
+
+  &.cost--increased > div {
+    color: #ff5555;
+  }
 }
