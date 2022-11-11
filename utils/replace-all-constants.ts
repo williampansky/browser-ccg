@@ -1,13 +1,15 @@
-// import { CONSTANTS, HEROS, MECHANICS } from '@ccg/data';
+import CONSTANTS from '../data/constants.json';
+import MECHANICS from '../data/mechanics.json';
+
 const json = {
-  // ...CONSTANTS,
+  ...CONSTANTS,
+  ...MECHANICS
   // ...HEROS,
-  // ...MECHANICS
 } as any;
 
 /**
  * Parses string and replaces the symbol with the relative constant.
  */
 export default function replaceAllConstants(stringToParse: string) {
-  return stringToParse.replace(/%(.*?)%/g, m => json[m] && json[m].name);
+  return stringToParse.replace(/%(.*?)%/g, x => json[x] && json[x].name);
 }

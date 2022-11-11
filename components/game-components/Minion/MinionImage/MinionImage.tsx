@@ -19,8 +19,7 @@ export const MinionImage = ({
   rarity,
   placeholderSrc,
 }: ReactMinionImageProps) => {
-  const tempset = 'SET_002';
-  const src = id ? `/images/sets/${tempset}/${id}-MINION.jpg` : PLACEHOLDER;
+  const src = id ? `/images/sets/${set}/${id}-MINION.jpg` : PLACEHOLDER;
   const rare = rarity ? rarity : 'NONE';
 
   return (

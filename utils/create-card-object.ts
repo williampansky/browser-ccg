@@ -1,49 +1,84 @@
+import { isArray } from 'mathjs';
 import { v4 as uuid } from 'uuid';
-import { CardType } from '../enums';
 import { Card, CardBase } from '../types';
+import createArtistHtmlLink from './create-artist-html-link';
+import createMarkup from './create-markup';
+import replaceAllConstants from './replace-all-constants';
 
 /**
  * Creates a playable `Card` object from the provided card base info.
  */
 const createCardObject = (obj: CardBase): Card => {
   const {
-    id,
+    artistName,
+    artistUrl,
+    collectible,
     cost,
+    description,
     elite,
     entourage,
-    power,
-    description,
-    mechanic,
+    id,
+    isEntourage,
+    mechanics,
     name,
+    numberPrimary,
+    numberRNG,
+    numberSecondary,
+    power,
+    race,
     rarity,
     set,
+    text,
     type,
   } = obj;
 
+  const SET = set?.replace(/\%/g, '');
+  const RARITY = rarity?.replace(/\%/g, '').replace('RARITY_', '');
+  const RACE = race?.replace(/\%/g, '').replace('RACE_', '');
+  const TYPE = type?.replace(/\%/g, '').replace('TYPE_', '');
+
   return {
-    id,
+    artist:
+      artistName || artistUrl
+        ? createArtistHtmlLink(artistName, artistUrl)
+        : undefined,
+    artistName,
+    artistUrl,
     baseCost: cost,
     basePower: power,
     canPlay: false,
+    collectible: collectible || false,
     currentCost: cost,
-    description: description,
+    description,
     displayPower: power,
-    entourage: entourage,
-    mechanic,
-    name: name,
+    elite: elite || false,
+    // entourage: () => {
+    //   if (typeof entourage === 'string') return entourage;
+    //   if (isArray(entourage)) entourage?.map((ent: string) => {
+
+    //   })
+    // },
+    id,
+    imageFlairSrc: `/images/sets/${SET}/${id}`,
+    isEntourage: isEntourage || false,
+    key: id,
+    mechanics,
+    name,
+    numberPrimary,
+    numberRNG,
+    numberSecondary,
     powerStream: [],
+    race: RACE,
+    rarity: RARITY,
     revealed: false,
     revealedOnTurn: 0,
-    rarity: rarity ? rarity : 'NONE',
-    elite: elite ? elite : false,
-    set: set ? set : 'SET_002',
-    type: type ? type : CardType.Card,
-    // type: type ? type : 'CARD',
+    set: SET,
+    text: text ? createMarkup(replaceAllConstants(text)) : undefined,
+    type: TYPE,
     uuid: uuid(),
+    value: name,
     zonePowerAdjustment: 0,
-    // imageFlairSrc: `sets/SET_002/${id}-CARD.jpg`
-    imageFlairSrc: `/images/sets/${set}/${id}-CARD.jpg`,
-  } as Card;
+  };
 };
 
 export default createCardObject;

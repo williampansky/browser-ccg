@@ -42,7 +42,6 @@ export const Card = ({
     imageFlairSrc,
     imagePlaceholderSrc,
     isGolden,
-    mechanic,
     mechanics,
     name,
     numberPrimary,
@@ -56,6 +55,7 @@ export const Card = ({
     revealedOnTurn,
     set,
     sounds,
+    text,
     type,
     uuid,
     zonePowerAdjustment,
@@ -95,7 +95,7 @@ export const Card = ({
 
       {/* <CardRarityGem rarity={rarity} /> */}
       <CardName name={name} formatter={fontSizeBasedOnCharacterLength} />
-      <CardText text={createMarkup(description)} />
+      <CardText markup={text} />
       <CardTypeLabel race={race} type={type} formatter={(val: any) => val} />
 
       <CardTypeBadge

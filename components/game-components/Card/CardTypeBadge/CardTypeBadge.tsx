@@ -1,4 +1,3 @@
-import { ReactElement } from 'react';
 import styles from './card-type-badge.module.scss';
 
 interface CardTypeBadgeProps {
@@ -15,7 +14,8 @@ export const CardTypeBadge = ({
   badgeImgSrc,
   typeIconAlt,
   typeImgSrc,
-}: CardTypeBadgeProps): ReactElement | null => {
+}: CardTypeBadgeProps) => {
+  const src = `/images/card-assets/TYPE_${type}.png`;
   return race && type ? (
     <div className={styles['card__type__image__wrapper']}>
       <div className={styles['card__type__image__icon__wrapper']}>
@@ -23,7 +23,7 @@ export const CardTypeBadge = ({
           alt={`${typeIconAlt} Icon`}
           className={styles['card__type__image']}
           role='presentation'
-          src={typeImgSrc}
+          src={src}
         />
       </div>
       <img

@@ -13,17 +13,31 @@ export declare type CardType =
  * @see createCardObject
  */
 export interface CardBase {
+  artistName?: string;
+  artistUrl?: string;
   cost: number;
+  collectible?: boolean;
   description?: string;
-  entourage?: CardBase[];
-  id: CardId;
-  mechanic?: string;
-  name: string;
-  power: number;
-  rarity?: string;
-  set?: string;
   elite?: boolean;
-  type?: CardType | string;
+  entourage?: string;
+  flavorText?: string;
+  howToEarn?: string;
+  howToEarnGolden?: string;
+  id: CardId;
+  isEntourage?: boolean;
+  mechanics?: string[];
+  name: string;
+  numberPrimary?: number;
+  numberRNG?: number;
+  numberSecondary?: number;
+  playType?: string;
+  power: number;
+  race: string;
+  rarity: string;
+  set: string;
+  targetingText?: string;
+  text?: string;
+  type: CardType | string;
 }
 
 /**
@@ -48,15 +62,17 @@ export interface CardPowerStream {
 
 export interface Card {
   artist?: string;
+  artistName?: string;
+  artistUrl?: string;
   baseCost: number;
   basePower: number;
   canPlay: boolean;
-  collectible?: boolean;
+  collectible: boolean;
   currentCost: number;
   description?: string;
   displayPower: number;
-  elite?: boolean;
-  entourage?: CardBase[];
+  elite: boolean;
+  entourage?: Card[];
   flavorText?: string;
   howToEarn?: string;
   howToEarnGolden?: string;
@@ -64,8 +80,8 @@ export interface Card {
   imageBaseSrc?: string;
   imageFlairSrc?: string;
   imagePlaceholderSrc?: string;
+  isEntourage?: boolean;
   isGolden?: boolean;
-  mechanic?: string;
   mechanics?: string[];
   name: string;
   numberPrimary?: number;
@@ -73,13 +89,26 @@ export interface Card {
   numberSecondary?: number;
   powerOverride?: number; // use this power instead of base or latest stream
   powerStream: CardPowerStream[];
-  race?: string;
-  rarity?: string;
+  race: string;
+  rarity: string;
   revealed: boolean;
   revealedOnTurn: number;
-  set?: string;
+  set: string;
   sounds?: Record<string, string>;
-  type?: CardType | string;
+  targetingText?: string;
+  text?: { __html: string };
+  type: CardType | string;
   uuid: string;
   zonePowerAdjustment: number;
+  
+
+  /**
+   * Required by `react-select`
+   */
+  key?: string;
+  
+  /**
+   * Required by `react-select`
+   */
+  value: string;
 }

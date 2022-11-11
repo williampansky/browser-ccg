@@ -1,5 +1,5 @@
-import { ReactElement } from 'react';
 import styles from './card-subtype-badge.module.scss';
+import PLACEHOLDER from '../../../../public/images/sets/PLACEHOLDER.jpg';
 
 interface CardSubTypeBadgeProps {
   race?: string;
@@ -15,15 +15,16 @@ export const CardSubTypeBadge = ({
   badgeImgSrc,
   subtypeIconAlt,
   subtypeImgSrc,
-}: CardSubTypeBadgeProps): ReactElement | null => {
-  return race && type ? (
+}: CardSubTypeBadgeProps) => {
+  const src = `/images/card-assets/SUBTYPE_RACE_${race}.png`;
+  return race !== 'NONE' ? (
     <div className={styles['card__subtype__image__wrapper']}>
       <div className={styles['card__subtype__image__icon__wrapper']}>
         <img
-          alt={`${subtypeIconAlt} Icon`}
+          alt={`${race} Icon`}
           className={styles['card__subtype__image']}
           role='presentation'
-          src={subtypeImgSrc}
+          src={src}
         />
       </div>
       <img

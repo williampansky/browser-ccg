@@ -14,8 +14,7 @@ export const CardFlairImage = ({
   set,
   name,
 }: CardFlairImageProps): ReactElement => {
-  const tempset = 'SET_002';
-  const src = id ? `/images/sets/${tempset}/${id}-CARD.jpg` : PLACEHOLDER;
+  const src = id ? `/images/sets/${set}/${id}-CARD.jpg` : PLACEHOLDER;
   return (
     <div className={styles['component']}>
       <Image

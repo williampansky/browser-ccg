@@ -1,5 +1,8 @@
 .collection__page {
-  --card-height: 100px;
+  --card-height: 145px;
+  --card-cost-font-size: 1.25em;
+  --card-power-font-size: 1.25em;
+  
   width: 100%;
   height: 100%;
   overflow-y: scroll;
@@ -8,7 +11,7 @@
 
 .collection__page .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 1em;
   justify-items: center;
   width: fit-content;
@@ -20,5 +23,44 @@
 
   div[data-component="Card"] {
     margin: 0 !important;
+  }
+}
+
+.collection__page .collection__modal {
+  --card-height: 60vh;
+  --card-cost-font-size: 2.25em;
+  --card-power-font-size: 2.25em;
+  @include display-flex(column nowrap, center, center);
+  @include position-fixed(0, 0, 0, 0, -1);
+  height: 100vh;
+  width: 100vw;
+  opacity: 0;
+  pointer-events: none;
+  transition: 150ms ease-in;
+  transition-property: opacity;
+  background: rgba(0,0,0,0.865);
+  will-change: opacity, pointer-events, z-index;
+
+  
+  .modal__inner {
+    @include display-flex(column nowrap, center, center);
+    padding: 1rem;
+    transition: 150ms ease-in;
+    transition-delay: 150ms;
+    transition-property: opacity, transform;
+    will-change: opacity, transform;
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  &--active {
+    opacity: 1;
+    z-index: 9000;
+    pointer-events: auto;
+
+    .modal__inner {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }

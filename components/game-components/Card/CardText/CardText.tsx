@@ -3,14 +3,13 @@ import styles from './card-text.module.scss';
 
 interface CardTextProps {
   // width: number;
-  text?: {
-    __html: string;
+  markup?: {
+    __html: string
   };
 }
 
-export const CardText = ({ text }: CardTextProps) => {
-  const html = text && text.__html;
-  return text ? (
+export const CardText = ({ markup }: CardTextProps) => {
+  return markup ? (
     <div className={styles['card__text']} data-component="CardText">
         {/* <Text
           children={html}
@@ -23,7 +22,7 @@ export const CardText = ({ text }: CardTextProps) => {
           width={width}
           // scaleToFit={'shrink-only'}
         /> */}
-      <p className='text__value' dangerouslySetInnerHTML={text} />
+      <p className='text__value' dangerouslySetInnerHTML={markup} />
     </div>
   ) : null;
 };
