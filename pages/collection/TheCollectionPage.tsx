@@ -4,26 +4,15 @@ import { Card as CardComponent } from '../../components/game-components';
 import { createCardObject } from '../../utils';
 import type { Card, CardBase } from '../../types';
 import { siteConfig } from '../../app.config';
-import tempCardsDatabase from '../../tempCardsDatabase';
 
 export default function TheCollectionPage() {
   const page = siteConfig.pages.collection;
   const [cards, setCards] = useState<Card[]>([]);
   const [cardModal, setCardModal] = useState<Card | undefined>(undefined);
 
-  // useEffect(() => {
-  //   setCards(
-  //     tempCardsDatabase.map((c: CardBase) => {
-  //       const obj = createCardObject(c);
-  //       return obj;
-  //     })
-  //   );
-  // }, [tempCardsDatabase]);
-
   const fetchCards = async () => {
     const response = await fetch('/api/cards');
     const data = await response.json();
-    // const arr = data.map((obj: CardBase) => createCardObject(obj));
     setCards(data);
   };
 

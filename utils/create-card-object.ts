@@ -52,12 +52,7 @@ const createCardObject = (obj: CardBase): Card => {
     description,
     displayPower: power,
     elite: elite || false,
-    // entourage: () => {
-    //   if (typeof entourage === 'string') return entourage;
-    //   if (isArray(entourage)) entourage?.map((ent: string) => {
-
-    //   })
-    // },
+    entourage: entourage,
     id,
     imageFlairSrc: `/images/sets/${SET}/${id}`,
     isEntourage: isEntourage || false,

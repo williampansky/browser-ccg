@@ -1,5 +1,5 @@
 import { Card, GameState } from '../../../../types';
-import CARD_DATABASE from '../../../../tempCardsDatabase';
+import CARD_DATABASE from '../../../data/setsGame.json';
 import createCardObject from '../../../../utils/create-card-object';
 
 /**

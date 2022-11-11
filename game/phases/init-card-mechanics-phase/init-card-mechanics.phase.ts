@@ -10,7 +10,8 @@ import {
   logPhaseToConsole,
 } from '../../../utils';
 import { counts, firstRevealer } from '../../state';
-import tempCardsDatabase from '../../../tempCardsDatabase';
+import setsGame from '../../data/setsGame.json';
+import setsEntourage from '../../data/setsEntourage.json';
 
 const initCardMechanicsPhase: PhaseConfig = {
   onBegin(G, ctx) {
@@ -55,14 +56,14 @@ function mechs(
   const { opponent } = getContextualPlayerIds(player);
 
   switch (card.id) {
-    case 'CORE_002':
+    case 'GAME_002':
       G.zones[zoneIdx].sides[player].forEach((c: Card, i: number) => {
         const isNotCardPlayed = card.uuid !== c.uuid;
         const cardIsBeforeCardPlayed = cardIdx > i;
 
         if (isNotCardPlayed && cardIsBeforeCardPlayed) {
           c.powerStream.push({
-            blame: 'CORE_002',
+            blame: 'GAME_002',
             adjustment: -1,
             currentPower: add(c.displayPower, -1),
           });
@@ -72,25 +73,25 @@ function mechs(
       });
       break;
 
-    case 'CORE_003':
+    case 'GAME_003':
       if (G.players[player].cards.hand.length < cardsPerHand) {
         drawCardFromPlayersDeck(G, player, 1);
       }
       break;
 
-    case 'CORE_004':
+    case 'GAME_004':
       if (G.players[player].cards.hand.length < cardsPerHand) {
-        const randomCardBase = ctx.random!.Shuffle(tempCardsDatabase)[0];
+        const randomCardBase = ctx.random!.Shuffle(setsGame)[0];
         const randomCard = createCardObject(randomCardBase);
         G.players[player].cards.hand.push(randomCard);
         counts.incrementHand(G, player);
       }
       break;
 
-    case 'CORE_005':
+    case 'GAME_005':
       if (zoneSide.length >= 3) {
         card.powerStream.push({
-          blame: 'CORE_005',
+          blame: 'GAME_005',
           adjustment: 3,
           currentPower: add(card.displayPower, 3),
         });
@@ -100,7 +101,7 @@ function mechs(
       break;
 
     // @todo
-    case 'CORE_006':
+    case 'GAME_006':
       /**
        * An array of all current card `uuid` values on the opponent's zones.
        */
@@ -128,6 +129,20 @@ function mechs(
       // G.zonesCardsReference['1'][targetZone!] = newZoneSideArr;
       break;
 
+    case 'GAME_007':
+      G.zones.forEach((z, i) => {
+        if (zoneIdx !== i) {
+          if (z.sides[player].length < numberOfSlotsPerZone) {
+            const obj = setsEntourage.find((e) => e.id === card.entourage![0]);
+            const entourageCard = createCardObject(obj!);
+            const entCardObj = { ...entourageCard, revealed: true };
+            z.sides[player].push(entCardObj);
+            G.zonesCardsReference[i][player].push(entCardObj);
+          }
+        }
+      });
+      break;
+
     case 'CORE_008':
       if (G.players[opponent].cards.hand.length >= 1) {
         const rCard = ctx.random?.Shuffle(G.players[opponent].cards.hand)[0];
@@ -149,19 +164,6 @@ function mechs(
 
         card.displayPower = getCardPower(card);
       }
-      break;
-
-    case 'CORE_020':
-      G.zones.forEach((z, i) => {
-        if (zoneIdx !== i) {
-          if (z.sides[player].length < numberOfSlotsPerZone) {
-            const entourageCard = createCardObject(card.entourage![0]);
-            const entCardObj = { ... entourageCard, revealed: true };
-            z.sides[player].push(entCardObj);
-            G.zonesCardsReference[i][player].push(entCardObj);
-          }
-        }
-      });
       break;
 
     default:

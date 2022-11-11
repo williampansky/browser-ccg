@@ -7,7 +7,7 @@ import {
   createCardObject,
 } from '../../../utils';
 
-import CARD_DATABASE from '../../../tempCardsDatabase';
+import setsGame from '../../data/setsGame.json'
 
 const initStartingHandsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
@@ -17,15 +17,11 @@ const initStartingHandsPhase: PhaseConfig = {
     // debug card or side interactions
     if (G.gameConfig.debugConfig.debugCardId !== '') {
       for (let index = 0; index < 4; index++) {
-        let debugCardBase = random!.Shuffle(CARD_DATABASE)[index];
+        let debugCardBase = random!.Shuffle(setsGame)[index];
         let debugCard = createCardObject(debugCardBase);
         G.zones[0].sides['1'].push({ ...debugCard, revealed: true });
       }
     }
-
-    // set decks
-    // G.players['0'].cards.deck = createRandomDeck(G, ctx, CARD_DATABASE);
-    // G.players['1'].cards.deck = createRandomDeck(G, ctx, CARD_DATABASE);
 
     // init hands
     [...Array(G.gameConfig.numerics.cardsPerStartingHand)].forEach(() => {

@@ -19,7 +19,7 @@ export interface CardBase {
   collectible?: boolean;
   description?: string;
   elite?: boolean;
-  entourage?: string;
+  entourage?: string[];
   flavorText?: string;
   howToEarn?: string;
   howToEarnGolden?: string;
@@ -72,7 +72,7 @@ export interface Card {
   description?: string;
   displayPower: number;
   elite: boolean;
-  entourage?: Card[];
+  entourage?: string[];
   flavorText?: string;
   howToEarn?: string;
   howToEarnGolden?: string;
