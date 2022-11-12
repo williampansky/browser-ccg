@@ -18,7 +18,7 @@ export default function TheZonesPage() {
     fetchZones();
   }, []);
 
-  const inspectCard = (z: Zone) => {
+  const inspectZone = (z: Zone) => {
     return (event: React.MouseEvent) => {
       event.preventDefault();
       setZoneModal(z);
@@ -34,11 +34,13 @@ export default function TheZonesPage() {
             {zones.map((z: Zone) => {
               return z ? (
                 <div
-                  key={z.uuid}
+                  key={z.id}
                   className='grid-item'
-                  onClickCapture={inspectCard(z)}
+                  onClickCapture={inspectZone(z)}
                 >
-                  {z.name}
+                  <div>{z.id}</div>
+                  <div>{z.name}</div>
+                  <div>{z.effectText}</div>
                   {/* <CardComponent {...z} canPlay={true} /> */}
                 </div>
               ) : null;

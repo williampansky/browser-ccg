@@ -60,10 +60,10 @@ export const gameConfig: GameConfig = {
     TRANSFORM: false,
   },
   zonesConfig: {
-    effectAdjustments: false,
-    zoneImages: false,
-    zoneNames: false,
-    zoneReveals: false,
+    effectAdjustments: true,
+    zoneImages: true,
+    zoneNames: true,
+    zoneReveals: true,
   }
 };
 

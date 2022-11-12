@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { Zone, ZoneBase } from '../types';
+import createArtistHtmlLink from './create-artist-html-link';
 
 /**
  * Creates a `Zone` object from the provided zone base info. Can
@@ -19,6 +20,10 @@ const createZoneObject = (obj: ZoneBase, withUuid: boolean = false): Zone => {
   } = obj;
 
   return {
+    artist:
+      artistName && artistUrl
+        ? createArtistHtmlLink(artistName, artistUrl)
+        : undefined,
     artistName: artistName,
     artistUrl: artistUrl,
     disabled: {

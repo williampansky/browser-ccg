@@ -5,15 +5,15 @@ import zones from '../../../data/zones.json';
 
 export default async (_req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const zones = await getGameCards(res);
-    res.status(200).json(zones);
+    const data = await getZones(res);
+    res.status(200).json(data);
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ statusCode: 500, message: err?.message });
   }
 };
 
-async function getGameCards(res: NextApiResponse) {
+async function getZones(res: NextApiResponse) {
   const arr = zones.map((item: ZoneBase) => createZoneObject(item));
   res.status(200).json(arr);
 }

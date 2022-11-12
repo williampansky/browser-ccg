@@ -2,6 +2,8 @@
 require('dotenv').config({ path: './.env.local' });
 const fs = require('fs');
 const Airtable = require('airtable-node');
+const CONSTANTS = require('./data/constants.json');
+const MECHANICS = require('./data/mechanics.json');
 
 const API_KEY = process.env.AIRTABLE_API_KEY;
 const BASE_ID = process.env.AIRTABLE_BASE_ID;
@@ -22,9 +24,43 @@ const tables = {
   ZONES: 'tblKes7sTnuFcFStH',
 };
 
+const constantsDb = {
+  ...CONSTANTS,
+  ...MECHANICS,
+};
+
 function parseCardEntourage(string: string) {
   if (!string || typeof string === 'undefined') return [];
   return string.replace(/\s/g, '').split(',');
+}
+
+function replaceAllConstants(stringToParse: string, keyToUse: string = 'name') {
+  if (!stringToParse) return;
+  return stringToParse.replace(
+    /%(.*?)%/g,
+    (x) => constantsDb[x] && constantsDb[x][keyToUse]
+  );
+}
+
+function createArtistHtmlLink(name?: string, url?: string): string | undefined {
+  if (!name || !url) return undefined;
+  if (!name && url) return url;
+  if (name && !url) return name;
+
+  const html = `<a href="${url}" rel="noopener noreferrer" target="_blank">${name}</a>`;
+  return html;
+}
+
+function writeToFile(fileName: string, data: any) {
+  try {
+    fs.writeFileSync(`./data/${fileName}.json`, data);
+    fs.writeFileSync(`./game/data/${fileName}.json`, data);
+    console.log(`Writing ${fileName} to system ...`);
+  } catch (error) {
+    const obj = { dataError: data, catchError: error };
+    fs.writeFileSync(`./data/${fileName}.error.txt`, obj);
+    fs.writeFileSync(`./game/data/${fileName}.error.txt`, obj);
+  }
 }
 
 const fetchConstantsData = async (tableId: string) => {
@@ -35,28 +71,24 @@ const fetchConstantsData = async (tableId: string) => {
     .then((resp: any) => {
       const map = resp.records.map((item: any) => {
         const { fields } = item;
-        const { name, symbol, type, description } = fields;
+        const { name, symbol, type, description, value } = fields;
 
         return {
           [symbol]: {
-          name,
-          symbol,
-          type,
-          description,
-          key: symbol, // required for `react-select` pkg
-          value: name, // required for `react-select` pkg
+            name,
+            symbol,
+            value,
+            type,
+            description,
           },
         };
       });
 
       const constants = JSON.stringify(Object.assign({}, ...map));
-      // const constants = JSON.stringify(map);
-      fs.writeFileSync('./data/constants.json', constants);
-      fs.writeFileSync('./game/data/constants.json', constants);
+      writeToFile('constants', constants);
     })
     .catch((err: any) => {
-      fs.writeFileSync('./data/constants.error.txt', err);
-      fs.writeFileSync('./game/data/constants.error.txt', err);
+      writeToFile('constants', err);
     });
 };
 
@@ -68,28 +100,24 @@ const fetchMechanicsData = async (tableId: string) => {
     .then((resp: any) => {
       const map = resp.records.map((item: any) => {
         const { fields } = item;
-        const { name, symbol, description, shortDescription } = fields;
+        const { name, symbol, value, description, shortDescription } = fields;
 
         return {
           [symbol]: {
-          name,
-          symbol,
-          description,
-          shortDescription,
-          key: symbol, // required for `react-select` pkg
-          value: name, // required for `react-select` pkg
+            name,
+            symbol,
+            value,
+            description,
+            shortDescription,
           },
         };
       });
 
       const mechanics = JSON.stringify(Object.assign({}, ...map));
-      // const mechanics = JSON.stringify(map);
-      fs.writeFileSync('./data/mechanics.json', mechanics);
-      fs.writeFileSync('./game/data/mechanics.json', mechanics);
+      writeToFile('mechanics', mechanics);
     })
     .catch((err: any) => {
-      fs.writeFileSync('./data/mechanics.error.txt', err);
-      fs.writeFileSync('./game/data/mechanics.error.txt', err);
+      writeToFile('mechanics', err);
     });
 };
 
@@ -131,12 +159,10 @@ const fetchSetGameData = async (tableId: string) => {
       });
 
       const setsGame = JSON.stringify(map);
-      fs.writeFileSync('./data/setsGame.json', setsGame);
-      fs.writeFileSync('./game/data/setsGame.json', setsGame);
+      writeToFile('setsGame', setsGame);
     })
     .catch((err: any) => {
-      fs.writeFileSync('./data/setsGame.error.txt', err);
-      fs.writeFileSync('./game/data/setsGame.error.txt', err);
+      writeToFile('setsGame', err);
     });
 };
 
@@ -175,12 +201,10 @@ const fetchSetEntourageData = async (tableId: string) => {
       });
 
       const setsEntourage = JSON.stringify(map);
-      fs.writeFileSync('./data/setsEntourage.json', setsEntourage);
-      fs.writeFileSync('./game/data/setsEntourage.json', setsEntourage);
+      writeToFile('setsEntourage', setsEntourage);
     })
     .catch((err: any) => {
-      fs.writeFileSync('./data/setsEntourage.error.txt', err);
-      fs.writeFileSync('./game/data/setsEntourage.error.txt', err);
+      writeToFile('setsEntourage', err);
     });
 };
 
@@ -193,25 +217,31 @@ const fetchZonesData = async (tableId: string) => {
       const map = resp.records.map((item: any) => {
         const { fields } = item;
         return {
+          artist:
+            fields?.artistName && fields?.artistUrl
+              ? createArtistHtmlLink(fields?.artistName)
+              : undefined,
           artistName: fields?.artistName,
           artistUrl: fields?.artistUrl,
           effectAdjustment: fields?.effectAdjustment,
-          effectText: fields?.effectText,
+          effectText: replaceAllConstants(fields?.effectText),
           flavorText: fields?.flavorText,
           id: fields?.id,
-          mechanics: fields?.mechanics,
+          mechanics: () => {
+            fields?.mechanics.forEach((m: string) =>
+              replaceAllConstants(m, 'value')
+            );
+          },
           name: fields?.name,
-          set: fields?.set,
+          set: replaceAllConstants(fields?.set, 'value'),
         };
       });
 
       const zones = JSON.stringify(map);
-      fs.writeFileSync('./data/zones.json', zones);
-      fs.writeFileSync('./game/data/zones.json', zones);
+      writeToFile('zones', zones);
     })
     .catch((err: any) => {
-      fs.writeFileSync('./data/zones.error.txt', err);
-      fs.writeFileSync('./game/data/zones.error.txt', err);
+      writeToFile('zones', err);
     });
 };
 

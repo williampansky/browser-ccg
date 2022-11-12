@@ -2,7 +2,7 @@ import { Ctx, PhaseConfig } from 'boardgame.io';
 import { GameState, Zone } from '../../../types';
 import { zones } from '../../state';
 import { createZoneObject, logPhaseToConsole } from '../../../utils';
-import ZONE_DATABASE from '../../../tempZonesDatabase';
+import ZONE_DATABASE from '../../data/zones.json';
 
 const initZonesPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {

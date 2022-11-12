@@ -190,7 +190,7 @@ export const Board = (props: GameProps) => {
               width: '100%',
             }}
           >
-            {[...Array.from(Array(G.counts['1'].hand))]?.map((_, idx) => {
+            {/* {[...Array.from(Array(G.counts['1'].hand))]?.map((_, idx) => {
               return (
                 <div
                   key={idx}
@@ -216,7 +216,7 @@ export const Board = (props: GameProps) => {
                   }}
                 ></div>
               );
-            })}
+            })} */}
           </div>
         </div>
 
