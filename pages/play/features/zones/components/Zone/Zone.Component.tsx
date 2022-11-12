@@ -3,6 +3,7 @@ import type { ReactElement } from 'react';
 
 import { usePrevious } from '../../../../../../hooks';
 import type {
+  GameConfig,
   PlayerID,
   Zone as ZoneServerProps,
   ZonesCardsReference,
@@ -17,6 +18,7 @@ import { ZoneLeaderEffects } from '../ZoneLeaderEffects';
 import { ZonePower } from '../ZonePower';
 import { ZoneRevealOverlay } from '../ZoneRevealOverlay';
 import { ZoneName } from '../ZoneName';
+import Image from 'next/image';
 
 interface ZoneClientProps {
   opponent: string;
@@ -26,6 +28,7 @@ interface ZoneClientProps {
   zoneNumber: number;
   zoneRef: ZonesCardsReference;
   zonesAreActive: boolean;
+  gameConfig: GameConfig;
 }
 
 export const Zone = ({
@@ -36,8 +39,10 @@ export const Zone = ({
   zoneNumber,
   zoneRef,
   zonesAreActive,
+  gameConfig,
 }: ZoneClientProps): ReactElement => {
   const { powers } = zone;
+  const { zonesConfig } = gameConfig;
   const [zoneLeader, setZoneLeader] = useState<PlayerID | undefined>(undefined);
   const [zonePowers, setZonePowers] = useState({ '0': 0, '1': 0 });
   const prevZonePowers = usePrevious({ '0': 0, '1': 0 });
@@ -74,7 +79,7 @@ export const Zone = ({
               slotIndex={idx}
               opponent={opponent}
             />
-          )
+          );
           //  : (
           //   <div key={idx} className={styles['blank-slot']} />
           // );
@@ -82,13 +87,20 @@ export const Zone = ({
       </div>
 
       <div className={styles['zone-center']}>
-        <ZoneName name={zone?.name} effectText={zone?.effectText} />
-
-        <ZoneRevealOverlay
-          isRevealed={zone?.revealed}
-          turn={turn}
-          zoneNumber={zoneNumber}
+        <ZoneName
+          name={zonesConfig.zoneNames ? zone?.name : ''}
+          effectText={
+            zonesConfig.effectAdjustments ? zone?.effectText : undefined
+          }
         />
+
+        {zonesConfig.zoneReveals && (
+          <ZoneRevealOverlay
+            isRevealed={zone?.revealed}
+            turn={turn}
+            zoneNumber={zoneNumber}
+          />
+        )}
 
         <ZoneLeaderEffects zoneLeader={zoneLeader} />
 
@@ -106,6 +118,17 @@ export const Zone = ({
           zoneLeader={zoneLeader}
           zonePowers={zonePowers}
         />
+
+        {zonesConfig.zoneImages && (
+          <div className={styles['zone-image']}>
+            <Image
+              alt=''
+              role='presentation'
+              layout='fill'
+              src={`/images/zones/${zone.id}.jpg`}
+            />
+          </div>
+        )}
       </div>
 
       <div className={styles['player-side-wrapper']}>
@@ -113,7 +136,7 @@ export const Zone = ({
 
         <div className={[styles['zone-side'], styles['player-side']].join(' ')}>
           {[...Array.from(Array(6))].map((_, idx: number) => {
-            return  (
+            return (
               <PlayerZoneSlot
                 key={idx}
                 data={zone.sides[player][idx]}
@@ -123,7 +146,7 @@ export const Zone = ({
                 slotIndex={idx}
                 player={player}
               />
-            )
+            );
           })}
         </div>
       </div>

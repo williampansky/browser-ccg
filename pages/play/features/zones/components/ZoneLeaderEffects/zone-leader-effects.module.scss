@@ -17,21 +17,21 @@
   border-bottom-color: inherit;
   border-right-color: inherit;
   border-left-color: inherit;
-  border-radius: 50%;
+  border-radius: var(--zone-border-radius);
   opacity: 1;
   transition: 200ms ease-in-out;
   transform: scale(1.05925);
   pointer-events: none;
 
   &.leader-opponent {
-    border-bottom-color: yellow;
-    border-top-color: inherit;
-    transform: rotate(180deg) scale(1.05925);
+    border-top-color: yellow;
+    border-bottom-color: inherit;
+    // transform: rotate(180deg) scale(1.05925);
   }
 
   &.leader-player {
     border-bottom-color: yellow;
     border-top-color: inherit;
-    transform: rotate(0deg) scale(1.05925);;
+    // transform: rotate(0deg) scale(1.05925);
   }
 }

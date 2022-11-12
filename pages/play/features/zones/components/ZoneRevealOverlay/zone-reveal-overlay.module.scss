@@ -16,8 +16,9 @@
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
   background: #494949;
-  border-radius: 50%;
+  border-radius: var(--zone-border-radius);
   color: white;
+  z-index: 10;
 
   &.revealed {
     opacity: 0;

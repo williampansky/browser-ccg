@@ -31,6 +31,7 @@ export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
 
   const dispatch = useDispatch();
   const { G, ctx } = useLatestPropsOnEffect<GameState, any>('effects:end');
+  const {gameConfig} = useSelector((state: RootState) => state.config);
   const zones = useSelector((state: RootState) => state.zones);
   const zonesRef = useSelector((state: RootState) => state.zonesRef);
   const [zonesAreActive, setZonesAreActive] = useState<boolean>(false);
@@ -83,6 +84,7 @@ export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
             player={player}
             opponent={opponent}
             turn={G.turn}
+            gameConfig={gameConfig}
           />
         );
       })}

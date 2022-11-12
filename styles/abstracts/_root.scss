@@ -67,6 +67,17 @@
   --minion-border-radius:               1.25em;
   --minion-stat-offset:                 0;
 
+  // zone vars
+  // ========================================================================
+  --zone-height:                      6em;
+  --zone-width:                       8em;
+  --zone-border-radius:               35%;
+  --zone-background-color:            gray;
+  --zone-border-color:                var(--zone-background-color);
+  &:before {
+    --zone-border-color:              var(--zone-background-color);
+  }
+
   // avatar vars
   // ========================================================================
   --avatar-border-radius:               65%;

@@ -6,22 +6,37 @@ import { Zone, ZoneBase } from '../types';
  * be create with or without a uuid() via the second param.
  */
 const createZoneObject = (obj: ZoneBase, withUuid: boolean = false): Zone => {
-  const { id, name, effectAdjustment, effectText } = obj;
+  const {
+    artistName,
+    artistUrl,
+    effectAdjustment,
+    effectText,
+    flavorText,
+    id,
+    mechanics,
+    name,
+    set,
+  } = obj;
 
   return {
+    artistName: artistName,
+    artistUrl: artistUrl,
     disabled: {
       '0': false,
       '1': false,
     },
+    effectAdjustment: effectAdjustment,
+    effectText: effectText,
+    flavorText: flavorText,
     id: id,
     name: name,
+    mechanics: mechanics,
     powers: {
       '0': 0,
       '1': 0,
     },
-    effectAdjustment: effectAdjustment,
-    effectText: effectText,
     revealed: false,
+    set: set,
     sides: {
       '0': [],
       '1': [],

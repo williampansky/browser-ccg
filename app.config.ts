@@ -58,6 +58,12 @@ export const gameConfig: GameConfig = {
     TARGET: false,
     TRANSFER_OWNERSHIP: false,
     TRANSFORM: false,
+  },
+  zonesConfig: {
+    effectAdjustments: false,
+    zoneImages: false,
+    zoneNames: false,
+    zoneReveals: false,
   }
 };
 
@@ -113,6 +119,12 @@ export const sitePages: Pages = {
     description: '',
     name: 'Store',
     route: '/store',
+  },
+  zones: {
+    description: 'Zones database and information.',
+    name: 'Zones',
+    route: '/zones',
+    showInNav: true
   },
 };
 

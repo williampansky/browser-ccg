@@ -19,6 +19,7 @@ const tables = {
   SET_ENTOURAGE: 'tblC5Cy6pKp8EaQaV',
   SET_GAME: 'tblQLQ0BnfCAJvu6F',
   SET_PRIME: 'tblajpxLahsUgKzVd',
+  ZONES: 'tblKes7sTnuFcFStH',
 };
 
 function parseCardEntourage(string: string) {
@@ -26,7 +27,7 @@ function parseCardEntourage(string: string) {
   return string.replace(/\s/g, '').split(',');
 }
 
-const fetchConstants = async (tableId: string) => {
+const fetchConstantsData = async (tableId: string) => {
   console.log('Fetching constants ...');
   await base
     .table(tableId)
@@ -59,7 +60,7 @@ const fetchConstants = async (tableId: string) => {
     });
 };
 
-const fetchMechanics = async (tableId: string) => {
+const fetchMechanicsData = async (tableId: string) => {
   console.log('Fetching mechanics ...');
   await base
     .table(tableId)
@@ -92,7 +93,7 @@ const fetchMechanics = async (tableId: string) => {
     });
 };
 
-const fetchSetGame = async (tableId: string) => {
+const fetchSetGameData = async (tableId: string) => {
   console.log('Fetching game set ...');
   await base
     .table(tableId)
@@ -139,7 +140,7 @@ const fetchSetGame = async (tableId: string) => {
     });
 };
 
-const fetchSetEntourage = async (tableId: string) => {
+const fetchSetEntourageData = async (tableId: string) => {
   console.log('Fetching entourage set ...');
   await base
     .table(tableId)
@@ -183,7 +184,39 @@ const fetchSetEntourage = async (tableId: string) => {
     });
 };
 
-fetchConstants(tables.CONSTANTS);
-fetchMechanics(tables.MECHANICS);
-fetchSetEntourage(tables.SET_ENTOURAGE);
-fetchSetGame(tables.SET_GAME);
+const fetchZonesData = async (tableId: string) => {
+  console.log('Fetching zones ...');
+  await base
+    .table(tableId)
+    .list({ maxRecords: 20 })
+    .then((resp: any) => {
+      const map = resp.records.map((item: any) => {
+        const { fields } = item;
+        return {
+          artistName: fields?.artistName,
+          artistUrl: fields?.artistUrl,
+          effectAdjustment: fields?.effectAdjustment,
+          effectText: fields?.effectText,
+          flavorText: fields?.flavorText,
+          id: fields?.id,
+          mechanics: fields?.mechanics,
+          name: fields?.name,
+          set: fields?.set,
+        };
+      });
+
+      const zones = JSON.stringify(map);
+      fs.writeFileSync('./data/zones.json', zones);
+      fs.writeFileSync('./game/data/zones.json', zones);
+    })
+    .catch((err: any) => {
+      fs.writeFileSync('./data/zones.error.txt', err);
+      fs.writeFileSync('./game/data/zones.error.txt', err);
+    });
+};
+
+fetchConstantsData(tables.CONSTANTS);
+fetchMechanicsData(tables.MECHANICS);
+fetchSetEntourageData(tables.SET_ENTOURAGE);
+fetchSetGameData(tables.SET_GAME);
+fetchZonesData(tables.ZONES);

@@ -16,6 +16,7 @@ export interface GameConfig {
     numberOfSlotsPerZone: number;
     numberOfZones: number;
   };
+
   /**
    * Enable or disable specific game mechanics
    */
@@ -62,6 +63,13 @@ export interface GameConfig {
     TARGET: boolean;
     TRANSFER_OWNERSHIP: boolean;
     TRANSFORM: boolean;
+  };
+
+  zonesConfig: {
+    effectAdjustments: boolean;
+    zoneImages: boolean;
+    zoneNames: boolean;
+    zoneReveals: boolean;
   }
 }
 
