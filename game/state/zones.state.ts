@@ -1,6 +1,6 @@
 import { gameConfig } from '../../app.config';
 import { GameState, Zone, ZoneBase } from '../../types';
-import tempZonesDatabase from '../../tempZonesDatabase';
+import zonesDatabase from '../data/zones.json';
 import createZoneObject from '../../utils/create-zone-object';
 import getRandomNumberBetween from '../../utils/get-random-number-between';
 
@@ -19,7 +19,7 @@ const zones = {
   },
 
   createRandom: (): Zone => {
-    const db = tempZonesDatabase;
+    const db = zonesDatabase;
     const randomZone = db[getRandomNumberBetween(0, db.length)];
     return createZoneObject(randomZone, true);
   },

@@ -18,7 +18,7 @@ export interface ZoneBase {
   id: string;
   name: string;
   mechanics?: string[];
-  set: string;
+  set?: string;
 }
 
 export interface Zone {
