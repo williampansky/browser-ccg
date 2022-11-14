@@ -1,0 +1,45 @@
+// ========================================================================
+// Mixin: Breakpoints
+//  imac..............5120px
+//  hd................1920px
+//  xlarge............1440px
+//  large.............1200px
+//  medium............960px
+//  small.............640px
+//  xsmall............410px
+// ========================================================================
+
+// prettier-ignore
+@mixin breakpoint($point) {
+  @if $point == 'imac' {
+    @media (min-width: map-get($breakpoints, 'imac'))   { @content ; }
+  }
+
+  @if $point == 'hd' {
+    @media (min-width: map-get($breakpoints, 'hd'))     { @content ; }
+  }
+
+  @else if $point == 'xxlarge' {
+    @media (min-width: map-get($breakpoints, 'xxlarge')){ @content ; }
+  }
+
+  @else if $point == 'xlarge' {
+    @media (min-width: map-get($breakpoints, 'xlarge')) { @content ; }
+  }
+
+  @else if $point == 'large' {
+    @media (min-width: map-get($breakpoints, 'large'))  { @content ; }
+  }
+
+  @else if $point == 'medium' {
+    @media (min-width: map-get($breakpoints, 'medium')) { @content ; }
+  }
+
+  @else if $point == 'small' {
+    @media (min-width: map-get($breakpoints, 'small'))  { @content ; }
+  }
+
+  @else if $point == 'xsmall' {
+    @media (min-width: map-get($breakpoints, 'xsmall')) { @content ; }
+  }
+}

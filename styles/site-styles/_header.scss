@@ -1,0 +1,42 @@
+.site__header {
+  @include display-flex(row nowrap, center, space-between);
+  padding: 0 1rem;
+  margin: 0 auto;
+
+  div {
+    color: white;
+  }
+
+  button {
+    @include display-flex(column nowrap, center, center);
+    appearance: none;
+    background: none;
+    margin: 1rem 0 1rem 1rem;
+    padding: 1rem 0 1rem 1rem;
+    position: relative;
+    z-index: 901;
+    border: none;
+    outline: none !important;
+  }
+
+  button > * {
+    height: 1.25rem;
+    max-height: 1.25rem;
+    width: 1.25rem;
+    max-width: 1.25rem;
+  }
+}
+
+.site__header {
+  .semver {
+    @include position-absolute(auto, 0, 0, auto, 901);
+    padding: 0.25em;
+    font-size: 0.625rem;
+    color: #9b9b9b;
+    display: none;
+  }
+
+  &.active .semver {
+    display: block;
+  }
+}

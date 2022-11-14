@@ -1,0 +1,70 @@
+import { useEffect } from 'react';
+
+/**
+ * Injects a `<style>` tag into the document head
+ * for global CSS that only applies to the game.
+ */
+const useGlobalGameStyles = (): void => {
+  useEffect(() => {
+    const style = document.createElement('style');
+
+    style.textContent = `
+        html {
+          perspective: 100vh;
+          position: fixed;
+          overflow: hidden;
+        }
+  
+        body {
+          margin: 0;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+            sans-serif;
+          font-size: 15px;
+          text-rendering: optimizeLegibility;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          -webkit-overflow-scrolling: touch;
+        }
+        
+        html,
+        body,
+        #root,
+        .bgio-client {
+          width: 100vw;
+          min-width: 100vw;
+          max-width: 100vw;
+          height: 100vh;
+          min-height: 100vh;
+          max-height: 100vh;
+          overflow: hidden;
+          overscroll-behavior: none;
+          background: #151515;
+          background-color: #151515;
+        }
+        
+        *,
+        *:before,
+        *:after {
+          box-sizing: border-box;
+          text-rendering: optimizeLegibility;
+          user-select: none;
+        }
+        
+        img {
+          pointer-events: none;
+        }
+        
+        main {
+          width: 100vw;
+          max-width: 100vw;
+          min-width: 100vw;
+          overflow: hidden;
+        }
+      `;
+
+    document.head.appendChild(style);
+  }, []);
+};
+
+export default useGlobalGameStyles;

@@ -1,0 +1,17 @@
+.animation--shrink-bounce-alt {
+  animation-name: shrink-bounce-alt;
+  animation-duration: 600ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.23, 1);
+  animation-delay: 0ms;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: forwards;
+
+  // prettier-ignore
+  @keyframes shrink-bounce-alt {
+    0% { transform: scale(1); }
+    33% { transform: scale(0.5); }
+    66% { transform: scale(1.1875); }
+    100% { transform: scale(1); }
+  }
+}

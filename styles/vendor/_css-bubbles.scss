@@ -1,0 +1,63 @@
+$enableCssBubblesAnimation: true;
+
+@if $enableCssBubblesAnimation {
+  // @see https://codepen.io/artursopelnik/pen/yXogRQ
+  .css__bubbles {
+    bottom: 0;
+    height: 120%;
+    left: 0;
+    list-style-type: none;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .css__bubble {
+    $size: 2px;
+
+    animation: summer-animation-bubble 3000ms infinite;
+    background-color: white;
+    border-radius: 50%;
+    bottom: 0;
+    height: $size;
+    opacity: 0.865;
+    position: absolute;
+    transition: all 300ms ease-in;
+    width: $size;
+
+    $bubbles: (117px, 2.4s), (48px, 1.8s), (100px, 0.8s), (38px, 1s), (80px, 0s),
+      (65px, 0.4s), (101px, 0.6s);
+    $index: 1;
+
+    @each $bubble in $bubbles {
+      $position: nth($bubble, 1); // get the first value in braces
+      $delay: nth($bubble, 2); // get the second value in braces
+
+      &.css__bubble--#{$index} {
+        animation-delay: $delay;
+        left: $position;
+      }
+
+      $index: $index + 1;
+    }
+  }
+
+  @keyframes summer-animation-bubble {
+    0% {
+      bottom: -15px;
+    }
+
+    100% {
+      bottom: 100%;
+    }
+  }
+} @else {
+  .css__bubbles {
+    display: none;
+  }
+}

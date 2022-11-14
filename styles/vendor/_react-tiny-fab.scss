@@ -1,0 +1,189 @@
+// https://github.com/dericgw/react-tiny-fab
+.rtf {
+  $fabButtonSize: var(--player-fab-size);
+  $actionButtonSize: calc(#{$fabButtonSize} * 1.5);
+  $li: calc(#{$fabButtonSize} / -0.8);
+
+  * {
+    outline: none;
+  }
+
+  .rtf--mb__c {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .rtf--mb {
+    border-radius: 50%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: ease-in-out transform 200ms;
+
+    &:before {
+      border-top: 1px solid rgba(255, 255, 255, 0.925);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.725);
+      border-radius: 50%;
+      content: '';
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    &:after {
+      border-top: 4px solid rgba(255, 255, 255, 0.25);
+      border-bottom: 4px solid rgba(0, 0, 0, 0.425);
+      border-radius: 50%;
+      content: '';
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+    }
+  }
+
+  // prettier-ignore
+  &.open .rtf--mb {
+    transform: rotate(-360deg);
+    & > img:first-child { opacity: 0; }
+    & > img:last-child { opacity: 1; }
+    & > * { transform: rotate(0); }
+  }
+
+  // prettier-ignore
+  ul {
+    align-items: center;
+    bottom: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    height: $fabButtonSize;
+    justify-content: center;
+    left: -43.5vw;
+    @media (min-width: 475px) { left: -48vw; }
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: overflow 200ms ease 2s;
+    width: 100vw;
+  }
+
+  &.open ul {
+    pointer-events: visible;
+  }
+
+  .rtf--ab {
+    border-radius: 50%;
+    transform: scale(1);
+    height: $actionButtonSize;
+    width: $actionButtonSize;
+    margin: 0;
+
+    &:before {
+      border-top: 1px solid rgba(255, 255, 255, 0.925);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.725);
+      border-radius: 50%;
+      content: '';
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      @include position-absolute(0, 0, 0, 0, 1);
+    }
+
+    &:after {
+      border-top: 4px solid rgba(255, 255, 255, 0.25);
+      border-bottom: 4px solid rgba(0, 0, 0, 0.425);
+      border-radius: 50%;
+      content: '';
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      @include position-absolute(0, 0, 0, 0, 1);
+    }
+  }
+
+  li.rtf--ab__c {
+    position: relative;
+    opacity: 0;
+    padding: 10px;
+    filter: blur(2px);
+    transition-property: filter, opacity, transform;
+    transition-timing-function: var(--animation-transition-cubic);
+    transition-duration: 400ms;
+    will-change: filter, opacity, transform;
+  }
+
+  .rtf--ab__c > span {
+    opacity: 0;
+    display: none !important;
+    padding: 2px 4px 4px;
+    transition-property: opacity, transform;
+    transform: translate(100%, calc(#{$li} / 4.6));
+  }
+
+  &.open .rtf--ab__c > span {
+    // display: block;
+    // opacity: 1;
+    // transition: ease-in-out;
+    // transition-duration: 100ms;
+    // transform: translate(0, calc(#{$li} / 4.6));
+  }
+
+  // straight list
+  // prettier-ignore
+  // &.open .rtf--ab__c {
+  //   opacity: 1;
+  //   &:nth-child(1).top { transform: translateY($li) scale(1); }
+  //   &:nth-child(2).top { transform: translateY(calc(#{$li} * 2)) scale(1); }
+  //   &:nth-child(3).top { transform: translateY(calc(#{$li} * 3)) scale(1); }
+  //   &:nth-child(4).top { transform: translateY(calc(#{$li} * 4)) scale(1); }
+  //   &:nth-child(5).top { transform: translateY(calc(#{$li} * 5)) scale(1); }
+  //   &:nth-child(6).top { transform: translateY(calc(#{$li} * 6)) scale(1); }
+
+  //   &:nth-child(1) > span { transition-delay:   0ms; }
+  //   &:nth-child(2) > span { transition-delay: 100ms; }
+  //   &:nth-child(2) > span { transition-delay: 200ms; }
+  //   &:nth-child(3) > span { transition-delay: 300ms; }
+  //   &:nth-child(4) > span { transition-delay: 400ms; }
+  //   &:nth-child(5) > span { transition-delay: 500ms; }
+  //   &:nth-child(6) > span { transition-delay: 600ms; }
+  // }
+
+  // knob list
+  // prettier-ignore
+  .rtf--ab__c {
+    opacity: 0;
+    &:nth-child(1).top { transform: translate(100%, 0) scale(0); transition-delay: 200ms; }
+    &:nth-child(2).top { transform: translate(0, 0) scale(0); transition-delay: 100ms; }
+    &:nth-child(3).top { transform: translate(-100%, 0) scale(0); transition-delay: 0ms; }
+  }
+
+  // prettier-ignore
+  &.open .rtf--ab__c {
+    opacity: 1;
+    filter: blur(0);
+    &:nth-child(1).top { transform: translate(0, $li) scale(1); transition-delay: 500ms; }
+    &:nth-child(2).top { transform: translate(0, calc(#{$li} * 2)) scale(1);  transition-delay: 300ms; }
+    &:nth-child(3).top { transform: translate(0, $li) scale(1);  transition-delay: 100ms; }
+  }
+}

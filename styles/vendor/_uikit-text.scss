@@ -1,0 +1,7 @@
+// @see https://getuikit.com/docs/text#text-wrapping
+.uk-text-truncate {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

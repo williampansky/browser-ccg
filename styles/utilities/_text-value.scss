@@ -1,0 +1,74 @@
+$Use-Text-Shadow: false;
+
+.text__value {
+  color: inherit;
+  display: block;
+  font-family: var(--font-family-card);
+  line-height: 1;
+  position: relative;
+  
+  // prettier-ignore
+  @if $Use-Text-Shadow == true {
+    color: white;
+    text-shadow: 0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black,
+      0 0 1px black;
+  }
+}

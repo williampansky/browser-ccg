@@ -1,0 +1,17 @@
+@import 'styles/mixins/!module.scss';
+
+.component {
+  @include display-flex(column nowrap, flex-start, flex-start);
+  @include position-absolute(0, 0, auto, 0, 8001);
+
+  background-color: #333;
+  color: white;
+  font-size: 10px;
+  padding: 0.5em;
+  width: 100%;
+
+  code {
+    color: aqua;
+    font-size: 90%;
+  }
+}

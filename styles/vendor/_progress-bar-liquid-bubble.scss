@@ -1,0 +1,150 @@
+// @see https://codepen.io/junebug12851/pen/mJZNqN
+[data-component='PlayerHealthOrb'] {
+  $baseSize: var(--player-health-size);
+  $divisionAmount: var(--player-health-size-division);
+  $progessSize: calc(#{$baseSize} / #{$divisionAmount});
+  $innerSize: calc(#{$progessSize} / 1.071428571);
+
+  $color__Green--Border: #53fc53;
+  $color__Green--BoxShadow: #029502;
+  $color__Green--WaterBoxShadow: #03bc03;
+  $color__Green--WaterBackground: linear-gradient(
+    to bottom,
+    rgba(83, 252, 83, 0.75),
+    rgba(64, 232, 77, 0.75),
+    rgba(21, 153, 56, 0.95)
+  );
+
+  $color__Orange--Border: #f07c3e;
+  $color__Orange--BoxShadow: #7e320a;
+  $color__Orange--WaterBoxShadow: #a0400c;
+  $color__Orange--WaterBackground: linear-gradient(
+    to bottom,
+    rgba(240, 124, 62, 0.75),
+    rgba(221, 104, 56, 0.75),
+    rgba(112, 51, 17, 0.95)
+  );
+
+  $color__Red--Border: #ed3b3b;
+  $color__Red--BoxShadow: #7a0b0b;
+  $color__Red--WaterBoxShadow: #ac3517;
+  $color__Red--WaterBackground: linear-gradient(
+    to bottom,
+    rgba(172, 53, 23, 0.75),
+    rgba(153, 33, 17, 0.75),
+    rgba(99, 16, 6, 0.95)
+  );
+
+  .red,
+  .progress,
+  .inner,
+  .water,
+  .glare {
+    pointer-events: none;
+  }
+
+  .progress {
+    background: #111;
+    border-radius: 50%;
+    height: $progessSize;
+    position: relative;
+    transition: all 2500ms var(--animation-transition-cubic);
+    width: $progessSize;
+  }
+
+  .inner {
+    border-radius: 50%;
+    border: 5px solid #1a1a1a;
+    height: $innerSize;
+    overflow: hidden;
+    position: absolute;
+    transition: all 2500ms var(--animation-transition-cubic);
+    width: $innerSize;
+    z-index: 2;
+  }
+
+  .water {
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-name: spin;
+    animation-timing-function: linear;
+    border-radius: 40%;
+    height: 200%;
+    left: -50%;
+    position: absolute;
+    transition: all 2500ms var(--animation-transition-cubic);
+    width: 200%;
+    z-index: 1;
+  }
+
+  .glare {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    filter: blur(4px);
+    height: 200%;
+    left: -120%;
+    position: absolute;
+    top: -120%;
+    transform: rotate(45deg);
+    transition: all 2500ms var(--animation-transition-cubic);
+    width: 200%;
+    z-index: 5;
+  }
+
+  .green {
+    .progress {
+      border: 5px solid $color__Green--Border;
+      // box-shadow: 0 0 20px $color__Green--BoxShadow;
+    }
+
+    .water {
+      background: $color__Green--WaterBackground;
+      // box-shadow: 0 0 20px $color__Green--WaterBoxShadow;
+      top: 25%;
+    }
+
+    .glare {
+      opacity: 1;
+    }
+  }
+
+  .orange {
+    .progress {
+      border: 5px solid $color__Orange--Border;
+      // box-shadow: 0 0 20px $color__Orange--BoxShadow;
+    }
+
+    .water {
+      top: 50%;
+      background: $color__Orange--WaterBackground;
+      // box-shadow: 0 0 20px $color__Orange--WaterBoxShadow;
+    }
+
+    .glare {
+      opacity: 0.65;
+    }
+  }
+
+  .red {
+    .progress {
+      border: 5px solid $color__Red--Border;
+      // box-shadow: 0 0 20px $color__Red--BoxShadow;
+    }
+
+    .water {
+      background: $color__Red--WaterBackground;
+      // box-shadow: 0 5px 0 $color__Red--WaterBoxShadow;
+      top: 75%;
+    }
+
+    .glare {
+      opacity: 0.35;
+    }
+  }
+
+  // prettier-ignore
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+}

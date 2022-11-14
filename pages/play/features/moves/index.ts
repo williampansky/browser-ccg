@@ -1,0 +1,1 @@
+export { default as movesSlice } from './moves.slice'
