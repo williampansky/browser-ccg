@@ -33,7 +33,6 @@ export const Minion = ({
     imageFlairSrc,
     imagePlaceholderSrc,
     isGolden,
-    mechanic,
     mechanics,
     name,
     numberPrimary,
