@@ -1,9 +1,11 @@
 html,
 body,
 #__next,
-#__next > main {
+#__next > main,
+#__next > .bgio-client {
   color: #d1d1d1;
   background: #151515;
+  background-color: #151515;
   width: 100vw;
   min-width: 100vw;
   max-width: 100vw;

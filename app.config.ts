@@ -1,4 +1,4 @@
-import { AppConfig, GameConfig, Pages, SiteConfig } from './types';
+import type { AppConfig, GameConfig, Pages, SiteConfig } from './types';
 
 export const gameConfig: GameConfig = {
   debugConfig: {

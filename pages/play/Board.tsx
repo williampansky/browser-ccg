@@ -4,23 +4,24 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react';
-import { BoardProps, Client } from 'boardgame.io/react';
-import { Ctx } from 'boardgame.io';
-import { Card, GameState, Zone } from '../../types';
+import { useDispatch } from 'react-redux';
+
+import type { BoardProps } from 'boardgame.io/react';
+import type { Card, GameState } from '../../types';
+
+import {
+  useEndPhase,
+  useEndTurnButton,
+  useGameOver,
+  useWindowSize,
+} from '../../hooks';
+
 import { CardModal } from './features/card-modal/CardModal';
-import { EndTurnButton, Player, PlayerHand } from '../../components';
-import type { RootState } from './store';
-import { useSelector, useDispatch } from 'react-redux';
 import { Zones } from './features/zones/components/Zones/Zones.Wrapper';
 import { showCardModal } from './features/card-modal/card-modal.slice';
-import useEndTurnButton from '../../hooks/useEndTurnButton';
-import useEndPhase from '../../hooks/useEndPhase';
-import { useGameOver, useWindowSize } from '../../hooks';
 import { setWindowSize } from './features/windowSize';
 import { GameOverOverlay } from './features/game-over';
-import { DebugBar } from './play-components/DebugBar';
-
-const showDebug = false;
+import { DebugBar, EndTurnButton, Player, PlayerHand } from '../../components';
 
 export interface GameProps extends BoardProps<GameState> {}
 
@@ -112,7 +113,7 @@ export const Board = (props: GameProps) => {
           height: `calc(100vh - ${addressBarSize}px)`,
           maxHeight: `calc(100vh - ${addressBarSize}px)`,
           minHeight: `calc(100vh - ${addressBarSize}px)`,
-          position: 'relative'
+          position: 'relative',
         }}
       >
         <CardModal />
