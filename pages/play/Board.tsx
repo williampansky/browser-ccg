@@ -112,6 +112,7 @@ export const Board = (props: GameProps) => {
           height: `calc(100vh - ${addressBarSize}px)`,
           maxHeight: `calc(100vh - ${addressBarSize}px)`,
           minHeight: `calc(100vh - ${addressBarSize}px)`,
+          position: 'relative'
         }}
       >
         <CardModal />
