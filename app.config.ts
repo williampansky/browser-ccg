@@ -4,7 +4,7 @@ export const gameConfig: GameConfig = {
   debugConfig: {
     debugCardId: '',
     logPhaseToConsole: true,
-    showDebugBar: false,
+    showDebugBar: true,
   },
   numerics: {
     actionPointsPerTurn: 1,
