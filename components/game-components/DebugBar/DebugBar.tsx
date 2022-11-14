@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import type { ReactElement } from 'react';
 import type { Ctx } from 'boardgame.io';
 import type { GameState, PlayerID } from '../../../types';
-import type { RootState } from '../store';
+import type { RootState } from '../../../store';
 import styles from './debug-bar.module.scss';
 
 interface DebugBarComponent {

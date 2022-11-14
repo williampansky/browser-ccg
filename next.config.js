@@ -6,7 +6,7 @@ const nextConfig = {
     AIRTABLE_API_KEY: 'keyGV8CtuvpBRjIJ0',
     AIRTABLE_BASE_ID: 'appNlE7nWcgfXGBii',
   },
-  pageExtensions: ['page.tsx', 'page.ts']
+  // pageExtensions: ['page.tsx', 'page.ts']
 }
 
 module.exports = nextConfig

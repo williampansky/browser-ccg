@@ -40,5 +40,5 @@ async function getGameCards(res: NextApiResponse) {
 
 async function getEntourageCards(res: NextApiResponse) {
   const arr = setsEntourage.map((item: CardBase) => createCardObject(item));
-  res.status(200).json(arr);
+  return arr;
 }

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setGameOver } from '../pages/play/features';
+import { setGameOver } from '../features';
 import { GameOver } from '../types/g.interface';
 
 const useGameOver = (ctxGameOver: GameOver): void => {

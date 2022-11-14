@@ -14,7 +14,7 @@ import { useGesture } from '@use-gesture/react';
 import { usePrevious } from '../../../hooks';
 import { Card as CardComponent } from '../Card/Card';
 
-import type { RootState } from '../../../pages/play/store';
+import type { RootState } from '../../../store';
 import type { Card, GameState, PlayerID } from '../../../types';
 
 import fn from './fn';

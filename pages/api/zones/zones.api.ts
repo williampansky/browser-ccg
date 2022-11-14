@@ -5,7 +5,7 @@ import zones from '../../../data/zones.json';
 
 export default async (_req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const data = await getZones(res);
+    const data = await getZones();
     res.status(200).json(data);
   } catch (err: any) {
     console.error(err);
@@ -13,10 +13,8 @@ export default async (_req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-async function getZones(res: NextApiResponse) {
-  const arr = zones
+async function getZones(arr: ZoneBase[] = zones) {
+  return arr
     .map((item: ZoneBase) => createZoneObject(item))
     .sort((a: any, b: any) => a.id.localeCompare(b.id));
-
-  res.status(200).json(arr);
 }
