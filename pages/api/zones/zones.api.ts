@@ -14,6 +14,9 @@ export default async (_req: NextApiRequest, res: NextApiResponse) => {
 };
 
 async function getZones(res: NextApiResponse) {
-  const arr = zones.map((item: ZoneBase) => createZoneObject(item));
+  const arr = zones
+    .map((item: ZoneBase) => createZoneObject(item))
+    .sort((a: any, b: any) => a.id.localeCompare(b.id));
+
   res.status(200).json(arr);
 }

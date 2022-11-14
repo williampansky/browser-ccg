@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
+
 import { Container, Layout } from '../../components/site-components';
-import { siteConfig } from '../../app.config';
+import { gameConfig, siteConfig } from '../../app.config';
 import type { Zone } from '../../types';
+
+interface ZoneModal extends Zone {
+  imgSrc: string;
+}
 
 export default function TheZonesPage() {
   const page = siteConfig.pages.zones;
   const [zones, setZones] = useState<Zone[]>([]);
-  const [zoneModal, setZoneModal] = useState<Zone | undefined>(undefined);
+  const [zoneModal, setZoneModal] = useState<ZoneModal | undefined>(undefined);
 
   const fetchZones = async () => {
     const response = await fetch('/api/zones');
@@ -21,14 +27,17 @@ export default function TheZonesPage() {
   const inspectZone = (z: Zone) => {
     return (event: React.MouseEvent) => {
       event.preventDefault();
-      setZoneModal(z);
+      setZoneModal({
+        ...z,
+        imgSrc: `/images/zones/${z?.id.replace('ZONE_', '')}.jpg`,
+      } as ZoneModal);
     };
   };
 
   return (
     <Layout title={page.name} description={page.description}>
       <div className={`${page.name.toLocaleLowerCase()}__page`}>
-      <Container>
+        <Container>
           <h1>{page.headline}</h1>
           <div className='grid'>
             {zones.map((z: Zone) => {
@@ -38,10 +47,29 @@ export default function TheZonesPage() {
                   className='grid-item'
                   onClickCapture={inspectZone(z)}
                 >
-                  <div>{z.id}</div>
-                  <div>{z.name}</div>
-                  <div>{z.effectText}</div>
-                  {/* <CardComponent {...z} canPlay={true} /> */}
+                  <div className='zone'>
+                    <div className='zone__center'>
+                      <div className='zone__info'>
+                        <div className='zone__name'>{z.name}</div>
+                        <div className='zone__text'>{z?.effectText}</div>
+                      </div>
+                      {gameConfig.zonesConfig.zoneImages && (
+                        <div className='center__image'>
+                          <Image
+                            alt=''
+                            role='presentation'
+                            layout='intrinsic'
+                            height={1000}
+                            width={1000}
+                            src={`/images/zones/${z.id.replace(
+                              'ZONE_',
+                              ''
+                            )}.jpg`}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               ) : null;
             })}
@@ -50,13 +78,37 @@ export default function TheZonesPage() {
 
         <div
           className={[
-            'zone__modal',
-            zoneModal ? 'zone__modal--active' : '',
+            'zones__modal',
+            zoneModal ? 'zones__modal--active' : '',
           ].join(' ')}
           onClick={() => setZoneModal(undefined)}
         >
           <div className='modal__inner'>
-            {/* {zoneModal && <CardComponent {...zoneModal} canPlay={true} />} */}
+            {zoneModal && (
+              <>
+                <div className='inner__header'>
+                  <h2>{zoneModal.name}</h2>
+                  <p>{zoneModal.effectText}</p>
+                </div>
+                <div className='inner__image'>
+                  <Image
+                    alt=''
+                    role='presentation'
+                    layout='intrinsic'
+                    height={1000}
+                    width={1000}
+                    src={zoneModal.imgSrc}
+                  />
+                </div>
+                <div className='inner__footer'>
+                  {zoneModal?.artistName && (
+                    <p>
+                      <small>Artist: {zoneModal?.artistName}</small>
+                    </p>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

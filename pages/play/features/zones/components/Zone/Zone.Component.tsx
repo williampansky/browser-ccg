@@ -9,8 +9,6 @@ import type {
   ZonesCardsReference,
 } from '../../../../../../types';
 
-import styles from './zone.module.scss';
-
 import { OpponentZoneSlot } from '../ZoneSlotOpponent';
 import { PlayerZoneSlot } from '../ZoneSlotPlayer';
 import { ZoneDropSlot } from '../ZoneDropSlot';
@@ -63,11 +61,11 @@ export const Zone = ({
   return (
     <div
       className={[
-        styles['wrapper'],
-        zone?.disabled[player] ? styles['disabled'] : '',
+        'zone',
+        zone?.disabled[player] ? 'zone--disabled' : '',
       ].join(' ')}
     >
-      <div className={[styles['zone-side'], styles['opponent-side']].join(' ')}>
+      <div className={['zone__side', 'side__opponent'].join(' ')}>
         {[...Array.from(Array(6))].map((_, idx: number) => {
           return (
             <OpponentZoneSlot
@@ -86,7 +84,7 @@ export const Zone = ({
         })}
       </div>
 
-      <div className={styles['zone-center']}>
+      <div className={'zone__center'}>
         <ZoneName
           name={zonesConfig.zoneNames ? zone?.name : ''}
           effectText={
@@ -120,21 +118,21 @@ export const Zone = ({
         />
 
         {zonesConfig.zoneImages && (
-          <div className={styles['zone-image']}>
+          <div className={'center__image'}>
             <Image
               alt=''
               role='presentation'
               layout='fill'
-              src={`/images/zones/${zone.id}.jpg`}
+              src={`/images/zones/${zone.id.replace('ZONE_', '')}.jpg`}
             />
           </div>
         )}
       </div>
 
-      <div className={styles['player-side-wrapper']}>
+      <div className={'side__player__wrapper'}>
         <ZoneDropSlot isActive={zonesAreActive} zoneNumber={zoneNumber} />
 
-        <div className={[styles['zone-side'], styles['player-side']].join(' ')}>
+        <div className={['zone__side', 'side__player'].join(' ')}>
           {[...Array.from(Array(6))].map((_, idx: number) => {
             return (
               <PlayerZoneSlot

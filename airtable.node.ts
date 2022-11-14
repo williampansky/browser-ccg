@@ -42,6 +42,11 @@ function replaceAllConstants(stringToParse: string, keyToUse: string = 'name') {
   );
 }
 
+function parseMechanics(arr: string[]) {
+  if (!arr || typeof arr === 'undefined') return [];
+  return arr.map(s => replaceAllConstants(s, 'value'))
+}
+
 function createArtistHtmlLink(name?: string, url?: string): string | undefined {
   if (!name || !url) return undefined;
   if (!name && url) return url;
@@ -227,11 +232,7 @@ const fetchZonesData = async (tableId: string) => {
           effectText: replaceAllConstants(fields?.effectText),
           flavorText: fields?.flavorText,
           id: fields?.id,
-          mechanics: () => {
-            fields?.mechanics.forEach((m: string) =>
-              replaceAllConstants(m, 'value')
-            );
-          },
+          mechanics: parseMechanics(fields?.mechanics),
           name: fields?.name,
           set: replaceAllConstants(fields?.set, 'value'),
         };

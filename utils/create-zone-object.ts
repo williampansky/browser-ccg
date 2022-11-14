@@ -19,6 +19,8 @@ const createZoneObject = (obj: ZoneBase, withUuid: boolean = false): Zone => {
     set,
   } = obj;
 
+  console.log(mechanics)
+
   return {
     artist:
       artistName && artistUrl
