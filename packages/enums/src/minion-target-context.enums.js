@@ -1,6 +1,0 @@
-const MINION_TARGET_CONTEXT = {
-  MINION: 'MINION',
-  PLAYER: 'PLAYER'
-};
-
-export default MINION_TARGET_CONTEXT;

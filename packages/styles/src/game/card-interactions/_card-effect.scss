@@ -1,8 +1,0 @@
-.card__effect {
-  pointer-events: none;
-  border-radius: calc(var(--card-height) / 28.571428571);
-  height: 100%;
-  opacity: 0;
-  width: 100%;
-  @include position-absolute(0, 0, 0, 0, 0);
-}

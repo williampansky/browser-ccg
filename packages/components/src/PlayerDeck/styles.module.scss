@@ -1,9 +1,0 @@
-.deck {
-  padding: 40px 10px;
-  height: 100%;
-  overflow-y: auto;
-
-  & > div + div {
-    margin-top: 2px;
-  }
-}

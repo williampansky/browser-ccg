@@ -1,8 +1,0 @@
-{
-  "extends": "../../jsconfig.json",
-  "include": ["src"],
-  "baseUrl": "./",
-  "paths": {
-    "@/*": ["./*"]
-  }
-}
