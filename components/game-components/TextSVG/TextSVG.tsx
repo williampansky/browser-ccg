@@ -12,12 +12,13 @@ import Number8 from '../../../public/images/type/8.svg';
 import Number9 from '../../../public/images/type/9.svg';
 
 interface TextSvgProps {
-  value?: any;
+  value: any;
 }
 
-export const TextSVG = ({ value }: TextSvgProps) => {
-  if (!value) return <span data-component='TextSVG'></span>;
-  switch (value?.toString()) {
+export const TextSVG = ({ value = 0 }: TextSvgProps) => {
+  // if (!value) return <span data-component='TextSVG'></span>;
+  switch (value.toString()) {
+    case 0:
     case '0':
       return <span className='bccg-icon bccg-preserve' data-component='TextSVG'><Number0 /></span>;
     case '1':
