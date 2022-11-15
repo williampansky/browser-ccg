@@ -33,8 +33,8 @@ export default function TheCollectionPage() {
         <Container>
           <h1>{page.headline}</h1>
           <div className='grid'>
-            {cards.map((c: Card) => {
-              return c ? (
+            {cards?.map((c: Card) => {
+              return c && !c.isEntourage ? (
                 <div
                   key={c.uuid}
                   className='grid-item'

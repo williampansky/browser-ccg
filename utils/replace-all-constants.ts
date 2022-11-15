@@ -1,5 +1,5 @@
-import CONSTANTS from '../data/constants.json';
-import MECHANICS from '../data/mechanics.json';
+import CONSTANTS from '../json/constants.json';
+import MECHANICS from '../json/mechanics.json';
 
 const jsonDatabase = {
   ...CONSTANTS,

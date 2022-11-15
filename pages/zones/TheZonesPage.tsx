@@ -38,9 +38,9 @@ export default function TheZonesPage() {
     <Layout title={page.name} description={page.description}>
       <div className={`${page.name.toLocaleLowerCase()}__page`}>
         <Container>
-          <h1>{page.headline}</h1>
+          <h1>{page.name}</h1>
           <div className='grid'>
-            {zones.map((z: Zone) => {
+            {zones?.map((z: Zone) => {
               return z ? (
                 <div
                   key={z.id}

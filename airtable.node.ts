@@ -2,8 +2,8 @@
 require('dotenv').config({ path: './.env.local' });
 const fs = require('fs');
 const Airtable = require('airtable-node');
-const CONSTANTS = require('./data/constants.json');
-const MECHANICS = require('./data/mechanics.json');
+const CONSTANTS = require('./json/constants.json');
+const MECHANICS = require('./json/mechanics.json');
 
 const API_KEY = process.env.AIRTABLE_API_KEY;
 const BASE_ID = process.env.AIRTABLE_BASE_ID;
@@ -58,12 +58,12 @@ function createArtistHtmlLink(name?: string, url?: string): string | undefined {
 
 function writeToFile(fileName: string, data: any) {
   try {
-    fs.writeFileSync(`./data/${fileName}.json`, data);
+    fs.writeFileSync(`./json/${fileName}.json`, data);
     fs.writeFileSync(`./game/data/${fileName}.json`, data);
     console.log(`Writing ${fileName} to system ...`);
   } catch (error) {
     const obj = { dataError: data, catchError: error };
-    fs.writeFileSync(`./data/${fileName}.error.txt`, obj);
+    fs.writeFileSync(`./json/${fileName}.error.txt`, obj);
     fs.writeFileSync(`./game/data/${fileName}.error.txt`, obj);
   }
 }

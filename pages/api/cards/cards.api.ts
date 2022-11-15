@@ -7,18 +7,22 @@ import {
   setsEntourageTable,
 } from '../../../airtable';
 import { createCardObject } from '../../../utils';
-import setsGame from '../../../data/setsGame.json';
-import setsEntourage from '../../../data/setsEntourage.json';
+// import setsGame from '../../../json/setsGame.json';
+// import setsEntourage from '../../../json/setsEntourage.json';
+
+import path from 'path';
+import { promises as fs } from 'fs';
+const jsonDirectory = path.join(process.cwd(), 'json');
 
 export default async (_req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const game = await getGameCards(res);
-    const entourage = await getEntourageCards(res);
+    const game = await getGameCards();
+    const entourage = await getEntourageCards();
 
-    const db = {
-      game,
-      entourage
-    }
+    const db = [
+      ...game,
+      ...entourage
+    ]
     // const records = await table.select({}).firstPage();
 
     // const gameArr = game?.map((obj: CardBase) => createCardObject(obj))
@@ -33,12 +37,12 @@ export default async (_req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-async function getGameCards(res: NextApiResponse) {
-  const arr = setsGame.map((item: CardBase) => createCardObject(item));
-  res.status(200).json(arr);
+async function getGameCards() {
+  const fileContents = await fs.readFile(jsonDirectory + '/setsGame.json', 'utf8');
+  return JSON.parse(fileContents).map((item: CardBase) => createCardObject(item));
 }
 
-async function getEntourageCards(res: NextApiResponse) {
-  const arr = setsEntourage.map((item: CardBase) => createCardObject(item));
-  return arr;
+async function getEntourageCards() {
+  const fileContents = await fs.readFile(jsonDirectory + '/setsEntourage.json', 'utf8');
+  return JSON.parse(fileContents).map((item: CardBase) => createCardObject(item));
 }
