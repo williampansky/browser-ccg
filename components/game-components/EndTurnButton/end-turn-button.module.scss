@@ -7,11 +7,16 @@
   font-size: 0.75rem;
   border-radius: 0;
   border: 0;
-  height: 17.5px;
+  height: auto;
   min-width: 95px;
   background-color: yellow;
+  padding: 0 0.25rem;
 
   &[disabled] {
     background-color: darkgray;
+  }
+
+  & > span {
+    line-height: 2.875;
   }
 }

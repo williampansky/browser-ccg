@@ -1,3 +1,4 @@
+export { default as useAddressBarSize } from './useAddressBarSize';
 export { default as useEndPhase } from './useEndPhase';
 export { default as useEndTurnButton } from './useEndTurnButton';
 export { default as useGameOver } from './useGameOver';

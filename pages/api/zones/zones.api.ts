@@ -1,9 +1,8 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import type { ZoneBase } from '../../../types';
-import { createZoneObject } from '../../../utils';
-// import zones from '../../../data/zones.json';
 import path from 'path';
 import { promises as fs } from 'fs';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { createZoneObject } from '../../../utils';
+import type { ZoneBase } from '../../../types';
 
 export default async (_req: NextApiRequest, res: NextApiResponse) => {
   try {

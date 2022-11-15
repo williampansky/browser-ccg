@@ -10,6 +10,7 @@ import type { BoardProps } from 'boardgame.io/react';
 import type { Card, GameState } from '../../../types';
 
 import {
+  useAddressBarSize,
   useEndPhase,
   useEndTurnButton,
   useGameOver,
@@ -41,40 +42,20 @@ export const Board = (props: GameProps) => {
   const yourID = playerID === '0' ? '0' : '1';
   const opponentID = playerID === '0' ? '1' : '0';
 
-  // state
-  const [addressBarSize, setAddressBarSize] = useState<number>(0);
-
   // hooks
   const { height, width } = useWindowSize();
+  const addressBarSize = useAddressBarSize();
   const endTurnIsDisabled = useEndTurnButton(phase, G.playerTurnDone);
   const dispatch = useDispatch();
   useEndPhase(events, phase, G.playerTurnDone);
   useGameOver(ctx?.gameover);
 
-  /**
-   * Uses html.perspective CSS property, which is set to 100vh, to determine
-   * a mobile browser's address bar height; such as Android Chrome's URL bar.
-   * @see [StackOverflow]{@link https://stackoverflow.com/a/54796813}
-   */
-  const addressBarCallback = useCallback(() => {
-    if (typeof document !== 'undefined') {
-      setAddressBarSize(
-        parseFloat(getComputedStyle(document.documentElement).perspective) -
-          document.documentElement.clientHeight
-      );
-    }
-  }, []);
-
   useEffect(() => {
     dispatch(setWindowSize({ height, width }));
   }, [height, width]);
 
-  useLayoutEffect(() => {
-    addressBarCallback();
-  }, [addressBarCallback]);
-
   const onEndTurnButtonClick = () => {
-    return moves.setDone('0');
+    return moves.setDone(yourID);
   };
 
   const onCardClick = (obj: Card) => {
@@ -92,10 +73,6 @@ export const Board = (props: GameProps) => {
   const onCardSlotDrop = (playerId: string, zoneNumber: number) => {
     return moves.playCard(playerId, zoneNumber);
   };
-
-  // React.useEffect(() => {
-  //   dispatch(setActionPoints(G.actionPoints));
-  // }, [G.actionPoints]);
 
   return (
     <>
@@ -117,114 +94,16 @@ export const Board = (props: GameProps) => {
         }}
       >
         <CardModal />
-        <div
-          style={{
-            display: 'flex',
-            flexFlow: 'row nowrap',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            width: '100%',
-            height: '22px',
-            position: 'absolute',
-            top: 0,
-            bottom: 'auto',
-            left: 0,
-            right: 0,
-            zIndex: 1,
-            padding: '0.15em',
-            background: '#333',
-          }}
-        >
-          <div
-            style={{
-              paddingRight: '0.25em',
-              marginRight: 'auto',
-              fontSize: '11px',
-              whiteSpace: 'nowrap',
-              color: 'white',
-            }}
-          >
-            {G.playerNames['1']}
-          </div>
-          <div
-            style={{
-              padding: '0 0.15em',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexFlow: 'row nowrap',
-                alignItems: 'center',
-                fontSize: 11,
-                color: 'white',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              <div>
-                Hand: <strong>{G.counts['1'].hand}</strong>
-              </div>
-              <div>&nbsp;|&nbsp;</div>
-              <div>
-                Deck: <strong>{G.counts['1'].deck}</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          style={{
-            width: '100%',
-            position: 'absolute',
-            top: '10px',
-            bottom: 'auto',
-            left: 0,
-            right: 0,
-            zIndex: 0,
-            maxWidth: '100%',
-            padding: '0 1em',
-          }}
-        >
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(8, 1fr)',
-              gridGap: '0',
-              width: '100%',
-            }}
-          >
-            {/* {[...Array.from(Array(G.counts['1'].hand))]?.map((_, idx) => {
-              return (
-                <div
-                  key={idx}
-                  style={{
-                    display: 'flex',
-                    flexFlow: 'column nowrap',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '0',
-                    textAlign: 'center',
-                    position: 'relative',
-                    border: '1px solid',
-                    borderColor: '#333',
-                    borderRadius: '0.25em',
-                    background: ctx.currentPlayer === '1' ? 'white' : '#616161',
-                    height: '3.5em',
-                    width: '2.45em',
-                    transform:
-                      G.selectedCardIndex['1'] === idx
-                        ? 'scale(120%)'
-                        : 'scale(80%)',
-                    transition: '200ms ease-out',
-                  }}
-                ></div>
-              );
-            })} */}
-          </div>
-        </div>
-
         <Zones player={yourID} opponent={opponentID} />
-
-        <Player player={G.players[yourID]} />
+        <Player
+          actionPoints={G.actionPoints[yourID]}
+          counts={G.counts[yourID]}
+          currentTurn={G.turn}
+          endTurnIsDisabled={endTurnIsDisabled}
+          onEndTurnButtonClick={onEndTurnButtonClick}
+          player={G.players[yourID]}
+          turnsPerGame={gameConfig.numerics.numberOfSingleTurnsPerGame}
+        />
 
         <PlayerHand
           G={G}
@@ -238,7 +117,7 @@ export const Board = (props: GameProps) => {
 
         <div
           style={{
-            display: 'flex',
+            display: 'none',
             flexFlow: 'row nowrap',
             alignItems: 'center',
             justifyContent: 'flex-start',

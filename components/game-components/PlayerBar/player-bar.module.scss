@@ -1,0 +1,19 @@
+.component {
+  position: absolute;
+  top: auto; right: 0; bottom: 0; left: 0;
+  background: gray;
+}
+
+.inner {
+  padding: 0.25rem;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: calc(var(--avatar-size) - 1.5rem);
+  margin-right: 0;
+  
+  & > *:nth-child(1) {
+    margin-right: 0.5rem;
+  }
+}

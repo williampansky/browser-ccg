@@ -20,8 +20,10 @@ export const EndTurnButton = ({
       disabled={isDisabled}
       className={styles['component']}
     >
-      {isDisabled ? 'Waiting ' : 'End Turn '}
-      {currentTurn}/{turnsPerGame}
+      <span className='text__value'>
+        {isDisabled ? 'Waiting ' : 'End Turn '}
+        {currentTurn}/{turnsPerGame}
+      </span>
     </button>
   );
 };

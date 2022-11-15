@@ -1,0 +1,17 @@
+.component {
+  position: relative;
+  max-width: 20px;
+  max-height: fit-content;
+
+  .img > span {
+    display: block !important;
+  }
+
+  .block {
+    display: block;
+  }
+
+  .none {
+    display: none;
+  }
+}

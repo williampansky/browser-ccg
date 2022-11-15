@@ -26,26 +26,8 @@
 
   // layout vars
   // ========================================================================
-  --game-wrapper-background-color:              #333;
-  --board-board-background-color:               #151515;
-  --board-theirHand-background-color:           #151515;
-  --board-theirHand-height:                     45px;
-  --board-theirHand-zIndex:                     200;
-  --board-theirPlayerArea-background-color:     #8c8273;
-  --board-theirPlayerArea-height:               85px;
-  --board-theirPlayerArea-zIndex:               190;
-  --board-yourHand-background-color:            #2c2b2b;
-  --board-yourHand-height:                      45px;
-  --board-yourHand-zIndex:                      200;
-  --board-yourPlayerArea-background-color:      #8c8273;
-  --board-yourPlayerArea-height:                85px;
-  --board-yourPlayerArea-zIndex:                190;
-  --board-hands-height: calc(
-    var(--board-theirHand-height) + var(--board-yourHand-height)
-  );
-  --board-playerAreas-height: calc(
-    var(--board-theirHand-height) + var(--board-yourHand-height)
-  );
+  --board-height: 75%;
+  --board-width: 100%;
 
   // animation vars
   // ========================================================================
@@ -74,15 +56,13 @@
   --zone-border-radius:               35%;
   --zone-background-color:            gray;
   --zone-border-color:                var(--zone-background-color);
-  &:before {
-    --zone-border-color:              var(--zone-background-color);
-  }
 
   // avatar vars
   // ========================================================================
   --avatar-border-radius:               65%;
   --avatar-height:                      50px;
   --avatar-width:                       50px;
+  --avatar-size:                        100px;
 
   // player FAB vars
   // ========================================================================
