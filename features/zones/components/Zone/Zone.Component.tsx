@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import type { ReactElement } from 'react';
+import Image from 'next/image';
 
-import { usePrevious } from '../../../../hooks';
 import type {
   GameConfig,
   PlayerID,
@@ -9,6 +8,7 @@ import type {
   ZonesCardsReference,
 } from '../../../../types';
 
+import { usePrevious } from '../../../../hooks';
 import { OpponentZoneSlot } from '../ZoneSlotOpponent';
 import { PlayerZoneSlot } from '../ZoneSlotPlayer';
 import { ZoneDropSlot } from '../ZoneDropSlot';
@@ -16,7 +16,6 @@ import { ZoneLeaderEffects } from '../ZoneLeaderEffects';
 import { ZonePower } from '../ZonePower';
 import { ZoneRevealOverlay } from '../ZoneRevealOverlay';
 import { ZoneName } from '../ZoneName';
-import Image from 'next/image';
 
 interface ZoneClientProps {
   opponent: string;
@@ -38,9 +37,9 @@ export const Zone = ({
   zoneRef,
   zonesAreActive,
   gameConfig,
-}: ZoneClientProps): ReactElement => {
+}: ZoneClientProps) => {
   const { powers } = zone;
-  const { zonesConfig } = gameConfig;
+  const { numerics, zonesConfig } = gameConfig;
   const [zoneLeader, setZoneLeader] = useState<PlayerID | undefined>(undefined);
   const [zonePowers, setZonePowers] = useState({ '0': 0, '1': 0 });
   const prevZonePowers = usePrevious({ '0': 0, '1': 0 });
@@ -60,28 +59,29 @@ export const Zone = ({
 
   return (
     <div
-      className={[
-        'zone',
-        zone?.disabled[player] ? 'zone--disabled' : '',
-      ].join(' ')}
+      className={['zone', zone?.disabled[player] ? 'zone--disabled' : ''].join(
+        ' '
+      )}
     >
       <div className={['zone__side', 'side__opponent'].join(' ')}>
-        {[...Array.from(Array(6))].map((_, idx: number) => {
-          return (
-            <OpponentZoneSlot
-              key={idx}
-              data={zone.sides[opponent][idx]}
-              onClick={(val: any) => console.log(val)}
-              zoneNumber={zoneNumber}
-              zoneRef={zoneRef}
-              slotIndex={idx}
-              opponent={opponent}
-            />
-          );
-          //  : (
-          //   <div key={idx} className={styles['blank-slot']} />
-          // );
-        })}
+        {[...Array.from(Array(numerics.numberOfSlotsPerZone))].map(
+          (_, idx: number) => {
+            return (
+              <OpponentZoneSlot
+                key={idx}
+                data={zone.sides[opponent][idx]}
+                onClick={(val: any) => console.log(val)}
+                zoneNumber={zoneNumber}
+                zoneRef={zoneRef}
+                slotIndex={idx}
+                opponent={opponent}
+              />
+            );
+            //  : (
+            //   <div key={idx} className={styles['blank-slot']} />
+            // );
+          }
+        )}
       </div>
 
       <div className={'zone__center'}>
@@ -133,19 +133,21 @@ export const Zone = ({
         <ZoneDropSlot isActive={zonesAreActive} zoneNumber={zoneNumber} />
 
         <div className={['zone__side', 'side__player'].join(' ')}>
-          {[...Array.from(Array(6))].map((_, idx: number) => {
-            return (
-              <PlayerZoneSlot
-                key={idx}
-                data={zone.sides[player][idx]}
-                onClick={(val: any) => console.log(val)}
-                zoneNumber={zoneNumber}
-                zoneRef={zoneRef}
-                slotIndex={idx}
-                player={player}
-              />
-            );
-          })}
+          {[...Array.from(Array(numerics.numberOfSlotsPerZone))].map(
+            (_, idx: number) => {
+              return (
+                <PlayerZoneSlot
+                  key={idx}
+                  data={zone.sides[player][idx]}
+                  onClick={(val: any) => console.log(val)}
+                  zoneNumber={zoneNumber}
+                  zoneRef={zoneRef}
+                  slotIndex={idx}
+                  player={player}
+                />
+              );
+            }
+          )}
         </div>
       </div>
     </div>

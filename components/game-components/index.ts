@@ -7,3 +7,4 @@ export { EndTurnButton } from './EndTurnButton';
 export { Player } from './Player';
 export { PlayerBar } from './PlayerBar';
 export { PlayerHand } from './Hands';
+export { TextSVG } from './TextSVG';

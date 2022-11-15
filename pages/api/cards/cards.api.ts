@@ -23,9 +23,9 @@ async function getGameCards() {
   const dir = jsonDirectory;
   const fileContents = await fs.readFile(dir + '/setsGame.json', 'utf8');
 
-  return JSON.parse(fileContents).map((item: CardBase) => {
-    return createCardObject(item);
-  });
+  return JSON.parse(fileContents)
+    .map((item: CardBase) => createCardObject(item))
+    .sort((a: any, b: any) => a.id.localeCompare(b.id));
 }
 
 async function getEntourageCards() {

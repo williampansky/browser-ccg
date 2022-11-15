@@ -1,6 +1,6 @@
 import calcOffsetX from './calc-offset-x';
 import calcScale from './calc-scale';
-import { config as springConfig } from 'react-spring';
+import { config as springConfig, easings } from 'react-spring';
 
 /**
  * Returns fitting styles for dragged/idle items
@@ -47,7 +47,10 @@ const fn =
         zIndex: 100,
         cursor: 'grabbing',
         immediate: (n: string) => n === 'x' || n === 'y' || n === 'scale',
-        config: springConfig.default,
+        config: {
+          ...springConfig.gentle,
+          easing: easings.easeInOutQuart
+        },
       };
     else if (context() === 'isHovered' && match)
       return {
@@ -61,10 +64,11 @@ const fn =
         cursor: 'grab',
         immediate: true,
         config: {
-          ...springConfig.default,
+          ...springConfig.gentle,
           tension: 500,
           friction: 38,
           duration: 75,
+          easing: easings.easeInOutQuart
         },
       };
     else
@@ -79,7 +83,10 @@ const fn =
         cursor: 'grab',
         display: 'block',
         immediate: (n: string) => n === 'zIndex' || n === 'marginLeft',
-        config: springConfig.default,
+        config: {
+          ...springConfig.default,
+          easing: easings.easeInOutQuart
+        },
       };
   };
 

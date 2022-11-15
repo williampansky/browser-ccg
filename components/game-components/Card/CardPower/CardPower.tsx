@@ -1,5 +1,7 @@
-import { ReactElement } from 'react';
+import { TextSVG } from '../../TextSVG';
+import BADGE_POWER from '../../../../public/images/card-assets/BADGE_POWER.png'
 import styles from './card-power.module.scss'
+import Image from 'next/image';
 
 interface CardPowerProps {
   basePower: number;
@@ -13,7 +15,7 @@ export const CardPower = ({
   currentPower,
   elite = false,
   badgeImgSrc,
-}: CardPowerProps): ReactElement => {
+}: CardPowerProps) => {
   return (
     <div
       className={[
@@ -23,10 +25,14 @@ export const CardPower = ({
         currentPower < basePower ? styles['power--debuffed'] : '',
       ].join(' ')}
     >
-      <div className='text__value' data-value={currentPower}>
-        {currentPower}
-      </div>
-      <img
+      {/* <div className='text__value' data-value={currentPower}> */}
+        {/* {currentPower.toString() === '0' ? <TextSVG value={currentPower} /> :
+        currentPower } */}
+        <TextSVG value={currentPower} />
+        {/* {currentPower} */}
+      {/* </div> */}
+      <Image src={BADGE_POWER} layout='fill' />
+      {/* <img
         alt=''
         className={[
           styles['badge'],
@@ -34,7 +40,7 @@ export const CardPower = ({
         ].join(' ')}
         role='presentation'
         src={badgeImgSrc}
-      />
+      /> */}
     </div>
   );
 };

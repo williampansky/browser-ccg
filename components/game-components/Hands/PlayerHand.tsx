@@ -254,7 +254,8 @@ export const PlayerHand = ({
                       cursor: canPlay ? cursor : 'default',
                       marginLeft,
                       // marginLeft: marginLeft.to((mL: number) => `${mL}px`),
-                      height: `${cardHeight}px`,
+                      // height: `${cardHeight}px`,
+                      height: 65,
                       width: `${cardWidth}px`,
                       // transform: to([x, y], (x, y) => {
                       //   return `translate3d(${x}px, ${y}px, 0)`;

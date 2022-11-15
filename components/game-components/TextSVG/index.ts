@@ -1,0 +1,1 @@
+export { TextSVG } from './TextSVG';

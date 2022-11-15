@@ -1,0 +1,41 @@
+.bccg-icon {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  font: inherit;
+  color: inherit;
+  text-transform: none;
+  padding: 0;
+  background-color: transparent;
+  display: inline-block;
+  fill: currentcolor;
+  line-height: 0;
+
+  & > * {
+    transform: translate(0,0);
+  }
+
+  &:not(.bccg-preserve) [fill*='#']:not(.bccg-preserve) {
+    fill: currentcolor;
+  }
+
+  &:not(.bccg-preserve) [stroke*='#']:not(.bccg-preserve) {
+    stroke: currentcolor;
+  }
+}
+
+button.bccg-icon:not(:disabled) {
+  cursor: pointer
+}
+
+.bccg-icon::-moz-focus-inner {
+  border: 0;
+  padding: 0
+}
+
+svg {
+  max-width: 100%;
+  height: auto;
+  box-sizing: border-box;
+}
