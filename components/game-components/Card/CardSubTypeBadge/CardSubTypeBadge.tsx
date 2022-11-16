@@ -18,7 +18,10 @@ export const CardSubTypeBadge = ({
 }: CardSubTypeBadgeProps) => {
   const src = `/images/card-assets/SUBTYPE_RACE_${race}.png`;
   return race !== 'NONE' && race !== undefined ? (
-    <div className={styles['card__subtype__image__wrapper']}>
+    <div
+      className={styles['card__subtype__image__wrapper']}
+      data-component='CardSubType'
+    >
       <div className={styles['card__subtype__image__icon__wrapper']}>
         <img
           alt={`${race} Icon`}

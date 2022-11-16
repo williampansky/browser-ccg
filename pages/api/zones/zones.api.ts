@@ -19,5 +19,5 @@ async function getZones() {
   const fileContents = await fs.readFile(jsonDirectory + '/zones.json', 'utf8');
   return JSON.parse(fileContents)
     .map((item: ZoneBase) => createZoneObject(item))
-    .sort((a: any, b: any) => a.id.localeCompare(b.id));
+    .sort((a: any, b: any) => a?.id?.localeCompare(b.id));
 }

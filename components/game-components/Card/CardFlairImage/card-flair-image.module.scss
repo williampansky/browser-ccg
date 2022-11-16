@@ -5,7 +5,7 @@
   margin-bottom: 0;
   margin-left: calc(var(--card-height) / 20);
   margin-right: calc(var(--card-height) / 22.222222222);
-  margin-top: calc(var(--card-height) / 11.111111111);
+  margin-top: calc(var(--card-height) / 8.7111111111);
   overflow: hidden;
   position: absolute;
   width: calc(var(--card-height) / 1.628293223);
@@ -15,6 +15,7 @@
 .image {
   animation: img-fade 500ms linear forwards;
   image-rendering: pixelated;
+  object-fit: cover;
   position: relative;
   width: 100%;
 

@@ -251,3 +251,7 @@ fetchMechanicsData(tables.MECHANICS);
 fetchSetEntourageData(tables.SET_ENTOURAGE);
 fetchSetGameData(tables.SET_GAME);
 fetchZonesData(tables.ZONES);
+
+setTimeout(() => {
+  process.exit();
+}, 5000);

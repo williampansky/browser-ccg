@@ -19,6 +19,7 @@ import type { Card, GameState, PlayerID } from '../../../types';
 
 import fn from './fn';
 import styles from './player-hand.module.scss';
+import calcScale from './calc-scale';
 
 interface PlayerHandProps {
   G: GameState;
@@ -257,6 +258,7 @@ export const PlayerHand = ({
                       // height: `${cardHeight}px`,
                       height: 65,
                       width: `${cardWidth}px`,
+                      transform: `scale(1.3)`
                       // transform: to([x, y], (x, y) => {
                       //   return `translate3d(${x}px, ${y}px, 0)`;
                       // }),

@@ -1,29 +1,3 @@
-// .card__cost {
-//   align-items: center;
-//   display: flex;
-//   flex-flow: column nowrap;
-//   font-size: var(--card-cost-font-size);
-//   height: calc(var(--card-height) / 9.090909091);
-//   justify-content: center;
-//   left: calc(var(--card-height) / 50);
-//   position: absolute;
-//   top: calc(var(--card-height) / 50);
-//   width: calc(var(--card-height) / 9.090909091);
-//   z-index: 2;
-
-//   & > div {
-//     top: calc(var(--card-height) / 400);
-//   }
-
-//   &.cost--decreased > div {
-//     color: #1aff1a;
-//   }
-
-//   &.cost--increased > div {
-//     color: #ff5555;
-//   }
-// }
-
 .card__cost {
   align-items: center;
   bottom: calc(var(--card-height) / -50);
@@ -39,16 +13,14 @@
   z-index: 2;
 
   & > div {
-    // left: calc(var(--card-height) / -18);
-    // top: calc(var(--card-height) / 16);
     z-index: 1;
   }
 
-  & > [data-component='TextSVG'] {
-    height: auto;
-    width: 100%;
-    transform: scale(0.6);
-    position: relative;
-    z-index: 1;
+  &.cost--decreased > div {
+    color: #1aff1a;
+  }
+
+  &.cost--increased > div {
+    color: #ff57e7;
   }
 }

@@ -17,7 +17,10 @@ export const CardTypeBadge = ({
 }: CardTypeBadgeProps) => {
   const src = `/images/card-assets/TYPE_${type}.png`;
   return race && type ? (
-    <div className={styles['card__type__image__wrapper']}>
+    <div
+      className={styles['card__type__image__wrapper']}
+      data-component='CardType'
+    >
       <div className={styles['card__type__image__icon__wrapper']}>
         <img
           alt={`${typeIconAlt} Icon`}

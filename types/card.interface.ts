@@ -25,6 +25,7 @@ export interface CardBase {
   howToEarnGolden?: string;
   id: CardId;
   isEntourage?: boolean;
+  isGolden?: boolean;
   mechanics?: string[];
   name: string;
   numberPrimary?: number;

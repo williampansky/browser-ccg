@@ -1,7 +1,6 @@
-import { TextSVG } from '../../TextSVG';
-import BADGE_POWER from '../../../../public/images/card-assets/BADGE_POWER.png'
-import styles from './card-power.module.scss'
 import Image from 'next/image';
+import BADGE_POWER from '../../../../public/images/card-assets/BADGE_POWER.png';
+import styles from './card-power.module.scss';
 
 interface CardPowerProps {
   basePower: number;
@@ -19,28 +18,20 @@ export const CardPower = ({
   return (
     <div
       className={[
-        styles['power'],
+        styles['card__power'],
         elite ? styles['power__elite'] : '',
-        currentPower > basePower ? styles['power--buffed'] : '',
-        currentPower < basePower ? styles['power--debuffed'] : '',
+        currentPower > basePower ? styles['card__power--buffed'] : '',
+        currentPower < basePower ? styles['card__power--debuffed'] : '',
       ].join(' ')}
+      data-component='CardPower'
     >
-      {/* <div className='text__value' data-value={currentPower}> */}
-        {/* {currentPower.toString() === '0' ? <TextSVG value={currentPower} /> :
-        currentPower } */}
-        <TextSVG value={currentPower} />
-        {/* {currentPower} */}
-      {/* </div> */}
+      <div
+        className='text__value text__value--shadow'
+        data-value={currentPower}
+      >
+        {currentPower}
+      </div>
       <Image src={BADGE_POWER} layout='fill' />
-      {/* <img
-        alt=''
-        className={[
-          styles['badge'],
-          elite ? styles['badge__elite'] : '',
-        ].join(' ')}
-        role='presentation'
-        src={badgeImgSrc}
-      /> */}
     </div>
   );
 };

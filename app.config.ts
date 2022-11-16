@@ -91,6 +91,13 @@ export const sitePages: Pages = {
     route: '/profile',
     showInNav: true
   },
+  cards: {
+    description: 'All cards in the game',
+    name: 'Cards',
+    route: '/cards',
+    headline: 'All Cards',
+    title: 'All Cards',
+  },
   collection: {
     description: '',
     name: 'Cards',

@@ -9,10 +9,6 @@
   pointer-events: none;
   touch-action: none;
 
-  p {
-    // color: black;
-  }
-
   *,
   & * {
     user-select: none;
@@ -29,21 +25,17 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.65);
-    z-index: 2;
+    z-index: 3;
     pointer-events: none;
     touch-action: none;
     transition: 200ms ease-in-out;
     transition-property: opacity;
     opacity: 0;
+    border-radius: 4px;
   }
 
   &.cant-play {
     color: #626262;
-
-    *,
-    & * {
-      // filter: brightness(0.5);
-    }
 
     p {
       color: #626262;

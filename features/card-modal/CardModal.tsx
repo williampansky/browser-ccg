@@ -6,6 +6,7 @@ import type { RootState } from '../../store';
 import { hideCardModal } from './card-modal.slice';
 import type { CardModal as ICardModal } from './card-modal.slice';
 import { Card as CardComponent } from '../../components/game-components/Card/Card';
+import styles from './card-modal.module.scss';
 
 export const CardModal = (): ReactElement | null => {
   const dispatch = useDispatch();
@@ -16,6 +17,8 @@ export const CardModal = (): ReactElement | null => {
 
   return (
     <div
+      className={styles['component']}
+      data-component='CardModal'
       onClick={onClick}
       style={{
         height: '100%',

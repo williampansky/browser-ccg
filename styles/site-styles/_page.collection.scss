@@ -6,7 +6,7 @@
   width: 100%;
   height: 100%;
   overflow-y: scroll;
-  padding-bottom: 22vh;
+  padding-bottom: 35vh;
 }
 
 .collection__page .grid {
@@ -28,8 +28,9 @@
 
 .collection__page .collection__modal {
   --card-height: 60vh;
-  --card-cost-font-size: 2.25em;
-  --card-power-font-size: 2.25em;
+  --card-cost-font-size: 3.25em;
+  --card-power-font-size: 3.25em;
+
   @include display-flex(column nowrap, center, center);
   @include position-fixed(0, 0, 0, 0, -1);
   height: 100vh;

@@ -25,7 +25,7 @@ async function getGameCards() {
 
   return JSON.parse(fileContents)
     .map((item: CardBase) => createCardObject(item))
-    .sort((a: any, b: any) => a.id.localeCompare(b.id));
+    .sort((a: any, b: any) => a?.id?.localeCompare(b.id));
 }
 
 async function getEntourageCards() {

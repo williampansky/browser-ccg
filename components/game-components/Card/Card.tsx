@@ -98,7 +98,7 @@ export const Card = ({
       <CardText markup={text} />
       <CardTypeLabel race={race} type={type} formatter={(val: any) => val} />
 
-      <CardTypeBadge
+      {/* <CardTypeBadge
         race={race}
         type={type}
         badgeImgSrc={'/images/card-assets/TYPE_WRAPPER.png'}
@@ -108,7 +108,7 @@ export const Card = ({
         race={race}
         type={type}
         badgeImgSrc={'/images/card-assets/SUBTYPE_WRAPPER.png'}
-      />
+      /> */}
 
       <CardFlairImage name={name} set={set} id={id} />
       <CardBaseImage rarity={rarity} type={type} />

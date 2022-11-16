@@ -48,7 +48,7 @@ const fn =
         cursor: 'grabbing',
         immediate: (n: string) => n === 'x' || n === 'y' || n === 'scale',
         config: {
-          ...springConfig.gentle,
+          ...springConfig.default,
           easing: easings.easeInOutQuart
         },
       };
@@ -64,7 +64,7 @@ const fn =
         cursor: 'grab',
         immediate: true,
         config: {
-          ...springConfig.gentle,
+          ...springConfig.default,
           tension: 500,
           friction: 38,
           duration: 75,
