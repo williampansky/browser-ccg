@@ -114,6 +114,7 @@ export const OpponentZoneSlot = ({
         zIndex: objData ? '1' : '-1',
         transform: `${getAnimationDirection(zoneNumber, objData)} rotate(${rotation}deg)`,
         transitionDelay: objData?.revealed ? `${slotIndex * 200}ms` : '0ms',
+        pointerEvents: objData ? 'auto' : 'none'
         // filter: objData ? 'blur(0)' : 'blur(1px)'
       }}
     >

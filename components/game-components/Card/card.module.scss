@@ -34,6 +34,13 @@
     border-radius: 4px;
   }
 
+  [data-component='CardCost'],
+  [data-component='CardPower'],
+  [data-component='CardType'],
+  [data-component='CardSubType'] {
+    transition: 150ms transform var(--animation-transition-cubic);
+  }
+
   &.cant-play {
     color: #626262;
 
@@ -43,6 +50,22 @@
 
     &:before {
       opacity: 1;
+    }
+
+    [data-component='CardCost'] {
+      transform: translate(2px, 2px) scale(0.675);
+    }
+
+    [data-component='CardPower'] {
+      transform: translate(-2px, 2px) scale(0.675);
+    }
+
+    [data-component='CardType'] {
+      transform: translateX(4px);
+    }
+
+    [data-component='CardSubType'] {
+      transform: translateX(-4px);
     }
   }
 }

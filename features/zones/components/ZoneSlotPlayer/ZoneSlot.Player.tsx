@@ -131,6 +131,7 @@ export const PlayerZoneSlot = ({
         width: 'calc(var(--minion-height) / 1.25)',
         transition: '250ms ease-in',
         position: 'relative',
+        pointerEvents: objData ? 'auto' : 'none',
         top: `${offsetY}px`,
         opacity: objData ? 1 : 0,
         zIndex: objData ? '1' : '-1',

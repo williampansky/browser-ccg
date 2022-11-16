@@ -3,10 +3,9 @@ import { Provider } from 'react-redux';
 import Head from 'next/head';
 
 import type { AppProps } from 'next/app';
-import { store } from '../store';
 
+import { store } from '../store';
 import '../styles/site.scss';
-// import '../styles/game.scss';
 
 /**
  * Stops NextJS from breaking the dev page due to the
