@@ -10,9 +10,9 @@ import {
   logPhaseToConsole,
 } from '../../../utils';
 import { counts, firstRevealer } from '../../state';
-import setsGame from '../../data/setsGame.json';
+import setsCore from '../../data/setsCore.json';
 import setsEntourage from '../../data/setsEntourage.json';
-import { initGameMechanicsById } from '../../mechanics';
+import { initCardMechanicsByKey } from '../../mechanics';
 
 const initCardMechanicsPhase: PhaseConfig = {
   onBegin(G, ctx) {
@@ -68,7 +68,7 @@ function initOnPlay(
   const hasOnPlay = card.mechanics?.includes('ON_PLAY');
 
   if (revealedThisTurn && hasOnPlay) {
-    initGameMechanicsById(
+    initCardMechanicsByKey(
       G,
       ctx,
       G.gameConfig,

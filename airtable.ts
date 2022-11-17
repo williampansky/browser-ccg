@@ -29,18 +29,19 @@ const constantsTable = base(tables.CONSTANTS);
 const mechanicsTable = base(tables.MECHANICS);
 const herosTable = base(tables.HEROS);
 const abilitiesTable = base(tables.HERO_ABILITIES);
-const setsGameTable = base(tables.SET_GAME);
 const setsCoreTable = base(tables.SET_CORE);
 const setsPrimeTable = base(tables.SET_PRIME);
 const setsEntourageTable = base(tables.SET_ENTOURAGE);
 
-export {
-  constantsTable,
-  mechanicsTable,
-  herosTable,
-  abilitiesTable,
-  setsGameTable,
-  setsCoreTable,
-  setsPrimeTable,
-  setsEntourageTable,
-};
+// export {
+//   constantsTable,
+//   mechanicsTable,
+//   herosTable,
+//   abilitiesTable,
+//   setsCoreTable,
+//   setsCoreTable,
+//   setsPrimeTable,
+//   setsEntourageTable,
+// };
+
+export {}

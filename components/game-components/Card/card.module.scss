@@ -1,5 +1,7 @@
 .card {
-  border-radius: calc(var(--card-height) / 28.571428571);
+  $borderRadius: #{calc(var(--card-height) / 28.571428571)};
+
+  border-radius: $borderRadius;
   color: white;
   font-family: var(--font-family-card);
   height: var(--card-height);
@@ -31,7 +33,7 @@
     transition: 200ms ease-in-out;
     transition-property: opacity;
     opacity: 0;
-    border-radius: 4px;
+    border-radius: $borderRadius;
   }
 
   [data-component='CardCost'],
@@ -42,10 +44,10 @@
   }
 
   &.cant-play {
-    color: #626262;
+    // color: #626262;
 
     p {
-      color: #626262;
+      // color: #626262;
     }
 
     &:before {

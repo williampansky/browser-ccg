@@ -1,5 +1,5 @@
-import CONSTANTS from '../json/constants.json';
-import MECHANICS from '../json/mechanics.json';
+import CONSTANTS from '../data/constants.json';
+import MECHANICS from '../data/mechanics.json';
 
 const jsonDatabase = {
   ...CONSTANTS,
@@ -8,15 +8,22 @@ const jsonDatabase = {
 } as any;
 
 /**
- * Parses string and replaces the symbol with the relative constant.
+ * Parses string and replaces the symbol (%) with the relative constant.
+ * @example replaceAllConstants('%RARITY_COMMON%') => 'Common';
+ * @example replaceAllConstants('%RARITY_COMMON%', 'value') => 'COMMON';
  */
-export default function replaceAllConstants(
+const replaceAllConstants = (
   stringToParse: string,
-  keyToUse: string = 'name'
-) {
-  if (!stringToParse) return;
+  keyToUse: 'name' | 'value' = 'name'
+) => {
+  // eject if no param or param is undefined
+  if (!stringToParse || typeof stringToParse === undefined) return '';
+
+  // used json to match the replacement by keyToUse
   return stringToParse.replace(
     /%(.*?)%/g,
     (x) => jsonDatabase[x] && jsonDatabase[x][keyToUse]
   );
-}
+};
+
+export default replaceAllConstants;

@@ -1,30 +1,29 @@
 import Image from 'next/image';
 import styles from './minion-image.module.scss';
 import PLACEHOLDER from '../../../../public/images/sets/PLACEHOLDER.jpg';
+import { getImageFlairSrc } from '../../../../utils';
 
 export interface ReactMinionImageProps {
-  imageSrc?: string;
+  src?: string;
   name?: string;
   id?: string;
   set?: string;
-  rarity?: string;
+  rarity: string;
   placeholderSrc?: string;
 }
 
 export const MinionImage = ({
-  imageSrc,
+  src,
   name,
   id,
   set,
   rarity,
   placeholderSrc,
 }: ReactMinionImageProps) => {
-  const src = id ? `/images/sets/${set}/${id}-MINION.jpg` : PLACEHOLDER;
-  const rare = rarity ? rarity : 'NONE';
-
+  const source = src || src === '' ? src?.replace('CARD', 'MINION') : PLACEHOLDER;
   return (
     <div
-      className={[styles['wrapper'], styles[rare]].join(' ')}
+      className={[styles['wrapper'], styles[rarity]].join(' ')}
       data-component='MinionImage'
     >
       <Image
@@ -33,7 +32,7 @@ export const MinionImage = ({
         layout='fill'
         priority
         role='presentation'
-        src={src}
+        src={source}
       />
     </div>
   );

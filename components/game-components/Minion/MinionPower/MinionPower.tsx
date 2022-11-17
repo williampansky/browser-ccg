@@ -1,4 +1,5 @@
-import { ReactElement } from 'react';
+import Image from 'next/image';
+import TYPE_WRAPPER from '../../../../public/images/card-assets/TYPE_WRAPPER.png';
 import styles from './minion-power.module.scss';
 
 export interface ReactMinionPowerProps {
@@ -15,7 +16,7 @@ export const MinionPower = ({
   elite = false,
   imageSrc,
   alternate = false,
-}: ReactMinionPowerProps): ReactElement => {
+}: ReactMinionPowerProps) => {
   return (
     <div
       className={[
@@ -31,18 +32,20 @@ export const MinionPower = ({
         <div className='text__value'>{currentPower}</div>
       </div>
       {elite ? (
-        <img
+        <Image
           alt=''
           className={[styles['badge'], styles['elite']].join(' ')}
           role='presentation'
-          src={imageSrc}
+          layout='fill'
+          src={TYPE_WRAPPER}
         />
       ) : (
-        <img
+        <Image
           alt=''
           className={styles['badge']}
           role='presentation'
-          src={imageSrc}
+          layout='fill'
+          src={TYPE_WRAPPER}
         />
       )}
     </div>

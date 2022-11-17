@@ -1,1 +1,12 @@
 @import 'page.collection';
+
+.collection__page .collection__modal {
+  .inner__content {
+    position: relative; 
+  }
+
+  .content__minion {
+    --minion-height: 80px;
+    @include position-absolute(auto, -15px, -15px, auto, 1);
+  }
+}

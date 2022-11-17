@@ -15,7 +15,7 @@ export default async (_req: NextApiRequest, res: NextApiResponse) => {
 };
 
 async function getZones() {
-  const jsonDirectory = path.join(process.cwd(), 'json');
+  const jsonDirectory = path.join(process.cwd(), 'data');
   const fileContents = await fs.readFile(jsonDirectory + '/zones.json', 'utf8');
   return JSON.parse(fileContents)
     .map((item: ZoneBase) => createZoneObject(item))

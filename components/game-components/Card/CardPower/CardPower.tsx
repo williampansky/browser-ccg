@@ -6,14 +6,12 @@ interface CardPowerProps {
   basePower: number;
   currentPower: number;
   elite?: boolean;
-  badgeImgSrc?: string;
 }
 
 export const CardPower = ({
   basePower,
   currentPower,
   elite = false,
-  badgeImgSrc,
 }: CardPowerProps) => {
   return (
     <div

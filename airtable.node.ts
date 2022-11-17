@@ -1,9 +1,10 @@
 // @ts-ignore
 require('dotenv').config({ path: './.env.local' });
 const fs = require('fs');
+const v4 = require('uuid');
 const Airtable = require('airtable-node');
-const CONSTANTS = require('./json/constants.json');
-const MECHANICS = require('./json/mechanics.json');
+const CONSTANTS = require('./data/constants.json');
+const MECHANICS = require('./data/mechanics.json');
 
 const API_KEY = process.env.AIRTABLE_API_KEY;
 const BASE_ID = process.env.AIRTABLE_BASE_ID;
@@ -17,9 +18,8 @@ const tables = {
   HERO_ABILITIES: 'tblU5qFbU8cc0diXq',
   HEROS: 'tblTWmz40jBegB1TJ',
   MECHANICS: 'tblmYzve1mJUuIpfq',
-  SET_CORE: 'tblwYhK2ndoM2lohc',
+  SET_CORE: 'tblQLQ0BnfCAJvu6F',
   SET_ENTOURAGE: 'tblC5Cy6pKp8EaQaV',
-  SET_GAME: 'tblQLQ0BnfCAJvu6F',
   SET_PRIME: 'tblajpxLahsUgKzVd',
   ZONES: 'tblKes7sTnuFcFStH',
 };
@@ -42,6 +42,10 @@ function replaceAllConstants(stringToParse: string, keyToUse: string = 'name') {
   );
 }
 
+function createCardKey(id?: string, set?: string): string {
+  return set && id ? `${replaceAllConstants(set, 'value')}_${id}` : v4();
+};
+
 function parseMechanics(arr: string[]) {
   if (!arr || typeof arr === 'undefined') return [];
   return arr.map(s => replaceAllConstants(s, 'value'))
@@ -58,12 +62,12 @@ function createArtistHtmlLink(name?: string, url?: string): string | undefined {
 
 function writeToFile(fileName: string, data: any) {
   try {
-    fs.writeFileSync(`./json/${fileName}.json`, data);
+    fs.writeFileSync(`./data/${fileName}.json`, data);
     fs.writeFileSync(`./game/data/${fileName}.json`, data);
     console.log(`Writing ${fileName} to system ...`);
   } catch (error) {
     const obj = { dataError: data, catchError: error };
-    fs.writeFileSync(`./json/${fileName}.error.txt`, obj);
+    fs.writeFileSync(`./data/${fileName}.error.txt`, obj);
     fs.writeFileSync(`./game/data/${fileName}.error.txt`, obj);
   }
 }
@@ -126,8 +130,8 @@ const fetchMechanicsData = async (tableId: string) => {
     });
 };
 
-const fetchSetGameData = async (tableId: string) => {
-  console.log('Fetching game set ...');
+const fetchSetCoreData = async (tableId: string) => {
+  console.log('Fetching core set ...');
   await base
     .table(tableId)
     .list({ maxRecords: 200 })
@@ -145,6 +149,8 @@ const fetchSetGameData = async (tableId: string) => {
           power: fields?.power,
           text: fields?.text,
           set: fields?.set,
+          active: fields?.active || false,
+          isEntourage: false,
           collectible: fields?.collectible || false,
           elite: fields?.elite || false,
           mechanics: parseMechanics(fields?.mechanics),
@@ -163,11 +169,11 @@ const fetchSetGameData = async (tableId: string) => {
         };
       });
 
-      const setsGame = JSON.stringify(map);
-      writeToFile('setsGame', setsGame);
+      const setsCore = JSON.stringify(map);
+      writeToFile('setsCore', setsCore);
     })
     .catch((err: any) => {
-      writeToFile('setsGame', err);
+      writeToFile('setsCore', err);
     });
 };
 
@@ -190,7 +196,7 @@ const fetchSetEntourageData = async (tableId: string) => {
           power: fields?.power,
           text: fields?.text,
           set: fields?.set,
-          collectible: fields?.collectible || false,
+          collectible: false,
           elite: fields?.elite || false,
           mechanics: parseMechanics(fields?.mechanics),
           playType: fields?.playType,
@@ -202,6 +208,7 @@ const fetchSetEntourageData = async (tableId: string) => {
           artistName: fields?.artistName,
           artistUrl: fields?.artistUrl,
           description: fields?.description,
+          key: createCardKey(fields?.id, fields?.set)
         };
       });
 
@@ -222,10 +229,7 @@ const fetchZonesData = async (tableId: string) => {
       const map = resp.records.map((item: any) => {
         const { fields } = item;
         return {
-          artist:
-            fields?.artistName && fields?.artistUrl
-              ? createArtistHtmlLink(fields?.artistName)
-              : undefined,
+          artist: createArtistHtmlLink(fields?.artistName),
           artistName: fields?.artistName,
           artistUrl: fields?.artistUrl,
           effectAdjustment: fields?.effectAdjustment,
@@ -249,7 +253,7 @@ const fetchZonesData = async (tableId: string) => {
 fetchConstantsData(tables.CONSTANTS);
 fetchMechanicsData(tables.MECHANICS);
 fetchSetEntourageData(tables.SET_ENTOURAGE);
-fetchSetGameData(tables.SET_GAME);
+fetchSetCoreData(tables.SET_CORE);
 fetchZonesData(tables.ZONES);
 
 setTimeout(() => {

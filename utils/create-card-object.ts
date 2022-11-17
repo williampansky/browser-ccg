@@ -1,23 +1,19 @@
 import { v4 as uuid } from 'uuid';
 import { Card, CardBase } from '../types';
 import createArtistHtmlLink from './create-artist-html-link';
+import createCardKey from './create-card-key';
 import createMarkup from './create-markup';
+import getImageFlairSrc from './get-image-flair-src';
 import replaceAllConstants from './replace-all-constants';
 
 /**
  * Creates a playable `Card` object from the provided card base info.
  */
 const createCardObject = (obj: CardBase): Card => {
-  const SET = obj?.set?.replace(/\%/g, '');
-  const RARITY = obj?.rarity?.replace(/\%/g, '').replace('RARITY_', '');
-  const RACE = obj?.race?.replace(/\%/g, '').replace('RACE_', '');
-  const TYPE = obj?.type?.replace(/\%/g, '').replace('TYPE_', '');
-
   return {
-    artist:
-      obj?.artistName || obj?.artistUrl
-        ? createArtistHtmlLink(obj?.artistName, obj?.artistUrl)
-        : undefined,
+    id: obj?.id,
+    set: replaceAllConstants(obj?.set),
+    artist: createArtistHtmlLink(obj?.artistName, obj?.artistUrl),
     artistName: obj?.artistName,
     artistUrl: obj?.artistUrl,
     baseCost: obj?.cost,
@@ -29,23 +25,24 @@ const createCardObject = (obj: CardBase): Card => {
     displayPower: obj?.power,
     elite: obj?.elite || false,
     entourage: obj?.entourage,
-    id: obj?.id,
-    imageFlairSrc: `/images/sets/${SET}/${obj?.id}`,
+    flavorText: obj?.flavorText
+      ? replaceAllConstants(obj?.flavorText)
+      : undefined,
+    imageFlairSrc: getImageFlairSrc(obj?.id, obj?.set),
     isEntourage: obj?.isEntourage || false,
-    key: obj?.id,
+    key: createCardKey(obj?.id, obj?.set),
     mechanics: obj?.mechanics,
     name: obj?.name,
     numberPrimary: obj?.numberPrimary,
     numberRNG: obj?.numberRNG,
     numberSecondary: obj?.numberSecondary,
     powerStream: [],
-    race: RACE,
-    rarity: RARITY,
+    race: replaceAllConstants(obj?.race, 'value'),
+    rarity: replaceAllConstants(obj?.rarity, 'value'),
     revealed: false,
     revealedOnTurn: 0,
-    set: SET,
     text: obj?.text ? createMarkup(replaceAllConstants(obj?.text)) : undefined,
-    type: TYPE,
+    type: replaceAllConstants(obj?.type, 'value'),
     uuid: uuid(),
     value: obj?.name,
     zonePowerAdjustment: 0,

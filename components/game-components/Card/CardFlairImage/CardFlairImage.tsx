@@ -1,20 +1,14 @@
-import { ReactElement } from 'react';
-import Image from 'next/image'
+import Image from 'next/image';
 import styles from './card-flair-image.module.scss';
 import PLACEHOLDER from '../../../../public/images/sets/PLACEHOLDER.jpg';
 
 interface CardFlairImageProps {
-  id: string;
-  set?: string;
   name: string;
+  src: string;
 }
 
-export const CardFlairImage = ({
-  id,
-  set,
-  name,
-}: CardFlairImageProps): ReactElement => {
-  const src = id ? `/images/sets/${set}/${id}-CARD.jpg` : PLACEHOLDER;
+export const CardFlairImage = ({ name, src }: CardFlairImageProps) => {
+  const source = src || src === '' ? src : PLACEHOLDER;
   return (
     <div className={styles['component']}>
       <Image
@@ -23,7 +17,7 @@ export const CardFlairImage = ({
         role='presentation'
         priority
         layout='fill'
-        src={src}
+        src={source}
       />
     </div>
   );

@@ -1,5 +1,5 @@
 import { Card, GameState } from '../../../../types';
-import CARD_DATABASE from '../../../data/setsGame.json';
+import CARD_DATABASE from '../../../data/setsCore.json';
 import createCardObject from '../../../../utils/create-card-object';
 import { counts } from '../../../state';
 

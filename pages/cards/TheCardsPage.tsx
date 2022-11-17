@@ -3,6 +3,7 @@ import { Container, Layout } from '../../components/site-components';
 import { Card as CardComponent } from '../../components/game-components';
 import { siteConfig } from '../../app.config';
 import type { Card } from '../../types';
+import { Minion } from '../../components/game-components/Minion';
 
 export default function TheCardsPage() {
   const page = siteConfig.pages.cards;
@@ -54,7 +55,16 @@ export default function TheCardsPage() {
           onClick={() => setCardModal(undefined)}
         >
           <div className='modal__inner'>
-            {cardModal && <CardComponent {...cardModal} canPlay={true} />}
+            {cardModal && (
+              <div className='inner__content'>
+                <div className='content__card'>
+                  <CardComponent {...cardModal} canPlay={true} />
+                </div>
+                <div className='content__minion'>
+                  <Minion {...cardModal} />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

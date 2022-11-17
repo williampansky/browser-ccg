@@ -59,7 +59,9 @@ export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
   // }, [G.zones]);
 
   useEffect(() => {
-    setZonesAreActive(G.selectedCardData[player] !== undefined);
+    setTimeout(() => {
+      setZonesAreActive(G.selectedCardData[player] !== undefined);
+    }, 100);
   }, [G.selectedCardData[player]]);
 
   // useEffect(() => {

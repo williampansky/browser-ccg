@@ -1,4 +1,3 @@
-import { ReactElement, useEffect, useState } from 'react';
 import { Card as CardProps } from '../../../types';
 import { createMarkup, fontSizeBasedOnCharacterLength } from '../../../utils';
 
@@ -19,10 +18,7 @@ export interface ReactCardProps extends CardProps {
   isSelected?: boolean;
 }
 
-export const Card = ({
-  isSelected = false,
-  ...card
-}: ReactCardProps): ReactElement => {
+export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
   const {
     artist,
     baseCost,
@@ -42,6 +38,7 @@ export const Card = ({
     imageFlairSrc,
     imagePlaceholderSrc,
     isGolden,
+    key,
     mechanics,
     name,
     numberPrimary,
@@ -61,19 +58,6 @@ export const Card = ({
     zonePowerAdjustment,
   } = card;
 
-  // const [textWidth, setTextWidth] = useState<number>(0);
-
-  // useEffect(() => {
-  //   const cardElem = document?.getElementById(uuid);
-  //   const textElem = cardElem?.querySelector('[data-component="CardText"] svg');
-
-  //   if (cardElem) {
-  //     // @ts-ignore
-  //     const width = textElem.width.baseVal.value;
-  //     setTextWidth(width);
-  //   }
-  // }, [card]);
-
   return (
     <div
       className={[
@@ -90,7 +74,6 @@ export const Card = ({
         basePower={basePower}
         currentPower={displayPower}
         elite={elite}
-        badgeImgSrc={'/images/card-assets/BADGE_SWORD.png'}
       />
 
       {/* <CardRarityGem rarity={rarity} /> */}
@@ -110,7 +93,7 @@ export const Card = ({
         badgeImgSrc={'/images/card-assets/SUBTYPE_WRAPPER.png'}
       /> */}
 
-      <CardFlairImage name={name} set={set} id={id} />
+      <CardFlairImage name={name} src={imageFlairSrc} />
       <CardBaseImage rarity={rarity} type={type} />
     </div>
   );

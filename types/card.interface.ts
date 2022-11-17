@@ -13,6 +13,7 @@ export declare type CardType =
  * @see createCardObject
  */
 export interface CardBase {
+  active?: boolean;
   artistName?: string;
   artistUrl?: string;
   cost: number;
@@ -26,6 +27,7 @@ export interface CardBase {
   id: CardId;
   isEntourage?: boolean;
   isGolden?: boolean;
+  key?: string;
   mechanics?: string[];
   name: string;
   numberPrimary?: number;
@@ -79,7 +81,7 @@ export interface Card {
   howToEarnGolden?: string;
   id: CardId;
   imageBaseSrc?: string;
-  imageFlairSrc?: string;
+  imageFlairSrc: string;
   imagePlaceholderSrc?: string;
   isEntourage?: boolean;
   isGolden?: boolean;

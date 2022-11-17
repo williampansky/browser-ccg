@@ -82,6 +82,7 @@ export const Minion = ({
         name={name}
         set={set}
         rarity={rarity}
+        src={imageFlairSrc}
       />
     </div>
   );

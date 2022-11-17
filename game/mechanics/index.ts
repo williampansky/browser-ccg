@@ -1,1 +1,1 @@
-export { default as initGameMechanicsById } from './init-game-mechanics-by-id';
+export { default as initCardMechanicsByKey } from './init-card-mechanics-by-key';

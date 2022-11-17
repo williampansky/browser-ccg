@@ -18,6 +18,13 @@ const createRandomDeck = (
     tempDeckArray.push(createCardObject(randomCard));
   });
 
+  while (tempDeckArray.length !== G.gameConfig.numerics.cardsPerDeck) {
+    let randomCard = ctx.random!.Shuffle(database)[0];
+    if (tempDeckArray.filter(obj => obj.id).length >= 2) {
+      tempDeckArray.push(createCardObject(randomCard));
+    }
+  }
+
   return tempDeckArray;
 };
 

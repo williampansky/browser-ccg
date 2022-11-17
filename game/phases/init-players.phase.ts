@@ -2,7 +2,7 @@ import { Ctx, PhaseConfig } from 'boardgame.io';
 import { Card, GameState } from '../../types';
 import { createCardObject, createRandomDeck, logPhaseToConsole } from '../../utils';
 import { actionPoints, playerNames, players } from '../state';
-import setsGame from '../data/setsGame.json';
+import setsCore from '../data/setsCore.json';
 
 const initPlayersPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
@@ -15,7 +15,7 @@ const initPlayersPhase: PhaseConfig = {
     players.set(G, '0', {
       actionPoints: actionPoints.defaultState['0'],
       cards: {
-        deck: createRandomDeck(G, ctx, setsGame),
+        deck: createRandomDeck(G, ctx, setsCore),
         destroyed: [],
         discarded: [],
         hand: [],
@@ -29,7 +29,7 @@ const initPlayersPhase: PhaseConfig = {
     players.set(G, '1', {
       actionPoints: actionPoints.defaultState['1'],
       cards: {
-        deck: createRandomDeck(G, ctx, setsGame),
+        deck: createRandomDeck(G, ctx, setsCore),
         // deck: debugCards(),
         destroyed: [],
         discarded: [],
@@ -60,7 +60,7 @@ const initPlayersPhase: PhaseConfig = {
 //   let arr: Card[] = [];
 
 //   for (let index = 0; index < 20; index++) {
-//     arr.push(createCardObject(setsGame.find(obj => obj.id === 'CORE_008')!))
+//     arr.push(createCardObject(setsCore.find(obj => obj.id === 'CORE_008')!))
 //   }
 
 //   return arr;
