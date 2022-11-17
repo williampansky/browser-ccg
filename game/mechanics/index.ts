@@ -1,0 +1,1 @@
+export { default as initGameMechanicsById } from './init-game-mechanics-by-id';

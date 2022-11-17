@@ -1,9 +1,10 @@
-import { Ctx } from 'boardgame.io';
+import { Ctx, Undo } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Card, GameState, PlayerID } from '../types';
 import getCardPower from '../utils/get-card-power';
 import {
   actionPoints,
+  canUndo,
   counts,
   playedCards,
   playerTurnDone,
@@ -102,9 +103,22 @@ const playCard = (
   // unset selected card
   selectedCardData.reset(G, playerId);
   G.selectedCardIndex[playerId] = undefined;
+  canUndo.setPlayer(G, playerId);
 
   // @ts-ignore
   ctx.effects.effectsEnd();
+};
+
+const undoPlayCard = (
+  G: GameState,
+  ctx: Ctx,
+  playerId: PlayerID,
+  undo: Undo
+) => {
+  if (G.canUndo[playerId]) {
+    // () => undo;
+    canUndo.resetPlayer(G, playerId);
+  }
 };
 
 const revealCard = async (
@@ -211,4 +225,12 @@ const setDone = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
   playerTurnDone.set(G, playerId);
 };
 
-export { deselectCard, playAiCard, playCard, revealCard, selectCard, setDone };
+export {
+  deselectCard,
+  playAiCard,
+  playCard,
+  revealCard,
+  selectCard,
+  setDone,
+  undoPlayCard,
+};

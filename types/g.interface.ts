@@ -23,6 +23,7 @@ export declare type SelectedCardIndex = Record<PlayerID, CardIndex>;
 export interface GameState {
   actionPoints: Record<PlayerID, ActionPoints>;
   gameConfig: GameConfig;
+  canUndo: Record<PlayerID, boolean>;
   counts: Record<PlayerID, Counts>;
   firstRevealer: PlayerID;
   playedCards: Record<PlayerID, Card[]>;

@@ -24,6 +24,8 @@ import { setWindowSize } from '../../../features/windowSize';
 import { GameOverOverlay } from '../../../features/game-over';
 import { DebugBar, EndTurnButton, Player, PlayerHand } from '../';
 
+import styles from './board.module.scss';
+
 export interface GameProps extends BoardProps<GameState> {}
 
 export const Board = (props: GameProps) => {
@@ -37,6 +39,7 @@ export const Board = (props: GameProps) => {
     events: { endPhase },
     reset,
     playerID,
+    undo
   } = props;
 
   const yourID = playerID === '0' ? '0' : '1';

@@ -1,4 +1,5 @@
 export { default as actionPoints } from './action-points.state';
+export { default as canUndo } from './can-undo.state';
 export { default as counts } from './counts.state';
 export { default as defaultState } from './default.state';
 export { default as firstRevealer } from './first-revealer.state';

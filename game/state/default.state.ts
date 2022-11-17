@@ -1,5 +1,6 @@
 import { gameConfig } from '../../app.config';
 import actionPoints from './action-points.state';
+import canUndo from './can-undo.state';
 import counts from './counts.state';
 import firstRevealer from './first-revealer.state';
 import playedCards from './played-cards.state';
@@ -14,6 +15,7 @@ import zonesCardsReference from './zones-cards-reference.state';
 
 const DefaultState = {
   actionPoints: actionPoints.defaultState,
+  canUndo: canUndo.defaultState,
   counts: counts.defaultState,
   firstRevealer: firstRevealer.defaultState,
   gameConfig: gameConfig,

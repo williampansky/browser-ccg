@@ -12,24 +12,40 @@ import {
 import { counts, firstRevealer } from '../../state';
 import setsGame from '../../data/setsGame.json';
 import setsEntourage from '../../data/setsEntourage.json';
+import { initGameMechanicsById } from '../../mechanics';
 
 const initCardMechanicsPhase: PhaseConfig = {
   onBegin(G, ctx) {
     logPhaseToConsole(G.turn, ctx.phase);
     const { first, second } = firstRevealer.getRevealOrder(G);
+    const fir = first;
+    const sec = second;
 
-    // init mechanics
     G.zones.forEach((zone: Zone, zoneIdx: number) => {
-      zone.sides[first].forEach((card: Card, cardIdx: number) => {
-        if (card.revealedOnTurn === G.turn) {
-          mechs(G, ctx, zoneIdx, card, cardIdx, first, zone.sides[first]);
-        }
+      zone.sides[fir].forEach((card: Card, cardIdx: number) => {
+        initOnPlay(
+          G,
+          ctx,
+          zone,
+          zoneIdx,
+          card,
+          cardIdx,
+          fir,
+          initEvent(G, ctx, zone, zoneIdx, card, cardIdx, fir)
+        );
       });
 
-      zone.sides[second].forEach((card: Card, cardIdx: number) => {
-        if (card.revealedOnTurn === G.turn) {
-          mechs(G, ctx, zoneIdx, card, cardIdx, second, zone.sides[second]);
-        }
+      zone.sides[sec].forEach((card: Card, cardIdx: number) => {
+        initOnPlay(
+          G,
+          ctx,
+          zone,
+          zoneIdx,
+          card,
+          cardIdx,
+          sec,
+          initEvent(G, ctx, zone, zoneIdx, card, cardIdx, sec)
+        );
       });
     });
 
@@ -37,7 +53,55 @@ const initCardMechanicsPhase: PhaseConfig = {
   },
 };
 
-function mechs(
+function initOnPlay(
+  G: GameState,
+  ctx: Ctx,
+  zone: Zone,
+  zoneIdx: number,
+  card: Card,
+  cardIdx: number,
+  player: PlayerID,
+  callback?: () => void
+) {
+  const { opponent } = getContextualPlayerIds(player);
+  const revealedThisTurn = card.revealedOnTurn === G.turn;
+  const hasOnPlay = card.mechanics?.includes('ON_PLAY');
+
+  if (revealedThisTurn && hasOnPlay) {
+    initGameMechanicsById(
+      G,
+      ctx,
+      G.gameConfig,
+      zone,
+      zoneIdx,
+      card,
+      cardIdx,
+      player,
+      opponent
+    );
+  }
+
+  if (callback) return callback;
+}
+
+function initEvent(
+  G: GameState,
+  ctx: Ctx,
+  zone: Zone,
+  zoneIdx: number,
+  card: Card,
+  cardIdx: number,
+  player: PlayerID,
+  callback?: () => void
+) {
+  if (card.mechanics?.includes('EVENT')) {
+    eventMechs(G, ctx, zone, zoneIdx, card, cardIdx, player);
+  }
+
+  if (callback) return callback;
+}
+
+function onPlayMechs(
   G: GameState,
   ctx: Ctx,
   zoneIdx: number,
@@ -56,50 +120,6 @@ function mechs(
   const { opponent } = getContextualPlayerIds(player);
 
   switch (card.id) {
-    case 'GAME_002':
-      G.zones[zoneIdx].sides[player].forEach((c: Card, i: number) => {
-        const isNotCardPlayed = card.uuid !== c.uuid;
-        const cardIsBeforeCardPlayed = cardIdx > i;
-
-        if (isNotCardPlayed && cardIsBeforeCardPlayed) {
-          c.powerStream.push({
-            blame: 'GAME_002',
-            adjustment: -1,
-            currentPower: add(c.displayPower, -1),
-          });
-
-          c.displayPower = getCardPower(c);
-        }
-      });
-      break;
-
-    case 'GAME_003':
-      if (G.players[player].cards.hand.length < cardsPerHand) {
-        drawCardFromPlayersDeck(G, player, 1);
-      }
-      break;
-
-    case 'GAME_004':
-      if (G.players[player].cards.hand.length < cardsPerHand) {
-        const randomCardBase = ctx.random!.Shuffle(setsGame)[0];
-        const randomCard = createCardObject(randomCardBase);
-        G.players[player].cards.hand.push(randomCard);
-        counts.incrementHand(G, player);
-      }
-      break;
-
-    case 'GAME_005':
-      if (zoneSide.length >= 3) {
-        card.powerStream.push({
-          blame: 'GAME_005',
-          adjustment: 3,
-          currentPower: add(card.displayPower, 3),
-        });
-
-        card.displayPower = getCardPower(card);
-      }
-      break;
-
     // @todo
     case 'GAME_006':
       /**
@@ -129,41 +149,50 @@ function mechs(
       // G.zonesCardsReference['1'][targetZone!] = newZoneSideArr;
       break;
 
-    case 'GAME_007':
-      G.zones.forEach((z, i) => {
-        if (zoneIdx !== i) {
-          if (z.sides[player].length < numberOfSlotsPerZone) {
-            const obj = setsEntourage.find((e) => e.id === card.entourage![0]);
-            const entourageCard = createCardObject(obj!);
-            const entCardObj = { ...entourageCard, revealed: true };
-            z.sides[player].push(entCardObj);
-            G.zonesCardsReference[i][player].push(entCardObj);
-          }
+    default:
+      break;
+  }
+}
+
+function eventMechs(
+  G: GameState,
+  ctx: Ctx,
+  zone: Zone,
+  zoneIdx: number,
+  card: Card,
+  cardIdx: number,
+  player: PlayerID
+) {
+  const {
+    gameConfig,
+    gameConfig: {
+      numerics: { cardsPerHand, numberOfSlotsPerZone },
+    },
+  } = G;
+
+  const { opponent } = getContextualPlayerIds(player);
+
+  switch (card.id) {
+    case 'GAME_008':
+      G.zones[zoneIdx].sides[player].forEach((c: Card, i: number) => {
+        let playedThisTurn: number = 0;
+        const isNotCardPlayed = card.uuid !== c.uuid;
+
+        if (isNotCardPlayed) {
+          add(playedThisTurn, 1);
+        }
+
+        // console.log(playedThisTurn);
+        if (playedThisTurn > 0) {
+          card.powerStream.push({
+            blame: c.id,
+            adjustment: 1,
+            currentPower: add(card.displayPower, 1),
+          });
+
+          card.displayPower = getCardPower(card);
         }
       });
-      break;
-
-    case 'CORE_008':
-      if (G.players[opponent].cards.hand.length >= 1) {
-        const rCard = ctx.random?.Shuffle(G.players[opponent].cards.hand)[0];
-        G.players[opponent].cards.hand.forEach((c) => {
-          if (c.uuid === rCard!.uuid) {
-            c.currentCost = add(c.currentCost, 1);
-          }
-        });
-      }
-      break;
-
-    case 'CORE_010':
-      if (G.zones[zoneIdx].sides[opponent].length >= 2) {
-        card.powerStream.push({
-          blame: 'CORE_010',
-          adjustment: 2,
-          currentPower: add(card.displayPower, 2),
-        });
-
-        card.displayPower = getCardPower(card);
-      }
       break;
 
     default:

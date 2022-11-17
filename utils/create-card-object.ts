@@ -1,4 +1,3 @@
-import { isArray } from 'mathjs';
 import { v4 as uuid } from 'uuid';
 import { Card, CardBase } from '../types';
 import createArtistHtmlLink from './create-artist-html-link';
@@ -9,29 +8,6 @@ import replaceAllConstants from './replace-all-constants';
  * Creates a playable `Card` object from the provided card base info.
  */
 const createCardObject = (obj: CardBase): Card => {
-  // const {
-  //   artistName,
-  //   artistUrl,
-  //   collectible,
-  //   cost,
-  //   description,
-  //   elite,
-  //   entourage,
-  //   id,
-  //   isEntourage,
-  //   mechanics,
-  //   name,
-  //   numberPrimary,
-  //   numberRNG,
-  //   numberSecondary,
-  //   power,
-  //   race,
-  //   rarity,
-  //   set,
-  //   text,
-  //   type,
-  // } = obj;
-
   const SET = obj?.set?.replace(/\%/g, '');
   const RARITY = obj?.rarity?.replace(/\%/g, '').replace('RARITY_', '');
   const RACE = obj?.race?.replace(/\%/g, '').replace('RACE_', '');

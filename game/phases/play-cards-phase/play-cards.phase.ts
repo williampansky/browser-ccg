@@ -16,6 +16,7 @@ import {
   playCard,
   selectCard,
   setDone,
+  undoPlayCard,
 } from '../../moves';
 import { logPhaseToConsole } from '../../../utils';
 
@@ -83,6 +84,7 @@ const playCardsPhase: PhaseConfig = {
             client: false,
             noLimit: true,
             ignoreStaleStateID: true,
+            undoable: true,
             move: (
               G: GameState,
               ctx: Ctx,
@@ -90,6 +92,19 @@ const playCardsPhase: PhaseConfig = {
               zoneNumber: number
             ) => {
               return playCard(G, ctx, playerId, zoneNumber);
+            },
+          },
+          undoPlayCard: {
+            client: false,
+            noLimit: true,
+            ignoreStaleStateID: true,
+            move: (
+              G: GameState,
+              ctx: Ctx,
+              playerId: string,
+              undo
+            ) => {
+              return undoPlayCard(G, ctx, playerId, undo);
             },
           },
           playAiCard: {
