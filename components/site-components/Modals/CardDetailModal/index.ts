@@ -1,0 +1,1 @@
+export { CardDetailModal } from './CardDetailModal';

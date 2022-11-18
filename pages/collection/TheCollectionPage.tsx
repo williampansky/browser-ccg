@@ -4,6 +4,7 @@ import { Card as CardComponent } from '../../components/game-components';
 import { createCardObject } from '../../utils';
 import type { Card, CardBase } from '../../types';
 import { siteConfig } from '../../app.config';
+import { CardDetailModal } from '../../components/site-components/Modals';
 
 export default function TheCollectionPage() {
   const page = siteConfig.pages.collection;
@@ -47,7 +48,7 @@ export default function TheCollectionPage() {
           </div>
         </Container>
 
-        <div
+        {/* <div
           className={[
             'collection__modal',
             cardModal ? 'collection__modal--active' : '',
@@ -57,7 +58,12 @@ export default function TheCollectionPage() {
           <div className='modal__inner'>
             {cardModal && <CardComponent {...cardModal} canPlay={true} />}
           </div>
-        </div>
+        </div> */}
+
+        <CardDetailModal
+          data={cardModal}
+          onModalDismiss={() => setCardModal(undefined)}
+        />
       </div>
     </Layout>
   );

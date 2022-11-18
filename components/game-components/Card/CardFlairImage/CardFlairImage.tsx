@@ -14,9 +14,9 @@ export const CardFlairImage = ({ name, src }: CardFlairImageProps) => {
       <Image
         alt={name}
         className={styles['image']}
-        role='presentation'
-        priority
         layout='fill'
+        priority
+        role='presentation'
         src={source}
       />
     </div>

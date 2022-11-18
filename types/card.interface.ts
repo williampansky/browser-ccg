@@ -29,6 +29,7 @@ export interface CardBase {
   isGolden?: boolean;
   key?: string;
   mechanics?: string[];
+  mechanicsEnabled?: boolean;
   name: string;
   numberPrimary?: number;
   numberRNG?: number;
@@ -86,6 +87,7 @@ export interface Card {
   isEntourage?: boolean;
   isGolden?: boolean;
   mechanics?: string[];
+  mechanicsEnabled?: boolean;
   name: string;
   numberPrimary?: number;
   numberRNG?: number;

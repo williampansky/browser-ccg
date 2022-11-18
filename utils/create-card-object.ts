@@ -31,7 +31,8 @@ const createCardObject = (obj: CardBase): Card => {
     imageFlairSrc: getImageFlairSrc(obj?.id, obj?.set),
     isEntourage: obj?.isEntourage || false,
     key: createCardKey(obj?.id, obj?.set),
-    mechanics: obj?.mechanics,
+    mechanics: obj?.mechanicsEnabled ? obj?.mechanics : [],
+    mechanicsEnabled: obj?.mechanicsEnabled || false,
     name: obj?.name,
     numberPrimary: obj?.numberPrimary,
     numberRNG: obj?.numberRNG,
@@ -41,7 +42,9 @@ const createCardObject = (obj: CardBase): Card => {
     rarity: replaceAllConstants(obj?.rarity, 'value'),
     revealed: false,
     revealedOnTurn: 0,
-    text: obj?.text ? createMarkup(replaceAllConstants(obj?.text)) : undefined,
+    text: obj?.mechanicsEnabled
+      ? createMarkup(replaceAllConstants(obj.text!))
+      : undefined,
     type: replaceAllConstants(obj?.type, 'value'),
     uuid: uuid(),
     value: obj?.name,

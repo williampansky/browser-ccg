@@ -1,9 +1,14 @@
+// layout
 @import 'container';
 @import 'header';
 @import 'footer';
 @import 'main';
 @import 'nav';
 
+// components
+@import 'modal.card-detail';
+
+// pages
 @import 'page.404';
 @import 'page.changelog';
 @import 'page.collection';

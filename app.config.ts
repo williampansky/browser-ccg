@@ -14,7 +14,7 @@ export const gameConfig: GameConfig = {
     cardsPerStartingHand: 3,
     cardsPerTurn: 1,
     numberOfPlayers: 2,
-    numberOfSingleTurnsPerGame: 12,
+    numberOfSingleTurnsPerGame: 9,
     numberOfSlotsPerZone: 6,
     numberOfZones: 3,
   },
@@ -60,7 +60,7 @@ export const gameConfig: GameConfig = {
     TRANSFORM: false,
   },
   zonesConfig: {
-    effectAdjustments: true,
+    effectAdjustments: false,
     zoneImages: true,
     zoneNames: true,
     zoneReveals: true,

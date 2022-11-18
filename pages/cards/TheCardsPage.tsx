@@ -4,6 +4,7 @@ import { Card as CardComponent } from '../../components/game-components';
 import { siteConfig } from '../../app.config';
 import type { Card } from '../../types';
 import { Minion } from '../../components/game-components/Minion';
+import { CardDetailModal } from '../../components/site-components/Modals';
 
 export default function TheCardsPage() {
   const page = siteConfig.pages.cards;
@@ -47,7 +48,7 @@ export default function TheCardsPage() {
           </div>
         </Container>
 
-        <div
+        {/* <div
           className={[
             'collection__modal',
             cardModal ? 'collection__modal--active' : '',
@@ -66,7 +67,12 @@ export default function TheCardsPage() {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
+
+        <CardDetailModal
+          data={cardModal}
+          onModalDismiss={() => setCardModal(undefined)}
+        />
       </div>
     </Layout>
   );

@@ -4,6 +4,7 @@ export { Avatar } from './Avatar';
 export { Card } from './Card';
 export { DebugBar } from './DebugBar';
 export { EndTurnButton } from './EndTurnButton';
+export { Minion } from './Minion';
 export { Player } from './Player';
 export { PlayerBar } from './PlayerBar';
 export { PlayerHand } from './Hands';
