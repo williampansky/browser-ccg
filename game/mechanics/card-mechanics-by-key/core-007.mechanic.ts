@@ -8,8 +8,11 @@ import type {
   Zone,
 } from '../../../types';
 
-import { createCardObject, getRandomNumberBetween } from '../../../utils';
 import setsEntourage from '../../data/setsEntourage.json';
+import {
+  createCardObject,
+  getRandomNumberBetween as randomNum,
+} from '../../../utils';
 
 /**
  * on play: summon two 1/1 minions to each other zone
@@ -29,15 +32,12 @@ export const core007 = (
   G.zones.forEach((z, i) => {
     if (zoneIdx !== i) {
       if (z.sides[player].length < numerics.numberOfSlotsPerZone) {
-        const obj = setsEntourage.find(
-          (e: CardBase) =>
-            e.key ===
-            card.entourage![
-              getRandomNumberBetween(0, card.entourage!.length - 1)
-            ]
-        );
+        const entArr = setsEntourage.filter((ent: CardBase) => {
+          return ent.key!.match(`${ent.set?.replace(/\%/g, '')}`);
+        });
 
-        const entourageCard = createCardObject(obj!);
+        const entObj = entArr[randomNum(0, card.entourage!.length - 1)];
+        const entourageCard = createCardObject(entObj);
         const entCardObj = { ...entourageCard, revealed: true };
         z.sides[player].push(entCardObj);
         G.zonesCardsReference[i][player].push(entCardObj);

@@ -9,8 +9,10 @@ const jsonDirectory = path.join(process.cwd(), 'data');
 export default async (_req: NextApiRequest, res: NextApiResponse) => {
   try {
     const core = await getCoreCards();
-    // const entourage = await getEntourageCards();
-    const db = [...core, /**...entourage*/];
+    const entourage = await getEntourageCards();
+    const db = [...core, ...entourage].sort((a: any, b: any) => {
+      return a?.id?.localeCompare(b.id);
+    });
 
     res.status(200).json(db);
   } catch (err: any) {
@@ -23,16 +25,16 @@ async function getCoreCards() {
   const dir = jsonDirectory;
   const fileContents = await fs.readFile(dir + '/setsCore.json', 'utf8');
 
-  return JSON.parse(fileContents)
-    .map((item: CardBase) => createCardObject(item))
-    .sort((a: any, b: any) => a?.id?.localeCompare(b.id));
+  return JSON.parse(fileContents).map((item: CardBase) => {
+    return createCardObject(item);
+  });
 }
 
-// async function getEntourageCards() {
-//   const dir = jsonDirectory;
-//   const fileContents = await fs.readFile(dir + '/setsEntourage.json', 'utf8');
+async function getEntourageCards() {
+  const dir = jsonDirectory;
+  const fileContents = await fs.readFile(dir + '/setsEntourage.json', 'utf8');
 
-//   return JSON.parse(fileContents).map((item: CardBase) => {
-//     return createCardObject(item);
-//   });
-// }
+  return JSON.parse(fileContents).map((item: CardBase) => {
+    return createCardObject(item);
+  });
+}

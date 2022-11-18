@@ -34,6 +34,10 @@ function parseCardEntourage(string: string) {
   return string.replace(/\s/g, '').split(',');
 }
 
+function formatCardEntourage(arr: string[], set?: string) {
+  return arr.map(s => `${set?.replace(/\%/g, '')}_${s}`);
+}
+
 function replaceAllConstants(stringToParse: string, keyToUse: string = 'name') {
   if (!stringToParse) return;
   return stringToParse.replace(
@@ -44,11 +48,11 @@ function replaceAllConstants(stringToParse: string, keyToUse: string = 'name') {
 
 function createCardKey(id?: string, set?: string): string {
   return set && id ? `${replaceAllConstants(set, 'value')}_${id}` : v4();
-};
+}
 
 function parseMechanics(arr: string[]) {
   if (!arr || typeof arr === 'undefined') return [];
-  return arr.map(s => replaceAllConstants(s, 'value'))
+  return arr.map((s) => replaceAllConstants(s, 'value'));
 }
 
 function createArtistHtmlLink(name?: string, url?: string): string | undefined {
@@ -160,7 +164,10 @@ const fetchSetCoreData = async (tableId: string) => {
           numberRng: fields?.numberRng,
           numberSecondary: fields?.numberSecondary,
           targetingText: fields?.targetingText,
-          entourage: parseCardEntourage(fields?.entourage),
+          entourage: formatCardEntourage(
+            parseCardEntourage(fields?.entourage),
+            fields?.set
+          ),
           howToEarn: fields?.howToEarn,
           howToEarnGolden: fields?.howToEarnGolden,
           flavorText: fields?.flavorText,
@@ -210,7 +217,7 @@ const fetchSetEntourageData = async (tableId: string) => {
           artistName: fields?.artistName,
           artistUrl: fields?.artistUrl,
           description: fields?.description,
-          key: createCardKey(fields?.id, fields?.set)
+          key: createCardKey(fields?.id, fields?.set),
         };
       });
 

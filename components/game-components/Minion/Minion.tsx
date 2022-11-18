@@ -1,10 +1,7 @@
-import { ReactElement } from 'react';
-import { Card as CardProps } from '../../../types';
-import { createMarkup, fontSizeBasedOnCharacterLength } from '../../../utils';
-import styles from './minion.module.scss';
-import { MinionCost } from './MinionCost/MinionCost';
+import type { Card as CardProps } from '../../../types';
 import { MinionImage } from './MinionImage/MinionImage';
 import { MinionPower } from './MinionPower/MinionPower';
+import styles from './minion.module.scss';
 
 export interface ReactMinionProps extends CardProps {
   isSelected?: boolean;
@@ -13,7 +10,7 @@ export interface ReactMinionProps extends CardProps {
 export const Minion = ({
   isSelected = false,
   ...card
-}: ReactMinionProps): ReactElement => {
+}: ReactMinionProps) => {
   const {
     artist,
     baseCost,
@@ -33,6 +30,7 @@ export const Minion = ({
     imageFlairSrc,
     imagePlaceholderSrc,
     isGolden,
+    key,
     mechanics,
     name,
     numberPrimary,

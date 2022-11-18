@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import Image from 'next/image';
+
 import styles from './minion-image.module.scss';
 import PLACEHOLDER from '../../../../public/images/sets/PLACEHOLDER.jpg';
-import { getImageFlairSrc } from '../../../../utils';
 
 export interface ReactMinionImageProps {
   src?: string;
@@ -21,6 +22,8 @@ export const MinionImage = ({
   placeholderSrc,
 }: ReactMinionImageProps) => {
   const source = src || src === '' ? src?.replace('CARD', 'MINION') : PLACEHOLDER;
+  const [err, setErr] = useState<boolean>(false);
+
   return (
     <div
       className={[styles['wrapper'], styles[rarity]].join(' ')}
@@ -30,9 +33,10 @@ export const MinionImage = ({
         alt={name}
         className={styles['component']}
         layout='fill'
+        onError={() => setErr(true)}
         priority
         role='presentation'
-        src={source}
+        src={!err ? source : PLACEHOLDER}
       />
     </div>
   );

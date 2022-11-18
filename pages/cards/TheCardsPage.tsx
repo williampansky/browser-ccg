@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import { Container, Layout } from '../../components/site-components';
 import { Card as CardComponent } from '../../components/game-components';
 import { siteConfig } from '../../app.config';
-import type { Card } from '../../types';
-import { Minion } from '../../components/game-components/Minion';
 import { CardDetailModal } from '../../components/site-components/Modals';
+import type { Card } from '../../types';
 
 export default function TheCardsPage() {
   const page = siteConfig.pages.cards;
@@ -14,7 +13,7 @@ export default function TheCardsPage() {
   const fetchCards = async () => {
     const response = await fetch('/api/cards');
     const data = await response.json();
-    setCards(data.sort((a: any, b: any) => a?.id?.localeCompare(b.id)));
+    setCards(data.sort().reverse());
   };
 
   useEffect(() => {
@@ -47,27 +46,6 @@ export default function TheCardsPage() {
             })}
           </div>
         </Container>
-
-        {/* <div
-          className={[
-            'collection__modal',
-            cardModal ? 'collection__modal--active' : '',
-          ].join(' ')}
-          onClick={() => setCardModal(undefined)}
-        >
-          <div className='modal__inner'>
-            {cardModal && (
-              <div className='inner__content'>
-                <div className='content__card'>
-                  <CardComponent {...cardModal} canPlay={true} />
-                </div>
-                <div className='content__minion'>
-                  <Minion {...cardModal} />
-                </div>
-              </div>
-            )}
-          </div>
-        </div> */}
 
         <CardDetailModal
           data={cardModal}
