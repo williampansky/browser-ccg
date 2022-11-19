@@ -25,6 +25,10 @@ export type {
 } from './g.interface';
 
 export type {
+  Mechanic
+} from './mechanic.interface';
+
+export type {
   ActionPoints,
   Player,
   PlayerCards,

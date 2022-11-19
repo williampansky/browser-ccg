@@ -52,7 +52,8 @@ function createCardKey(id?: string, set?: string): string {
 
 function parseMechanics(arr: string[]) {
   if (!arr || typeof arr === 'undefined') return [];
-  return arr.map((s) => replaceAllConstants(s, 'value'));
+  return arr.map((s) => s.replace(/\%/g, ''));
+  // return arr.map((s) => replaceAllConstants(s, 'value'));
 }
 
 function createArtistHtmlLink(name?: string, url?: string): string | undefined {
@@ -174,6 +175,7 @@ const fetchSetCoreData = async (tableId: string) => {
           artistName: fields?.artistName,
           artistUrl: fields?.artistUrl,
           description: fields?.description,
+          key: createCardKey(fields?.id, fields?.set),
         };
       });
 

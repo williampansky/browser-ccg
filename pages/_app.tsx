@@ -5,6 +5,7 @@ import Head from 'next/head';
 import type { AppProps } from 'next/app';
 
 import { store } from '../store';
+import '../node_modules/magic.css/dist/magic.min.css';
 import '../styles/site.scss';
 
 /**

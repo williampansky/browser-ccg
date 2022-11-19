@@ -1,1 +1,1 @@
-export { CardDetailModal } from './CardDetailModal';
+export { CardDetailModal } from './CardDetailModalV2';

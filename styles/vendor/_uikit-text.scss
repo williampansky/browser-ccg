@@ -1,5 +1,7 @@
-// @see https://getuikit.com/docs/text#text-wrapping
-.uk-text-truncate {
+/**
+ * forked via getuikit.com/docs/text#text-wrapping
+ */
+.bccg-text-truncate {
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -14,6 +14,8 @@ export { default as getCardPower } from './get-card-power';
 export { default as getContextualPlayerIds } from './get-contextual-player-ids';
 export { default as getGameResult } from './get-game-result';
 export { default as getImageFlairSrc } from './get-image-flair-src';
+export { default as getMechanicDescription } from './get-mechanic-description';
+export { default as getMechanicObject } from './get-mechanic-object';
 export { default as getPercentageChange } from './get-percentage-change';
 export { default as getRandomNumberBetween } from './get-random-number-between';
 export { default as getSumOfAllZonesPower } from './get-sum-of-all-zones-power';

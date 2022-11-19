@@ -1,113 +1,117 @@
-[class*='uk-animation-'] {
+/**
+ * forked via getuikit.com/docs/animation
+ */
+
+[class*='bccg-animation-'] {
   animation-duration: 0.5s;
   animation-timing-function: ease-out;
   animation-fill-mode: both;
 }
 
-.uk-animation-delay {
+.bccg-animation-delay {
   animation-delay: 400ms !important;
 }
 
-.uk-animation-fade {
-  animation-name: uk-fade;
+.bccg-animation-fade {
+  animation-name: bccg-fade;
   animation-duration: 0.8s;
   animation-timing-function: linear;
 }
 
-.uk-animation-scale-up {
-  animation-name: uk-fade-scale-02;
+.bccg-animation-scale-up {
+  animation-name: bccg-fade-scale-02;
 }
 
-.uk-animation-scale-down {
-  animation-name: uk-fade-scale-18;
+.bccg-animation-scale-down {
+  animation-name: bccg-fade-scale-18;
 }
 
-.uk-animation-slide-top {
-  animation-name: uk-fade-top;
+.bccg-animation-slide-top {
+  animation-name: bccg-fade-top;
 }
 
-.uk-animation-slide-bottom {
-  animation-name: uk-fade-bottom;
+.bccg-animation-slide-bottom {
+  animation-name: bccg-fade-bottom;
 }
 
-.uk-animation-slide-left {
-  animation-name: uk-fade-left;
+.bccg-animation-slide-left {
+  animation-name: bccg-fade-left;
 }
 
-.uk-animation-slide-right {
-  animation-name: uk-fade-right;
+.bccg-animation-slide-right {
+  animation-name: bccg-fade-right;
 }
 
-.uk-animation-slide-top-small {
-  animation-name: uk-fade-top-small;
+.bccg-animation-slide-top-small {
+  animation-name: bccg-fade-top-small;
 }
 
-.uk-animation-slide-bottom-small {
-  animation-name: uk-fade-bottom-small;
+.bccg-animation-slide-bottom-small {
+  animation-name: bccg-fade-bottom-small;
 }
 
-.uk-animation-slide-left-small {
-  animation-name: uk-fade-left-small;
+.bccg-animation-slide-left-small {
+  animation-name: bccg-fade-left-small;
 }
 
-.uk-animation-slide-right-small {
-  animation-name: uk-fade-right-small;
+.bccg-animation-slide-right-small {
+  animation-name: bccg-fade-right-small;
 }
 
-.uk-animation-slide-top-medium {
-  animation-name: uk-fade-top-medium;
+.bccg-animation-slide-top-medium {
+  animation-name: bccg-fade-top-medium;
 }
 
-.uk-animation-slide-bottom-medium {
-  animation-name: uk-fade-bottom-medium;
+.bccg-animation-slide-bottom-medium {
+  animation-name: bccg-fade-bottom-medium;
 }
 
-.uk-animation-slide-left-medium {
-  animation-name: uk-fade-left-medium;
+.bccg-animation-slide-left-medium {
+  animation-name: bccg-fade-left-medium;
 }
 
-.uk-animation-slide-right-medium {
-  animation-name: uk-fade-right-medium;
+.bccg-animation-slide-right-medium {
+  animation-name: bccg-fade-right-medium;
 }
 
-.uk-animation-kenburns {
-  animation-name: uk-scale-kenburns;
+.bccg-animation-kenburns {
+  animation-name: bccg-scale-kenburns;
   animation-duration: 15s;
 }
 
-.uk-animation-shake {
-  animation-name: uk-shake;
+.bccg-animation-shake {
+  animation-name: bccg-shake;
 }
 
-.uk-animation-stroke {
-  animation-name: uk-stroke;
-  stroke-dasharray: var(--uk-animation-stroke);
+.bccg-animation-stroke {
+  animation-name: bccg-stroke;
+  stroke-dasharray: var(--bccg-animation-stroke);
   animation-duration: 2s;
 }
 
-.uk-animation-reverse {
+.bccg-animation-reverse {
   animation-direction: reverse;
   animation-timing-function: ease-in;
 }
 
-.uk-animation-fast {
+.bccg-animation-fast {
   animation-duration: 0.1s;
 }
 
-.uk-animation-toggle:not(:hover):not(:focus) [class*='uk-animation-'] {
+.bccg-animation-toggle:not(:hover):not(:focus) [class*='bccg-animation-'] {
   animation-name: none;
 }
 
-.uk-animation-toggle {
+.bccg-animation-toggle {
   -webkit-tap-highlight-color: transparent;
 }
 
-.uk-animation-toggle:focus {
+.bccg-animation-toggle:focus {
   outline: none;
 }
 
-.uk-spinner {
-  animation: uk-spinner-rotate 1.4s linear infinite;
+.bccg-spinner {
+  animation: bccg-spinner-rotate 1.4s linear infinite;
   margin: 0 auto;
   height: 30px;
   width: 30px;
@@ -116,57 +120,57 @@
     stroke-dasharray: 88px;
     stroke-dashoffset: 0;
     transform-origin: center;
-    animation: uk-spinner-dash 1.4s ease-in-out infinite;
+    animation: bccg-spinner-dash 1.4s ease-in-out infinite;
     stroke-width: 1;
     stroke-linecap: round;
     height: 30px;
     width: 30px;
   }
 
-  &.uk-spinner-\@2x,
-  &.uk-spinner-\@2x > div {
+  &.bccg-spinner-\@2x,
+  &.bccg-spinner-\@2x > div {
     height: 90px;
     width: 90px;
   }
 }
 
-.uk-transform-center {
+.bccg-transform-center {
   transform: translate(-50%, -50%);
 }
 
-.uk-transform-origin-top-left {
+.bccg-transform-origin-top-left {
   transform-origin: 0 0;
 }
 
-.uk-transform-origin-top-center {
+.bccg-transform-origin-top-center {
   transform-origin: 50% 0;
 }
 
-.uk-transform-origin-top-right {
+.bccg-transform-origin-top-right {
   transform-origin: 100% 0;
 }
 
-.uk-transform-origin-center-left {
+.bccg-transform-origin-center-left {
   transform-origin: 0 50%;
 }
 
-.uk-transform-origin-center-right {
+.bccg-transform-origin-center-right {
   transform-origin: 100% 50%;
 }
 
-.uk-transform-origin-bottom-left {
+.bccg-transform-origin-bottom-left {
   transform-origin: 0 100%;
 }
 
-.uk-transform-origin-bottom-center {
+.bccg-transform-origin-bottom-center {
   transform-origin: 50% 100%;
 }
 
-.uk-transform-origin-bottom-right {
+.bccg-transform-origin-bottom-right {
   transform-origin: 100% 100%;
 }
 
-@keyframes uk-fade {
+@keyframes bccg-fade {
   0% {
     opacity: 0;
   }
@@ -176,7 +180,7 @@
   }
 }
 
-@keyframes uk-fade-top {
+@keyframes bccg-fade-top {
   0% {
     opacity: 0;
     transform: translateY(-100%);
@@ -188,7 +192,7 @@
   }
 }
 
-@keyframes uk-fade-bottom {
+@keyframes bccg-fade-bottom {
   0% {
     opacity: 0;
     transform: translateY(100%);
@@ -200,7 +204,7 @@
   }
 }
 
-@keyframes uk-fade-left {
+@keyframes bccg-fade-left {
   0% {
     opacity: 0;
     transform: translateX(-100%);
@@ -212,7 +216,7 @@
   }
 }
 
-@keyframes uk-fade-right {
+@keyframes bccg-fade-right {
   0% {
     opacity: 0;
     transform: translateX(100%);
@@ -224,7 +228,7 @@
   }
 }
 
-@keyframes uk-fade-top-small {
+@keyframes bccg-fade-top-small {
   0% {
     opacity: 0;
     transform: translateY(-10px);
@@ -236,7 +240,7 @@
   }
 }
 
-@keyframes uk-fade-bottom-small {
+@keyframes bccg-fade-bottom-small {
   0% {
     opacity: 0;
     transform: translateY(10px);
@@ -248,7 +252,7 @@
   }
 }
 
-@keyframes uk-fade-left-small {
+@keyframes bccg-fade-left-small {
   0% {
     opacity: 0;
     transform: translateX(-10px);
@@ -260,7 +264,7 @@
   }
 }
 
-@keyframes uk-fade-right-small {
+@keyframes bccg-fade-right-small {
   0% {
     opacity: 0;
     transform: translateX(10px);
@@ -272,7 +276,7 @@
   }
 }
 
-@keyframes uk-fade-top-medium {
+@keyframes bccg-fade-top-medium {
   0% {
     opacity: 0;
     transform: translateY(-50px);
@@ -284,7 +288,7 @@
   }
 }
 
-@keyframes uk-fade-bottom-medium {
+@keyframes bccg-fade-bottom-medium {
   0% {
     opacity: 0;
     transform: translateY(50px);
@@ -296,7 +300,7 @@
   }
 }
 
-@keyframes uk-fade-left-medium {
+@keyframes bccg-fade-left-medium {
   0% {
     opacity: 0;
     transform: translateX(-50px);
@@ -308,7 +312,7 @@
   }
 }
 
-@keyframes uk-fade-right-medium {
+@keyframes bccg-fade-right-medium {
   0% {
     opacity: 0;
     transform: translateX(50px);
@@ -320,7 +324,7 @@
   }
 }
 
-@keyframes uk-fade-scale-02 {
+@keyframes bccg-fade-scale-02 {
   0% {
     opacity: 0;
     transform: scale(0.2);
@@ -332,7 +336,7 @@
   }
 }
 
-@keyframes uk-fade-scale-18 {
+@keyframes bccg-fade-scale-18 {
   0% {
     opacity: 0;
     transform: scale(1.8);
@@ -344,7 +348,7 @@
   }
 }
 
-@keyframes uk-scale-kenburns {
+@keyframes bccg-scale-kenburns {
   0% {
     transform: scale(1);
   }
@@ -354,7 +358,7 @@
   }
 }
 
-@keyframes uk-shake {
+@keyframes bccg-shake {
   0%,
   100% {
     transform: translateX(0);
@@ -397,9 +401,9 @@
   }
 }
 
-@keyframes uk-stroke {
+@keyframes bccg-stroke {
   0% {
-    stroke-dashoffset: var(--uk-animation-stroke);
+    stroke-dashoffset: var(--bccg-animation-stroke);
   }
 
   100% {
@@ -407,7 +411,7 @@
   }
 }
 
-@keyframes uk-spinner-rotate {
+@keyframes bccg-spinner-rotate {
   0% {
     transform: rotate(0deg);
   }
@@ -417,7 +421,7 @@
   }
 }
 
-@keyframes uk-spinner-dash {
+@keyframes bccg-spinner-dash {
   0% {
     stroke-dashoffset: 88px;
   }
