@@ -117,7 +117,7 @@ export interface Card {
   value: string;
 }
 
-interface Deck {
+export interface Deck {
   name: string;
   cards: Card[];
   deckSlot?: number;

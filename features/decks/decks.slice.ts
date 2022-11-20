@@ -4,7 +4,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Card, Deck, Decks } from '../../types';
 import { gameConfig } from '../../app.config';
 
-const blankDeckItem: Deck = (idx: number) => {
+const blankDeckItem = (idx: number): Deck => {
   return {
     name: '',
     cards: [],
