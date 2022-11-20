@@ -14,6 +14,8 @@ export type {
   CardBase,
   CardId,
   CardPowerStream,
+  Deck,
+  Decks
 } from './card.interface';
 
 export type {

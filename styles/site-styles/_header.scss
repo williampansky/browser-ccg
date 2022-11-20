@@ -2,6 +2,8 @@
   @include display-flex(row nowrap, center, space-between);
   padding: 0 1rem;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 
   div {
     color: white;

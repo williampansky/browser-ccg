@@ -1,3 +1,9 @@
+html {
+  perspective: 100vh;
+  position: fixed;
+  overflow: hidden;
+}
+
 html,
 body,
 #__next,
@@ -38,4 +44,8 @@ body {
 
 a {
   color: #8cc8ff;
+}
+
+h1 {
+  margin-top: 0;
 }

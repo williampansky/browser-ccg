@@ -105,7 +105,6 @@ export interface Card {
   type: CardType | string;
   uuid: string;
   zonePowerAdjustment: number;
-  
 
   /**
    * Required by `react-select`
@@ -117,3 +116,12 @@ export interface Card {
    */
   value: string;
 }
+
+interface Deck {
+  name: string;
+  cards: Card[];
+  deckSlot?: number;
+  uuid?: string;
+}
+
+export declare type Decks = Record<number, Deck>;

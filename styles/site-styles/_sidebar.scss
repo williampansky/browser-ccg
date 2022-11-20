@@ -1,0 +1,217 @@
+.site__sidebar {
+  @include position-fixed(0, 0, auto, 0, 3);
+  background: #1e1e1e;
+  transition-property: height, transform, width;
+  transition-duration: 0ms;
+  transition-timing-function: var(--animation-transition-cubic);
+  transform: translateY(-100%);
+  height: 75px;
+  width: 100%;
+
+  @media (min-width: 640px) {
+    left: auto;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    transform: translateX(100%);
+  }
+}
+
+.site__sidebar.sidebar--decks {
+  transition-duration: 400ms;
+  transform: translateY(0);
+
+  @media (min-width: 640px) {
+    transform: translateX(0);
+  }
+}
+
+.site__sidebar.sidebar--deckbuilder {
+  height: 237px;
+  transition-duration: 400ms;
+}
+
+.site__sidebar .decks__grid {
+  @include display-flex(row nowrap, center, flex-start);
+  height: 100%;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  overflow: auto hidden;
+  list-style-type: none;
+  margin: 0;
+
+  & > li {
+    height: 100%;
+  }
+
+  & > li + li {
+    margin-left: 0.5rem;
+  }
+}
+
+.site__sidebar .deck__slot {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 40px;
+  min-height: 30px;
+  height: 100%;
+  text-decoration: none;
+}
+
+.site__sidebar .deckbuilder__deck {
+  padding: 0.5rem 1rem;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.site__sidebar .deckbuilder__deck-info {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site__sidebar .deckbuilder__deck-grid {
+  list-style-type: none;
+  padding: 0;
+  margin: 0.5em 0 0;
+  height: 100%;
+  // display: flex;
+  // flex-flow: row nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  grid-gap: 0.5em 1em;
+  width: 100%;
+}
+
+.site__sidebar .deckbuilder__deck-grid .deck__item {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  height: 1.5em;
+  position: relative;
+  user-select: none;
+  font-family: 'Carter One', sans-serif;
+  width: 100%;
+  font-size: 14px;
+  z-index: 1;
+  opacity: 1;
+  pointer-events: none;
+  border-left: 4px solid;
+
+  &.deck__item--blank {
+    height: 1.5em;
+    width: 100%;
+  }
+
+  // prettier-ignore
+  & {
+    &[data-rarity='FREE'] { border-color: var(--color-rarity-FREE); }
+    &[data-rarity='COMMON'] { border-color: var(--color-rarity-COMMON); }
+    &[data-rarity='SUPERIOR'] { border-color: var(--color-rarity-SUPERIOR); }
+    &[data-rarity='REMARKABLE'] { border-color: var(--color-rarity-REMARKABLE); }
+    &[data-rarity='MYTHIC'] { border-color: var(--color-rarity-MYTHIC); }
+    &[data-rarity='GOLDEN'] { border-color: var(--color-rarity-GOLDEN); }
+  }
+
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.365);
+    z-index: 1;
+    pointer-events: none;
+    touch-action: none;
+    opacity: 1;
+  }
+
+  .item__cost {
+    font-size: 0.875em;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+    margin: 0 0 0 10px;
+    padding: 0 2px;
+    width: 14px;
+    z-index: 1;
+    line-height: 1.5;
+  }
+
+  // .item__cost .text__value {
+  //   font-size: 0.875em;
+  //   display: flex;
+  //   flex-flow: column nowrap;
+  //   align-items: center;
+  //   justify-content: center;
+  //   position: absolute;
+  //   width: 100%;
+  //   height: 100%;
+  //   line-height: 1;
+  // }
+
+  .item__cost img {
+    height: 30px;
+  }
+
+  .item__info {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 2px 0;
+    width: 100%;
+    max-width: 30vw;
+  }
+
+  .item__name {
+    font-size: 0.875em;
+    position: relative;
+    line-height: 1.5;
+    z-index: 1;
+    padding: 0 2px;
+  }
+
+  .item__amount {
+    font-size: 0.875em;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .item__image {
+    background-position: top right;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    z-index: 0;
+  }
+}
+
+.site__sidebar.sidebar--deckbuilder + .collection__page {
+  padding-top: 165px;
+  transition: padding-top 450ms var(--animation-transition-cubic);
+}

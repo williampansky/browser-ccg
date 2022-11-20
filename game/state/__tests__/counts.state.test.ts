@@ -28,8 +28,8 @@ describe('Handles G.counts state manipulation', () => {
   test("Should reduce the player's deck count by 1", () => {
     const G = mockGameState(
       'counts',
-      { deck: 20, hand: 0 },
-      { deck: 20, hand: 0 }
+      { deck: gameConfig.numerics.cardsPerDeck, hand: 0 },
+      { deck: gameConfig.numerics.cardsPerDeck, hand: 0 }
     );
 
     counts.decrementDeck(G, '0');
@@ -43,8 +43,8 @@ describe('Handles G.counts state manipulation', () => {
   test("Should reduce the player's hand count by 1", () => {
     const G = mockGameState(
       'counts',
-      { deck: 20, hand: 5 },
-      { deck: 20, hand: 0 }
+      { deck: gameConfig.numerics.cardsPerDeck, hand: 5 },
+      { deck: gameConfig.numerics.cardsPerDeck, hand: 0 }
     );
 
     counts.decrementHand(G, '0');
@@ -58,8 +58,8 @@ describe('Handles G.counts state manipulation', () => {
   test("Should increase the player's deck count by 1", () => {
     const G = mockGameState(
       'counts',
-      { deck: 20, hand: 0 },
-      { deck: 20, hand: 0 }
+      { deck: gameConfig.numerics.cardsPerDeck, hand: 0 },
+      { deck: gameConfig.numerics.cardsPerDeck, hand: 0 }
     );
 
     counts.incrementDeck(G, '0');
@@ -73,8 +73,8 @@ describe('Handles G.counts state manipulation', () => {
   test("Should increase the player's hand count by 1", () => {
     const G = mockGameState(
       'counts',
-      { deck: 20, hand: 0 },
-      { deck: 20, hand: 0 }
+      { deck: gameConfig.numerics.cardsPerDeck, hand: 0 },
+      { deck: gameConfig.numerics.cardsPerDeck, hand: 0 }
     );
 
     counts.incrementHand(G, '0');

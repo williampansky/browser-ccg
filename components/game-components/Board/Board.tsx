@@ -1,16 +1,11 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import type { BoardProps } from 'boardgame.io/react';
 import type { Card, GameState } from '../../../types';
+import type { RootState } from '../../../store';
 
 import {
-  useAddressBarSize,
   useEndPhase,
   useEndTurnButton,
   useGameOver,
@@ -39,19 +34,22 @@ export const Board = (props: GameProps) => {
     events: { endPhase },
     reset,
     playerID,
-    undo
+    undo,
   } = props;
 
+  // player IDs
   const yourID = playerID === '0' ? '0' : '1';
   const opponentID = playerID === '0' ? '1' : '0';
 
   // hooks
   const { height, width } = useWindowSize();
-  const addressBarSize = useAddressBarSize();
   const endTurnIsDisabled = useEndTurnButton(phase, G.playerTurnDone);
   const dispatch = useDispatch();
   useEndPhase(events, phase, G.playerTurnDone);
   useGameOver(ctx?.gameover);
+
+  // states
+  const abSize = useSelector(({ addressBarSize }: RootState) => addressBarSize);
 
   useEffect(() => {
     dispatch(setWindowSize({ height, width }));
@@ -83,16 +81,16 @@ export const Board = (props: GameProps) => {
         G={G}
         ctx={ctx}
         playerID={playerID}
-        addressBarSize={addressBarSize}
+        addressBarSize={abSize}
       />
 
       <GameOverOverlay playerID={playerID} reset={reset} />
 
       <main
         style={{
-          height: `calc(100vh - ${addressBarSize}px)`,
-          maxHeight: `calc(100vh - ${addressBarSize}px)`,
-          minHeight: `calc(100vh - ${addressBarSize}px)`,
+          height: `calc(100vh - ${abSize}px)`,
+          maxHeight: `calc(100vh - ${abSize}px)`,
+          minHeight: `calc(100vh - ${abSize}px)`,
           position: 'relative',
         }}
       >

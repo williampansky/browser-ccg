@@ -9,10 +9,11 @@ export const gameConfig: GameConfig = {
   numerics: {
     actionPointsPerTurn: 1,
     actionPointsTotal: 10,
-    cardsPerDeck: 20,
+    cardsPerDeck: 14,
     cardsPerHand: 8,
     cardsPerStartingHand: 3,
     cardsPerTurn: 1,
+    maxNumberOfDecks: 10,
     numberOfPlayers: 2,
     numberOfSingleTurnsPerGame: 9,
     numberOfSlotsPerZone: 6,
@@ -105,6 +106,13 @@ export const sitePages: Pages = {
     headline: 'Your Collection',
     title: 'Collection',
   },
+  deckbuilder: {
+    description: '',
+    name: 'Deck Builder',
+    route: '/deckbuilder',
+    headline: 'Deck Builder',
+    title: 'Deck Builder',
+  },
   faq: {
     description: '',
     name: 'FAQ',
@@ -168,7 +176,8 @@ export const siteConfig: SiteConfig = {
   longName: 'Browser-CCG',
   pages: sitePages,
   footerButtons: footerButtons,
-  version: '0.0.1'
+  version: '0.0.1',
+  disableRightClick: true,
 };
 
 const appConfig: AppConfig = {

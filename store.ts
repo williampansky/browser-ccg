@@ -1,7 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import {
+  addressBarSizeSlice,
   cardModalSlice,
   configSlice,
+  collectionSlice,
+  decksSlice,
   gameOverSlice,
   windowSizeSlice,
   zonesRefSlice,
@@ -10,8 +13,11 @@ import {
 
 export const store = configureStore({
   reducer: {
+    addressBarSize: addressBarSizeSlice,
     cardModal: cardModalSlice,
+    collection: collectionSlice,
     config: configSlice,
+    decks: decksSlice,
     gameOver: gameOverSlice,
     windowSize: windowSizeSlice,
     zones: zonesSlice,

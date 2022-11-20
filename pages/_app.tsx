@@ -1,12 +1,14 @@
-import { Fragment } from 'react';
+import '../node_modules/magic.css/dist/magic.min.css';
+import { Fragment, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import Head from 'next/head';
 
 import type { AppProps } from 'next/app';
 
-import { store } from '../store';
-import '../node_modules/magic.css/dist/magic.min.css';
 import '../styles/site.scss';
+import { store } from '../store';
+import { siteConfig } from '../app.config';
+import { Dispatcher } from '../components';
 
 /**
  * Stops NextJS from breaking the dev page due to the
@@ -43,6 +45,14 @@ export const noOverlayWorkaroundScript = `
 `;
 
 export default function App({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    if (siteConfig.disableRightClick) {
+      document.addEventListener('contextmenu', (event) =>
+        event.preventDefault()
+      );
+    }
+  }, []);
+
   return (
     <Fragment>
       <Provider store={store}>
@@ -54,6 +64,7 @@ export default function App({ Component, pageProps }: AppProps) {
           )}
         </Head>
         <Component {...pageProps} />
+        <Dispatcher />
       </Provider>
     </Fragment>
   );

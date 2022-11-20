@@ -56,14 +56,4 @@ const initPlayersPhase: PhaseConfig = {
   },
 };
 
-// function debugCards(): Card[] {
-//   let arr: Card[] = [];
-
-//   for (let index = 0; index < 20; index++) {
-//     arr.push(createCardObject(setsCore.find(obj => obj.id === 'CORE_008')!))
-//   }
-
-//   return arr;
-// }
-
 export default initPlayersPhase;

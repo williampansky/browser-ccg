@@ -11,6 +11,7 @@ export interface GameConfig {
     cardsPerHand: number;
     cardsPerStartingHand: number;
     cardsPerTurn: number;
+    maxNumberOfDecks: number;
     numberOfPlayers: number;
     numberOfSingleTurnsPerGame: number;
     numberOfSlotsPerZone: number;
@@ -120,6 +121,7 @@ export interface SiteConfig {
   pages: Pages;
   footerButtons: Pages;
   version: Version;
+  disableRightClick: boolean;
 }
 
 export interface AppConfig {

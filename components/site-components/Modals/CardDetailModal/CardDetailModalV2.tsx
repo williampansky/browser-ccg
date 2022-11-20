@@ -1,4 +1,7 @@
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../../../store';
 import type { Card } from '../../../../types';
+
 import { getMechanicObject, replaceAllConstants } from '../../../../utils';
 import { Card as CardComponent, Minion } from '../../../game-components';
 
@@ -8,6 +11,8 @@ interface Props {
 }
 
 export const CardDetailModal = ({ data, onModalDismiss }: Props) => {
+  const abSize = useSelector(({ addressBarSize }: RootState) => addressBarSize);
+
   return (
     <div
       className={[
@@ -15,6 +20,11 @@ export const CardDetailModal = ({ data, onModalDismiss }: Props) => {
         data ? 'card-detail__modal--active' : '',
       ].join(' ')}
       onClick={onModalDismiss}
+      style={{
+        height: `calc(100vh - ${abSize}px)`,
+        maxHeight: `calc(100vh - ${abSize}px)`,
+        minHeight: `calc(100vh - ${abSize}px)`,
+      }}
     >
       {data ? (
         <div className='modal__dialog'>

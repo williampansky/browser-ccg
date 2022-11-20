@@ -1,0 +1,1 @@
+export { default as collectionSlice, setCollection } from './collection.slice'
