@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { siteConfig } from '../../../app.config';
+import type { RootState } from '../../../store';
 import styles from './scroll-to-top.module.scss';
 const { pages } = siteConfig;
 
@@ -20,6 +22,7 @@ export const ScrollToTop = ({
   parentSelector = '.collection__page',
 }: ScrollToTopProps) => {
   const [visible, setVisible] = useState<boolean>(false);
+  const abSize = useSelector(({ addressBarSize }: RootState) => addressBarSize);
 
   const scrollToTopFunc = (smooth: boolean = false) => {
     if (typeof window !== 'undefined') {
@@ -53,6 +56,9 @@ export const ScrollToTop = ({
       data-component='ScrollToTop'
       onClick={() => scrollToTopFunc(smooth)}
       aria-label='Scroll to top'
+      style={{
+        bottom: `calc((52px + 1rem) + ${abSize}px)`,
+      }}
     >
       <span className="bccg-icon" uk-icon="triangle-up"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><polygon points="5 13 10 8 15 13"></polygon></svg></span>
     </button>

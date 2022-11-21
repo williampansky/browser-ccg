@@ -19,7 +19,7 @@ export function Dispatcher() {
 
   useEffect(() => {
     if (addressBarSize !== null || addressBarSize !== NaN) {
-      dispatch(setAddressBarSize(addressBarSize));
+      dispatch(setAddressBarSize(56));
     }
   }, [addressBarSize]);
 
