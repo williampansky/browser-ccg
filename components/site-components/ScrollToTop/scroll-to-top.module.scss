@@ -1,0 +1,15 @@
+.component {
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: auto;
+  right: 1rem;
+  bottom: calc(52px + 1rem);
+  left: auto;
+  z-index: 3;
+}

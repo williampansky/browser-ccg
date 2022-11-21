@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { MouseEvent, TouchEvent } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLongPress } from 'use-long-press';
 
-import { Container, Layout, Sidebar } from '../../components/site-components';
+import { Container, Layout, ScrollToTop, Sidebar } from '../../components/site-components';
 import { Card as CardComponent } from '../../components/game-components';
 import { CardDetailModal } from '../../components/site-components/Modals';
 import { gameConfig, siteConfig } from '../../app.config';
@@ -129,13 +129,20 @@ export default function TheCollectionPage() {
     return false;
   };
 
-  const onAddCardFromModalClick = (card: Card) => {
-    if (activeDeck) dispatch(addCard({ card: card, deckSlot: activeDeck }));
-    return (event: MouseEvent | TouchEvent) => event.preventDefault();
-  };
+  const handleModalDeckbuilderCtaClick = (context: 'ADD_CARD' | 'REMOVE_CARD', card: Card) => {
+    if (activeDeck) {
+      switch (context) {
+        case 'ADD_CARD':
+          dispatch(addCard({ card: card, deckSlot: activeDeck }));
+          break;
+      
+        case 'REMOVE_CARD':
+        default:
+          dispatch(removeCard({ cardId: card?.id, deckSlot: activeDeck }));
+          break;
+      }
+    }
 
-  const onRemoveCardFromModalClick = (card: Card) => {
-    if (activeDeck) dispatch(removeCard({ cardId: card?.id, deckSlot: activeDeck }));
     return (event: MouseEvent | TouchEvent) => event.preventDefault();
   };
 
@@ -154,7 +161,9 @@ export default function TheCollectionPage() {
         <Container>
           <div className='page__header'>
             <h1>{page.headline}</h1>
-            <button onClickCapture={toggleSidebar()}>Decks</button>
+            <button onClickCapture={toggleSidebar()} style={{
+              backgroundColor: showDecks ? 'yellow' : 'buttonface',
+            }}>Decks</button>
           </div>
 
           <div className='grid'>
@@ -173,6 +182,8 @@ export default function TheCollectionPage() {
             })}
           </div>
         </Container>
+
+        <ScrollToTop />
       </div>
 
       <CardDetailModal
@@ -181,8 +192,7 @@ export default function TheCollectionPage() {
         deckbuilderLocked={getDeckbuilderDeckLength(decks[activeDeck!]?.cards) >= numerics.cardsPerDeck}
         isDeckbuilder={activeDeck ? true : false}
         onModalDismiss={() => setCardModal(undefined)}
-        onAddCardClick={onAddCardFromModalClick}
-        onRemoveCardClick={(card) => onRemoveCardFromModalClick(card)}
+        onDeckbuilderCtaClick={handleModalDeckbuilderCtaClick}
       />
     </Layout>
   );
