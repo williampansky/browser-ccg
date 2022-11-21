@@ -10,8 +10,8 @@ const { numerics } = gameConfig;
 interface Props {
   data?: Card;
   activeDeck?: number;
-  isDeckbuilder: boolean;
-  deckbuilderLocked: boolean;
+  isDeckbuilder?: boolean;
+  deckbuilderLocked?: boolean;
   onModalDismiss?: () => void;
   onAddCardClick?: (card: Card) => void;
   onRemoveCardClick?: (card: Card) => void;
@@ -20,8 +20,8 @@ interface Props {
 export const CardDetailModal = ({
   data,
   activeDeck,
-  isDeckbuilder,
-  deckbuilderLocked,
+  isDeckbuilder = false,
+  deckbuilderLocked = false,
   onModalDismiss,
   onAddCardClick,
   onRemoveCardClick,
