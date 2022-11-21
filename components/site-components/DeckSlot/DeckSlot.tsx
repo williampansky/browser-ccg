@@ -7,7 +7,7 @@ interface DeckSlotProps {
   cardBack?: string;
 }
 
-export const DeckSlot = ({ filled, cardBack }: DeckSlotProps) => {
+export const DeckSlot = ({ filled = false, cardBack }: DeckSlotProps) => {
   return (
     <div className={['deck__slot'].join(' ')}>
       {filled ? (

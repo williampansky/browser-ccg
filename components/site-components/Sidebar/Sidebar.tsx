@@ -6,12 +6,16 @@ import type { Card, Deck } from '../../../types';
 import { DeckSlot } from '../DeckSlot';
 import { removeCard } from '../../../features';
 
+import energyImg from '../../../public/images/card-assets/ENERGY_SLOT_EMPTY.png';
+import { getDeckbuilderDeckLength } from '../../../utils';
+
 interface SidebarProps {
   active: boolean;
   activeDeck?: number;
   onDeckSlotClick: (d: Deck, i: number) => void;
   onDeckDeleteClick: (event: any) => void;
   onDeckNameChange: (event: any) => void;
+  onBackFromDeckClick: (event: any) => void;
 }
 
 export const Sidebar = ({
@@ -20,15 +24,15 @@ export const Sidebar = ({
   onDeckSlotClick,
   onDeckDeleteClick,
   onDeckNameChange,
+  onBackFromDeckClick,
 }: SidebarProps) => {
   const dispatch = useDispatch();
   const config = useSelector(({ config }: RootState) => config);
   const decks = useSelector(({ decks }: RootState) => decks);
-  const decksArray = Object.keys(decks).map((i) => decks[i]);
   const { gameConfig } = config;
 
   const handleRemoveCardClick = (c: Card, d: number) => {
-    dispatch(removeCard({ cardId: c.id, cardUuid: c.uuid, deckSlot: d }));
+    dispatch(removeCard({ cardId: c.id, deckSlot: d }));
     return (event: MouseEvent | TouchEvent) => event.preventDefault();
   };
 
@@ -40,7 +44,7 @@ export const Sidebar = ({
         activeDeck !== undefined ? 'sidebar--deckbuilder' : '',
       ].join(' ')}
     >
-      {!activeDeck && (
+      {active && !activeDeck && decks && (
         <ul className='decks__grid'>
           {Object.keys(decks)
             .map((i) => decks[i])
@@ -48,16 +52,19 @@ export const Sidebar = ({
               i = i + 1;
               return (
                 <li key={i} onClickCapture={() => onDeckSlotClick(d, i)}>
-                  <DeckSlot filled={false} />
+                  <DeckSlot filled={d?.uuid ? true : false} />
                 </li>
               );
             })}
         </ul>
       )}
 
-      {activeDeck && (
+      {active && activeDeck && (
         <div className='deckbuilder__deck'>
           <div className='deckbuilder__deck-info'>
+            <div>
+              <button onClickCapture={onBackFromDeckClick}>Back</button>
+            </div>
             <div>
               <input
                 name='name'
@@ -65,6 +72,9 @@ export const Sidebar = ({
                 type='text'
                 onChangeCapture={onDeckNameChange}
               />
+            </div>
+            <div>
+              {getDeckbuilderDeckLength(decks[activeDeck]?.cards)}/{gameConfig.numerics.cardsPerDeck}
             </div>
             <div>
               <button onClickCapture={onDeckDeleteClick}>Delete</button>
@@ -79,7 +89,10 @@ export const Sidebar = ({
                   onClick={() => handleRemoveCardClick(card, activeDeck)}
                 >
                   <div className='deck__item' data-rarity={card?.rarity}>
-                    <div className='item__cost text__value text__value--shadow'>{card?.baseCost}</div>
+                    <div className='item__cost text__value text__value--shadow'>
+                      <span>{card?.baseCost}</span>
+                      <Image layout='intrinsic' src={energyImg} />
+                    </div>
 
                     <div className='item__info'>
                       <div className='item__name bccg-text-truncate text__value text__value--shadow'>
@@ -87,9 +100,11 @@ export const Sidebar = ({
                       </div>
                     </div>
 
-                    {/* {decks[activeDeck]?.cards.filter(
-                      (c: Card) => c.id === card.id
-                    ).length === 2 && <div className='item__amount'>2</div>} */}
+                    {card?.amount === 2 && (
+                      <div className='item__amount text__value text__value--shadow'>
+                        2
+                      </div>
+                    )}
 
                     <Image
                       layout='fill'

@@ -35,4 +35,8 @@
   div[data-component="Card"] {
     margin: 0 !important;
   }
+
+  &[data-locked='true'] {
+    cursor: not-allowed;
+  }
 }

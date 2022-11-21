@@ -1,8 +1,26 @@
 import { v4 as uuid } from 'uuid';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { Card, Deck, Decks } from '../../types';
+
+import type { Card, CardId, Deck, Decks } from '../../types';
 import { gameConfig } from '../../app.config';
+import { getDeckbuilderDeckLength } from '../../utils';
+
+const { numerics: { cardsPerDeck } } = gameConfig;
+
+declare type DeckSlot = number;
+interface AddCard {
+  card: Card;
+  deckSlot: number;
+}
+interface RemoveCard {
+  cardId: CardId;
+  deckSlot: number;
+}
+interface SetDeckName {
+  name: string;
+  deckSlot: number;
+}
 
 const blankDeckItem = (idx: number): Deck => {
   return {
@@ -25,10 +43,10 @@ const blankDecksObj: Decks = {
   10: blankDeckItem(10)
 };
 
-function sortArray(arr: any) {
-  return arr.sort((a: any, b: any) => {
-    if (a.cost > b.cost) return 1;
-    if (a.cost < b.cost) return -1;
+function sortArray(arr: Card[]) {
+  return arr.sort((a: Card, b: Card) => {
+    if (a.baseCost > b.baseCost) return 1;
+    if (a.baseCost < b.baseCost) return -1;
     if (a.name > b.name) return 1;
     if (a.name < b.name) return -1;
     return 1;
@@ -48,63 +66,58 @@ export const decksSlice = createSlice({
   initialState: getInitialState(),
   reducers: {
     // prettier-ignore
-    addCard(state, { payload }) {
+    addCard(state, { payload }: PayloadAction<AddCard>) {
       const { card, deckSlot } = payload;
-      const { key } = card;
+      const { id, key } = card;
 
-      if (state[deckSlot].cards.length === gameConfig.numerics.cardsPerDeck) {
+      if (getDeckbuilderDeckLength(state[deckSlot].cards) === cardsPerDeck) {
         return; // decks limited to numerics.cardsPerDeck
       } else if (state[deckSlot].cards.find((c: Card) => c.key === key && c.elite === true)) {
         return; // can only add single entry of elite cards
-      } else if (state[deckSlot].cards.filter((c: Card) => c.key === key).length === 2) {
-        return; // decks have non-elite limit of two
+      } else if (state[deckSlot].cards.find((c: Card) => c.id === id)) {
+        if (state[deckSlot].cards.filter((c: Card) => c.id === id).length === 2) {
+          return; // decks have non-elite limit of two
+        } else {
+          const cardObj = state[deckSlot].cards.find((c: Card) => c.id === id);
+          const newCardObj = { ...cardObj, amount: 2 };
+          const newArray = state[deckSlot].cards.filter((c: Card) => c.id !== id);
+          state[deckSlot].cards = sortArray([...newArray, newCardObj]);
+        }
       } else {
-        const cardObj = {
-          ...card,
-          uuid: uuid()
-        };
-
         state[deckSlot].cards = sortArray([
           ...state[deckSlot].cards,
-          { ...cardObj }
+          { ...card, amount: 1 }
         ]);
       }
     },
-    deleteDeck(state, { payload }) {
+    deleteDeck(state, { payload }: PayloadAction<DeckSlot>) {
       const deckSlot = payload;
       state[deckSlot] = blankDeckItem(deckSlot);
     },
-    editDeck(state, { payload }) {
-      const { deckSlot } = payload;
+    editDeck(state, { payload }: PayloadAction<DeckSlot>) {
       // console.log('editDeckName');
     },
-    newDeck(state, { payload }) {
+    newDeck(state, { payload }: PayloadAction<DeckSlot>) {
       const deckSlot = payload;
       state[deckSlot] = {
         ...blankDeckItem(deckSlot),
         name: `Deck Slot ${deckSlot}`,
         uuid: uuid()
+      };
+    },
+    removeCard(state, { payload }: PayloadAction<RemoveCard>) {
+      const { deckSlot, cardId } = payload;
+      if (state[deckSlot].cards.find((c: Card) => c.id === cardId && c.amount === 1)) {
+        const newArray = state[deckSlot].cards.filter((c: Card) => c.id !== cardId);
+        state[deckSlot].cards = sortArray([...newArray]);
+      } else {
+        const cardObj = state[deckSlot].cards.find((c: Card) => c.id === cardId);
+        const newCardObj = { ...cardObj, amount: 1 };
+        const newArray = state[deckSlot].cards.filter((c: Card) => c.id !== cardId);
+        state[deckSlot].cards = sortArray([...newArray, newCardObj]);
       }
-      // state[deckSlot] = {
-      //   name: `Deck Slot ${deckSlot}`,
-      //   cards: [],
-      //   deckSlot,
-      //   uuid: uuid()
-      // };
     },
-    removeCard(state, { payload }) {
-      const { deckSlot, cardId, cardUuid } = payload;
-      const newArray = state[deckSlot].cards.filter((c: Card) => c.uuid !== cardUuid);
-      state[deckSlot].cards = sortArray([...newArray]);
-      // if (state[deckSlot].cards.filter((c: Card) => c.id === cardId).length === 2) {
-      //   const newArray = state[deckSlot].cards.filter((c: Card) => c.uuid !== cardUuid);
-      //   state[deckSlot].cards = sortArray([...newArray]);
-      // } else {
-      //   const newArray = state[deckSlot].cards.filter((c: Card) => c.id !== cardId);
-      //   state[deckSlot].cards = sortArray([...newArray]);
-      // }
-    },
-    setDeckName(state, { payload }) {
+    setDeckName(state, { payload }: PayloadAction<SetDeckName>) {
       const { deckSlot, name } = payload;
       state[deckSlot].name = name;
     },

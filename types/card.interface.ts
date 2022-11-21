@@ -65,6 +65,7 @@ export interface CardPowerStream {
 }
 
 export interface Card {
+  amount?: number;
   artist?: string;
   artistName?: string;
   artistUrl?: string;

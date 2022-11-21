@@ -2,16 +2,32 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../../../../store';
 import type { Card } from '../../../../types';
 
-import { getMechanicObject, replaceAllConstants } from '../../../../utils';
+import { getDeckbuilderDeckLength, getMechanicObject, replaceAllConstants } from '../../../../utils';
 import { Card as CardComponent, Minion } from '../../../game-components';
+import { gameConfig } from '../../../../app.config';
+const { numerics } = gameConfig;
 
 interface Props {
   data?: Card;
+  activeDeck?: number;
+  isDeckbuilder: boolean;
+  deckbuilderLocked: boolean;
   onModalDismiss?: () => void;
+  onAddCardClick?: (card: Card) => void;
+  onRemoveCardClick?: (card: Card) => void;
 }
 
-export const CardDetailModal = ({ data, onModalDismiss }: Props) => {
+export const CardDetailModal = ({
+  data,
+  activeDeck,
+  isDeckbuilder,
+  deckbuilderLocked,
+  onModalDismiss,
+  onAddCardClick,
+  onRemoveCardClick,
+}: Props) => {
   const abSize = useSelector(({ addressBarSize }: RootState) => addressBarSize);
+  const decks = useSelector(({ decks }: RootState) => decks);
 
   return (
     <div
@@ -91,6 +107,22 @@ export const CardDetailModal = ({ data, onModalDismiss }: Props) => {
                   )}
                 </ul>
               </>
+            ) : null}
+
+            {/* ========================================== */}
+            {/* BUTTON */}
+            {isDeckbuilder ? (
+              !decks[activeDeck!]?.cards.find((o: Card) => o.id === data.id) || decks[activeDeck!]?.cards.find((o: Card) => o.id === data.id && o.amount === 1 && !o.elite) ? (
+                !deckbuilderLocked && (
+                  <div className='content__cta'>
+                    <button onClickCapture={() => onAddCardClick!(data)}>Add to Deck</button>
+                  </div>
+                )
+              ) : (
+                <div className='content__cta'>
+                  <button onClickCapture={() => onRemoveCardClick!(data)}>Remove from Deck</button>
+                </div>
+              )
             ) : null}
           </div>
         </div>

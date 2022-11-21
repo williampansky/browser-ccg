@@ -192,6 +192,10 @@
   }
 }
 
+.card-detail__modal .content__cta {
+  margin: 1rem auto 0;
+}
+
 .card-detail__modal.card-detail__modal--active {
   opacity: 1;
   z-index: 9000;

@@ -1,19 +1,26 @@
 import path from 'path';
 import { promises as fs } from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { CardBase } from '../../../types';
+import { Card, CardBase } from '../../../types';
 import { createCardObject } from '../../../utils';
 
 const jsonDirectory = path.join(process.cwd(), 'data');
+
+function sortArray(arr: Card[]) {
+  return arr.sort((a: Card, b: Card) => {
+    if (a.baseCost > b.baseCost) return 1;
+    if (a.baseCost < b.baseCost) return -1;
+    if (a.name > b.name) return 1;
+    if (a.name < b.name) return -1;
+    return 1;
+  });
+}
 
 export default async (_req: NextApiRequest, res: NextApiResponse) => {
   try {
     const core = await getCoreCards();
     const entourage = await getEntourageCards();
-    const db = [...core, ...entourage].sort((a: any, b: any) => {
-      return a?.id?.localeCompare(b.id);
-    });
-
+    const db = sortArray([...core, ...entourage]);
     res.status(200).json(db);
   } catch (err: any) {
     console.error(err);

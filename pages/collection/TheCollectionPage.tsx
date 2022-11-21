@@ -7,12 +7,22 @@ import { useLongPress } from 'use-long-press';
 import { Container, Layout, Sidebar } from '../../components/site-components';
 import { Card as CardComponent } from '../../components/game-components';
 import { CardDetailModal } from '../../components/site-components/Modals';
-import { siteConfig } from '../../app.config';
+import { gameConfig, siteConfig } from '../../app.config';
 import { useLocalStorage } from '../../hooks';
 
 import type { RootState } from '../../store';
 import type { Card, Deck } from '../../types';
-import { addCard, deleteDeck, editDeck, newDeck, setDeckName } from '../../features';
+import {
+  addCard,
+  deleteDeck,
+  editDeck,
+  newDeck,
+  removeCard,
+  setDeckName,
+} from '../../features';
+import { getDeckbuilderDeckLength } from '../../utils';
+
+const { numerics } = gameConfig;
 
 export default function TheCollectionPage() {
   const page = siteConfig.pages.collection;
@@ -31,16 +41,18 @@ export default function TheCollectionPage() {
     (e: MouseEvent | TouchEvent, c: any) => {
       e.preventDefault();
       // console.log(c)
-      // if (activeDeck) dispatch(addCard({ card: c?.context, deckSlot: activeDeck }));
+      if (activeDeck) {
+        dispatch(addCard({ card: c?.context, deckSlot: activeDeck }));
+      }
     },
     [activeDeck]
   );
 
   const bind = useLongPress(addCardToDeck as any, {
     onStart: (event) => () => null,
-    onFinish: (event, { context }) => addCardToDeck(event, context),
+    onFinish: (event, { context }) => null,
     onCancel: (event) => () => null,
-    threshold: 500,
+    threshold: 350,
     captureEvent: true,
     cancelOnMovement: true,
   });
@@ -48,8 +60,17 @@ export default function TheCollectionPage() {
   const inspectCard = (c: Card) => {
     return (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
-      // setCardModal(c);
-      if (activeDeck) dispatch(addCard({ card: c, deckSlot: activeDeck }));
+      setCardModal(c);
+      // if (activeDeck) dispatch(addCard({ card: c, deckSlot: activeDeck }));
+    };
+  };
+
+  const onBackFromDeckClick = () => {
+    setShowDecks(true);
+    setActiveDeck(undefined);
+
+    return (event: MouseEvent | TouchEvent) => {
+      event.preventDefault();
     };
   };
 
@@ -71,14 +92,14 @@ export default function TheCollectionPage() {
   const onDeckNameChange = (event: MouseEvent | TouchEvent) => {
     event.preventDefault();
     const element = event.currentTarget as HTMLInputElement;
-    dispatch(setDeckName({ deckSlot: activeDeck, name: element.value }));
+    dispatch(setDeckName({ deckSlot: activeDeck!, name: element.value }));
     return (event: MouseEvent | TouchEvent) => event.preventDefault();
   };
 
   const onDeckDeleteClick = (event: MouseEvent | TouchEvent) => {
     event.preventDefault();
     setActiveDeck(undefined);
-    dispatch(deleteDeck(activeDeck));
+    dispatch(deleteDeck(activeDeck!));
     return (event: MouseEvent | TouchEvent) => event.preventDefault();
   };
 
@@ -94,6 +115,30 @@ export default function TheCollectionPage() {
     };
   };
 
+  const handleCardLock = (card: Card): boolean => {
+    if (activeDeck !== undefined) {
+      if (getDeckbuilderDeckLength(decks[activeDeck].cards) >= numerics.cardsPerDeck) {
+        return true;
+      }
+
+      const c = decks[activeDeck].cards.find((c: Card) => c.id === card?.id);
+      if (c?.amount === 2 || c?.elite === true) return true;
+      else return false;
+    }
+
+    return false;
+  };
+
+  const onAddCardFromModalClick = (card: Card) => {
+    if (activeDeck) dispatch(addCard({ card: card, deckSlot: activeDeck }));
+    return (event: MouseEvent | TouchEvent) => event.preventDefault();
+  };
+
+  const onRemoveCardFromModalClick = (card: Card) => {
+    if (activeDeck) dispatch(removeCard({ cardId: card?.id, deckSlot: activeDeck }));
+    return (event: MouseEvent | TouchEvent) => event.preventDefault();
+  };
+
   return (
     <Layout title={page.title} description={page.description}>
       <Sidebar
@@ -102,6 +147,7 @@ export default function TheCollectionPage() {
         onDeckSlotClick={onDeckSlotClick}
         onDeckDeleteClick={onDeckDeleteClick}
         onDeckNameChange={onDeckNameChange}
+        onBackFromDeckClick={onBackFromDeckClick}
       />
 
       <div className='collection__page'>
@@ -117,10 +163,11 @@ export default function TheCollectionPage() {
                 <div
                   key={c.uuid}
                   className='grid-item'
+                  data-locked={handleCardLock(c)}
                   onClickCapture={inspectCard(c)}
                   {...bind(c)}
                 >
-                  <CardComponent {...c} canPlay={true} />
+                  <CardComponent {...c} canPlay={!handleCardLock(c)} />
                 </div>
               ) : null;
             })}
@@ -130,7 +177,12 @@ export default function TheCollectionPage() {
 
       <CardDetailModal
         data={cardModal}
+        activeDeck={activeDeck}
+        deckbuilderLocked={getDeckbuilderDeckLength(decks[activeDeck!]?.cards) >= numerics.cardsPerDeck}
+        isDeckbuilder={activeDeck ? true : false}
         onModalDismiss={() => setCardModal(undefined)}
+        onAddCardClick={onAddCardFromModalClick}
+        onRemoveCardClick={(card) => onRemoveCardFromModalClick(card)}
       />
     </Layout>
   );

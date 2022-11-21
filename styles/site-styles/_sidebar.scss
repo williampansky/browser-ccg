@@ -1,6 +1,6 @@
 .site__sidebar {
-  @include position-fixed(0, 0, auto, 0, 3);
-  background: #1e1e1e;
+  @include position-fixed(0, 0, auto, 0, 20);
+  background: #333333;
   transition-property: height, transform, width;
   transition-duration: 0ms;
   transition-timing-function: var(--animation-transition-cubic);
@@ -79,6 +79,10 @@
   flex-flow: row nowrap;
   align-items: center;
   justify-content: space-between;
+
+  input {
+    text-align: center;
+  }
 }
 
 .site__sidebar .deckbuilder__deck-grid {
@@ -98,6 +102,7 @@
 }
 
 .site__sidebar .deckbuilder__deck-grid .deck__item {
+  color: white;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -138,7 +143,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.365);
+    background: rgba(0, 0, 0, 0.165);
     z-index: 1;
     pointer-events: none;
     touch-action: none;
@@ -149,13 +154,12 @@
     font-size: 0.875em;
     display: flex;
     flex-flow: column nowrap;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
     position: relative;
     margin: 0 0 0 10px;
     padding: 0 2px;
     width: 14px;
-    z-index: 1;
     line-height: 1.5;
   }
 
@@ -171,8 +175,17 @@
   //   line-height: 1;
   // }
 
-  .item__cost img {
-    height: 30px;
+  .item__cost > span:nth-child(1) {
+    position: relative;
+    z-index: 2;
+  }
+
+  .item__cost > span:nth-child(2) {
+    height: 15px !important;
+    width: 15px !important;
+    position: absolute !important;
+    top: 1px; bottom: 0; left: 0; right: 0;
+    z-index: 1;
   }
 
   .item__info {
@@ -186,7 +199,7 @@
   }
 
   .item__name {
-    font-size: 0.875em;
+    font-size: 0.75em;
     position: relative;
     line-height: 1.5;
     z-index: 1;
@@ -198,6 +211,7 @@
     line-height: 1;
     position: relative;
     z-index: 1;
+    margin-left: 4px;
   }
 
   .item__image {

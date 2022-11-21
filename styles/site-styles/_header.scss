@@ -5,6 +5,10 @@
   position: relative;
   z-index: 1;
 
+  &.active {
+    z-index: 9999;
+  }
+
   div {
     color: white;
   }
