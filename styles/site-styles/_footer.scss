@@ -1,5 +1,5 @@
 .site__footer {
-  @include position-fixed(auto, 0, 0, 0, 100);
+  @include position-absolute(auto, 0, 0, 0, 100);
 }
 
 .footer__nav {
