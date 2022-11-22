@@ -1,5 +1,6 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameConfig, GameState, PlayerID, Zone } from '../../types';
+
 import { core002 } from './card-mechanics-by-key/core-002.mechanic';
 import { core003 } from './card-mechanics-by-key/core-003.mechanic';
 import { core004 } from './card-mechanics-by-key/core-004.mechanic';
@@ -9,7 +10,7 @@ import { core011 } from './card-mechanics-by-key/core-011.mechanic';
 import { core014 } from './card-mechanics-by-key/core-014.mechanic';
 import { core036 } from './card-mechanics-by-key/core-036.mechanic';
 
-const initCardMechanicsByKey = (
+const initOnPlayMechanics = (
   G: GameState,
   ctx: Ctx,
   gameConfig: GameConfig,
@@ -45,4 +46,4 @@ const initCardMechanicsByKey = (
   }
 };
 
-export default initCardMechanicsByKey;
+export default initOnPlayMechanics;

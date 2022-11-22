@@ -26,7 +26,7 @@ export const core005 = (
 ) => {
   if (zone.sides[player].length >= 3) {
     card.powerStream.push({
-      blame: 'GAME_005',
+      blame: card.name,
       adjustment: 3,
       currentPower: add(card.displayPower, 3),
     });

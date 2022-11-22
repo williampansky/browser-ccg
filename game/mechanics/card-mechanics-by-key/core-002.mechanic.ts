@@ -30,7 +30,7 @@ export const core002 = (
 
     if (isNotCardPlayed && cardIsBeforeCardPlayed) {
       c.powerStream.push({
-        blame: 'GAME_002',
+        blame: card.name,
         adjustment: -1,
         currentPower: add(c.displayPower, -1),
       });

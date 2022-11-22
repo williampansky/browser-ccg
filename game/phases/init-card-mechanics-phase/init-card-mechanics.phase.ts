@@ -1,50 +1,63 @@
 import { current } from 'immer';
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { add, subtract } from 'mathjs';
 import { Card, GameState, PlayerID, Zone } from '../../../types';
+import { getContextualPlayerIds, logPhaseToConsole } from '../../../utils';
+import { firstRevealer } from '../../state';
+import { Mechanics } from '../../../enums';
 import {
-  createCardObject,
-  drawCardFromPlayersDeck,
-  getCardPower,
-  getContextualPlayerIds,
-  logPhaseToConsole,
-} from '../../../utils';
-import { counts, firstRevealer } from '../../state';
-import setsCore from '../../data/setsCore.json';
-import setsEntourage from '../../data/setsEntourage.json';
-import { initCardMechanicsByKey } from '../../mechanics';
+  initEventMechanics,
+  initOnPlayMechanics,
+  initOnTurnEndMechanics,
+} from '../../mechanics';
 
 const initCardMechanicsPhase: PhaseConfig = {
   onBegin(G, ctx) {
     logPhaseToConsole(G.turn, ctx.phase);
     const { first, second } = firstRevealer.getRevealOrder(G);
-    const fir = first;
-    const sec = second;
 
+    // prettier-ignore
     G.zones.forEach((zone: Zone, zoneIdx: number) => {
-      zone.sides[fir].forEach((card: Card, cardIdx: number) => {
-        initOnPlay(
+      zone.sides[first].forEach((card: Card, cardIdx: number) => {
+        const props: InitGameMechanic = {
           G,
           ctx,
           zone,
           zoneIdx,
           card,
           cardIdx,
-          fir,
-          initEvent(G, ctx, zone, zoneIdx, card, cardIdx, fir)
+          player: first
+        };
+
+        const onPlay = (callback?: () => void) => initOnPlay({...props}, callback);
+        const onEvent = (callback?: () => void) => initEvent({...props}, callback);
+        const turnEnd = (callback?: () => void) => initTurnEnd({...props}, callback);
+        
+        onPlay(
+          onEvent(
+            turnEnd()
+          )
         );
       });
 
-      zone.sides[sec].forEach((card: Card, cardIdx: number) => {
-        initOnPlay(
+      zone.sides[second].forEach((card: Card, cardIdx: number) => {
+        const props: InitGameMechanic = {
           G,
           ctx,
           zone,
           zoneIdx,
           card,
           cardIdx,
-          sec,
-          initEvent(G, ctx, zone, zoneIdx, card, cardIdx, sec)
+          player: second
+        };
+
+        const onPlay = (callback?: () => void) => initOnPlay({...props}, callback);
+        const onEvent = (callback?: () => void) => initEvent({...props}, callback);
+        const turnEnd = (callback?: () => void) => initTurnEnd({...props}, callback);
+        
+        onPlay(
+          onEvent(
+            turnEnd()
+          )
         );
       });
     });
@@ -53,14 +66,18 @@ const initCardMechanicsPhase: PhaseConfig = {
   },
 };
 
+interface InitGameMechanic {
+  G: GameState;
+  ctx: Ctx;
+  zone: Zone;
+  zoneIdx: number;
+  card: Card;
+  cardIdx: number;
+  player: PlayerID;
+}
+
 function initOnPlay(
-  G: GameState,
-  ctx: Ctx,
-  zone: Zone,
-  zoneIdx: number,
-  card: Card,
-  cardIdx: number,
-  player: PlayerID,
+  { G, ctx, zone, zoneIdx, card, cardIdx, player }: InitGameMechanic,
   callback?: () => void
 ) {
   const { opponent } = getContextualPlayerIds(player);
@@ -68,7 +85,7 @@ function initOnPlay(
   const hasOnPlay = card.mechanics?.includes('ON_PLAY');
 
   if (revealedThisTurn && hasOnPlay) {
-    initCardMechanicsByKey(
+    initOnPlayMechanics(
       G,
       ctx,
       G.gameConfig,
@@ -85,119 +102,51 @@ function initOnPlay(
 }
 
 function initEvent(
-  G: GameState,
-  ctx: Ctx,
-  zone: Zone,
-  zoneIdx: number,
-  card: Card,
-  cardIdx: number,
-  player: PlayerID,
+  { G, ctx, zone, zoneIdx, card, cardIdx, player }: InitGameMechanic,
   callback?: () => void
 ) {
-  if (card.mechanics?.includes('EVENT')) {
-    eventMechs(G, ctx, zone, zoneIdx, card, cardIdx, player);
+  const { opponent } = getContextualPlayerIds(player);
+  const hasEvent = card.mechanics?.includes('EVENT');
+
+  if (hasEvent) {
+    initEventMechanics(
+      G,
+      ctx,
+      G.gameConfig,
+      zone,
+      zoneIdx,
+      card,
+      cardIdx,
+      player,
+      opponent
+    );
   }
 
   if (callback) return callback;
 }
 
-function onPlayMechs(
-  G: GameState,
-  ctx: Ctx,
-  zoneIdx: number,
-  card: Card,
-  cardIdx: number,
-  player: PlayerID,
-  zoneSide: Card[]
+function initTurnEnd(
+  { G, ctx, zone, zoneIdx, card, cardIdx, player }: InitGameMechanic,
+  callback?: () => void
 ) {
-  const {
-    gameConfig,
-    gameConfig: {
-      numerics: { cardsPerHand, numberOfSlotsPerZone },
-    },
-  } = G;
-
   const { opponent } = getContextualPlayerIds(player);
+  const hasTurnEnd = card.mechanics?.includes(Mechanics.OnTurnEnd);
 
-  switch (card.id) {
-    // @todo
-    case 'GAME_006':
-      /**
-       * An array of all current card `uuid` values on the opponent's zones.
-       */
-      // let opponentCardUuidsArr: string[] = [];
-      // G.zones.forEach((z) => {
-      //   z.sides['1'].forEach((c) => opponentCardUuidsArr.push(c.uuid));
-      // });
-
-      // const targetUuid = ctx.random?.Shuffle(opponentCardUuidsArr)[0];
-      // let targetCard: Card;
-      // let targetZone: number;
-      // G.zones.forEach((z, i) => {
-      //   z.sides['1'].find((c: Card) => {
-      //     if (c.uuid === targetUuid) {
-      //       targetCard = c;
-      //       targetZone = i;
-      //     }
-      //   });
-      // })
-
-      // // G.zones[0].sides['1'] = G.zones[0].sides['1'].splice(0, 1);
-      // const newZoneSideArr = G.zones[targetZone!].sides['1'].filter((obj: Card) => obj.uuid !== targetUuid);
-      // console.log(newZoneSideArr, targetZone!)
-      // // G.zones[targetZone!].sides['1'] = newZoneSideArr;
-      // G.zonesCardsReference['1'][targetZone!] = newZoneSideArr;
-      break;
-
-    default:
-      break;
+  if (hasTurnEnd) {
+    initOnTurnEndMechanics(
+      G,
+      ctx,
+      G.gameConfig,
+      zone,
+      zoneIdx,
+      card,
+      cardIdx,
+      player,
+      opponent
+    );
   }
-}
 
-function eventMechs(
-  G: GameState,
-  ctx: Ctx,
-  zone: Zone,
-  zoneIdx: number,
-  card: Card,
-  cardIdx: number,
-  player: PlayerID
-) {
-  const {
-    gameConfig,
-    gameConfig: {
-      numerics: { cardsPerHand, numberOfSlotsPerZone },
-    },
-  } = G;
-
-  const { opponent } = getContextualPlayerIds(player);
-
-  switch (card.id) {
-    case 'GAME_008':
-      G.zones[zoneIdx].sides[player].forEach((c: Card, i: number) => {
-        let playedThisTurn: number = 0;
-        const isNotCardPlayed = card.uuid !== c.uuid;
-
-        if (isNotCardPlayed) {
-          add(playedThisTurn, 1);
-        }
-
-        // console.log(playedThisTurn);
-        if (playedThisTurn > 0) {
-          card.powerStream.push({
-            blame: c.id,
-            adjustment: 1,
-            currentPower: add(card.displayPower, 1),
-          });
-
-          card.displayPower = getCardPower(card);
-        }
-      });
-      break;
-
-    default:
-      break;
-  }
+  if (callback) return callback;
 }
 
 export default initCardMechanicsPhase;
