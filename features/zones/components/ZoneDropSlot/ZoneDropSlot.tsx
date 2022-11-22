@@ -4,21 +4,29 @@ import styles from './zone-drop-slot.module.scss';
 
 interface ReactZoneDropSlot {
   isActive: boolean;
-  zoneNumber: number;
+  zoneNumber?: number;
 }
 
 export const ZoneDropSlot = ({
   isActive,
   zoneNumber,
 }: ReactZoneDropSlot): ReactElement => {
-  const wrapperStyles = [styles['wrapper'], isActive ? styles['active'] : ''];
-  const buttonStyles = [styles['button'], isActive ? styles['active'] : ''];
+  const wrapperStyles = [
+    styles['wrapper'],
+    zoneNumber === undefined ? styles['global-spell'] : '',
+    isActive ? styles['active'] : '',
+  ];
+  const buttonStyles = [
+    styles['button'],
+    zoneNumber === undefined ? styles['global-spell'] : '',
+    isActive ? styles['active'] : '',
+  ];
 
   return (
     <React.Fragment>
       <div data-drop className={wrapperStyles.join(' ')} />
       <div
-        role="button"
+        role='button'
         tabIndex={0}
         data-receive={true}
         data-index={zoneNumber}

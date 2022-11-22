@@ -70,11 +70,13 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
     >
       <CardCost baseCost={baseCost} currentCost={currentCost} />
 
-      <CardPower
-        basePower={basePower}
-        currentPower={displayPower}
-        elite={elite}
-      />
+      {type === 'MINION' && (
+        <CardPower
+          basePower={basePower}
+          currentPower={displayPower}
+          elite={elite}
+        />
+      )}
 
       {/* <CardRarityGem rarity={rarity} /> */}
       <CardName name={name} formatter={fontSizeBasedOnCharacterLength} />

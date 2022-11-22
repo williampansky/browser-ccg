@@ -56,6 +56,12 @@ function parseMechanics(arr: string[]) {
   // return arr.map((s) => replaceAllConstants(s, 'value'));
 }
 
+function parseArtistUrl(str?: string) {
+  if (!str || typeof str === 'undefined') return undefined;
+  return str.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
+  // return arr.map((s) => replaceAllConstants(s, 'value'));
+}
+
 function createArtistHtmlLink(name?: string, url?: string): string | undefined {
   if (!name || !url) return undefined;
   if (!name && url) return url;
@@ -149,9 +155,9 @@ const fetchSetCoreData = async (tableId: string) => {
           id: fields?.id,
           rarity: fields?.rarity,
           type: fields?.type,
-          race: fields?.race,
+          race: fields?.race || '%RACE_NONE%',
           cost: fields?.cost,
-          power: fields?.power,
+          power: fields?.power || 0,
           text: fields?.text,
           set: fields?.set,
           active: fields?.active || false,
@@ -173,7 +179,7 @@ const fetchSetCoreData = async (tableId: string) => {
           howToEarnGolden: fields?.howToEarnGolden,
           flavorText: fields?.flavorText,
           artistName: fields?.artistName,
-          artistUrl: fields?.artistUrl,
+          artistUrl: parseArtistUrl(fields?.artistUrl),
           description: fields?.description,
           key: createCardKey(fields?.id, fields?.set),
         };
@@ -217,7 +223,7 @@ const fetchSetEntourageData = async (tableId: string) => {
           targetingText: fields?.targetingText,
           flavorText: fields?.flavorText,
           artistName: fields?.artistName,
-          artistUrl: fields?.artistUrl,
+          artistUrl: parseArtistUrl(fields?.artistUrl),
           description: fields?.description,
           key: createCardKey(fields?.id, fields?.set),
         };

@@ -24,6 +24,14 @@
   will-change: border-style, opacity, pointer-events;
   z-index: -1;
 
+  &.global-spell {
+    top: auto;
+    height: 23%;
+    bottom: 31%;
+    width: 95%;
+    margin: 0 auto;
+  }
+
   &.active {
     opacity: 0.5;
     // pointer-events: auto;
@@ -53,6 +61,14 @@
   width: 100%;
   will-change: pointer-events;
   z-index: 101;
+
+  &.global-spell {
+    top: auto;
+    height: 23%;
+    bottom: 31%;
+    width: 95%;
+    margin: 0 auto;
+  }
 
   &.active {
     pointer-events: auto;

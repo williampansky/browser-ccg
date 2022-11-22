@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 /**
  * Uses html.perspective CSS property, which is set to 100vh, to determine
@@ -17,7 +17,7 @@ const useAddressBarSize = (): number => {
     }
   }, []);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     addressBarCallback();
   }, [addressBarCallback]);
 

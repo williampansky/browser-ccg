@@ -12,6 +12,7 @@ import styles from './zones.wrapper.module.scss';
 import { Ctx } from 'boardgame.io';
 import { EffectsCtxMixin } from 'bgio-effects/dist/types';
 import bgioEffectsConfig from '../../../../game/config.bgio-effects';
+import { ZoneDropSlot } from '../ZoneDropSlot';
 
 interface ReactZones {
   // G: GameState;
@@ -35,6 +36,7 @@ export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
   const zones = useSelector((state: RootState) => state.zones);
   const zonesRef = useSelector((state: RootState) => state.zonesRef);
   const [zonesAreActive, setZonesAreActive] = useState<boolean>(false);
+  const [cardType, setCardType] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     G.zones.forEach((z: Zone, i: number) => {
@@ -61,6 +63,7 @@ export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
   useEffect(() => {
     setTimeout(() => {
       setZonesAreActive(G.selectedCardData[player] !== undefined);
+      setCardType(G.selectedCardData[player]?.type);
     }, 100);
   }, [G.selectedCardData[player]]);
 

@@ -12,9 +12,17 @@ export const CardBaseImage = ({
   rarity,
   placeholderBaseSrc,
 }: CardBaseImageProps) => {
-  const src = rarity
-    ? `/images/cards/fronts/${rarity}.png`
-    : '/images/cards/fronts/NONE.png';
+  const src = () => {
+    if (type === 'SPELL') {
+      return rarity
+        ? `/images/cards/fronts/${rarity}-ALT.png`
+        : '/images/cards/fronts/NONE-ALT.png';
+    }
+
+    return rarity
+      ? `/images/cards/fronts/${rarity}.png`
+      : '/images/cards/fronts/NONE.png';
+  }
 
   return (
     <Image
@@ -23,7 +31,7 @@ export const CardBaseImage = ({
       layout='fill'
       priority
       role='presentation'
-      src={src}
+      src={src()}
     />
   );
 };
