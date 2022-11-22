@@ -11,6 +11,8 @@ export interface ReactMinionImageProps {
   set?: string;
   rarity: string;
   placeholderSrc?: string;
+  fpoArt?: boolean;
+  isHidden?: boolean;
 }
 
 export const MinionImage = ({
@@ -20,6 +22,8 @@ export const MinionImage = ({
   set,
   rarity,
   placeholderSrc,
+  fpoArt,
+  isHidden = false
 }: ReactMinionImageProps) => {
   const source = src || src === '' ? src?.replace('CARD', 'MINION') : PLACEHOLDER;
   const [err, setErr] = useState<boolean>(false);
@@ -29,6 +33,13 @@ export const MinionImage = ({
       className={[styles['wrapper'], styles[rarity]].join(' ')}
       data-component='MinionImage'
     >
+      {fpoArt && <div className={styles['fpo']}>FPO</div>}
+
+      {isHidden && (<div
+        className="hidden__clouds"
+        style={{ backgroundImage: `url('/images/mechanics/HIDDEN.png')` }}
+      />)}
+
       <Image
         alt={name}
         className={styles['component']}

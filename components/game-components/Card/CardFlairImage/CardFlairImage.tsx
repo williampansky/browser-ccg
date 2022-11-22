@@ -7,14 +7,16 @@ import PLACEHOLDER from '../../../../public/images/sets/PLACEHOLDER.jpg';
 interface CardFlairImageProps {
   name: string;
   src: string;
+  fpoArt?: boolean;
 }
 
-export const CardFlairImage = ({ name, src }: CardFlairImageProps) => {
+export const CardFlairImage = ({ name, src, fpoArt }: CardFlairImageProps) => {
   const source = src || src === '' ? src : PLACEHOLDER;
   const [err, setErr] = useState<boolean>(false);
 
   return (
     <div className={styles['component']}>
+      {fpoArt && <div className={styles['fpo']}>FPO</div>}
       <Image
         alt={name}
         className={styles['image']}

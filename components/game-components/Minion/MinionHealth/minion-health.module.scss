@@ -1,10 +1,10 @@
-.attack__wrapper {
+.health__wrapper {
   border-radius: 50%;
   bottom: var(--minion-stat-offset);
   font-size: 1.25em;
   font-weight: 600;
   height: calc(var(--minion-height) / 2.75);
-  right: calc(var(--minion-height) / -10);
+  left: calc(var(--minion-height) / -10);
   bottom: calc(var(--minion-height) / -10);
   line-height: 1;
   position: absolute;
@@ -87,7 +87,7 @@
   // top: -9px;
 }
 
-.attack__wrapper {
+.health__wrapper {
   &.power--buffed .text  {
     color: #1aff1a;
   }

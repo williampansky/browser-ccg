@@ -1,6 +1,30 @@
-import { CardType as CardTypeEnums } from '../enums';
+import {
+  CardRace as CardRaceEnums,
+  CardRarity as CardRarityEnums,
+  CardSet as CardSetEnums,
+  CardType as CardTypeEnums,
+} from '../enums';
 
 export declare type CardId = string;
+export declare type CardRace =
+  | CardRaceEnums.Android
+  | CardRaceEnums.Creature
+  | CardRaceEnums.Demon
+  | CardRaceEnums.Dragon
+  | CardRaceEnums.Element
+  | CardRaceEnums.Idol
+  | CardRaceEnums.Location
+  | CardRaceEnums.None
+  | CardRaceEnums.Pirate
+  | CardRaceEnums.Sprite;
+export declare type CardRarity =
+  | CardRarityEnums.Common
+  | CardRarityEnums.Free
+  | CardRarityEnums.Golden
+  | CardRarityEnums.Mythic
+  | CardRarityEnums.Remarkable
+  | CardRarityEnums.Superior;
+export declare type CardSet = CardSetEnums.Core | CardSetEnums.Prime;
 export declare type CardType =
   | CardTypeEnums.Card
   | CardTypeEnums.Minion
@@ -16,12 +40,14 @@ export interface CardBase {
   active?: boolean;
   artistName?: string;
   artistUrl?: string;
-  cost: number;
   collectible?: boolean;
+  cost: number;
   description?: string;
   elite?: boolean;
   entourage?: string[];
   flavorText?: string;
+  fpoArt?: boolean;
+  health: number;
   howToEarn?: string;
   howToEarnGolden?: string;
   id: CardId;
@@ -36,9 +62,9 @@ export interface CardBase {
   numberSecondary?: number;
   playType?: string;
   power: number;
-  race: string;
-  rarity: string;
-  set: string;
+  race: CardRace | string;
+  rarity: CardRarity | string;
+  set: CardSet | string;
   targetingText?: string;
   text?: string;
   type: CardType | string;
@@ -70,15 +96,18 @@ export interface Card {
   artistName?: string;
   artistUrl?: string;
   baseCost: number;
+  baseHealth: number;
   basePower: number;
   canPlay: boolean;
   collectible: boolean;
   currentCost: number;
   description?: string;
   displayPower: number;
+  displayHealth: number;
   elite: boolean;
   entourage?: string[];
   flavorText?: string;
+  fpoArt?: boolean;
   howToEarn?: string;
   howToEarnGolden?: string;
   id: CardId;
@@ -95,11 +124,11 @@ export interface Card {
   numberSecondary?: number;
   powerOverride?: number; // use this power instead of base or latest stream
   powerStream: CardPowerStream[];
-  race: string;
-  rarity: string;
+  race: CardRace | string;
+  rarity: CardRarity | string;
   revealed: boolean;
   revealedOnTurn: number;
-  set: string;
+  set: CardSet | string;
   sounds?: Record<string, string>;
   targetingText?: string;
   text?: { __html: string };
@@ -111,7 +140,7 @@ export interface Card {
    * Required by `react-select`
    */
   key?: string;
-  
+
   /**
    * Required by `react-select`
    */
@@ -121,6 +150,7 @@ export interface Card {
 export interface Deck {
   name: string;
   cards: Card[];
+  cardBack?: string;
   deckSlot?: number;
   uuid?: string;
 }

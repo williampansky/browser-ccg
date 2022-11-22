@@ -31,6 +31,7 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
     elite,
     entourage,
     flavorText,
+    fpoArt,
     howToEarn,
     howToEarnGolden,
     id,
@@ -95,7 +96,7 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
         badgeImgSrc={'/images/card-assets/SUBTYPE_WRAPPER.png'}
       /> */}
 
-      <CardFlairImage name={name} src={imageFlairSrc} />
+      <CardFlairImage name={name} src={imageFlairSrc} fpoArt={fpoArt} />
       <CardBaseImage rarity={rarity} type={type} />
     </div>
   );

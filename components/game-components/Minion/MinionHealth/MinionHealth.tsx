@@ -1,24 +1,24 @@
 import Image from 'next/image';
 import TYPE_WRAPPER from '../../../../public/images/card-assets/TYPE_WRAPPER.png';
-import styles from './minion-power.module.scss';
+import styles from './minion-health.module.scss';
 
-export interface ReactMinionPowerProps {
+export interface MinionHealthProps {
   base: number;
   current: number;
   elite?: boolean;
   alternate?: boolean;
 }
 
-export const MinionPower = ({
+export const MinionHealth = ({
   base,
   current,
   elite = false,
   alternate = false,
-}: ReactMinionPowerProps) => {
+}: MinionHealthProps) => {
   return (
     <div
       className={[
-        styles['attack__wrapper'],
+        styles['health__wrapper'],
         alternate ? styles['alternate'] : '',
         current > base ? styles['power--buffed'] : '',
         base > current ? styles['power--debuffed'] : '',

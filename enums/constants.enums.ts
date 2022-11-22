@@ -1,0 +1,33 @@
+/**
+ * Enum values for game variables
+ */
+export enum Constants {
+  CardRace = 'CARD_RACE',
+  CardRarity = 'CARD_RARITY',
+  CardSet = 'CARD_SET',
+  CardType = 'CARD_TYPE',
+  RaceAndroid = 'RACE_ANDROID',
+  RaceCreature = 'RACE_CREATURE',
+  RaceDemon = 'RACE_DEMONIC',
+  RaceDragon = 'RACE_DRAGON',
+  RaceElement = 'RACE_ELEMENT',
+  RaceIdol = 'RACE_IDOL',
+  RaceLocation = 'RACE_LOCATION',
+  RaceNone = 'RACE_NONE',
+  RacePirate = 'RACE_PIRATE',
+  RaceSprite = 'RACE_SPRITE',
+  RarityCommon = 'RARITY_COMMON',
+  RarityFree = 'RARITY_FREE',
+  RarityGolden = 'RARITY_GOLDEN',
+  RarityMythic = 'RARITY_MYTHIC',
+  RarityNone = 'RARITY_NONE',
+  RarityRemarkable = 'RARITY_REMARKABLE',
+  RaritySuperior = 'RARITY_SUPERIOR',
+  SetCore = 'SET_CORE',
+  SetPrime = 'SET_PRIME',
+  TypeItem = 'TYPE_ITEM',
+  TypeMinion = 'TYPE_MINION',
+  TypeSpell = 'TYPE_SPELL',
+  TypeWeapon = 'TYPE_WEAPON',
+  Zone = 'ZONE',
+}

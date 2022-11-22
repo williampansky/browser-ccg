@@ -1,1 +1,54 @@
 @import 'zone';
+
+[data-component='Minion'].minion--is-hidden {
+  $borderRadius: #{var(--minion-border-radius)};
+  // @include position-absolute(0, 0, 0, 0, 1);
+
+  &:before {
+    background: #333;
+    border-radius: $borderRadius;
+    content: '';
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+    opacity: 0.625;
+    @include position-absolute(0, 0, 0, 0, 0);
+  }
+
+  .hidden__clouds {
+    border-radius: $borderRadius;
+    // animation: scroll-smoke 12s linear infinite;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background: none !important;
+    display: block !important;
+    height: 250%;
+    opacity: 0;
+    position: absolute;
+    transform: translate(35%, -75%);
+    width: 200%;
+    z-index: 1;
+    filter: drop-shadow(2px 4px 6px black);
+  }
+
+  @keyframes scroll-smoke {
+    0% {
+      opacity: 0;
+      transform: translate(35%, -75%);
+    }
+
+    10% {
+      opacity: 0.625;
+    }
+
+    90% {
+      opacity: 0;
+    }
+
+    90% {
+      opacity: 0;
+      transform: translate(-50%, 35%);
+    }
+  }
+}

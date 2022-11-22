@@ -31,7 +31,9 @@ export default function TheCardsPage() {
     <Layout title={page.title} description={page.description}>
       <div className='collection__page'>
         <Container>
-          <h1>{page.headline}</h1>
+          <div className='page__header'>
+            <h1>{page.headline}</h1>
+          </div>
           <div className='grid'>
             {cards?.map((c: Card) => {
               return c ? (

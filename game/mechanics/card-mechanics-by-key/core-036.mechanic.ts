@@ -8,16 +8,17 @@ import type {
   Zone,
 } from '../../../types';
 
-import setsEntourage from '../../data/setsEntourage.json';
 import {
   createCardObject,
   getRandomNumberBetween as randomNum,
 } from '../../../utils';
 
+import setsEntourage from '../../data/setsEntourage.json';
+
 /**
- * on play: summon two 1/1 minions to each other zone
+ * summon random relative entourage card
  */
-export const core007 = (
+export const core036 = (
   G: GameState,
   ctx: Ctx,
   gameConfig: GameConfig,
@@ -27,21 +28,21 @@ export const core007 = (
   cardIdx: number,
   player: PlayerID
 ) => {
+  const { entourage } = card;
   const { numerics } = gameConfig;
+  const entArr = setsEntourage.filter((ent: CardBase) => {
+    const set = ent.set?.replace(/\%/g, '');
+    const id = card?.id;
+    return ent.key!.includes(`${set}_${id}`);
+  });
 
   G.zones.forEach((z, i) => {
-    if (zoneIdx !== i) {
+    if (zoneIdx === i) {
       if (z.sides[player].length < numerics.numberOfSlotsPerZone) {
-        const entArr = setsEntourage.filter((ent: CardBase) => {
-          const set = ent.set?.replace(/\%/g, '');
-          const id = card?.id;
-          return ent.key!.includes(`${set}_${id}`);
-        });
-
-        const entObj = entArr[randomNum(0, card.entourage!.length - 1)];
+        const entObj = entArr[randomNum(0, entourage!.length - 1)];
         const entourageCard = createCardObject(entObj);
         const entCardObj = { ...entourageCard, revealed: true };
-        z.sides[player].push(entCardObj);
+        zone.sides[player].push(entCardObj);
         G.zonesCardsReference[i][player].push(entCardObj);
       }
     }
