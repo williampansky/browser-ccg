@@ -29,9 +29,10 @@ export const core012 = (
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
       const revealedThisTurn = c.revealedOnTurn === G.turn;
+      const cardIsASpell = c.type === CardType.Spell;
 
       // make sure to only check spells revealed this turn
-      if (c.type === CardType.Spell && revealedThisTurn) {
+      if (cardIsASpell && revealedThisTurn) {
         // find the core012 card node
         const self = G.zones[zoneIdx].sides[player][cardIdx];
 

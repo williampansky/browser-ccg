@@ -29,6 +29,7 @@ export const OpponentZoneSlot = ({
   const dispatch = useDispatch();
   const [objData, setObjData] = useState<Card | undefined>(undefined);
   const [incoming, setIncoming] = useState<boolean>(false);
+  const [destroyed, setDestroyed] = useState<boolean>(false);
   const [animation, setAnimation] = useState<string>('');
   const [rotation, setRotation] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
@@ -67,8 +68,12 @@ export const OpponentZoneSlot = ({
 
   useEffect(() => {
     if (data?.revealed) {
+      setDestroyed(false);
       setObjData(data);
       // setIncoming(false);
+    } else if (typeof data === 'undefined') {
+      setDestroyed(true);
+      setTimeout(() => setObjData(undefined), 500);
     }
   }, [data]);
 
@@ -110,7 +115,7 @@ export const OpponentZoneSlot = ({
         transition: '250ms ease-in',
         position: objData ? 'relative' : 'relative',
         top: `${offsetY}px`,
-        opacity: objData ? 1 : 0,
+        opacity: objData && !destroyed ? 1 : 0,
         zIndex: objData ? '1' : '-1',
         transform: `${getAnimationDirection(zoneNumber, objData)} rotate(${rotation}deg)`,
         transitionDelay: objData?.revealed ? `${slotIndex * 200}ms` : '0ms',

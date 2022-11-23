@@ -15,10 +15,11 @@ const initStartingHandsPhase: PhaseConfig = {
     logPhaseToConsole(G.turn, ctx.phase);
 
     // debug card or side interactions
-    if (G.gameConfig.debugConfig.debugHandCardId !== '') {
-      for (let index = 0; index < 4; index++) {
-        let debugCardBase = random!.Shuffle(setsCore)[index];
-        let debugCard = createCardObject(debugCardBase);
+    if (G.gameConfig.debugConfig.debugOpponentBoardCardId !== '') {
+      for (let index = 0; index < 1; index++) {
+        // let debugCardBase = random!.Shuffle(setsCore)[index];
+        let debugCardBase = setsCore.find(o => o.id === G.gameConfig.debugConfig.debugOpponentBoardCardId);
+        let debugCard = createCardObject(debugCardBase!);
         G.zones[0].sides['1'].push({ ...debugCard, revealed: true });
       }
     }

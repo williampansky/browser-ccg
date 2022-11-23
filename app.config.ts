@@ -4,6 +4,7 @@ export const gameConfig: GameConfig = {
   debugConfig: {
     debugHandCardId: '',
     debugBoardCardId: '',
+    debugOpponentBoardCardId: '',
     logPhaseToConsole: false,
     showDebugBar: false,
   },
