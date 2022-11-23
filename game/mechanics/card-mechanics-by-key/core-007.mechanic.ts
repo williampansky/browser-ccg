@@ -15,7 +15,7 @@ import {
 } from '../../../utils';
 
 /**
- * on play: summon two 1/1 minions to each other zone
+ * on play: summon 2/1 droid companion
  */
 export const core007 = (
   G: GameState,

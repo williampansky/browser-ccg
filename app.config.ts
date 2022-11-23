@@ -2,7 +2,8 @@ import type { AppConfig, GameConfig, Pages, SiteConfig } from './types';
 
 export const gameConfig: GameConfig = {
   debugConfig: {
-    debugCardId: '',
+    debugHandCardId: '',
+    debugBoardCardId: '',
     logPhaseToConsole: false,
     showDebugBar: false,
   },

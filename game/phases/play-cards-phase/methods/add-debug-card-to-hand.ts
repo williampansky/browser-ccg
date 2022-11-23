@@ -15,9 +15,9 @@ const addDebugCardToHand = (G: GameState): void => {
     },
   } = G;
 
-  if (G.gameConfig.debugConfig.debugCardId !== '') {
+  if (G.gameConfig.debugConfig.debugHandCardId !== '') {
     if (G.players['0'].cards.hand.length < cardsPerHand) {
-      const DEBUG_CARD_ID = G.gameConfig.debugConfig.debugCardId;
+      const DEBUG_CARD_ID = G.gameConfig.debugConfig.debugHandCardId;
       const dCardBase = CARD_DATABASE.find((c) => c.id === DEBUG_CARD_ID)!;
       const dCardObj = createCardObject(dCardBase);
       G.players['0'].cards.hand.push({

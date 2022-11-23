@@ -24,19 +24,40 @@ export const core013 = (
   cardIdx: number,
   player: PlayerID
 ) => {
+  let possibleTargets: {
+    zoneNumber: number;
+    cardData: Card;
+    cardIndex: number;
+  }[] = [];
+
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
       if (c.uuid !== card.uuid) { // make sure not to buff itself
         if (c.race === CardRace.Sprite) { // make sure race matches
-          c.powerStream.push({
-            blame: card.name,
-            adjustment: 1,
-            currentPower: add(c.displayPower, 1),
+          possibleTargets.push({
+            zoneNumber: zIdx,
+            cardData: c,
+            cardIndex: cIdx
           });
-      
-          c.displayPower = getCardPower(c);
         }
       }
-    })
+    });
   });
+
+  // if there is a target
+  if (possibleTargets.length !== 0) {
+    // get a random one from the list
+    const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
+
+    // find the target amonst the board zones
+    const node = G.zones[choice.zoneNumber].sides[player][choice.cardIndex];
+
+    // push powerStream and set display
+    node.powerStream.push({
+      blame: card.name,
+      adjustment: 1,
+      currentPower: add(node.displayPower, 1),
+    });
+    node.displayPower = getCardPower(node);
+  }
 };
