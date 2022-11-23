@@ -12,19 +12,6 @@ const useGlobalGameStyles = (): void => {
     const style = document.createElement('style');
 
     style.textContent = `
-      :root {
-        --config-actionPointsPerTurn: ${numerics.actionPointsPerTurn};
-        --config-actionPointsTotal: ${numerics.actionPointsTotal};
-        --config-cardsPerDeck: ${numerics.cardsPerDeck};
-        --config-cardsPerHand: ${numerics.cardsPerHand};
-        --config-cardsPerStartingHand: ${numerics.cardsPerStartingHand};
-        --config-cardsPerTurn: ${numerics.cardsPerTurn};
-        --config-numberOfPlayers: ${numerics.numberOfPlayers};
-        --config-numberOfSingleTurnsPerGame: ${numerics.numberOfSingleTurnsPerGame};
-        --config-numberOfSlotsPerZone: ${numerics.numberOfSlotsPerZone};
-        --config-numberOfZones: ${numerics.numberOfZones};
-      }
-
       html {
         perspective: 100vh;
         position: fixed;

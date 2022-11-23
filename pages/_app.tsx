@@ -9,6 +9,7 @@ import '../styles/site.scss';
 import { store } from '../store';
 import { siteConfig } from '../app.config';
 import { Dispatcher } from '../components';
+import useConfigCssVariables from '../hooks/useConfigCssVariables';
 
 /**
  * Stops NextJS from breaking the dev page due to the
@@ -45,6 +46,8 @@ export const noOverlayWorkaroundScript = `
 `;
 
 export default function App({ Component, pageProps }: AppProps) {
+  useConfigCssVariables();
+
   useEffect(() => {
     if (siteConfig.disableRightClick) {
       document.addEventListener('contextmenu', (event) =>

@@ -3,6 +3,7 @@ import type { Card, GameConfig, GameState, PlayerID, Zone } from '../../types';
 import { core008 } from './card-mechanics-by-key/core-008.mechanic';
 import { core009 } from './card-mechanics-by-key/core-009.mechanic';
 import { core012 } from './card-mechanics-by-key/core-012.mechanic';
+import { core032 } from './card-mechanics-by-key/core-032.mechanic';
 
 const initEventMechanics = (
   G: GameState,
@@ -25,6 +26,8 @@ const initEventMechanics = (
       return core009(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     case 'SET_CORE_012':
       return core012(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+    case 'SET_CORE_032':
+      return core032(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     default:
       return;
   }

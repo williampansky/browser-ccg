@@ -24,7 +24,7 @@ const fn =
     const prevMatch = curIndex === index - 1;
     const gtMatch = curIndex > index;
     const ltMatch = curIndex < index;
-    const hoverOffsetY = -40;
+    const hoverOffsetY = -90;
 
     if (match && logMatch)
       console.log(
@@ -58,7 +58,7 @@ const fn =
         x: 0,
         y: hoverOffsetY,
         rotate: 0,
-        scale: 1.15,
+        scale: 2,
         marginTop: 0,
         zIndex: 100,
         cursor: 'grab',
@@ -76,7 +76,7 @@ const fn =
         x: 0,
         y: 0,
         rotate: 0,
-        scale: calcScale(items),
+        scale: calcScale(items, windowWidth),
         marginLeft: calcOffsetX(index, items, windowWidth),
         marginTop: 0,
         zIndex: index * 1,

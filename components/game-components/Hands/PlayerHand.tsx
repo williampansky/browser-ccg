@@ -1,15 +1,11 @@
-import { Ctx } from 'boardgame.io';
-import { useSelector } from 'react-redux';
-import React, {
-  Fragment,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React from 'react';
+import { Fragment } from 'react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useSprings, animated, to } from 'react-spring';
 import { useCallbackRef } from 'use-callback-ref';
 import { useGesture } from '@use-gesture/react';
+import { useSelector } from 'react-redux';
+import { Ctx } from 'boardgame.io';
 
 import { usePrevious } from '../../../hooks';
 import { Card as CardComponent } from '../Card/Card';
@@ -19,7 +15,6 @@ import type { Card, GameState, PlayerID } from '../../../types';
 
 import fn from './fn';
 import styles from './player-hand.module.scss';
-import calcScale from './calc-scale';
 
 interface PlayerHandProps {
   G: GameState;
@@ -80,7 +75,7 @@ export const PlayerHand = ({
 
   // Create springs, each corresponds to an item,
   // controlling its transform, scale, etc.
-  const [springs, setSprings] = useSprings(handLength, fn(), [handLength]);
+  const [springs, setSprings] = useSprings(handLength, fn(handLength, width), [handLength]);
 
   const order = useCallbackRef(
     [...Array.from(Array(cardsPerHand))].map((_, index) => index),
@@ -93,8 +88,8 @@ export const PlayerHand = ({
 
   // rerenders hand correctly based on new array length
   useEffect(() => {
-    setSprings(fn(handLength));
-  }, [handLength]);
+    setSprings(fn(handLength, width));
+  }, [handLength, width]);
 
   const bind: any = useGesture(
     {
@@ -258,7 +253,11 @@ export const PlayerHand = ({
                       // height: `${cardHeight}px`,
                       height: 65,
                       width: `${cardWidth}px`,
-                      transform: `scale(1.3)`
+                      // transform: `scale(1.3)`
+                      transform: to([x, y, rotate, scale], (x, y, rt, sc) => {
+                        if (width && width >= 1024) return `scale(${sc})`;
+                        return '';
+                      }),
                       // transform: to([x, y], (x, y) => {
                       //   return `translate3d(${x}px, ${y}px, 0)`;
                       // }),
