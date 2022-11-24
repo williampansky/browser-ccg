@@ -53,7 +53,7 @@ export interface CardBase {
   id: CardId;
   isEntourage?: boolean;
   isGolden?: boolean;
-  key?: string;
+  key: string;
   mechanics?: string[];
   mechanicsEnabled?: boolean;
   name: string;
@@ -139,7 +139,7 @@ export interface Card {
   /**
    * Required by `react-select`
    */
-  key?: string;
+  key: string;
 
   /**
    * Required by `react-select`

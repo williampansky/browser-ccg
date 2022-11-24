@@ -149,10 +149,9 @@ const fetchSetCoreData = async (tableId: string) => {
     .then((resp: any) => {
       const map = resp.records.map((item: any) => {
         const { fields } = item;
-        if (!fields.active) return;
         return {
           name: fields?.name,
-          id: fields?.id,
+          id: fields.id,
           rarity: fields?.rarity,
           type: fields?.type,
           race: fields?.race || '%RACE_NONE%',
@@ -160,7 +159,7 @@ const fetchSetCoreData = async (tableId: string) => {
           health: fields?.health || 0,
           power: fields?.power || 0,
           text: fields?.text,
-          set: fields?.set,
+          set: fields.set,
           active: fields?.active || false,
           isEntourage: false,
           collectible: fields?.collectible || false,
@@ -183,9 +182,9 @@ const fetchSetCoreData = async (tableId: string) => {
           artistUrl: parseArtistUrl(fields?.artistUrl),
           fpoArt: fields?.fpoArt || false,
           description: fields?.description,
-          key: createCardKey(fields?.id, fields?.set),
+          key: createCardKey(fields.id, fields.set),
         };
-      });
+      }).filter((obj: any) => obj.active);
 
       const setsCore = JSON.stringify(map);
       writeToFile('setsCore', setsCore);
@@ -206,7 +205,7 @@ const fetchSetEntourageData = async (tableId: string) => {
         return {
           isEntourage: true,
           name: fields?.name,
-          id: fields?.id,
+          id: fields.id,
           rarity: fields?.rarity,
           type: fields?.type,
           race: fields?.race || '%RACE_NONE%',
@@ -214,9 +213,10 @@ const fetchSetEntourageData = async (tableId: string) => {
           health: fields?.health || 0,
           power: fields?.power || 0,
           text: fields?.text,
-          set: fields?.set,
+          set: fields.set,
           collectible: false,
           elite: fields?.elite || false,
+          active: fields?.active || false,
           mechanics: parseMechanics(fields?.mechanics),
           mechanicsEnabled: fields?.mechanicsEnabled || false,
           playType: fields?.playType,
@@ -229,9 +229,9 @@ const fetchSetEntourageData = async (tableId: string) => {
           artistUrl: parseArtistUrl(fields?.artistUrl),
           fpoArt: fields?.fpoArt || false,
           description: fields?.description,
-          key: createCardKey(fields?.id, fields?.set),
+          key: createCardKey(fields.id, fields.set),
         };
-      });
+      }).filter((obj: any) => obj.active);
 
       const setsEntourage = JSON.stringify(map);
       writeToFile('setsEntourage', setsEntourage);

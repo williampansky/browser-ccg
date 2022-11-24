@@ -4,9 +4,9 @@ const core = `SET_CORE`;
 
 export const gameConfig: GameConfig = {
   debugConfig: {
-    debugHandCardKey: `${core}_010`,
-    debugBoardCardKey: `${core}_004`,
-    debugOpponentHandCardKey: `${core}_006`,
+    debugHandCardKey: '', //`${core}_011`,
+    debugBoardCardKey: '', //`${core}_004`,
+    debugOpponentHandCardKey: '', //`${core}_006`,
     debugOpponentBoardCardKey: '',
     logPhaseToConsole: false,
     showDebugBar: false,

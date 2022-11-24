@@ -1,13 +1,16 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { CardBase, GameState } from '../../../types';
+import { GameState } from '../../../types';
 import {
   drawCardFromPlayersDeck,
   logPhaseToConsole,
-  createRandomDeck,
   createCardObject,
 } from '../../../utils';
 
-import setsCore from '../../data/setsCore.json'
+import setsCore from '../../data/setsCore.json';
+
+const db = [
+  ...setsCore
+]
 
 const initStartingHandsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
@@ -22,8 +25,8 @@ const initStartingHandsPhase: PhaseConfig = {
     // debug card or side interactions
     if (debugOpponentBoardCardKey !== '') {
       for (let index = 0; index < 1; index++) {
-        // let debugCardBase = random!.Shuffle(setsCore)[index];
-        let debugCardBase = setsCore.find(o => o.key === debugOpponentBoardCardKey);
+        // let debugCardBase = random!.Shuffle(db)[index];
+        let debugCardBase = db.find(o => o.key === debugOpponentBoardCardKey);
         let debugCard = createCardObject(debugCardBase!);
         G.zones[0].sides['1'].push({ ...debugCard, revealed: true });
         G.zonesCardsReference[0]['1'].push({ ...debugCard, revealed: true });
@@ -33,7 +36,7 @@ const initStartingHandsPhase: PhaseConfig = {
     // debug card or side interactions
     if (debugBoardCardKey !== '') {
       for (let index = 0; index < 1; index++) {
-        let debugCardBase = setsCore.find(o => o.key === debugBoardCardKey);
+        let debugCardBase = db.find(o => o.key === debugBoardCardKey);
         let debugCard = createCardObject(debugCardBase!);
         G.zones[0].sides['0'].push({ ...debugCard, revealed: true });
         G.zonesCardsReference[0]['0'].push({ ...debugCard, revealed: true });

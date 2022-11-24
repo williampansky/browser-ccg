@@ -8,6 +8,10 @@ import {
 import { actionPoints, playerNames, players } from '../state';
 import setsCore from '../data/setsCore.json';
 
+const db = [
+  ...setsCore
+]
+
 const initPlayersPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
     const {
@@ -28,8 +32,8 @@ const initPlayersPhase: PhaseConfig = {
       cards: {
         deck:
           debugHandCardKey !== ''
-            ? createDebugDeck(G, ctx, setsCore, debugHandCardKey)
-            : createRandomDeck(G, ctx, setsCore),
+            ? createDebugDeck(G, ctx, db, debugHandCardKey)
+            : createRandomDeck(G, ctx, db),
         destroyed: [],
         discarded: [],
         hand: [],
@@ -45,8 +49,8 @@ const initPlayersPhase: PhaseConfig = {
       cards: {
         deck:
           debugOpponentHandCardKey !== ''
-            ? createDebugDeck(G, ctx, setsCore, debugOpponentHandCardKey)
-            : createRandomDeck(G, ctx, setsCore),
+            ? createDebugDeck(G, ctx, db, debugOpponentHandCardKey)
+            : createRandomDeck(G, ctx, db),
         destroyed: [],
         discarded: [],
         hand: [],

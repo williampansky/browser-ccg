@@ -28,7 +28,7 @@ export const core004 = (
   
   if (G.players[player].cards.hand.length < numerics.cardsPerHand) {
     const randomCardBase = ctx.random!.Shuffle(setsCore)[0];
-    const randomCard = createCardObject(randomCardBase);
+    const randomCard = createCardObject(randomCardBase!);
     G.players[player].cards.hand.push(randomCard);
     counts.incrementHand(G, player);
   }
