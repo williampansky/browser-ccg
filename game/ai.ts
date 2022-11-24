@@ -8,7 +8,15 @@ const aiEnumeration = {
     const perZone = gameConfig.numerics.numberOfSlotsPerZone;
     const aiPlayer = players['1'];
     const aiHand = aiPlayer.cards.hand;
-    let moves = [];
+    let moves: any[] = [];
+
+    if (gameConfig.debugConfig.disableAiMoves) {
+      if (G.playerTurnDone['1'] === false) {
+        moves.push({ move: 'setDone', args: ['1'] });
+      }
+      
+      return moves;
+    }
 
     // avoids onslaught of INVALID_MOVE errors
     if (G.playerTurnDone['1'] === false) {

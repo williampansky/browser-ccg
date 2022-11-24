@@ -57,6 +57,7 @@ const createCardObject = (obj: CardBase): Card => {
       ? replaceAllConstants(obj?.flavorText)
       : undefined,
     fpoArt: obj?.fpoArt || false,
+    healthStream: [],
     imageFlairSrc: getImageFlairSrc(obj?.id, obj?.set),
     isEntourage: obj?.isEntourage || false,
     key: createCardKey(obj?.id, obj?.set),

@@ -96,6 +96,27 @@ export interface CardBase {
 }
 
 /**
+ * Used to track a card's health changes.
+ */
+export interface CardHealthStream {
+  /**
+   * card that changed this health
+   */
+  blame: string;
+
+  /**
+   * adjustment to make
+   */
+  adjustment: number;
+
+  /**
+   * - if no previous idx, baseHealth + adjustment
+   * - otherwise last idx currentHealth + this adjustment
+   */
+  currentHealth: number;
+}
+
+/**
  * Used to track a card's power changes.
  */
 export interface CardPowerStream {
@@ -110,7 +131,8 @@ export interface CardPowerStream {
   adjustment: number;
 
   /**
-   * if no previous idx, basePower + adjustment—otherwise last idx currentPower + this adjustment
+   * - if no previous idx, basePower + adjustment
+   * - otherwise last idx currentPower + this adjustment
    */
   currentPower: number;
 }
@@ -134,6 +156,8 @@ export interface Card {
   entourage?: string[];
   flavorText?: string;
   fpoArt?: boolean;
+  healthStream: CardHealthStream[];
+  healthOverride?: number; // use this health instead of base or latest stream
   howToEarn?: string;
   howToEarnGolden?: string;
   id: CardId;

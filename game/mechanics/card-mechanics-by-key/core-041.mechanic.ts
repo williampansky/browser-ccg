@@ -1,4 +1,3 @@
-import { current } from 'immer';
 import type { Ctx } from 'boardgame.io';
 import type {
   Card,
@@ -7,11 +6,13 @@ import type {
   PlayerID,
   Zone,
 } from '../../../types';
+import { CardType } from '../../../enums';
+import { getCardPower } from '../../../utils';
 
 /**
- * destroy a random 1 cost on opponent's side
+ * destroy random enemy minion
  */
-export const core006 = (
+export const core041 = (
   G: GameState,
   ctx: Ctx,
   gameConfig: GameConfig,
@@ -20,23 +21,24 @@ export const core006 = (
   card: Card,
   cardIdx: number,
   player: PlayerID,
-  opponent: PlayerID
+  opponent: PlayerID,
 ) => {
-  const { numberPrimary } = card;
   let possibleTargets: {
     zoneNumber: number;
     cardData: Card;
     cardIndex: number;
   }[] = [];
 
-  zone.sides[opponent].forEach((c, cIdx) => {
-    if (c.baseCost === numberPrimary) {
-      possibleTargets.push({
-        zoneNumber: zoneIdx,
-        cardData: c,
-        cardIndex: cIdx
-      });
-    }
+  G.zones.forEach((z, zIdx) => {
+    z.sides[opponent].forEach((c, cIdx) => {
+        if (c.type === CardType.Minion) { // make sure race matches
+          possibleTargets.push({
+            zoneNumber: zIdx,
+            cardData: c,
+            cardIndex: cIdx
+          });
+        }
+    });
   });
 
   // if there is a target

@@ -6,6 +6,7 @@ export interface GameConfig {
     debugOpponentBoardCardKey: string;
     logPhaseToConsole: boolean;
     showDebugBar: boolean;
+    disableAiMoves: boolean;
   };
   numerics: {
     actionPointsPerTurn: number;

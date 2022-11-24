@@ -4,12 +4,13 @@ const core = `SET_CORE`;
 
 export const gameConfig: GameConfig = {
   debugConfig: {
-    debugHandCardKey: '', //`${core}_011`,
+    debugHandCardKey: '', //`${core}_042`,
     debugBoardCardKey: '', //`${core}_004`,
     debugOpponentHandCardKey: '', //`${core}_006`,
     debugOpponentBoardCardKey: '',
     logPhaseToConsole: false,
     showDebugBar: false,
+    disableAiMoves: false
   },
   numerics: {
     actionPointsPerTurn: 1,

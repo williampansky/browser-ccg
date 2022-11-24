@@ -11,6 +11,7 @@ export { default as drawCardFromPlayersDeck } from './draw-card-from-players-dec
 export { default as elementIsNotUndefined } from './element-is-not-undefined';
 export { default as fontSizeBasedOnCharacterLength } from './font-size-based-on-length';
 export { default as formatUrlString } from './format-url-string';
+export { default as getCardHealth } from './get-card-health';
 export { default as getCardPower } from './get-card-power';
 export { default as getContextualPlayerIds } from './get-contextual-player-ids';
 export { default as getDeckbuilderDeckLength } from './get-deckbuilder-deck-length';

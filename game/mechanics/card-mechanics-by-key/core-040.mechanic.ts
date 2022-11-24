@@ -10,9 +10,9 @@ import type {
 import { drawCardFromPlayersDeck } from '../../../utils';
 
 /**
- * on play: Draw a random card from your deck
+ * draw the next 4 cards from your deck
  */
-export const core003 = (
+export const core040 = (
   G: GameState,
   ctx: Ctx,
   gameConfig: GameConfig,
@@ -22,7 +22,7 @@ export const core003 = (
   cardIdx: number,
   player: PlayerID
 ) => {
-  const numberPrimary = card?.numberPrimary || 1;
+  const numberPrimary = card?.numberPrimary || 4;
   const { numerics } = gameConfig;
   if (G.players[player].cards.hand.length < numerics.cardsPerHand) {
     drawCardFromPlayersDeck(G, player, numberPrimary);
