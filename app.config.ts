@@ -1,10 +1,13 @@
 import type { AppConfig, GameConfig, Pages, SiteConfig } from './types';
 
+const core = `SET_CORE`;
+
 export const gameConfig: GameConfig = {
   debugConfig: {
-    debugHandCardId: '',
-    debugBoardCardId: '',
-    debugOpponentBoardCardId: '',
+    debugHandCardKey: `${core}_010`,
+    debugBoardCardKey: `${core}_004`,
+    debugOpponentHandCardKey: `${core}_006`,
+    debugOpponentBoardCardKey: '',
     logPhaseToConsole: false,
     showDebugBar: false,
   },

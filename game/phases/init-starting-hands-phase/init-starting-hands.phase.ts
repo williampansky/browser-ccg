@@ -12,24 +12,31 @@ import setsCore from '../../data/setsCore.json'
 const initStartingHandsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
     const { random } = ctx;
+    const {
+      gameConfig: {
+        debugConfig: { debugBoardCardKey, debugOpponentBoardCardKey },
+      },
+    } = G;
     logPhaseToConsole(G.turn, ctx.phase);
 
     // debug card or side interactions
-    if (G.gameConfig.debugConfig.debugOpponentBoardCardId !== '') {
+    if (debugOpponentBoardCardKey !== '') {
       for (let index = 0; index < 1; index++) {
         // let debugCardBase = random!.Shuffle(setsCore)[index];
-        let debugCardBase = setsCore.find(o => o.id === G.gameConfig.debugConfig.debugOpponentBoardCardId);
+        let debugCardBase = setsCore.find(o => o.key === debugOpponentBoardCardKey);
         let debugCard = createCardObject(debugCardBase!);
         G.zones[0].sides['1'].push({ ...debugCard, revealed: true });
+        G.zonesCardsReference[0]['1'].push({ ...debugCard, revealed: true });
       }
     }
 
     // debug card or side interactions
-    if (G.gameConfig.debugConfig.debugBoardCardId !== '') {
+    if (debugBoardCardKey !== '') {
       for (let index = 0; index < 1; index++) {
-        let debugCardBase = setsCore.find(o => o.id === G.gameConfig.debugConfig.debugBoardCardId);
+        let debugCardBase = setsCore.find(o => o.key === debugBoardCardKey);
         let debugCard = createCardObject(debugCardBase!);
         G.zones[0].sides['0'].push({ ...debugCard, revealed: true });
+        G.zonesCardsReference[0]['0'].push({ ...debugCard, revealed: true });
       }
     }
 

@@ -1,8 +1,9 @@
 export interface GameConfig {
   debugConfig: {
-    debugHandCardId: string;
-    debugBoardCardId: string;
-    debugOpponentBoardCardId: string;
+    debugHandCardKey: string;
+    debugBoardCardKey: string;
+    debugOpponentHandCardKey: string;
+    debugOpponentBoardCardKey: string;
     logPhaseToConsole: boolean;
     showDebugBar: boolean;
   };

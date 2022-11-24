@@ -1,12 +1,23 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
 import { Card, GameState } from '../../types';
-import { createCardObject, createRandomDeck, logPhaseToConsole } from '../../utils';
+import {
+  createDebugDeck,
+  createRandomDeck,
+  logPhaseToConsole,
+} from '../../utils';
 import { actionPoints, playerNames, players } from '../state';
 import setsCore from '../data/setsCore.json';
 
 const initPlayersPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    if (G.gameConfig.debugConfig.logPhaseToConsole) {
+    const {
+      gameConfig: {
+        debugConfig,
+        debugConfig: { debugHandCardKey, debugOpponentHandCardKey },
+      },
+    } = G;
+
+    if (debugConfig.logPhaseToConsole) {
       console.clear();
       logPhaseToConsole(G.turn, ctx.phase);
     }
@@ -15,7 +26,10 @@ const initPlayersPhase: PhaseConfig = {
     players.set(G, '0', {
       actionPoints: actionPoints.defaultState['0'],
       cards: {
-        deck: createRandomDeck(G, ctx, setsCore),
+        deck:
+          debugHandCardKey !== ''
+            ? createDebugDeck(G, ctx, setsCore, debugHandCardKey)
+            : createRandomDeck(G, ctx, setsCore),
         destroyed: [],
         discarded: [],
         hand: [],
@@ -29,8 +43,10 @@ const initPlayersPhase: PhaseConfig = {
     players.set(G, '1', {
       actionPoints: actionPoints.defaultState['1'],
       cards: {
-        deck: createRandomDeck(G, ctx, setsCore),
-        // deck: debugCards(),
+        deck:
+          debugOpponentHandCardKey !== ''
+            ? createDebugDeck(G, ctx, setsCore, debugOpponentHandCardKey)
+            : createRandomDeck(G, ctx, setsCore),
         destroyed: [],
         discarded: [],
         hand: [],

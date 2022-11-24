@@ -25,7 +25,6 @@ export const PlayerZoneSlot = ({
 }: ReactZoneSlot): ReactElement => {
   const dispatch = useDispatch();
   const [objData, setObjData] = useState<Card | undefined>(undefined);
-  const [destroyed, setDestroyed] = useState<boolean>(false);
   const [incoming, setIncoming] = useState<boolean>(false);
 
   const [rotation, setRotation] = useState<number>(0);
@@ -81,10 +80,10 @@ export const PlayerZoneSlot = ({
   useEffect(() => {
     if (zoneRef[player]?.length && zoneRef[player][slotIndex]) {
       const ref = zoneRef[player][slotIndex].revealed;
-      if (!ref) {
-        setDestroyed(false);
-        setIncoming(true);
-      }
+      if (!ref) setIncoming(true);
+    } else {
+      setIncoming(false);
+      setObjData(undefined);
     }
   }, [zoneRef]);
 
@@ -97,10 +96,6 @@ export const PlayerZoneSlot = ({
     if (data?.revealed) {
       setObjData(data);
       setIncoming(false);
-      setDestroyed(false);
-    } else if (typeof data === 'undefined') {
-      setDestroyed(true);
-      setTimeout(() => setObjData(undefined), 500);
     }
   }, [data]);
 

@@ -50,8 +50,6 @@ export const core006 = (
       return c.uuid !== choice.cardData.uuid;
     })
 
-    console.log(newZoneArr)
-
     G.zones[choice.zoneNumber].sides[opponent] = newZoneArr;
     G.zonesCardsReference[choice.zoneNumber][opponent] = newZoneArr;
   }

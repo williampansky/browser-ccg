@@ -11,22 +11,24 @@ const addDebugCardToHand = (G: GameState): void => {
   const {
     gameConfig,
     gameConfig: {
-      numerics: { cardsPerHand, numberOfSlotsPerZone },
+      numerics: { cardsPerHand },
+      debugConfig: { debugHandCardKey }
     },
   } = G;
 
-  if (G.gameConfig.debugConfig.debugHandCardId !== '') {
+  if (debugHandCardKey !== '') {
     if (G.players['0'].cards.hand.length < cardsPerHand) {
-      const DEBUG_CARD_ID = G.gameConfig.debugConfig.debugHandCardId;
-      const dCardBase = CARD_DATABASE.find((c) => c.id === DEBUG_CARD_ID)!;
-      const dCardObj = createCardObject(dCardBase);
-      G.players['0'].cards.hand.push({
-        ...dCardObj,
-        canPlay: true,
-        currentCost: 0
-      } as Card);
-
-      counts.incrementHand(G, '0');
+      const dCardBase = CARD_DATABASE.find((c) => c.key === debugHandCardKey);
+      if (dCardBase !== null && typeof dCardBase !== 'undefined') {
+        const dCardObj = createCardObject(dCardBase);
+        G.players['0'].cards.hand.push({
+          ...dCardObj,
+          canPlay: true,
+          currentCost: 0
+        } as Card);
+  
+        counts.incrementHand(G, '0');
+      }
     }
   }
 };
