@@ -17,6 +17,8 @@ const initEventMechanics = (
   opponent: PlayerID
 ) => {
   if (!card) return;
+  if (card.booleans.isDisabled) return;
+  if (card.booleans.isSilenced) return;
 
   // prettier-ignore
   switch (card?.key) {

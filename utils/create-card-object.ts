@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import { Mechanics } from '../enums';
 import { Card, CardBase } from '../types';
 import createArtistHtmlLink from './create-artist-html-link';
 import createCardKey from './create-card-key';
@@ -19,6 +20,31 @@ const createCardObject = (obj: CardBase): Card => {
     baseCost: obj?.cost,
     baseHealth: obj?.health,
     basePower: obj?.power,
+    // prettier-ignore
+    booleans: {
+      hasArmor: obj?.mechanics?.find(v => v === Mechanics.Armor) ? true : false,
+      hasCostIncreased: false,
+      hasCostReduced: false,
+      hasEvent: obj?.mechanics?.find(v => v === Mechanics.Event) ? true : false,
+      hasImmunity: obj?.mechanics?.find(v => v === Mechanics.Immune) ? true : false,
+      hasOnTurnEnd: obj?.mechanics?.find(v => v === Mechanics.OnTurnEnd) ? true : false,
+      hasOnTurnStart: obj?.mechanics?.find(v => v === Mechanics.OnTurnStart) ? true : false,
+      isBooned: false,
+      isBuffed: false,
+      isDamaged: false,
+      isDebuffed: false,
+      isDestroyed: false,
+      isDisabled: false,
+      isHidden: obj?.mechanics?.find(v => v === Mechanics.Hidden) ? true : false,
+      isSilenced: false,
+      wasDiscarded: false,
+      wasDiscovered: false,
+      wasResurrected: false,
+      wasReturned: false,
+      wasTransferred: false,
+      wasTransformed: false,
+      willBeDestroyedNextTurn: false,
+    },
     canPlay: false,
     collectible: obj?.collectible || false,
     currentCost: obj?.cost,

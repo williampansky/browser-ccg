@@ -31,6 +31,31 @@ export declare type CardType =
   | CardTypeEnums.Spell
   | CardTypeEnums.Weapon;
 
+export interface CardStateBooleans {
+  hasArmor: boolean;
+  hasCostIncreased: boolean;
+  hasCostReduced: boolean;
+  hasEvent: boolean;
+  hasImmunity: boolean;
+  hasOnTurnEnd: boolean;
+  hasOnTurnStart: boolean;
+  isBooned: boolean;
+  isBuffed: boolean;
+  isDamaged: boolean;
+  isDebuffed: boolean;
+  isDestroyed: boolean;
+  isDisabled: boolean;
+  isHidden: boolean;
+  isSilenced: boolean;
+  wasDiscarded: boolean;
+  wasDiscovered: boolean;
+  wasResurrected: boolean;
+  wasReturned: boolean;
+  wasTransferred: boolean;
+  wasTransformed: boolean;
+  willBeDestroyedNextTurn: boolean;
+}
+
 /**
  * Base card information from the database/API, which gets
  * converted into a Card interface via the `createCardObject` util.
@@ -98,6 +123,7 @@ export interface Card {
   baseCost: number;
   baseHealth: number;
   basePower: number;
+  booleans: CardStateBooleans;
   canPlay: boolean;
   collectible: boolean;
   currentCost: number;
