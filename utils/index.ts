@@ -23,8 +23,11 @@ export { default as getPercentageChange } from './get-percentage-change';
 export { default as getRandomNumberBetween } from './get-random-number-between';
 export { default as getSumOfAllZonesPower } from './get-sum-of-all-zones-power';
 export { default as getZoneWinsBySide } from './get-zone-wins-by-side';
+export { default as handleCardDestructionMechanics } from './handle-card-destruction-adjustments';
 export { default as limitNumberWithinRange } from './limit-number-within-range';
 export { default as logPhaseToConsole } from './log-phase-to-console';
+export { default as pushPowerStreamAndSetDisplay } from './push-powerstream-and-set-display';
+export { default as removeBoonFromCards } from './remove-boon-from-cards'
 export { default as removeSymbols } from './remove-symbols';
 export { default as replaceAllConstants } from './replace-all-constants';
 export { default as replaceDynamicText } from './replace-dynamic-text';

@@ -6,7 +6,7 @@ export const gameConfig: GameConfig = {
   debugConfig: {
     debugHandCardKey: '', //`${core}_042`,
     debugBoardCardKey: '', //`${core}_004`,
-    debugOpponentHandCardKey: '', //`${core}_006`,
+    debugOpponentHandCardKey: '', //`${core}_041`,
     debugOpponentBoardCardKey: '',
     logPhaseToConsole: false,
     showDebugBar: false,

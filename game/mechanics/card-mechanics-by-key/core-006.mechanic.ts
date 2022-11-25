@@ -7,6 +7,7 @@ import type {
   PlayerID,
   Zone,
 } from '../../../types';
+import { handleCardDestructionMechanics } from '../../../utils';
 
 /**
  * destroy a random 1 cost on opponent's side
@@ -34,7 +35,7 @@ export const core006 = (
       possibleTargets.push({
         zoneNumber: zoneIdx,
         cardData: c,
-        cardIndex: cIdx
+        cardIndex: cIdx,
       });
     }
   });
@@ -45,11 +46,14 @@ export const core006 = (
     const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
 
     // remove the target from the board zone side and its ref
-    const newZoneArr = G.zones[choice.zoneNumber].sides[opponent].filter(c => {
-      return c.uuid !== choice.cardData.uuid;
-    })
+    const newZoneArr = G.zones[choice.zoneNumber].sides[opponent].filter(
+      (c) => {
+        return c.uuid !== choice.cardData.uuid;
+      }
+    );
 
     G.zones[choice.zoneNumber].sides[opponent] = newZoneArr;
     G.zonesCardsReference[choice.zoneNumber][opponent] = newZoneArr;
+    handleCardDestructionMechanics(G, choice.cardData, opponent);
   }
 };

@@ -114,6 +114,11 @@ export interface CardHealthStream {
    * - otherwise last idx currentHealth + this adjustment
    */
   currentHealth: number;
+
+  /**
+   * unique id of the blame target
+   */
+   uuid: string;
 }
 
 /**
@@ -135,6 +140,11 @@ export interface CardPowerStream {
    * - otherwise last idx currentPower + this adjustment
    */
   currentPower: number;
+
+  /**
+   * unique id of the blame target
+   */
+   uuid: string;
 }
 
 export interface Card {

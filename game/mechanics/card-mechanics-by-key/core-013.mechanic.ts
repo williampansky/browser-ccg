@@ -9,7 +9,7 @@ import type {
   Zone,
 } from '../../../types';
 import { CardRace } from '../../../enums';
-import { getCardPower } from '../../../utils';
+import { pushPowerStreamAndSetDisplay } from '../../../utils';
 
 /**
  * on turn end, give a friendly sprite +1 power
@@ -32,12 +32,14 @@ export const core013 = (
 
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
-      if (c.uuid !== card.uuid) { // make sure not to buff itself
-        if (c.race === CardRace.Sprite) { // make sure race matches
+      // make sure not to buff itself
+      if (c.uuid !== card.uuid) {
+        // make sure race matches
+        if (c.race === CardRace.Sprite) {
           possibleTargets.push({
             zoneNumber: zIdx,
             cardData: c,
-            cardIndex: cIdx
+            cardIndex: cIdx,
           });
         }
       }
@@ -53,11 +55,6 @@ export const core013 = (
     const node = G.zones[choice.zoneNumber].sides[player][choice.cardIndex];
 
     // push powerStream and set display
-    node.powerStream.push({
-      blame: card.name,
-      adjustment: 1,
-      currentPower: add(node.displayPower, 1),
-    });
-    node.displayPower = getCardPower(node);
+    pushPowerStreamAndSetDisplay(node, card, 1, add(node.displayPower, 1));
   }
 };

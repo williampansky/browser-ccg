@@ -40,6 +40,7 @@ export const core009 = (
           blame: c.name,
           adjustment: numberPrimary!,
           currentPower: add(card.displayPower, numberPrimary!),
+          uuid: c.uuid
         });
         self.displayPower = getCardPower(self);
       }

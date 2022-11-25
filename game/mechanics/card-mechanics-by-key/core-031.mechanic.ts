@@ -9,7 +9,7 @@ import type {
   Zone,
 } from '../../../types';
 import { CardRace } from '../../../enums';
-import { getCardPower } from '../../../utils';
+import { getCardPower, pushPowerStreamAndSetDisplay } from '../../../utils';
 
 /**
  * boon: give a creature +4 attack power
@@ -28,15 +28,16 @@ export const core031 = (
 
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
-      if (c.uuid !== card.uuid) { // make sure not to buff itself
-        if (c.race === CardRace.Creature) { // make sure race matches
-          c.powerStream.push({
-            blame: card.name,
-            adjustment: numberPrimary!,
-            currentPower: add(c.displayPower, numberPrimary!),
-          });
-
-          c.displayPower = getCardPower(c);
+      // make sure not to buff itself
+      if (c.uuid !== card.uuid) {
+        // make sure race matches
+        if (c.race === CardRace.Creature) {
+          pushPowerStreamAndSetDisplay(
+            c,
+            card,
+            numberPrimary!,
+            add(c.displayPower, numberPrimary!)
+          );
         }
       }
     });

@@ -7,7 +7,7 @@ import type {
   Zone,
 } from '../../../types';
 import { CardType } from '../../../enums';
-import { getCardPower } from '../../../utils';
+import { handleCardDestructionMechanics } from '../../../utils';
 
 /**
  * destroy random enemy minion
@@ -21,7 +21,7 @@ export const core041 = (
   card: Card,
   cardIdx: number,
   player: PlayerID,
-  opponent: PlayerID,
+  opponent: PlayerID
 ) => {
   let possibleTargets: {
     zoneNumber: number;
@@ -31,13 +31,14 @@ export const core041 = (
 
   G.zones.forEach((z, zIdx) => {
     z.sides[opponent].forEach((c, cIdx) => {
-        if (c.type === CardType.Minion) { // make sure race matches
-          possibleTargets.push({
-            zoneNumber: zIdx,
-            cardData: c,
-            cardIndex: cIdx
-          });
-        }
+      // make sure race matches
+      if (c.type === CardType.Minion) {
+        possibleTargets.push({
+          zoneNumber: zIdx,
+          cardData: c,
+          cardIndex: cIdx,
+        });
+      }
     });
   });
 
@@ -47,11 +48,14 @@ export const core041 = (
     const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
 
     // remove the target from the board zone side and its ref
-    const newZoneArr = G.zones[choice.zoneNumber].sides[opponent].filter(c => {
-      return c.uuid !== choice.cardData.uuid;
-    })
+    const newZoneArr = G.zones[choice.zoneNumber].sides[opponent].filter(
+      (c) => {
+        return c.uuid !== choice.cardData.uuid;
+      }
+    );
 
     G.zones[choice.zoneNumber].sides[opponent] = newZoneArr;
     G.zonesCardsReference[choice.zoneNumber][opponent] = newZoneArr;
+    handleCardDestructionMechanics(G, choice.cardData, opponent);
   }
 };

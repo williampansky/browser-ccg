@@ -8,8 +8,7 @@ import type {
   PlayerID,
   Zone,
 } from '../../../types';
-
-import { getCardPower } from '../../../utils';
+import { pushPowerStreamAndSetDisplay } from '../../../utils';
 
 /**
  * on play: debuff your other cards here with -1 Power
@@ -29,13 +28,7 @@ export const core002 = (
     const cardIsBeforeCardPlayed = cardIdx > i;
 
     if (isNotCardPlayed && cardIsBeforeCardPlayed) {
-      c.powerStream.push({
-        blame: card.name,
-        adjustment: -1,
-        currentPower: add(c.displayPower, -1),
-      });
-
-      c.displayPower = getCardPower(c);
+      pushPowerStreamAndSetDisplay(c, card, -1, add(c.displayPower, -1));
     }
   });
 };

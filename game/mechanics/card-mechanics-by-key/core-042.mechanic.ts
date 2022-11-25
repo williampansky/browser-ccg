@@ -35,11 +35,13 @@ export const core042 = (
             blame: card.name,
             adjustment: numberSecondary,
             currentHealth: add(c.displayHealth, numberSecondary),
+            uuid: card.uuid
           });
           c.powerStream.push({
             blame: card.name,
             adjustment: numberPrimary,
             currentPower: add(c.displayPower, numberPrimary),
+            uuid: card.uuid
           });
 
           c.displayPower = getCardPower(c);

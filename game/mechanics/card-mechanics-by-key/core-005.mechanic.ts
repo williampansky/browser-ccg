@@ -29,6 +29,7 @@ export const core005 = (
       blame: card.name,
       adjustment: 3,
       currentPower: add(card.displayPower, 3),
+      uuid: card.uuid
     });
 
     card.displayPower = getCardPower(card);

@@ -9,7 +9,7 @@ import type {
   Zone,
 } from '../../../types';
 import { CardType } from '../../../enums';
-import { getCardPower } from '../../../utils';
+import { pushPowerStreamAndSetDisplay } from '../../../utils';
 
 /**
  * buff +1 power whenever you play a minion card
@@ -37,12 +37,12 @@ export const core008 = (
           const self = G.zones[zoneIdx].sides[player][cardIdx];
 
           // push powerStream and set it
-          self.powerStream.push({
-            blame: c.name,
-            adjustment: numberPrimary!,
-            currentPower: add(card.displayPower, numberPrimary!),
-          });
-          self.displayPower = getCardPower(self);
+          pushPowerStreamAndSetDisplay(
+            self,
+            c,
+            numberPrimary!,
+            add(card.displayPower, numberPrimary!)
+          );
         }
       }
     });
