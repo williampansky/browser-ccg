@@ -3,13 +3,16 @@ import type { AppConfig, GameConfig, Pages, SiteConfig } from './types';
 const core = `SET_CORE`;
 
 export const gameConfig: GameConfig = {
+  asynchronousTurns: false,
+  enableBotAi: true,
   debugConfig: {
     debugHandCardKey: '', //`${core}_042`,
     debugBoardCardKey: '', //`${core}_004`,
     debugOpponentHandCardKey: '', //`${core}_041`,
     debugOpponentBoardCardKey: '',
-    logPhaseToConsole: false,
+    logPhaseToConsole: true,
     showDebugBar: false,
+    showBoardgameIoSidebar: true,
     disableAiMoves: false
   },
   numerics: {

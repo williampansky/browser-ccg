@@ -1,10 +1,15 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import type { Card, PlayerID } from '../../../../types';
 import { Minion } from '../../../../components/game-components/Minion/Minion';
 import { showCardModal } from '../../../card-modal/card-modal.slice';
 import { getRandomNumberBetween } from '../../../../utils';
 import styles from './zoneslot-player.module.scss';
+import { gameConfig } from '../../../../app.config';
+
+const { asynchronousTurns } = gameConfig;
+const gameUsesAsyncTurns = asynchronousTurns === true;
+const gameUsesDefaultTurns = asynchronousTurns === false;
 
 interface ReactZoneSlot {
   data?: Card;
@@ -12,7 +17,9 @@ interface ReactZoneSlot {
   zoneNumber: number;
   zoneRef: any;
   slotIndex: number;
-  player: PlayerID;
+  playerId: PlayerID;
+  yourID: PlayerID;
+  theirID: PlayerID;
 }
 
 export const PlayerZoneSlot = ({
@@ -20,9 +27,11 @@ export const PlayerZoneSlot = ({
   zoneNumber,
   zoneRef,
   slotIndex,
-  player,
+  playerId,
+  yourID,
+  theirID,
   onClick,
-}: ReactZoneSlot): ReactElement => {
+}: ReactZoneSlot) => {
   const dispatch = useDispatch();
   const [objData, setObjData] = useState<Card | undefined>(undefined);
   const [incoming, setIncoming] = useState<boolean>(false);
@@ -78,33 +87,38 @@ export const PlayerZoneSlot = ({
   };
 
   useEffect(() => {
-    if (zoneRef[player]?.length && zoneRef[player][slotIndex]) {
-      const ref = zoneRef[player][slotIndex].revealed;
-      if (!ref) setIncoming(true);
-    } else {
-      setIncoming(false);
-      setObjData(undefined);
+    if (gameUsesAsyncTurns) {
+      if (zoneRef[yourID]?.length && zoneRef[yourID][slotIndex]) {
+        const ref = zoneRef[yourID][slotIndex]?.revealed;
+        if (!ref) setIncoming(true);
+        else setIncoming(false);
+      } else {
+        setIncoming(false);
+        setObjData(undefined);
+      }
     }
-  }, [zoneRef]);
+  }, [zoneRef, yourID]);
 
   const onUnrevealedClick = () => {
     if (!incoming) return;
-    return dispatch(showCardModal(zoneRef[player][slotIndex]));
+    return dispatch(showCardModal(zoneRef[yourID][slotIndex]));
   };
 
   useEffect(() => {
-    if (data?.revealed) {
+    if (data && data?.revealed && playerId === yourID) {
       setObjData(data);
-      setIncoming(false);
+      if (gameUsesAsyncTurns) setIncoming(false);
+    } else {
+      setObjData(undefined);
     }
-  }, [data]);
+  }, [data, playerId]);
 
   useEffect(() => {
     setRotation(getRandomNumberBetween(-3, 3));
     setOffsetY(getRandomNumberBetween(-2, 2));
   }, []);
 
-  if (incoming) {
+  if (incoming && gameUsesAsyncTurns) {
     return (
       <div
         onClick={onUnrevealedClick}
@@ -120,7 +134,7 @@ export const PlayerZoneSlot = ({
       >
         <div className={styles['incoming-minion-wrapper']}>
           {/* @ts-ignore */}
-          <Minion {...zoneRef[player][slotIndex]} />
+          <Minion {...zoneRef[playerId][slotIndex]} />
         </div>
       </div>
     );

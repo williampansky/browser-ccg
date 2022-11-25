@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { GameState, Zone } from '../../../../types';
+import { GameState, PlayerID, Zone } from '../../../../types';
 // import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
 // import { ZoneDropSlot } from '../ZoneDropSlot/ZoneDropSlot';
 import type { RootState } from '../../../../store';
@@ -14,19 +14,19 @@ import { EffectsCtxMixin } from 'bgio-effects/dist/types';
 import bgioEffectsConfig from '../../../../game/config.bgio-effects';
 import { ZoneDropSlot } from '../ZoneDropSlot';
 
-interface ReactZones {
+interface ZonesProps {
   // G: GameState;
   // ctx: Ctx;
   // moves: any;
   // disabled: boolean;
   // zone: ZoneProps;
   // zoneNumber: number;
-  player: string;
-  opponent: string;
+  yourID: PlayerID;
+  theirID: PlayerID;
   // onCardClick: (obj: Card) => void;
 }
 
-export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
+export const Zones = ({ yourID, theirID }: ZonesProps) => {
   // const { powers } = zone;
   // const { playCard } = moves;
 
@@ -62,10 +62,10 @@ export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
 
   useEffect(() => {
     setTimeout(() => {
-      setZonesAreActive(G.selectedCardData[player] !== undefined);
-      setCardType(G.selectedCardData[player]?.type);
+      setZonesAreActive(G.selectedCardData[yourID] !== undefined);
+      setCardType(G.selectedCardData[yourID]?.type);
     }, 100);
-  }, [G.selectedCardData[player]]);
+  }, [G.selectedCardData[yourID], yourID]);
 
   // useEffect(() => {
   //   console.log(G)
@@ -86,8 +86,8 @@ export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
             zoneRef={zonesRef[idx]}
             key={idx}
             // onCardClick={onCardClick}
-            player={player}
-            opponent={opponent}
+            yourID={yourID}
+            theirID={theirID}
             turn={G.turn}
             gameConfig={gameConfig}
           />

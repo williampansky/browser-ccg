@@ -15,7 +15,9 @@ interface ReactZoneSlot {
   zoneNumber: number;
   zoneRef: any;
   slotIndex: number;
-  opponent: PlayerID;
+  playerId: PlayerID;
+  yourID: PlayerID;
+  theirID: PlayerID;
 }
 
 export const OpponentZoneSlot = ({
@@ -23,7 +25,9 @@ export const OpponentZoneSlot = ({
   zoneNumber,
   zoneRef,
   slotIndex,
-  opponent,
+  playerId,
+  yourID,
+  theirID,
   onClick,
 }: ReactZoneSlot): ReactElement => {
   const dispatch = useDispatch();
@@ -67,15 +71,18 @@ export const OpponentZoneSlot = ({
   };
 
   useEffect(() => {
-    if (data?.revealed) {
+    if (data?.revealed && playerId === theirID) {
       setDestroyed(false);
       setObjData(data);
       // setIncoming(false);
     } else if (typeof data === 'undefined') {
       setDestroyed(true);
       setTimeout(() => setObjData(undefined), 500);
+    } else if (playerId !== theirID) {
+      setObjData(undefined);
+      setIncoming(false);
     }
-  }, [data]);
+  }, [data, playerId]);
 
   useEffect(() => {
     setRotation(getRandomNumberBetween(-3, 3));
@@ -84,7 +91,7 @@ export const OpponentZoneSlot = ({
 
   const onUnrevealedClick = () => {
     if (!incoming) return;
-    return onClick(zoneRef[opponent][slotIndex]);
+    return onClick(zoneRef[theirID][slotIndex]);
   };
 
   // if (G?.ZonesCardsReference[zoneNumber]['0'][slotIndex]) {

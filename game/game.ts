@@ -20,10 +20,15 @@ import {
   revealZonePhase,
 } from './phases';
 import { defaultState } from './state';
+import { gameConfig } from '../app.config';
 import aiEnumeration from './ai';
 import stripSecrets from './strip-secrets';
 import bgioEffectsConfig from './config.bgio-effects';
 import getGameResult from '../utils/get-game-result';
+
+const { asynchronousTurns } = gameConfig;
+const gameUsesAsyncTurns = asynchronousTurns === true;
+const gameUsesDefaultTurns = asynchronousTurns === false;
 
 const BrowserCCG: Game<GameState, Ctx & EffectsCtxMixin<typeof bgioEffectsConfig>> = {
   name: 'BrowserCCG',
@@ -99,12 +104,12 @@ const BrowserCCG: Game<GameState, Ctx & EffectsCtxMixin<typeof bgioEffectsConfig
     },
     playCards: {
       ...playCardsPhase,
-      next: 'revealCardsFaceDown',
+      next: gameUsesAsyncTurns ? 'revealCards' : 'initCardMechanics',
     },
-    revealCardsFaceDown: {
-      ...revealCardsFaceDownPhase,
-      next: 'revealCards',
-    },
+    // revealCardsFaceDown: {
+    //   ...revealCardsFaceDownPhase,
+    //   next: 'revealCards',
+    // },
     revealCards: {
       ...revealCardsPhase,
       next: 'initCardMechanics',

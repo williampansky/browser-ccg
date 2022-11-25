@@ -28,12 +28,11 @@ export const Player = ({
   player,
   turnsPerGame,
 }: Player) => {
-  const { cards, displayName, playerId } = player;
   return (
     <div
       className={[styles['component']].join(' ')}
       data-component='Player'
-      data-playerid={playerId}
+      data-playerid={player?.playerId}
     >
       <PlayerBar>
         {/* <ActionPoints actionPoints={actionPoints} /> */}

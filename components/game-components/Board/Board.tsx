@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ImSpinner10 } from 'react-icons/im';
 
 import type { BoardProps } from 'boardgame.io/react';
 import type { Card, GameState } from '../../../types';
@@ -39,11 +40,16 @@ export const Board = (props: GameProps) => {
 
   // player IDs
   const yourID = playerID === '0' ? '0' : '1';
-  const opponentID = playerID === '0' ? '1' : '0';
+  const theirID = playerID === '0' ? '1' : '0';
 
   // hooks
+  const endTurnIsDisabled = useEndTurnButton(
+    phase,
+    ctx.currentPlayer,
+    G.playerTurnDone,
+    yourID
+  );
   const { height, width } = useWindowSize();
-  const endTurnIsDisabled = useEndTurnButton(phase, G.playerTurnDone);
   const dispatch = useDispatch();
   useEndPhase(events, phase, G.playerTurnDone);
   useGameOver(ctx?.gameover);
@@ -56,7 +62,15 @@ export const Board = (props: GameProps) => {
   }, [height, width]);
 
   const onEndTurnButtonClick = () => {
-    return moves.setDone(yourID);
+    if (gameConfig.asynchronousTurns) return moves.setDone(yourID);
+    
+    moves.setDone(yourID);
+    if (ctx.playOrderPos === 1) {
+      events?.endTurn!({ next: theirID });
+      return events?.endPhase!();
+    }
+
+    else return events?.endTurn!({ next: theirID });
   };
 
   const onCardClick = (obj: Card) => {
@@ -77,14 +91,22 @@ export const Board = (props: GameProps) => {
 
   return (
     <>
-      <DebugBar
-        G={G}
-        ctx={ctx}
-        playerID={playerID}
-        addressBarSize={abSize}
-      />
-
+      <DebugBar G={G} ctx={ctx} playerID={playerID} addressBarSize={abSize} />
       <GameOverOverlay playerID={playerID} reset={reset} />
+
+      {/* @todo fix later */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        bottom: 'auto',
+        left: 0,
+        right: 'auto',
+        margin: '1em',
+        pointerEvents: 'none',
+        display: ctx?.currentPlayer === '1' ? 'block' : 'none'
+      }}>
+        <ImSpinner10 className='bccg-spinner' />
+      </div>
 
       <main
         style={{
@@ -95,7 +117,7 @@ export const Board = (props: GameProps) => {
         }}
       >
         <CardModal />
-        <Zones player={yourID} opponent={opponentID} />
+        <Zones yourID={yourID} theirID={theirID} />
         <Player
           actionPoints={G.actionPoints[yourID]}
           counts={G.counts[yourID]}
@@ -106,15 +128,17 @@ export const Board = (props: GameProps) => {
           turnsPerGame={gameConfig.numerics.numberOfSingleTurnsPerGame}
         />
 
-        <PlayerHand
-          G={G}
-          ctx={ctx}
-          onCardClick={onCardClick}
-          onCardSelect={onCardSelect}
-          onCardDeselect={onCardDeselect}
-          onCardSlotDrop={onCardSlotDrop}
-          player={yourID}
-        />
+        {G.players[yourID] && (
+          <PlayerHand
+            G={G}
+            ctx={ctx}
+            onCardClick={onCardClick}
+            onCardSelect={onCardSelect}
+            onCardDeselect={onCardDeselect}
+            onCardSlotDrop={onCardSlotDrop}
+            player={yourID}
+          />
+        )}
 
         <div
           style={{

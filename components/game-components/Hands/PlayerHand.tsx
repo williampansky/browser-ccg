@@ -46,7 +46,7 @@ export const PlayerHand = ({
     ({ windowSize }: RootState) => windowSize
   );
 
-  const playerHand = G.players[player].cards.hand;
+  const playerHand = G.players[player]?.cards?.hand;
   const selectedCard = selectedCardData[player];
 
   const [handLength, setHandLength] = useState<number>(0);
@@ -75,7 +75,9 @@ export const PlayerHand = ({
 
   // Create springs, each corresponds to an item,
   // controlling its transform, scale, etc.
-  const [springs, setSprings] = useSprings(handLength, fn(handLength, width), [handLength]);
+  const [springs, setSprings] = useSprings(handLength, fn(handLength, width), [
+    handLength,
+  ]);
 
   const order = useCallbackRef(
     [...Array.from(Array(cardsPerHand))].map((_, index) => index),
@@ -83,7 +85,7 @@ export const PlayerHand = ({
   );
 
   useEffect(() => {
-    setHandLength(playerHand.length);
+    setHandLength(playerHand?.length);
   }, [playerHand, setHandLength]);
 
   // rerenders hand correctly based on new array length
@@ -190,7 +192,7 @@ export const PlayerHand = ({
    */
   const getCanPlay = useCallback(
     (i: number) => {
-      if (playerHand[i]) return playerHand[i].canPlay;
+      if (playerHand && playerHand[i]) return playerHand[i]?.canPlay;
       return false;
     },
     [playerHand]
@@ -205,7 +207,7 @@ export const PlayerHand = ({
    */
   const getUuid = useCallback(
     (i: number) => {
-      if (playerHand[i]) return playerHand[i].uuid;
+      if (playerHand && playerHand[i]) return playerHand[i]?.uuid;
       return '';
     },
     [playerHand]
@@ -231,10 +233,12 @@ export const PlayerHand = ({
               }: any,
               i
             ) => {
-              // const { canPlay, uuid } = playerHand[i];
               const canPlay = getCanPlay(i);
               const uuid = getUuid(i);
-              return order && order.current![i] === i ? (
+              return playerHand &&
+                playerHand[i] &&
+                order &&
+                order.current![i] === i ? (
                 <Fragment key={i}>
                   <animated.div
                     {...bind(i, canPlay)}

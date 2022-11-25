@@ -21,6 +21,7 @@ export declare type CardIndex = number | undefined;
 export declare type SelectedCardIndex = Record<PlayerID, CardIndex>;
 
 export interface GameState {
+  aiLoading: boolean;
   actionPoints: Record<PlayerID, ActionPoints>;
   gameConfig: GameConfig;
   canUndo: Record<PlayerID, boolean>;

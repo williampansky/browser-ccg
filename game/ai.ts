@@ -53,11 +53,13 @@ const aiEnumeration = {
         }
       }
 
-      // moves.push({ event: 'endTurn' });
       moves.push({ move: 'setDone', args: ['1'] });
+      // if (G.gameConfig.asynchronousTurns === false) {
+      //   moves.push({ move: 'endTurn', args: ['0'] });
+      // }
     }
 
-    // console.log(moves);
+    // if (moves.length !== 0) console.log(moves);
     return moves;
   },
 };

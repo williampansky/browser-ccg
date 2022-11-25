@@ -105,6 +105,11 @@ const playCard = (
   G.selectedCardIndex[playerId] = undefined;
   canUndo.setPlayer(G, playerId);
 
+  if (G.gameConfig.asynchronousTurns === false) {
+    const idx = zoneRef[playerId].findIndex(o => o.uuid === card.uuid);
+    revealCard(G, ctx, playerId, zoneNumber, card, idx);
+  }
+
   // @ts-ignore
   ctx.effects.effectsEnd();
 };
@@ -219,6 +224,11 @@ const playAiCard = (
   // unset selectedCard
   selectedCardData.reset(G, '1');
   G.selectedCardIndex['1'] = undefined;
+
+  if (G.gameConfig.asynchronousTurns === false) {
+    const idx = zoneRef['1'].findIndex(o => o.uuid === card.uuid);
+    revealCard(G, ctx, '1', zoneNumber, card, idx);
+  }
 };
 
 const setDone = (G: GameState, ctx: Ctx, playerId: PlayerID) => {

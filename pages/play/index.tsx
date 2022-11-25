@@ -6,16 +6,17 @@ import { MCTSBot } from 'boardgame.io/ai';
 import { Provider } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 
-import { BrowserCCG } from '../../game';
-import { Board } from '../../components/game-components/Board/Board';
 import { store } from '../../store';
+import { BrowserCCG } from '../../game';
+import { gameConfig } from '../../app.config';
 import { useGlobalGameStyles } from '../../hooks';
+import { Board } from '../../components/game-components/Board/Board';
 
 const MultiplayerSetup = (isMultiplayer: boolean = false) => {
   if (isMultiplayer) return SocketIO();
 
   return Local({
-    bots: { 1: MCTSBot },
+    bots: gameConfig.enableBotAi ? { 1: MCTSBot } : undefined,
     persist: false,
     storageKey: 'bgio',
   });
@@ -29,17 +30,20 @@ const BrowserCcgClient = BoardgameClient({
   game: BrowserCCG,
   board: EffectsBoardWrapper(Board, { updateStateAfterEffects: true }),
   multiplayer: MultiplayerSetup(),
-  numPlayers: 1,
-  debug: false,
+  numPlayers: gameConfig.enableBotAi ? 1 : 2,
+  debug: gameConfig.debugConfig.showBoardgameIoSidebar,
 });
 
-const BrowserCcgPage: FunctionComponent = () => {
+const BrowserCcgPage: FunctionComponent = (props) => {
   useGlobalGameStyles();
 
   return (
     <Fragment>
       <Provider store={store}>
-        <BrowserCcgClient playerID='0' matchID={uuid()} />
+        <BrowserCcgClient
+          playerID={getInitialProps().playerID}
+          matchID={uuid()}
+        />
       </Provider>
     </Fragment>
   );

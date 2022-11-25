@@ -18,8 +18,8 @@ import { ZoneRevealOverlay } from '../ZoneRevealOverlay';
 import { ZoneName } from '../ZoneName';
 
 interface ZoneClientProps {
-  opponent: string;
-  player: string;
+  yourID: PlayerID;
+  theirID: PlayerID;
   turn: number;
   zone: ZoneServerProps;
   zoneNumber: number;
@@ -29,8 +29,8 @@ interface ZoneClientProps {
 }
 
 export const Zone = ({
-  opponent,
-  player,
+  theirID,
+  yourID,
   turn,
   zone,
   zoneNumber,
@@ -59,7 +59,7 @@ export const Zone = ({
 
   return (
     <div
-      className={['zone', zone?.disabled[player] ? 'zone--disabled' : ''].join(
+      className={['zone', zone?.disabled[yourID] ? 'zone--disabled' : ''].join(
         ' '
       )}
     >
@@ -69,12 +69,14 @@ export const Zone = ({
             return (
               <OpponentZoneSlot
                 key={idx}
-                data={zone.sides[opponent][idx]}
+                data={zone.sides[theirID][idx]}
                 onClick={(val: any) => console.log(val)}
                 zoneNumber={zoneNumber}
                 zoneRef={zoneRef}
                 slotIndex={idx}
-                opponent={opponent}
+                playerId={theirID}
+                yourID={yourID}
+                theirID={theirID}
               />
             );
             //  : (
@@ -104,14 +106,14 @@ export const Zone = ({
 
         <ZonePower
           key='opponent'
-          playerId={opponent}
+          playerId={theirID}
           playerIdContext='opponent'
           zoneLeader={zoneLeader}
           zonePowers={zonePowers}
         />
         <ZonePower
           key='player'
-          playerId={player}
+          playerId={yourID}
           playerIdContext='player'
           zoneLeader={zoneLeader}
           zonePowers={zonePowers}
@@ -138,12 +140,14 @@ export const Zone = ({
               return (
                 <PlayerZoneSlot
                   key={idx}
-                  data={zone.sides[player][idx]}
+                  data={zone.sides[yourID][idx]}
                   onClick={(val: any) => console.log(val)}
                   zoneNumber={zoneNumber}
                   zoneRef={zoneRef}
                   slotIndex={idx}
-                  player={player}
+                  playerId={yourID}
+                  yourID={yourID}
+                  theirID={theirID}
                 />
               );
             }

@@ -1,4 +1,12 @@
 export interface GameConfig {
+  /**
+   * This property determines how the game's turn
+   * order takes place:
+   * - `true`: both players make moves simultaneously
+   * - `false`: players take turns normally
+   */
+  asynchronousTurns: boolean;
+  enableBotAi: boolean;
   debugConfig: {
     debugHandCardKey: string;
     debugBoardCardKey: string;
@@ -6,6 +14,7 @@ export interface GameConfig {
     debugOpponentBoardCardKey: string;
     logPhaseToConsole: boolean;
     showDebugBar: boolean;
+    showBoardgameIoSidebar: boolean;
     disableAiMoves: boolean;
   };
   numerics: {

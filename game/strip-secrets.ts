@@ -11,8 +11,8 @@ import { GameState, PlayerID } from '../types';
  */
 const stripSecrets = (G: GameState, ctx: Ctx, playerId: PlayerID) => ({
   ...G,
-  players: { [playerId]: G.players[playerId] },
-  selectedCardData: { [playerId]: G.selectedCardData[playerId] },
+  // players: { [playerId]: G.players[playerId] },
+  // selectedCardData: { [playerId]: G.selectedCardData[playerId] },
 });
 
 export default stripSecrets;
