@@ -1,18 +1,20 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { Card, GameState } from '../../types';
+import { Card, GameState } from '../../../types';
 import {
   createDebugDeck,
   createRandomDeck,
   logPhaseToConsole,
-} from '../../utils';
-import { actionPoints, playerNames, players } from '../state';
-import setsCore from '../data/setsCore.json';
+} from '../../../utils';
+import { actionPoints, playerNames, players } from '../../state';
+import setsCore from '../../data/setsCore.json';
 
 const db = [
   ...setsCore
 ]
 
-const initPlayersPhase: PhaseConfig = {
+export default<PhaseConfig> {
+  next: 'initZones',
+  start: true,
   onBegin(G: GameState, ctx: Ctx) {
     const {
       gameConfig: {
@@ -62,7 +64,7 @@ const initPlayersPhase: PhaseConfig = {
 
     // ctx.events?.endPhase();
   },
-  endIf(G, ctx) {
+  endIf(G: GameState, ctx: Ctx) {
     const { cardsPerDeck } = G.gameConfig.numerics;
 
     return (
@@ -76,4 +78,4 @@ const initPlayersPhase: PhaseConfig = {
   },
 };
 
-export default initPlayersPhase;
+// export default initPlayersPhase;

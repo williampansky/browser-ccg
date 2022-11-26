@@ -2,7 +2,7 @@ import { Ctx, PhaseConfig } from 'boardgame.io';
 import { calculateZoneSidePower } from './methods';
 import { GameState } from '../../../types';
 
-const handleZonePowerCalculationsPhase: PhaseConfig = {
+export default<PhaseConfig> {
   next: 'drawCard',
   onBegin(G: GameState, ctx: Ctx) {
     if (G.gameConfig.debugConfig.logPhaseToConsole) {
@@ -24,5 +24,3 @@ const handleZonePowerCalculationsPhase: PhaseConfig = {
     ctx.events?.endPhase();
   },
 };
-
-export default handleZonePowerCalculationsPhase;

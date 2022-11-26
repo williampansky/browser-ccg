@@ -4,27 +4,14 @@ import { EffectsPlugin } from 'bgio-effects/plugin';
 import type { EffectsCtxMixin } from 'bgio-effects/dist/types';
 import type { GameState, PlayerID } from '../types';
 
-import {
-  calculateCardMechanicsPhase,
-  drawCardPhase,
-  handleZonePowerCalculationsPhase,
-  incrementGameTurnPhase,
-  initCardMechanicsPhase,
-  initPlayersPhase,
-  initStartingHandsPhase,
-  initZoneInteractionsPhase,
-  initZonesPhase,
-  playCardsPhase,
-  revealCardsFaceDownPhase,
-  revealCardsPhase,
-  revealZonePhase,
-} from './phases';
+
 import { defaultState } from './state';
 import { gameConfig } from '../app.config';
 import aiEnumeration from './ai';
 import stripSecrets from './strip-secrets';
 import bgioEffectsConfig from './config.bgio-effects';
 import getGameResult from '../utils/get-game-result';
+import { asyncPhases, defaultPhases } from './phases';
 
 const { asynchronousTurns } = gameConfig;
 const gameUsesAsyncTurns = asynchronousTurns === true;
@@ -34,12 +21,18 @@ export type CtxWithEffects = Ctx & EffectsCtxMixin<typeof bgioEffectsConfig>;
 
 const BrowserCCG: Game<GameState, CtxWithEffects> = {
   name: 'BrowserCCG',
+
+  /**
+   * The Plugin API allows you to create objects that expose custom 
+   * functionality to boardgame.io. You can create wrappers 
+   * around moves, add API’s to ctx etc.
+   * @see https://boardgame.io/documentation/#/plugins
+   */
   plugins: [EffectsPlugin(bgioEffectsConfig)],
 
   /**
    * This method uses the `stripSecrets` function to hide
    * the opponent player's hand and deck data from your client.
-   * @name playerView
    * @requires stripSecrets
    * @see https://boardgame.io/documentation/#/secret-state
    */
@@ -47,6 +40,11 @@ const BrowserCCG: Game<GameState, CtxWithEffects> = {
     return stripSecrets(G, ctx, playerId!);
   },
 
+  /**
+   * Function that returns the initial value of G.setupData is 
+   * an optional custom object that is passed through the Game Creation API.
+   * @see https://boardgame.io/documentation/#/api/Game
+   */
   setup: () => defaultState,
 
   /**
@@ -55,88 +53,26 @@ const BrowserCCG: Game<GameState, CtxWithEffects> = {
    * ability to define a different set of moves, use a different turn order
    * etc. Turns happen inside phases.
    * @see https://boardgame.io/documentation/#/phases
-   *
-   * Order of Phases:
-   *  - initPlayers
-   *  - initZones
-   *  - initStartingHands
-   *
-   *  - revealZone (turns 0,1,2 only)
-   *  - incrementGameTurn
-   *  - drawCard
-   *  - playCards
-   *  - revealCardsFaceDown
-   *  - revealCards
-   *  - initCardMechanics
-   *  - calculateCardMechanics
-   *  - initZoneInteractions
-   *  - calculateZoneInteractions
-   *  - handleZonePowerCalculations
-   *
-   *  - incrementGameTurn
-   *  - drawCard
-   *  - playCards
-   *  - etc... loop until game ends
    */
-  phases: {
-    initPlayers: {
-      ...initPlayersPhase,
-      next: 'initZones',
-      start: true,
-    },
-    initZones: {
-      ...initZonesPhase,
-      next: 'initStartingHands',
-    },
-    initStartingHands: {
-      ...initStartingHandsPhase,
-      next: 'revealZone',
-    },
-    revealZone: {
-      ...revealZonePhase,
-      next: 'incrementGameTurn',
-    },
-    incrementGameTurn: {
-      ...incrementGameTurnPhase,
-      next: 'drawCard',
-    },
-    drawCard: {
-      ...drawCardPhase,
-      next: 'playCards',
-    },
-    playCards: {
-      ...playCardsPhase,
-      next: gameUsesAsyncTurns ? 'revealCards' : 'initCardMechanics',
-    },
-    // revealCardsFaceDown: {
-    //   ...revealCardsFaceDownPhase,
-    //   next: 'revealCards',
-    // },
-    revealCards: {
-      ...revealCardsPhase,
-      next: 'initCardMechanics',
-    },
-    initCardMechanics: {
-      ...initCardMechanicsPhase,
-      next: 'initZoneInteractions',
-    },
-    // calculateCardMechanics: {
-    //   ...calculateCardMechanicsPhase,
-    //   next: 'initZoneInteractions',
-    // },
-    initZoneInteractions: {
-      ...initZoneInteractionsPhase,
-      next: 'handleZonePowerCalculations',
-    },
-    handleZonePowerCalculations: {
-      ...handleZonePowerCalculationsPhase,
-      next: 'revealZone',
-    },
-  },
+  phases: gameUsesAsyncTurns ? {...asyncPhases} : {...defaultPhases},
+
+  /**
+   * The framework will come bundled with a few different bot algorithms, 
+   * and an advanced version of MCTS that will allow you to specify a set 
+   * of objectives to optimize for. For example, at any given point in the 
+   * game you can tell the bot to gather resources in the short term and 
+   * wage wars in the late stages. You just tell the bot what to do and it 
+   * will figure out the right combination of moves to make it happen!
+   * @see https://boardgame.io/documentation/#/tutorial?id=bots
+   */
   ai: aiEnumeration,
+
+  /**
+   * End the game if G.turn hits the max per config.
+   */
   endIf: (G: GameState, ctx: Ctx) => {
+    // prettier-ignore
     if (G.turn === G.gameConfig.numerics.numberOfSingleTurnsPerGame) {
-      // prettier-ignore
       switch (getGameResult(G.zones)) {
         case '1': return { winner: '1' };
         case '0': return { winner: '0' };

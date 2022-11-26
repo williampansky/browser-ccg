@@ -1,0 +1,13 @@
+@keyframes flashThenFadeTurnTag {
+  0%    { opacity: 1; }
+  50%   { opacity: 1; }
+  100%  { opacity: 0; }
+}
+
+.your-turn {
+  animation: flashThenFadeTurnTag 800ms linear forwards 200ms;
+  height: 72%;
+  z-index: 9999;
+  color: white;
+  font-size: 1.5rem;
+}

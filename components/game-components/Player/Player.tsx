@@ -42,7 +42,7 @@ export const Player = ({
             flexFlow: 'row nowrap',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 11,
+            fontSize: 10,
             color: 'white',
             whiteSpace: 'nowrap',
             width: '100%',

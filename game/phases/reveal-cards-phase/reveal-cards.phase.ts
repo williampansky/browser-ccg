@@ -1,8 +1,8 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { Card, GameState, Zone, ZonesCardsReference } from '../../types';
-import { revealCard } from '../moves';
-import { logPhaseToConsole } from '../../utils';
-import { firstRevealer } from '../state';
+import { Card, GameState, Zone, ZonesCardsReference } from '../../../types';
+import { revealCard } from '../../moves';
+import { logPhaseToConsole } from '../../../utils';
+import { firstRevealer } from '../../state';
 
 const revealCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {

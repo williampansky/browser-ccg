@@ -3,7 +3,7 @@ import { calculateZoneSidePower } from './methods';
 import { GameState } from '../../../types';
 import { logPhaseToConsole } from '../../../utils';
 
-const handleZonePowerCalculationsPhase: PhaseConfig = {
+export default<PhaseConfig> {
   next: 'drawCard',
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase);
@@ -23,5 +23,3 @@ const handleZonePowerCalculationsPhase: PhaseConfig = {
     ctx.events?.endPhase();
   },
 };
-
-export default handleZonePowerCalculationsPhase;

@@ -108,6 +108,25 @@ export const Board = (props: GameProps) => {
         <ImSpinner10 className='bccg-spinner' />
       </div>
 
+      {/* @todo fix later */}
+      <div 
+      className={styles['your-turn']}
+      style={{
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        margin: '1em',
+        pointerEvents: 'none',
+        display: ctx?.currentPlayer === '0' ? 'flex' : 'none',
+        flexFlow: 'column nowrap',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <h1 className='text__value text__value--shadow'><em>Your turn!</em></h1>
+      </div>
+
       <main
         style={{
           height: `calc(100vh - ${abSize}px)`,
@@ -180,7 +199,7 @@ export const Board = (props: GameProps) => {
                 display: 'flex',
                 flexFlow: 'row nowrap',
                 alignItems: 'center',
-                fontSize: 11,
+                fontSize: 10,
                 color: 'white',
                 whiteSpace: 'nowrap',
               }}
