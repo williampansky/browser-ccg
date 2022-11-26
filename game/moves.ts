@@ -1,7 +1,7 @@
 import { Ctx, Undo } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Card, GameState, PlayerID } from '../types';
-import getCardPower from '../utils/get-card-power';
+import { getCardPower } from '../utils';
 import {
   actionPoints,
   canUndo,
@@ -11,18 +11,15 @@ import {
   selectedCardData,
 } from './state';
 
-const selectCard = (
+export const selectCard = (
   G: GameState,
   ctx: Ctx,
   playerId: PlayerID,
   cardUuid: string
 ) => {
-  const cardMatch = G.players[playerId].cards.hand.find(
-    (c: Card) => c.uuid === cardUuid
-  );
-  const cardMatchIndex = G.players[playerId].cards.hand.findIndex(
-    (c: Card) => c.uuid === cardUuid
-  );
+  const hand = G.players[playerId].cards.hand;
+  const cardMatch = hand.find((c: Card) => c.uuid === cardUuid);
+  const cardMatchIndex = hand.findIndex((c: Card) => c.uuid === cardUuid);
 
   if (G.selectedCardData[playerId]?.uuid === cardMatch!.uuid) {
     selectedCardData.reset(G, playerId);
@@ -36,14 +33,14 @@ const selectCard = (
   }
 };
 
-const deselectCard = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
+export const deselectCard = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
   selectedCardData.reset(G, playerId);
   G.selectedCardIndex[playerId] = undefined;
   // @ts-ignore
   ctx.effects.effectsEnd();
 };
 
-const playCard = (
+export const playCard = (
   G: GameState,
   ctx: Ctx,
   playerId: PlayerID,
@@ -106,7 +103,7 @@ const playCard = (
   canUndo.setPlayer(G, playerId);
 
   if (G.gameConfig.asynchronousTurns === false) {
-    const idx = zoneRef[playerId].findIndex(o => o.uuid === card.uuid);
+    const idx = zoneRef[playerId].findIndex((o) => o.uuid === card.uuid);
     revealCard(G, ctx, playerId, zoneNumber, card, idx);
   }
 
@@ -114,7 +111,7 @@ const playCard = (
   ctx.effects.effectsEnd();
 };
 
-const undoPlayCard = (
+export const undoPlayCard = (
   G: GameState,
   ctx: Ctx,
   playerId: PlayerID,
@@ -126,7 +123,7 @@ const undoPlayCard = (
   }
 };
 
-const revealCard = async (
+export const revealCard = async (
   G: GameState,
   ctx: Ctx,
   playerId: string,
@@ -162,7 +159,7 @@ const revealCard = async (
   });
 };
 
-const playAiCard = (
+export const playAiCard = (
   G: GameState,
   ctx: Ctx,
   zoneNumber: number,
@@ -226,21 +223,11 @@ const playAiCard = (
   G.selectedCardIndex['1'] = undefined;
 
   if (G.gameConfig.asynchronousTurns === false) {
-    const idx = zoneRef['1'].findIndex(o => o.uuid === card.uuid);
+    const idx = zoneRef['1'].findIndex((o) => o.uuid === card.uuid);
     revealCard(G, ctx, '1', zoneNumber, card, idx);
   }
 };
 
-const setDone = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
+export const setDone = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
   playerTurnDone.set(G, playerId);
-};
-
-export {
-  deselectCard,
-  playAiCard,
-  playCard,
-  revealCard,
-  selectCard,
-  setDone,
-  undoPlayCard,
 };

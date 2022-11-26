@@ -4,14 +4,13 @@ import { EffectsPlugin } from 'bgio-effects/plugin';
 import type { EffectsCtxMixin } from 'bgio-effects/dist/types';
 import type { GameState, PlayerID } from '../types';
 
-
+import { asyncPhases, defaultPhases } from './phases';
 import { defaultState } from './state';
 import { gameConfig } from '../app.config';
 import aiEnumeration from './ai';
 import stripSecrets from './strip-secrets';
 import bgioEffectsConfig from './config.bgio-effects';
 import getGameResult from '../utils/get-game-result';
-import { asyncPhases, defaultPhases } from './phases';
 
 const { asynchronousTurns } = gameConfig;
 const gameUsesAsyncTurns = asynchronousTurns === true;

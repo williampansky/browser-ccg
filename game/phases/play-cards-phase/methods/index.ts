@@ -7,3 +7,4 @@ export { default as setActionPointsToTotal } from './set-action-points-to-total'
 export { default as setFirstRevealer } from './set-first-revealer';
 export { default as setPlayableCardsInHand } from './set-playable-cards-in-hand';
 export { default as unsetPlayableCardsInHand } from './unset-playable-cards-in-hand';
+export { default as updateZoneCardsReference } from './update-zone-cards-reference';
