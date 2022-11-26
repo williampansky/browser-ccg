@@ -6,7 +6,7 @@ import { initPlayersPhase } from './init-players-phase';
 import { initStartingHandsPhase } from './init-starting-hands-phase';
 import { initZoneInteractionsPhase } from './init-zone-interactions-phase';
 import { initZonesPhase } from './init-zones-phase';
-import { playCardsPhase } from './play-cards-phase';
+import { asyncPlayCardsPhase } from './play-cards-phase';
 import { revealCardsFaceDownPhase } from './reveal-cards-face-down-phase';
 import { revealCardsPhase } from './reveal-cards-phase';
 import { revealZonePhase } from './reveal-zone-phase';
@@ -59,7 +59,7 @@ export default {
     next: 'playCards',
   },
   playCards: {
-    ...playCardsPhase,
+    ...asyncPlayCardsPhase,
     next: 'revealCardsFaceDown',
   },
   revealCardsFaceDown: {

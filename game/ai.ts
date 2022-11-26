@@ -1,10 +1,12 @@
-import { Ctx } from 'boardgame.io';
-import { Card, GameState } from '../types';
+import type { Ctx } from 'boardgame.io';
+import type { Card, GameState } from '../types';
 
 const aiEnumeration = {
   enumerate: (G: GameState, ctx: Ctx) => {
     const { players, zones, gameConfig } = G;
-    const { random } = ctx;
+    const { asynchronousTurns } = gameConfig;
+    const gameUsesAsyncTurns = asynchronousTurns === true;
+    const gameUsesDefaultTurns = asynchronousTurns === false;
     const perZone = gameConfig.numerics.numberOfSlotsPerZone;
     const aiPlayer = players['1'];
     const aiHand = aiPlayer.cards.hand;
@@ -53,13 +55,16 @@ const aiEnumeration = {
         }
       }
 
-      moves.push({ move: 'setDone', args: ['1'] });
-      // if (G.gameConfig.asynchronousTurns === false) {
-      //   moves.push({ move: 'endTurn', args: ['0'] });
+      if (gameUsesAsyncTurns || gameUsesDefaultTurns) {
+        moves.push({ move: 'setDone', args: ['1'] });
+      }
+
+      // if (gameUsesDefaultTurns) {
+      //   moves.push({ event: 'endPhase' });
       // }
     }
 
-    // if (moves.length !== 0) console.log(moves);
+    if (moves.length !== 0) console.log(moves);
     return moves;
   },
 };

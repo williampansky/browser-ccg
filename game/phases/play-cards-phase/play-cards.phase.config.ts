@@ -75,19 +75,3 @@ export const moves = {
     },
   },
 };
-
-export const asyncActivePlayers = {
-  all: 'playCards',
-  currentPlayer: { stage: 'playCards' },
-  others: { stage: 'playCards' },
-  value: {
-    '0': { stage: 'playCards' },
-    '1': { stage: 'playCards' },
-  },
-};
-
-export const asyncStages = {
-  playCards: {
-    moves: moves,
-  },
-};

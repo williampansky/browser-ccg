@@ -6,28 +6,44 @@ const { asynchronousTurns } = gameConfig;
 const gameUsesAsyncTurns = asynchronousTurns === true;
 const gameUsesDefaultTurns = asynchronousTurns === false;
 
-const useEndTurnButton = (
+const useEndTurnButtonAsync = (
   ctxPhase: string,
-  currentPlayer: PlayerID,
   playerTurnDone: Record<PlayerID, boolean>,
-  playerId: PlayerID
+  playerId: PlayerID,
+  currentPlayer: PlayerID,
 ): boolean => {
   const [endTurnDisabled, setEndTurnDisabled] = useState<boolean>(true);
 
   useEffect(() => {
-    if (gameUsesAsyncTurns) {
-      if (ctxPhase !== 'playCards') setEndTurnDisabled(true);
-      if (playerTurnDone[playerId] === true) setEndTurnDisabled(true);
-      else setTimeout(() => setEndTurnDisabled(false), 2000);
-    } else if (gameUsesDefaultTurns) {
-      if (currentPlayer === playerId) {
-        if (playerTurnDone[playerId] === true) setEndTurnDisabled(true);
-        else setEndTurnDisabled(false);
-      } else setEndTurnDisabled(true);
+    if (ctxPhase !== 'playCards') setEndTurnDisabled(true);
+    if (playerTurnDone[playerId] === true) setEndTurnDisabled(true);
+    else setTimeout(() => setEndTurnDisabled(false), 2000);
+  }, [ctxPhase, playerTurnDone]);
+
+  return endTurnDisabled;
+};
+
+const useEndTurnButtonDefault = (
+  ctxPhase: string,
+  playerTurnDone: Record<PlayerID, boolean>,
+  playerId: PlayerID,
+  currentPlayer: PlayerID,
+): boolean => {
+  const [endTurnDisabled, setEndTurnDisabled] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (ctxPhase !== 'playCards') {
+      setEndTurnDisabled(true);
+    } else if (currentPlayer === playerId) {
+      setEndTurnDisabled(false);
+    } else {
+      setEndTurnDisabled(true);
     }
   }, [ctxPhase, currentPlayer, playerTurnDone, playerId]);
 
   return endTurnDisabled;
 };
 
-export default useEndTurnButton;
+export default gameUsesAsyncTurns
+  ? useEndTurnButtonAsync
+  : useEndTurnButtonDefault;

@@ -1,8 +1,9 @@
+import { GameState } from '../../types';
 import { incrementGameTurnPhase } from './increment-game-turn-phase';
 import { initPlayersPhase } from './init-players-phase';
 import { initStartingHandsPhase } from './init-starting-hands-phase';
 import { initZonesPhase } from './init-zones-phase';
-import { playCardsPhase } from './play-cards-phase';
+import { defaultPlayCardsPhase } from './play-cards-phase';
 import { revealZonePhase } from './reveal-zone-phase';
 
 /**
@@ -43,7 +44,7 @@ export default {
     next: 'playCards',
   },
   playCards: {
-    ...playCardsPhase,
+    ...defaultPlayCardsPhase,
     next: 'revealZone',
   },
 };

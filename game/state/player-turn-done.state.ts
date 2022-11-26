@@ -6,12 +6,16 @@ const playerTurnDone = {
     '1': false,
   } as Record<PlayerID, boolean>,
 
-  set: (G: GameState, playerId: PlayerID) => {
-    G.playerTurnDone[playerId] = true;
+  set: (G: GameState, player: PlayerID) => {
+    G.playerTurnDone[player] = true;
   },
 
   reset: (G: GameState) => {
     G.playerTurnDone = playerTurnDone.defaultState;
+  },
+
+  resetPlayer: (G: GameState, player: PlayerID) => {
+    G.playerTurnDone[player] = false;
   },
 };
 

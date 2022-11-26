@@ -32,7 +32,7 @@ export const Board = (props: GameProps) => {
     ctx: { phase, gameover },
     moves,
     events,
-    events: { endPhase },
+    events: { endPhase, endTurn },
     reset,
     playerID,
     undo,
@@ -45,9 +45,9 @@ export const Board = (props: GameProps) => {
   // hooks
   const endTurnIsDisabled = useEndTurnButton(
     phase,
-    ctx.currentPlayer,
     G.playerTurnDone,
-    yourID
+    yourID,
+    ctx.currentPlayer,
   );
   const { height, width } = useWindowSize();
   const dispatch = useDispatch();
@@ -65,12 +65,12 @@ export const Board = (props: GameProps) => {
     if (gameConfig.asynchronousTurns) return moves.setDone(yourID);
     
     moves.setDone(yourID);
-    if (ctx.playOrderPos === 1) {
-      events?.endTurn!({ next: theirID });
-      return events?.endPhase!();
-    }
+    // if (ctx.playOrderPos === 1) {
+    //   endTurn!({ next: theirID });
+    //   // return endPhase!();
+    // }
 
-    else return events?.endTurn!({ next: theirID });
+    // else return endTurn!({ next: theirID });
   };
 
   const onCardClick = (obj: Card) => {
