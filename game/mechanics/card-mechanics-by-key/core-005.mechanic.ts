@@ -9,7 +9,7 @@ import type {
   Zone,
 } from '../../../types';
 
-import { getCardPower } from '../../../utils';
+import { getCardPower, pushPowerStreamAndSetDisplay } from '../../../utils';
 
 /**
  * on play: +3 Power if you have 3 other cards here
@@ -25,13 +25,6 @@ export const core005 = (
   player: PlayerID
 ) => {
   if (zone.sides[player].length >= 3) {
-    card.powerStream.push({
-      blame: card.name,
-      adjustment: 3,
-      currentPower: add(card.displayPower, 3),
-      uuid: card.uuid
-    });
-
-    card.displayPower = getCardPower(card);
+    pushPowerStreamAndSetDisplay(card, card, 3, add(card.displayPower, 3));
   }
 };

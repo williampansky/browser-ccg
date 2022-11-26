@@ -35,6 +35,10 @@ export interface CardStateBooleans {
   hasArmor: boolean;
   hasCostIncreased: boolean;
   hasCostReduced: boolean;
+  hasHealthIncreased: boolean;
+  hasHealthReduced: boolean;
+  hasPowerIncreased: boolean;
+  hasPowerReduced: boolean;
   hasEvent: boolean;
   hasImmunity: boolean;
   hasOnTurnEnd: boolean;

@@ -2,11 +2,13 @@ import Image from 'next/image';
 import TYPE_WRAPPER from '../../../../public/images/card-assets/TYPE_WRAPPER.png';
 import styles from './minion-power.module.scss';
 
-export interface ReactMinionPowerProps {
+export interface MinionPowerProps {
   base: number;
   current: number;
   elite?: boolean;
   alternate?: boolean;
+  isIncreased?: boolean;
+  isReduced?: boolean;
 }
 
 export const MinionPower = ({
@@ -14,14 +16,16 @@ export const MinionPower = ({
   current,
   elite = false,
   alternate = false,
-}: ReactMinionPowerProps) => {
+  isIncreased = false,
+  isReduced = false,
+}: MinionPowerProps) => {
   return (
     <div
       className={[
         styles['attack__wrapper'],
         alternate ? styles['alternate'] : '',
-        current > base ? styles['power--buffed'] : '',
-        base > current ? styles['power--debuffed'] : '',
+        isIncreased ? styles['power--buffed'] : '',
+        isReduced ? styles['power--debuffed'] : '',
       ].join(' ')}
       data-component='MinionPower'
       data-value={current}

@@ -9,7 +9,10 @@ import type {
   Zone,
 } from '../../../types';
 import { CardType } from '../../../enums';
-import { getCardHealth, getCardPower } from '../../../utils';
+import {
+  pushPowerStreamAndSetDisplay,
+  pushHealthStreamAndSetDisplay,
+} from '../../../utils';
 
 /**
  * your minions have +1/1
@@ -29,23 +32,22 @@ export const core042 = (
 
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
-      if (c.uuid !== card.uuid) { // make sure not to buff itself
-        if (c.type === CardType.Minion) { // make sure type matches
-          c.healthStream.push({
-            blame: card.name,
-            adjustment: numberSecondary,
-            currentHealth: add(c.displayHealth, numberSecondary),
-            uuid: card.uuid
-          });
-          c.powerStream.push({
-            blame: card.name,
-            adjustment: numberPrimary,
-            currentPower: add(c.displayPower, numberPrimary),
-            uuid: card.uuid
-          });
-
-          c.displayPower = getCardPower(c);
-          c.displayHealth = getCardHealth(c);
+      // make sure not to buff itself
+      if (c.uuid !== card.uuid) {
+        // make sure type matches
+        if (c.type === CardType.Minion) {
+          pushHealthStreamAndSetDisplay(
+            c,
+            card,
+            numberSecondary,
+            add(c.displayHealth, numberSecondary)
+          );
+          pushPowerStreamAndSetDisplay(
+            c,
+            card,
+            numberPrimary,
+            add(c.displayPower, numberPrimary)
+          );
         }
       }
     });

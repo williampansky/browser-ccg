@@ -26,6 +26,7 @@ export { default as getZoneWinsBySide } from './get-zone-wins-by-side';
 export { default as handleCardDestructionMechanics } from './handle-card-destruction-adjustments';
 export { default as limitNumberWithinRange } from './limit-number-within-range';
 export { default as logPhaseToConsole } from './log-phase-to-console';
+export { default as pushHealthStreamAndSetDisplay } from './push-healthstream-and-set-display';
 export { default as pushPowerStreamAndSetDisplay } from './push-powerstream-and-set-display';
 export { default as removeBoonFromCards } from './remove-boon-from-cards'
 export { default as removeSymbols } from './remove-symbols';

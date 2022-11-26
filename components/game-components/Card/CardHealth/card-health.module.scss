@@ -1,4 +1,4 @@
-.card__power {
+.card__health {
   align-items: center;
   bottom: calc(var(--card-height) / -30);
   display: flex;
@@ -7,14 +7,18 @@
   height: calc(var(--card-height) / 4.714285714);
   justify-content: center;
   position: absolute;
-  right: calc(var(--card-height) / -30);
+  left: calc(var(--card-height) / -30);
   top: auto;
-  transform: translate(2px, 4px) scale(0.875);
+  transform: translate(-2px, 4px) scale(0.875);
   width: calc(var(--card-height) / 4.714285714);
   z-index: 2;
 
   & > div {
     z-index: 1;
+  }
+
+  img {
+    filter: hue-rotate(-800deg);
   }
 
   &__elite {

@@ -37,6 +37,7 @@
   }
 
   [data-component='CardCost'],
+  [data-component='CardHealth'],
   [data-component='CardPower'],
   [data-component='CardType'],
   [data-component='CardSubType'] {
@@ -58,8 +59,12 @@
       transform: translate(2px, 2px) scale(0.675);
     }
 
+    [data-component='CardHealth'] {
+      transform: translate(-1px, 0px) scale(0.675);
+    }
+
     [data-component='CardPower'] {
-      transform: translate(-2px, 2px) scale(0.675);
+      transform: translate(1px, 0px) scale(0.675);
     }
 
     [data-component='CardType'] {

@@ -10,7 +10,7 @@ export const gameConfig: GameConfig = {
     debugBoardCardKey: '', //`${core}_004`,
     debugOpponentHandCardKey: '', //`${core}_041`,
     debugOpponentBoardCardKey: '',
-    logPhaseToConsole: true,
+    logPhaseToConsole: false,
     showDebugBar: false,
     showBoardgameIoSidebar: true,
     disableAiMoves: false

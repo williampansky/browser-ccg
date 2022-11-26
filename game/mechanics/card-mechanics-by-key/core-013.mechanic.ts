@@ -53,6 +53,7 @@ export const core013 = (
 
     // find the target amonst the board zones
     const node = G.zones[choice.zoneNumber].sides[player][choice.cardIndex];
+    node.booleans.isBooned = true;
 
     // push powerStream and set display
     pushPowerStreamAndSetDisplay(node, card, 1, add(node.displayPower, 1));

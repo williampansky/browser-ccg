@@ -1,5 +1,4 @@
 import { current } from 'immer';
-import type { Ctx } from 'boardgame.io';
 import type {
   Card,
   GameConfig,
@@ -7,6 +6,7 @@ import type {
   PlayerID,
   Zone,
 } from '../../../types';
+import type { CtxWithEffects } from '../../game';
 import { handleCardDestructionMechanics } from '../../../utils';
 
 /**
@@ -14,7 +14,7 @@ import { handleCardDestructionMechanics } from '../../../utils';
  */
 export const core006 = (
   G: GameState,
-  ctx: Ctx,
+  ctx: CtxWithEffects,
   gameConfig: GameConfig,
   zone: Zone,
   zoneIdx: number,
@@ -45,6 +45,9 @@ export const core006 = (
     // get a random one from the list
     const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
 
+    // push to opponents destroyed arr
+    G.players[opponent].cards.destroyed.push(choice.cardData.key);
+
     // remove the target from the board zone side and its ref
     const newZoneArr = G.zones[choice.zoneNumber].sides[opponent].filter(
       (c) => {
@@ -55,5 +58,6 @@ export const core006 = (
     G.zones[choice.zoneNumber].sides[opponent] = newZoneArr;
     G.zonesCardsReference[choice.zoneNumber][opponent] = newZoneArr;
     handleCardDestructionMechanics(G, choice.cardData, opponent);
+    ctx.effects.effectsEnd();
   }
 };

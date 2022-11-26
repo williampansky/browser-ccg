@@ -30,7 +30,9 @@ const { asynchronousTurns } = gameConfig;
 const gameUsesAsyncTurns = asynchronousTurns === true;
 const gameUsesDefaultTurns = asynchronousTurns === false;
 
-const BrowserCCG: Game<GameState, Ctx & EffectsCtxMixin<typeof bgioEffectsConfig>> = {
+export type CtxWithEffects = Ctx & EffectsCtxMixin<typeof bgioEffectsConfig>;
+
+const BrowserCCG: Game<GameState, CtxWithEffects> = {
   name: 'BrowserCCG',
   plugins: [EffectsPlugin(bgioEffectsConfig)],
 

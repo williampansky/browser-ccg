@@ -56,7 +56,7 @@ export const Minion = ({ isSelected = false, ...card }: ReactMinionProps) => {
     <div
       className={[
         styles['minion'],
-        mechanics?.find((m) => m === 'HIDDEN') ? 'minion--is-hidden' : '',
+        booleans?.isHidden ? 'minion--is-hidden' : '',
       ].join(' ')}
       data-component='Minion'
       id={uuid}
@@ -74,21 +74,24 @@ export const Minion = ({ isSelected = false, ...card }: ReactMinionProps) => {
       /> */}
 
       {type === CardType.Minion && (
-        <MinionHealth
-          alternate={true}
-          base={baseHealth}
-          current={displayHealth}
-          elite={elite}
-        />
-      )}
-
-      {type === CardType.Minion && (
-        <MinionPower
-          alternate={true}
-          base={basePower}
-          current={displayPower}
-          elite={elite}
-        />
+        <>
+          <MinionHealth
+            alternate={true}
+            base={baseHealth}
+            current={displayHealth}
+            elite={elite}
+            isIncreased={booleans.hasHealthIncreased}
+            isReduced={booleans.hasHealthReduced}
+          />
+          <MinionPower
+            alternate={true}
+            base={basePower}
+            current={displayPower}
+            elite={elite}
+            isIncreased={booleans.hasPowerIncreased}
+            isReduced={booleans.hasPowerReduced}
+          />
+        </>
       )}
 
       <MinionImage

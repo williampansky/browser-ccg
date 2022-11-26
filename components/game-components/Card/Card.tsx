@@ -13,6 +13,7 @@ import { CardTypeBadge } from './CardTypeBadge/CardTypeBadge';
 import { CardTypeLabel } from './CardTypeLabel/CardTypeLabel';
 
 import styles from './card.module.scss';
+import { CardHealth } from './CardHealth/CardHealth';
 
 export interface ReactCardProps extends CardProps {
   isSelected?: boolean;
@@ -22,17 +23,20 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
   const {
     artist,
     baseCost,
+    baseHealth,
     basePower,
     booleans,
     canPlay,
     collectible,
     currentCost,
     description,
+    displayHealth,
     displayPower,
     elite,
     entourage,
     flavorText,
     fpoArt,
+    healthStream,
     howToEarn,
     howToEarnGolden,
     id,
@@ -70,14 +74,30 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
       data-component='Card'
       id={uuid}
     >
-      <CardCost baseCost={baseCost} currentCost={currentCost} />
+      <CardCost
+        base={baseCost}
+        current={currentCost}
+        isIncreased={booleans?.hasCostIncreased}
+        isReduced={booleans?.hasCostReduced}
+      />
 
       {type === 'MINION' && (
-        <CardPower
-          basePower={basePower}
-          currentPower={displayPower}
-          elite={elite}
-        />
+        <>
+          <CardHealth
+            base={baseHealth}
+            current={displayHealth}
+            elite={elite}
+            isIncreased={booleans?.hasHealthIncreased}
+            isReduced={booleans?.hasHealthReduced}
+          />
+          <CardPower
+            basePower={basePower}
+            currentPower={displayPower}
+            elite={elite}
+            isIncreased={booleans?.hasPowerIncreased}
+            isReduced={booleans?.hasPowerReduced}
+          />
+        </>
       )}
 
       {/* <CardRarityGem rarity={rarity} /> */}

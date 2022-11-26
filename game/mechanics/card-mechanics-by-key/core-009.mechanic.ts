@@ -9,7 +9,7 @@ import type {
   Zone,
 } from '../../../types';
 import { CardRace } from '../../../enums';
-import { getCardPower } from '../../../utils';
+import { getCardPower, pushPowerStreamAndSetDisplay } from '../../../utils';
 
 /**
  * buff +2 power whenever you play a sprite card
@@ -36,13 +36,12 @@ export const core009 = (
         const self = G.zones[zoneIdx].sides[player][cardIdx];
 
         // push powerStream and set it
-        self.powerStream.push({
-          blame: c.name,
-          adjustment: numberPrimary!,
-          currentPower: add(card.displayPower, numberPrimary!),
-          uuid: c.uuid
-        });
-        self.displayPower = getCardPower(self);
+        pushPowerStreamAndSetDisplay(
+          self,
+          c,
+          numberPrimary!,
+          add(card.displayPower, numberPrimary!)
+        );
       }
     });
   });

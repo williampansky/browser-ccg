@@ -1,23 +1,30 @@
 import Image from 'next/image';
-import BADGE_COST from '../../../../public/images/card-assets/BADGE_COST.png'
+import BADGE_COST from '../../../../public/images/card-assets/BADGE_COST.png';
 import styles from './card-cost.module.scss';
 
 interface CardCostProps {
-  baseCost: number;
-  currentCost: number;
+  base: number;
+  current: number;
+  isIncreased?: boolean;
+  isReduced?: boolean;
 }
 
-export const CardCost = ({ baseCost, currentCost }: CardCostProps) => {
+export const CardCost = ({
+  base,
+  current,
+  isIncreased,
+  isReduced,
+}: CardCostProps) => {
   return (
     <div
       className={[
         styles['card__cost'],
-        currentCost > baseCost ? styles['cost--increased'] : '',
-        currentCost < baseCost ? styles['cost--decreased'] : '',
+        isIncreased ? styles['cost--increased'] : '',
+        isReduced ? styles['cost--decreased'] : '',
       ].join(' ')}
-      data-component="CardCost"
+      data-component='CardCost'
     >
-      <div className='text__value text__value--shadow'>{currentCost}</div>
+      <div className='text__value text__value--shadow'>{current}</div>
       <Image src={BADGE_COST} layout='fill' />
     </div>
   );

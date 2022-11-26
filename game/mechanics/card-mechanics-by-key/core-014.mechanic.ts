@@ -28,6 +28,7 @@ export const core014 = (
     G.players[opponent].cards.hand.forEach((c) => {
       if (c.uuid === rCard!.uuid) {
         c.currentCost = add(c.currentCost, 1);
+        c.booleans.hasCostIncreased = true;
       }
     });
   }

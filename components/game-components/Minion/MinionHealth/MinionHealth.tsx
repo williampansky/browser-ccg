@@ -7,6 +7,8 @@ export interface MinionHealthProps {
   current: number;
   elite?: boolean;
   alternate?: boolean;
+  isIncreased?: boolean;
+  isReduced?: boolean;
 }
 
 export const MinionHealth = ({
@@ -14,14 +16,16 @@ export const MinionHealth = ({
   current,
   elite = false,
   alternate = false,
+  isIncreased = false,
+  isReduced = false,
 }: MinionHealthProps) => {
   return (
     <div
       className={[
         styles['health__wrapper'],
         alternate ? styles['alternate'] : '',
-        current > base ? styles['power--buffed'] : '',
-        base > current ? styles['power--debuffed'] : '',
+        isIncreased ? styles['power--buffed'] : '',
+        isReduced ? styles['power--debuffed'] : '',
       ].join(' ')}
       data-component='MinionPower'
       data-value={current}

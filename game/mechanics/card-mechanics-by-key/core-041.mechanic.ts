@@ -47,6 +47,9 @@ export const core041 = (
     // get a random one from the list
     const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
 
+    // push to opponents destroyed arr
+    G.players[opponent].cards.destroyed.push(choice.cardData.key);
+
     // remove the target from the board zone side and its ref
     const newZoneArr = G.zones[choice.zoneNumber].sides[opponent].filter(
       (c) => {

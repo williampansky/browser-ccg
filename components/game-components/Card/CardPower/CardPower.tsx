@@ -6,20 +6,24 @@ interface CardPowerProps {
   basePower: number;
   currentPower: number;
   elite?: boolean;
+  isIncreased?: boolean;
+  isReduced?: boolean;
 }
 
 export const CardPower = ({
   basePower,
   currentPower,
   elite = false,
+  isIncreased = false,
+  isReduced = false
 }: CardPowerProps) => {
   return (
     <div
       className={[
         styles['card__power'],
         elite ? styles['power__elite'] : '',
-        currentPower > basePower ? styles['card__power--buffed'] : '',
-        currentPower < basePower ? styles['card__power--debuffed'] : '',
+        isIncreased ? styles['card__power--buffed'] : '',
+        isReduced ? styles['card__power--debuffed'] : '',
       ].join(' ')}
       data-component='CardPower'
     >

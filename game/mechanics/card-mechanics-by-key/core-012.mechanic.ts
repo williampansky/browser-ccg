@@ -9,7 +9,7 @@ import type {
   Zone,
 } from '../../../types';
 import { CardType } from '../../../enums';
-import { getCardPower } from '../../../utils';
+import { getCardPower, pushPowerStreamAndSetDisplay } from '../../../utils';
 
 /**
  * buff +2 power whenever you play a spell card
@@ -25,7 +25,7 @@ export const core012 = (
   player: PlayerID
 ) => {
   const { numberPrimary } = card;
-  
+
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
       const revealedThisTurn = c.revealedOnTurn === G.turn;
@@ -37,13 +37,12 @@ export const core012 = (
         const self = G.zones[zoneIdx].sides[player][cardIdx];
 
         // push powerStream and set it
-        self.powerStream.push({
-          blame: c.name,
-          adjustment: numberPrimary!,
-          currentPower: add(card.displayPower, numberPrimary!),
-          uuid: c.uuid
-        });
-        self.displayPower = getCardPower(self);
+        pushPowerStreamAndSetDisplay(
+          self,
+          c,
+          numberPrimary!,
+          add(card.displayPower, numberPrimary!)
+        );
       }
     });
   });
