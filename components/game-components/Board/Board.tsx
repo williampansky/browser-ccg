@@ -25,6 +25,7 @@ import {
   PlayerHand,
   TheTurnTextOverlay,
 } from '../';
+import { DragLayer } from '../DragLayer';
 
 export interface GameProps extends BoardProps<GameState> {}
 
@@ -54,7 +55,7 @@ export const Board = (props: GameProps) => {
 
   // hooks
   const dispatch = useDispatch();
-  const { height } = useWindowSize();
+  const { height, width } = useWindowSize();
   useEndPhase(events, phase, G.playerTurnDone);
   useGameOver(ctx?.gameover);
 
@@ -85,12 +86,16 @@ export const Board = (props: GameProps) => {
       <main
         className={styles['component']}
         style={{
-          height: height ? height - abSize : `calc(100vh - ${abSize}px)`,
-          maxHeight: height ? height - abSize : `calc(100vh - ${abSize}px)`,
-          minHeight: height ? height - abSize : `calc(100vh - ${abSize}px)`,
+          height: height ? height : `calc(100vh - ${abSize}px)`,
+          maxHeight: height ? height : `calc(100vh - ${abSize}px)`,
+          minHeight: height ? height : `calc(100vh - ${abSize}px)`,
         }}
       >
         <Zones yourID={yourID} theirID={theirID} />
+
+        {/* {height && width ? (
+          <DragLayer height={height - abSize} width={width} />
+        ) : null} */}
 
         <Player
           actionPoints={G.actionPoints[yourID]}

@@ -6,9 +6,9 @@ import type { Card, GameState, PlayerID } from '../../../../types';
 import { showCardModal } from '../../../card-modal/card-modal.slice';
 import { Minion } from '../../../../components/game-components/Minion/Minion';
 import { getRandomNumberBetween } from '../../../../utils';
+import { gameConfig } from '../../../../app.config';
 
-
-interface ReactZoneSlot {
+interface Props {
   G?: GameState;
   data?: Card;
   onClick: (card: Card) => void;
@@ -29,7 +29,7 @@ export const OpponentZoneSlot = ({
   yourID,
   theirID,
   onClick,
-}: ReactZoneSlot): ReactElement => {
+}: Props) => {
   const dispatch = useDispatch();
   const [objData, setObjData] = useState<Card | undefined>(undefined);
   const [incoming, setIncoming] = useState<boolean>(false);
@@ -77,7 +77,9 @@ export const OpponentZoneSlot = ({
       // setIncoming(false);
     } else if (typeof data === 'undefined') {
       setDestroyed(true);
-      setTimeout(() => setObjData(undefined), 500);
+      if (gameConfig.debugConfig.debugOpponentBoardCardKey === '') {
+        setTimeout(() => setObjData(undefined), 500);
+      }
     } else if (playerId !== theirID) {
       setObjData(undefined);
       setIncoming(false);
