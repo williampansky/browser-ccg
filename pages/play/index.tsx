@@ -16,7 +16,7 @@ const MultiplayerSetup = (isMultiplayer: boolean = false) => {
   if (isMultiplayer) return SocketIO();
 
   return Local({
-    bots: gameConfig.enableBotAi ? { 1: MCTSBot } : undefined,
+    bots: gameConfig.ai.enableBotAi ? { 1: MCTSBot } : undefined,
     persist: false,
     storageKey: 'bgio',
   });
@@ -30,7 +30,7 @@ const BrowserCcgClient = BoardgameClient({
   game: BrowserCCG,
   board: EffectsBoardWrapper(Board, { updateStateAfterEffects: true }),
   multiplayer: MultiplayerSetup(),
-  numPlayers: gameConfig.enableBotAi ? 1 : 2,
+  numPlayers: gameConfig.ai.enableBotAi ? 1 : 2,
   debug: gameConfig.debugConfig.showBoardgameIoSidebar,
 });
 

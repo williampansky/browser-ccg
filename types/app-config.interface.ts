@@ -6,7 +6,10 @@ export interface GameConfig {
    * - `false`: players take turns normally
    */
   asynchronousTurns: boolean;
-  enableBotAi: boolean;
+
+  /**
+   * Various configurations used in debugging the game
+   */
   debugConfig: {
     debugHandCardKey: string;
     debugBoardCardKey: string;
@@ -15,8 +18,26 @@ export interface GameConfig {
     logPhaseToConsole: boolean;
     showDebugBar: boolean;
     showBoardgameIoSidebar: boolean;
-    disableAiMoves: boolean;
   };
+
+  ai: {
+    /**
+     * This enables bots in the `MultiplayerSetup()` function
+     * of the boardgame.io client instance
+     */
+    enableBotAi: boolean;
+
+    /**
+     * This disables ai from the `ai.ts` file
+     */
+    enableBotAiMoves: boolean;
+
+    /**
+     * Logs the `moves` array created inside the `ai.ts` file
+     */
+    logBotAiMovesToConsole: boolean;
+  };
+
   numerics: {
     actionPointsPerTurn: number;
     actionPointsTotal: number;
@@ -84,7 +105,7 @@ export interface GameConfig {
     zoneImages: boolean;
     zoneNames: boolean;
     zoneReveals: boolean;
-  }
+  };
 }
 
 export interface Page {

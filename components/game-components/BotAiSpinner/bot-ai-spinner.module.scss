@@ -1,0 +1,20 @@
+.component {
+  align-items: center;
+  bottom: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 1rem;
+  justify-content: center;
+  left: 0;
+  margin: 0.5em;
+  pointer-events: none;
+  position: absolute;
+  right: auto;
+  top: 0;
+  z-index: auto;
+
+  svg {
+    height: 1em;
+    width: 1em;
+  }
+}

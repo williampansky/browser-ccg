@@ -1,0 +1,27 @@
+.component {
+  align-items: center;
+  animation: flashThenFadeTurnTag 800ms linear forwards 200ms;
+  bottom: 0;
+  color: white;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 1.5rem;
+  height: 72%;
+  justify-content: center;
+  left: 0;
+  margin: 1em;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 9999; // @todo
+}
+
+@keyframes flashThenFadeTurnTag {
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

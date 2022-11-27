@@ -51,6 +51,7 @@ export interface CardStateBooleans {
   isDisabled: boolean;
   isHidden: boolean;
   isSilenced: boolean;
+  onPlayWasTriggered: boolean;
   wasDiscarded: boolean;
   wasDiscovered: boolean;
   wasResurrected: boolean;

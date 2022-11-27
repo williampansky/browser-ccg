@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ImSpinner10 } from 'react-icons/im';
 
 import type { BoardProps } from 'boardgame.io/react';
-import type { Card, GameState } from '../../../types';
-import type { RootState } from '../../../store';
+import type { Card, GameState, PlayerID } from '../../../types';
+import type { RootState as Root } from '../../../store';
 
 import {
   useEndPhase,
@@ -13,24 +12,35 @@ import {
   useWindowSize,
 } from '../../../hooks';
 
+import styles from './TheBoard.module.scss';
 import { CardModal } from '../../../features/card-modal/CardModal';
 import { Zones } from '../../../features/zones/components/Zones/Zones.Wrapper';
 import { showCardModal } from '../../../features/card-modal/card-modal.slice';
-import { setWindowSize } from '../../../features/windowSize';
 import { GameOverOverlay } from '../../../features/game-over';
-import { DebugBar, EndTurnButton, Player, PlayerHand } from '../';
-
-import styles from './board.module.scss';
+import {
+  BotAiSpinner,
+  DebugBar,
+  EndTurnButton,
+  Player,
+  PlayerHand,
+  TheTurnTextOverlay,
+} from '../';
 
 export interface GameProps extends BoardProps<GameState> {}
 
 export const Board = (props: GameProps) => {
   const {
     G,
-    G: { gameConfig },
+    G: {
+      gameConfig,
+      gameConfig: {
+        ai: { enableBotAi },
+      },
+    },
     ctx,
     ctx: { phase, gameover },
     moves,
+    moves: { deselectCard, playCard, selectCard, setDone },
     events,
     events: { endPhase, endTurn },
     reset,
@@ -43,100 +53,45 @@ export const Board = (props: GameProps) => {
   const theirID = playerID === '0' ? '1' : '0';
 
   // hooks
-  const endTurnIsDisabled = useEndTurnButton(
-    phase,
-    G.playerTurnDone,
-    yourID,
-    ctx.currentPlayer,
-  );
-  const { height, width } = useWindowSize();
   const dispatch = useDispatch();
+  const { height } = useWindowSize();
   useEndPhase(events, phase, G.playerTurnDone);
   useGameOver(ctx?.gameover);
 
   // states
-  const abSize = useSelector(({ addressBarSize }: RootState) => addressBarSize);
+  const abSize = useSelector(({ addressBarSize }: Root) => addressBarSize);
+  const endTurnIsDisabled = useEndTurnButton(
+    phase,
+    G.playerTurnDone,
+    yourID,
+    ctx.currentPlayer
+  );
 
-  useEffect(() => {
-    dispatch(setWindowSize({ height, width }));
-  }, [height, width]);
-
-  const onEndTurnButtonClick = () => {
-    if (gameConfig.asynchronousTurns) return moves.setDone(yourID);
-    
-    moves.setDone(yourID);
-    // if (ctx.playOrderPos === 1) {
-    //   endTurn!({ next: theirID });
-    //   // return endPhase!();
-    // }
-
-    // else return endTurn!({ next: theirID });
-  };
-
-  const onCardClick = (obj: Card) => {
-    dispatch(showCardModal(obj));
-  };
-
-  const onCardSelect = (playerId: string, uuid: string) => {
-    return moves.selectCard(playerId, uuid);
-  };
-
-  const onCardDeselect = (playerId: string) => {
-    return moves.deselectCard(playerId);
-  };
-
-  const onCardSlotDrop = (playerId: string, zoneNumber: number) => {
-    return moves.playCard(playerId, zoneNumber);
-  };
+  // moves
+  const onEndTurnButtonClick = () => setDone(yourID);
+  const onCardClick = (obj: Card) => dispatch(showCardModal(obj));
+  const onCardSelect = (pl: PlayerID, uuid: string) => selectCard(pl, uuid);
+  const onCardDeselect = (pl: PlayerID) => deselectCard(pl);
+  const onCardSlotDrop = (pl: PlayerID, zNum: number) => playCard(pl, zNum);
 
   return (
     <>
+      <CardModal />
+      <BotAiSpinner currentPlayer={ctx.currentPlayer} enabled={enableBotAi} />
       <DebugBar G={G} ctx={ctx} playerID={playerID} addressBarSize={abSize} />
+      <TheTurnTextOverlay currentPlayer={ctx.currentPlayer} yourID={yourID} />
       <GameOverOverlay playerID={playerID} reset={reset} />
 
-      {/* @todo fix later */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        bottom: 'auto',
-        left: 0,
-        right: 'auto',
-        margin: '1em',
-        pointerEvents: 'none',
-        display: ctx?.currentPlayer === '1' ? 'block' : 'none'
-      }}>
-        <ImSpinner10 className='bccg-spinner' />
-      </div>
-
-      {/* @todo fix later */}
-      <div 
-      className={styles['your-turn']}
-      style={{
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        margin: '1em',
-        pointerEvents: 'none',
-        display: ctx?.currentPlayer === '0' ? 'flex' : 'none',
-        flexFlow: 'column nowrap',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-        <h1 className='text__value text__value--shadow'><em>Your turn!</em></h1>
-      </div>
-
       <main
+        className={styles['component']}
         style={{
-          height: `calc(100vh - ${abSize}px)`,
-          maxHeight: `calc(100vh - ${abSize}px)`,
-          minHeight: `calc(100vh - ${abSize}px)`,
-          position: 'relative',
+          height: height ? height - abSize : `calc(100vh - ${abSize}px)`,
+          maxHeight: height ? height - abSize : `calc(100vh - ${abSize}px)`,
+          minHeight: height ? height - abSize : `calc(100vh - ${abSize}px)`,
         }}
       >
-        <CardModal />
         <Zones yourID={yourID} theirID={theirID} />
+
         <Player
           actionPoints={G.actionPoints[yourID]}
           counts={G.counts[yourID]}
@@ -147,91 +102,15 @@ export const Board = (props: GameProps) => {
           turnsPerGame={gameConfig.numerics.numberOfSingleTurnsPerGame}
         />
 
-        {G.players[yourID] && (
-          <PlayerHand
-            G={G}
-            ctx={ctx}
-            onCardClick={onCardClick}
-            onCardSelect={onCardSelect}
-            onCardDeselect={onCardDeselect}
-            onCardSlotDrop={onCardSlotDrop}
-            player={yourID}
-          />
-        )}
-
-        <div
-          style={{
-            display: 'none',
-            flexFlow: 'row nowrap',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            width: '100%',
-            height: '22px',
-            zIndex: 200,
-            position: 'absolute',
-            top: 'auto',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            padding: '0.15em',
-            background: '#333',
-          }}
-        >
-          <div
-            style={{
-              paddingRight: '0.25em',
-              marginRight: 'auto',
-              fontSize: '11px',
-              whiteSpace: 'nowrap',
-              color: 'white',
-            }}
-          >
-            {G.playerNames['0']}
-          </div>
-          {/* <ActionPoints player={playerID} /> */}
-          <div
-            style={{
-              padding: '0 0.15em',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexFlow: 'row nowrap',
-                alignItems: 'center',
-                fontSize: 10,
-                color: 'white',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              <div>
-                Hand: <strong>{G.counts['0'].hand}</strong>
-              </div>
-              <div>&nbsp;|&nbsp;</div>
-              <div>
-                Deck: <strong>{G.counts['0'].deck}</strong>
-              </div>
-              <div>&nbsp;|&nbsp;</div>
-              <div>
-                AP: <strong>{G.actionPoints['0'].current}</strong> /{' '}
-                <strong>{G.actionPoints['0'].total}</strong>
-              </div>
-            </div>
-          </div>
-          <div
-            style={{
-              paddingLeft: '0.15em',
-              marginLeft: 'auto',
-            }}
-          >
-            <EndTurnButton
-              currentTurn={G.turn}
-              isDisabled={endTurnIsDisabled}
-              onClick={onEndTurnButtonClick}
-              turnsPerGame={gameConfig.numerics.numberOfSingleTurnsPerGame}
-            />
-          </div>
-        </div>
+        <PlayerHand
+          G={G}
+          ctx={ctx}
+          onCardClick={onCardClick}
+          onCardSelect={onCardSelect}
+          onCardDeselect={onCardDeselect}
+          onCardSlotDrop={onCardSlotDrop}
+          player={yourID}
+        />
       </main>
     </>
   );

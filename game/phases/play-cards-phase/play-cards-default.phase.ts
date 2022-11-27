@@ -1,6 +1,7 @@
 import { TurnOrder } from 'boardgame.io/core';
-import { Ctx, PhaseConfig } from 'boardgame.io';
-import { GameState } from '../../../types';
+import type { Ctx, PhaseConfig } from 'boardgame.io';
+import type { Card, GameState, Zone } from '../../../types';
+
 import {
   addDebugCardToHand,
   incrementActionPointsTotal,
@@ -11,9 +12,16 @@ import {
   unsetPlayableCardsInHand,
 } from './methods';
 
-import { drawCardFromPlayersDeck, logPhaseToConsole } from '../../../utils';
+import {
+  initEvent,
+  InitGameMechanic,
+  initOnPlay,
+  initTurnEnd,
+} from '../init-card-mechanics-phase';
+
 import { moves } from './play-cards.phase.config';
-const { CUSTOM_FROM } = TurnOrder;
+import { drawCardFromPlayersDeck, logPhaseToConsole } from '../../../utils';
+import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/methods';
 
 const defaultPlayCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
@@ -37,12 +45,58 @@ const defaultPlayCardsPhase: PhaseConfig = {
       addDebugCardToHand(G, currentPlayer);
     },
     onEnd(G: GameState, ctx: Ctx) {
-      unsetPlayableCardsInHand(G, ctx.currentPlayer);
+      const { currentPlayer } = ctx;
+      unsetPlayableCardsInHand(G, currentPlayer);
+
+      G.zones.forEach((zone: Zone, zoneIdx) => {
+        zone.sides[currentPlayer].forEach((card: Card, cardIdx) => {
+          const props: InitGameMechanic = {
+            G,
+            ctx,
+            zone,
+            zoneIdx,
+            card,
+            cardIdx,
+            player: currentPlayer,
+          };
+
+          const turnEnd = (cb?: () => void) => initTurnEnd({ ...props }, cb);
+          turnEnd();
+        });
+      });
     },
     endIf(G: GameState, ctx: Ctx) {
-      return G.playerTurnDone[ctx.currentPlayer] === true;
+      const { currentPlayer } = ctx;
+      return G.playerTurnDone[currentPlayer] === true;
     },
-    order: CUSTOM_FROM('turnOrder'),
+    onMove(G: GameState, ctx: Ctx) {
+      const { currentPlayer } = ctx;
+
+      G.zones.forEach((zone: Zone, zoneIdx) => {
+        zone.sides[currentPlayer].forEach((card: Card, cardIdx) => {
+          const props: InitGameMechanic = {
+            G,
+            ctx,
+            zone,
+            zoneIdx,
+            card,
+            cardIdx,
+            player: currentPlayer,
+          };
+
+          const onPlay = (cb?: () => void) => initOnPlay({ ...props }, cb);
+          const onEvent = (cb?: () => void) => initEvent({ ...props }, cb);
+
+          onPlay(onEvent());
+        });
+
+        G.zones[zoneIdx].powers = {
+          '0': calculateZoneSidePower(G, zoneIdx, '0'),
+          '1': calculateZoneSidePower(G, zoneIdx, '1'),
+        };
+      });
+    },
+    order: TurnOrder.CUSTOM_FROM('turnOrder'),
   },
 };
 

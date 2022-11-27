@@ -6,15 +6,16 @@ import type {
   PlayerID,
   Zone,
 } from '../../../types';
-import type { CtxWithEffects } from '../../game';
+// import type { CtxWithEffects } from '../../game';
 import { handleCardDestructionMechanics } from '../../../utils';
+import { Ctx } from 'boardgame.io';
 
 /**
  * destroy a random 1 cost on opponent's side
  */
 export const core006 = (
   G: GameState,
-  ctx: CtxWithEffects,
+  ctx: Ctx,
   gameConfig: GameConfig,
   zone: Zone,
   zoneIdx: number,
@@ -58,6 +59,7 @@ export const core006 = (
     G.zones[choice.zoneNumber].sides[opponent] = newZoneArr;
     G.zonesCardsReference[choice.zoneNumber][opponent] = newZoneArr;
     handleCardDestructionMechanics(G, choice.cardData, opponent);
+    // @ts-ignore
     ctx.effects.effectsEnd();
   }
 };

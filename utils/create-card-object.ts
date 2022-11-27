@@ -41,6 +41,7 @@ const createCardObject = (obj: CardBase): Card => {
       isDisabled: false,
       isHidden: obj?.mechanics?.find(v => v === Mechanics.Hidden) ? true : false,
       isSilenced: false,
+      onPlayWasTriggered: false,
       wasDiscarded: false,
       wasDiscovered: false,
       wasResurrected: false,

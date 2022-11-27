@@ -1,11 +1,19 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setWindowSize as setWindowSizeToStore } from '../features/windowSize';
 
 interface WindowSize {
   height?: number;
   width?: number;
 }
 
+/**
+ * Returns `{ height, width }` of window on resize event,
+ * also takes care of dispatching to redux store.
+ * @example const { height, width } = useWindowSize();
+ */
 export default function useWindowSize() {
+  const dispatch = useDispatch();
   // Initialize state with undefined width/height so server and client renders match
   // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
   const [windowSize, setWindowSize] = useState<WindowSize>({
@@ -22,6 +30,12 @@ export default function useWindowSize() {
         height: window.innerHeight,
         width: window.innerWidth,
       });
+
+      // Set window width/height to redux store
+      dispatch(setWindowSizeToStore({
+        height: window.innerHeight,
+        width: window.innerWidth,
+      }));
     }
 
     // Add event listener

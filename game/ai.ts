@@ -12,7 +12,7 @@ const aiEnumeration = {
     const aiHand = aiPlayer.cards.hand;
     let moves: any[] = [];
 
-    if (gameConfig.debugConfig.disableAiMoves) {
+    if (gameConfig.ai.enableBotAiMoves === false) {
       if (G.playerTurnDone['1'] === false) {
         moves.push({ move: 'setDone', args: ['1'] });
       }
