@@ -31,6 +31,9 @@ const initStartingHandsPhase: PhaseConfig = {
         G.zones[0].sides['1'].push({ ...debugCard, revealed: true });
         G.zonesCardsReference[0]['1'].push({ ...debugCard, revealed: true });
       }
+
+      // @ts-ignore
+      ctx.effects?.fxEnd();
     }
 
     // debug card or side interactions
@@ -41,13 +44,24 @@ const initStartingHandsPhase: PhaseConfig = {
         G.zones[0].sides['0'].push({ ...debugCard, revealed: true });
         G.zonesCardsReference[0]['0'].push({ ...debugCard, revealed: true });
       }
+
+      // @ts-ignore
+      ctx.effects?.fxEnd();
     }
 
     // init hands
     [...Array(G.gameConfig.numerics.cardsPerStartingHand)].forEach(() => {
       drawCardFromPlayersDeck(G, '0');
+      // @ts-ignore
+      ctx.effects?.fxEnd();
+      
       drawCardFromPlayersDeck(G, '1');
+      // @ts-ignore
+      ctx.effects?.fxEnd();
     });
+
+    // @ts-ignore
+    ctx.effects?.fxEnd(G);
   },
   endIf: (G: GameState) => {
     // end phase when both players have cards in hand
@@ -57,6 +71,10 @@ const initStartingHandsPhase: PhaseConfig = {
       G.players['0'].cards.hand.length === perStartingHand &&
       G.players['1'].cards.hand.length === perStartingHand
     );
+  },
+  onEnd(G: GameState, ctx: Ctx) {
+    // @ts-ignore
+    ctx.effects?.fxEnd(G);
   },
 };
 

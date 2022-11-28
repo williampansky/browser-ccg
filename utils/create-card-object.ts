@@ -22,6 +22,9 @@ const createCardObject = (obj: CardBase): Card => {
     basePower: obj?.power,
     // prettier-ignore
     booleans: {
+      canBeBuffed: false,
+      canBeDebuffed: false,
+      canBeHealed: false,
       hasArmor: obj?.mechanics?.find(v => v === Mechanics.Armor) ? true : false,
       hasCostIncreased: false,
       hasCostReduced: false,

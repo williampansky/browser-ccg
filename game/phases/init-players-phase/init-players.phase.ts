@@ -29,7 +29,7 @@ export default<PhaseConfig> {
     }
 
     playerNames.set(G, '0', 'Player');
-    players.set(G, '0', {
+    players.set(G, ctx, '0', {
       actionPoints: actionPoints.defaultState['0'],
       cards: {
         deck:
@@ -45,8 +45,11 @@ export default<PhaseConfig> {
       playerId: '0',
     });
 
+    // @ts-ignore
+    ctx.effects?.fxEnd();
+
     playerNames.set(G, '1', 'Opponent');
-    players.set(G, '1', {
+    players.set(G, ctx, '1', {
       actionPoints: actionPoints.defaultState['1'],
       cards: {
         deck:
@@ -62,7 +65,8 @@ export default<PhaseConfig> {
       playerId: '1',
     });
 
-    // ctx.events?.endPhase();
+    // @ts-ignore
+    ctx.effects?.fxEnd();
   },
   endIf(G: GameState, ctx: Ctx) {
     const { cardsPerDeck } = G.gameConfig.numerics;
@@ -75,6 +79,10 @@ export default<PhaseConfig> {
       G.players['0'].playerId !== '' &&
       G.players['1'].playerId !== ''
     );
+  },
+  onEnd(G: GameState, ctx: Ctx) {
+    // @ts-ignore
+    ctx.effects?.fxEnd();
   },
 };
 

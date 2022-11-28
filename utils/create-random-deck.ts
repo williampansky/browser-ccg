@@ -20,7 +20,9 @@ const createRandomDeck = (
 
   while (tempDeckArray.length !== G.gameConfig.numerics.cardsPerDeck) {
     let randomCard = ctx.random!.Shuffle(database)[0];
-    if (tempDeckArray.filter(obj => obj.id).length >= 2) {
+    if (tempDeckArray.filter(obj => obj.key).length >= 2) {
+      tempDeckArray.push(createCardObject(randomCard));
+    } else if (tempDeckArray.filter(obj => obj.key && obj.elite).length >= 1) {
       tempDeckArray.push(createCardObject(randomCard));
     }
   }

@@ -16,6 +16,7 @@ import { ZoneLeaderEffects } from '../ZoneLeaderEffects';
 import { ZonePower } from '../ZonePower';
 import { ZoneRevealOverlay } from '../ZoneRevealOverlay';
 import { ZoneName } from '../ZoneName';
+import { MinionSlotWrapper } from '../../../../components/game-components/Zones/MinionSlotWrapper';
 
 interface ZoneClientProps {
   yourID: PlayerID;
@@ -26,6 +27,7 @@ interface ZoneClientProps {
   zoneRef: ZonesCardsReference;
   zonesAreActive: boolean;
   gameConfig: GameConfig;
+  moves: any;
 }
 
 export const Zone = ({
@@ -37,6 +39,7 @@ export const Zone = ({
   zoneRef,
   zonesAreActive,
   gameConfig,
+  moves
 }: ZoneClientProps) => {
   const { powers } = zone;
   const { numerics, zonesConfig } = gameConfig;
@@ -138,17 +141,25 @@ export const Zone = ({
           {[...Array.from(Array(numerics.numberOfSlotsPerZone))].map(
             (_, idx: number) => {
               return (
-                <PlayerZoneSlot
+                <MinionSlotWrapper
                   key={idx}
                   data={zone.sides[yourID][idx]}
-                  onClick={(val: any) => console.log(val)}
+                  player={yourID}
+                  index={idx}
+                  moves={moves}
                   zoneNumber={zoneNumber}
-                  zoneRef={zoneRef}
-                  slotIndex={idx}
-                  playerId={yourID}
-                  yourID={yourID}
-                  theirID={theirID}
-                />
+                >
+                  <PlayerZoneSlot
+                    data={zone.sides[yourID][idx]}
+                    onClick={(val: any) => console.log(val)}
+                    zoneNumber={zoneNumber}
+                    zoneRef={zoneRef}
+                    slotIndex={idx}
+                    playerId={yourID}
+                    yourID={yourID}
+                    theirID={theirID}
+                  />
+                </MinionSlotWrapper>
               );
             }
           )}

@@ -17,6 +17,9 @@ const incrementGameTurnPhase: PhaseConfig = {
 
     G.turn = add(G.turn, 1);
     ctx.events?.endPhase();
+    
+    // @ts-ignore
+    ctx.effects?.fxEnd();
   },
 };
 

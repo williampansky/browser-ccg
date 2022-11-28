@@ -4,7 +4,7 @@ import type { Card, GameState } from '../types';
 const aiEnumeration = {
   enumerate: (G: GameState, ctx: Ctx) => {
     const { players, zones, gameConfig } = G;
-    const { asynchronousTurns } = gameConfig;
+    const { asynchronousTurns, ai } = gameConfig;
     const gameUsesAsyncTurns = asynchronousTurns === true;
     const gameUsesDefaultTurns = asynchronousTurns === false;
     const perZone = gameConfig.numerics.numberOfSlotsPerZone;
@@ -64,7 +64,10 @@ const aiEnumeration = {
       // }
     }
 
-    if (moves.length !== 0) console.log(moves);
+    if (ai.logBotAiMovesToConsole === true) {
+      if (moves.length !== 0) console.log(moves);
+    }
+    
     return moves;
   },
 };

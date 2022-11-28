@@ -21,7 +21,7 @@ const initZonesPhase: PhaseConfig = {
     // playerNames.set(G, '1', 'Opponent');
 
     // @ts-ignore
-    ctx.effects.effectsEnd();
+    ctx.effects?.fxEnd();
 
     if (G.gameConfig.debugConfig.logPhaseToConsole) {
       const zone0 = `${newZones[0].name} (${newZones[0].id})`;
@@ -35,6 +35,10 @@ const initZonesPhase: PhaseConfig = {
     }
   },
   endIf: (G: GameState) => zones.areReady(G),
+  onEnd(G: GameState, ctx: Ctx) {
+    // @ts-ignore
+    ctx.effects?.fxEnd();
+  },
 };
 
 export default initZonesPhase;

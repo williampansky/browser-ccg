@@ -1,5 +1,6 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameConfig, GameState, PlayerID, Zone } from '../../types';
+import { CtxWithEffects } from '../game';
 
 import { core002 } from './card-mechanics-by-key/core-002.mechanic';
 import { core003 } from './card-mechanics-by-key/core-003.mechanic';
@@ -19,6 +20,9 @@ import { core039 } from './card-mechanics-by-key/core-039.mechanic';
 import { core040 } from './card-mechanics-by-key/core-040.mechanic';
 import { core041 } from './card-mechanics-by-key/core-041.mechanic';
 import { core042 } from './card-mechanics-by-key/core-042.mechanic';
+import { core110 } from './core-mechanics-by-key/mechanic.core.110';
+import { core118 } from './core-mechanics-by-key/mechanic.core.118';
+import { core122 } from './core-mechanics-by-key/mechanic.core.122';
 
 const initOnPlayMechanics = (
   G: GameState,
@@ -64,6 +68,7 @@ const initOnPlayMechanics = (
       return core036(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     case 'SET_CORE_037':
       return core037(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+    case 'SET_CORE_019':
     case 'SET_CORE_039':
       return core039(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
     case 'SET_CORE_040':
@@ -72,6 +77,12 @@ const initOnPlayMechanics = (
       return core041(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
     case 'SET_CORE_042':
       return core042(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+    case 'SET_CORE_110':
+      return core110(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+    case 'SET_CORE_118':
+      return core118(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+    case 'SET_CORE_122':
+      return core122(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
     default:
       return;
   }

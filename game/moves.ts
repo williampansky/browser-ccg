@@ -2,6 +2,7 @@ import { Ctx, Undo } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Card, GameState, PlayerID } from '../types';
 import { getCardPower } from '../utils';
+import { core110Buff } from './mechanics/core-mechanics-by-key/mechanic.core.110';
 import {
   actionPoints,
   canUndo,
@@ -24,12 +25,12 @@ export const selectCard = (
   if (G.selectedCardData[playerId]?.uuid === cardMatch!.uuid) {
     selectedCardData.reset(G, playerId);
     // @ts-ignore
-    ctx.effects.effectsEnd();
+    ctx.effects?.fxEnd();
   } else {
     selectedCardData.set(G, playerId, cardMatch!);
     G.selectedCardIndex[playerId] = cardMatchIndex;
     // @ts-ignore
-    ctx.effects.effectsEnd();
+    ctx.effects?.fxEnd();
   }
 };
 
@@ -37,7 +38,7 @@ export const deselectCard = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
   selectedCardData.reset(G, playerId);
   G.selectedCardIndex[playerId] = undefined;
   // @ts-ignore
-  ctx.effects.effectsEnd();
+  ctx.effects?.fxEnd();
 };
 
 export const playCard = (
@@ -108,7 +109,7 @@ export const playCard = (
   }
 
   // @ts-ignore
-  ctx.effects.effectsEnd();
+  ctx.effects?.fxEnd();
 };
 
 export const undoPlayCard = (
@@ -228,6 +229,38 @@ export const playAiCard = (
   }
 };
 
-export const setDone = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
-  playerTurnDone.set(G, playerId);
+export const setDone = (G: GameState, ctx: Ctx, player: PlayerID) => {
+  playerTurnDone.set(G, player);
+};
+
+export const buffMinion = (
+  G: GameState,
+  ctx: Ctx,
+  player: PlayerID,
+  cardToBuffUuid: string,
+  zoneNumber: number
+) => {
+  const { playedCards } = G;
+  const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
+  G.zones[zoneNumber].sides[player].forEach(c => {
+    if (c.uuid === cardToBuffUuid) {
+      switch (lastPlayedCard?.key) {
+        case 'SET_CORE_110':
+          return core110Buff(G, ctx, player, c, lastPlayedCard);
+      
+        default:
+          return;
+      }
+    }
+  })
+};
+
+export const updatePlayerHandArray = (
+  G: GameState,
+  ctx: Ctx,
+  player: PlayerID,
+  cardUuid: string,
+) => {
+  const newHand = G.players[player].cards.hand.filter(c => c.uuid !== cardUuid);
+  G.players[player].cards.hand = newHand;
 };

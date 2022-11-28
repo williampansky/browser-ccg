@@ -1,13 +1,15 @@
-import type { Ctx } from "boardgame.io";
-import type { Card, GameState, PlayerID } from "../../../types";
+import type { Ctx } from 'boardgame.io';
+import type { Card, GameState, PlayerID } from '../../../types';
 
 import {
+  buffMinion,
   deselectCard,
   playAiCard,
   playCard,
   selectCard,
   setDone,
   undoPlayCard,
+  updatePlayerHandArray,
 } from '../../moves';
 
 export const moves = {
@@ -72,6 +74,33 @@ export const moves = {
     ignoreStaleStateID: true,
     move: (G: GameState, ctx: Ctx, player: PlayerID) => {
       return ctx?.events?.endTurn({ next: player });
+    },
+  },
+  buffMinion: {
+    client: false,
+    noLimit: true,
+    ignoreStaleStateID: true,
+    move: (
+      G: GameState,
+      ctx: Ctx,
+      player: PlayerID,
+      cardToBuffUuid: string,
+      zoneNumber: number
+    ) => {
+      return buffMinion(G, ctx, player, cardToBuffUuid, zoneNumber);
+    },
+  },
+  updatePlayerHandArray: {
+    client: false,
+    noLimit: true,
+    ignoreStaleStateID: true,
+    move: (
+      G: GameState,
+      ctx: Ctx,
+      player: PlayerID,
+      cardUuid: string,
+    ) => {
+      return updatePlayerHandArray(G, ctx, player, cardUuid);
     },
   },
 };

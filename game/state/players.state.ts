@@ -1,3 +1,4 @@
+import { Ctx } from 'boardgame.io';
 import { GameState, Player, PlayerID } from '../../types';
 
 const players = {
@@ -18,8 +19,11 @@ const players = {
     },
   },
 
-  set: (G: GameState, playerId: PlayerID, playerData: Player) => {
+  set: (G: GameState, ctx: Ctx, playerId: PlayerID, playerData: Player) => {
     G.players[playerId] = playerData;
+
+    // @ts-ignore
+    ctx.effects?.fxEnd();
   },
 
   reset: (G: GameState) => {

@@ -32,6 +32,9 @@ export declare type CardType =
   | CardTypeEnums.Weapon;
 
 export interface CardStateBooleans {
+  canBeBuffed: boolean;
+  canBeDebuffed: boolean;
+  canBeHealed: boolean;
   hasArmor: boolean;
   hasCostIncreased: boolean;
   hasCostReduced: boolean;
@@ -87,9 +90,9 @@ export interface CardBase {
   mechanics?: string[];
   mechanicsEnabled?: boolean;
   name: string;
-  numberPrimary?: number;
-  numberRNG?: number;
-  numberSecondary?: number;
+  numberPrimary: number;
+  numberRNG: number;
+  numberSecondary: number;
   playContext?: string;
   playType?: string;
   power: number;
@@ -185,9 +188,9 @@ export interface Card {
   mechanics?: string[];
   mechanicsEnabled?: boolean;
   name: string;
-  numberPrimary?: number;
-  numberRNG?: number;
-  numberSecondary?: number;
+  numberPrimary: number;
+  numberRNG: number;
+  numberSecondary: number;
   playContext?: string;
   playType?: string;
   powerOverride?: number; // use this power instead of base or latest stream

@@ -7,6 +7,7 @@ export enum Mechanics {
   Armor = 'ARMOR',
   Boolean = 'BOOLEAN',
   Boon = 'BOON',
+  Bulwark = 'BULWARK',
   Buff = 'BUFF',
   ChooseOne = 'CHOOSE_ONE',
   Combo = 'COMBO',

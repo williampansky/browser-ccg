@@ -1,0 +1,22 @@
+&.handslot--discarded {
+  animation: discardCardAnimation 1800ms var(--animation-transition-cubic) forwards;
+
+  [data-component='Card']:before {
+    display: none;
+  }
+}
+
+@keyframes discardCardAnimation {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(0, -10vh) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, -10vh) scale(3);
+  }
+}

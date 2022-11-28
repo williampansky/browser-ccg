@@ -1,27 +1,27 @@
 import type { AppConfig, GameConfig, Pages, SiteConfig } from './types';
 
-const core = `SET_CORE`;
+const core = `SET_CORE_`;
 
 export const gameConfig: GameConfig = {
   asynchronousTurns: false,
   debugConfig: {
-    debugHandCardKey: '', //`${core}_006`,
-    debugBoardCardKey: '', //`${core}_004`,
-    debugOpponentHandCardKey: '', //`${core}_041`,
-    debugOpponentBoardCardKey: '', //`${core}_003`,
+    debugHandCardKey: '', //core + '110',
+    debugBoardCardKey: '', //core + '122',
+    debugOpponentHandCardKey: '', //core + '122',
+    debugOpponentBoardCardKey: '', //core + '122',
     logPhaseToConsole: false,
     showDebugBar: false,
     showBoardgameIoSidebar: false,
   },
   ai: {
     enableBotAi: true,
-    enableBotAiMoves: true,
+    enableBotAiMoves: false,
     logBotAiMovesToConsole: false,
   },
   numerics: {
     actionPointsPerTurn: 1,
     actionPointsTotal: 10,
-    cardsPerDeck: 20,
+    cardsPerDeck: 30,
     cardsPerHand: 10,
     cardsPerStartingHand: 3,
     cardsPerTurn: 1,

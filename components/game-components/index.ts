@@ -4,6 +4,7 @@ export { Avatar } from './Avatar';
 export { BotAiSpinner } from './BotAiSpinner';
 export { Card } from './Card';
 export { DebugBar } from './DebugBar';
+export { DragLayer } from './DragLayer';
 export { EndTurnButton } from './EndTurnButton';
 export { Minion } from './Minion';
 export { Player } from './Player';

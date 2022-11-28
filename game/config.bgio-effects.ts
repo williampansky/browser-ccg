@@ -1,20 +1,13 @@
-import { Card, PlayerID, Zone } from '../types';
-
-interface RevealCardEffects {
-  card: Card;
-  zoneNumber: number;
-  slotIndex: number;
-  player: PlayerID;
-}
-
-interface RevealZoneEffects {
-  zone: Zone;
-  zoneNumber: number;
-}
+import {
+  DiscardCardEffects,
+  RevealCardEffects,
+  RevealZoneEffects,
+} from '../types';
 
 const bgioEffectsConfig = {
   effects: {
-    effectsEnd: {
+    fxEnd: {
+      create: ({ ...value }: any) => value,
       duration: 0,
     },
     revealZone: {
@@ -23,6 +16,18 @@ const bgioEffectsConfig = {
         return {
           zone: value.zone,
           zoneNumber: value.zoneNumber,
+        };
+      },
+    },
+    discardCard: {
+      duration: 2,
+      create: ({ ...value }: DiscardCardEffects) => {
+        const { card, cardIdx, player, newHand } = value;
+        return {
+          card,
+          cardIdx,
+          player,
+          newHand,
         };
       },
     },

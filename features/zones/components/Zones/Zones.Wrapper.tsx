@@ -17,7 +17,7 @@ import { ZoneDropSlot } from '../ZoneDropSlot';
 interface ZonesProps {
   // G: GameState;
   // ctx: Ctx;
-  // moves: any;
+  moves: any;
   // disabled: boolean;
   // zone: ZoneProps;
   // zoneNumber: number;
@@ -26,7 +26,7 @@ interface ZonesProps {
   // onCardClick: (obj: Card) => void;
 }
 
-export const Zones = ({ yourID, theirID }: ZonesProps) => {
+export const Zones = ({ yourID, theirID, moves }: ZonesProps) => {
   // const { powers } = zone;
   // const { playCard } = moves;
 
@@ -78,7 +78,7 @@ export const Zones = ({ yourID, theirID }: ZonesProps) => {
           <ZoneComponent
             // G={G}
             // ctx={ctx}
-            // moves={moves}
+            moves={moves}
             // disabled={zone.disabled[0]}
             zone={zone}
             zoneNumber={idx}

@@ -26,6 +26,9 @@ import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/
 const defaultPlayCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase);
+    
+    // @ts-ignore
+    ctx.effects?.fxEnd();
   },
   onEnd(G: GameState, ctx: Ctx) {
     resetDoneState(G);
@@ -50,6 +53,11 @@ const defaultPlayCardsPhase: PhaseConfig = {
 
       G.zones.forEach((zone: Zone, zoneIdx) => {
         zone.sides[currentPlayer].forEach((card: Card, cardIdx) => {
+          card.booleans = {
+            ...card.booleans,
+            canBeBuffed: false
+          }
+
           const props: InitGameMechanic = {
             G,
             ctx,

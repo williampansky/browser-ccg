@@ -10,12 +10,18 @@ export type {
 } from './app-config.interface';
 
 export type {
+  DiscardCardEffects,
+  RevealCardEffects,
+  RevealZoneEffects,
+} from './bgio-effects.interface';
+
+export type {
   Card,
   CardBase,
   CardId,
   CardPowerStream,
   Deck,
-  Decks
+  Decks,
 } from './card.interface';
 
 export type {
@@ -26,9 +32,7 @@ export type {
   SelectedCardIndex,
 } from './g.interface';
 
-export type {
-  Mechanic
-} from './mechanic.interface';
+export type { Mechanic } from './mechanic.interface';
 
 export type {
   ActionPoints,

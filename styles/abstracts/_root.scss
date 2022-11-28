@@ -24,6 +24,11 @@
   --color-rarity-MYTHIC:                        #ff6941;
   --color-rarity-GOLDEN:                        #fbef31;
 
+  // mechanics vars
+  // ========================================================================
+  --box-shadow-can-be-buffed-color-ripple:    rgba(45, 243, 216, 0.5);
+  --box-shadow-can-be-buffed-color:           rgba(45, 243, 216, 0.865);
+
   // layout vars
   // ========================================================================
   --board-height: 75%;
@@ -111,7 +116,7 @@
   --box-shadow-is-selected-color-ripple:      rgba(236, 210, 79, 0.5);
   --box-shadow-is-selected-color:             rgba(236, 210, 79, 0.865);
   
-  --box-shadow-dimensions:      0px 0px 10px 10px;
+  --box-shadow-dimensions:      0px 0px 4px 4px;
   --box-shadow-can-be-attacked: var(--box-shadow-dimensions) var(--box-shadow-can-be-attacked-color);
   --box-shadow-can-be-buffed:   var(--box-shadow-dimensions) var(--box-shadow-can-be-buffed-color);
   --box-shadow-can-be-debuffed: var(--box-shadow-dimensions) var(--box-shadow-can-be-debuffed-color);

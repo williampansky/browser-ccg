@@ -60,6 +60,6 @@ export const core006 = (
     G.zonesCardsReference[choice.zoneNumber][opponent] = newZoneArr;
     handleCardDestructionMechanics(G, choice.cardData, opponent);
     // @ts-ignore
-    ctx.effects.effectsEnd();
+    ctx.effects?.fxEnd();
   }
 };

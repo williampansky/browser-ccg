@@ -1,22 +1,23 @@
 import React from 'react';
 import { Fragment } from 'react';
-import { ReactElement, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSprings, animated, to } from 'react-spring';
 import { useCallbackRef } from 'use-callback-ref';
 import { useGesture } from '@use-gesture/react';
 import { useSelector } from 'react-redux';
-import { Ctx } from 'boardgame.io';
 
 import { usePrevious } from '../../../hooks';
 import { Card as CardComponent } from '../Card/Card';
+import { HandSlotCardWrapper } from './HandSlotCardWrapper';
 
+import type { Ctx } from 'boardgame.io';
 import type { RootState } from '../../../store';
 import type { Card, GameState, PlayerID } from '../../../types';
 
 import fn from './fn';
 import styles from './player-hand.module.scss';
 
-interface PlayerHandProps {
+interface Props {
   G: GameState;
   ctx: Ctx;
   onCardClick: (card: Card) => void;
@@ -24,17 +25,19 @@ interface PlayerHandProps {
   onCardDeselect: (playerId: string) => void;
   onCardSlotDrop: (playerId: string, zoneNumber: number) => void;
   player: PlayerID;
+  moves: any;
 }
 
 export const PlayerHand = ({
   G,
   ctx,
+  moves,
   onCardClick,
   onCardSelect,
   onCardDeselect,
   onCardSlotDrop,
   player,
-}: PlayerHandProps): ReactElement => {
+}: Props) => {
   const {
     gameConfig: {
       numerics: { cardsPerHand },
@@ -49,8 +52,10 @@ export const PlayerHand = ({
   const playerHand = G.players[player]?.cards?.hand;
   const selectedCard = selectedCardData[player];
 
+  // states
   const [handLength, setHandLength] = useState<number>(0);
   const prevHandLength = usePrevious(handLength);
+  const prevHand = usePrevious(playerHand);
   const [cardHeight, setCardHeight] = useState<number>(0);
   const [cardWidth, setCardWidth] = useState<number>(0);
 
@@ -271,8 +276,9 @@ export const PlayerHand = ({
                   <animated.div
                     {...bind(i, canPlay)}
                     key={`HandSlot_${i}`}
-                    className={styles['hand-slot']}
+                    className={[styles['hand-slot']].join(' ')}
                     data-index={i}
+                    data-component='PlayerHandSlot'
                     style={{
                       zIndex,
                       marginLeft,
@@ -287,11 +293,19 @@ export const PlayerHand = ({
                       }),
                     }}
                   >
-                    <CardComponent
-                      {...playerHand[i]}
-                      key={uuid}
-                      isSelected={selectedCard?.uuid === uuid}
-                    />
+                    <HandSlotCardWrapper
+                      data={playerHand[i]}
+                      index={i}
+                      moves={moves}
+                      prevHand={prevHand}
+                      player={player}
+                    >
+                      <CardComponent
+                        {...playerHand[i]}
+                        key={uuid}
+                        isSelected={selectedCard?.uuid === uuid}
+                      />
+                    </HandSlotCardWrapper>
                   </animated.div>
                 </Fragment>
               ) : null;

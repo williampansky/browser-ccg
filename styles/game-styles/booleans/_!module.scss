@@ -1,0 +1,15 @@
+.player__handslot {
+  pointer-events: none;
+  touch-action: none;
+  
+  @import 'card.discard';
+}
+
+.minionslot {
+  border-radius: var(--minion-border-radius);
+  pointer-events: none;
+  touch-action: none;
+  position: relative;
+  
+  @import 'minion.can-be-buffed';
+}

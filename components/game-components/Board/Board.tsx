@@ -1,8 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLatestPropsOnEffect } from 'bgio-effects/react';
 
 import type { BoardProps } from 'boardgame.io/react';
-import type { Card, GameState, PlayerID } from '../../../types';
+import type { Card, GameConfig, GameState, PlayerID } from '../../../types';
 import type { RootState as Root } from '../../../store';
 
 import {
@@ -20,26 +21,24 @@ import { GameOverOverlay } from '../../../features/game-over';
 import {
   BotAiSpinner,
   DebugBar,
+  DragLayer,
   EndTurnButton,
   Player,
   PlayerHand,
   TheTurnTextOverlay,
 } from '../';
-import { DragLayer } from '../DragLayer';
+import { Ctx } from 'boardgame.io';
+
+interface PropsOnEffect {
+  G: GameState;
+  ctx: Ctx;
+}
 
 export interface GameProps extends BoardProps<GameState> {}
 
 export const Board = (props: GameProps) => {
   const {
-    G,
-    G: {
-      gameConfig,
-      gameConfig: {
-        ai: { enableBotAi },
-      },
-    },
-    ctx,
-    ctx: { phase, gameover },
+    ctx: { phase },
     moves,
     moves: { deselectCard, playCard, selectCard, setDone },
     events,
@@ -48,6 +47,14 @@ export const Board = (props: GameProps) => {
     playerID,
     undo,
   } = props;
+
+  const { G, ctx }: PropsOnEffect = useLatestPropsOnEffect('effects:end');
+  const {
+    gameConfig,
+    gameConfig: {
+      ai: { enableBotAi },
+    },
+  } = G;
 
   // player IDs
   const yourID = playerID === '0' ? '0' : '1';
@@ -91,7 +98,7 @@ export const Board = (props: GameProps) => {
           minHeight: height ? height : `calc(100vh - ${abSize}px)`,
         }}
       >
-        <Zones yourID={yourID} theirID={theirID} />
+        <Zones yourID={yourID} theirID={theirID} moves={moves} />
 
         {/* {height && width ? (
           <DragLayer height={height - abSize} width={width} />
@@ -110,6 +117,7 @@ export const Board = (props: GameProps) => {
         <PlayerHand
           G={G}
           ctx={ctx}
+          moves={moves}
           onCardClick={onCardClick}
           onCardSelect={onCardSelect}
           onCardDeselect={onCardDeselect}

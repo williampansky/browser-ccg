@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+
 import type { Card, PlayerID } from '../../../../types';
 import { Minion } from '../../../../components/game-components/Minion/Minion';
 import { showCardModal } from '../../../card-modal/card-modal.slice';
 import { getRandomNumberBetween } from '../../../../utils';
-import styles from './zoneslot-player.module.scss';
 import { gameConfig } from '../../../../app.config';
+import styles from './zoneslot-player.module.scss';
 
 const { asynchronousTurns } = gameConfig;
 const gameUsesAsyncTurns = asynchronousTurns === true;
@@ -109,7 +110,9 @@ export const PlayerZoneSlot = ({
       setObjData(data);
       if (gameUsesAsyncTurns) setIncoming(false);
     } else {
-      setObjData(undefined);
+      if (gameConfig.debugConfig.debugBoardCardKey === '') {
+        setTimeout(() => setObjData(undefined), 500);
+      }
     }
   }, [data, playerId]);
 
@@ -149,7 +152,7 @@ export const PlayerZoneSlot = ({
         transition: '250ms ease-in',
         position: 'relative',
         pointerEvents: objData ? 'auto' : 'none',
-        top: `${offsetY}px`,
+        // top: `${offsetY}px`,
         opacity: objData ? 1 : 0,
         zIndex: objData ? '1' : '-1',
         transform: `${getAnimationDirection(

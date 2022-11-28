@@ -1,5 +1,9 @@
 import { Card as CardProps } from '../../../types';
-import { createMarkup, fontSizeBasedOnCharacterLength } from '../../../utils';
+import {
+  fontSizeBasedOnCharacterLength,
+  formatCardText,
+  replaceAllConstants,
+} from '../../../utils';
 
 import { CardBaseImage } from './CardBaseImage/CardBaseImage';
 import { CardCost } from './CardCost/CardCost';
@@ -14,6 +18,7 @@ import { CardTypeLabel } from './CardTypeLabel/CardTypeLabel';
 
 import styles from './card.module.scss';
 import { CardHealth } from './CardHealth/CardHealth';
+import { useCallback } from 'react';
 
 export interface ReactCardProps extends CardProps {
   isSelected?: boolean;
@@ -64,6 +69,20 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
     zonePowerAdjustment,
   } = card;
 
+  const formattedCardText = useCallback(() => {
+    return {
+      __html: replaceAllConstants(
+        formatCardText(
+          text?.__html,
+          numberPrimary,
+          numberSecondary,
+          numberRNG,
+          0
+        )
+      ),
+    };
+  }, [text, numberPrimary, numberSecondary, numberRNG, 0]);
+
   return (
     <div
       className={[
@@ -102,7 +121,7 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
 
       {/* <CardRarityGem rarity={rarity} /> */}
       <CardName name={name} formatter={fontSizeBasedOnCharacterLength} />
-      <CardText markup={text} />
+      <CardText markup={formattedCardText()} />
       <CardTypeLabel race={race} type={type} formatter={(val: any) => val} />
 
       {/* <CardTypeBadge
