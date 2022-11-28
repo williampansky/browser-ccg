@@ -7,6 +7,7 @@ import { showCardModal } from '../../../card-modal/card-modal.slice';
 import { getRandomNumberBetween } from '../../../../utils';
 import { gameConfig } from '../../../../app.config';
 import styles from './zoneslot-player.module.scss';
+import { usePrevious } from '../../../../hooks';
 
 const { asynchronousTurns } = gameConfig;
 const gameUsesAsyncTurns = asynchronousTurns === true;
@@ -36,6 +37,7 @@ export const PlayerZoneSlot = ({
   const dispatch = useDispatch();
   const [objData, setObjData] = useState<Card | undefined>(undefined);
   const [incoming, setIncoming] = useState<boolean>(false);
+  const prevObjData = usePrevious(objData);
 
   // const [rotation, setRotation] = useState<number>(0);
   // const [offsetY, setOffsetY] = useState<number>(0);
@@ -110,9 +112,13 @@ export const PlayerZoneSlot = ({
       setObjData(data);
       if (gameUsesAsyncTurns) setIncoming(false);
     } else {
-      if (gameConfig.debugConfig.debugBoardCardKey === '') {
+      if (data === undefined && prevObjData !== undefined) {
         setTimeout(() => setObjData(undefined), 500);
       }
+      // console.log('Game is using debugBoardCardKey!');
+      // if (gameConfig.debugConfig.debugBoardCardKey === '') {
+      //   setTimeout(() => setObjData(undefined), 500);
+      // }
     }
   }, [data, playerId]);
 

@@ -164,6 +164,7 @@ export const revealCard = async (
 export const playAiCard = (
   G: GameState,
   ctx: Ctx,
+  aiID: PlayerID,
   zoneNumber: number,
   card: Card,
   cardIndex: number

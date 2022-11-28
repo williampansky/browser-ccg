@@ -1,8 +1,14 @@
+import { Ctx } from 'boardgame.io';
 import {
   DiscardCardEffects,
   RevealCardEffects,
   RevealZoneEffects,
 } from '../types';
+
+export const fxEnd = (ctx: Ctx) => {
+  // @ts-ignore
+  ctx.effects?.fxEnd();
+}
 
 const bgioEffectsConfig = {
   effects: {

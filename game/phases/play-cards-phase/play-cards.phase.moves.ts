@@ -54,11 +54,12 @@ export const moves = {
     move: (
       G: GameState,
       ctx: Ctx,
+      aiID: PlayerID,
       zoneNumber: number,
       card: Card,
       cardIndex: number
     ) => {
-      return playAiCard(G, ctx, zoneNumber, card, cardIndex);
+      return playAiCard(G, ctx, aiID, zoneNumber, card, cardIndex);
     },
   },
   setDone: {

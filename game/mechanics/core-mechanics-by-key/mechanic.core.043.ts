@@ -58,12 +58,13 @@ export const core043Destroy = (
 
     // push to opponents destroyed arr
     G.players[opponent].cards.destroyed.push(card.key);
-  
+
+    
     // remove the target from the board zone side and its ref
     const newZoneArr = G.zones[zoneNumber].sides[opponent].filter((c) => {
       return c.uuid !== card.uuid;
     });
-  
+    
     G.zones[zoneNumber].sides[opponent] = newZoneArr;
     G.zonesCardsReference[zoneNumber][opponent] = newZoneArr;
     handleCardDestructionMechanics(G, card, opponent);

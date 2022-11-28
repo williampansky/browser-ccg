@@ -13,7 +13,7 @@ import {
 } from './methods';
 
 import { logPhaseToConsole } from '../../../utils';
-import { moves } from './play-cards.phase.config';
+import { moves } from './play-cards.phase.moves';
 
 const asyncPlayCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {

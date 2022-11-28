@@ -19,16 +19,15 @@ import {
   initTurnEnd,
 } from '../init-card-mechanics-phase';
 
-import { moves } from './play-cards.phase.config';
+import { moves } from './play-cards.phase.moves';
 import { drawCardFromPlayersDeck, logPhaseToConsole } from '../../../utils';
 import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/methods';
+import { fxEnd } from '../../config.bgio-effects';
 
 const defaultPlayCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase);
-    
-    // @ts-ignore
-    ctx.effects?.fxEnd();
+    fxEnd(ctx);
   },
   onEnd(G: GameState, ctx: Ctx) {
     resetDoneState(G);
@@ -46,16 +45,18 @@ const defaultPlayCardsPhase: PhaseConfig = {
       setPlayableCardsInHand(G, currentPlayer);
       initZoneOnTurnStartInteractions(G, currentPlayer);
       addDebugCardToHand(G, currentPlayer);
+      fxEnd(ctx);
     },
     onEnd(G: GameState, ctx: Ctx) {
       const { currentPlayer } = ctx;
       unsetPlayableCardsInHand(G, currentPlayer);
 
       G.zones.forEach((zone: Zone, zoneIdx) => {
-        zone.sides[currentPlayer].forEach((card: Card, cardIdx) => {
+        zone.sides['0'].forEach((card: Card, cardIdx) => {
           card.booleans = {
             ...card.booleans,
-            canBeBuffed: false
+            canBeBuffed: false,
+            canBeDestroyed: false,
           }
 
           const props: InitGameMechanic = {
@@ -65,13 +66,36 @@ const defaultPlayCardsPhase: PhaseConfig = {
             zoneIdx,
             card,
             cardIdx,
-            player: currentPlayer,
+            player: '0',
+          };
+
+          const turnEnd = (cb?: () => void) => initTurnEnd({ ...props }, cb);
+          turnEnd();
+        });
+        
+        zone.sides['1'].forEach((card: Card, cardIdx) => {
+          card.booleans = {
+            ...card.booleans,
+            canBeBuffed: false,
+            canBeDestroyed: false,
+          }
+
+          const props: InitGameMechanic = {
+            G,
+            ctx,
+            zone,
+            zoneIdx,
+            card,
+            cardIdx,
+            player: '1',
           };
 
           const turnEnd = (cb?: () => void) => initTurnEnd({ ...props }, cb);
           turnEnd();
         });
       });
+
+      fxEnd(ctx);
     },
     endIf(G: GameState, ctx: Ctx) {
       const { currentPlayer } = ctx;
