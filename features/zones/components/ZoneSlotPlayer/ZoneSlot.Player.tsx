@@ -37,8 +37,8 @@ export const PlayerZoneSlot = ({
   const [objData, setObjData] = useState<Card | undefined>(undefined);
   const [incoming, setIncoming] = useState<boolean>(false);
 
-  const [rotation, setRotation] = useState<number>(0);
-  const [offsetY, setOffsetY] = useState<number>(0);
+  // const [rotation, setRotation] = useState<number>(0);
+  // const [offsetY, setOffsetY] = useState<number>(0);
 
   const getAnimationDirection = (
     zoneNumber: number,
@@ -116,32 +116,32 @@ export const PlayerZoneSlot = ({
     }
   }, [data, playerId]);
 
-  useEffect(() => {
-    setRotation(getRandomNumberBetween(-3, 3));
-    setOffsetY(getRandomNumberBetween(-2, 2));
-  }, []);
+  // useEffect(() => {
+  //   setRotation(getRandomNumberBetween(-3, 3));
+  //   setOffsetY(getRandomNumberBetween(-2, 2));
+  // }, []);
 
-  if (incoming && gameUsesAsyncTurns) {
-    return (
-      <div
-        onClick={onUnrevealedClick}
-        className={styles['incoming-wrapper']}
-        style={{
-          top: `${offsetY}px`,
-          transform: `${getAnimationDirection(
-            zoneNumber,
-            incoming,
-            objData
-          )} rotate(${rotation}deg)`,
-        }}
-      >
-        <div className={styles['incoming-minion-wrapper']}>
-          {/* @ts-ignore */}
-          <Minion {...zoneRef[playerId][slotIndex]} />
-        </div>
-      </div>
-    );
-  }
+  // if (incoming && gameUsesAsyncTurns) {
+  //   return (
+  //     <div
+  //       onClick={onUnrevealedClick}
+  //       className={styles['incoming-wrapper']}
+  //       style={{
+  //         top: `${offsetY}px`,
+  //         transform: `${getAnimationDirection(
+  //           zoneNumber,
+  //           incoming,
+  //           objData
+  //         )} rotate(${rotation}deg)`,
+  //       }}
+  //     >
+  //       <div className={styles['incoming-minion-wrapper']}>
+  //         {/* @ts-ignore */}
+  //         <Minion {...zoneRef[playerId][slotIndex]} />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div
@@ -159,7 +159,7 @@ export const PlayerZoneSlot = ({
           zoneNumber,
           incoming,
           objData
-        )} rotate(${rotation}deg)`,
+        )}`,
         transitionDelay: objData?.revealed ? `${slotIndex * 200}ms` : '0ms',
       }}
     >

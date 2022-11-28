@@ -34,6 +34,7 @@ export declare type CardType =
 export interface CardStateBooleans {
   canBeBuffed: boolean;
   canBeDebuffed: boolean;
+  canBeDestroyed: boolean;
   canBeHealed: boolean;
   hasArmor: boolean;
   hasCostIncreased: boolean;

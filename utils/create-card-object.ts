@@ -24,6 +24,7 @@ const createCardObject = (obj: CardBase): Card => {
     booleans: {
       canBeBuffed: false,
       canBeDebuffed: false,
+      canBeDestroyed: false,
       canBeHealed: false,
       hasArmor: obj?.mechanics?.find(v => v === Mechanics.Armor) ? true : false,
       hasCostIncreased: false,

@@ -39,7 +39,7 @@ export const Zone = ({
   zoneRef,
   zonesAreActive,
   gameConfig,
-  moves
+  moves,
 }: ZoneClientProps) => {
   const { powers } = zone;
   const { numerics, zonesConfig } = gameConfig;
@@ -60,31 +60,39 @@ export const Zone = ({
     else setZoneLeader(undefined);
   }, [powers]);
 
+  const zoneClasses = [
+    'zone',
+    zone?.disabled[yourID] ? 'zone--disabled' : '',
+  ].join(' ');
+
   return (
-    <div
-      className={['zone', zone?.disabled[yourID] ? 'zone--disabled' : ''].join(
-        ' '
-      )}
-    >
+    <div className={zoneClasses}>
       <div className={['zone__side', 'side__opponent'].join(' ')}>
         {[...Array.from(Array(numerics.numberOfSlotsPerZone))].map(
           (_, idx: number) => {
             return (
-              <OpponentZoneSlot
+              <MinionSlotWrapper
                 key={idx}
                 data={zone.sides[theirID][idx]}
-                onClick={(val: any) => console.log(val)}
+                player={yourID}
+                opponent={theirID}
+                index={idx}
+                moves={moves}
                 zoneNumber={zoneNumber}
-                zoneRef={zoneRef}
-                slotIndex={idx}
-                playerId={theirID}
-                yourID={yourID}
-                theirID={theirID}
-              />
+              >
+                <OpponentZoneSlot
+                  key={idx}
+                  data={zone.sides[theirID][idx]}
+                  onClick={(val: any) => console.log(val)}
+                  zoneNumber={zoneNumber}
+                  zoneRef={zoneRef}
+                  slotIndex={idx}
+                  playerId={theirID}
+                  yourID={yourID}
+                  theirID={theirID}
+                />
+              </MinionSlotWrapper>
             );
-            //  : (
-            //   <div key={idx} className={styles['blank-slot']} />
-            // );
           }
         )}
       </div>
@@ -145,6 +153,7 @@ export const Zone = ({
                   key={idx}
                   data={zone.sides[yourID][idx]}
                   player={yourID}
+                  opponent={theirID}
                   index={idx}
                   moves={moves}
                   zoneNumber={zoneNumber}

@@ -1,7 +1,7 @@
-&.minionslot--can-be-buffed {
+&.minionslot--can-be-destroyed {
   $radius: #{var(--minion-border-radius)};
 
-  box-shadow: var(--box-shadow-can-be-buffed);
+  box-shadow: var(--box-shadow-can-be-attacked);
   pointer-events: auto;
   transition: box-shadow 600ms ease-in-out;
   will-change: box-shadow;
@@ -34,15 +34,15 @@
 
   @keyframes targeting-ripple-buff {
     0% {
-      box-shadow: 0 1px 5px var(--box-shadow-can-be-buffed-color-ripple),
-        0 0 0 0 var(--box-shadow-can-be-buffed-color-ripple),
-        0 0 0 2.5px var(--box-shadow-can-be-buffed-color-ripple),
-        0 0 0 5px var(--box-shadow-can-be-buffed-color-ripple);
+      box-shadow: 0 1px 5px var(--box-shadow-can-be-attacked-color-ripple),
+        0 0 0 0 var(--box-shadow-can-be-attacked-color-ripple),
+        0 0 0 2.5px var(--box-shadow-can-be-attacked-color-ripple),
+        0 0 0 5px var(--box-shadow-can-be-attacked-color-ripple);
     }
     100% {
-      box-shadow: 0 1px 5px var(--box-shadow-can-be-buffed-color-ripple),
-        0 0 0 2.5px var(--box-shadow-can-be-buffed-color-ripple),
-        0 0 0 5px var(--box-shadow-can-be-buffed-color-ripple),
+      box-shadow: 0 1px 5px var(--box-shadow-can-be-attacked-color-ripple),
+        0 0 0 2.5px var(--box-shadow-can-be-attacked-color-ripple),
+        0 0 0 5px var(--box-shadow-can-be-attacked-color-ripple),
         0 0 0 20px rgba(0, 0, 0, 0);
     }
   }

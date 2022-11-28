@@ -1,7 +1,8 @@
 import { Ctx, Undo } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Card, GameState, PlayerID } from '../types';
-import { getCardPower } from '../utils';
+import { getCardPower, getContextualPlayerIds } from '../utils';
+import { core043Destroy } from './mechanics/core-mechanics-by-key/mechanic.core.043';
 import { core110Buff } from './mechanics/core-mechanics-by-key/mechanic.core.110';
 import {
   actionPoints,
@@ -242,25 +243,50 @@ export const buffMinion = (
 ) => {
   const { playedCards } = G;
   const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
-  G.zones[zoneNumber].sides[player].forEach(c => {
+  G.zones[zoneNumber].sides[player].forEach((c) => {
     if (c.uuid === cardToBuffUuid) {
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_110':
           return core110Buff(G, ctx, player, c, lastPlayedCard);
-      
+
         default:
           return;
       }
     }
-  })
+  });
+};
+
+export const destroyMinion = (
+  G: GameState,
+  ctx: Ctx,
+  player: PlayerID,
+  cardToDestroyUuid: string,
+  zoneNumber: number
+) => {
+  const { opponent } = getContextualPlayerIds(player);
+  const { playedCards } = G;
+  const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
+
+  G.zones[zoneNumber].sides[opponent].forEach((c) => {
+    if (c.uuid === cardToDestroyUuid) {
+      switch (lastPlayedCard?.key) {
+        case 'SET_CORE_043':
+          return core043Destroy(G, ctx, opponent, c?.uuid);
+        default:
+          return;
+      }
+    }
+  });
 };
 
 export const updatePlayerHandArray = (
   G: GameState,
   ctx: Ctx,
   player: PlayerID,
-  cardUuid: string,
+  cardUuid: string
 ) => {
-  const newHand = G.players[player].cards.hand.filter(c => c.uuid !== cardUuid);
+  const newHand = G.players[player].cards.hand.filter(
+    (c) => c.uuid !== cardUuid
+  );
   G.players[player].cards.hand = newHand;
 };

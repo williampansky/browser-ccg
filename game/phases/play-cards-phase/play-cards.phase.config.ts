@@ -4,6 +4,7 @@ import type { Card, GameState, PlayerID } from '../../../types';
 import {
   buffMinion,
   deselectCard,
+  destroyMinion,
   playAiCard,
   playCard,
   selectCard,
@@ -88,6 +89,20 @@ export const moves = {
       zoneNumber: number
     ) => {
       return buffMinion(G, ctx, player, cardToBuffUuid, zoneNumber);
+    },
+  },
+  destroyMinion: {
+    client: false,
+    noLimit: true,
+    ignoreStaleStateID: true,
+    move: (
+      G: GameState,
+      ctx: Ctx,
+      player: PlayerID,
+      cardToDestroyUuid: string,
+      zoneNumber: number
+    ) => {
+      return destroyMinion(G, ctx, player, cardToDestroyUuid, zoneNumber);
     },
   },
   updatePlayerHandArray: {

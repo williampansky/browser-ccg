@@ -35,15 +35,6 @@ export const OpponentZoneSlot = ({
   const [incoming, setIncoming] = useState<boolean>(false);
   const [destroyed, setDestroyed] = useState<boolean>(false);
   const [animation, setAnimation] = useState<string>('');
-  const [rotation, setRotation] = useState<number>(0);
-  const [offsetY, setOffsetY] = useState<number>(0);
-
-  // useEffect(() => {
-  //   if (zoneRef[opponent]?.length && zoneRef[opponent][slotIndex]) {
-  //     const ref = zoneRef[opponent][slotIndex].revealed;
-  //     if (!ref) setIncoming(true);
-  //   }
-  // }, [zoneRef]);
 
   const getAnimationDirection = (zoneNumber: number, data?: Card): string => {
     const scaleEnd = 'scale(1, -1)';
@@ -86,11 +77,6 @@ export const OpponentZoneSlot = ({
     }
   }, [data, playerId]);
 
-  useEffect(() => {
-    setRotation(getRandomNumberBetween(-3, 3));
-    setOffsetY(getRandomNumberBetween(-2, 2));
-  }, []);
-
   const onUnrevealedClick = () => {
     if (!incoming) return;
     return onClick(zoneRef[theirID][slotIndex]);
@@ -123,10 +109,9 @@ export const OpponentZoneSlot = ({
         width: 'calc(var(--minion-height) / 1.25)',
         transition: '250ms ease-in',
         position: objData ? 'relative' : 'relative',
-        top: `${offsetY}px`,
         opacity: objData && !destroyed ? 1 : 0,
         zIndex: objData ? '1' : '-1',
-        transform: `${getAnimationDirection(zoneNumber, objData)} rotate(${rotation}deg)`,
+        transform: `${getAnimationDirection(zoneNumber, objData)}`,
         transitionDelay: objData?.revealed ? `${slotIndex * 200}ms` : '0ms',
         pointerEvents: objData ? 'auto' : 'none'
         // filter: objData ? 'blur(0)' : 'blur(1px)'

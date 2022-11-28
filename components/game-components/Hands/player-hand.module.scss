@@ -36,7 +36,8 @@
   // background: yellow;
   display: block;
   pointer-events: auto;
-  touch-action: auto;
+  // touch-action: auto;
+  touch-action: none;
   position: absolute;
   top: 0;
 }
