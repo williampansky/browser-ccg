@@ -15,7 +15,7 @@ export const gameConfig: GameConfig = {
   },
   ai: {
     enableBotAi: true,
-    enableBotAiMoves: false,
+    enableBotAiMoves: true,
     logBotAiMovesToConsole: false,
   },
   numerics: {
