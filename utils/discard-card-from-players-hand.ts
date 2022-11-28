@@ -23,11 +23,11 @@ const discardCardFromPlayersHand = (
       cardToDiscard.booleans.wasDiscarded = true;
 
       // @ts-ignore
-      ctx.effects.discardCard({
-        card: current(cardToDiscard),
-        cardIdx: cardToDiscardIdx,
-        player
-      });
+      // ctx.effects.discardCard({
+      //   card: current(cardToDiscard),
+      //   cardIdx: cardToDiscardIdx,
+      //   player
+      // });
 
       G.players[player].cards.hand = newHand;
       counts.decrementHand(G, player);

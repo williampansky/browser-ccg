@@ -22,12 +22,11 @@ const bgioEffectsConfig = {
     discardCard: {
       duration: 2,
       create: ({ ...value }: DiscardCardEffects) => {
-        const { card, cardIdx, player, newHand } = value;
+        const { cardUuid, cardIdx, player } = value;
         return {
-          card,
+          cardUuid,
           cardIdx,
           player,
-          newHand,
         };
       },
     },
