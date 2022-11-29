@@ -2,6 +2,7 @@ import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
 
 import {
+  attackMinion,
   buffMinion,
   deselectCard,
   destroyMinion,
@@ -76,6 +77,20 @@ export const moves = {
     ignoreStaleStateID: true,
     move: (G: GameState, ctx: Ctx, player: PlayerID) => {
       return ctx?.events?.endTurn({ next: player });
+    },
+  },
+  attackMinion: {
+    client: false,
+    noLimit: true,
+    ignoreStaleStateID: true,
+    move: (
+      G: GameState,
+      ctx: Ctx,
+      player: PlayerID,
+      cardToAttackUuid: string,
+      zoneNumber: number
+    ) => {
+      return attackMinion(G, ctx, player, cardToAttackUuid, zoneNumber);
     },
   },
   buffMinion: {

@@ -22,6 +22,8 @@ const createCardObject = (obj: CardBase): Card => {
     basePower: obj?.power,
     // prettier-ignore
     booleans: {
+      canBeAttackedBySpell: false,
+      canBeAttackedByWeapon: false,
       canBeBuffed: false,
       canBeDebuffed: false,
       canBeDestroyed: false,

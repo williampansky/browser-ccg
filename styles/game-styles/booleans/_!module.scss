@@ -12,6 +12,7 @@
   position: relative;
   font-size: calc(var(--minion-height) / 8);
   
+  @import 'minion.can-be-attacked';
   @import 'minion.can-be-buffed';
   @import 'minion.can-be-destroyed';
 }

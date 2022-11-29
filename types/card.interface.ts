@@ -32,6 +32,8 @@ export declare type CardType =
   | CardTypeEnums.Weapon;
 
 export interface CardStateBooleans {
+  canBeAttackedBySpell: boolean;
+  canBeAttackedByWeapon: boolean;
   canBeBuffed: boolean;
   canBeDebuffed: boolean;
   canBeDestroyed: boolean;

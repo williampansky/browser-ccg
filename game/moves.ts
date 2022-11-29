@@ -15,6 +15,7 @@ import {
 } from './state';
 import { core031Buff } from './mechanics/core-mechanics-by-key/mechanic.core.031';
 import { fxEnd } from './config.bgio-effects';
+import { core044Attack } from './mechanics/core-mechanics-by-key/mechanic.core.044';
 
 export const selectCard = (
   G: GameState,
@@ -232,6 +233,29 @@ export const playAiCard = (
 
 export const setDone = (G: GameState, ctx: Ctx, player: PlayerID) => {
   playerTurnDone.set(G, player);
+};
+
+export const attackMinion = (
+  G: GameState,
+  ctx: Ctx,
+  player: PlayerID,
+  cardToAttackUuid: string,
+  zoneNumber: number
+) => {
+  const { opponent } = getContextualPlayerIds(player);
+  const { playedCards } = G;
+  const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
+
+  G.zones[zoneNumber].sides[opponent].forEach((c) => {
+    if (c.uuid === cardToAttackUuid) {
+      switch (lastPlayedCard?.key) {
+        case 'SET_CORE_044':
+          return core044Attack(G, ctx, opponent, c?.uuid, lastPlayedCard);
+        default:
+          return;
+      }
+    }
+  });
 };
 
 export const buffMinion = (

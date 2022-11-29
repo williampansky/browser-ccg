@@ -28,7 +28,7 @@ export const MinionSlotWrapper = ({
   zoneNumber,
 }: Props) => {
   const booleans = data && data?.booleans;
-  const { buffMinion, destroyMinion } = moves;
+  const { attackMinion, buffMinion, destroyMinion } = moves;
 
   const [rotation, setRotation] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
@@ -39,14 +39,19 @@ export const MinionSlotWrapper = ({
   }, []);
 
   const handleOnClick = (): void => {
-    if (booleans?.canBeBuffed) move('canBeBuffed');
-    if (booleans?.canBeDestroyed) move('canBeDestroyed');
+    if (booleans?.canBeAttackedBySpell) move(Context.CanBeAttackedBySpell);
+    if (booleans?.canBeBuffed) move(Context.CanBeBuffed);
+    if (booleans?.canBeDestroyed) move(Context.CanBeDestroyed);
   };
 
   const move = (
     context: string,
   ): void => {
     switch (context) {
+      case Context.CanBeAttackedBySpell:
+        return attackMinion(player, data?.uuid, zoneNumber);
+      case Context.CanBeAttackedByWeapon:
+        return attackMinion(player, data?.uuid, zoneNumber);
       case Context.CanBeBuffed:
         return buffMinion(player, data?.uuid, zoneNumber);
       case Context.CanBeDestroyed:
@@ -60,6 +65,7 @@ export const MinionSlotWrapper = ({
     <div
       className={[
         'minionslot',
+        booleans?.canBeAttackedBySpell ? 'minionslot--can-be-attacked' : '',
         booleans?.canBeBuffed ? 'minionslot--can-be-buffed' : '',
         booleans?.canBeDestroyed ? 'minionslot--can-be-destroyed' : '',
       ].join(' ')}

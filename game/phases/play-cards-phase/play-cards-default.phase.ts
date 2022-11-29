@@ -60,6 +60,8 @@ const defaultPlayCardsPhase: PhaseConfig = {
         zone.sides['0'].forEach((card: Card, cardIdx) => {
           card.booleans = {
             ...card.booleans,
+            canBeAttackedBySpell: false,
+            canBeAttackedByWeapon: false,
             canBeBuffed: false,
             canBeDestroyed: false,
           };
@@ -81,6 +83,8 @@ const defaultPlayCardsPhase: PhaseConfig = {
         zone.sides['1'].forEach((card: Card, cardIdx) => {
           card.booleans = {
             ...card.booleans,
+            canBeAttackedBySpell: false,
+            canBeAttackedByWeapon: false,
             canBeBuffed: false,
             canBeDestroyed: false,
           };
@@ -108,6 +112,8 @@ const defaultPlayCardsPhase: PhaseConfig = {
     },
     onMove(G: GameState, ctx: Ctx) {
       const { currentPlayer } = ctx;
+
+      // console.log(G.actionPoints[currentPlayer].current)
 
       G.zones.forEach((zone: Zone, zoneIdx) => {
         zone.sides[currentPlayer].forEach((card: Card, cardIdx) => {
