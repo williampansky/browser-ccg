@@ -1,4 +1,5 @@
 import type { Ctx } from 'boardgame.io';
+import { gte, lt } from 'lodash';
 import type { Card, GameState, PlayerID, Zone } from '../types';
 import { getRandomNumberBetween } from '../utils';
 
@@ -6,6 +7,7 @@ interface PushPlayCardToZoneMove {
   aiID: PlayerID;
   card: Card;
   cardIndex: number;
+  currentAp: number;
   moves: any;
   perZone: number;
   zoneNumber: number;
@@ -19,6 +21,7 @@ const aiEnumeration = {
     const perZone = gameConfig.numerics.numberOfSlotsPerZone;
     const aiPlayer = players[aiID];
     const aiHand = aiPlayer.cards.hand;
+    const ap = G.actionPoints[aiID].current;
 
     const playableCards: Card[] = [];
     let moves: any[] = [];
@@ -31,7 +34,7 @@ const aiEnumeration = {
     // avoids onslaught of INVALID_MOVE errors
     // prettier-ignore
     if (G.playerTurnDone[aiID] === false) {
-      pushPlayCardMoves(moves, aiID, aiHand, playableCards, perZone, zones);
+      pushPlayCardMoves(moves, aiID, ap, aiHand, playableCards, perZone, zones);
       pushInteractionMoves(G, moves, aiID);
       pushSetDoneMove(moves, aiID);
     }
@@ -51,15 +54,18 @@ export const pushPlayCardToZoneMoves = ({
   aiID,
   card,
   cardIndex,
+  currentAp,
   moves,
   perZone,
   zoneNumber,
   zones,
 }: PushPlayCardToZoneMove) => {
   const zoneSideLength = zones[zoneNumber].sides[aiID].length;
-  const slotsAvailableInZone = perZone - zoneSideLength;
+  const slotsAvailableInZone = lt(zoneSideLength, perZone);
+  const zoneIsNotDisabled = !zones[zoneNumber].disabled[aiID];
+  const canAfford = gte(currentAp, card.currentCost);
 
-  if (!zones[zoneNumber].disabled[aiID])
+  if (canAfford && zoneIsNotDisabled && slotsAvailableInZone)
     // for (let i = 0; i < slotsAvailableInZone; i++) {
     moves.push({
       move: 'playAiCard',
@@ -71,6 +77,7 @@ export const pushPlayCardToZoneMoves = ({
 export const pushPlayCardMoves = (
   moves: any,
   aiID: PlayerID,
+  currentAp: number,
   hand: Card[],
   playableCards: Card[],
   perZone: number,
@@ -89,6 +96,7 @@ export const pushPlayCardMoves = (
         aiID,
         card: rngCard,
         cardIndex: rngIdx,
+        currentAp,
         moves,
         perZone,
         zones,

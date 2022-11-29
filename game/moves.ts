@@ -14,6 +14,7 @@ import {
   selectedCardData,
 } from './state';
 import { core031Buff } from './mechanics/core-mechanics-by-key/mechanic.core.031';
+import { fxEnd } from './config.bgio-effects';
 
 export const selectCard = (
   G: GameState,
@@ -47,40 +48,41 @@ export const deselectCard = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
 export const playCard = (
   G: GameState,
   ctx: Ctx,
-  playerId: PlayerID,
+  player: PlayerID,
   zoneNumber: number
 ) => {
   const { currentPlayer } = ctx;
   const {
-    zones,
     gameConfig: {
       numerics: { numberOfSlotsPerZone },
     },
+    zones,
   } = G;
 
   // validate selected card
-  if (G.selectedCardData[playerId] === undefined) return INVALID_MOVE;
+  if (G.selectedCardData[player] === undefined) return INVALID_MOVE;
 
-  const player = G.players[playerId];
-  const card = G.selectedCardData[playerId]! as Card;
-  const cardUuid = G.selectedCardData[playerId]!.uuid;
+  const ap = G.actionPoints;
+  const playerObj = G.players[player];
+  const card = G.selectedCardData[player]! as Card;
+  const cardUuid = G.selectedCardData[player]!.uuid;
   const zone = zones[zoneNumber];
+  const cantAffordCard = !gte(ap[player].current, card.currentCost);
 
-  // validate cost playability
-  if (G.actionPoints[playerId].current < card.currentCost) return INVALID_MOVE;
+  if (cantAffordCard) return INVALID_MOVE;
 
   // validate zone playability
-  if (zone.sides[playerId].length > numberOfSlotsPerZone) return INVALID_MOVE;
-  if (zone.disabled[playerId]) return INVALID_MOVE;
+  if (zone.sides[player].length > numberOfSlotsPerZone) return INVALID_MOVE;
+  if (zone.disabled[player]) return INVALID_MOVE;
 
   // add card to PlayedCards array
-  playedCards.push(G, playerId, card);
+  playedCards.push(G, player, card);
 
   // remove cost from current action points
-  actionPoints.subtract(G, playerId, card.currentCost);
+  actionPoints.subtract(G, player, card.currentCost);
 
   // push card to zone side array
-  zone.sides[playerId].push({
+  zone.sides[player].push({
     ...card,
     revealed: true, // reveal card
     displayPower: getCardPower(card), // set display power
@@ -88,29 +90,28 @@ export const playCard = (
   });
 
   // remove card from hand
-  const newHand = player.cards.hand.filter((c: Card) => c.uuid !== cardUuid);
-  G.players[playerId].cards.hand = newHand;
+  const newHand = playerObj.cards.hand.filter((c: Card) => c.uuid !== cardUuid);
+  G.players[player].cards.hand = newHand;
 
   // recount cards in hand
-  counts.decrementHand(G, playerId);
+  counts.decrementHand(G, player);
 
   // re-evaluate cards in hand
-  if (G.players[playerId].cards.hand.length !== 0)
-    G.players[playerId].cards.hand.forEach((c: Card) => {
-      if (G.actionPoints[playerId].current >= c.currentCost) {
+  if (gte(playerObj.cards.hand.length, 1)) {
+    playerObj.cards.hand.forEach((c: Card) => {
+      if (ap[player].current >= c.currentCost) {
         return (c.canPlay = true);
       } else {
         return (c.canPlay = false);
       }
     });
+  }
 
   // unset selected card
-  selectedCardData.reset(G, playerId);
-  G.selectedCardIndex[playerId] = undefined;
-  canUndo.setPlayer(G, playerId);
-
-  // @ts-ignore
-  ctx.effects?.fxEnd();
+  selectedCardData.reset(G, player);
+  G.selectedCardIndex[player] = undefined;
+  canUndo.setPlayer(G, player);
+  fxEnd(ctx);
 };
 
 export const undoPlayCard = (
@@ -191,13 +192,6 @@ export const playAiCard = (
 
   // validate cost playability
   if (cannotAffordCard || zoneHasNoAvailableSlots || zoneIsDisabled) {
-    console.error(`
-      INVALID_MOVE
-      cannotAffordCard: ${cannotAffordCard},
-      zoneHasNoAvailableSlots: ${zoneHasNoAvailableSlots},
-      zoneIsDisabled: ${zoneIsDisabled}
-    `);
-
     return INVALID_MOVE;
   }
 

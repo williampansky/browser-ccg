@@ -22,14 +22,14 @@ export const core032 = (
   cardIdx: number,
   player: PlayerID
 ) => {
-  const { numberPrimary } = card;
-
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
-      if (c.uuid !== card.uuid) { // make sure not to buff itself
-        if (c.race === CardRace.Creature) { // make sure race matches
-          drawCardFromPlayersDeck(G, player);
-        }
+      const revealedThisTurn = c.revealedOnTurn === G.turn;
+      const cardIsACreature = c.type === CardRace.Creature;
+      const cardIsNotSelf = c.uuid !== card.uuid;
+
+      if (cardIsNotSelf && cardIsACreature && revealedThisTurn) { 
+        drawCardFromPlayersDeck(G, player);
       }
     });
   });

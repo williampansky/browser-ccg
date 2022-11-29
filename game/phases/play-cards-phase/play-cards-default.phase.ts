@@ -27,7 +27,7 @@ import {
 } from '../../../utils';
 import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/methods';
 import { fxEnd } from '../../config.bgio-effects';
-import { lt, lte } from 'lodash';
+import { gte, lt, lte } from 'lodash';
 
 const defaultPlayCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
@@ -130,7 +130,7 @@ const defaultPlayCardsPhase: PhaseConfig = {
         // handle card deaths if health goes below zero
         zone.sides['0'].forEach((c, cI) => {
           const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
-          if (hpIsLessOrEqualTo(-1)) {
+          if (hpIsLessOrEqualTo(0)) {
             G.players['0'].cards.destroyed.push(c.key);
             zone.sides['0'] = zone.sides['0'].filter((_, idx) => idx !== cI);
             handleCardDestructionMechanics(G, c, '0');
@@ -139,7 +139,7 @@ const defaultPlayCardsPhase: PhaseConfig = {
 
         zone.sides['1'].forEach((c, cI) => {
           const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
-          if (hpIsLessOrEqualTo(-1)) {
+          if (hpIsLessOrEqualTo(0)) {
             G.players['1'].cards.destroyed.push(c.key);
             zone.sides['1'] = zone.sides['1'].filter((_, idx) => idx !== cI);
             handleCardDestructionMechanics(G, c, '1');
@@ -150,6 +150,16 @@ const defaultPlayCardsPhase: PhaseConfig = {
         zone.powers['0'] = calculateZoneSidePower(G, zoneIdx, '0');
         zone.powers['1'] = calculateZoneSidePower(G, zoneIdx, '1');
       });
+
+      if (gte(G.players[currentPlayer].cards.hand.length, 1)) {
+        G.players[currentPlayer].cards.hand.forEach((c: Card) => {
+          if (G.actionPoints[currentPlayer].current >= c.currentCost) {
+            return (c.canPlay = true);
+          } else {
+            return (c.canPlay = false);
+          }
+        });
+      }
     },
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
   },
