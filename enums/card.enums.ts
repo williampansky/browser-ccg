@@ -1,4 +1,20 @@
 /**
+ * Enum values for the `Card.race` base format
+ */
+export enum CardBaseRace {
+  Android = '%RACE_ANDROID%',
+  Creature = '%RACE_CREATURE%',
+  Demon = '%RACE_DEMONIC%',
+  Dragon = '%RACE_DRAGON%',
+  Element = '%RACE_ELEMENT%',
+  Idol = '%RACE_IDOL%',
+  Location = '%RACE_LOCATION%',
+  None = '%RACE_NONE%',
+  Pirate = '%RACE_PIRATE%',
+  Sprite = '%RACE_SPRITE%',
+}
+
+/**
  * Enum values for the `Card.race`
  */
 export enum CardRace {
@@ -12,6 +28,18 @@ export enum CardRace {
   None = 'NONE',
   Pirate = 'PIRATE',
   Sprite = 'SPRITE',
+}
+
+/**
+ * Enum values for the `Card.rarity` base format
+ */
+export enum CardBaseRarity {
+  Common = '%RARITY_COMMON%',
+  Free = '%RARITY_FREE%',
+  Golden = '%RARITY_GOLDEN%',
+  Mythic = '%RARITY_MYTHIC%',
+  Remarkable = '%RARITY_REMARKABLE%',
+  Superior = '%RARITY_SUPERIOR%',
 }
 
 /**
@@ -32,6 +60,16 @@ export enum CardRarity {
 export enum CardSet {
   Core = 'Core',
   Prime = 'Prime',
+}
+
+/**
+ * Enum values for the `Card.type` base format
+ */
+export enum CardBaseType {
+  Card = '%TYPE_CARD%',
+  Minion = '%TYPE_MINION%',
+  Spell = '%TYPE_SPELL%',
+  Weapon = '%TYPE_WEAPON%',
 }
 
 /**

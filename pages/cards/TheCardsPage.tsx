@@ -13,7 +13,7 @@ export default function TheCardsPage() {
   const fetchCards = async () => {
     const response = await fetch('/api/cards');
     const data = await response.json();
-    setCards(data.sort().reverse());
+    setCards(data);
   };
 
   useEffect(() => {

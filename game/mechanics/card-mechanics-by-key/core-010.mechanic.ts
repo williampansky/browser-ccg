@@ -28,17 +28,17 @@ export const core010 = (
 
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
-      // make sure not to buff itself
-      if (c.uuid !== card.uuid) {
-        // make sure race matches
-        if (c.race === CardRace.Sprite) {
-          pushPowerStreamAndSetDisplay(
-            c,
-            card,
-            numberPrimary!,
-            add(c.displayPower, numberPrimary!)
-          );
-        }
+      const zoneMatch = zIdx === zoneIdx;
+      const isNotSelf = c.uuid !== card.uuid;
+      const isSprite = c.race === CardRace.Sprite;
+
+      if (zoneMatch && isNotSelf && isSprite) {
+        pushPowerStreamAndSetDisplay(
+          c,
+          card,
+          numberPrimary!,
+          add(c.displayPower, numberPrimary!)
+        );
       }
     });
   });

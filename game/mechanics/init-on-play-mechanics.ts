@@ -26,6 +26,7 @@ import { core118 } from './core-mechanics-by-key/mechanic.core.118';
 import { core122 } from './core-mechanics-by-key/mechanic.core.122';
 import { core034 } from './core-mechanics-by-key/mechanic.core.034';
 import { core044 } from './core-mechanics-by-key/mechanic.core.044';
+import { core019 } from './core-mechanics-by-key/core.mechanic.019';
 
 const initOnPlayMechanics = (
   G: GameState,
@@ -61,6 +62,8 @@ const initOnPlayMechanics = (
       return core011(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     case 'SET_CORE_014':
       return core014(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
+    case 'SET_CORE_019':
+      return core019(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
     case 'SET_CORE_025':
       return core025(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     case 'SET_CORE_029':

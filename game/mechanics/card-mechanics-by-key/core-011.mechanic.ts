@@ -11,10 +11,9 @@ import type {
 import setsCore from '../../data/setsCore.json';
 import { counts } from '../../state';
 import { createCardObject } from '../../../utils';
+import { CardBaseRarity, CardBaseType } from '../../../enums';
 
-const db = [
-  ...setsCore
-];
+const db = [...setsCore];
 
 /**
  * on play: add a random legendary to your hand
@@ -31,7 +30,11 @@ export const core011 = (
 ) => {
   const { numerics } = gameConfig;
   const cardsArr = db.filter((c: CardBase) => {
-    return c.rarity === '%RARITY_MYTHIC%' && c.key !== card.key;
+    return (
+      c.key !== card.key &&
+      c.rarity === CardBaseRarity.Mythic &&
+      c.type === CardBaseType.Minion
+    );
   });
 
   if (G.players[player].cards.hand.length < numerics.cardsPerHand) {

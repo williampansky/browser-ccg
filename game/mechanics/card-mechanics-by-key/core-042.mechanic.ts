@@ -27,28 +27,28 @@ export const core042 = (
   cardIdx: number,
   player: PlayerID
 ) => {
-  const numberPrimary = card?.numberPrimary || 1;
-  const numberSecondary = card?.numberSecondary || 1;
+  const numberPrimary = card?.numberPrimary;
+  const numberSecondary = card?.numberSecondary;
 
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
-      // make sure not to buff itself
-      if (c.uuid !== card.uuid) {
-        // make sure type matches
-        if (c.type === CardType.Minion) {
-          pushHealthStreamAndSetDisplay(
-            c,
-            card,
-            numberSecondary,
-            add(c.displayHealth, numberSecondary)
-          );
-          pushPowerStreamAndSetDisplay(
-            c,
-            card,
-            numberPrimary,
-            add(c.displayPower, numberPrimary)
-          );
-        }
+      const zoneMatch = zIdx === zoneIdx;
+      const isNotSelf = c.uuid !== card.uuid;
+      const isMinion = c.type === CardType.Minion;
+      
+      if (zoneMatch && isNotSelf && isMinion) {
+        pushHealthStreamAndSetDisplay(
+          c,
+          card,
+          numberSecondary,
+          add(c.displayHealth, numberSecondary)
+        );
+        pushPowerStreamAndSetDisplay(
+          c,
+          card,
+          numberPrimary,
+          add(c.displayPower, numberPrimary)
+        );
       }
     });
   });
