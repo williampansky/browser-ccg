@@ -87,9 +87,7 @@ const createCardObject = (obj: CardBase): Card => {
     rarity: replaceAllConstants(obj?.rarity, 'value'),
     revealed: false,
     revealedOnTurn: 0,
-    text: obj?.mechanicsEnabled
-      ? createMarkup(replaceAllConstants(obj.text!))
-      : undefined,
+    text: obj?.text && obj?.mechanicsEnabled ? obj.text : undefined,
     type: replaceAllConstants(obj?.type, 'value'),
     uuid: uuid(),
     value: obj?.name,

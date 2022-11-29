@@ -19,6 +19,7 @@ export default function replaceDynamicText(
   }
 
   if (stringToParse.includes('%NUM1%')) {
+    console.log(stringToParse, val1)
     return stringToParse.replace(/%(NUM1)%/g, val1);
   }
   

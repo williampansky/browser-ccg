@@ -203,7 +203,7 @@ export interface Card {
   set: CardSet | string;
   sounds?: Record<string, string>;
   targetingText?: string;
-  text?: { __html: string };
+  text?: string;
   type: CardType | string;
   uuid: string;
   zonePowerAdjustment: number;

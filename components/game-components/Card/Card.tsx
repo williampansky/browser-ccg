@@ -1,5 +1,6 @@
 import { Card as CardProps } from '../../../types';
 import {
+  createMarkup,
   fontSizeBasedOnCharacterLength,
   formatCardText,
   replaceAllConstants,
@@ -70,17 +71,9 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
   } = card;
 
   const formattedCardText = useCallback(() => {
-    return {
-      __html: replaceAllConstants(
-        formatCardText(
-          text?.__html,
-          numberPrimary,
-          numberSecondary,
-          numberRNG,
-          0
-        )
-      ),
-    };
+    return replaceAllConstants(
+      formatCardText(text, numberPrimary, numberSecondary, numberRNG, 0)
+    );
   }, [text, numberPrimary, numberSecondary, numberRNG, 0]);
 
   return (
@@ -121,7 +114,7 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
 
       {/* <CardRarityGem rarity={rarity} /> */}
       <CardName name={name} formatter={fontSizeBasedOnCharacterLength} />
-      <CardText markup={formattedCardText()} />
+      <CardText markup={createMarkup(formattedCardText())} />
       <CardTypeLabel race={race} type={type} formatter={(val: any) => val} />
 
       {/* <CardTypeBadge
