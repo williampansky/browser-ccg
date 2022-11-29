@@ -208,6 +208,14 @@
   }
 }
 
+.card-detail__modal .modal__key {
+  position: absolute;
+  top: 0; right: auto; bottom: auto; left: 0;
+  margin: 2px;
+  font-size: 10px;
+  line-height: 1;
+}
+
 .card-detail__modal.card-detail__modal--active {
   opacity: 1;
   z-index: 9000;

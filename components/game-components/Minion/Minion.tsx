@@ -47,6 +47,7 @@ export const Minion = ({ isSelected = false, ...card }: ReactMinionProps) => {
     revealedOnTurn,
     set,
     sounds,
+    targetingText,
     type,
     uuid,
     zonePowerAdjustment,

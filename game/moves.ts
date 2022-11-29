@@ -247,6 +247,8 @@ export const buffMinion = (
   G.zones[zoneNumber].sides[player].forEach((c) => {
     if (c.uuid === cardToBuffUuid) {
       switch (lastPlayedCard?.key) {
+        case 'SET_CORE_031':
+          return core110Buff(G, ctx, player, c, lastPlayedCard);
         case 'SET_CORE_110':
           return core110Buff(G, ctx, player, c, lastPlayedCard);
 

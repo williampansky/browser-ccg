@@ -64,6 +64,7 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
     revealedOnTurn,
     set,
     sounds,
+    targetingText,
     text,
     type,
     uuid,

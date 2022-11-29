@@ -40,6 +40,10 @@ export const CardDetailModal = ({
     >
       {data ? (
         <>
+          {window?.location?.href?.includes('localhost') && (
+            <div className='modal__key'>{data?.key}</div>
+          )}
+
           <div className='modal__dialog'>
             {/* ========================================== */}
             {/* CARD */}

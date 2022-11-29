@@ -3,7 +3,7 @@ import { Mechanics } from '../enums';
 import { Card, CardBase } from '../types';
 import createArtistHtmlLink from './create-artist-html-link';
 import createCardKey from './create-card-key';
-import createMarkup from './create-markup';
+import formatCardText from './format-card-text';
 import getImageFlairSrc from './get-image-flair-src';
 import replaceAllConstants from './replace-all-constants';
 
@@ -87,6 +87,9 @@ const createCardObject = (obj: CardBase): Card => {
     rarity: replaceAllConstants(obj?.rarity, 'value'),
     revealed: false,
     revealedOnTurn: 0,
+    targetingText: obj?.targetingText
+      ? formatCardText(obj?.targetingText)
+      : undefined,
     text: obj?.text && obj?.mechanicsEnabled ? obj.text : undefined,
     type: replaceAllConstants(obj?.type, 'value'),
     uuid: uuid(),

@@ -13,7 +13,7 @@ import { core011 } from './card-mechanics-by-key/core-011.mechanic';
 import { core014 } from './card-mechanics-by-key/core-014.mechanic';
 import { core025 } from './card-mechanics-by-key/core-025.mechanic';
 import { core029 } from './card-mechanics-by-key/core-029.mechanic';
-import { core031 } from './card-mechanics-by-key/core-031.mechanic';
+import { core031 } from './core-mechanics-by-key/mechanic.core.031';
 import { core036 } from './card-mechanics-by-key/core-036.mechanic';
 import { core037 } from './card-mechanics-by-key/core-037.mechanic';
 import { core039 } from './card-mechanics-by-key/core-039.mechanic';

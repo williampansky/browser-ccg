@@ -121,9 +121,9 @@ export const PlayerHand = ({
         if (tap) {
           return onCardClick(playerHand[originalIndex]);
         } else if (!canPlay) {
-          cancel();
+          return cancel();
         } else {
-          setSprings(
+          return setSprings(
             fn(
               handLength,
               width,
@@ -258,18 +258,12 @@ export const PlayerHand = ({
                       zIndex: 110 - i,
                       cursor: canPlay ? cursor : 'default',
                       marginLeft,
-                      // marginLeft: marginLeft.to((mL: number) => `${mL}px`),
-                      // height: `${cardHeight}px`,
                       height: 65,
                       width: `${cardWidth}px`,
-                      // transform: `scale(1.3)`
                       transform: to([x, y, rotate, scale], (x, y, rt, sc) => {
                         if (width && width >= 1024) return `scale(${sc})`;
                         return '';
                       }),
-                      // transform: to([x, y], (x, y) => {
-                      //   return `translate3d(${x}px, ${y}px, 0)`;
-                      // }),
                     }}
                   />
 
@@ -282,7 +276,6 @@ export const PlayerHand = ({
                     style={{
                       zIndex,
                       marginLeft,
-                      // marginLeft: marginLeft.to((mL: number) => `${mL}px`),
                       marginTop: marginTop.to((mT: number) => `${mT}px`),
                       transform: to([x, y, rotate, scale], (x, y, rt, sc) => {
                         return `

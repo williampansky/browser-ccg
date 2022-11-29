@@ -126,6 +126,23 @@ const defaultPlayCardsPhase: PhaseConfig = {
           '0': calculateZoneSidePower(G, zoneIdx, '0'),
           '1': calculateZoneSidePower(G, zoneIdx, '1'),
         };
+
+        // handle card deaths if health goes below zero
+        G.zones.forEach((z, zI) => {
+          z.sides['0'].forEach((c, cI) => {
+            if (c.revealed && c.displayHealth <= 0) {
+              G.players['0'].cards.destroyed.push(c.key);
+              z.sides['0'] = z.sides['0'].filter((_, idx) => idx !== cI);
+            }
+          });
+
+          z.sides['1'].forEach((c, cI) => {
+            if (c.revealed && c.displayHealth <= 0) {
+              G.players['1'].cards.destroyed.push(c.key);
+              z.sides['1'] = z.sides['1'].filter((_, idx) => idx !== cI);
+            }
+          });
+        })
       });
     },
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
