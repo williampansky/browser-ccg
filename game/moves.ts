@@ -63,14 +63,12 @@ export const playCard = (
   const card = G.selectedCardData[playerId]! as Card;
   const cardUuid = G.selectedCardData[playerId]!.uuid;
   const zone = zones[zoneNumber];
-  const zoneRef = G.zonesCardsReference[zoneNumber];
 
   // validate cost playability
   if (G.actionPoints[playerId].current < card.currentCost) return INVALID_MOVE;
 
   // validate zone playability
   if (zone.sides[playerId].length > numberOfSlotsPerZone) return INVALID_MOVE;
-  if (zoneRef[playerId].length > numberOfSlotsPerZone) return INVALID_MOVE;
   if (zone.disabled[playerId]) return INVALID_MOVE;
 
   // add card to PlayedCards array
@@ -80,7 +78,12 @@ export const playCard = (
   actionPoints.subtract(G, playerId, card.currentCost);
 
   // push card to zone side array
-  zoneRef[playerId].push(card);
+  zone.sides[playerId].push({
+    ...card,
+    revealed: true, // reveal card
+    displayPower: getCardPower(card), // set display power
+    revealedOnTurn: G.turn, // set revealedOnTurn value
+  });
 
   // remove card from hand
   const newHand = player.cards.hand.filter((c: Card) => c.uuid !== cardUuid);
@@ -103,11 +106,6 @@ export const playCard = (
   selectedCardData.reset(G, playerId);
   G.selectedCardIndex[playerId] = undefined;
   canUndo.setPlayer(G, playerId);
-
-  if (G.gameConfig.asynchronousTurns === false) {
-    const idx = zoneRef[playerId].findIndex((o) => o.uuid === card.uuid);
-    revealCard(G, ctx, playerId, zoneNumber, card, idx);
-  }
 
   // @ts-ignore
   ctx.effects?.fxEnd();
@@ -177,44 +175,68 @@ export const playAiCard = (
   } = G;
 
   // set selected card
-  G.selectedCardData['1'] = card;
-  G.selectedCardIndex['1'] = cardIndex;
+  G.selectedCardData[aiID] = card;
+  // G.selectedCardIndex[aiID] = cardIndex;
 
-  const player = G.players['1'];
+  const player = G.players[aiID];
   const cardUuid = card.uuid;
   const zone = zones[zoneNumber];
-  const zoneSideLength = zone.sides['1'].length;
-  const zoneRef = G.zonesCardsReference[zoneNumber];
-  const zoneRefSideLength = zoneRef['1'].length;
-  const currentAP = G.actionPoints['1'].current;
+  const zoneSideLength = zone.sides[aiID].length;
+  // const zoneRef = G.zonesCardsReference[zoneNumber];
+  // const zoneRefSideLength = zoneRef[aiID].length;
+  const currentAP = G.actionPoints[aiID].current;
 
   // validate cost playability
-  if (currentAP < card.currentCost) return INVALID_MOVE;
+  if (currentAP < card.currentCost) {
+    console.error(
+      `INVALID_MOVE: card.currentCost(${card.currentCost}) higher than currentAP(${currentAP})`
+    );
+
+    return INVALID_MOVE;
+  }
 
   // validate zone playability
-  if (zoneSideLength > numberOfSlotsPerZone) return INVALID_MOVE;
-  if (zoneRefSideLength > numberOfSlotsPerZone) return INVALID_MOVE;
-  if (zone.disabled['1']) return INVALID_MOVE;
+  if (zoneSideLength >= numberOfSlotsPerZone) {
+    console.error(
+      `INVALID_MOVE: zoneSideLength(${card.currentCost}) is less than numberOfSlotsPerZone(${numberOfSlotsPerZone})`
+    );
+
+    return INVALID_MOVE;
+  }
+  // if (zoneRefSideLength > numberOfSlotsPerZone) return INVALID_MOVE;
+
+  if (zone.disabled[aiID]) {
+    console.error(
+      `INVALID_MOVE: zone[${zoneNumber}] is disabled for player ${aiID}`
+    );
+
+    return INVALID_MOVE;
+  };
 
   // add card to PlayedCards array
-  playedCards.push(G, '1', card);
+  playedCards.push(G, aiID, card);
 
   // remove cost from current action points
-  actionPoints.subtract(G, '1', card.currentCost);
+  actionPoints.subtract(G, aiID, card.currentCost);
 
   // push card to zone side array
-  zoneRef['1'].push(card);
+  zone.sides[aiID].push({
+    ...card,
+    revealed: true, // reveal card
+    displayPower: getCardPower(card), // set display power
+    revealedOnTurn: G.turn, // set revealedOnTurn value
+  });
 
   // remove card from hand
   const newHand = player.cards.hand.filter((c: Card) => c.uuid !== cardUuid);
-  G.players['1'].cards.hand = newHand;
+  G.players[aiID].cards.hand = newHand;
 
   // recount cards in hand
-  counts.decrementHand(G, '1');
+  counts.decrementHand(G, aiID);
 
   // re-evaluate cards in hand
-  G.players['1'].cards.hand.forEach((c: Card) => {
-    if (G.actionPoints['1'].current >= c.currentCost) {
+  G.players[aiID].cards.hand.forEach((c: Card) => {
+    if (G.actionPoints[aiID].current >= c.currentCost) {
       return (c.canPlay = true);
     } else {
       return (c.canPlay = false);
@@ -222,13 +244,13 @@ export const playAiCard = (
   });
 
   // unset selectedCard
-  selectedCardData.reset(G, '1');
-  G.selectedCardIndex['1'] = undefined;
+  selectedCardData.reset(G, aiID);
+  G.selectedCardIndex[aiID] = undefined;
 
-  if (G.gameConfig.asynchronousTurns === false) {
-    const idx = zoneRef['1'].findIndex((o) => o.uuid === card.uuid);
-    revealCard(G, ctx, '1', zoneNumber, card, idx);
-  }
+  // if (G.gameConfig.asynchronousTurns === false) {
+  //   const idx = zoneRef[aiID].findIndex((o) => o.uuid === card.uuid);
+  //   revealCard(G, ctx, aiID, zoneNumber, card, idx);
+  // }
 };
 
 export const setDone = (G: GameState, ctx: Ctx, player: PlayerID) => {

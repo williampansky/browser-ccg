@@ -24,24 +24,29 @@ export const core009 = (
   cardIdx: number,
   player: PlayerID
 ) => {
-  const { numberPrimary } = card;
+  const { numberPrimary, powerStream } = card;
   
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
-      const revealedThisTurn = c.revealedOnTurn === G.turn;
+      const cardIsntSelf = c.uuid !== card.uuid;
+      if (cardIsntSelf) {
+        const revealedThisTurn = c.revealedOnTurn === G.turn;
+        const cardIsSprite = c.race === CardRace.Sprite;
+        const cardNotInStream = !powerStream.find(o => o.uuid === c.uuid);
 
-      // make sure to only check sprites revealed this turn
-      if (c.race === CardRace.Sprite && revealedThisTurn) {
-        // find the core009 card node
-        const self = G.zones[zoneIdx].sides[player][cardIdx];
-
-        // push powerStream and set it
-        pushPowerStreamAndSetDisplay(
-          self,
-          c,
-          numberPrimary!,
-          add(card.displayPower, numberPrimary!)
-        );
+        // make sure to only check sprites revealed this turn
+        if (cardIsSprite && revealedThisTurn && cardNotInStream) {
+          // find the core009 card node
+          const self = G.zones[zoneIdx].sides[player][cardIdx];
+  
+          // push powerStream and set it
+          pushPowerStreamAndSetDisplay(
+            self,
+            c,
+            numberPrimary!,
+            add(card.displayPower, numberPrimary!)
+          );
+        }
       }
     });
   });

@@ -24,15 +24,17 @@ export const core008 = (
   cardIdx: number,
   player: PlayerID
 ) => {
-  const { numberPrimary } = card;
+  const { numberPrimary, powerStream } = card;
 
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
       const revealedThisTurn = c.revealedOnTurn === G.turn;
+      const cardIsMinion = c.type === CardType.Minion;
+      const cardNotInStream = !powerStream.find(o => o.uuid === c.uuid)
 
       if (c.uuid !== card.uuid) {
         // make sure to only check minions revealed this turn
-        if (c.type === CardType.Minion && revealedThisTurn) {
+        if (cardIsMinion && revealedThisTurn && cardNotInStream) {
           // find the core009 card node
           const self = G.zones[zoneIdx].sides[player][cardIdx];
 

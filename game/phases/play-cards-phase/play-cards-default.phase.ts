@@ -20,7 +20,7 @@ import {
 } from '../init-card-mechanics-phase';
 
 import { moves } from './play-cards.phase.moves';
-import { drawCardFromPlayersDeck, logPhaseToConsole } from '../../../utils';
+import { drawCardFromPlayersDeck, handleCardDestructionMechanics, logPhaseToConsole } from '../../../utils';
 import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/methods';
 import { fxEnd } from '../../config.bgio-effects';
 
@@ -122,27 +122,30 @@ const defaultPlayCardsPhase: PhaseConfig = {
           onPlay(onEvent());
         });
 
-        G.zones[zoneIdx].powers = {
-          '0': calculateZoneSidePower(G, zoneIdx, '0'),
-          '1': calculateZoneSidePower(G, zoneIdx, '1'),
-        };
-
         // handle card deaths if health goes below zero
         G.zones.forEach((z, zI) => {
           z.sides['0'].forEach((c, cI) => {
-            if (c.revealed && c.displayHealth <= 0) {
+            if (c.revealed && c.displayHealth < 0) {
               G.players['0'].cards.destroyed.push(c.key);
               z.sides['0'] = z.sides['0'].filter((_, idx) => idx !== cI);
+              handleCardDestructionMechanics(G, c, '0');
             }
           });
 
           z.sides['1'].forEach((c, cI) => {
-            if (c.revealed && c.displayHealth <= 0) {
+            if (c.revealed && c.displayHealth < 0) {
               G.players['1'].cards.destroyed.push(c.key);
               z.sides['1'] = z.sides['1'].filter((_, idx) => idx !== cI);
+              handleCardDestructionMechanics(G, c, '1');
             }
           });
         })
+
+        // set zone powers
+        G.zones[zoneIdx].powers = {
+          '0': calculateZoneSidePower(G, zoneIdx, '0'),
+          '1': calculateZoneSidePower(G, zoneIdx, '1'),
+        };
       });
     },
     order: TurnOrder.CUSTOM_FROM('turnOrder'),

@@ -40,6 +40,17 @@ export const CardModal = (): ReactElement | null => {
         background: 'rgba(0,0,0,0.865)',
       }}
     >
+      {window?.location?.href?.includes('localhost') && (
+        <div style={{
+          position: 'absolute',
+          top: 2,
+          right: 'auto',
+          bottom: 'auto',
+          left: 2,
+          fontSize: 10,
+          lineHeight: 1
+        }}>{cardModalData?.key}</div>
+      )}
       <div
         style={{
           position: 'absolute',

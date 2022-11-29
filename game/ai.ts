@@ -1,5 +1,6 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID, Zone } from '../types';
+import { getRandomNumberBetween } from '../utils';
 
 interface PushPlayCardToZoneMove {
   aiID: PlayerID;
@@ -34,6 +35,13 @@ const aiEnumeration = {
 
       G.zones.forEach((z, zI) => {
         z.sides['0'].forEach((c, cI) => {
+          if (c.booleans.canBeBuffed) {
+            moves.push({
+              move: 'buffMinion',
+              args: [aiID, c.uuid, zI]
+            })
+          }
+
           if (c.booleans.canBeDestroyed) {
             moves.push({
               move: 'destroyMinion',
@@ -70,12 +78,12 @@ export const pushPlayCardToZoneMoves = ({
   const slotsAvailableInZone = perZone - zoneSideLength;
 
   if (!zones[zoneNumber].disabled[aiID])
-    for (let i = 0; i < slotsAvailableInZone; i++) {
+    // for (let i = 0; i < slotsAvailableInZone; i++) {
       moves.push({
         move: 'playAiCard',
         args: [aiID, zoneNumber, card, cardIndex],
       });
-    }
+    // }
 };
 
 export const pushPlayCardMoves = (
@@ -86,14 +94,19 @@ export const pushPlayCardMoves = (
   perZone: number,
   zones: Zone[]
 ) => {
-  if (hand.length >= 1) {
+  const handHasAtLeastOneCard = hand.length >= 1;
+  const movesArrIsAtOrBelow = (n: number) => moves.length <= n;
+  
+  if (handHasAtLeastOneCard && movesArrIsAtOrBelow(20)) {
     determinePlayableCards(hand, playableCards);
 
     for (let i = 0; i < playableCards.length; i++) {
+      const rngIdx = getRandomNumberBetween(0, playableCards.length - 1);
+      const rngCard = playableCards[rngIdx];
       const props = {
         aiID,
-        card: playableCards[0],
-        cardIndex: 0,
+        card: rngCard,
+        cardIndex: rngIdx,
         moves,
         perZone,
         zones,

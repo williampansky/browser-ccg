@@ -8,11 +8,12 @@ import type {
   Zone,
 } from '../../../types';
 
-import setsEntourage from '../../data/setsEntourage.json';
 import {
   createCardObject,
   getRandomNumberBetween as randomNum,
 } from '../../../utils';
+
+import setsEntourage from '../../data/setsEntourage.json';
 
 /**
  * on play: summon 2/1 droid companion
@@ -42,7 +43,7 @@ export const core007 = (
         const entourageCard = createCardObject(entObj);
         const entCardObj = { ...entourageCard, revealed: true };
         z.sides[player].push(entCardObj);
-        G.zonesCardsReference[i][player].push(entCardObj);
+        // G.zonesCardsReference[i][player].push(entCardObj);
       }
     }
   });
