@@ -68,6 +68,8 @@ export const MinionSlotWrapper = ({
         booleans?.canBeAttackedBySpell ? 'minionslot--can-be-attacked' : '',
         booleans?.canBeBuffed ? 'minionslot--can-be-buffed' : '',
         booleans?.canBeDestroyed ? 'minionslot--can-be-destroyed' : '',
+        booleans?.eventWasTriggered ? 'minionslot--event-was-triggered' : '',
+        booleans?.onPlayWasTriggered ? 'minionslot--onplay-was-triggered' : '',
       ].join(' ')}
       data-component='MinionSlotWrapper'
       data-index={index}

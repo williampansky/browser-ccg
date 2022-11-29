@@ -16,6 +16,10 @@ import {
 import { core031Buff } from './mechanics/core-mechanics-by-key/mechanic.core.031';
 import { fxEnd } from './config.bgio-effects';
 import { core044Attack } from './mechanics/core-mechanics-by-key/mechanic.core.044';
+import { core058Attack } from './mechanics/core-mechanics-by-key/mechanic.core.058';
+import { core050Attack } from './mechanics/core-mechanics-by-key/mechanic.core.050';
+import { core053Attack } from './mechanics/core-mechanics-by-key/mechanic.core.053';
+import { core056Attack } from './mechanics/core-mechanics-by-key/mechanic.core.056';
 
 export const selectCard = (
   G: GameState,
@@ -251,6 +255,14 @@ export const attackMinion = (
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_044':
           return core044Attack(G, ctx, opponent, c?.uuid, lastPlayedCard);
+        case 'SET_CORE_050':
+          return core050Attack(G, ctx, opponent, c?.uuid, lastPlayedCard);
+        case 'SET_CORE_053':
+          return core053Attack(G, ctx, opponent, c?.uuid, lastPlayedCard);
+        case 'SET_CORE_056':
+          return core056Attack(G, ctx, opponent, c?.uuid, lastPlayedCard);
+        case 'SET_CORE_058':
+          return core058Attack(G, ctx, opponent, c?.uuid, lastPlayedCard);
         default:
           return;
       }

@@ -24,7 +24,7 @@ const initStartingHandsPhase: PhaseConfig = {
 
     // debug card or side interactions
     if (debugOpponentBoardCardKey !== '') {
-      for (let index = 0; index < 1; index++) {
+      for (let index = 0; index < 4; index++) {
         // let debugCardBase = random!.Shuffle(db)[index];
         let debugCardBase = db.find(o => o.key === debugOpponentBoardCardKey);
         let debugCard = createCardObject(debugCardBase!);

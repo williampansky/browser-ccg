@@ -38,6 +38,7 @@ export interface CardStateBooleans {
   canBeDebuffed: boolean;
   canBeDestroyed: boolean;
   canBeHealed: boolean;
+  eventWasTriggered: boolean;
   hasArmor: boolean;
   hasCostIncreased: boolean;
   hasCostReduced: boolean;

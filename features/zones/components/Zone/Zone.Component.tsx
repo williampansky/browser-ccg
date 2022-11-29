@@ -62,7 +62,9 @@ export const Zone = ({
 
   const zoneClasses = [
     'zone',
-    zone?.disabled[yourID] ? 'zone--disabled' : '',
+    zone?.disabled[yourID] ? 'zone--disabled-you' : '',
+    zone?.disabled[theirID] ? 'zone--disabled-them' : '',
+    zone?.disabled[yourID] && zone?.disabled[theirID] ? 'zone--disabled' : '',
   ].join(' ');
 
   return (

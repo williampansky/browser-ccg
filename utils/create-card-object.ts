@@ -28,6 +28,7 @@ const createCardObject = (obj: CardBase): Card => {
       canBeDebuffed: false,
       canBeDestroyed: false,
       canBeHealed: false,
+      eventWasTriggered: false,
       hasArmor: obj?.mechanics?.find(v => v === Mechanics.Armor) ? true : false,
       hasCostIncreased: false,
       hasCostReduced: false,

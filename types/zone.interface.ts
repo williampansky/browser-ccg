@@ -26,6 +26,7 @@ export interface Zone {
   artistName?: string;
   artistUrl?: string;
   disabled: Record<PlayerID, boolean>;
+  disabledForXTurns: Record<PlayerID, number>;
   effectAdjustment: number;
   effectText?: string;
   flavorText?: string;

@@ -27,11 +27,32 @@ import {
 } from '../../../utils';
 import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/methods';
 import { fxEnd } from '../../config.bgio-effects';
-import { gte, lt, lte } from 'lodash';
+import { gt, gte, lt, lte } from 'lodash';
+import { subtract } from 'mathjs';
 
 const defaultPlayCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase);
+
+    // decrement zone.disabledForXTurns values
+    G.zones.forEach((z, zI) => {
+      if (gt(z.disabledForXTurns['0'], 0)) {
+        z.disabledForXTurns['0'] = subtract(z.disabledForXTurns['0'], 1);
+      }
+
+      if (gt(z.disabledForXTurns['1'], 0)) {
+        z.disabledForXTurns['1'] = subtract(z.disabledForXTurns['1'], 1);
+      }
+
+      if (z.disabled['0'] === true && z.disabledForXTurns['0'] === 0) {
+        z.disabled['0'] = false;
+      }
+
+      if (z.disabled['1'] === true && z.disabledForXTurns['1'] === 0) {
+        z.disabled['1'] = false;
+      }
+    })
+
     fxEnd(ctx);
   },
   onEnd(G: GameState, ctx: Ctx) {
@@ -64,6 +85,7 @@ const defaultPlayCardsPhase: PhaseConfig = {
             canBeAttackedByWeapon: false,
             canBeBuffed: false,
             canBeDestroyed: false,
+            eventWasTriggered: false,
           };
 
           const props: InitGameMechanic = {
@@ -87,6 +109,7 @@ const defaultPlayCardsPhase: PhaseConfig = {
             canBeAttackedByWeapon: false,
             canBeBuffed: false,
             canBeDestroyed: false,
+            eventWasTriggered: false,
           };
 
           const props: InitGameMechanic = {

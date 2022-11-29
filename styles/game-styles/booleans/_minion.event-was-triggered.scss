@@ -1,0 +1,48 @@
+&.minionslot--event-was-triggered {
+  $radius: #{var(--minion-border-radius)};
+
+  box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0);
+  pointer-events: auto;
+  transition: box-shadow 600ms ease-in-out;
+  will-change: box-shadow;
+
+  &:after {
+    animation: event-ripple 1200ms linear;
+    border-radius: #{$radius};
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: opacity 600ms ease-in-out;
+    will-change: opacity;
+  }
+
+  @keyframes event-ripple {
+    0% {
+      opacity: 0;
+      box-shadow: 0 0 0 var(--box-shadow-is-selected-color-ripple),
+        0 0 0 0 var(--box-shadow-is-selected-color-ripple),
+        0 0 0 0 var(--box-shadow-is-selected-color-ripple),
+        0 0 0 0 var(--box-shadow-is-selected-color-ripple);
+    }
+    5% {
+      opacity: 1;
+    }
+    80% {
+      box-shadow: 0 1px 5px var(--box-shadow-is-selected-color-ripple),
+        0 0 0 0 var(--box-shadow-is-selected-color-ripple),
+        0 0 0 5px var(--box-shadow-is-selected-color-ripple),
+        0 0 0 20px rgba(0, 0, 0, 0);
+    }
+    100% {
+      opacity: 0;
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0),
+        0 0 0 0 rgba(0, 0, 0, 0),
+        0 0 0 0 rgba(0, 0, 0, 0),
+        0 0 0 0 rgba(0, 0, 0, 0);
+    }
+  }
+}

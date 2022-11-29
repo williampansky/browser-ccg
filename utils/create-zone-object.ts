@@ -30,6 +30,10 @@ const createZoneObject = (obj: ZoneBase, withUuid: boolean = false): Zone => {
       '0': false,
       '1': false,
     },
+    disabledForXTurns: {
+      '0': 0,
+      '1': 0,
+    },
     effectAdjustment: effectAdjustment,
     effectText: effectText,
     flavorText: flavorText,

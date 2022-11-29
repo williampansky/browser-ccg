@@ -8,6 +8,14 @@
   &--disabled {
     opacity: 0.5;
   }
+
+  &--disabled-you .side__player__wrapper {
+    opacity: 0.5;
+  }
+
+  &--disabled-them .side__opponent {
+    opacity: 0.5;
+  }
 }
 
 .zone .zone__info {

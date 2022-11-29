@@ -1,6 +1,5 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameConfig, GameState, PlayerID, Zone } from '../../types';
-import { CtxWithEffects } from '../game';
 
 import { core002 } from './card-mechanics-by-key/core-002.mechanic';
 import { core003 } from './card-mechanics-by-key/core-003.mechanic';
@@ -26,7 +25,14 @@ import { core118 } from './core-mechanics-by-key/mechanic.core.118';
 import { core122 } from './core-mechanics-by-key/mechanic.core.122';
 import { core034 } from './core-mechanics-by-key/mechanic.core.034';
 import { core044 } from './core-mechanics-by-key/mechanic.core.044';
-import { core019 } from './core-mechanics-by-key/core.mechanic.019';
+import { core019 } from './core-mechanics-by-key/mechanic.core.019';
+import { core108 } from './core-mechanics-by-key/mechanic.core.108';
+import { core071 } from './core-mechanics-by-key/mechanic.core.071';
+import { core060 } from './core-mechanics-by-key/mechanic.core.060';
+import { core058 } from './core-mechanics-by-key/mechanic.core.058';
+import { core050 } from './core-mechanics-by-key/mechanic.core.050';
+import { core053 } from './core-mechanics-by-key/mechanic.core.053';
+import { core056 } from './core-mechanics-by-key/mechanic.core.056';
 
 const initOnPlayMechanics = (
   G: GameState,
@@ -76,7 +82,6 @@ const initOnPlayMechanics = (
       return core036(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     case 'SET_CORE_037':
       return core037(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
-    case 'SET_CORE_019':
     case 'SET_CORE_039':
       return core039(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
     case 'SET_CORE_040':
@@ -89,6 +94,20 @@ const initOnPlayMechanics = (
       return core043(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
     case 'SET_CORE_044':
       return core044(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
+    case 'SET_CORE_050':
+      return core050(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
+    case 'SET_CORE_053':
+      return core053(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
+    case 'SET_CORE_056':
+      return core056(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
+    case 'SET_CORE_058':
+      return core058(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
+    case 'SET_CORE_060':
+      return core060(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
+    case 'SET_CORE_071':
+      return core071(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
+    case 'SET_CORE_108':
+      return core108(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     case 'SET_CORE_110':
       return core110(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     case 'SET_CORE_118':

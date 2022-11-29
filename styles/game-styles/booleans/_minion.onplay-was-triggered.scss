@@ -1,0 +1,56 @@
+&.minionslot--onplay-was-triggered {
+  $radius: #{var(--minion-border-radius)};
+
+  box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0);
+  pointer-events: auto;
+  transition: box-shadow 600ms ease-in-out;
+  will-change: box-shadow;
+
+  &:after {
+    animation: event-ripple 1200ms linear;
+    border-radius: #{$radius};
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: opacity 600ms ease-in-out;
+    will-change: opacity;
+  }
+
+  &[data-index='0']:after { animation-delay: 200ms; }
+  &[data-index='1']:after { animation-delay: 400ms; }
+  &[data-index='2']:after { animation-delay: 600ms; }
+  &[data-index='3']:after { animation-delay: 800ms; }
+  &[data-index='4']:after { animation-delay: 1000ms; }
+  &[data-index='5']:after { animation-delay: 1200ms; }
+  &[data-index='6']:after { animation-delay: 1400ms; }
+
+  @keyframes event-ripple {
+    0% {
+      opacity: 0;
+      box-shadow: 0 0 0 var(--mechanics-color-bubble),
+        0 0 0 0 var(--mechanics-color-bubble),
+        0 0 0 0 var(--mechanics-color-bubble),
+        0 0 0 0 var(--mechanics-color-bubble);
+    }
+    5% {
+      opacity: 1;
+    }
+    80% {
+      box-shadow: 0 1px 5px var(--mechanics-color-bubble),
+        0 0 0 0 var(--mechanics-color-bubble),
+        0 0 0 5px var(--mechanics-color-bubble),
+        0 0 0 20px rgba(0, 0, 0, 0);
+    }
+    100% {
+      opacity: 0;
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0),
+        0 0 0 0 rgba(0, 0, 0, 0),
+        0 0 0 0 rgba(0, 0, 0, 0),
+        0 0 0 0 rgba(0, 0, 0, 0);
+    }
+  }
+}
