@@ -20,9 +20,14 @@ import {
 } from '../init-card-mechanics-phase';
 
 import { moves } from './play-cards.phase.moves';
-import { drawCardFromPlayersDeck, handleCardDestructionMechanics, logPhaseToConsole } from '../../../utils';
+import {
+  drawCardFromPlayersDeck,
+  handleCardDestructionMechanics,
+  logPhaseToConsole,
+} from '../../../utils';
 import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/methods';
 import { fxEnd } from '../../config.bgio-effects';
+import { lt, lte } from 'lodash';
 
 const defaultPlayCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
@@ -57,7 +62,7 @@ const defaultPlayCardsPhase: PhaseConfig = {
             ...card.booleans,
             canBeBuffed: false,
             canBeDestroyed: false,
-          }
+          };
 
           const props: InitGameMechanic = {
             G,
@@ -72,13 +77,13 @@ const defaultPlayCardsPhase: PhaseConfig = {
           const turnEnd = (cb?: () => void) => initTurnEnd({ ...props }, cb);
           turnEnd();
         });
-        
+
         zone.sides['1'].forEach((card: Card, cardIdx) => {
           card.booleans = {
             ...card.booleans,
             canBeBuffed: false,
             canBeDestroyed: false,
-          }
+          };
 
           const props: InitGameMechanic = {
             G,
@@ -123,29 +128,27 @@ const defaultPlayCardsPhase: PhaseConfig = {
         });
 
         // handle card deaths if health goes below zero
-        G.zones.forEach((z, zI) => {
-          z.sides['0'].forEach((c, cI) => {
-            if (c.revealed && c.displayHealth < 0) {
-              G.players['0'].cards.destroyed.push(c.key);
-              z.sides['0'] = z.sides['0'].filter((_, idx) => idx !== cI);
-              handleCardDestructionMechanics(G, c, '0');
-            }
-          });
+        zone.sides['0'].forEach((c, cI) => {
+          const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
+          if (hpIsLessOrEqualTo(-1)) {
+            G.players['0'].cards.destroyed.push(c.key);
+            zone.sides['0'] = zone.sides['0'].filter((_, idx) => idx !== cI);
+            handleCardDestructionMechanics(G, c, '0');
+          }
+        });
 
-          z.sides['1'].forEach((c, cI) => {
-            if (c.revealed && c.displayHealth < 0) {
-              G.players['1'].cards.destroyed.push(c.key);
-              z.sides['1'] = z.sides['1'].filter((_, idx) => idx !== cI);
-              handleCardDestructionMechanics(G, c, '1');
-            }
-          });
-        })
+        zone.sides['1'].forEach((c, cI) => {
+          const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
+          if (hpIsLessOrEqualTo(-1)) {
+            G.players['1'].cards.destroyed.push(c.key);
+            zone.sides['1'] = zone.sides['1'].filter((_, idx) => idx !== cI);
+            handleCardDestructionMechanics(G, c, '1');
+          }
+        });
 
         // set zone powers
-        G.zones[zoneIdx].powers = {
-          '0': calculateZoneSidePower(G, zoneIdx, '0'),
-          '1': calculateZoneSidePower(G, zoneIdx, '1'),
-        };
+        zone.powers['0'] = calculateZoneSidePower(G, zoneIdx, '0');
+        zone.powers['1'] = calculateZoneSidePower(G, zoneIdx, '1');
       });
     },
     order: TurnOrder.CUSTOM_FROM('turnOrder'),

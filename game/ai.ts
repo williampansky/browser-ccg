@@ -32,25 +32,7 @@ const aiEnumeration = {
     // prettier-ignore
     if (G.playerTurnDone[aiID] === false) {
       pushPlayCardMoves(moves, aiID, aiHand, playableCards, perZone, zones);
-
-      G.zones.forEach((z, zI) => {
-        z.sides['0'].forEach((c, cI) => {
-          if (c.booleans.canBeBuffed) {
-            moves.push({
-              move: 'buffMinion',
-              args: [aiID, c.uuid, zI]
-            })
-          }
-
-          if (c.booleans.canBeDestroyed) {
-            moves.push({
-              move: 'destroyMinion',
-              args: [aiID, c.uuid, zI]
-            })
-          }
-        })
-      })
-
+      pushInteractionMoves(G, moves, aiID);
       pushSetDoneMove(moves, aiID);
     }
 
@@ -79,11 +61,11 @@ export const pushPlayCardToZoneMoves = ({
 
   if (!zones[zoneNumber].disabled[aiID])
     // for (let i = 0; i < slotsAvailableInZone; i++) {
-      moves.push({
-        move: 'playAiCard',
-        args: [aiID, zoneNumber, card, cardIndex],
-      });
-    // }
+    moves.push({
+      move: 'playAiCard',
+      args: [aiID, zoneNumber, card, cardIndex],
+    });
+  // }
 };
 
 export const pushPlayCardMoves = (
@@ -96,7 +78,7 @@ export const pushPlayCardMoves = (
 ) => {
   const handHasAtLeastOneCard = hand.length >= 1;
   const movesArrIsAtOrBelow = (n: number) => moves.length <= n;
-  
+
   if (handHasAtLeastOneCard && movesArrIsAtOrBelow(20)) {
     determinePlayableCards(hand, playableCards);
 
@@ -117,6 +99,32 @@ export const pushPlayCardMoves = (
       pushPlayCardToZoneMoves({ ...props, zoneNumber: 2 });
     }
   }
+};
+
+export const pushInteractionMoves = (
+  G: GameState,
+  moves: any,
+  aiID: PlayerID
+) => {
+  G.zones.forEach((z, zI) => {
+    z.sides['0'].forEach((c, cI) => {
+      if (c.booleans.canBeDestroyed) {
+        moves.push({
+          move: 'destroyMinion',
+          args: [aiID, c.uuid, zI],
+        });
+      }
+    });
+
+    z.sides['1'].forEach((c, cI) => {
+      if (c.booleans.canBeBuffed) {
+        moves.push({
+          move: 'buffMinion',
+          args: [aiID, c.uuid, zI],
+        });
+      }
+    });
+  });
 };
 
 export const pushSetDoneMove = (moves: any, aiID: PlayerID) => {

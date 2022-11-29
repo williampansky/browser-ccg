@@ -55,11 +55,9 @@ export const core031Buff = (
           numberPrimary!,
           add(c.displayPower, numberPrimary!)
         );
-
-        c.booleans.canBeBuffed = false;
-      } else {
-        c.booleans.canBeBuffed = false;
       }
+
+      c.booleans.canBeBuffed = false;
     });
   });
 };

@@ -1,3 +1,4 @@
+import { gt, gte, lt } from 'lodash';
 import { Ctx, Undo } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Card, GameState, PlayerID } from '../types';
@@ -12,6 +13,7 @@ import {
   playerTurnDone,
   selectedCardData,
 } from './state';
+import { core031Buff } from './mechanics/core-mechanics-by-key/mechanic.core.031';
 
 export const selectCard = (
   G: GameState,
@@ -176,42 +178,28 @@ export const playAiCard = (
 
   // set selected card
   G.selectedCardData[aiID] = card;
-  // G.selectedCardIndex[aiID] = cardIndex;
+  G.selectedCardIndex[aiID] = cardIndex;
 
   const player = G.players[aiID];
   const cardUuid = card.uuid;
   const zone = zones[zoneNumber];
   const zoneSideLength = zone.sides[aiID].length;
-  // const zoneRef = G.zonesCardsReference[zoneNumber];
-  // const zoneRefSideLength = zoneRef[aiID].length;
   const currentAP = G.actionPoints[aiID].current;
+  const cannotAffordCard = lt(currentAP, card.currentCost);
+  const zoneHasNoAvailableSlots = gte(zoneSideLength, numberOfSlotsPerZone);
+  const zoneIsDisabled = zone.disabled[aiID];
 
   // validate cost playability
-  if (currentAP < card.currentCost) {
-    console.error(
-      `INVALID_MOVE: card.currentCost(${card.currentCost}) higher than currentAP(${currentAP})`
-    );
+  if (cannotAffordCard || zoneHasNoAvailableSlots || zoneIsDisabled) {
+    console.error(`
+      INVALID_MOVE
+      cannotAffordCard: ${cannotAffordCard},
+      zoneHasNoAvailableSlots: ${zoneHasNoAvailableSlots},
+      zoneIsDisabled: ${zoneIsDisabled}
+    `);
 
     return INVALID_MOVE;
   }
-
-  // validate zone playability
-  if (zoneSideLength >= numberOfSlotsPerZone) {
-    console.error(
-      `INVALID_MOVE: zoneSideLength(${card.currentCost}) is less than numberOfSlotsPerZone(${numberOfSlotsPerZone})`
-    );
-
-    return INVALID_MOVE;
-  }
-  // if (zoneRefSideLength > numberOfSlotsPerZone) return INVALID_MOVE;
-
-  if (zone.disabled[aiID]) {
-    console.error(
-      `INVALID_MOVE: zone[${zoneNumber}] is disabled for player ${aiID}`
-    );
-
-    return INVALID_MOVE;
-  };
 
   // add card to PlayedCards array
   playedCards.push(G, aiID, card);
@@ -246,11 +234,6 @@ export const playAiCard = (
   // unset selectedCard
   selectedCardData.reset(G, aiID);
   G.selectedCardIndex[aiID] = undefined;
-
-  // if (G.gameConfig.asynchronousTurns === false) {
-  //   const idx = zoneRef[aiID].findIndex((o) => o.uuid === card.uuid);
-  //   revealCard(G, ctx, aiID, zoneNumber, card, idx);
-  // }
 };
 
 export const setDone = (G: GameState, ctx: Ctx, player: PlayerID) => {
@@ -270,7 +253,7 @@ export const buffMinion = (
     if (c.uuid === cardToBuffUuid) {
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_031':
-          return core110Buff(G, ctx, player, c, lastPlayedCard);
+          return core031Buff(G, ctx, player, c, lastPlayedCard);
         case 'SET_CORE_110':
           return core110Buff(G, ctx, player, c, lastPlayedCard);
 
