@@ -89,12 +89,12 @@ export const pushPlayCardMoves = (
   zones: Zone[]
 ) => {
   const handHasAtLeastOneCard = hand.length >= 1;
-  const canPlay = playableCards.length;
   const movesArrIsAtOrBelow = (n: number) => moves.length <= n;
-  const amountToPlay = debugOpponentHandCardKey !== '' ? 1 : canPlay;
-
+  
   if (handHasAtLeastOneCard && movesArrIsAtOrBelow(20)) {
     determinePlayableCards(hand, playableCards);
+    const canPlay = playableCards.length;
+    const amountToPlay = debugOpponentHandCardKey !== '' ? 1 : canPlay;
 
     for (let i = 0; i < amountToPlay; i++) {
       const rngIdx = getRandomNumberBetween(0, canPlay - 1);
