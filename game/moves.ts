@@ -20,6 +20,8 @@ import { core058Attack } from './mechanics/core-mechanics-by-key/mechanic.core.0
 import { core050Attack } from './mechanics/core-mechanics-by-key/mechanic.core.050';
 import { core053Attack } from './mechanics/core-mechanics-by-key/mechanic.core.053';
 import { core056Attack } from './mechanics/core-mechanics-by-key/mechanic.core.056';
+import { core082Heal } from './mechanics/core-mechanics-by-key/mechanic.core.082';
+import { core112Attack } from './mechanics/core-mechanics-by-key/mechanic.core.112';
 
 export const selectCard = (
   G: GameState,
@@ -243,26 +245,28 @@ export const attackMinion = (
   G: GameState,
   ctx: Ctx,
   player: PlayerID,
+  targetPlayer: PlayerID,
   cardToAttackUuid: string,
   zoneNumber: number
 ) => {
-  const { opponent } = getContextualPlayerIds(player);
   const { playedCards } = G;
   const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
 
-  G.zones[zoneNumber].sides[opponent].forEach((c) => {
+  G.zones[zoneNumber].sides[targetPlayer].forEach((c) => {
     if (c.uuid === cardToAttackUuid) {
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_044':
-          return core044Attack(G, ctx, opponent, c?.uuid, lastPlayedCard);
+          return core044Attack(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
         case 'SET_CORE_050':
-          return core050Attack(G, ctx, opponent, c?.uuid, lastPlayedCard);
+          return core050Attack(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
         case 'SET_CORE_053':
-          return core053Attack(G, ctx, opponent, c?.uuid, lastPlayedCard);
+          return core053Attack(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
         case 'SET_CORE_056':
-          return core056Attack(G, ctx, opponent, c?.uuid, lastPlayedCard);
+          return core056Attack(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
         case 'SET_CORE_058':
-          return core058Attack(G, ctx, opponent, c?.uuid, lastPlayedCard);
+          return core058Attack(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
+        case 'SET_CORE_112':
+          return core112Attack(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
         default:
           return;
       }
@@ -274,18 +278,19 @@ export const buffMinion = (
   G: GameState,
   ctx: Ctx,
   player: PlayerID,
+  targetPlayer: PlayerID,
   cardToBuffUuid: string,
   zoneNumber: number
 ) => {
   const { playedCards } = G;
   const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
-  G.zones[zoneNumber].sides[player].forEach((c) => {
+  G.zones[zoneNumber].sides[targetPlayer].forEach((c) => {
     if (c.uuid === cardToBuffUuid) {
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_031':
-          return core031Buff(G, ctx, player, c, lastPlayedCard);
+          return core031Buff(G, ctx, targetPlayer, c, lastPlayedCard);
         case 'SET_CORE_110':
-          return core110Buff(G, ctx, player, c, lastPlayedCard);
+          return core110Buff(G, ctx, targetPlayer, c, lastPlayedCard);
 
         default:
           return;
@@ -298,18 +303,18 @@ export const destroyMinion = (
   G: GameState,
   ctx: Ctx,
   player: PlayerID,
+  targetPlayer: PlayerID,
   cardToDestroyUuid: string,
   zoneNumber: number
 ) => {
-  const { opponent } = getContextualPlayerIds(player);
   const { playedCards } = G;
   const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
 
-  G.zones[zoneNumber].sides[opponent].forEach((c) => {
+  G.zones[zoneNumber].sides[targetPlayer].forEach((c) => {
     if (c.uuid === cardToDestroyUuid) {
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_043':
-          return core043Destroy(G, ctx, opponent, c?.uuid);
+          return core043Destroy(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
         default:
           return;
       }
@@ -321,16 +326,17 @@ export const healMinion = (
   G: GameState,
   ctx: Ctx,
   player: PlayerID,
+  targetPlayer: PlayerID,
   cardToHealUuid: string,
   zoneNumber: number
 ) => {
   const { playedCards } = G;
   const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
-  G.zones[zoneNumber].sides[player].forEach((c) => {
+  G.zones[zoneNumber].sides[targetPlayer].forEach((c) => {
     if (c.uuid === cardToHealUuid) {
       switch (lastPlayedCard?.key) {
-        case 'SET_CORE_031':
-          return core031Buff(G, ctx, player, c, lastPlayedCard);
+        case 'SET_CORE_082':
+          return core082Heal(G, ctx, player, targetPlayer, c.uuid, lastPlayedCard);
 
         default:
           return;

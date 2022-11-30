@@ -12,7 +12,7 @@
   height: 100%;
 
   &:after {
-    animation: event-ripple 1200ms linear;
+    animation: onplay-ripple 1200ms linear;
     border-radius: #{$radius};
     bottom: 0;
     content: '';
@@ -33,7 +33,7 @@
   &[data-index='5']:after { animation-delay: 1200ms; }
   &[data-index='6']:after { animation-delay: 1400ms; }
 
-  @keyframes event-ripple {
+  @keyframes onplay-ripple {
     0% {
       opacity: 0;
       box-shadow: 0 0 0 var(--mechanics-color-bubble),

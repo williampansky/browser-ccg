@@ -32,6 +32,7 @@ export const core029 = (
       if (c.uuid !== card.uuid) {
         // make sure card is minion
         if (c.type === CardType.Minion) {
+          card.booleans.onPlayWasTriggered = true;
           pushPowerStreamAndSetDisplay(
             c,
             card,

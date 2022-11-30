@@ -15,6 +15,7 @@ export interface GameConfig {
     debugBoardCardKey: string;
     debugOpponentHandCardKey: string;
     debugOpponentBoardCardKey: string;
+    debugScenario: string;
     logPhaseToConsole: boolean;
     showDebugBar: boolean;
     showBoardgameIoSidebar: boolean;

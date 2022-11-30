@@ -114,25 +114,37 @@ export const pushInteractionMoves = (
   moves: any,
   aiID: PlayerID
 ) => {
-  G.zones.forEach((z, zI) => {
-    z.sides['0'].forEach((c, cI) => {
-      if (c.booleans.canBeDestroyed) {
-        moves.push({
-          move: 'destroyMinion',
-          args: [aiID, c.uuid, zI],
-        });
-      }
-    });
+  // G.zones.forEach((z, zI) => {
+  //   z.sides['0'].forEach((c, cI) => {
+  //     if (c.booleans.canBeAttackedBySpell) {
+  //       moves.push({
+  //         move: 'attackMinion',
+  //         args: [aiID, '0', c.uuid, zI],
+  //       });
+  //     }
+  //     if (c.booleans.canBeDestroyed) {
+  //       moves.push({
+  //         move: 'destroyMinion',
+  //         args: [aiID, '0', c.uuid, zI],
+  //       });
+  //     }
+  //   });
 
-    z.sides['1'].forEach((c, cI) => {
-      if (c.booleans.canBeBuffed) {
-        moves.push({
-          move: 'buffMinion',
-          args: [aiID, c.uuid, zI],
-        });
-      }
-    });
-  });
+  //   z.sides['1'].forEach((c, cI) => {
+  //     if (c.booleans.canBeBuffed) {
+  //       moves.push({
+  //         move: 'buffMinion',
+  //         args: [aiID, '1', c.uuid, zI],
+  //       });
+  //     }
+  //     if (c.booleans.canBeHealed) {
+  //       moves.push({
+  //         move: 'healMinion',
+  //         args: [aiID, '1', c.uuid, zI],
+  //       });
+  //     }
+  //   });
+  // });
 };
 
 export const pushSetDoneMove = (moves: any, aiID: PlayerID) => {

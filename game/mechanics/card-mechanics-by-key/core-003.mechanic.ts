@@ -25,6 +25,7 @@ export const core003 = (
   const numberPrimary = card?.numberPrimary || 1;
   const { numerics } = gameConfig;
   if (G.players[player].cards.hand.length < numerics.cardsPerHand) {
+    card.booleans.onPlayWasTriggered = true;
     drawCardFromPlayersDeck(G, player, numberPrimary);
   }
 };

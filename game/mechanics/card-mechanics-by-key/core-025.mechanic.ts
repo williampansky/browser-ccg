@@ -41,5 +41,6 @@ export const core025 = (
     const entCardObj = { ...entourageCard, revealed: true };
     zone.sides[player].push(entCardObj);
     G.zonesCardsReference[zoneIdx][player].push(entCardObj);
+    card.booleans.onPlayWasTriggered = true;
   }
 };

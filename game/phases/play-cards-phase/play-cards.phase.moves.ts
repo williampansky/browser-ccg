@@ -88,10 +88,11 @@ export const moves = {
       G: GameState,
       ctx: Ctx,
       player: PlayerID,
+      targetPlayer: PlayerID,
       cardToAttackUuid: string,
       zoneNumber: number
     ) => {
-      return attackMinion(G, ctx, player, cardToAttackUuid, zoneNumber);
+      return attackMinion(G, ctx, player, targetPlayer, cardToAttackUuid, zoneNumber);
     },
   },
   buffMinion: {
@@ -102,10 +103,11 @@ export const moves = {
       G: GameState,
       ctx: Ctx,
       player: PlayerID,
+      targetPlayer: PlayerID,
       cardToBuffUuid: string,
       zoneNumber: number
     ) => {
-      return buffMinion(G, ctx, player, cardToBuffUuid, zoneNumber);
+      return buffMinion(G, ctx, player, targetPlayer, cardToBuffUuid, zoneNumber);
     },
   },
   destroyMinion: {
@@ -116,10 +118,11 @@ export const moves = {
       G: GameState,
       ctx: Ctx,
       player: PlayerID,
+      targetPlayer: PlayerID,
       cardToDestroyUuid: string,
       zoneNumber: number
     ) => {
-      return destroyMinion(G, ctx, player, cardToDestroyUuid, zoneNumber);
+      return destroyMinion(G, ctx, player, targetPlayer, cardToDestroyUuid, zoneNumber);
     },
   },
   healMinion: {
@@ -130,10 +133,11 @@ export const moves = {
       G: GameState,
       ctx: Ctx,
       player: PlayerID,
+      targetPlayer: PlayerID,
       cardToHealUuid: string,
       zoneNumber: number
     ) => {
-      return healMinion(G, ctx, player, cardToHealUuid, zoneNumber);
+      return healMinion(G, ctx, player, targetPlayer, cardToHealUuid, zoneNumber);
     },
   },
   updatePlayerHandArray: {

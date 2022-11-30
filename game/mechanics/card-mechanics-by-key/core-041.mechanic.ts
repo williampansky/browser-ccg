@@ -58,7 +58,7 @@ export const core041 = (
     );
 
     G.zones[choice.zoneNumber].sides[opponent] = newZoneArr;
-    G.zonesCardsReference[choice.zoneNumber][opponent] = newZoneArr;
     handleCardDestructionMechanics(G, choice.cardData, opponent);
+    card.booleans.onPlayWasTriggered = true;
   }
 };

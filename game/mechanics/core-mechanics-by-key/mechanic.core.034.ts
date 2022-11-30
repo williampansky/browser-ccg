@@ -25,4 +25,5 @@ export const core034 = (
 ) => {
   const newValue = add(G.actionPoints[player].current, 1);
   G.actionPoints[player].current = newValue;
+  card.booleans.onPlayWasTriggered = true;
 };

@@ -62,6 +62,7 @@ export const core050Attack = (
 
     G.zones[zoneNumber].sides[opponent].forEach((c, ci) => {
       if (c.uuid === card.uuid) {
+        card.booleans.onPlayWasTriggered = true;
         pushHealthStreamAndSetDisplay(
           c,
           cardToBlame,
@@ -69,6 +70,7 @@ export const core050Attack = (
           subtract(c.displayHealth, cardToBlame.numberPrimary)
         );
       } else {
+        card.booleans.onPlayWasTriggered = true;
         pushHealthStreamAndSetDisplay(
           c,
           cardToBlame,

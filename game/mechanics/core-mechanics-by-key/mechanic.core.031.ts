@@ -31,6 +31,7 @@ export const core031 = (
         // make sure race matches
         if (c.race === CardRace.Creature) {
           c.booleans.canBeBuffed = true;
+          card.booleans.onPlayWasTriggered = true;
         }
       }
     });

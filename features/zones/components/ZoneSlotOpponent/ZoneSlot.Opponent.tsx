@@ -7,6 +7,7 @@ import { showCardModal } from '../../../card-modal/card-modal.slice';
 import { Minion } from '../../../../components/game-components/Minion/Minion';
 import { getRandomNumberBetween } from '../../../../utils';
 import { gameConfig } from '../../../../app.config';
+import { usePrevious } from '../../../../hooks';
 
 interface Props {
   G?: GameState;
@@ -35,6 +36,7 @@ export const OpponentZoneSlot = ({
   const [incoming, setIncoming] = useState<boolean>(false);
   const [destroyed, setDestroyed] = useState<boolean>(false);
   const [animation, setAnimation] = useState<string>('');
+  const prevObjData = usePrevious(objData);
 
   const getAnimationDirection = (zoneNumber: number, data?: Card): string => {
     const scaleEnd = 'scale(1, -1)';
@@ -66,11 +68,9 @@ export const OpponentZoneSlot = ({
       setDestroyed(false);
       setObjData(data);
       // setIncoming(false);
-    } else if (typeof data === 'undefined') {
+    } else if (data === undefined && prevObjData !== undefined) {
       setDestroyed(true);
-      if (gameConfig.debugConfig.debugOpponentBoardCardKey === '') {
-        setTimeout(() => setObjData(undefined), 500);
-      }
+      setTimeout(() => setObjData(undefined), 500);
     } else if (playerId !== theirID) {
       setObjData(undefined);
       setIncoming(false);

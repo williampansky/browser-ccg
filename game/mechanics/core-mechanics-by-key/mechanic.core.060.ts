@@ -33,8 +33,6 @@ export const core060 = (
     cardIndex: number;
   }[] = [];
 
-  card.booleans.onPlayWasTriggered = true;
-
   G.zones[zoneIdx].sides[opponent].forEach((c, cIdx) => {
     possibleTargets.push({
       zoneNumber: zoneIdx,
@@ -50,6 +48,7 @@ export const core060 = (
       // get a random one from the list
       const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
       const rngDamage = getRandomNumberBetween(numberPrimary, numberSecondary);
+      card.booleans.onPlayWasTriggered = true;
       pushHealthStreamAndSetDisplay(
         choice.cardData,
         card,

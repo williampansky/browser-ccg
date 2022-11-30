@@ -32,6 +32,7 @@ export const core039 = (
       const choice = ctx?.random?.Shuffle(G.playedCards[opponent])[0]!;
       G.players[player].cards.hand.push(choice);
       counts.incrementHand(G, player);
+      card.booleans.onPlayWasTriggered = true;
     }
   }
 };

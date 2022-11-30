@@ -40,7 +40,7 @@ export function initOnPlay(
       opponent
     );
 
-    G.zones[zoneIdx].sides[player][cardIdx].booleans.onPlayWasTriggered = true;
+    // G.zones[zoneIdx].sides[player][cardIdx].booleans.onPlayWasTriggered = true;
   }
 
   if (callback) return callback;

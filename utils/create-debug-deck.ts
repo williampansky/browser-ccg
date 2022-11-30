@@ -18,13 +18,12 @@ const createDebugDeck = (
       return obj.key === debugKey;
     });
 
-    tempDeckArray.push(createCardObject(debugCardBase!));
+    const obj = createCardObject(debugCardBase!);
+    tempDeckArray.push({
+      ...obj,
+      currentCost: 0
+    });
   });
-
-  while (tempDeckArray.length !== G.gameConfig.numerics.cardsPerDeck) {
-    let randomCard = ctx.random!.Shuffle(database)[0];
-    tempDeckArray.push(createCardObject(randomCard));
-  }
 
   return tempDeckArray;
 };

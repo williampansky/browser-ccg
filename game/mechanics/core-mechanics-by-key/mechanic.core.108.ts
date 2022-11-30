@@ -30,6 +30,7 @@ export const core108 = (
       const cardIsNotSelf = c.uuid !== card.uuid;
 
       if (zoneMatch && cardIsNotSelf) {
+        card.booleans.onPlayWasTriggered = true;
         pushPowerStreamAndSetDisplay(
           c,
           card,

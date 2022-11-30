@@ -29,6 +29,7 @@ export const core118 = (
     const randomCard = ctx.random?.Shuffle(hand)[0];
 
     if (randomCard) {
+      card.booleans.onPlayWasTriggered = true;
       discardCardFromPlayersHand(G, ctx, player, randomCard?.uuid);
     }
   }

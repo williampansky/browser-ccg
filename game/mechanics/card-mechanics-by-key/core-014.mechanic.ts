@@ -29,6 +29,7 @@ export const core014 = (
       if (c.uuid === rCard!.uuid) {
         c.currentCost = add(c.currentCost, 1);
         c.booleans.hasCostIncreased = true;
+        card.booleans.onPlayWasTriggered = true;
       }
     });
   }

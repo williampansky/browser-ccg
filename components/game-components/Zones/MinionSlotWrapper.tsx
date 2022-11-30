@@ -18,6 +18,7 @@ interface Props {
   opponent?: PlayerID;
   prevHand?: Card[];
   zoneNumber?: number;
+  zoneSide?: PlayerID;
 }
 
 export const MinionSlotWrapper = ({
@@ -28,9 +29,10 @@ export const MinionSlotWrapper = ({
   player,
   opponent,
   zoneNumber,
+  zoneSide,
 }: Props) => {
   const b = data && data?.booleans;
-  const { attackMinion, buffMinion, destroyMinion } = moves;
+  const { attackMinion, buffMinion, destroyMinion, healMinion } = moves;
 
   const [rotation, setRotation] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
@@ -44,6 +46,7 @@ export const MinionSlotWrapper = ({
     if (b?.canBeAttackedBySpell) move(Context.CanBeAttackedBySpell);
     if (b?.canBeBuffed) move(Context.CanBeBuffed);
     if (b?.canBeDestroyed) move(Context.CanBeDestroyed);
+    if (b?.canBeHealed) move(Context.CanBeHealed);
   };
 
   const move = (
@@ -51,15 +54,15 @@ export const MinionSlotWrapper = ({
   ): void => {
     switch (context) {
       case Context.CanBeAttackedBySpell:
-        return attackMinion(player, data?.uuid, zoneNumber);
+        return attackMinion(player, zoneSide, data?.uuid, zoneNumber);
       case Context.CanBeAttackedByWeapon:
-        return attackMinion(player, data?.uuid, zoneNumber);
+        return attackMinion(player, zoneSide, data?.uuid, zoneNumber);
       case Context.CanBeBuffed:
-        return buffMinion(player, data?.uuid, zoneNumber);
+        return buffMinion(player, zoneSide, data?.uuid, zoneNumber);
       case Context.CanBeDestroyed:
-        return destroyMinion(player, data?.uuid, zoneNumber);
+        return destroyMinion(player, zoneSide, data?.uuid, zoneNumber);
       case Context.CanBeHealed:
-        return buffMinion(player, data?.uuid, zoneNumber);
+        return healMinion(player, zoneSide, data?.uuid, zoneNumber);
       default:
         return;
     }
@@ -83,9 +86,9 @@ export const MinionSlotWrapper = ({
       }}
     >
       <>
+        {children}
         <MinionEventAnimation data={data} index={index} zoneNumber={zoneNumber} />
         <MinionOnPlayAnimation data={data} index={index} zoneNumber={zoneNumber} />
-        {children}
       </>
     </div>
   );

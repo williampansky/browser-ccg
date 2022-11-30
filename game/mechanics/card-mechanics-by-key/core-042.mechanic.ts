@@ -35,6 +35,7 @@ export const core042 = (
       const zoneMatch = zIdx === zoneIdx;
       const isNotSelf = c.uuid !== card.uuid;
       const isMinion = c.type === CardType.Minion;
+      card.booleans.onPlayWasTriggered = true;
       
       if (zoneMatch && isNotSelf && isMinion) {
         pushHealthStreamAndSetDisplay(

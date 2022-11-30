@@ -26,15 +26,18 @@ export const core044 = (
   player: PlayerID,
   opponent: PlayerID
 ) => {
-  G.zones.forEach((z) =>
-    z.sides[opponent].forEach((c) => (c.booleans.canBeAttackedBySpell = true))
-  );
+  G.zones.forEach((z) => {
+    z.sides[opponent].forEach((c) => (c.booleans.canBeAttackedBySpell = true));
+    z.sides[player].forEach((c) => {
+      if (c.uuid !== card.uuid) c.booleans.canBeAttackedBySpell = true;
+    });
+  });
 };
 
 export const core044Attack = (
   G: GameState,
   ctx: Ctx,
-  opponent: PlayerID,
+  targetPlayer: PlayerID,
   cardToAttackUuid: string,
   cardToBlame: Card
 ) => {
@@ -46,7 +49,7 @@ export const core044Attack = (
   } | undefined;
 
   G.zones.forEach((z, zi) => {
-    z.sides[opponent].forEach((c, ci) => {
+    z.sides[targetPlayer].forEach((c, ci) => {
       if (c.uuid === cardToAttackUuid) {
         target = {
           card: c,
@@ -60,21 +63,27 @@ export const core044Attack = (
   if (target !== undefined) {
     const { card, cardIdx, zoneNumber } = target;
 
-    G.zones[zoneNumber].sides[opponent].forEach((c, ci) => {
-      if (c.uuid === card.uuid) {
+    G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
+      if (c.uuid === card.uuid && ci === cardIdx) {
+        c.booleans.canBeAttackedBySpell = false;
         pushHealthStreamAndSetDisplay(
-          card,
+          c,
           cardToBlame,
           cardToBlame.numberPrimary,
-          subtract(card.displayHealth, cardToBlame.numberPrimary)
+          subtract(c.displayHealth, cardToBlame.numberPrimary)
         );
       }
     });
-  }
 
-  G.zones.forEach((z, zi) =>
-    z.sides[opponent].forEach((c, ci) => {
-      c.booleans.canBeAttackedBySpell = false;
-    })
-  );
+    G.zones.forEach((z, zi) => {
+      z.sides['0'].forEach((c, ci) => {
+        c.booleans.canBeAttackedBySpell = false;
+        if (c.uuid === cardToBlame.uuid) c.booleans.onPlayWasTriggered = true;
+      });
+
+      z.sides['1'].forEach((c, ci) => {
+        c.booleans.canBeAttackedBySpell = false;
+      });
+    });
+  }
 };

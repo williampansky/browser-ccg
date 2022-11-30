@@ -33,6 +33,7 @@ export const core010 = (
       const isSprite = c.race === CardRace.Sprite;
 
       if (zoneMatch && isNotSelf && isSprite) {
+        card.booleans.onPlayWasTriggered = true;
         pushPowerStreamAndSetDisplay(
           c,
           card,

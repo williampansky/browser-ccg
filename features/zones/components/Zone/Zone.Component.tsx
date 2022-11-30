@@ -81,6 +81,7 @@ export const Zone = ({
                 index={idx}
                 moves={moves}
                 zoneNumber={zoneNumber}
+                zoneSide={theirID}
               >
                 <OpponentZoneSlot
                   key={idx}
@@ -159,6 +160,7 @@ export const Zone = ({
                   index={idx}
                   moves={moves}
                   zoneNumber={zoneNumber}
+                  zoneSide={yourID}
                 >
                   <PlayerZoneSlot
                     data={zone.sides[yourID][idx]}

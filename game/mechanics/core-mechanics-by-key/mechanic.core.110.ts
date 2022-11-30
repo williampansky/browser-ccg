@@ -39,6 +39,7 @@ export const core110Buff = (
   G.zones.forEach((z) => {
     z.sides[player].forEach((c) => {
       if (c.uuid === cardToBuff.uuid) {
+        cardBuffedFrom.booleans.onPlayWasTriggered = true;
         pushPowerStreamAndSetDisplay(
           cardToBuff,
           cardBuffedFrom,

@@ -1,8 +1,9 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { GameState, Zone } from '../../../types';
+import { GameState, Zone, Zones } from '../../../types';
 import { zones } from '../../state';
 import { createZoneObject, logPhaseToConsole } from '../../../utils';
 import ZONE_DATABASE from '../../data/zones.json';
+import scenario from '../../debug/scenarios/heal-player-minion.scenario'
 
 const initZonesPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
@@ -32,6 +33,12 @@ const initZonesPhase: PhaseConfig = {
         key: 'ZONES',
         value: `${zone0} | ${zone1} | ${zone2}`,
       });
+    }
+
+    if (G.gameConfig.debugConfig.debugScenario !== '') {
+      // const scenario = require('../../debug/scenarios/' + s);
+      G.zones[0].sides[0] = scenario.zones[0].sides[0];
+      G.zones[0].sides[1] = scenario.zones[0].sides[1];
     }
   },
   endIf: (G: GameState) => zones.areReady(G),

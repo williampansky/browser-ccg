@@ -85,6 +85,7 @@ const defaultPlayCardsPhase: PhaseConfig = {
             canBeAttackedByWeapon: false,
             canBeBuffed: false,
             canBeDestroyed: false,
+            canBeHealed: false,
             eventWasTriggered: false,
           };
 
@@ -109,6 +110,7 @@ const defaultPlayCardsPhase: PhaseConfig = {
             canBeAttackedByWeapon: false,
             canBeBuffed: false,
             canBeDestroyed: false,
+            canBeHealed: false,
             eventWasTriggered: false,
           };
 

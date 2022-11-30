@@ -12,7 +12,10 @@ const pushHealthStreamAndSetDisplay = (
   currentHealth: number
 ): void => {
   // set boolean tag
-  if (cardToAdjust.displayHealth < currentHealth) {
+  if (cardToAdjust.baseHealth === currentHealth) {
+    cardToAdjust.booleans.hasHealthIncreased = false;
+    cardToAdjust.booleans.hasHealthReduced = false;
+  } else if (cardToAdjust.displayHealth < currentHealth) {
     cardToAdjust.booleans.hasHealthIncreased = true;
     cardToAdjust.booleans.hasHealthReduced = false;
   } else if (cardToAdjust.displayHealth > currentHealth) {

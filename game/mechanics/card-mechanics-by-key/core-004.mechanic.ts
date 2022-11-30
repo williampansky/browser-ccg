@@ -31,5 +31,6 @@ export const core004 = (
     const randomCard = createCardObject(randomCardBase!);
     G.players[player].cards.hand.push(randomCard);
     counts.incrementHand(G, player);
+    card.booleans.onPlayWasTriggered = true;
   }
 };

@@ -43,7 +43,7 @@ export const core007 = (
         const entourageCard = createCardObject(entObj);
         const entCardObj = { ...entourageCard, revealed: true };
         z.sides[player].push(entCardObj);
-        // G.zonesCardsReference[i][player].push(entCardObj);
+        card.booleans.onPlayWasTriggered = true;
       }
     }
   });

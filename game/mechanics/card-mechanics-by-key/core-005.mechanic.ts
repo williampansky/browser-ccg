@@ -1,4 +1,5 @@
 import { add } from 'mathjs';
+import { gte } from 'lodash';
 
 import type { Ctx } from 'boardgame.io';
 import type {
@@ -9,10 +10,10 @@ import type {
   Zone,
 } from '../../../types';
 
-import { getCardPower, pushPowerStreamAndSetDisplay } from '../../../utils';
+import { pushPowerStreamAndSetDisplay } from '../../../utils';
 
 /**
- * on play: +3 Power if you have 3 other cards here
+ * on play: +num1 Power if you have num2 or more other cards here
  */
 export const core005 = (
   G: GameState,
@@ -24,7 +25,20 @@ export const core005 = (
   cardIdx: number,
   player: PlayerID
 ) => {
-  if (zone.sides[player].length >= 3) {
-    pushPowerStreamAndSetDisplay(card, card, 3, add(card.displayPower, 3));
+  const { displayPower, numberPrimary, numberSecondary } = card;
+  const counter: number = 0;
+
+  zone.sides[player].forEach((c, ci) => {
+    if (c.uuid !== card.uuid) add(counter, 1);
+  });
+
+  if (gte(counter, numberSecondary)) {
+    card.booleans.onPlayWasTriggered = true;
+    pushPowerStreamAndSetDisplay(
+      card,
+      card,
+      numberPrimary,
+      add(displayPower, numberPrimary)
+    );
   }
 };

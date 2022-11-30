@@ -28,6 +28,7 @@ export const core002 = (
     const cardIsBeforeCardPlayed = cardIdx > i;
 
     if (isNotCardPlayed && cardIsBeforeCardPlayed) {
+      card.booleans.onPlayWasTriggered = true;
       pushPowerStreamAndSetDisplay(c, card, -1, add(c.displayPower, -1));
     }
   });

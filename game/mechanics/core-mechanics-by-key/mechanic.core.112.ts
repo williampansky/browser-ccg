@@ -8,14 +8,13 @@ import type {
   Zone,
 } from '../../../types';
 import {
-  handleCardDestructionMechanics,
   pushHealthStreamAndSetDisplay,
 } from '../../../utils';
 
 /**
- * deal num1 dmg to a minion
+ * deal num1 targeted dmg
  */
-export const core053 = (
+export const core112 = (
   G: GameState,
   ctx: Ctx,
   gameConfig: GameConfig,
@@ -34,7 +33,7 @@ export const core053 = (
   });
 };
 
-export const core053Attack = (
+export const core112Attack = (
   G: GameState,
   ctx: Ctx,
   targetPlayer: PlayerID,
@@ -65,7 +64,6 @@ export const core053Attack = (
 
     G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
       if (c.uuid === card.uuid && ci === cardIdx) {
-        c.booleans.canBeAttackedBySpell = false;
         pushHealthStreamAndSetDisplay(
           c,
           cardToBlame,

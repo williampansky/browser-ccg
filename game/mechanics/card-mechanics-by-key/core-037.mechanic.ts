@@ -25,5 +25,6 @@ export const core037 = (
 ) => {
   const numberPrimary = card?.numberPrimary || 1;
   const currentTotal = G.actionPoints[player].total;
-  actionPoints.setTotal(G, player, add(currentTotal, numberPrimary))
+  actionPoints.setTotal(G, player, add(currentTotal, numberPrimary));
+  card.booleans.onPlayWasTriggered = true;
 };

@@ -26,23 +26,27 @@ export const core122 = (
   const { numberPrimary } = card;
   G.zones.forEach((z) => {
     z.sides[player].forEach((c) => {
-      if (c.uuid !== card.uuid)
+      if (c.uuid !== card.uuid) {
+        card.booleans.onPlayWasTriggered = true;
         pushHealthStreamAndSetDisplay(
           c,
           card,
           numberPrimary,
           subtract(c.displayHealth, numberPrimary)
         );
+      }
     });
 
     z.sides[opponent].forEach((c) => {
-      if (c.uuid !== card.uuid)
+      if (c.uuid !== card.uuid) {
+        card.booleans.onPlayWasTriggered = true;
         pushHealthStreamAndSetDisplay(
           c,
           card,
           numberPrimary,
           subtract(c.displayHealth, numberPrimary)
         );
+      }
     });
   });
 };
