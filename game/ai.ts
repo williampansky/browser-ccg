@@ -1,7 +1,12 @@
-import type { Ctx } from 'boardgame.io';
 import { gte, lt } from 'lodash';
+import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID, Zone } from '../types';
 import { getRandomNumberBetween } from '../utils';
+import { gameConfig } from '../app.config';
+
+const {
+  debugConfig: { debugOpponentHandCardKey },
+} = gameConfig;
 
 interface PushPlayCardToZoneMove {
   aiID: PlayerID;
@@ -84,18 +89,21 @@ export const pushPlayCardMoves = (
   zones: Zone[]
 ) => {
   const handHasAtLeastOneCard = hand.length >= 1;
+  const canPlay = playableCards.length;
   const movesArrIsAtOrBelow = (n: number) => moves.length <= n;
+  const amountToPlay = debugOpponentHandCardKey !== '' ? 1 : canPlay;
 
   if (handHasAtLeastOneCard && movesArrIsAtOrBelow(20)) {
     determinePlayableCards(hand, playableCards);
 
-    for (let i = 0; i < playableCards.length; i++) {
-      const rngIdx = getRandomNumberBetween(0, playableCards.length - 1);
-      const rngCard = playableCards[rngIdx];
+    for (let i = 0; i < amountToPlay; i++) {
+      const rngIdx = getRandomNumberBetween(0, canPlay - 1);
       const props = {
         aiID,
-        card: rngCard,
-        cardIndex: rngIdx,
+        card: debugOpponentHandCardKey
+          ? hand[0]
+          : playableCards[rngIdx],
+        cardIndex: debugOpponentHandCardKey ? 0 : rngIdx,
         currentAp,
         moves,
         perZone,
@@ -129,7 +137,6 @@ export const pushInteractionMoves = (
   //       });
   //     }
   //   });
-
   //   z.sides['1'].forEach((c, cI) => {
   //     if (c.booleans.canBeBuffed) {
   //       moves.push({

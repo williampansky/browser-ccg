@@ -21,7 +21,8 @@ const createDebugDeck = (
     const obj = createCardObject(debugCardBase!);
     tempDeckArray.push({
       ...obj,
-      currentCost: 0
+      currentCost: 0,
+      canPlay: true
     });
   });
 

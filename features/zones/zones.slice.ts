@@ -9,15 +9,26 @@ export const zonesSlice = createSlice({
   name: 'zones',
   initialState,
   reducers: {
-    initZone: (state, { payload }: PayloadAction<{ zoneNumber: number; zoneData: Zone }>) => {
+    initZone: (
+      state,
+      { payload }: PayloadAction<{ zoneNumber: number; zoneData: Zone }>
+    ) => {
       const { zoneNumber, zoneData } = payload;
       state[zoneNumber] = zoneData;
     },
-    updateZone: (state, { payload }: PayloadAction<{ zoneNumber: number; zoneData: Zone }>) => {
+    updateZone: (
+      state,
+      { payload }: PayloadAction<{ zoneNumber: number; zoneData: Zone }>
+    ) => {
       const { zoneNumber, zoneData } = payload;
       state[zoneNumber] = zoneData;
     },
-    updateZoneSide: (state, { payload }: PayloadAction<{ zoneNumber: number; cardData: Card, player: PlayerID }>) => {
+    updateZoneSide: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{ zoneNumber: number; cardData: Card; player: PlayerID }>
+    ) => {
       const { cardData, player, zoneNumber } = payload;
       state[zoneNumber].sides[player].push(cardData);
     },

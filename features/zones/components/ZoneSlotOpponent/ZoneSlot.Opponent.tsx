@@ -1,12 +1,9 @@
-import { useEffectListener } from 'bgio-effects/react';
-import { Ctx } from 'boardgame.io';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+
 import type { Card, GameState, PlayerID } from '../../../../types';
 import { showCardModal } from '../../../card-modal/card-modal.slice';
 import { Minion } from '../../../../components/game-components/Minion/Minion';
-import { getRandomNumberBetween } from '../../../../utils';
-import { gameConfig } from '../../../../app.config';
 import { usePrevious } from '../../../../hooks';
 
 interface Props {
@@ -14,7 +11,6 @@ interface Props {
   data?: Card;
   onClick: (card: Card) => void;
   zoneNumber: number;
-  zoneRef: any;
   slotIndex: number;
   playerId: PlayerID;
   yourID: PlayerID;
@@ -24,7 +20,6 @@ interface Props {
 export const OpponentZoneSlot = ({
   data,
   zoneNumber,
-  zoneRef,
   slotIndex,
   playerId,
   yourID,
@@ -33,9 +28,7 @@ export const OpponentZoneSlot = ({
 }: Props) => {
   const dispatch = useDispatch();
   const [objData, setObjData] = useState<Card | undefined>(undefined);
-  const [incoming, setIncoming] = useState<boolean>(false);
   const [destroyed, setDestroyed] = useState<boolean>(false);
-  const [animation, setAnimation] = useState<string>('');
   const prevObjData = usePrevious(objData);
 
   const getAnimationDirection = (zoneNumber: number, data?: Card): string => {
@@ -44,7 +37,7 @@ export const OpponentZoneSlot = ({
     const translateStart0 = 'translate(-100%, -100%)';
     const translateStart1 = 'translate(0, -100%)';
     const translateStart2 = 'translate(100%, -100%)';
-  
+
     switch (zoneNumber) {
       case 0:
         return data
@@ -67,39 +60,13 @@ export const OpponentZoneSlot = ({
     if (data?.revealed && playerId === theirID) {
       setDestroyed(false);
       setObjData(data);
-      // setIncoming(false);
     } else if (data === undefined && prevObjData !== undefined) {
       setDestroyed(true);
       setTimeout(() => setObjData(undefined), 500);
     } else if (playerId !== theirID) {
       setObjData(undefined);
-      setIncoming(false);
     }
   }, [data, playerId]);
-
-  const onUnrevealedClick = () => {
-    if (!incoming) return;
-    return onClick(zoneRef[theirID][slotIndex]);
-  };
-
-  // if (G?.ZonesCardsReference[zoneNumber]['0'][slotIndex]) {
-  // if (objData?.revealed === false) {
-  if (incoming) {
-    return (
-      <div
-        onClick={onUnrevealedClick}
-        style={{
-          height: 'var(--minion-height)',
-          width: 'calc(var(--minion-height) / 1.25)',
-          transition: '100ms ease-in',
-          opacity: 0.65,
-          border: '1px solid orange',
-          borderRadius: '1.25em 1.25em 0 0',
-          transitionDelay: '200ms'
-        }}
-      />
-    );
-  }
 
   return (
     <div
@@ -113,12 +80,10 @@ export const OpponentZoneSlot = ({
         zIndex: objData ? '1' : '-1',
         transform: `${getAnimationDirection(zoneNumber, objData)}`,
         transitionDelay: objData?.revealed ? `${slotIndex * 200}ms` : '0ms',
-        pointerEvents: objData ? 'auto' : 'none'
-        // filter: objData ? 'blur(0)' : 'blur(1px)'
+        pointerEvents: objData ? 'auto' : 'none',
       }}
     >
-      {/* @ts-ignore */}
-      <Minion {...objData} />
+      <Minion {...objData!} />
     </div>
   );
 };

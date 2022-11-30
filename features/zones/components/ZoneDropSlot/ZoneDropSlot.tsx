@@ -1,16 +1,12 @@
 import React from 'react';
-import type { ReactElement } from 'react';
 import styles from './zone-drop-slot.module.scss';
 
-interface ReactZoneDropSlot {
+interface ZoneDropSlotProps {
   isActive: boolean;
   zoneNumber?: number;
 }
 
-export const ZoneDropSlot = ({
-  isActive,
-  zoneNumber,
-}: ReactZoneDropSlot): ReactElement => {
+export const ZoneDropSlot = ({ isActive, zoneNumber }: ZoneDropSlotProps) => {
   const wrapperStyles = [
     styles['wrapper'],
     zoneNumber === undefined ? styles['global-spell'] : '',

@@ -1,4 +1,7 @@
+import { subtract } from 'mathjs';
+import { gt, gte, lte } from 'lodash';
 import { TurnOrder } from 'boardgame.io/core';
+
 import type { Ctx, PhaseConfig } from 'boardgame.io';
 import type { Card, GameState, Zone } from '../../../types';
 
@@ -19,39 +22,19 @@ import {
   initTurnEnd,
 } from '../init-card-mechanics-phase';
 
-import { moves } from './play-cards.phase.moves';
 import {
   drawCardFromPlayersDeck,
+  getContextualPlayerIds,
   handleCardDestructionMechanics,
   logPhaseToConsole,
 } from '../../../utils';
+import { moves } from './play-cards.phase.moves';
 import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/methods';
 import { fxEnd } from '../../config.bgio-effects';
-import { gt, gte, lt, lte } from 'lodash';
-import { subtract } from 'mathjs';
 
 const defaultPlayCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase);
-
-    // decrement zone.disabledForXTurns values
-    G.zones.forEach((z, zI) => {
-      if (gt(z.disabledForXTurns['0'], 0)) {
-        z.disabledForXTurns['0'] = subtract(z.disabledForXTurns['0'], 1);
-      }
-
-      if (gt(z.disabledForXTurns['1'], 0)) {
-        z.disabledForXTurns['1'] = subtract(z.disabledForXTurns['1'], 1);
-      }
-
-      if (z.disabled['0'] === true && z.disabledForXTurns['0'] === 0) {
-        z.disabled['0'] = false;
-      }
-
-      if (z.disabled['1'] === true && z.disabledForXTurns['1'] === 0) {
-        z.disabled['1'] = false;
-      }
-    })
 
     fxEnd(ctx);
   },
@@ -65,6 +48,8 @@ const defaultPlayCardsPhase: PhaseConfig = {
   turn: {
     onBegin(G: GameState, ctx: Ctx) {
       const { currentPlayer } = ctx;
+      const { opponent } = getContextualPlayerIds(currentPlayer);
+
       drawCardFromPlayersDeck(G, currentPlayer);
       incrementActionPointsTotal(G, currentPlayer);
       setActionPointsToTotal(G, currentPlayer);
@@ -72,6 +57,18 @@ const defaultPlayCardsPhase: PhaseConfig = {
       initZoneOnTurnStartInteractions(G, currentPlayer);
       addDebugCardToHand(G, currentPlayer);
       fxEnd(ctx);
+
+      // decrement zone.disabledForXTurns values
+      const op = opponent;
+      G.zones.forEach((z, zI) => {
+        if (gt(z.disabledForXTurns[op], 0)) {
+          z.disabledForXTurns[op] = subtract(z.disabledForXTurns[op], 1);
+        }
+
+        if (z.disabled[op] === true && z.disabledForXTurns[op] === 0) {
+          z.disabled[op] = false;
+        }
+      });
     },
     onEnd(G: GameState, ctx: Ctx) {
       const { currentPlayer } = ctx;

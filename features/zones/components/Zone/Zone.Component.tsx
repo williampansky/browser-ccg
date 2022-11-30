@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-import type {
-  GameConfig,
-  PlayerID,
-  Zone as ZoneServerProps,
-  ZonesCardsReference,
-} from '../../../../types';
-
+import type { GameConfig, PlayerID, Zone as IZone } from '../../../../types';
 import { usePrevious } from '../../../../hooks';
 import { OpponentZoneSlot } from '../ZoneSlotOpponent';
 import { PlayerZoneSlot } from '../ZoneSlotPlayer';
@@ -18,29 +12,27 @@ import { ZoneRevealOverlay } from '../ZoneRevealOverlay';
 import { ZoneName } from '../ZoneName';
 import { MinionSlotWrapper } from '../../../../components/game-components/Zones/MinionSlotWrapper';
 
-interface ZoneClientProps {
-  yourID: PlayerID;
-  theirID: PlayerID;
-  turn: number;
-  zone: ZoneServerProps;
-  zoneNumber: number;
-  zoneRef: ZonesCardsReference;
-  zonesAreActive: boolean;
+interface Props {
   gameConfig: GameConfig;
   moves: any;
+  theirID: PlayerID;
+  turn: number;
+  yourID: PlayerID;
+  zone: IZone;
+  zoneNumber: number;
+  zonesAreActive: boolean;
 }
 
 export const Zone = ({
-  theirID,
-  yourID,
-  turn,
-  zone,
-  zoneNumber,
-  zoneRef,
-  zonesAreActive,
   gameConfig,
   moves,
-}: ZoneClientProps) => {
+  theirID,
+  turn,
+  yourID,
+  zone,
+  zoneNumber,
+  zonesAreActive,
+}: Props) => {
   const { powers } = zone;
   const { numerics, zonesConfig } = gameConfig;
   const [zoneLeader, setZoneLeader] = useState<PlayerID | undefined>(undefined);
@@ -88,7 +80,6 @@ export const Zone = ({
                   data={zone.sides[theirID][idx]}
                   onClick={(val: any) => console.log(val)}
                   zoneNumber={zoneNumber}
-                  zoneRef={zoneRef}
                   slotIndex={idx}
                   playerId={theirID}
                   yourID={yourID}
@@ -146,7 +137,10 @@ export const Zone = ({
       </div>
 
       <div className={'side__player__wrapper'}>
-        <ZoneDropSlot isActive={zonesAreActive} zoneNumber={zoneNumber} />
+        <ZoneDropSlot
+          isActive={zone?.disabled[yourID] ? false : zonesAreActive}
+          zoneNumber={zoneNumber}
+        />
 
         <div className={['zone__side', 'side__player'].join(' ')}>
           {[...Array.from(Array(numerics.numberOfSlotsPerZone))].map(
@@ -166,7 +160,6 @@ export const Zone = ({
                     data={zone.sides[yourID][idx]}
                     onClick={(val: any) => console.log(val)}
                     zoneNumber={zoneNumber}
-                    zoneRef={zoneRef}
                     slotIndex={idx}
                     playerId={yourID}
                     yourID={yourID}

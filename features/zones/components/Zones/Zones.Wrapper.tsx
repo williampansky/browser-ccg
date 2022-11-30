@@ -1,46 +1,31 @@
-import React, { ReactElement, useEffect, useState } from 'react';
-import { GameState, PlayerID, Zone } from '../../../../types';
-// import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
-// import { ZoneDropSlot } from '../ZoneDropSlot/ZoneDropSlot';
-import type { RootState } from '../../../../store';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Zone as ZoneComponent } from '../Zone';
 import { useEffectListener, useLatestPropsOnEffect } from 'bgio-effects/react';
+
+import type { RootState } from '../../../../store';
+import type { GameState, PlayerID, Zone } from '../../../../types';
+
 import { initZone, updateZoneSide } from '../../zones.slice';
-import { updateZonesRef } from '../../zones-ref.slice';
+import { Zone as ZoneComponent } from '../Zone';
 import styles from './zones.wrapper.module.scss';
-import { Ctx } from 'boardgame.io';
-import { EffectsCtxMixin } from 'bgio-effects/dist/types';
-import bgioEffectsConfig from '../../../../game/config.bgio-effects';
-import { ZoneDropSlot } from '../ZoneDropSlot';
 
 interface ZonesProps {
-  // G: GameState;
-  // ctx: Ctx;
   moves: any;
-  // disabled: boolean;
-  // zone: ZoneProps;
-  // zoneNumber: number;
   yourID: PlayerID;
   theirID: PlayerID;
-  // onCardClick: (obj: Card) => void;
 }
 
 export const Zones = ({ yourID, theirID, moves }: ZonesProps) => {
-  // const { powers } = zone;
-  // const { playCard } = moves;
-
   const dispatch = useDispatch();
   const { G, ctx } = useLatestPropsOnEffect<GameState, any>('effects:end');
-  const {gameConfig} = useSelector((state: RootState) => state.config);
-  const zones = useSelector((state: RootState) => state.zones);
-  const zonesRef = useSelector((state: RootState) => state.zonesRef);
+  const { gameConfig } = useSelector((state: RootState) => state.config);
   const [zonesAreActive, setZonesAreActive] = useState<boolean>(false);
-  const [cardType, setCardType] = useState<string | undefined>(undefined);
+  const [_, setCardType] = useState<string | undefined>(undefined);
+  const zones = useSelector((state: RootState) => state.zones);
 
   useEffect(() => {
+    // prettier-ignore
     G.zones.forEach((z: Zone, i: number) => {
-      // if (z.revealed) 
       dispatch(initZone({
         zoneData: G.zones[i],
         zoneNumber: i
@@ -49,43 +34,22 @@ export const Zones = ({ yourID, theirID, moves }: ZonesProps) => {
   }, [G.zones]);
 
   useEffect(() => {
-    dispatch(updateZonesRef(G.zonesCardsReference));
-  }, [G.zonesCardsReference]);
-
-  // useEffectListener('revealCard', (effectPayload: any, boardProps: any) => {
-  //   dispatch(updateZoneSide({
-  //     zoneNumber: effectPayload.zoneNumber,
-  //     cardData: effectPayload.card,
-  //     player: effectPayload.player
-  //   }))
-  // }, [G.zones]);
-
-  useEffect(() => {
     setTimeout(() => {
       setZonesAreActive(G.selectedCardData[yourID] !== undefined);
       setCardType(G.selectedCardData[yourID]?.type);
     }, 100);
   }, [G.selectedCardData[yourID], yourID]);
 
-  // useEffect(() => {
-  //   console.log(G)
-  // }, [G]);
-
   return (
     <div className={styles['wrapper']}>
       {zones.map((zone: Zone, idx: number) => {
         return (
           <ZoneComponent
-            // G={G}
-            // ctx={ctx}
             moves={moves}
-            // disabled={zone.disabled[0]}
             zone={zone}
             zoneNumber={idx}
             zonesAreActive={zonesAreActive}
-            zoneRef={zonesRef[idx]}
             key={idx}
-            // onCardClick={onCardClick}
             yourID={yourID}
             theirID={theirID}
             turn={G.turn}
