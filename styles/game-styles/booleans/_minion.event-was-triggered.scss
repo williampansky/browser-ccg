@@ -25,6 +25,14 @@
     will-change: opacity;
   }
 
+  &[data-index='0']:after { animation-delay: 200ms; }
+  &[data-index='1']:after { animation-delay: 400ms; }
+  &[data-index='2']:after { animation-delay: 600ms; }
+  &[data-index='3']:after { animation-delay: 800ms; }
+  &[data-index='4']:after { animation-delay: 1000ms; }
+  &[data-index='5']:after { animation-delay: 1200ms; }
+  &[data-index='6']:after { animation-delay: 1400ms; }
+
   @keyframes event-ripple {
     0% {
       opacity: 0;

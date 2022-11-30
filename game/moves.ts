@@ -114,6 +114,24 @@ export const playCard = (
     });
   }
 
+  G.zones.forEach((z, zi) => {
+    z.sides['0'].forEach((c, ci) => {
+      if (c.uuid !== cardUuid)
+        c.booleans = {
+          ...c.booleans,
+          eventWasTriggered: false,
+        };
+    });
+
+    z.sides['1'].forEach((c, ci) => {
+      if (c.uuid !== cardUuid)
+        c.booleans = {
+          ...c.booleans,
+          eventWasTriggered: false,
+        };
+    });
+  });
+
   // unset selected card
   selectedCardData.reset(G, player);
   G.selectedCardIndex[player] = undefined;
@@ -336,7 +354,14 @@ export const healMinion = (
     if (c.uuid === cardToHealUuid) {
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_082':
-          return core082Heal(G, ctx, player, targetPlayer, c.uuid, lastPlayedCard);
+          return core082Heal(
+            G,
+            ctx,
+            player,
+            targetPlayer,
+            c.uuid,
+            lastPlayedCard
+          );
 
         default:
           return;

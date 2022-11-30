@@ -23,15 +23,15 @@ export const Zones = ({ yourID, theirID, moves }: ZonesProps) => {
   const [_, setCardType] = useState<string | undefined>(undefined);
   const zones = useSelector((state: RootState) => state.zones);
 
-  useEffect(() => {
-    // prettier-ignore
-    G.zones.forEach((z: Zone, i: number) => {
-      dispatch(initZone({
-        zoneData: G.zones[i],
-        zoneNumber: i
-      }))
-    })
-  }, [G.zones]);
+  // useEffect(() => {
+  //   // prettier-ignore
+  //   G.zones.forEach((z: Zone, i: number) => {
+  //     if (z.revealed) dispatch(initZone({
+  //       zoneData: G.zones[i],
+  //       zoneNumber: i
+  //     }))
+  //   })
+  // }, [G.zones]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -42,7 +42,7 @@ export const Zones = ({ yourID, theirID, moves }: ZonesProps) => {
 
   return (
     <div className={styles['wrapper']}>
-      {zones.map((zone: Zone, idx: number) => {
+      {G.zones.map((zone: Zone, idx: number) => {
         return (
           <ZoneComponent
             moves={moves}
