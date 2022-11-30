@@ -26,9 +26,12 @@ export const core050 = (
   player: PlayerID,
   opponent: PlayerID
 ) => {
-  G.zones.forEach((z) =>
-    z.sides[opponent].forEach((c) => (c.booleans.canBeAttackedBySpell = true))
-  );
+  G.zones.forEach((z) => {
+    z.sides[opponent].forEach((c) => (c.booleans.canBeAttackedBySpell = true));
+    z.sides[player].forEach((c) => {
+      if (c.uuid !== card.uuid) c.booleans.canBeAttackedBySpell = true;
+    });
+  });
 };
 
 export const core050Attack = (
@@ -61,8 +64,7 @@ export const core050Attack = (
     const { card, cardIdx, zoneNumber } = target;
 
     G.zones[zoneNumber].sides[opponent].forEach((c, ci) => {
-      if (c.uuid === card.uuid) {
-        card.booleans.onPlayWasTriggered = true;
+      if (c.uuid === card.uuid && ci === cardIdx) {
         pushHealthStreamAndSetDisplay(
           c,
           cardToBlame,
@@ -70,7 +72,6 @@ export const core050Attack = (
           subtract(c.displayHealth, cardToBlame.numberPrimary)
         );
       } else {
-        card.booleans.onPlayWasTriggered = true;
         pushHealthStreamAndSetDisplay(
           c,
           cardToBlame,
@@ -79,11 +80,15 @@ export const core050Attack = (
         );
       }
     });
-  }
 
-  G.zones.forEach((z, zi) =>
-    z.sides[opponent].forEach((c, ci) => {
-      c.booleans.canBeAttackedBySpell = false;
-    })
-  );
+    G.zones.forEach((z, zi) => {
+      z.sides['0'].forEach((c, ci) => {
+        c.booleans.canBeAttackedBySpell = false;
+        if (c.uuid === cardToBlame.uuid) c.booleans.onPlayWasTriggered = true;
+      });
+      z.sides['1'].forEach((c, ci) => {
+        c.booleans.canBeAttackedBySpell = false;
+      });
+    });
+  }
 };
