@@ -317,6 +317,28 @@ export const destroyMinion = (
   });
 };
 
+export const healMinion = (
+  G: GameState,
+  ctx: Ctx,
+  player: PlayerID,
+  cardToHealUuid: string,
+  zoneNumber: number
+) => {
+  const { playedCards } = G;
+  const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
+  G.zones[zoneNumber].sides[player].forEach((c) => {
+    if (c.uuid === cardToHealUuid) {
+      switch (lastPlayedCard?.key) {
+        case 'SET_CORE_031':
+          return core031Buff(G, ctx, player, c, lastPlayedCard);
+
+        default:
+          return;
+      }
+    }
+  });
+};
+
 export const updatePlayerHandArray = (
   G: GameState,
   ctx: Ctx,

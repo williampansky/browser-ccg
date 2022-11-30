@@ -4,6 +4,8 @@ import { useEffectListener } from 'bgio-effects/react';
 import type { Card, DiscardCardEffects, PlayerID } from '../../../types';
 import { getRandomNumberBetween } from '../../../utils';
 import { Context } from '../../../enums';
+import { MinionOnPlayAnimation } from './MinionOnPlayAnimation';
+import { MinionEventAnimation } from './MinionEventAnimation';
 
 // import styles from './MinionSlotWrapper.module.scss';
 
@@ -27,7 +29,7 @@ export const MinionSlotWrapper = ({
   opponent,
   zoneNumber,
 }: Props) => {
-  const booleans = data && data?.booleans;
+  const b = data && data?.booleans;
   const { attackMinion, buffMinion, destroyMinion } = moves;
 
   const [rotation, setRotation] = useState<number>(0);
@@ -39,9 +41,9 @@ export const MinionSlotWrapper = ({
   }, []);
 
   const handleOnClick = (): void => {
-    if (booleans?.canBeAttackedBySpell) move(Context.CanBeAttackedBySpell);
-    if (booleans?.canBeBuffed) move(Context.CanBeBuffed);
-    if (booleans?.canBeDestroyed) move(Context.CanBeDestroyed);
+    if (b?.canBeAttackedBySpell) move(Context.CanBeAttackedBySpell);
+    if (b?.canBeBuffed) move(Context.CanBeBuffed);
+    if (b?.canBeDestroyed) move(Context.CanBeDestroyed);
   };
 
   const move = (
@@ -56,6 +58,8 @@ export const MinionSlotWrapper = ({
         return buffMinion(player, data?.uuid, zoneNumber);
       case Context.CanBeDestroyed:
         return destroyMinion(player, data?.uuid, zoneNumber);
+      case Context.CanBeHealed:
+        return buffMinion(player, data?.uuid, zoneNumber);
       default:
         return;
     }
@@ -65,11 +69,10 @@ export const MinionSlotWrapper = ({
     <div
       className={[
         'minionslot',
-        booleans?.canBeAttackedBySpell ? 'minionslot--can-be-attacked' : '',
-        booleans?.canBeBuffed ? 'minionslot--can-be-buffed' : '',
-        booleans?.canBeDestroyed ? 'minionslot--can-be-destroyed' : '',
-        booleans?.eventWasTriggered ? 'minionslot--event-was-triggered' : '',
-        booleans?.onPlayWasTriggered ? 'minionslot--onplay-was-triggered' : '',
+        b?.canBeAttackedBySpell ? 'minionslot--can-be-attacked' : '',
+        b?.canBeBuffed ? 'minionslot--can-be-buffed' : '',
+        b?.canBeDestroyed ? 'minionslot--can-be-destroyed' : '',
+        b?.canBeHealed ? 'minionslot--can-be-healed' : '',
       ].join(' ')}
       data-component='MinionSlotWrapper'
       data-index={index}
@@ -79,7 +82,11 @@ export const MinionSlotWrapper = ({
         top: `${offsetY}px`,
       }}
     >
-      {children}
+      <>
+        <MinionEventAnimation data={data} index={index} zoneNumber={zoneNumber} />
+        <MinionOnPlayAnimation data={data} index={index} zoneNumber={zoneNumber} />
+        {children}
+      </>
     </div>
   );
 };

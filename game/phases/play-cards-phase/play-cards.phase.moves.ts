@@ -6,6 +6,7 @@ import {
   buffMinion,
   deselectCard,
   destroyMinion,
+  healMinion,
   playAiCard,
   playCard,
   selectCard,
@@ -119,6 +120,20 @@ export const moves = {
       zoneNumber: number
     ) => {
       return destroyMinion(G, ctx, player, cardToDestroyUuid, zoneNumber);
+    },
+  },
+  healMinion: {
+    client: false,
+    noLimit: true,
+    ignoreStaleStateID: true,
+    move: (
+      G: GameState,
+      ctx: Ctx,
+      player: PlayerID,
+      cardToHealUuid: string,
+      zoneNumber: number
+    ) => {
+      return healMinion(G, ctx, player, cardToHealUuid, zoneNumber);
     },
   },
   updatePlayerHandArray: {

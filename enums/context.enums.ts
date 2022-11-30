@@ -6,5 +6,6 @@ export enum Context {
   CanBeAttackedByWeapon = 'canBeAttackedByWeapon',
   CanBeBuffed = 'canBeBuffed',
   CanBeDestroyed = 'canBeDestroyed',
+  CanBeHealed = 'canBeHealed',
   EventWasTriggered = 'eventWasTriggered',
 }
