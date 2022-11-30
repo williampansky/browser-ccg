@@ -30,6 +30,7 @@ export const core032 = (
 
       if (cardIsNotSelf && cardIsACreature && revealedThisTurn) { 
         drawCardFromPlayersDeck(G, player);
+        card.booleans.eventWasTriggered = true;
       }
     });
   });

@@ -1,7 +1,7 @@
-import { ReactElement } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './end-turn-button.module.scss';
 
-export interface EndTurnButton {
+export interface Props {
   currentTurn: number;
   isDisabled: boolean;
   onClick: () => void;
@@ -13,15 +13,26 @@ export const EndTurnButton = ({
   isDisabled,
   onClick,
   turnsPerGame,
-}: EndTurnButton): ReactElement => {
+}: Props) => {
+  const [clicked, setClicked] = useState<boolean>(false);
+
+  const onButtonClick = () => {
+    setClicked(true);
+    return onClick();
+  };
+
+  useEffect(() => {
+    setClicked(false);
+  }, [currentTurn]);
+
   return (
     <button
-      onClick={onClick}
-      disabled={isDisabled}
+      onClick={onButtonClick}
+      disabled={clicked || isDisabled}
       className={styles['component']}
     >
       <span className='text__value'>
-        {isDisabled ? 'Waiting ' : 'End Turn '}
+        {clicked || isDisabled ? 'Waiting ' : 'End Turn '}
         {currentTurn}/{turnsPerGame}
       </span>
     </button>

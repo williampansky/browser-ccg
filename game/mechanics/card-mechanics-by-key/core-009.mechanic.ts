@@ -25,20 +25,21 @@ export const core009 = (
   player: PlayerID
 ) => {
   const { numberPrimary, powerStream } = card;
-  
+
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
       const cardIsntSelf = c.uuid !== card.uuid;
       if (cardIsntSelf) {
         const revealedThisTurn = c.revealedOnTurn === G.turn;
         const cardIsSprite = c.race === CardRace.Sprite;
-        const cardNotInStream = !powerStream.find(o => o.uuid === c.uuid);
+        const cardNotInStream = !powerStream.find((o) => o.uuid === c.uuid);
 
         // make sure to only check sprites revealed this turn
         if (cardIsSprite && revealedThisTurn && cardNotInStream) {
           // find the core009 card node
           const self = G.zones[zoneIdx].sides[player][cardIdx];
-  
+          self.booleans.eventWasTriggered = true;
+
           // push powerStream and set it
           pushPowerStreamAndSetDisplay(
             self,

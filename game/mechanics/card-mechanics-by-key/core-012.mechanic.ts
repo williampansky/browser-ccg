@@ -30,12 +30,13 @@ export const core012 = (
     z.sides[player].forEach((c, cIdx) => {
       const revealedThisTurn = c.revealedOnTurn === G.turn;
       const cardIsASpell = c.type === CardType.Spell;
-      const cardNotInStream = !powerStream.find(o => o.uuid === c.uuid);
+      const cardNotInStream = !powerStream.find((o) => o.uuid === c.uuid);
 
       // make sure to only check spells revealed this turn
       if (cardIsASpell && revealedThisTurn && cardNotInStream) {
         // find the core012 card node
         const self = G.zones[zoneIdx].sides[player][cardIdx];
+        self.booleans.eventWasTriggered = true;
 
         // push powerStream and set it
         pushPowerStreamAndSetDisplay(

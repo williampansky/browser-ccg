@@ -76,7 +76,7 @@ export const Board = (props: GameProps) => {
   );
 
   // moves
-  const onEndTurnButtonClick = () => setDone(yourID);
+  const onEndTurnButtonClick = () => setTimeout(() => setDone(yourID), 1500);
   const onCardClick = (obj: Card) => dispatch(showCardModal(obj));
   const onCardSelect = (pl: PlayerID, uuid: string) => selectCard(pl, uuid);
   const onCardDeselect = (pl: PlayerID) => deselectCard(pl);

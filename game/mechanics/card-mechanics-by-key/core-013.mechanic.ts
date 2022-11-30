@@ -57,5 +57,6 @@ export const core013 = (
 
     // push powerStream and set display
     pushPowerStreamAndSetDisplay(node, card, 1, add(node.displayPower, 1));
+    card.booleans.eventWasTriggered = true;
   }
 };

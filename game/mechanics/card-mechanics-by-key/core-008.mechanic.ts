@@ -37,6 +37,7 @@ export const core008 = (
         if (cardIsMinion && revealedThisTurn && cardNotInStream) {
           // find the core009 card node
           const self = G.zones[zoneIdx].sides[player][cardIdx];
+          self.booleans.eventWasTriggered = true;
 
           // push powerStream and set it
           pushPowerStreamAndSetDisplay(
