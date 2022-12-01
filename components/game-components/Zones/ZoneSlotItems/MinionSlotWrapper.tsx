@@ -1,9 +1,7 @@
-import { current } from 'immer';
 import { ReactNode, useEffect, useState } from 'react';
-import { useEffectListener } from 'bgio-effects/react';
-import type { Card, DiscardCardEffects, PlayerID } from '../../../types';
-import { getRandomNumberBetween } from '../../../utils';
-import { Context } from '../../../enums';
+import type { Card, PlayerID } from '../../../../types';
+import { getRandomNumberBetween } from '../../../../utils';
+import { Context } from '../../../../enums';
 import { MinionOnPlayAnimation } from './MinionOnPlayAnimation';
 import { MinionEventAnimation } from './MinionEventAnimation';
 

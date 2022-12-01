@@ -1,15 +1,11 @@
-import type { ReactElement } from 'react';
-import styles from './zone-name.module.scss';
+import styles from './ZoneName.module.scss';
 
-interface ZoneNameComponent {
+interface Props {
   name: string;
   effectText?: string;
 }
 
-export const ZoneName = ({
-  name,
-  effectText,
-}: ZoneNameComponent): ReactElement => {
+export const ZoneName = ({ name, effectText }: Props) => {
   return (
     <div className={styles['component']}>
       <div className={styles['zone-name']}>{name}</div>

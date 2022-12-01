@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import type { Card, GameState, PlayerID } from '../../../../types';
-import { showCardModal } from '../../../card-modal/card-modal.slice';
+import { showCardModal } from '../../../../features/card-modal/card-modal.slice';
 import { Minion } from '../../../../components/game-components/Minion/Minion';
 import { usePrevious } from '../../../../hooks';
 

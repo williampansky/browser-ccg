@@ -11,3 +11,4 @@ export { Player } from './Player';
 export { PlayerBar } from './PlayerBar';
 export { PlayerHand } from './Hands';
 export { TheTurnTextOverlay } from './TheTurnTextOverlay';
+export { TheZonesContainer } from './Zones';

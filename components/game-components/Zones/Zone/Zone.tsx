@@ -3,14 +3,17 @@ import Image from 'next/image';
 
 import type { GameConfig, PlayerID, Zone as IZone } from '../../../../types';
 import { usePrevious } from '../../../../hooks';
-import { OpponentZoneSlot } from '../ZoneSlotOpponent';
-import { PlayerZoneSlot } from '../ZoneSlotPlayer';
-import { ZoneDropSlot } from '../ZoneDropSlot';
-import { ZoneLeaderEffects } from '../ZoneLeaderEffects';
-import { ZonePower } from '../ZonePower';
-import { ZoneRevealOverlay } from '../ZoneRevealOverlay';
-import { ZoneName } from '../ZoneName';
-import { MinionSlotWrapper } from '../../../../components/game-components/Zones/MinionSlotWrapper';
+
+import {
+  MinionSlotWrapper,
+  OpponentZoneSlot,
+  PlayerZoneSlot,
+  ZoneDropSlot,
+  ZoneLeaderEffects,
+  ZoneName,
+  ZonePower,
+  ZoneRevealOverlay,
+} from '..';
 
 interface Props {
   gameConfig: GameConfig;

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import type { Card, PlayerID } from '../../../../types';
 import { Minion } from '../../../../components/game-components/Minion/Minion';
-import { showCardModal } from '../../../card-modal/card-modal.slice';
+import { showCardModal } from '../../../../features/card-modal/card-modal.slice';
 import { usePrevious } from '../../../../hooks';
 
 interface Props {
@@ -29,10 +29,7 @@ export const PlayerZoneSlot = ({
   const [objData, setObjData] = useState<Card | undefined>(undefined);
   const prevObjData = usePrevious(objData);
 
-  const getAnimationDirection = (
-    zoneNumber: number,
-    data?: Card
-  ): string => {
+  const getAnimationDirection = (zoneNumber: number, data?: Card): string => {
     const scaleEnd = 'scale(1)';
     const scaleStart = 'scale(3)';
     const translateStart0 = 'translate(-100%, 100%)';

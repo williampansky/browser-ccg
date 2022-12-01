@@ -1,14 +1,11 @@
-import type { ReactElement } from 'react';
 import type { PlayerID } from '../../../../types';
-import styles from './zone-leader-effects.module.scss';
+import styles from './ZoneLeaderEffects.module.scss';
 
-interface ZoneLeaderEffectsComponent {
+interface Props {
   zoneLeader?: PlayerID;
 }
 
-export const ZoneLeaderEffects = ({
-  zoneLeader,
-}: ZoneLeaderEffectsComponent): ReactElement => {
+export const ZoneLeaderEffects = ({ zoneLeader }: Props) => {
   return (
     <div
       className={[

@@ -1,17 +1,12 @@
-import type { ReactElement } from 'react';
-import styles from './zone-reveal-overlay.module.scss';
+import styles from './ZoneRevealOverlay.module.scss';
 
-interface ZoneRevealOverlay {
+interface Props {
   isRevealed: boolean;
   turn: number;
   zoneNumber: number;
 }
 
-export const ZoneRevealOverlay = ({
-  isRevealed,
-  turn,
-  zoneNumber,
-}: ZoneRevealOverlay): ReactElement => {
+export const ZoneRevealOverlay = ({ isRevealed, turn, zoneNumber }: Props) => {
   const getRevealText = (): string => {
     // if (turn === 1 && zoneNumber === 1) return '1 turn';
     if (turn === 1 && zoneNumber === 2) return '2 turns';

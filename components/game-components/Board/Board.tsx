@@ -15,7 +15,6 @@ import {
 
 import styles from './TheBoard.module.scss';
 import { CardModal } from '../../../features/card-modal/CardModal';
-import { Zones } from '../../../features/zones/components/Zones/Zones.Wrapper';
 import { showCardModal } from '../../../features/card-modal/card-modal.slice';
 import { GameOverOverlay } from '../../../features/game-over';
 import {
@@ -26,6 +25,7 @@ import {
   Player,
   PlayerHand,
   TheTurnTextOverlay,
+  TheZonesContainer
 } from '../';
 import { Ctx } from 'boardgame.io';
 
@@ -98,7 +98,7 @@ export const Board = (props: GameProps) => {
           minHeight: height ? height : `calc(100vh - ${abSize}px)`,
         }}
       >
-        <Zones yourID={yourID} theirID={theirID} moves={moves} />
+        <TheZonesContainer yourID={yourID} theirID={theirID} moves={moves} />
 
         {/* {height && width ? (
           <DragLayer height={height - abSize} width={width} />

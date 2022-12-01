@@ -1,8 +1,7 @@
-import type { ReactElement } from 'react';
 import type { PlayerID } from '../../../../types';
-import styles from './zone-power.module.scss';
+import styles from './ZonePower.module.scss';
 
-interface ZonePowerComponent {
+interface Props {
   playerId: PlayerID;
   playerIdContext: string;
   zoneLeader?: PlayerID;
@@ -14,7 +13,7 @@ export const ZonePower = ({
   playerIdContext,
   zoneLeader,
   zonePowers,
-}: ZonePowerComponent): ReactElement => {
+}: Props) => {
   return (
     <div
       className={[

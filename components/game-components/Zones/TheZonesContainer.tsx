@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffectListener, useLatestPropsOnEffect } from 'bgio-effects/react';
 
-import type { RootState } from '../../../../store';
-import type { GameState, PlayerID, Zone } from '../../../../types';
+import type { RootState } from '../../../store';
+import type { GameState, PlayerID } from '../../../types';
 
-import { initZone, updateZoneSide } from '../../zones.slice';
-import { Zone as ZoneComponent } from '../Zone';
-import styles from './zones.wrapper.module.scss';
+import { Zone } from './Zone';
+import styles from './TheZonesContainer.module.scss';
 
 interface ZonesProps {
   moves: any;
@@ -15,7 +14,7 @@ interface ZonesProps {
   theirID: PlayerID;
 }
 
-export const Zones = ({ yourID, theirID, moves }: ZonesProps) => {
+export const TheZonesContainer = ({ yourID, theirID, moves }: ZonesProps) => {
   const dispatch = useDispatch();
   const { G, ctx } = useLatestPropsOnEffect<GameState, any>('effects:end');
   const { gameConfig } = useSelector((state: RootState) => state.config);
@@ -42,9 +41,9 @@ export const Zones = ({ yourID, theirID, moves }: ZonesProps) => {
 
   return (
     <div className={styles['wrapper']}>
-      {G.zones.map((zone: Zone, idx: number) => {
+      {G.zones.map((zone, idx) => {
         return (
-          <ZoneComponent
+          <Zone
             moves={moves}
             zone={zone}
             zoneNumber={idx}
