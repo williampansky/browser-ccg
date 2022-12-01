@@ -7,13 +7,13 @@ import type {
   Zone,
 } from '../../../types';
 import { drawCardFromPlayersDeck } from '../../../utils';
-import { gt } from 'lodash';
+import { gt, gte } from 'lodash';
 
 const wasHealed = (c: Card) => {
-  if (c.healthStream.length !== 0) {
+  if (gte(c.healthStream.length, 2)) {
     return gt(
-      c.displayHealth,
-      c.healthStream[c.healthStream.length - 1]?.currentHealth
+      c.healthStream[c.healthStream.length - 1]?.currentHealth,
+      c.healthStream[c.healthStream.length - 2]?.currentHealth
     );
   }
 }

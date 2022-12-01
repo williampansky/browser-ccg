@@ -32,8 +32,11 @@ export const core082 = (
         c.booleans.canBeHealed = true;
       }
     });
+
     z.sides[opponent].forEach((c) => {
-      if (c.booleans.hasHealthReduced) c.booleans.canBeHealed = true;
+      if (c.uuid !== card.uuid && c.booleans.hasHealthReduced) {
+        c.booleans.canBeHealed = true;
+      }
     });
   });
 };
@@ -69,8 +72,7 @@ export const core082Heal = (
     const { card, cardIdx, zoneNumber } = target;
 
     G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === card.uuid) {
-        card.booleans.onPlayWasTriggered = true;
+      if (c.uuid === card.uuid && ci === cardIdx) {
         pushHealthStreamAndSetDisplay(
           c,
           cardToBlame,
@@ -83,10 +85,17 @@ export const core082Heal = (
         );
       }
     });
+    
+    G.zones.forEach((z, zi) => {
+      z.sides['0'].forEach((c, ci) => {
+        c.booleans.canBeHealed = false;
+        if (c.uuid === cardToBlame.uuid) c.booleans.onPlayWasTriggered = true;
+      });
+
+      z.sides['1'].forEach((c, ci) => {
+        c.booleans.canBeHealed = false;
+      });
+    });
   }
 
-  G.zones.forEach((z, zi) => {
-    z.sides['0'].forEach((c) => (c.booleans.canBeHealed = false));
-    z.sides['1'].forEach((c) => (c.booleans.canBeHealed = false));
-  });
 };
