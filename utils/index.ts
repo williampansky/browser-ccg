@@ -1,3 +1,4 @@
+export { default as cardIsNotSelf } from './card-is-not-self';
 export { default as classesArray } from './classes-array';
 export { default as createArtistHtmlLink } from './create-artist-html-link';
 export { default as createCardKey } from './create-card-key';
@@ -6,6 +7,7 @@ export { default as createDebugDeck } from './create-debug-deck';
 export { default as createMarkup } from './create-markup';
 export { default as createRandomDeck } from './create-random-deck';
 export { default as createZoneObject } from './create-zone-object';
+export { default as dealAoeDamage } from './deal-aoe-damage';
 export { default as determineFirstRevealer } from './determine-first-revealer';
 export { default as discardCardFromPlayersHand } from './discard-card-from-players-hand';
 export { default as drawCardFromPlayersDeck } from './draw-card-from-players-deck';

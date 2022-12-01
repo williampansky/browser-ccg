@@ -3,7 +3,15 @@ import { GameState, Zone, Zones } from '../../../types';
 import { zones } from '../../state';
 import { createZoneObject, logPhaseToConsole } from '../../../utils';
 import ZONE_DATABASE from '../../data/zones.json';
-import scenario from '../../debug/scenarios/heal-player-minion.scenario'
+
+import healPlayerMinionScenario from '../../debug/scenarios/heal-player-minion.scenario';
+import dealAoeDmgScenario from '../../debug/scenarios/deal-aoe-damage.scenario';
+import { fxEnd } from '../../config.bgio-effects';
+
+const scenarios = {
+  'heal-player-minion': healPlayerMinionScenario,
+  'deal-aoe-damage': dealAoeDmgScenario,
+} as Record<string, any>
 
 const initZonesPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
@@ -36,15 +44,14 @@ const initZonesPhase: PhaseConfig = {
     }
 
     if (G.gameConfig.debugConfig.debugScenario !== '') {
-      // const scenario = require('../../debug/scenarios/' + s);
-      G.zones[0].sides[0] = scenario.zones[0].sides[0];
-      G.zones[0].sides[1] = scenario.zones[0].sides[1];
+      const name = G.gameConfig.debugConfig.debugScenario;
+      G.zones[0].sides[0] = scenarios[name].zones[0].sides[0];
+      G.zones[0].sides[1] = scenarios[name].zones[0].sides[1];
     }
   },
   endIf: (G: GameState) => zones.areReady(G),
   onEnd(G: GameState, ctx: Ctx) {
-    // @ts-ignore
-    ctx.effects?.fxEnd();
+    fxEnd(ctx)
   },
 };
 
