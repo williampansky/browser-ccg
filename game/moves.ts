@@ -306,9 +306,9 @@ export const buffMinion = (
     if (c.uuid === cardToBuffUuid) {
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_031':
-          return core031Buff(G, ctx, targetPlayer, c, lastPlayedCard);
+          return core031Buff(G, ctx, targetPlayer, cardToBuffUuid, lastPlayedCard);
         case 'SET_CORE_110':
-          return core110Buff(G, ctx, targetPlayer, c, lastPlayedCard);
+          return core110Buff(G, ctx, targetPlayer, cardToBuffUuid, lastPlayedCard);
 
         default:
           return;

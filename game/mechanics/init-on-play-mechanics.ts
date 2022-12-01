@@ -113,7 +113,7 @@ const initOnPlayMechanics = (
     case 'SET_CORE_108':
       return core108(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     case 'SET_CORE_110':
-      return core110(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+      return core110(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
     case 'SET_CORE_112':
       return core112(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
     case 'SET_CORE_118':

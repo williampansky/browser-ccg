@@ -7,7 +7,10 @@ import type {
   PlayerID,
   Zone,
 } from '../../../types';
-import { pushHealthStreamAndSetDisplay } from '../../../utils';
+import {
+  limitNumberWithinRange,
+  pushHealthStreamAndSetDisplay,
+} from '../../../utils';
 
 /**
  * heal a minion for num1 hp
@@ -72,7 +75,11 @@ export const core082Heal = (
           c,
           cardToBlame,
           cardToBlame.numberPrimary,
-          add(c.displayHealth, cardToBlame.numberPrimary)
+          limitNumberWithinRange(
+            add(c.displayHealth, cardToBlame.numberPrimary),
+            c.baseHealth,
+            cardToBlame.numberPrimary
+          )
         );
       }
     });
