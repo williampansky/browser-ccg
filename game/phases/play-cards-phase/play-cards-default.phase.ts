@@ -135,61 +135,62 @@ const defaultPlayCardsPhase: PhaseConfig = {
     },
     onMove(G: GameState, ctx: Ctx) {
       const { currentPlayer } = ctx;
+      const moveIsPlayCard = G.lastMoveMade === 'playCard';
 
-      // console.log(G.actionPoints[currentPlayer].current)
-
-      G.zones.forEach((zone: Zone, zoneIdx) => {
-        zone.sides[currentPlayer].forEach((card: Card, cardIdx) => {
-          const props: InitGameMechanic = {
-            G,
-            ctx,
-            zone,
-            zoneIdx,
-            card,
-            cardIdx,
-            player: currentPlayer,
-          };
-
-          const onPlay = (cb?: () => void) => initOnPlay({ ...props }, cb);
-          const onEvent = (cb?: () => void) => initEvent({ ...props }, cb);
-
-          onPlay(onEvent());
+      if (moveIsPlayCard) {
+        G.zones.forEach((zone: Zone, zoneIdx) => {
+          zone.sides[currentPlayer].forEach((card: Card, cardIdx) => {
+            const props: InitGameMechanic = {
+              G,
+              ctx,
+              zone,
+              zoneIdx,
+              card,
+              cardIdx,
+              player: currentPlayer,
+            };
+  
+            const onPlay = (cb?: () => void) => initOnPlay({ ...props }, cb);
+            const onEvent = (cb?: () => void) => initEvent({ ...props }, cb);
+  
+            onPlay(onEvent());
+          });
+  
+          // handle card deaths if health goes below zero
+          zone.sides['0'].forEach((c, cI) => {
+            const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
+            if (hpIsLessOrEqualTo(0)) {
+              G.players['0'].cards.destroyed.push(c);
+              counts.incrementDestroyed(G, '0');
+              zone.sides['0'] = zone.sides['0'].filter((_, idx) => idx !== cI);
+              handleCardDestructionMechanics(G, c, '0');
+            }
+          });
+  
+          zone.sides['1'].forEach((c, cI) => {
+            const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
+            if (hpIsLessOrEqualTo(0)) {
+              G.players['1'].cards.destroyed.push(c);
+              counts.incrementDestroyed(G, '1');
+              zone.sides['1'] = zone.sides['1'].filter((_, idx) => idx !== cI);
+              handleCardDestructionMechanics(G, c, '1');
+            }
+          });
+  
+          // set zone powers
+          zone.powers['0'] = calculateZoneSidePower(G, zoneIdx, '0');
+          zone.powers['1'] = calculateZoneSidePower(G, zoneIdx, '1');
         });
 
-        // handle card deaths if health goes below zero
-        zone.sides['0'].forEach((c, cI) => {
-          const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
-          if (hpIsLessOrEqualTo(0)) {
-            G.players['0'].cards.destroyed.push(c);
-            counts.incrementDestroyed(G, '0');
-            zone.sides['0'] = zone.sides['0'].filter((_, idx) => idx !== cI);
-            handleCardDestructionMechanics(G, c, '0');
-          }
-        });
-
-        zone.sides['1'].forEach((c, cI) => {
-          const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
-          if (hpIsLessOrEqualTo(0)) {
-            G.players['1'].cards.destroyed.push(c);
-            counts.incrementDestroyed(G, '1');
-            zone.sides['1'] = zone.sides['1'].filter((_, idx) => idx !== cI);
-            handleCardDestructionMechanics(G, c, '1');
-          }
-        });
-
-        // set zone powers
-        zone.powers['0'] = calculateZoneSidePower(G, zoneIdx, '0');
-        zone.powers['1'] = calculateZoneSidePower(G, zoneIdx, '1');
-      });
-
-      if (gte(G.players[currentPlayer].cards.hand.length, 1)) {
-        G.players[currentPlayer].cards.hand.forEach((c: Card) => {
-          if (G.actionPoints[currentPlayer].current >= c.currentCost) {
-            return (c.canPlay = true);
-          } else {
-            return (c.canPlay = false);
-          }
-        });
+        if (gte(G.players[currentPlayer].cards.hand.length, 1)) {
+          G.players[currentPlayer].cards.hand.forEach((c: Card) => {
+            if (G.actionPoints[currentPlayer].current >= c.currentCost) {
+              return (c.canPlay = true);
+            } else {
+              return (c.canPlay = false);
+            }
+          });
+        }
       }
     },
     order: TurnOrder.CUSTOM_FROM('turnOrder'),

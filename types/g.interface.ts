@@ -17,11 +17,18 @@ export interface GameOver {
   winner?: PlayerID;
 }
 
+export interface LastMoveMade {
+  args: any[],
+  playerID: PlayerID,
+  type: string;
+}
+
 export declare type CardIndex = number | undefined;
 export declare type SelectedCardIndex = Record<PlayerID, CardIndex>;
 
 export interface GameState {
   aiLoading: boolean;
+  lastMoveMade?: string;
   actionPoints: Record<PlayerID, ActionPoints>;
   gameConfig: GameConfig;
   canUndo: Record<PlayerID, boolean>;

@@ -1,5 +1,6 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
+import { LastMoveMade } from '../../../types/g.interface';
 
 import {
   attackMinion,
@@ -11,6 +12,7 @@ import {
   playCard,
   selectCard,
   setDone,
+  setLog,
   undoPlayCard,
   updatePlayerHandArray,
 } from '../../moves';
@@ -70,6 +72,14 @@ export const moves = {
     ignoreStaleStateID: true,
     move: (G: GameState, ctx: Ctx, player: PlayerID) => {
       return setDone(G, ctx, player);
+    },
+  },
+  setLog: {
+    client: false,
+    noLimit: true,
+    ignoreStaleStateID: true,
+    move: (G: GameState, ctx: Ctx, payload: LastMoveMade) => {
+      return setLog(G, ctx, payload);
     },
   },
   endTurn: {

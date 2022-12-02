@@ -1,5 +1,6 @@
-import { Ctx, PhaseConfig } from 'boardgame.io';
-import { GameState } from '../../../types';
+import type { Ctx, PhaseConfig } from 'boardgame.io';
+import type { GameState } from '../../../types';
+import { fxEnd } from '../../config.bgio-effects';
 import {
   drawCardFromPlayersDeck,
   logPhaseToConsole,
@@ -14,59 +15,52 @@ const db = [
 
 const initStartingHandsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    const { random } = ctx;
     const {
       gameConfig: {
         debugConfig: {
           debugBoardCardKey,
           useDebugBoardCardKey,
+          debugBoardCardKeyAmount,
           debugOpponentBoardCardKey,
           useDebugOpponentBoardCardKey,
+          debugOpponentBoardCardKeyAmount
         },
       },
     } = G;
     logPhaseToConsole(G.turn, ctx.phase);
 
-    // debug card or side interactions
-    if (useDebugOpponentBoardCardKey) {
-      for (let index = 0; index < 4; index++) {
-        // let debugCardBase = random!.Shuffle(db)[index];
-        let debugCardBase = db.find(o => o.key === debugOpponentBoardCardKey);
-        let debugCard = createCardObject(debugCardBase!);
-        G.zones[0].sides['1'].push({ ...debugCard, revealed: true });
-        G.zonesCardsReference[0]['1'].push({ ...debugCard, revealed: true });
-      }
-
-      // @ts-ignore
-      ctx.effects?.fxEnd();
-    }
-
-    // debug card or side interactions
+    // [your side] debug card or side interactions
     if (useDebugBoardCardKey) {
-      for (let index = 0; index < 1; index++) {
+      for (let index = 0; index < debugBoardCardKeyAmount; index++) {
         let debugCardBase = db.find(o => o.key === debugBoardCardKey);
         let debugCard = createCardObject(debugCardBase!);
         G.zones[0].sides['0'].push({ ...debugCard, revealed: true });
         G.zonesCardsReference[0]['0'].push({ ...debugCard, revealed: true });
       }
+      fxEnd(ctx);
+    }
 
-      // @ts-ignore
-      ctx.effects?.fxEnd();
+    // [their side] debug card or side interactions
+    if (useDebugOpponentBoardCardKey) {
+      for (let index = 0; index < debugOpponentBoardCardKeyAmount; index++) {
+        let debugCardBase = db.find(o => o.key === debugOpponentBoardCardKey);
+        let debugCard = createCardObject(debugCardBase!);
+        G.zones[0].sides['1'].push({ ...debugCard, revealed: true });
+        G.zonesCardsReference[0]['1'].push({ ...debugCard, revealed: true });
+      }
+      fxEnd(ctx);
     }
 
     // init hands
     [...Array(G.gameConfig.numerics.cardsPerStartingHand)].forEach(() => {
       drawCardFromPlayersDeck(G, '0');
-      // @ts-ignore
-      ctx.effects?.fxEnd();
+      fxEnd(ctx);
       
       drawCardFromPlayersDeck(G, '1');
-      // @ts-ignore
-      ctx.effects?.fxEnd();
+      fxEnd(ctx);
     });
 
-    // @ts-ignore
-    ctx.effects?.fxEnd(G);
+    fxEnd(ctx);
   },
   endIf: (G: GameState) => {
     // end phase when both players have cards in hand
@@ -78,8 +72,7 @@ const initStartingHandsPhase: PhaseConfig = {
     );
   },
   onEnd(G: GameState, ctx: Ctx) {
-    // @ts-ignore
-    ctx.effects?.fxEnd(G);
+    fxEnd(ctx);
   },
 };
 

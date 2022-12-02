@@ -13,11 +13,13 @@ export interface GameConfig {
   debugConfig: {
     debugHandCardKey: string;
     debugBoardCardKey: string;
+    debugBoardCardKeyAmount: number;
     useDebugHandCardKey: boolean;
     useDebugBoardCardKey: boolean;
 
     debugOpponentHandCardKey: string;
     debugOpponentBoardCardKey: string;
+    debugOpponentBoardCardKeyAmount: number;
     useDebugOpponentHandCardKey: boolean;
     useDebugOpponentBoardCardKey: boolean;
     

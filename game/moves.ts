@@ -24,6 +24,7 @@ import { core082Heal } from './mechanics/core-mechanics-by-key/mechanic.core.082
 import { core112Attack } from './mechanics/core-mechanics-by-key/mechanic.core.112';
 import { core126Destroy } from './mechanics/core-mechanics-by-key/mechanic.core.126';
 import { CardType } from '../enums';
+import { LastMoveMade } from '../types/g.interface';
 
 export const selectCard = (
   G: GameState,
@@ -37,11 +38,13 @@ export const selectCard = (
 
   if (G.selectedCardData[playerId]?.uuid === cardMatch!.uuid) {
     selectedCardData.reset(G, playerId);
+    G.lastMoveMade = 'deselectCard';
     // @ts-ignore
     ctx.effects?.fxEnd();
   } else {
     selectedCardData.set(G, playerId, cardMatch!);
     G.selectedCardIndex[playerId] = cardMatchIndex;
+    G.lastMoveMade = 'selectCard';
     // @ts-ignore
     ctx.effects?.fxEnd();
   }
@@ -50,6 +53,7 @@ export const selectCard = (
 export const deselectCard = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
   selectedCardData.reset(G, playerId);
   G.selectedCardIndex[playerId] = undefined;
+  G.lastMoveMade = 'deselectCard';
   // @ts-ignore
   ctx.effects?.fxEnd();
 };
@@ -138,6 +142,7 @@ export const playCard = (
   selectedCardData.reset(G, player);
   G.selectedCardIndex[player] = undefined;
   canUndo.setPlayer(G, player);
+  G.lastMoveMade = 'playCard';
   fxEnd(ctx);
 };
 
@@ -257,10 +262,15 @@ export const playAiCard = (
   // unset selectedCard
   selectedCardData.reset(G, aiID);
   G.selectedCardIndex[aiID] = undefined;
+  G.lastMoveMade = 'playCard';
 };
 
 export const setDone = (G: GameState, ctx: Ctx, player: PlayerID) => {
   playerTurnDone.set(G, player);
+};
+
+export const setLog = (G: GameState, ctx: Ctx, payload: LastMoveMade) => {
+  // G.lastMoveMade = payload;
 };
 
 export const attackMinion = (

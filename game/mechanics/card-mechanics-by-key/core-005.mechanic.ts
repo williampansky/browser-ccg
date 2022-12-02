@@ -10,7 +10,7 @@ import type {
   Zone,
 } from '../../../types';
 
-import { pushPowerStreamAndSetDisplay } from '../../../utils';
+import { cardIsNotSelf, pushPowerStreamAndSetDisplay } from '../../../utils';
 
 /**
  * on play: +num1 Power if you have num2 or more other cards here
@@ -26,10 +26,11 @@ export const core005 = (
   player: PlayerID
 ) => {
   const { displayPower, numberPrimary, numberSecondary } = card;
-  const counter: number = 0;
+  let counter: number = 0;
 
-  zone.sides[player].forEach((c, ci) => {
-    if (c.uuid !== card.uuid) add(counter, 1);
+  G.zones[zoneIdx].sides[player].forEach((c, ci) => {
+    if (cardIsNotSelf(c, card)) counter++;
+    else return;
   });
 
   if (gte(counter, numberSecondary)) {

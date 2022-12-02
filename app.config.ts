@@ -5,13 +5,15 @@ const core = `SET_CORE_`;
 export const gameConfig: GameConfig = {
   asynchronousTurns: false,
   debugConfig: {
-    debugHandCardKey: core + '126',
+    debugHandCardKey: core + '005',
     debugBoardCardKey: core + '001',
+    debugBoardCardKeyAmount: 3,
     useDebugHandCardKey: false,
     useDebugBoardCardKey: false,
 
     debugOpponentHandCardKey: core + '126',
     debugOpponentBoardCardKey: core + '052',
+    debugOpponentBoardCardKeyAmount: 4,
     useDebugOpponentHandCardKey: false,
     useDebugOpponentBoardCardKey: false,
 
@@ -25,7 +27,7 @@ export const gameConfig: GameConfig = {
   ai: {
     enableBotAi: true,
     enableBotAiMoves: true,
-    logBotAiMovesToConsole: true,
+    logBotAiMovesToConsole: false,
   },
   numerics: {
     actionPointsPerTurn: 1,

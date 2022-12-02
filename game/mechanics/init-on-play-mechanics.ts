@@ -2,7 +2,6 @@ import type { Ctx } from 'boardgame.io';
 import type { Card, GameConfig, GameState, PlayerID, Zone } from '../../types';
 
 import { core002 } from './card-mechanics-by-key/core-002.mechanic';
-import { core003 } from './card-mechanics-by-key/core-003.mechanic';
 import { core004 } from './card-mechanics-by-key/core-004.mechanic';
 import { core005 } from './card-mechanics-by-key/core-005.mechanic';
 import { core006 } from './card-mechanics-by-key/core-006.mechanic';
@@ -10,9 +9,11 @@ import { core007 } from './card-mechanics-by-key/core-007.mechanic';
 import { core010 } from './card-mechanics-by-key/core-010.mechanic';
 import { core011 } from './card-mechanics-by-key/core-011.mechanic';
 import { core014 } from './card-mechanics-by-key/core-014.mechanic';
+import { core019 } from './core-mechanics-by-key/mechanic.core.019';
 import { core025 } from './card-mechanics-by-key/core-025.mechanic';
 import { core029 } from './card-mechanics-by-key/core-029.mechanic';
 import { core031 } from './core-mechanics-by-key/mechanic.core.031';
+import { core034 } from './core-mechanics-by-key/mechanic.core.034';
 import { core036 } from './card-mechanics-by-key/core-036.mechanic';
 import { core037 } from './card-mechanics-by-key/core-037.mechanic';
 import { core039 } from './card-mechanics-by-key/core-039.mechanic';
@@ -20,26 +21,25 @@ import { core040 } from './card-mechanics-by-key/core-040.mechanic';
 import { core041 } from './card-mechanics-by-key/core-041.mechanic';
 import { core042 } from './card-mechanics-by-key/core-042.mechanic';
 import { core043 } from './core-mechanics-by-key/mechanic.core.043';
-import { core110 } from './core-mechanics-by-key/mechanic.core.110';
-import { core034 } from './core-mechanics-by-key/mechanic.core.034';
 import { core044 } from './core-mechanics-by-key/mechanic.core.044';
-import { core019 } from './core-mechanics-by-key/mechanic.core.019';
-import { core108 } from './core-mechanics-by-key/mechanic.core.108';
-import { core071 } from './core-mechanics-by-key/mechanic.core.071';
-import { core060 } from './core-mechanics-by-key/mechanic.core.060';
-import { core058 } from './core-mechanics-by-key/mechanic.core.058';
 import { core050 } from './core-mechanics-by-key/mechanic.core.050';
 import { core053 } from './core-mechanics-by-key/mechanic.core.053';
 import { core056 } from './core-mechanics-by-key/mechanic.core.056';
+import { core058 } from './core-mechanics-by-key/mechanic.core.058';
+import { core060 } from './core-mechanics-by-key/mechanic.core.060';
+import { core071 } from './core-mechanics-by-key/mechanic.core.071';
 import { core082 } from './core-mechanics-by-key/mechanic.core.082';
+import { core108 } from './core-mechanics-by-key/mechanic.core.108';
+import { core110 } from './core-mechanics-by-key/mechanic.core.110';
 import { core112 } from './core-mechanics-by-key/mechanic.core.112';
+import { core126 } from './core-mechanics-by-key/mechanic.core.126';
+import { core133 } from './core-mechanics-by-key/mechanic.core.133';
 
 import {
   dealAoeDamageOnPlay,
   discardRandomCardFromHandOnPlay,
+  drawCardOnPlay,
 } from './on-play-mechanics';
-import { core133 } from './core-mechanics-by-key/mechanic.core.133';
-import { core126 } from './core-mechanics-by-key/mechanic.core.126';
 
 const initOnPlayMechanics = (
   G: GameState,
@@ -59,8 +59,7 @@ const initOnPlayMechanics = (
     case 'SET_CORE_002':
       return core002(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     case 'SET_CORE_003':
-    case 'SET_CORE_026':
-      return core003(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+      return drawCardOnPlay(G, player, card, 'player', 'random');
     case 'SET_CORE_004':
       return core004(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     case 'SET_CORE_005':
@@ -79,6 +78,8 @@ const initOnPlayMechanics = (
       return core019(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
     case 'SET_CORE_025':
       return core025(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+    case 'SET_CORE_026':
+      return drawCardOnPlay(G, player, card, 'player', 'next');
     case 'SET_CORE_029':
       return core029(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     case 'SET_CORE_031':

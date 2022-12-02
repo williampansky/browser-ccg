@@ -39,8 +39,6 @@ export function initOnPlay(
       player,
       opponent
     );
-
-    // G.zones[zoneIdx].sides[player][cardIdx].booleans.onPlayWasTriggered = true;
   }
 
   if (callback) return callback;
