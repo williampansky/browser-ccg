@@ -43,7 +43,7 @@ const initZonesPhase: PhaseConfig = {
       });
     }
 
-    if (G.gameConfig.debugConfig.debugScenario !== '') {
+    if (G.gameConfig.debugConfig.useDebugScenario) {
       const name = G.gameConfig.debugConfig.debugScenario;
       G.zones[0].sides[0] = scenarios[name].zones[0].sides[0];
       G.zones[0].sides[1] = scenarios[name].zones[0].sides[1];

@@ -2,7 +2,7 @@ import { gt, gte, lt } from 'lodash';
 import { Ctx, Undo } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Card, GameState, PlayerID } from '../types';
-import { getCardPower, getContextualPlayerIds } from '../utils';
+import { filterArray, getCardPower, getContextualPlayerIds, handleCardDestructionMechanics } from '../utils';
 import { core043Destroy } from './mechanics/core-mechanics-by-key/mechanic.core.043';
 import { core110Buff } from './mechanics/core-mechanics-by-key/mechanic.core.110';
 import {
@@ -23,6 +23,7 @@ import { core056Attack } from './mechanics/core-mechanics-by-key/mechanic.core.0
 import { core082Heal } from './mechanics/core-mechanics-by-key/mechanic.core.082';
 import { core112Attack } from './mechanics/core-mechanics-by-key/mechanic.core.112';
 import { core126Destroy } from './mechanics/core-mechanics-by-key/mechanic.core.126';
+import { CardType } from '../enums';
 
 export const selectCard = (
   G: GameState,
@@ -236,8 +237,8 @@ export const playAiCard = (
   });
 
   // remove card from hand
-  const newHand = player.cards.hand.filter((c: Card) => c.uuid !== cardUuid);
-  G.players[aiID].cards.hand = newHand;
+  // const newHand = player.cards.hand.filter((c: Card) => c.uuid !== cardUuid);
+  // G.players[aiID].cards.hand = newHand;
 
   // recount cards in hand
   counts.decrementHand(G, aiID);
@@ -250,6 +251,8 @@ export const playAiCard = (
       return (c.canPlay = false);
     }
   });
+
+  filterArray(G.players[aiID].cards.hand, card.uuid, cardIndex)
 
   // unset selectedCard
   selectedCardData.reset(G, aiID);

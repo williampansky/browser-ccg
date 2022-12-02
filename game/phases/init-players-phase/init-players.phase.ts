@@ -19,7 +19,12 @@ export default<PhaseConfig> {
     const {
       gameConfig: {
         debugConfig,
-        debugConfig: { debugHandCardKey, debugOpponentHandCardKey },
+        debugConfig: {
+          debugHandCardKey,
+          useDebugHandCardKey,
+          debugOpponentHandCardKey,
+          useDebugOpponentHandCardKey,
+        },
       },
     } = G;
 
@@ -33,7 +38,7 @@ export default<PhaseConfig> {
       actionPoints: actionPoints.defaultState['0'],
       cards: {
         deck:
-          debugHandCardKey !== ''
+          useDebugHandCardKey
             ? createRandomDeck(G, ctx, db)//createDebugDeck(G, ctx, db, debugHandCardKey)
             : createRandomDeck(G, ctx, db),
         destroyed: [],
@@ -53,7 +58,7 @@ export default<PhaseConfig> {
       actionPoints: actionPoints.defaultState['1'],
       cards: {
         deck:
-          debugOpponentHandCardKey !== ''
+          useDebugOpponentHandCardKey
             ? createDebugDeck(G, ctx, db, debugOpponentHandCardKey)
             : createRandomDeck(G, ctx, db),
         destroyed: [],

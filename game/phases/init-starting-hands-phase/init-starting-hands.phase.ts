@@ -17,13 +17,18 @@ const initStartingHandsPhase: PhaseConfig = {
     const { random } = ctx;
     const {
       gameConfig: {
-        debugConfig: { debugBoardCardKey, debugOpponentBoardCardKey },
+        debugConfig: {
+          debugBoardCardKey,
+          useDebugBoardCardKey,
+          debugOpponentBoardCardKey,
+          useDebugOpponentBoardCardKey,
+        },
       },
     } = G;
     logPhaseToConsole(G.turn, ctx.phase);
 
     // debug card or side interactions
-    if (debugOpponentBoardCardKey !== '') {
+    if (useDebugOpponentBoardCardKey) {
       for (let index = 0; index < 4; index++) {
         // let debugCardBase = random!.Shuffle(db)[index];
         let debugCardBase = db.find(o => o.key === debugOpponentBoardCardKey);
@@ -37,7 +42,7 @@ const initStartingHandsPhase: PhaseConfig = {
     }
 
     // debug card or side interactions
-    if (debugBoardCardKey !== '') {
+    if (useDebugBoardCardKey) {
       for (let index = 0; index < 1; index++) {
         let debugCardBase = db.find(o => o.key === debugBoardCardKey);
         let debugCard = createCardObject(debugCardBase!);

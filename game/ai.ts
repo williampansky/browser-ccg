@@ -1,11 +1,11 @@
 import { gte, lt } from 'lodash';
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID, Zone } from '../types';
-import { getRandomNumberBetween } from '../utils';
+import { getContextualPlayerIds, getRandomNumberBetween } from '../utils';
 import { gameConfig } from '../app.config';
 
 const {
-  debugConfig: { debugOpponentHandCardKey },
+  debugConfig: { debugOpponentHandCardKey, useDebugOpponentHandCardKey },
 } = gameConfig;
 
 interface PushPlayCardToZoneMove {
@@ -20,7 +20,7 @@ interface PushPlayCardToZoneMove {
 }
 
 const aiEnumeration = {
-  enumerate: (G: GameState, ctx: Ctx) => {
+  enumerate: (G: GameState, ctx: Ctx, player: PlayerID) => {
     const { players, zones, gameConfig } = G;
     const aiID = '1';
     const perZone = gameConfig.numerics.numberOfSlotsPerZone;
@@ -71,12 +71,10 @@ export const pushPlayCardToZoneMoves = ({
   const canAfford = gte(currentAp, card.currentCost);
 
   if (canAfford && zoneIsNotDisabled && slotsAvailableInZone)
-    // for (let i = 0; i < slotsAvailableInZone; i++) {
     moves.push({
       move: 'playAiCard',
       args: [aiID, zoneNumber, card, cardIndex],
     });
-  // }
 };
 
 export const pushPlayCardMoves = (
@@ -94,25 +92,29 @@ export const pushPlayCardMoves = (
   if (handHasAtLeastOneCard && movesArrIsAtOrBelow(20)) {
     determinePlayableCards(hand, playableCards);
     const canPlay = playableCards.length;
-    const amountToPlay = debugOpponentHandCardKey !== '' ? 1 : canPlay;
+    const amountToPlay = useDebugOpponentHandCardKey ? 1 : canPlay;
 
     for (let i = 0; i < amountToPlay; i++) {
       const rngIdx = getRandomNumberBetween(0, canPlay - 1);
       const props = {
         aiID,
-        card: debugOpponentHandCardKey
+        card: useDebugOpponentHandCardKey
           ? hand[0]
           : playableCards[rngIdx],
-        cardIndex: debugOpponentHandCardKey ? 0 : rngIdx,
+        cardIndex: useDebugOpponentHandCardKey ? 0 : rngIdx,
         currentAp,
         moves,
         perZone,
         zones,
       };
 
-      pushPlayCardToZoneMoves({ ...props, zoneNumber: 0 });
-      pushPlayCardToZoneMoves({ ...props, zoneNumber: 1 });
-      pushPlayCardToZoneMoves({ ...props, zoneNumber: 2 });
+      if (useDebugOpponentHandCardKey) {
+        pushPlayCardToZoneMoves({ ...props, zoneNumber: 0 });
+      } else {
+        pushPlayCardToZoneMoves({ ...props, zoneNumber: 0 });
+        pushPlayCardToZoneMoves({ ...props, zoneNumber: 1 });
+        pushPlayCardToZoneMoves({ ...props, zoneNumber: 2 });
+      }
     }
   }
 };
@@ -122,36 +124,42 @@ export const pushInteractionMoves = (
   moves: any,
   aiID: PlayerID
 ) => {
-  // G.zones.forEach((z, zI) => {
-  //   z.sides['0'].forEach((c, cI) => {
-  //     if (c.booleans.canBeAttackedBySpell) {
-  //       moves.push({
-  //         move: 'attackMinion',
-  //         args: [aiID, '0', c.uuid, zI],
-  //       });
-  //     }
-  //     if (c.booleans.canBeDestroyed) {
-  //       moves.push({
-  //         move: 'destroyMinion',
-  //         args: [aiID, '0', c.uuid, zI],
-  //       });
-  //     }
-  //   });
-  //   z.sides['1'].forEach((c, cI) => {
-  //     if (c.booleans.canBeBuffed) {
-  //       moves.push({
-  //         move: 'buffMinion',
-  //         args: [aiID, '1', c.uuid, zI],
-  //       });
-  //     }
-  //     if (c.booleans.canBeHealed) {
-  //       moves.push({
-  //         move: 'healMinion',
-  //         args: [aiID, '1', c.uuid, zI],
-  //       });
-  //     }
-  //   });
-  // });
+  const { player, opponent } = getContextualPlayerIds(aiID);
+  const human = opponent;
+  const bot = player;
+
+  G.zones.forEach((z, zI) => {
+    z.sides[human].forEach((c, cI) => {
+      if (c.booleans.canBeAttackedBySpell) {
+        moves.push({
+          move: 'attackMinion',
+          args: [aiID, human, c.uuid, zI],
+        });
+      }
+
+      if (c.booleans.canBeDestroyed) {
+        moves.push({
+          move: 'destroyMinion',
+          args: [aiID, human, c.uuid, zI],
+        });
+      }
+    });
+
+    z.sides[bot].forEach((c, cI) => {
+      if (c.booleans.canBeBuffed) {
+        moves.push({
+          move: 'buffMinion',
+          args: [aiID, bot, c.uuid, zI],
+        });
+      }
+      if (c.booleans.canBeHealed) {
+        moves.push({
+          move: 'healMinion',
+          args: [aiID, bot, c.uuid, zI],
+        });
+      }
+    });
+  });
 };
 
 export const pushSetDoneMove = (moves: any, aiID: PlayerID) => {

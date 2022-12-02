@@ -13,10 +13,19 @@ export interface GameConfig {
   debugConfig: {
     debugHandCardKey: string;
     debugBoardCardKey: string;
+    useDebugHandCardKey: boolean;
+    useDebugBoardCardKey: boolean;
+
     debugOpponentHandCardKey: string;
     debugOpponentBoardCardKey: string;
+    useDebugOpponentHandCardKey: boolean;
+    useDebugOpponentBoardCardKey: boolean;
+    
     debugScenario: string;
+    useDebugScenario: boolean;
+
     logPhaseToConsole: boolean;
+
     showDebugBar: boolean;
     showBoardgameIoSidebar: boolean;
   };

@@ -14,11 +14,16 @@ const addDebugCardToHand = (G: GameState, player?: PlayerID): void => {
     gameConfig,
     gameConfig: {
       numerics: { cardsPerHand },
-      debugConfig: { debugHandCardKey, debugOpponentHandCardKey }
+      debugConfig: {
+        debugHandCardKey,
+        useDebugHandCardKey,
+        debugOpponentHandCardKey,
+        useDebugOpponentHandCardKey,
+      }
     },
   } = G;
 
-  if (debugHandCardKey !== '') { 
+  if (useDebugHandCardKey) { 
     if (G.players[playerid].cards.hand.length < cardsPerHand) {
       const dCardBase = CARD_DATABASE.find((c) => c.key === debugHandCardKey);
       if (dCardBase !== null && typeof dCardBase !== 'undefined') {
@@ -34,7 +39,7 @@ const addDebugCardToHand = (G: GameState, player?: PlayerID): void => {
     }
   }
 
-  if (debugOpponentHandCardKey !== '') { 
+  if (useDebugOpponentHandCardKey) { 
     if (G.players[opponentid].cards.hand.length < cardsPerHand) {
       const dCardBase = CARD_DATABASE.find((c) => c.key === debugOpponentHandCardKey);
       if (dCardBase !== null && typeof dCardBase !== 'undefined') {
