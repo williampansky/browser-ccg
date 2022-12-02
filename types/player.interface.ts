@@ -16,7 +16,7 @@ export interface ActionPoints {
 
 export interface PlayerCards {
   deck: Card[];
-  destroyed: CardId[];
+  destroyed: Card[];
   discarded: Card[];
   hand: Card[];
   played: CardId[];

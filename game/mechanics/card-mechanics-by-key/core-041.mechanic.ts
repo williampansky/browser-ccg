@@ -8,6 +8,7 @@ import type {
 } from '../../../types';
 import { CardType } from '../../../enums';
 import { handleCardDestructionMechanics } from '../../../utils';
+import { counts } from '../../state';
 
 /**
  * destroy random enemy minion
@@ -48,7 +49,8 @@ export const core041 = (
     const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
 
     // push to opponents destroyed arr
-    G.players[opponent].cards.destroyed.push(choice.cardData.key);
+    G.players[opponent].cards.destroyed.push(choice.cardData);
+    counts.incrementDestroyed(G, opponent);
 
     // remove the target from the board zone side and its ref
     const newZoneArr = G.zones[choice.zoneNumber].sides[opponent].filter(

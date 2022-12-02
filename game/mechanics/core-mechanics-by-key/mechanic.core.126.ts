@@ -6,13 +6,13 @@ import type {
   PlayerID,
   Zone,
 } from '../../../types';
-import { filterArray, handleCardDestructionMechanics } from '../../../utils';
+import { cardIsNotSelf, filterArray, handleCardDestructionMechanics } from '../../../utils';
 import { counts } from '../../state';
 
 /**
- * destroy a minion
+ * destroy an already damaged minion
  */
-export const core043 = (
+export const core126 = (
   G: GameState,
   ctx: Ctx,
   gameConfig: GameConfig,
@@ -24,14 +24,21 @@ export const core043 = (
   opponent: PlayerID
 ) => {
   G.zones.forEach((z) => {
-    z.sides[opponent].forEach((c) => (c.booleans.canBeDestroyed = true));
     z.sides[player].forEach((c) => {
-      if (c.uuid !== card.uuid) c.booleans.canBeDestroyed = true;
+      if (cardIsNotSelf(c, card) && c.booleans.hasHealthReduced) {
+        c.booleans.canBeDestroyed = true;
+      }
+    });
+
+    z.sides[opponent].forEach((c) => {
+      if (cardIsNotSelf(c, card) && c.booleans.hasHealthReduced) {
+        c.booleans.canBeDestroyed = true;
+      }
     });
   });
 };
 
-export const core043Destroy = (
+export const core126Destroy = (
   G: GameState,
   ctx: Ctx,
   targetPlayer: PlayerID,

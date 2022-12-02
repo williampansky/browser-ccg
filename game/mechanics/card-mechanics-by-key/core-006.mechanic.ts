@@ -9,6 +9,7 @@ import type {
 // import type { CtxWithEffects } from '../../game';
 import { handleCardDestructionMechanics } from '../../../utils';
 import { Ctx } from 'boardgame.io';
+import { counts } from '../../state';
 
 /**
  * destroy a random 1 cost on opponent's side
@@ -47,7 +48,8 @@ export const core006 = (
     const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
 
     // push to opponents destroyed arr
-    G.players[opponent].cards.destroyed.push(choice.cardData.key);
+    G.players[opponent].cards.destroyed.push(choice.cardData);
+    counts.incrementDestroyed(G, opponent);
 
     // remove the target from the board zone side and its ref
     const newZoneArr = G.zones[choice.zoneNumber].sides[opponent].filter(

@@ -39,6 +39,7 @@ import {
   discardRandomCardFromHandOnPlay,
 } from './on-play-mechanics';
 import { core133 } from './core-mechanics-by-key/mechanic.core.133';
+import { core126 } from './core-mechanics-by-key/mechanic.core.126';
 
 const initOnPlayMechanics = (
   G: GameState,
@@ -124,6 +125,8 @@ const initOnPlayMechanics = (
       return discardRandomCardFromHandOnPlay(G, ctx, player, card);
     case 'SET_CORE_122':
       return dealAoeDamageOnPlay(G, player, card);
+    case 'SET_CORE_126':
+      return core126(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
     case 'SET_CORE_133':
       return core133(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
     default:

@@ -27,7 +27,7 @@ import {
   PlayerHand,
   TheTurnTextOverlay,
   TheZonesContainer,
-  TheDiscardedCardPopup
+  TheDiscardedCardPopup,
 } from '../';
 import { Ctx } from 'boardgame.io';
 import { gt } from 'lodash';
@@ -94,7 +94,13 @@ export const Board = (props: GameProps) => {
       <TheTurnTextOverlay currentPlayer={ctx.currentPlayer} yourID={yourID} />
       <GameOverOverlay playerID={playerID} reset={reset} />
 
-      <TheDiscardedCardPopup G={G} player={playerID} yourID={yourID} array={G.players[yourID].cards.discarded} arrayLength={G.counts[yourID].discarded} />
+      <TheDiscardedCardPopup
+        G={G}
+        player={playerID}
+        yourID={yourID}
+        array={G.players[yourID].cards.discarded}
+        arrayLength={G.counts[yourID].discarded}
+      />
 
       <main
         className={styles['component']}

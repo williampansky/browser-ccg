@@ -22,6 +22,7 @@ import { core053Attack } from './mechanics/core-mechanics-by-key/mechanic.core.0
 import { core056Attack } from './mechanics/core-mechanics-by-key/mechanic.core.056';
 import { core082Heal } from './mechanics/core-mechanics-by-key/mechanic.core.082';
 import { core112Attack } from './mechanics/core-mechanics-by-key/mechanic.core.112';
+import { core126Destroy } from './mechanics/core-mechanics-by-key/mechanic.core.126';
 
 export const selectCard = (
   G: GameState,
@@ -333,6 +334,8 @@ export const destroyMinion = (
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_043':
           return core043Destroy(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
+        case 'SET_CORE_126':
+          return core126Destroy(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
         default:
           return;
       }

@@ -31,6 +31,7 @@ import {
 import { moves } from './play-cards.phase.moves';
 import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/methods';
 import { fxEnd } from '../../config.bgio-effects';
+import { counts } from '../../state';
 
 const defaultPlayCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
@@ -159,7 +160,8 @@ const defaultPlayCardsPhase: PhaseConfig = {
         zone.sides['0'].forEach((c, cI) => {
           const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
           if (hpIsLessOrEqualTo(0)) {
-            G.players['0'].cards.destroyed.push(c.key);
+            G.players['0'].cards.destroyed.push(c);
+            counts.incrementDestroyed(G, '0');
             zone.sides['0'] = zone.sides['0'].filter((_, idx) => idx !== cI);
             handleCardDestructionMechanics(G, c, '0');
           }
@@ -168,7 +170,8 @@ const defaultPlayCardsPhase: PhaseConfig = {
         zone.sides['1'].forEach((c, cI) => {
           const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
           if (hpIsLessOrEqualTo(0)) {
-            G.players['1'].cards.destroyed.push(c.key);
+            G.players['1'].cards.destroyed.push(c);
+            counts.incrementDestroyed(G, '1');
             zone.sides['1'] = zone.sides['1'].filter((_, idx) => idx !== cI);
             handleCardDestructionMechanics(G, c, '1');
           }

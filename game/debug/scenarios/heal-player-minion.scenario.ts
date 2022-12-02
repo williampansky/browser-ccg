@@ -12,6 +12,19 @@ export default {
         '0': [
           {
             ...ifr,
+            booleans: {
+              ...obj.booleans,
+              hasHealthReduced: true,
+            },
+            displayHealth: 2,
+            healthStream: [
+              {
+                blame: 'cardToBlame.name1',
+                adjustment: -6,
+                currentHealth: 2,
+                uuid: 'cardToBlame.uuid1',
+              },
+            ],
             revealed: true,
           },
           {
@@ -23,10 +36,10 @@ export default {
             displayHealth: 2,
             healthStream: [
               {
-                blame: 'cardToBlame.name',
+                blame: 'cardToBlame.name2',
                 adjustment: -6,
                 currentHealth: 2,
-                uuid: 'cardToBlame.uuid',
+                uuid: 'cardToBlame.uuid2',
               },
             ],
             revealed: true,
@@ -42,10 +55,10 @@ export default {
             displayHealth: 1,
             healthStream: [
               {
-                blame: 'cardToBlame.name',
+                blame: 'cardToBlame.name3',
                 adjustment: -7,
                 currentHealth: 1,
-                uuid: 'cardToBlame.uuid',
+                uuid: 'cardToBlame.uuid3',
               },
             ],
             revealed: true,
