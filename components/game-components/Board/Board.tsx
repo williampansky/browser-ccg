@@ -102,6 +102,9 @@ export const Board = (props: GameProps) => {
           height: height ? height : `calc(100vh - ${abSize}px)`,
           maxHeight: height ? height : `calc(100vh - ${abSize}px)`,
           minHeight: height ? height : `calc(100vh - ${abSize}px)`,
+          width: width ? width : `100vw`,
+          maxWidth: width ? width : `100vw`,
+          minWidth: width ? width : `100vw`,
         }}
       >
         <TheZonesContainer yourID={yourID} theirID={theirID} moves={moves} />
