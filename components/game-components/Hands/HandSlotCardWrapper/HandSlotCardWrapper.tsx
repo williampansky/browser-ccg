@@ -2,6 +2,8 @@ import { current } from 'immer';
 import { ReactNode, useEffect, useState } from 'react';
 import { useEffectListener } from 'bgio-effects/react';
 import type { Card, DiscardCardEffects, PlayerID } from '../../../../types';
+import { useDispatch } from 'react-redux';
+import { setDiscardedCard } from '../../../../features';
 
 // import styles from './HandSlotCardWrapper.module.scss';
 
@@ -22,14 +24,19 @@ export const HandSlotCardWrapper = ({
   prevHand,
   player,
 }: Props) => {
+  const dispatch = useDispatch();
+  const b = data?.booleans;
+  const wasDiscarded = b?.wasDiscarded === true;
+  // console.log(wasDiscarded)
+
   // boolean states
-  const [canBeBuffed, setCanBeBuffed] = useState<boolean>(false);
-  const [wasDiscarded, setWasDiscarded] = useState<boolean>(false);
+  // const [canBeBuffed, setCanBeBuffed] = useState<boolean>(false);
+  // const [wasDiscarded, setWasDiscarded] = useState<boolean>(false);
 
   useEffect(() => {
-    if (data?.booleans?.canBeBuffed) setCanBeBuffed(true);
-    // if (data?.booleans?.wasDiscarded) setWasDiscarded(true);
-  }, [data])
+    // if (b?.canBeBuffed) setCanBeBuffed(true);
+    if (wasDiscarded) dispatch(setDiscardedCard(data));
+  }, [wasDiscarded])
 
   // useEffectListener(
   //   'discardCard',
@@ -53,8 +60,8 @@ export const HandSlotCardWrapper = ({
     <div
       className={[
         'player__handslot',
-        canBeBuffed ? 'handslot--can-be-buffed' : '',
-        wasDiscarded ? 'handslot--discarded' : '',
+        // canBeBuffed ? 'handslot--can-be-buffed' : '',
+        // wasDiscarded ? 'handslot--discarded' : '',
       ].join(' ')}
       data-component='HandSlotCardWrapper'
     >

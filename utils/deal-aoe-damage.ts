@@ -1,43 +1,55 @@
-import { subtract } from "mathjs";
-import { Card, GameState, PlayerID } from "../types";
-import cardIsNotSelf from "./card-is-not-self";
-import getContextualPlayerIds from "./get-contextual-player-ids";
-import pushHealthStreamAndSetDisplay from "./push-healthstream-and-set-display";
+import { subtract } from 'mathjs';
+import { Card, GameState, PlayerID } from '../types';
+import getContextualPlayerIds from './get-contextual-player-ids';
+import pushHealthStreamAndSetDisplay from './push-healthstream-and-set-display';
 
-const dealAoeDamage = (G: GameState, player: PlayerID, card: Card) => {
-  const { numberPrimary } = card;
+const dealAoeDamage = (
+  G: GameState,
+  player: PlayerID,
+  cardToBlame: Card,
+  targetPlayer?: PlayerID
+) => {
+  const { numberPrimary } = cardToBlame;
   const { opponent } = getContextualPlayerIds(player);
-  let onPlayWasTriggered: boolean = false;
+  const context = () => (targetPlayer ? 'targeted' : 'both');
 
-  G.zones.forEach((z) => {
-    z.sides[player].forEach((c) => {
-      if (cardIsNotSelf(c, card)) {
-        onPlayWasTriggered = true;
-        pushHealthStreamAndSetDisplay(
-          c,
-          card,
-          numberPrimary,
-          subtract(c.displayHealth, numberPrimary)
-        );
-      }
-    });
+  switch (context()) {
+    case 'targeted':
+      G.zones.forEach((z) => {
+        z.sides[targetPlayer!].forEach((c) => {
+          pushHealthStreamAndSetDisplay(
+            c,
+            cardToBlame,
+            numberPrimary,
+            subtract(c.displayHealth, numberPrimary)
+          );
+        });
+      });
+      break;
 
-    z.sides[opponent].forEach((c) => {
-      if (cardIsNotSelf(c, card)) {
-        onPlayWasTriggered = true;
-        pushHealthStreamAndSetDisplay(
-          c,
-          card,
-          numberPrimary,
-          subtract(c.displayHealth, numberPrimary)
-        );
-      }
-    });
-  });
+    case 'both':
+    default:
+      G.zones.forEach((z) => {
+        z.sides[player].forEach((c) => {
+          pushHealthStreamAndSetDisplay(
+            c,
+            cardToBlame,
+            numberPrimary,
+            subtract(c.displayHealth, numberPrimary)
+          );
+        });
 
-  if (onPlayWasTriggered) {
-    card.booleans.onPlayWasTriggered = true;
+        z.sides[opponent].forEach((c) => {
+          pushHealthStreamAndSetDisplay(
+            c,
+            cardToBlame,
+            numberPrimary,
+            subtract(c.displayHealth, numberPrimary)
+          );
+        });
+      });
+      break;
   }
-}
+};
 
 export default dealAoeDamage;

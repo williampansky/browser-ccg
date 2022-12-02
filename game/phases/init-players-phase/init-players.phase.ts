@@ -34,7 +34,7 @@ export default<PhaseConfig> {
       cards: {
         deck:
           debugHandCardKey !== ''
-            ? createDebugDeck(G, ctx, db, debugHandCardKey)
+            ? createRandomDeck(G, ctx, db)//createDebugDeck(G, ctx, db, debugHandCardKey)
             : createRandomDeck(G, ctx, db),
         destroyed: [],
         discarded: [],

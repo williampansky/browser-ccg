@@ -18,8 +18,8 @@ const discardCardFromPlayersHand = (
     const cardToDiscardIdx = hand.findIndex(c => c.uuid === cardUuid);
     const newHand = hand.filter(c => c.uuid !== cardUuid);
 
-    if (cardToDiscard) {
-      G.players[player].cards.discarded.push(cardToDiscard.key);
+    if (cardToDiscard && cardToDiscardIdx) {
+      G.players[player].cards.discarded.push(cardToDiscard);
       cardToDiscard.booleans.wasDiscarded = true;
 
       // @ts-ignore

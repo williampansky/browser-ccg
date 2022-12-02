@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSprings, animated, to } from 'react-spring';
 import { useCallbackRef } from 'use-callback-ref';
 import { useGesture } from '@use-gesture/react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { usePrevious } from '../../../hooks';
 import { Card as CardComponent } from '../Card/Card';
@@ -45,12 +45,19 @@ export const PlayerHand = ({
     selectedCardData,
   } = G;
 
+  const dispatch = useDispatch();
   const { height, width } = useSelector(
     ({ windowSize }: RootState) => windowSize
   );
 
   const playerHand = G.players[player]?.cards?.hand;
   const selectedCard = selectedCardData[player];
+
+  // useEffect(() => {
+  //   playerHand.forEach(c => {
+  //     if (c.booleans.wasDiscarded) console.log(true)
+  //   })
+  // }, [playerHand])
 
   // states
   const [handLength, setHandLength] = useState<number>(0);

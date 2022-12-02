@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLatestPropsOnEffect } from 'bgio-effects/react';
 
@@ -10,6 +10,7 @@ import {
   useEndPhase,
   useEndTurnButton,
   useGameOver,
+  usePrevious,
   useWindowSize,
 } from '../../../hooks';
 
@@ -25,9 +26,12 @@ import {
   Player,
   PlayerHand,
   TheTurnTextOverlay,
-  TheZonesContainer
+  TheZonesContainer,
+  TheDiscardedCardPopup
 } from '../';
 import { Ctx } from 'boardgame.io';
+import { gt } from 'lodash';
+import { setDiscardedCard } from '../../../features';
 
 interface PropsOnEffect {
   G: GameState;
@@ -89,6 +93,8 @@ export const Board = (props: GameProps) => {
       <DebugBar G={G} ctx={ctx} playerID={playerID} addressBarSize={abSize} />
       <TheTurnTextOverlay currentPlayer={ctx.currentPlayer} yourID={yourID} />
       <GameOverOverlay playerID={playerID} reset={reset} />
+
+      <TheDiscardedCardPopup G={G} player={playerID} yourID={yourID} array={G.players[yourID].cards.discarded} arrayLength={G.counts[yourID].discarded} />
 
       <main
         className={styles['component']}

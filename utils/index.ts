@@ -36,3 +36,4 @@ export { default as removeBoonFromCards } from './remove-boon-from-cards'
 export { default as removeSymbols } from './remove-symbols';
 export { default as replaceAllConstants } from './replace-all-constants';
 export { default as replaceDynamicText } from './replace-dynamic-text';
+export { default as filterArray } from './filter-array';
