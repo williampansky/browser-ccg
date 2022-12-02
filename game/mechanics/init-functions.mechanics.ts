@@ -1,12 +1,12 @@
 import { Ctx } from 'boardgame.io';
-import { Mechanics } from '../../../enums';
-import { Card, GameState, PlayerID, Zone } from '../../../types';
-import { getContextualPlayerIds } from '../../../utils';
+import { Mechanics } from '../../enums';
+import { Card, GameState, PlayerID, Zone } from '../../types';
+import { getContextualPlayerIds } from '../../utils';
 import {
   initEventMechanics,
   initOnPlayMechanics,
   initOnTurnEndMechanics,
-} from '../../mechanics';
+} from '.';
 
 export interface InitGameMechanic {
   G: GameState;

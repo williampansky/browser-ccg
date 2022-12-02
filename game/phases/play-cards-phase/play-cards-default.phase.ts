@@ -20,7 +20,7 @@ import {
   InitGameMechanic,
   initOnPlay,
   initTurnEnd,
-} from '../init-card-mechanics-phase';
+} from '../../mechanics';
 
 import {
   drawCardFromPlayersDeck,
@@ -149,13 +149,13 @@ const defaultPlayCardsPhase: PhaseConfig = {
               cardIdx,
               player: currentPlayer,
             };
-  
+
             const onPlay = (cb?: () => void) => initOnPlay({ ...props }, cb);
             const onEvent = (cb?: () => void) => initEvent({ ...props }, cb);
-  
+
             onPlay(onEvent());
           });
-  
+
           // handle card deaths if health goes below zero
           zone.sides['0'].forEach((c, cI) => {
             const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
@@ -166,7 +166,7 @@ const defaultPlayCardsPhase: PhaseConfig = {
               handleCardDestructionMechanics(G, c, '0');
             }
           });
-  
+
           zone.sides['1'].forEach((c, cI) => {
             const hpIsLessOrEqualTo = (n: number) => lte(c.displayHealth, n);
             if (hpIsLessOrEqualTo(0)) {
@@ -176,7 +176,7 @@ const defaultPlayCardsPhase: PhaseConfig = {
               handleCardDestructionMechanics(G, c, '1');
             }
           });
-  
+
           // set zone powers
           zone.powers['0'] = calculateZoneSidePower(G, zoneIdx, '0');
           zone.powers['1'] = calculateZoneSidePower(G, zoneIdx, '1');
