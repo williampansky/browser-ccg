@@ -5,10 +5,10 @@ const core = `SET_CORE_`;
 export const gameConfig: GameConfig = {
   asynchronousTurns: false,
   debugConfig: {
-    debugHandCardKey: core + '112',
+    debugHandCardKey: core + '082',
     debugBoardCardKey: core + '001',
     debugBoardCardKeyAmount: 3,
-    useDebugHandCardKey: false,
+    useDebugHandCardKey: true,
     useDebugBoardCardKey: false,
 
     debugOpponentHandCardKey: core + '126',
@@ -20,7 +20,7 @@ export const gameConfig: GameConfig = {
     debugScenario: 'heal-player-minion',
     useDebugScenario: false,
 
-    logPhaseToConsole: false,
+    logPhaseToConsole: true,
     showDebugBar: false,
     showBoardgameIoSidebar: false,
   },

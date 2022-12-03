@@ -1,21 +1,21 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { GameState } from '../../../types';
-import { actionPoints, playerNames, players } from '../../state';
-import { fxEnd } from '../../config.bgio-effects';
+import { GameState } from '../../../../types';
+import { actionPoints, playerNames, players } from '../../../state';
+import { fxEnd } from '../../../config.bgio-effects';
 import {
   createAiDeck,
   createDebugDeck,
   createRandomDeck,
   logPhaseToConsole,
-} from '../../../utils';
-import setsCore from '../../data/setsCore.json';
+} from '../../../../utils';
+import setsCore from '../../../data/setsCore.json';
 
 const db = [
   ...setsCore
 ]
 
 export default<PhaseConfig> {
-  next: 'initStartingHands',
+  next: 'initHands',
   start: true,
   onBegin(G: GameState, ctx: Ctx) {
     const {

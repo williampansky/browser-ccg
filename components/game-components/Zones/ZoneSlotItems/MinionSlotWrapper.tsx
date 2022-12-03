@@ -23,6 +23,7 @@ interface Props {
   yourID?: PlayerID;
   zoneNumber?: number;
   zoneSide?: PlayerID;
+  onHealMinionClick: (zS?: PlayerID, c?: Card) => void;
 }
 
 export const MinionSlotWrapper = ({
@@ -36,6 +37,7 @@ export const MinionSlotWrapper = ({
   yourID,
   zoneNumber,
   zoneSide,
+  onHealMinionClick,
 }: Props) => {
   const b = data && data?.booleans;
   const playerView = zoneSide === yourID;
@@ -56,9 +58,7 @@ export const MinionSlotWrapper = ({
     if (b?.canBeHealed) move(Context.CanBeHealed);
   };
 
-  const move = (
-    context: string,
-  ): void => {
+  const move = (context: string): void => {
     switch (context) {
       case Context.CanBeAttackedBySpell:
         return attackMinion(player, zoneSide, data?.uuid, zoneNumber);
@@ -69,7 +69,8 @@ export const MinionSlotWrapper = ({
       case Context.CanBeDestroyed:
         return destroyMinion(player, zoneSide, data?.uuid, zoneNumber);
       case Context.CanBeHealed:
-        return healMinion(player, zoneSide, data?.uuid, zoneNumber);
+        // return healMinion(player, zoneSide, zoneNumber, data);
+        return onHealMinionClick(zoneSide, data);
       default:
         return;
     }
@@ -88,6 +89,7 @@ export const MinionSlotWrapper = ({
       data-component='MinionSlotWrapper'
       data-index={index}
       data-zone-side={zoneSide}
+      data-uuid={data?.uuid}
       onClick={handleOnClick}
       style={{
         transform: `rotate(${rotation}deg)`,
@@ -95,18 +97,24 @@ export const MinionSlotWrapper = ({
       }}
     >
       <>
-      {b?.isDestroyed && (
-        <div className='dead-graphic'>
-          <Image
-            src={SUBTYPE_RACE_DEMONIC}
-            layout='fill'
-          />
-        </div>
-      )}
+        {b?.isDestroyed && (
+          <div className='dead-graphic'>
+            <Image src={SUBTYPE_RACE_DEMONIC} layout='fill' />
+          </div>
+        )}
 
         {children}
-        <MinionEventAnimation data={data} index={index} zoneNumber={zoneNumber} />
-        <MinionOnPlayAnimation data={data} index={index} zoneNumber={zoneNumber} />
+        
+        <MinionEventAnimation
+          data={data}
+          index={index}
+          zoneNumber={zoneNumber}
+        />
+        <MinionOnPlayAnimation
+          data={data}
+          index={index}
+          zoneNumber={zoneNumber}
+        />
       </>
     </div>
   );

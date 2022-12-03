@@ -3,20 +3,33 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffectListener, useLatestPropsOnEffect } from 'bgio-effects/react';
 
 import type { RootState } from '../../../store';
-import type { GameState, PlayerID } from '../../../types';
+import type { Card, GameState, PlayerID } from '../../../types';
 
 import { Zone } from './Zone';
 import styles from './TheZonesContainer.module.scss';
+import { Ctx } from 'boardgame.io';
 
-interface ZonesProps {
+interface Props {
+  ctx: Ctx;
+  G: GameState;
   moves: any;
-  yourID: PlayerID;
   theirID: PlayerID;
+  yourID: PlayerID;
+  onHealMinionClick: (zS?: PlayerID, c?: Card) => void
 }
 
-export const TheZonesContainer = ({ yourID, theirID, moves }: ZonesProps) => {
+export const TheZonesContainer = ({
+  ctx,
+  G,
+  moves,
+  theirID,
+  yourID,
+  onHealMinionClick
+}: Props) => {
+  const { lastMoveMade, selectedCardData } = G;
+  const yourCard = selectedCardData[yourID];
+
   const dispatch = useDispatch();
-  const { G, ctx } = useLatestPropsOnEffect<GameState, any>('effects:end');
   const { gameConfig } = useSelector((state: RootState) => state.config);
   const [zonesAreActive, setZonesAreActive] = useState<boolean>(false);
   const [_, setCardType] = useState<string | undefined>(undefined);
@@ -33,11 +46,14 @@ export const TheZonesContainer = ({ yourID, theirID, moves }: ZonesProps) => {
   // }, [G.zones]);
 
   useEffect(() => {
-    setTimeout(() => {
-      setZonesAreActive(G.selectedCardData[yourID] !== undefined);
-      setCardType(G.selectedCardData[yourID]?.type);
-    }, 100);
-  }, [G.selectedCardData[yourID], yourID]);
+    if (lastMoveMade === 'selectCard') {
+      setZonesAreActive(true);
+      setCardType(yourCard?.type);
+    } else {
+      setZonesAreActive(false);
+      setCardType(undefined);
+    }
+  }, [yourCard, lastMoveMade]);
 
   return (
     <div className={styles['wrapper']}>
@@ -53,6 +69,7 @@ export const TheZonesContainer = ({ yourID, theirID, moves }: ZonesProps) => {
             theirID={theirID}
             turn={G.turn}
             gameConfig={gameConfig}
+            onHealMinionClick={onHealMinionClick}
           />
         );
       })}

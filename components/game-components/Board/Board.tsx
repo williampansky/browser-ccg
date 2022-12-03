@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLatestPropsOnEffect } from 'bgio-effects/react';
 
@@ -42,9 +42,8 @@ export interface GameProps extends BoardProps<GameState> {}
 
 export const Board = (props: GameProps) => {
   const {
-    ctx: { phase },
     moves,
-    moves: { deselectCard, playCard, selectCard, setDone },
+    moves: { deselectCard, playCard, selectCard, setDone, healMinion },
     events,
     events: { endPhase, endTurn },
     reset,
@@ -52,13 +51,19 @@ export const Board = (props: GameProps) => {
     undo,
   } = props;
 
-  const { G, ctx }: PropsOnEffect = useLatestPropsOnEffect('effects:end');
   const {
-    gameConfig,
-    gameConfig: {
-      ai: { enableBotAi },
+    G,
+    G: {
+      gameConfig,
+      gameConfig: {
+        ai: { enableBotAi },
+      },
+      playedCards,
+      playerTurnDone,
     },
-  } = G;
+    ctx,
+    ctx: { currentPlayer, phase },
+  }: PropsOnEffect = useLatestPropsOnEffect('effects:end');
 
   // player IDs
   const yourID = playerID === '0' ? '0' : '1';
@@ -67,24 +72,40 @@ export const Board = (props: GameProps) => {
   // hooks
   const dispatch = useDispatch();
   const { height, width } = useWindowSize();
-  useEndPhase(events, phase, G.playerTurnDone);
+  useEndPhase(events, phase, playerTurnDone);
   useGameOver(ctx?.gameover);
 
   // states
   const abSize = useSelector(({ addressBarSize }: Root) => addressBarSize);
   const endTurnIsDisabled = useEndTurnButton(
     phase,
-    G.playerTurnDone,
+    playerTurnDone,
     yourID,
-    ctx.currentPlayer
+    currentPlayer
   );
 
   // moves
   const onEndTurnButtonClick = () => setTimeout(() => setDone(yourID), 1500);
   const onCardClick = (obj: Card) => dispatch(showCardModal(obj));
-  const onCardSelect = (pl: PlayerID, uuid: string) => selectCard(pl, uuid);
-  const onCardDeselect = (pl: PlayerID) => deselectCard(pl);
-  const onCardSlotDrop = (pl: PlayerID, zNum: number) => playCard(pl, zNum);
+  const onCardSelect = (pl: PlayerID, uuid: string) => selectCard(uuid);
+  const onCardDeselect = (pl: PlayerID) => deselectCard();
+  const onCardSlotDrop = (pl: PlayerID, zNum: number) => playCard(zNum);
+
+  const onHealMinionClick = useCallback(
+    (targetPlayer?: PlayerID, cardToHeal?: Card) => {
+      if (targetPlayer && cardToHeal)
+        return healMinion(
+          cardToHeal,
+          playedCards[yourID][playedCards[yourID].length - 1],
+          targetPlayer,
+        );
+      else
+        return console.error(
+          `ERROR: onHealMinionClick(${targetPlayer}, ${cardToHeal})`
+        )
+    },
+    [currentPlayer, playedCards]
+  );
 
   return (
     <>
@@ -113,7 +134,14 @@ export const Board = (props: GameProps) => {
           minWidth: width ? width : `100vw`,
         }}
       >
-        <TheZonesContainer yourID={yourID} theirID={theirID} moves={moves} />
+        <TheZonesContainer
+          ctx={ctx}
+          G={G}
+          moves={moves}
+          theirID={theirID}
+          yourID={yourID}
+          onHealMinionClick={onHealMinionClick}
+        />
 
         {/* {height && width ? (
           <DragLayer height={height - abSize} width={width} />

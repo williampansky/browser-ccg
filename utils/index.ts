@@ -1,6 +1,7 @@
 export { default as calculateZoneSidePower } from './calculate-zone-side-power';
 export { default as cardIsMinion } from './card-is-minion';
 export { default as cardIsNotSelf } from './card-is-not-self';
+export { default as cardUuidMatch } from './card-uuid-match';
 export { default as classesArray } from './classes-array';
 export { default as createAiDeck } from './create-ai-deck';
 export { default as createArtistHtmlLink } from './create-artist-html-link';
@@ -40,3 +41,4 @@ export { default as removeBoonFromCards } from './remove-boon-from-cards';
 export { default as removeSymbols } from './remove-symbols';
 export { default as replaceAllConstants } from './replace-all-constants';
 export { default as replaceDynamicText } from './replace-dynamic-text';
+export { default as healMinion } from './heal-minion'

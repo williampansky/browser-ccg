@@ -3,7 +3,8 @@ import { createCardObject } from '../../../utils';
 import setsCore from '../../data/setsCore.json';
 
 const ifr = createCardObject(setsCore.find((o) => o.id === '085')!);
-const obj = createCardObject(setsCore.find((o) => o.id === '052')!);
+const obj1 = createCardObject(setsCore.find((o) => o.id === '052')!);
+const obj2 = createCardObject(setsCore.find((o) => o.id === '052')!);
 
 export default {
   zones: [
@@ -13,7 +14,7 @@ export default {
           {
             ...ifr,
             booleans: {
-              ...obj.booleans,
+              ...ifr.booleans,
               hasHealthReduced: true,
             },
             displayHealth: 2,
@@ -28,9 +29,9 @@ export default {
             revealed: true,
           },
           {
-            ...obj,
+            ...obj1,
             booleans: {
-              ...obj.booleans,
+              ...obj1.booleans,
               hasHealthReduced: true,
             },
             displayHealth: 2,
@@ -47,9 +48,9 @@ export default {
         ],
         '1': [
           {
-            ...obj,
+            ...obj2,
             booleans: {
-              ...obj.booleans,
+              ...obj2.booleans,
               hasHealthReduced: true,
             },
             displayHealth: 1,

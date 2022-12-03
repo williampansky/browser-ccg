@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-import type { GameConfig, PlayerID, Zone as IZone } from '../../../../types';
+import type { Card, GameConfig, PlayerID, Zone as IZone } from '../../../../types';
 import { usePrevious } from '../../../../hooks';
 
 import {
@@ -24,6 +24,7 @@ interface Props {
   zone: IZone;
   zoneNumber: number;
   zonesAreActive: boolean;
+  onHealMinionClick: (zS?: PlayerID, c?: Card) => void
 }
 
 export const Zone = ({
@@ -35,6 +36,7 @@ export const Zone = ({
   zone,
   zoneNumber,
   zonesAreActive,
+  onHealMinionClick
 }: Props) => {
   const { powers } = zone;
   const { numerics, zonesConfig } = gameConfig;
@@ -79,6 +81,7 @@ export const Zone = ({
                 yourID={yourID}
                 zoneNumber={zoneNumber}
                 zoneSide={theirID}
+                onHealMinionClick={onHealMinionClick}
               >
                 <OpponentZoneSlot
                   key={idx}
@@ -162,6 +165,7 @@ export const Zone = ({
                   yourID={yourID}
                   zoneNumber={zoneNumber}
                   zoneSide={yourID}
+                  onHealMinionClick={onHealMinionClick}
                 >
                   <PlayerZoneSlot
                     data={zone.sides[yourID][idx]}
