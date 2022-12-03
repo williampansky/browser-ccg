@@ -70,7 +70,6 @@ export const core110Buff = (
 
     G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
       if (c.uuid === card.uuid) {
-        card.booleans.onPlayWasTriggered = true;
         pushPowerStreamAndSetDisplay(
           c,
           cardBuffedFrom,
@@ -82,7 +81,13 @@ export const core110Buff = (
   }
 
   G.zones.forEach((z, zi) => {
-    z.sides['0'].forEach((c) => (c.booleans.canBeBuffed = false));
-    z.sides['1'].forEach((c) => (c.booleans.canBeBuffed = false));
+    z.sides['0'].forEach((c, ci) => {
+      c.booleans.canBeBuffed = false;
+      if (c.uuid === cardBuffedFrom.uuid) c.booleans.onPlayWasTriggered = true;
+    });
+
+    z.sides['1'].forEach((c, ci) => {
+      c.booleans.canBeBuffed = false;
+    });
   });
 };

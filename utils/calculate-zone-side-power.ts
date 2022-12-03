@@ -1,5 +1,5 @@
 import { add } from 'mathjs';
-import { GameState, Card } from '../../../../types';
+import { GameState, Card } from '../types';
 
 const calculateZoneSidePower = (
   G: GameState,

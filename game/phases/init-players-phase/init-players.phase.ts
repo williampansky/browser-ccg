@@ -1,11 +1,13 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { Card, GameState } from '../../../types';
+import { GameState } from '../../../types';
+import { actionPoints, playerNames, players } from '../../state';
+import { fxEnd } from '../../config.bgio-effects';
 import {
+  createAiDeck,
   createDebugDeck,
   createRandomDeck,
   logPhaseToConsole,
 } from '../../../utils';
-import { actionPoints, playerNames, players } from '../../state';
 import setsCore from '../../data/setsCore.json';
 
 const db = [
@@ -39,7 +41,7 @@ export default<PhaseConfig> {
       cards: {
         deck:
           useDebugHandCardKey
-            ? createRandomDeck(G, ctx, db)//createDebugDeck(G, ctx, db, debugHandCardKey)
+            ? createDebugDeck(G, ctx, db, debugHandCardKey)
             : createRandomDeck(G, ctx, db),
         destroyed: [],
         discarded: [],
@@ -50,9 +52,6 @@ export default<PhaseConfig> {
       playerId: '0',
     });
 
-    // @ts-ignore
-    ctx.effects?.fxEnd();
-
     playerNames.set(G, '1', 'Opponent');
     players.set(G, ctx, '1', {
       actionPoints: actionPoints.defaultState['1'],
@@ -60,7 +59,7 @@ export default<PhaseConfig> {
         deck:
           useDebugOpponentHandCardKey
             ? createDebugDeck(G, ctx, db, debugOpponentHandCardKey)
-            : createRandomDeck(G, ctx, db),
+            : createAiDeck(G, ctx),
         destroyed: [],
         discarded: [],
         hand: [],
@@ -70,8 +69,7 @@ export default<PhaseConfig> {
       playerId: '1',
     });
 
-    // @ts-ignore
-    ctx.effects?.fxEnd();
+    fxEnd(ctx);
   },
   endIf(G: GameState, ctx: Ctx) {
     const { cardsPerDeck } = G.gameConfig.numerics;
@@ -86,9 +84,6 @@ export default<PhaseConfig> {
     );
   },
   onEnd(G: GameState, ctx: Ctx) {
-    // @ts-ignore
-    ctx.effects?.fxEnd();
+    fxEnd(ctx);
   },
 };
-
-// export default initPlayersPhase;

@@ -2,8 +2,8 @@ import type { Card as CardProps } from '../../../types';
 import { MinionHealth } from './MinionHealth/MinionHealth';
 import { MinionImage } from './MinionImage/MinionImage';
 import { MinionPower } from './MinionPower/MinionPower';
-import styles from './minion.module.scss';
 import { CardType } from '../../../enums';
+import styles from './minion.module.scss';
 
 export interface ReactMinionProps extends CardProps {
   isSelected?: boolean;

@@ -71,10 +71,12 @@ export const Zone = ({
               <MinionSlotWrapper
                 key={idx}
                 data={zone.sides[theirID][idx]}
-                player={yourID}
-                opponent={theirID}
                 index={idx}
                 moves={moves}
+                opponent={theirID}
+                player={yourID}
+                theirID={theirID}
+                yourID={yourID}
                 zoneNumber={zoneNumber}
                 zoneSide={theirID}
               >
@@ -152,10 +154,12 @@ export const Zone = ({
                 <MinionSlotWrapper
                   key={idx}
                   data={zone.sides[yourID][idx]}
-                  player={yourID}
-                  opponent={theirID}
                   index={idx}
                   moves={moves}
+                  opponent={theirID}
+                  player={yourID}
+                  theirID={theirID}
+                  yourID={yourID}
                   zoneNumber={zoneNumber}
                   zoneSide={yourID}
                 >

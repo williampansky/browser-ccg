@@ -286,6 +286,7 @@ export const attackMinion = (
 
   G.zones[zoneNumber].sides[targetPlayer].forEach((c) => {
     if (c.uuid === cardToAttackUuid) {
+      G.lastMoveMade = 'attackMinion';
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_044':
           return core044Attack(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
@@ -318,6 +319,7 @@ export const buffMinion = (
   const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
   G.zones[zoneNumber].sides[targetPlayer].forEach((c) => {
     if (c.uuid === cardToBuffUuid) {
+      G.lastMoveMade = 'buffMinion';
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_031':
           return core031Buff(G, ctx, targetPlayer, cardToBuffUuid, lastPlayedCard);
@@ -344,6 +346,7 @@ export const destroyMinion = (
 
   G.zones[zoneNumber].sides[targetPlayer].forEach((c) => {
     if (c.uuid === cardToDestroyUuid) {
+      G.lastMoveMade = 'destroyMinion';
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_043':
           return core043Destroy(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
@@ -368,6 +371,7 @@ export const healMinion = (
   const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
   G.zones[zoneNumber].sides[targetPlayer].forEach((c) => {
     if (c.uuid === cardToHealUuid) {
+      G.lastMoveMade = 'healMinion';
       switch (lastPlayedCard?.key) {
         case 'SET_CORE_082':
           return core082Heal(

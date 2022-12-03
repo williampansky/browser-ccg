@@ -1,9 +1,13 @@
+import Image from 'next/image';
 import { ReactNode, useEffect, useState } from 'react';
 import type { Card, PlayerID } from '../../../../types';
+
 import { getRandomNumberBetween } from '../../../../utils';
 import { Context } from '../../../../enums';
 import { MinionOnPlayAnimation } from './MinionOnPlayAnimation';
 import { MinionEventAnimation } from './MinionEventAnimation';
+
+import SUBTYPE_RACE_DEMONIC from '../../../../public/images/card-assets/SUBTYPE_RACE_DEMONIC.png';
 
 // import styles from './MinionSlotWrapper.module.scss';
 
@@ -12,9 +16,11 @@ interface Props {
   data?: Card;
   index?: number;
   moves?: any;
-  player?: PlayerID;
   opponent?: PlayerID;
+  player?: PlayerID;
   prevHand?: Card[];
+  theirID?: PlayerID;
+  yourID?: PlayerID;
   zoneNumber?: number;
   zoneSide?: PlayerID;
 }
@@ -24,12 +30,15 @@ export const MinionSlotWrapper = ({
   data,
   index,
   moves,
-  player,
   opponent,
+  player,
+  theirID,
+  yourID,
   zoneNumber,
   zoneSide,
 }: Props) => {
   const b = data && data?.booleans;
+  const playerView = zoneSide === yourID;
   const { attackMinion, buffMinion, destroyMinion, healMinion } = moves;
 
   const [rotation, setRotation] = useState<number>(0);
@@ -70,13 +79,15 @@ export const MinionSlotWrapper = ({
     <div
       className={[
         'minionslot',
-        b?.canBeAttackedBySpell ? 'minionslot--can-be-attacked' : '',
-        b?.canBeBuffed ? 'minionslot--can-be-buffed' : '',
-        b?.canBeDestroyed ? 'minionslot--can-be-destroyed' : '',
-        b?.canBeHealed ? 'minionslot--can-be-healed' : '',
+        b?.canBeAttackedBySpell && playerView ? 'minionslot--can-be-attacked' : '',
+        b?.canBeBuffed && playerView ? 'minionslot--can-be-buffed' : '',
+        b?.canBeDestroyed && playerView ? 'minionslot--can-be-destroyed' : '',
+        b?.canBeHealed && playerView ? 'minionslot--can-be-healed' : '',
+        b?.isDestroyed && playerView ? 'minionslot--is-destroyed' : '',
       ].join(' ')}
       data-component='MinionSlotWrapper'
       data-index={index}
+      data-zone-side={zoneSide}
       onClick={handleOnClick}
       style={{
         transform: `rotate(${rotation}deg)`,
@@ -84,6 +95,15 @@ export const MinionSlotWrapper = ({
       }}
     >
       <>
+      {b?.isDestroyed && (
+        <div className='dead-graphic'>
+          <Image
+            src={SUBTYPE_RACE_DEMONIC}
+            layout='fill'
+          />
+        </div>
+      )}
+
         {children}
         <MinionEventAnimation data={data} index={index} zoneNumber={zoneNumber} />
         <MinionOnPlayAnimation data={data} index={index} zoneNumber={zoneNumber} />

@@ -1,5 +1,8 @@
+export { default as calculateZoneSidePower } from './calculate-zone-side-power';
+export { default as cardIsMinion } from './card-is-minion';
 export { default as cardIsNotSelf } from './card-is-not-self';
 export { default as classesArray } from './classes-array';
+export { default as createAiDeck } from './create-ai-deck';
 export { default as createArtistHtmlLink } from './create-artist-html-link';
 export { default as createCardKey } from './create-card-key';
 export { default as createCardObject } from './create-card-object';
@@ -12,6 +15,7 @@ export { default as determineFirstRevealer } from './determine-first-revealer';
 export { default as discardCardFromPlayersHand } from './discard-card-from-players-hand';
 export { default as drawCardFromPlayersDeck } from './draw-card-from-players-deck';
 export { default as elementIsNotUndefined } from './element-is-not-undefined';
+export { default as filterArray } from './filter-array';
 export { default as fontSizeBasedOnCharacterLength } from './font-size-based-on-length';
 export { default as formatCardText } from './format-card-text';
 export { default as formatUrlString } from './format-url-string';
@@ -32,9 +36,7 @@ export { default as limitNumberWithinRange } from './limit-number-within-range';
 export { default as logPhaseToConsole } from './log-phase-to-console';
 export { default as pushHealthStreamAndSetDisplay } from './push-healthstream-and-set-display';
 export { default as pushPowerStreamAndSetDisplay } from './push-powerstream-and-set-display';
-export { default as removeBoonFromCards } from './remove-boon-from-cards'
+export { default as removeBoonFromCards } from './remove-boon-from-cards';
 export { default as removeSymbols } from './remove-symbols';
 export { default as replaceAllConstants } from './replace-all-constants';
 export { default as replaceDynamicText } from './replace-dynamic-text';
-export { default as filterArray } from './filter-array';
-export { default as cardIsMinion } from './card-is-minion';

@@ -27,8 +27,8 @@ const aiEnumeration = {
     const aiPlayer = players[aiID];
     const aiHand = aiPlayer.cards.hand;
     const ap = G.actionPoints[aiID].current;
+    // const playableCards: Card[] = [];
 
-    const playableCards: Card[] = [];
     let moves: any[] = [];
 
     if (gameConfig.ai.enableBotAiMoves === false) {
@@ -39,7 +39,8 @@ const aiEnumeration = {
     // avoids onslaught of INVALID_MOVE errors
     // prettier-ignore
     if (G.playerTurnDone[aiID] === false) {
-      pushPlayCardMoves(moves, aiID, ap, aiHand, playableCards, perZone, zones);
+      // determinePlayableCards(aiHand, playableCards);
+      pushPlayCardMoves(moves, aiID, ap, aiHand, perZone, zones);
       pushInteractionMoves(G, moves, aiID);
       pushSetDoneMove(moves, aiID);
     }
@@ -49,11 +50,11 @@ const aiEnumeration = {
   },
 };
 
-export const determinePlayableCards = (hand: Card[], playableCards: Card[]) => {
-  hand.forEach((c: Card) => {
-    if (c.canPlay) playableCards.push(c);
-  });
-};
+// export const determinePlayableCards = (hand: Card[], playableCards: Card[]) => {
+//   hand.forEach((c: Card) => {
+//     if (c && c.canPlay) playableCards.push(c);
+//   });
+// };
 
 export const pushPlayCardToZoneMoves = ({
   aiID,
@@ -82,7 +83,6 @@ export const pushPlayCardMoves = (
   aiID: PlayerID,
   currentAp: number,
   hand: Card[],
-  playableCards: Card[],
   perZone: number,
   zones: Zone[]
 ) => {
@@ -90,30 +90,31 @@ export const pushPlayCardMoves = (
   const movesArrIsAtOrBelow = (n: number) => moves.length <= n;
   
   if (handHasAtLeastOneCard && movesArrIsAtOrBelow(20)) {
-    determinePlayableCards(hand, playableCards);
-    const canPlay = playableCards.length;
-    const amountToPlay = useDebugOpponentHandCardKey ? 1 : canPlay;
+    const amountToPlay = useDebugOpponentHandCardKey ? 1 : hand.length;
+    const rngIdx = getRandomNumberBetween(0, hand.length - 1);
+    const rngCard = hand[rngIdx];
 
     for (let i = 0; i < amountToPlay; i++) {
-      const rngIdx = getRandomNumberBetween(0, canPlay - 1);
-      const props = {
-        aiID,
-        card: useDebugOpponentHandCardKey
-          ? hand[0]
-          : playableCards[rngIdx],
-        cardIndex: useDebugOpponentHandCardKey ? 0 : rngIdx,
-        currentAp,
-        moves,
-        perZone,
-        zones,
-      };
-
-      if (useDebugOpponentHandCardKey) {
-        pushPlayCardToZoneMoves({ ...props, zoneNumber: 0 });
-      } else {
-        pushPlayCardToZoneMoves({ ...props, zoneNumber: 0 });
-        pushPlayCardToZoneMoves({ ...props, zoneNumber: 1 });
-        pushPlayCardToZoneMoves({ ...props, zoneNumber: 2 });
+      if (rngCard.canPlay) {
+        const props = {
+          aiID,
+          card: useDebugOpponentHandCardKey
+            ? hand[0]
+            : rngCard,
+          cardIndex: useDebugOpponentHandCardKey ? 0 : rngIdx,
+          currentAp,
+          moves,
+          perZone,
+          zones,
+        };
+  
+        if (useDebugOpponentHandCardKey) {
+          pushPlayCardToZoneMoves({ ...props, zoneNumber: 0 });
+        } else {
+          pushPlayCardToZoneMoves({ ...props, zoneNumber: 0 });
+          pushPlayCardToZoneMoves({ ...props, zoneNumber: 1 });
+          pushPlayCardToZoneMoves({ ...props, zoneNumber: 2 });
+        }
       }
     }
   }
