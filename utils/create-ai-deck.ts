@@ -2,7 +2,7 @@ import { Ctx } from 'boardgame.io';
 import { Card, GameState } from '../types';
 import createCardObject from './create-card-object';
 
-import deckAiSprites from '../game/ai/decks/deck.ai.sprites';
+import { aiDeckSprites } from '../game/ai';
 
 /**
  * Creates a playable deck of cards out of a random AI cardBase deck
@@ -13,7 +13,7 @@ const createAiDeck = (
 ): Card[] => {
   let deck: Card[] = [];
 
-  deckAiSprites.forEach(obj => deck.push(createCardObject(obj!)))
+  aiDeckSprites.forEach(obj => deck.push(createCardObject(obj!)))
   
   const shuffledDeck = ctx?.random?.Shuffle(deck)!;
 

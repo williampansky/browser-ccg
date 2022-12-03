@@ -7,7 +7,7 @@ import type { GameState, PlayerID } from '../types';
 import { asyncPhases, defaultPhases } from './phases';
 import { defaultState } from './state';
 import { gameConfig } from '../app.config';
-import aiEnumeration from './ai';
+import aiEnumeration from './ai-enumeration';
 import stripSecrets from './strip-secrets';
 import bgioEffectsConfig from './config.bgio-effects';
 import getGameResult from '../utils/get-game-result';

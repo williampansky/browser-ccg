@@ -29,6 +29,7 @@ export type {
   Counts,
   GameOver,
   GameState,
+  LastMoveMade,
   SelectedCardIndex,
 } from './g.interface';
 

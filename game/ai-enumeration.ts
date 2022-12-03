@@ -5,7 +5,7 @@ import { getContextualPlayerIds, getRandomNumberBetween } from '../utils';
 import { gameConfig } from '../app.config';
 
 const {
-  debugConfig: { debugOpponentHandCardKey, useDebugOpponentHandCardKey },
+  debugConfig: { useDebugOpponentHandCardKey },
 } = gameConfig;
 
 interface PushPlayCardToZoneMove {
@@ -27,7 +27,6 @@ const aiEnumeration = {
     const aiPlayer = players[aiID];
     const aiHand = aiPlayer.cards.hand;
     const ap = G.actionPoints[aiID].current;
-    // const playableCards: Card[] = [];
 
     let moves: any[] = [];
 
@@ -39,9 +38,8 @@ const aiEnumeration = {
     // avoids onslaught of INVALID_MOVE errors
     // prettier-ignore
     if (G.playerTurnDone[aiID] === false) {
-      // determinePlayableCards(aiHand, playableCards);
       pushPlayCardMoves(moves, aiID, ap, aiHand, perZone, zones);
-      pushInteractionMoves(G, moves, aiID);
+      // pushInteractionMoves(G, moves, aiID);
       pushSetDoneMove(moves, aiID);
     }
 
@@ -49,12 +47,6 @@ const aiEnumeration = {
     return moves;
   },
 };
-
-// export const determinePlayableCards = (hand: Card[], playableCards: Card[]) => {
-//   hand.forEach((c: Card) => {
-//     if (c && c.canPlay) playableCards.push(c);
-//   });
-// };
 
 export const pushPlayCardToZoneMoves = ({
   aiID,
@@ -73,7 +65,7 @@ export const pushPlayCardToZoneMoves = ({
 
   if (canAfford && zoneIsNotDisabled && slotsAvailableInZone)
     moves.push({
-      move: 'playAiCard',
+      move: 'aiPlayCard',
       args: [aiID, zoneNumber, card, cardIndex],
     });
 };

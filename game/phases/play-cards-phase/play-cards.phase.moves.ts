@@ -1,14 +1,12 @@
 import type { Ctx } from 'boardgame.io';
-import type { Card, GameState, PlayerID } from '../../../types';
-import { LastMoveMade } from '../../../types/g.interface';
-
+import type { Card, GameState, LastMoveMade, PlayerID } from '../../../types';
+import { aiPlayCard } from '../../ai';
 import {
   attackMinion,
   buffMinion,
   deselectCard,
   destroyMinion,
   healMinion,
-  playAiCard,
   playCard,
   selectCard,
   setDone,
@@ -51,7 +49,7 @@ export const moves = {
       return undoPlayCard(G, ctx, player, undo);
     },
   },
-  playAiCard: {
+  aiPlayCard: {
     client: false,
     noLimit: true,
     ignoreStaleStateID: true,
@@ -63,7 +61,7 @@ export const moves = {
       card: Card,
       cardIndex: number
     ) => {
-      return playAiCard(G, ctx, aiID, zoneNumber, card, cardIndex);
+      return aiPlayCard(G, ctx, aiID, zoneNumber, card, cardIndex);
     },
   },
   setDone: {

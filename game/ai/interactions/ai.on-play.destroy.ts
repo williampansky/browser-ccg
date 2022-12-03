@@ -43,6 +43,6 @@ export const aiOnPlayDestroy = (G: GameState, ctx: Ctx, aiID: PlayerID) => {
     );
 
     handleCardDestructionMechanics(G, choice.cardData, opponent);
-    // card.booleans.onPlayWasTriggered = true;
+
   }
 };

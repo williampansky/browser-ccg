@@ -79,11 +79,11 @@ export const MinionSlotWrapper = ({
     <div
       className={[
         'minionslot',
-        b?.canBeAttackedBySpell && playerView ? 'minionslot--can-be-attacked' : '',
-        b?.canBeBuffed && playerView ? 'minionslot--can-be-buffed' : '',
-        b?.canBeDestroyed && playerView ? 'minionslot--can-be-destroyed' : '',
-        b?.canBeHealed && playerView ? 'minionslot--can-be-healed' : '',
-        b?.isDestroyed && playerView ? 'minionslot--is-destroyed' : '',
+        b?.canBeAttackedBySpell ? 'minionslot--can-be-attacked' : '',
+        b?.canBeBuffed ? 'minionslot--can-be-buffed' : '',
+        b?.canBeDestroyed ? 'minionslot--can-be-destroyed' : '',
+        b?.canBeHealed ? 'minionslot--can-be-healed' : '',
+        b?.isDestroyed ? 'minionslot--is-destroyed' : '',
       ].join(' ')}
       data-component='MinionSlotWrapper'
       data-index={index}
