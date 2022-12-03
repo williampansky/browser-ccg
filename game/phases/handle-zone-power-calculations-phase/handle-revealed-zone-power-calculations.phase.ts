@@ -1,6 +1,6 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { calculateZoneSidePower } from './methods';
 import { GameState } from '../../../types';
+import { calculateZoneSidePower, logPhaseToConsole } from '../../../utils';
 
 export default<PhaseConfig> {
   next: 'drawCard',
