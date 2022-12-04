@@ -20,27 +20,20 @@ import { unsetPlayableCards } from './methods/unset-playable-cards';
 import { noHealableMinionsAvailable } from './methods/no-healable-minions-available';
 import setDoneMove from '../_moves/set-done.move';
 import removeCardFromHand from '../utils/remove-card-from-hand';
+import { playerTurnDone } from '../../../state';
 // import { moves } from './play-cards.phase.moves';
 
 export default <PhaseConfig>{
   next: 'playCard',
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase, ctx.currentPlayer);
-    determineHealableMinions(G, ctx.currentPlayer);
-    unsetPlayableCards(G, ctx.currentPlayer);
   },
-  onEnd(G: GameState, ctx: Ctx) {
-    const { selectedCardData, selectedCardIndex } = G;
-    const { currentPlayer } = ctx;
-
-    const cardUuid = selectedCardData[currentPlayer]!.uuid;
-    const cardIdx = selectedCardIndex[currentPlayer]!;
-
-    resetHealableMinions(G, currentPlayer);
-    removeCardFromHand(G, currentPlayer, cardUuid, cardIdx);
-  },
+  onEnd(G: GameState, ctx: Ctx) {},
   endIf(G: GameState, ctx: Ctx) {
-    return noHealableMinionsAvailable(G, ctx.currentPlayer);
+    return (
+      noHealableMinionsAvailable(G, ctx.currentPlayer) ||
+      G.playerTurnDone[ctx.currentPlayer] === true
+    );
   },
   moves: {
     healMinion: {
@@ -58,18 +51,38 @@ export default <PhaseConfig>{
         return healMinion(G, ctx, cardToHeal, lastPlayedCard, targetPlayer);
       },
     },
-    setDone: {
-      client: false,
-      noLimit: true,
-      ignoreStaleStateID: true,
-      undoable: false,
-      move: (G: GameState, ctx: Ctx, player: PlayerID) => {
-        return setDoneMove({ G, ctx, player });
-      },
-    },
+    // setDone: {
+    //   client: false,
+    //   noLimit: true,
+    //   ignoreStaleStateID: true,
+    //   undoable: false,
+    //   move: (G: GameState, ctx: Ctx, player: PlayerID) => {
+    //     G.lastMoveMade = 'setDone';
+    //     playerTurnDone.set(G, player);
+    //     // ctx.events?.endTurn();
+    //     // ctx.events?.endPhase();
+    //   },
+    // },
   },
   turn: {
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
+    onBegin(G, ctx) {
+      determineHealableMinions(G, ctx.currentPlayer);
+      unsetPlayableCards(G, ctx.currentPlayer);
+    },
+    onEnd(G, ctx) {
+      const { selectedCardData, selectedCardIndex } = G;
+      const { currentPlayer } = ctx;
+
+      const cardUuid = selectedCardData[currentPlayer]!.uuid;
+      const cardIdx = selectedCardIndex[currentPlayer]!;
+
+      resetHealableMinions(G, currentPlayer);
+      removeCardFromHand(G, currentPlayer, cardUuid, cardIdx);
+    },
+    endIf(G: GameState, ctx: Ctx) {
+      return G.playerTurnDone[ctx.currentPlayer] === true;
+    },
     // onBegin(G: GameState, ctx: Ctx) {
     //   ctx.events?.setActivePlayers({ currentPlayer: ctx.playOrder[0] })
     // },

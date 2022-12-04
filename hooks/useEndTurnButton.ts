@@ -54,7 +54,8 @@ const useEndTurnButtonExtended = (
 
   useEffect(() => {
     if (currentPlayer === playerId) {
-      setEndTurnDisabled(false);
+      if (ctxPhase === 'healMinion') setEndTurnDisabled(true);
+      else setEndTurnDisabled(false);
     } else {
       setEndTurnDisabled(true);
     }

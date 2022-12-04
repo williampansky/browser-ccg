@@ -13,9 +13,10 @@ export const noHealableMinionsAvailable = (
       if (c.booleans.hasHealthReduced) noHealableMinionsAvailable = false;
     });
 
-    z.sides[opponent].forEach((c) => {
-      if (c.booleans.hasHealthReduced) noHealableMinionsAvailable = false;
-    });
+    // @todo future enhancement
+    // z.sides[opponent].forEach((c) => {
+    //   if (c.booleans.hasHealthReduced) noHealableMinionsAvailable = false;
+    // });
   });
 
   return noHealableMinionsAvailable;

@@ -97,8 +97,8 @@ export interface CardBase {
   numberPrimary: number;
   numberRNG: number;
   numberSecondary: number;
-  playContext?: string;
-  playType?: string;
+  playContext: string;
+  playType: string;
   power: number;
   race: CardRace | string;
   rarity: CardRarity | string;
@@ -195,8 +195,8 @@ export interface Card {
   numberPrimary: number;
   numberRNG: number;
   numberSecondary: number;
-  playContext?: string;
-  playType?: string;
+  playContext: string;
+  playType: string;
   powerOverride?: number; // use this power instead of base or latest stream
   powerStream: CardPowerStream[];
   race: CardRace | string;

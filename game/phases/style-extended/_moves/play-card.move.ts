@@ -1,7 +1,7 @@
 import { Ctx } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { gte } from 'lodash';
-import { Mechanics } from '../../../../enums';
+import { CardPlayType, Mechanics } from '../../../../enums';
 import { Card, GameState, PlayerID } from '../../../../types';
 import { filterArray, getCardPower } from '../../../../utils';
 import { fxEnd } from '../../../config.bgio-effects';
@@ -66,15 +66,21 @@ export const playCard = ({ ...props }: PlayCardMove) => {
   G.lastMoveMade = 'playCard';
   
   if (card.mechanics?.includes(Mechanics.OnPlay)) {
-      // switch (card.playType) {
-      //   case value:
-          
-      //     break;
-      
-      //   default:
-      //     break;
-      // }
-    ctx.events?.setPhase('healMinion');
+    switch (card.playType) {
+      case CardPlayType.Targeted:
+        // --targeted
+        switch (card.playContext) {
+          case Mechanics.Heal:
+            return ctx.events?.setPhase('healMinion');
+          default:
+            break;
+        }
+        // --targeted
+        break;
+    
+      default:
+        break;
+    }
   } else {
     removeCardFromHand(G, player, cardUuid, cardIdx);
     determinePlayableCards(G, player);
