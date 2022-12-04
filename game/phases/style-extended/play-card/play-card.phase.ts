@@ -25,12 +25,12 @@ import { determinePlayableCards } from './methods/determine-playable-cards';
 import setDoneMove from '../_moves/set-done.move';
 import { unsetPlayableCards } from './methods/unset-playable-cards';
 import { counts, playerTurnDone, selectedCardData, selectedCardIndex } from '../../../state';
-import determineActionPoints from '../utils/determine-action-points';
+import determineActionPoints from '../_utils/determine-action-points';
 import { aiPlayCard } from '../../../ai';
 import { aiSetDone } from '../../../ai/ai.moves';
-import removeCardFromHand from '../utils/remove-card-from-hand';
-import handleZonePowersCalculations from '../utils/handle-zone-powers-calculations';
-import removeDestroyedCards from '../utils/remove-destroyed-cards';
+import removeCardFromHand from '../_utils/remove-card-from-hand';
+import handleZonePowersCalculations from '../_utils/handle-zone-powers-calculations';
+import removeDestroyedCards from '../_utils/remove-destroyed-cards';
 // import { moves } from './play-cards.phase.moves';
 
 export default <PhaseConfig>{
@@ -121,7 +121,6 @@ export default <PhaseConfig>{
     },
     onEnd(G: GameState, ctx: Ctx) {
       unsetPlayableCards(G, ctx.currentPlayer);
-      removeDestroyedCards(G, ctx);
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;

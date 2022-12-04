@@ -7,7 +7,7 @@ import { filterArray, getCardPower } from '../../../../utils';
 import { fxEnd } from '../../../config.bgio-effects';
 import { actionPoints, counts, playedCards } from '../../../state';
 import { determinePlayableCards } from '../play-card/methods/determine-playable-cards';
-import removeCardFromHand from '../utils/remove-card-from-hand';
+import removeCardFromHand from '../_utils/remove-card-from-hand';
 
 export interface PlayCardMove {
   G: GameState;

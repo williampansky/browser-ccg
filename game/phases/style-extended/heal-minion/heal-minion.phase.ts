@@ -16,10 +16,10 @@ import { fxEnd } from '../../../config.bgio-effects';
 import { determineHealableMinions } from './methods/determine-healable-minions';
 import { healMinion, HealMinionMove } from './moves/heal-minion.move';
 import { resetHealableMinions } from './methods/reset-healable-minions';
-import { unsetPlayableCards } from '../utils/unset-playable-cards';
+import { unsetPlayableCards } from '../_utils/unset-playable-cards';
 import { noHealableMinionsAvailable } from './methods/no-healable-minions-available';
 import setDoneMove from '../_moves/set-done.move';
-import removeCardFromHand from '../utils/remove-card-from-hand';
+import removeCardFromHand from '../_utils/remove-card-from-hand';
 import { playerTurnDone } from '../../../state';
 // import { moves } from './play-cards.phase.moves';
 
@@ -77,8 +77,8 @@ export default <PhaseConfig>{
       const cardUuid = selectedCardData[currentPlayer]!.uuid;
       const cardIdx = selectedCardIndex[currentPlayer]!;
 
-      resetHealableMinions(G, currentPlayer);
       removeCardFromHand(G, currentPlayer, cardUuid, cardIdx);
+      resetHealableMinions(G, currentPlayer);
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;

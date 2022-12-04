@@ -16,14 +16,14 @@ import { fxEnd } from '../../../config.bgio-effects';
 import { noAttackableMinionsAvailable } from './methods/no-attackable-minions-available';
 import { attackMinion } from '../_moves/attack-minion.move';
 import { determineAttackableMinions } from './methods/determine-attackable-minions';
-import { unsetPlayableCards } from '../utils/unset-playable-cards';
+import { unsetPlayableCards } from '../_utils/unset-playable-cards';
 import { resetHealableMinions } from '../heal-minion/methods/reset-healable-minions';
-import removeCardFromHand from '../utils/remove-card-from-hand';
+import removeCardFromHand from '../_utils/remove-card-from-hand';
 import { resetAttackableMinions } from './methods/reset-attackable-minions';
 import { lte } from 'lodash';
 import { counts } from '../../../state';
-import handleDestroyedCards from '../utils/handle-destroyed-cards';
-import handleZonePowersCalculations from '../utils/handle-zone-powers-calculations';
+import handleDestroyedCards from '../_utils/handle-destroyed-cards';
+import handleZonePowersCalculations from '../_utils/handle-zone-powers-calculations';
 // import { moves } from './play-cards.phase.moves';
 
 export default <PhaseConfig>{
@@ -83,8 +83,8 @@ export default <PhaseConfig>{
       const cardUuid = selectedCardData[currentPlayer]!.uuid;
       const cardIdx = selectedCardIndex[currentPlayer]!;
 
-      resetAttackableMinions(G, currentPlayer);
       removeCardFromHand(G, currentPlayer, cardUuid, cardIdx);
+      resetAttackableMinions(G, currentPlayer);
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;

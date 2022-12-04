@@ -5,7 +5,7 @@ import { GameState } from '../../../../types';
 import { drawCardFromPlayersDeck, logPhaseToConsole } from '../../../../utils';
 import { fxEnd } from '../../../config.bgio-effects';
 import { actionPoints, playerTurnDone } from '../../../state';
-import determineActionPoints from '../utils/determine-action-points';
+import determineActionPoints from '../_utils/determine-action-points';
 
 /**
  * Increments the game turn (note: ***not*** `ctx.turn`).
