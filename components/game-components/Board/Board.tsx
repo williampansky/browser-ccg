@@ -43,7 +43,7 @@ export interface GameProps extends BoardProps<GameState> {}
 export const Board = (props: GameProps) => {
   const {
     moves,
-    moves: { attackMinion, buffMinion, deselectCard, playCard, selectCard, setDone, healMinion },
+    moves: { attackMinion, buffMinion, destroyMinion, deselectCard, playCard, selectCard, setDone, healMinion },
     events,
     events: { endPhase, endTurn },
     reset,
@@ -129,6 +129,22 @@ export const Board = (props: GameProps) => {
     [currentPlayer, playedCards]
   );
 
+  const onDestroyMinionClick = useCallback(
+    (targetPlayer?: PlayerID, cardToDestroy?: Card) => {
+      if (targetPlayer && cardToDestroy)
+        return destroyMinion(
+          cardToDestroy,
+          playedCards[yourID][playedCards[yourID].length - 1],
+          targetPlayer
+        );
+      else
+        return console.error(
+          `ERROR: onDestroyMinionClick(${targetPlayer}, ${cardToDestroy})`
+        );
+    },
+    [currentPlayer, playedCards]
+  );
+
   const onHealMinionClick = useCallback(
     (targetPlayer?: PlayerID, cardToHeal?: Card) => {
       if (targetPlayer && cardToHeal)
@@ -180,6 +196,7 @@ export const Board = (props: GameProps) => {
           yourID={yourID}
           onAttackMinionClick={onAttackMinionClick}
           onBuffMinionClick={onBuffMinionClick}
+          onDestroyMinionClick={onDestroyMinionClick}
           onHealMinionClick={onHealMinionClick}
         />
 

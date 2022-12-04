@@ -3,35 +3,16 @@ import { TurnOrder } from 'boardgame.io/core';
 import type { Ctx, PhaseConfig } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../../types';
 
-// import {
-//   onTurnBeginLoop,
-//   onTurnEndLoop,
-//   onTurnMoveLoop,
-//   resetDoneState,
-//   unsetPlayableCardsInHand,
-// } from './methods';
-
-import {
-  drawCardFromPlayersDeck,
-  filterArray,
-  getContextualPlayerIds,
-  logPhaseToConsole,
-} from '../../../../utils';
-import { fxEnd } from '../../../config.bgio-effects';
-import { playCard } from '../_moves/play-card.move';
-import { selectCard } from '../_moves/select-card.move';
-import { deselectCard } from '../_moves/deselect-card.move';
-import { determinePlayableCards } from './methods/determine-playable-cards';
-import setDoneMove from '../_moves/set-done.move';
-import { unsetPlayableCards } from './methods/unset-playable-cards';
-import { counts, playerTurnDone, selectedCardData, selectedCardIndex } from '../../../state';
-import determineActionPoints from '../_utils/determine-action-points';
 import { aiPlayCard } from '../../../ai';
 import { aiSetDone } from '../../../ai/ai.moves';
-import removeCardFromHand from '../_utils/remove-card-from-hand';
+import { deselectCard } from '../_moves/deselect-card.move';
+import { determinePlayableCards } from './methods/determine-playable-cards';
+import { logPhaseToConsole } from '../../../../utils';
+import { playCard } from '../_moves/play-card.move';
+import { selectCard } from '../_moves/select-card.move';
+import { unsetPlayableCards } from './methods/unset-playable-cards';
 import handleZonePowersCalculations from '../_utils/handle-zone-powers-calculations';
-import removeDestroyedCards from '../_utils/remove-destroyed-cards';
-// import { moves } from './play-cards.phase.moves';
+import setDoneMove from '../_moves/set-done.move';
 
 export default <PhaseConfig>{
   next(G, ctx) {
@@ -42,8 +23,6 @@ export default <PhaseConfig>{
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase, ctx.currentPlayer);
     handleZonePowersCalculations(G, ctx);
-    // selectedCardData.reset(G, ctx.currentPlayer);
-    // selectedCardIndex.reset(G, ctx.currentPlayer);
   },
   onEnd(G: GameState, ctx: Ctx) {
     // unsetPlayableCards({ G, player: ctx.currentPlayer })

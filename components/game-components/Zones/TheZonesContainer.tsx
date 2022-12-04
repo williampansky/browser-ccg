@@ -17,6 +17,7 @@ interface Props {
   yourID: PlayerID;
   onAttackMinionClick: (zS?: PlayerID, c?: Card) => void
   onBuffMinionClick: (zS?: PlayerID, c?: Card) => void
+  onDestroyMinionClick: (zS?: PlayerID, c?: Card) => void
   onHealMinionClick: (zS?: PlayerID, c?: Card) => void
 }
 
@@ -28,6 +29,7 @@ export const TheZonesContainer = ({
   yourID,
   onAttackMinionClick,
   onBuffMinionClick,
+  onDestroyMinionClick,
   onHealMinionClick
 }: Props) => {
   const { lastMoveMade, selectedCardData } = G;
@@ -75,6 +77,7 @@ export const TheZonesContainer = ({
             gameConfig={gameConfig}
             onAttackMinionClick={onAttackMinionClick}
             onBuffMinionClick={onBuffMinionClick}
+            onDestroyMinionClick={onDestroyMinionClick}
             onHealMinionClick={onHealMinionClick}
           />
         );

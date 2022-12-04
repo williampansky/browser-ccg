@@ -26,6 +26,7 @@ interface Props {
   zonesAreActive: boolean;
   onAttackMinionClick: (zS?: PlayerID, c?: Card) => void
   onBuffMinionClick: (zS?: PlayerID, c?: Card) => void
+  onDestroyMinionClick: (zS?: PlayerID, c?: Card) => void
   onHealMinionClick: (zS?: PlayerID, c?: Card) => void
 }
 
@@ -40,6 +41,7 @@ export const Zone = ({
   zonesAreActive,
   onAttackMinionClick,
   onBuffMinionClick,
+  onDestroyMinionClick,
   onHealMinionClick
 }: Props) => {
   const { powers } = zone;
@@ -87,6 +89,7 @@ export const Zone = ({
                 zoneSide={theirID}
                 onAttackMinionClick={onAttackMinionClick}
                 onBuffMinionClick={onBuffMinionClick}
+                onDestroyMinionClick={onDestroyMinionClick}
                 onHealMinionClick={onHealMinionClick}
               >
                 <OpponentZoneSlot
@@ -173,6 +176,7 @@ export const Zone = ({
                   zoneSide={yourID}
                   onAttackMinionClick={onAttackMinionClick}
                   onBuffMinionClick={onBuffMinionClick}
+                  onDestroyMinionClick={onDestroyMinionClick}
                   onHealMinionClick={onHealMinionClick}
                 >
                   <PlayerZoneSlot

@@ -25,6 +25,7 @@ interface Props {
   zoneSide?: PlayerID;
   onAttackMinionClick: (zS?: PlayerID, c?: Card) => void;
   onBuffMinionClick: (zS?: PlayerID, c?: Card) => void;
+  onDestroyMinionClick: (zS?: PlayerID, c?: Card) => void;
   onHealMinionClick: (zS?: PlayerID, c?: Card) => void;
 }
 
@@ -41,6 +42,7 @@ export const MinionSlotWrapper = ({
   zoneSide,
   onAttackMinionClick,
   onBuffMinionClick,
+  onDestroyMinionClick,
   onHealMinionClick,
 }: Props) => {
   const b = data && data?.booleans;
@@ -71,7 +73,7 @@ export const MinionSlotWrapper = ({
       case Context.CanBeBuffed:
         return onBuffMinionClick(zoneSide, data);
       case Context.CanBeDestroyed:
-        return destroyMinion(player, zoneSide, data?.uuid, zoneNumber);
+        return onDestroyMinionClick(zoneSide, data);
       case Context.CanBeHealed:
         // return healMinion(player, zoneSide, zoneNumber, data);
         return onHealMinionClick(zoneSide, data);

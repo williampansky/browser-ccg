@@ -1,5 +1,6 @@
 import { Ctx } from 'boardgame.io';
-import { add } from 'mathjs';
+import { lte } from 'lodash';
+import { add, subtract } from 'mathjs';
 import { Card, GameState, PlayerID } from '../../../../types';
 import {
   cardUuidMatch,
@@ -7,13 +8,13 @@ import {
   limitNumberWithinRange,
   pushHealthStreamAndSetDisplay,
 } from '../../../../utils';
-import { core031Buff } from '../../../mechanics/core-mechanics-by-key/mechanic.core.031';
-import { core110Buff } from '../../../mechanics/core-mechanics-by-key/mechanic.core.110';
+import { core043Destroy } from '../../../mechanics/core-mechanics-by-key/mechanic.core.043';
+import { core126Destroy } from '../../../mechanics/core-mechanics-by-key/mechanic.core.126';
 
-export const buffMinion = (
+export const destroyMinion = (
   G: GameState,
   ctx: Ctx,
-  cardToBuff: Card,
+  cardToDestroy: Card,
   lastPlayedCard: Card,
   targetPlayer: PlayerID
 ) => {
@@ -21,17 +22,9 @@ export const buffMinion = (
   const { opponent } = getContextualPlayerIds(currentPlayer);
 
   const init = (c: Card) => {
-    if (cardUuidMatch(c, cardToBuff)) {
-      switch (lastPlayedCard.key) {
-        case 'SET_CORE_031':
-          core031Buff(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
-          break;
-        case 'SET_CORE_110':
-          core110Buff(G, ctx, targetPlayer, c?.uuid, lastPlayedCard);
-          break;
-        default:
-          break;
-      }
+    if (cardUuidMatch(c, cardToDestroy)) {
+      c.booleans.isDestroyed = true;
+      c.booleans.canBeDestroyed = false;
     }
 
     if (cardUuidMatch(c, lastPlayedCard)) {
@@ -44,6 +37,6 @@ export const buffMinion = (
     z.sides[opponent].forEach((c) => init(c));
   });
 
-  G.lastMoveMade = 'buffMinion';
+  G.lastMoveMade = 'destroyMinion';
   ctx.events?.setPhase('playCard');
 };

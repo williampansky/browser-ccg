@@ -74,6 +74,8 @@ export const playCard = ({ ...props }: PlayCardMove) => {
             return ctx.events?.setPhase('buffMinion');
           case Mechanics.Damage:
             return ctx.events?.setPhase('attackMinion');
+          case Mechanics.Destroy:
+            return ctx.events?.setPhase('destroyMinion');
           case Mechanics.Heal:
             return ctx.events?.setPhase('healMinion');
           default:

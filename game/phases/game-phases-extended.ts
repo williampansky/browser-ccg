@@ -1,5 +1,6 @@
 import attackMinionPhase from './style-extended/attack-minion/attack-minion.phase';
 import buffMinionPhase from './style-extended/buff-minion/buff-minion.phase';
+import destroyMinionPhase from './style-extended/destroy-minion/destroy-minion.phase';
 import drawCardPhase from './style-extended/draw-card/draw-card.phase';
 import healMinionPhase from './style-extended/heal-minion/heal-minion.phase';
 import incrementActionPointsPhase from './style-extended/increment-action-points/increment-action-points.phase';
@@ -29,4 +30,5 @@ export default {
   healMinion: healMinionPhase,
   attackMinion: attackMinionPhase,
   buffMinion: buffMinionPhase,
+  destroyMinion: destroyMinionPhase,
 };
