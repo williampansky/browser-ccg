@@ -72,6 +72,8 @@ export const playCard = ({ ...props }: PlayCardMove) => {
         switch (card.playContext) {
           case Mechanics.Heal:
             return ctx.events?.setPhase('healMinion');
+          case Mechanics.Damage:
+            return ctx.events?.setPhase('attackMinion');
           default:
             break;
         }

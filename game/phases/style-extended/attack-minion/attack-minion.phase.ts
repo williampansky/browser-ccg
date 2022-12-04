@@ -11,16 +11,19 @@ import type { Card, GameState, PlayerID } from '../../../../types';
 //   unsetPlayableCardsInHand,
 // } from './methods';
 
-import { logPhaseToConsole } from '../../../../utils';
+import { calculateZoneSidePower, drawCardFromPlayersDeck, handleCardDestructionMechanics, logPhaseToConsole } from '../../../../utils';
 import { fxEnd } from '../../../config.bgio-effects';
-import { determineHealableMinions } from './methods/determine-healable-minions';
-import { healMinion, HealMinionMove } from './moves/heal-minion.move';
-import { resetHealableMinions } from './methods/reset-healable-minions';
+import { noAttackableMinionsAvailable } from './methods/no-attackable-minions-available';
+import { attackMinion } from '../_moves/attack-minion.move';
+import { determineAttackableMinions } from './methods/determine-attackable-minions';
 import { unsetPlayableCards } from '../utils/unset-playable-cards';
-import { noHealableMinionsAvailable } from './methods/no-healable-minions-available';
-import setDoneMove from '../_moves/set-done.move';
+import { resetHealableMinions } from '../heal-minion/methods/reset-healable-minions';
 import removeCardFromHand from '../utils/remove-card-from-hand';
-import { playerTurnDone } from '../../../state';
+import { resetAttackableMinions } from './methods/reset-attackable-minions';
+import { lte } from 'lodash';
+import { counts } from '../../../state';
+import handleDestroyedCards from '../utils/handle-destroyed-cards';
+import handleZonePowersCalculations from '../utils/handle-zone-powers-calculations';
 // import { moves } from './play-cards.phase.moves';
 
 export default <PhaseConfig>{
@@ -28,15 +31,18 @@ export default <PhaseConfig>{
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase, ctx.currentPlayer);
   },
-  onEnd(G: GameState, ctx: Ctx) {},
+  onEnd(G: GameState, ctx: Ctx) {
+    handleDestroyedCards(G, ctx);
+    handleZonePowersCalculations(G, ctx);
+  },
   endIf(G: GameState, ctx: Ctx) {
     return (
-      noHealableMinionsAvailable(G, ctx.currentPlayer) ||
+      noAttackableMinionsAvailable(G, ctx.currentPlayer) ||
       G.playerTurnDone[ctx.currentPlayer] === true
     );
   },
   moves: {
-    healMinion: {
+    attackMinion: {
       client: false,
       noLimit: true,
       ignoreStaleStateID: true,
@@ -44,11 +50,11 @@ export default <PhaseConfig>{
       move: (
         G: GameState,
         ctx: Ctx,
-        cardToHeal: Card,
+        cardToAttack: Card,
         lastPlayedCard: Card,
         targetPlayer: PlayerID
       ) => {
-        return healMinion(G, ctx, cardToHeal, lastPlayedCard, targetPlayer);
+        return attackMinion(G, ctx, cardToAttack, lastPlayedCard, targetPlayer);
       },
     },
     // setDone: {
@@ -67,7 +73,7 @@ export default <PhaseConfig>{
   turn: {
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
     onBegin(G, ctx) {
-      determineHealableMinions(G, ctx.currentPlayer);
+      determineAttackableMinions(G, ctx.currentPlayer);
       unsetPlayableCards(G, ctx.currentPlayer);
     },
     onEnd(G, ctx) {
@@ -77,29 +83,14 @@ export default <PhaseConfig>{
       const cardUuid = selectedCardData[currentPlayer]!.uuid;
       const cardIdx = selectedCardIndex[currentPlayer]!;
 
-      resetHealableMinions(G, currentPlayer);
+      resetAttackableMinions(G, currentPlayer);
       removeCardFromHand(G, currentPlayer, cardUuid, cardIdx);
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;
     },
-    // onBegin(G: GameState, ctx: Ctx) {
-    //   ctx.events?.setActivePlayers({ currentPlayer: ctx.playOrder[0] })
-    // },
-    // onEnd(G: GameState, ctx: Ctx) {
-    //   const { currentPlayer } = ctx;
-    //   unsetPlayableCardsInHand(G, currentPlayer);
-    //   onTurnEndLoop(G, ctx);
-    //   fxEnd(ctx);
-    // },
-    // endIf(G: GameState, ctx: Ctx) {
-    //   const { currentPlayer } = ctx;
-    //   return G.playerTurnDone[currentPlayer] === true;
-    // },
-    // onMove(G: GameState, ctx: Ctx) {
-    //   const { currentPlayer } = ctx;
-    //   onTurnMoveLoop(G, ctx, currentPlayer);
-    // },
-    // order: TurnOrder.CUSTOM_FROM('turnOrder'),
+    onMove(G: GameState, ctx: Ctx) {
+      
+    },
   },
 };

@@ -29,6 +29,8 @@ import determineActionPoints from '../utils/determine-action-points';
 import { aiPlayCard } from '../../../ai';
 import { aiSetDone } from '../../../ai/ai.moves';
 import removeCardFromHand from '../utils/remove-card-from-hand';
+import handleZonePowersCalculations from '../utils/handle-zone-powers-calculations';
+import removeDestroyedCards from '../utils/remove-destroyed-cards';
 // import { moves } from './play-cards.phase.moves';
 
 export default <PhaseConfig>{
@@ -39,6 +41,7 @@ export default <PhaseConfig>{
   },
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase, ctx.currentPlayer);
+    handleZonePowersCalculations(G, ctx);
     // selectedCardData.reset(G, ctx.currentPlayer);
     // selectedCardIndex.reset(G, ctx.currentPlayer);
   },
@@ -118,11 +121,13 @@ export default <PhaseConfig>{
     },
     onEnd(G: GameState, ctx: Ctx) {
       unsetPlayableCards(G, ctx.currentPlayer);
+      removeDestroyedCards(G, ctx);
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;
     },
     onMove(G: GameState, ctx: Ctx) {
+      handleZonePowersCalculations(G, ctx);
     },
   },
 };

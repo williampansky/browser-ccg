@@ -12,6 +12,7 @@ export enum Mechanics {
   ChooseOne = 'CHOOSE_ONE',
   Combo = 'COMBO',
   Curse = 'CURSE',
+  Damage = 'DAMAGE',
   Debuff = 'DEBUFF',
   Destroy = 'DESTROY',
   Disabled = 'DISABLED',
