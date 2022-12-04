@@ -5,7 +5,7 @@
 // export { default as revealCardsFaceDownPhase } from './reveal-cards-face-down.phase';
 // export { default as revealCardsPhase } from './reveal-cards.phase';
 // export { default as defaultPhases } from './game-phases-default'
-export { default } from './game-phases-extended'
+export { default } from './game-phases'
 // export { drawCardPhase } from './draw-card-phase';
 // export { handleZonePowerCalculationsPhase } from './handle-zone-power-calculations-phase';
 // export { incrementGameTurnPhase } from './increment-game-turn-phase';

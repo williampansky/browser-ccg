@@ -79,12 +79,8 @@ const createCardObject = (obj: CardBase): Card => {
     numberPrimary: obj?.numberPrimary,
     numberRNG: obj?.numberRNG,
     numberSecondary: obj?.numberSecondary,
-    playContext: obj?.playContext
-      ? replaceAllConstants(obj?.playContext, 'value')
-      : 'GLOBAL',
-    playType: obj?.playType
-      ? replaceAllConstants(obj?.playType, 'value')
-      : 'NONE',
+    playContext: replaceAllConstants(obj?.playContext, 'value'),
+    playType: replaceAllConstants(obj?.playType, 'value'),
     powerStream: [],
     race: replaceAllConstants(obj?.race, 'value'),
     rarity: replaceAllConstants(obj?.rarity, 'value'),

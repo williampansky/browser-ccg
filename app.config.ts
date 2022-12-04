@@ -8,7 +8,7 @@ export const gameConfig: GameConfig = {
     debugHandCardKey: core + '126',
     debugBoardCardKey: core + '001',
     debugBoardCardKeyAmount: 3,
-    useDebugHandCardKey: true,
+    useDebugHandCardKey: false,
     useDebugBoardCardKey: false,
 
     debugOpponentHandCardKey: core + '126',
@@ -18,7 +18,7 @@ export const gameConfig: GameConfig = {
     useDebugOpponentBoardCardKey: false,
 
     debugScenario: 'heal-player-minion',
-    useDebugScenario: true,
+    useDebugScenario: false,
 
     logPhaseToConsole: true,
     showDebugBar: false,
@@ -26,7 +26,7 @@ export const gameConfig: GameConfig = {
   },
   ai: {
     enableBotAi: true,
-    enableBotAiMoves: false,
+    enableBotAiMoves: true,
     logBotAiMovesToConsole: true,
   },
   numerics: {
