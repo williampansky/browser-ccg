@@ -38,8 +38,7 @@ const aiEnumeration = {
     // avoids onslaught of INVALID_MOVE errors
     // prettier-ignore
     if (G.playerTurnDone[aiID] === false) {
-      pushPlayCardMoves(moves, aiID, ap, aiHand, perZone, zones);
-      // pushInteractionMoves(G, moves, aiID);
+      pushPlayCardMovesV2(G, moves, aiID, ap, aiHand, perZone, zones);
       pushSetDoneMove(moves, aiID);
     }
 
@@ -58,19 +57,25 @@ export const pushPlayCardToZoneMoves = ({
   zoneNumber,
   zones,
 }: PushPlayCardToZoneMove) => {
-  const zoneSideLength = zones[zoneNumber].sides[aiID].length;
-  const slotsAvailableInZone = lt(zoneSideLength, perZone);
-  const zoneIsNotDisabled = !zones[zoneNumber].disabled[aiID];
-  const canAfford = gte(currentAp, card.currentCost);
+  // const zoneSideLength = zones[zoneNumber].sides[aiID].length;
+  // const slotsAvailableInZone = lt(zoneSideLength, perZone);
+  // const zoneIsNotDisabled = !zones[zoneNumber].disabled[aiID];
+  // const canAfford = gte(currentAp, card.currentCost);
 
-  if (canAfford && zoneIsNotDisabled && slotsAvailableInZone)
-    moves.push({
-      move: 'aiPlayCard',
-      args: [aiID, zoneNumber, card, cardIndex],
-    });
+  // if (canAfford && zoneIsNotDisabled && slotsAvailableInZone)
+  moves.push({
+    move: 'aiPlayCard',
+    args: [aiID, zoneNumber, card, cardIndex],
+  });
+  // else
+  //   moves.push({
+  //     move: 'setDone',
+  //     args: [aiID],
+  //   });
 };
 
 export const pushPlayCardMoves = (
+  G: GameState,
   moves: any,
   aiID: PlayerID,
   currentAp: number,
@@ -80,35 +85,103 @@ export const pushPlayCardMoves = (
 ) => {
   const handHasAtLeastOneCard = hand.length >= 1;
   const movesArrIsAtOrBelow = (n: number) => moves.length <= n;
-  
-  if (handHasAtLeastOneCard && movesArrIsAtOrBelow(20)) {
-    const amountToPlay = useDebugOpponentHandCardKey ? 1 : hand.length;
-    const rngIdx = getRandomNumberBetween(0, hand.length - 1);
-    const rngCard = hand[rngIdx];
 
-    for (let i = 0; i < amountToPlay; i++) {
-      if (rngCard.canPlay) {
-        const props = {
-          aiID,
-          card: useDebugOpponentHandCardKey
-            ? hand[0]
-            : rngCard,
-          cardIndex: useDebugOpponentHandCardKey ? 0 : rngIdx,
-          currentAp,
-          moves,
-          perZone,
-          zones,
-        };
-  
-        if (useDebugOpponentHandCardKey) {
-          pushPlayCardToZoneMoves({ ...props, zoneNumber: 0 });
-        } else {
-          pushPlayCardToZoneMoves({ ...props, zoneNumber: 0 });
-          pushPlayCardToZoneMoves({ ...props, zoneNumber: 1 });
-          pushPlayCardToZoneMoves({ ...props, zoneNumber: 2 });
-        }
+  // if (handHasAtLeastOneCard && movesArrIsAtOrBelow(2)) {
+  const amountToPlay = useDebugOpponentHandCardKey ? 1 : hand.length;
+  let rngIdx = getRandomNumberBetween(0, hand.length - 1);
+  let rngCard = hand[rngIdx];
+
+  interface target {
+    zoneNumber: number;
+    cardData: Card;
+    cardIndex: number;
+  }
+
+  let possibleTargets: target[] = [];
+
+  // for (let i = 0; i < amountToPlay; i++) {
+  if (rngCard.canPlay) {
+    // const props = {
+    //   aiID,
+    //   card: useDebugOpponentHandCardKey
+    //     ? hand[0]
+    //     : rngCard,
+    //   cardIndex: useDebugOpponentHandCardKey ? 0 : rngIdx,
+    //   currentAp,
+    //   moves,
+    //   perZone,
+    //   zones,
+    // };
+    possibleTargets.push({
+      zoneNumber: getRandomNumberBetween(0, 2),
+      cardData: rngCard,
+      cardIndex: rngIdx,
+    });
+
+    // if (useDebugOpponentHandCardKey) {
+    //   pushPlayCardToZoneMoves({ ...props, zoneNumber: 0 });
+    // } else {
+    //   pushPlayCardToZoneMoves({ ...props, zoneNumber: 0 });
+    //   pushPlayCardToZoneMoves({ ...props, zoneNumber: 1 });
+    //   pushPlayCardToZoneMoves({ ...props, zoneNumber: 2 });
+    // }
+    let choice: target | undefined;
+
+    if (possibleTargets.length !== 0) {
+      choice = possibleTargets[0];
+
+      if (choice !== undefined) {
+        moves.push({
+          move: 'aiPlayCard',
+          args: [aiID, choice.zoneNumber, choice.cardData, choice.cardIndex],
+        });
+
+        choice = undefined;
+        possibleTargets = [];
       }
     }
+  }
+  // }
+  // } else {
+  // moves.push({
+  //   move: 'setDone',
+  //   args: [aiID],
+  // });
+  // }
+};
+
+export const pushPlayCardMovesV2 = (
+  G: GameState,
+  moves: any,
+  aiID: PlayerID,
+  currentAp: number,
+  hand: Card[],
+  perZone: number,
+  zones: Zone[]
+) => {
+  const {
+    gameConfig: {
+      numerics: { numberOfSlotsPerZone },
+    },
+  } = G;
+
+  const move = (zoneNum: number, card: Card, cardIdx: number) => {
+    let notDisabled = !G.zones[zoneNum].disabled[aiID];
+    let notFull = lt(G.zones[zoneNum].sides[aiID].length, numberOfSlotsPerZone);
+
+    if (notDisabled && notFull)
+      moves.push({
+        move: 'aiPlayCard',
+        args: [aiID, zoneNum, card, cardIdx],
+      });
+  };
+
+  if (G.aiPossibleCards.length !== 0) {
+    let rngIdx = getRandomNumberBetween(0, G.aiPossibleCards.length - 1);
+    let rngCard = G.aiPossibleCards[rngIdx];
+    G.zones.forEach((_, zi) => {
+      move(zi, rngCard, rngIdx);
+    });
   }
 };
 
@@ -156,7 +229,7 @@ export const pushInteractionMoves = (
 };
 
 export const pushSetDoneMove = (moves: any, aiID: PlayerID) => {
-  moves.push({ move: 'setDone', args: [aiID] });
+  moves.push({ move: 'aiSetDone', args: [aiID] });
 };
 
 export const logBotAiMovesToConsole = (moves: any, perConfig: boolean) => {

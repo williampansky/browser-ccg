@@ -17,14 +17,14 @@ const logPhaseToConsole = (
         log(`
     TURN: ${value(turn)}
   PLAYER: ${value(player)}
-  PHASE: ${value(phase)}
-  ${custom.key}: ${value(custom.value)}
+   PHASE: ${value(phase)}
+   ${custom.key}: ${value(custom.value)}
         `);
       } else {
         log(`
     TURN: ${value(turn)}
-  PHASE: ${value(phase)}
-  ${custom.key}: ${value(custom.value)}
+   PHASE: ${value(phase)}
+   ${custom.key}: ${value(custom.value)}
         `);
       }
     } else {
@@ -32,12 +32,12 @@ const logPhaseToConsole = (
         log(`
     TURN: ${value(turn)}
   PLAYER: ${value(player)}
-  PHASE: ${value(phase)}
+   PHASE: ${value(phase)}
         `);
       } else {
         log(`
     TURN: ${value(turn)}
-  PHASE: ${value(phase)}
+   PHASE: ${value(phase)}
         `);
       }
     }

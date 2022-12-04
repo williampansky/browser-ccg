@@ -1,5 +1,6 @@
 import drawCardPhase from './style-extended/draw-card/draw-card.phase';
 import healMinionPhase from './style-extended/heal-minion/heal-minion.phase';
+import incrementActionPointsPhase from './style-extended/increment-action-points/increment-action-points.phase';
 import incrementTurnPhase from './style-extended/increment-turn/increment-turn.phase';
 import initHandsPhase from './style-extended/init-hands/init-hands.phase';
 import initPlayersPhase from './style-extended/init-players/init-players.phase';
@@ -20,6 +21,7 @@ export default {
   initZones: initZonesPhase,
   revealZone: revealZonePhase,
   incrementTurn: incrementTurnPhase,
+  incrementActionPoints: incrementActionPointsPhase,
   drawCard: drawCardPhase,
   playCard: playCardPhase,
   healMinion: healMinionPhase,

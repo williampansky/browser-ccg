@@ -1,6 +1,6 @@
 import { Ctx } from 'boardgame.io';
-import { Card, GameState } from '../../../../../types';
-import { selectedCardData } from '../../../../state';
+import { Card, GameState } from '../../../../types';
+import { selectedCardData } from '../../../state';
 
 export interface SelectCardMove {
   G: GameState;

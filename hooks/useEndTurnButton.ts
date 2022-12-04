@@ -44,6 +44,26 @@ const useEndTurnButtonDefault = (
   return endTurnDisabled;
 };
 
-export default gameUsesAsyncTurns
-  ? useEndTurnButtonAsync
-  : useEndTurnButtonDefault;
+const useEndTurnButtonExtended = (
+  ctxPhase: string,
+  playerTurnDone: Record<PlayerID, boolean>,
+  playerId: PlayerID,
+  currentPlayer: PlayerID,
+): boolean => {
+  const [endTurnDisabled, setEndTurnDisabled] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (currentPlayer === playerId) {
+      setEndTurnDisabled(false);
+    } else {
+      setEndTurnDisabled(true);
+    }
+  }, [ctxPhase, currentPlayer, playerTurnDone, playerId]);
+
+  return endTurnDisabled;
+};
+
+// export default gameUsesAsyncTurns
+//   ? useEndTurnButtonAsync
+//   : useEndTurnButtonDefault;
+export default useEndTurnButtonExtended;

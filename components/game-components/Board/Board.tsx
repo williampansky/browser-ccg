@@ -58,6 +58,7 @@ export const Board = (props: GameProps) => {
       gameConfig: {
         ai: { enableBotAi },
       },
+      lastMoveMade,
       playedCards,
       playerTurnDone,
     },
@@ -72,7 +73,7 @@ export const Board = (props: GameProps) => {
   // hooks
   const dispatch = useDispatch();
   const { height, width } = useWindowSize();
-  useEndPhase(events, phase, playerTurnDone);
+  // useEndPhase(events, phase, playerTurnDone);
   useGameOver(ctx?.gameover);
 
   // states
@@ -88,8 +89,13 @@ export const Board = (props: GameProps) => {
   const onEndTurnButtonClick = () => setTimeout(() => setDone(yourID), 1500);
   const onCardClick = (obj: Card) => dispatch(showCardModal(obj));
   const onCardSelect = (pl: PlayerID, uuid: string) => selectCard(uuid);
-  const onCardDeselect = (pl: PlayerID) => deselectCard();
-  const onCardSlotDrop = (pl: PlayerID, zNum: number) => playCard(zNum);
+  const onCardSlotDrop = (zNum: number) => playCard(zNum);
+
+  const onCardDeselect = useCallback(() => {
+    if (lastMoveMade !== 'playCard') {
+      return setTimeout(() => deselectCard(), 100);
+    }
+  }, [lastMoveMade]);
 
   const onHealMinionClick = useCallback(
     (targetPlayer?: PlayerID, cardToHeal?: Card) => {
@@ -97,12 +103,12 @@ export const Board = (props: GameProps) => {
         return healMinion(
           cardToHeal,
           playedCards[yourID][playedCards[yourID].length - 1],
-          targetPlayer,
+          targetPlayer
         );
       else
         return console.error(
           `ERROR: onHealMinionClick(${targetPlayer}, ${cardToHeal})`
-        )
+        );
     },
     [currentPlayer, playedCards]
   );

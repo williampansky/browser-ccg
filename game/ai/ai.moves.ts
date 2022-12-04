@@ -1,79 +1,81 @@
-import { Ctx } from "boardgame.io";
-import { INVALID_MOVE } from "boardgame.io/core";
-import { gte, lt } from "lodash";
-import { Mechanics } from "../../enums";
-import { Card, GameState, PlayerID } from "../../types";
-import { filterArray, getCardPower } from "../../utils";
-import { actionPoints, counts, playedCards, selectedCardData } from "../state";
-import { aiOnPlayDestroy } from "./interactions/ai.on-play.destroy";
+import { Ctx } from 'boardgame.io';
+import { Mechanics } from '../../enums';
+import { Card, GameState, PlayerID } from '../../types';
+import { filterArray, getCardPower } from '../../utils';
+import { actionPoints, counts, playedCards, playerTurnDone } from '../state';
+import { fxEnd } from '../config.bgio-effects';
+import { INVALID_MOVE } from 'boardgame.io/core';
+import { gte, lt, lte } from 'lodash';
 
-export const aiPlayCard = (
-  G: GameState,
-  ctx: Ctx,
-  aiID: PlayerID,
-  zoneNumber: number,
-  card: Card,
-  cardIndex: number
-) => {
+export interface AiPlayCardMove {
+  G: GameState;
+  ctx: Ctx;
+  aiID: PlayerID;
+  zoneNumber: number;
+  card: Card;
+  cardIndex: number;
+}
+
+export const aiPlayCard = ({ ...props }: AiPlayCardMove) => {
   const {
-    zones,
-    gameConfig: {
-      numerics: { numberOfSlotsPerZone },
+    G,
+    G: {
+      gameConfig: {
+        numerics: { numberOfSlotsPerZone },
+      },
+      players,
+      zones,
     },
-  } = G;
+    ctx,
+    aiID,
+    zoneNumber,
+    card,
+    cardIndex,
+  } = props;
 
-  // set selected card
-  G.selectedCardData[aiID] = card;
-  G.selectedCardIndex[aiID] = cardIndex;
-
-  const player = G.players[aiID];
+  const player = aiID;
+  const ap = G.actionPoints;
+  const playerObj = players[player];
   const cardUuid = card.uuid;
   const zone = zones[zoneNumber];
-  const zoneSideLength = zone.sides[aiID].length;
-  const currentAP = G.actionPoints[aiID].current;
-  const cannotAffordCard = lt(currentAP, card.currentCost);
-  const zoneHasNoAvailableSlots = gte(zoneSideLength, numberOfSlotsPerZone);
-  const zoneIsDisabled = zone.disabled[aiID];
-
-  // validate cost playability
-  if (cannotAffordCard || zoneHasNoAvailableSlots || zoneIsDisabled) {
-    return INVALID_MOVE;
-  }
 
   // add card to PlayedCards array
-  playedCards.push(G, aiID, card);
+  playedCards.push(G, player, card);
 
   // remove cost from current action points
-  actionPoints.subtract(G, aiID, card.currentCost);
+  actionPoints.subtract(G, player, card.currentCost);
 
   // push card to zone side array
-  zone.sides[aiID].push({
+  zone.sides[player].push({
     ...card,
     revealed: true, // reveal card
     displayPower: getCardPower(card), // set display power
     revealedOnTurn: G.turn, // set revealedOnTurn value
   });
 
+  // remove card from hand
+  const newHand = G.players[aiID].cards.hand.filter(o => o.uuid !== cardUuid);
+  G.players[aiID].cards.hand = newHand;
+
   // recount cards in hand
-  counts.decrementHand(G, aiID);
+  counts.decrementHand(G, player);
 
-  // re-evaluate cards in hand
-  G.players[aiID].cards.hand.forEach((c: Card) => {
-    if (G.actionPoints[aiID].current >= c.currentCost) {
-      return (c.canPlay = true);
-    } else {
-      return (c.canPlay = false);
-    }
-  });
+  G.lastMoveMade = 'aiPlayCard';
+  fxEnd(ctx);
 
-  filterArray(G.players[aiID].cards.hand, card.uuid, cardIndex);
+  if (card.mechanics?.includes(Mechanics.OnPlay)) {
+    // ctx.events?.setPhase('healMinion');
+  }
 
-  // if (card.mechanics?.includes(Mechanics.Destroy)) {
-  //   aiOnPlayDestroy(G, ctx, aiID);
-  // }
+  // temp test
+  G.aiPossibleCards = []
+  // G.players[aiID].cards.hand.forEach((c) => {
+  //   if (c.canPlay) G.aiPossibleCards.push(c);
+  // });
+};
 
-  // unset selectedCard
-  selectedCardData.reset(G, aiID);
-  G.selectedCardIndex[aiID] = undefined;
-  G.lastMoveMade = 'playCard';
+export const aiSetDone = (G: GameState, ctx: Ctx, aiID: PlayerID) => {
+  G.lastMoveMade = 'aiSetDone';
+  G.aiPossibleCards = [];
+  playerTurnDone.set(G, aiID);
 };

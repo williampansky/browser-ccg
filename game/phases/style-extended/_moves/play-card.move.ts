@@ -1,11 +1,13 @@
 import { Ctx } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { gte } from 'lodash';
-import { Mechanics } from '../../../../../enums';
-import { Card, GameState, PlayerID } from '../../../../../types';
-import { filterArray, getCardPower } from '../../../../../utils';
-import { fxEnd } from '../../../../config.bgio-effects';
-import { actionPoints, counts, playedCards, selectedCardData } from '../../../../state';
+import { Mechanics } from '../../../../enums';
+import { Card, GameState, PlayerID } from '../../../../types';
+import { filterArray, getCardPower } from '../../../../utils';
+import { fxEnd } from '../../../config.bgio-effects';
+import { actionPoints, counts, playedCards } from '../../../state';
+import { determinePlayableCards } from '../play-card/methods/determine-playable-cards';
+import removeCardFromHand from '../utils/remove-card-from-hand';
 
 export interface PlayCardMove {
   G: GameState;
@@ -37,6 +39,7 @@ export const playCard = ({ ...props }: PlayCardMove) => {
   const playerObj = players[player];
   const card = G.selectedCardData[player]! as Card;
   const cardUuid = G.selectedCardData[player]!.uuid;
+  const cardIdx = G.selectedCardIndex[player]!;
   const zone = zones[zoneNumber];
   const cantAffordCard = !gte(ap[player].current, card.currentCost);
 
@@ -60,19 +63,20 @@ export const playCard = ({ ...props }: PlayCardMove) => {
     revealedOnTurn: G.turn, // set revealedOnTurn value
   });
 
-  // remove card from hand
-  filterArray(G.players[player].cards.hand, cardUuid, G.selectedCardIndex[player]!);
-
-  // recount cards in hand
-  counts.decrementHand(G, player);
-
-  // unset selected card
-  // selectedCardData.reset(G, player);
-  // G.selectedCardIndex[player] = undefined;
   G.lastMoveMade = 'playCard';
-  fxEnd(ctx);
   
   if (card.mechanics?.includes(Mechanics.OnPlay)) {
-    ctx.events?.setPhase('healMinion')
+      // switch (card.playType) {
+      //   case value:
+          
+      //     break;
+      
+      //   default:
+      //     break;
+      // }
+    ctx.events?.setPhase('healMinion');
+  } else {
+    removeCardFromHand(G, player, cardUuid, cardIdx);
+    determinePlayableCards(G, player);
   }
 };

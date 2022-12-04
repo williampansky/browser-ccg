@@ -18,11 +18,12 @@ import { fxEnd } from '../../../config.bgio-effects';
 export default<PhaseConfig> {
   next: 'playCard',
   onBegin(G: GameState, ctx: Ctx) {
-    logPhaseToConsole(G.turn, ctx.phase, ctx.currentPlayer);
-    drawCardFromPlayersDeck(G, ctx.currentPlayer);
-    G.lastMoveMade = 'drawCard';
+    const { currentPlayer, phase } = ctx;
+    logPhaseToConsole(G.turn, phase, currentPlayer);
+    drawCardFromPlayersDeck(G, currentPlayer);
+    ctx.events?.endPhase();
   },
-  endIf(G: GameState, ctx: Ctx) {
-    return G.lastMoveMade === 'drawCard';
-  },
+  turn: {
+    order: TurnOrder.CUSTOM_FROM('turnOrder')
+  }
 };

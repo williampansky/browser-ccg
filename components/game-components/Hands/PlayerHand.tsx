@@ -23,7 +23,7 @@ interface Props {
   onCardClick: (card: Card) => void;
   onCardSelect: (playerId: string, uuid: string) => void;
   onCardDeselect: (playerId: string) => void;
-  onCardSlotDrop: (playerId: string, zoneNumber: number) => void;
+  onCardSlotDrop: (zoneNumber: number) => void;
   player: PlayerID;
   moves: any;
 }
@@ -153,7 +153,7 @@ export const PlayerHand = ({
         // @ts-ignore
         if (elem && elem.dataset.receive) {
           // console.log('🚀 target', elem);
-          onCardSlotDrop(player, Number(elem.getAttribute('data-index')));
+          onCardSlotDrop(Number(elem.getAttribute('data-index')));
         }
       },
       // ts-ignore
@@ -257,6 +257,10 @@ export const PlayerHand = ({
                     key={`DragSlot_${i}`}
                     className={styles['drag-slot']}
                     data-index={i}
+                    data-last-played={
+                      G.selectedCardData[player]?.uuid === uuid &&
+                      G.lastMoveMade === 'playCard'
+                    }
                     onMouseDownCapture={() => select(canPlay, i)}
                     onMouseUpCapture={() => deselect()}
                     onTouchStartCapture={() => select(canPlay, i)}
@@ -280,6 +284,10 @@ export const PlayerHand = ({
                     className={[styles['hand-slot']].join(' ')}
                     data-index={i}
                     data-component='PlayerHandSlot'
+                    data-last-played={
+                      G.selectedCardData[player]?.uuid === uuid &&
+                      G.lastMoveMade === 'playCard'
+                    }
                     style={{
                       zIndex,
                       marginLeft,

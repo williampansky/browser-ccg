@@ -10,6 +10,7 @@ export {
   CardRarity,
   CardSet,
   CardType,
+  CardPlayType,
 } from './card.enums';
 
 export { Mechanics } from './mechanics.enums';

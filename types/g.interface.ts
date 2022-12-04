@@ -28,7 +28,8 @@ export declare type SelectedCardIndex = Record<PlayerID, CardIndex>;
 
 export interface GameState {
   aiLoading: boolean;
-  lastMoveMade?: string;
+  aiPossibleCards: Card[];
+  lastMoveMade: string | undefined;
   actionPoints: Record<PlayerID, ActionPoints>;
   gameConfig: GameConfig;
   canUndo: Record<PlayerID, boolean>;

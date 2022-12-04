@@ -1,16 +1,14 @@
 import { GameState, PlayerID } from '../../../../../types';
 import { getContextualPlayerIds } from '../../../../../utils';
 
-interface Props {
-  G: GameState;
-  player: PlayerID;
-}
-
-export const noHealableMinionsAvailable = ({ G, player }: Props): boolean => {
+export const noHealableMinionsAvailable = (
+  G: GameState,
+  player: PlayerID
+): boolean => {
   const { opponent } = getContextualPlayerIds(player);
   let noHealableMinionsAvailable = true;
 
-  G.zones.forEach((z) => {
+  G.zones.forEach((z, zi) => {
     z.sides[player].forEach((c) => {
       if (c.booleans.hasHealthReduced) noHealableMinionsAvailable = false;
     });

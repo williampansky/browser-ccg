@@ -4,26 +4,25 @@ import { add } from 'mathjs';
 import { GameState } from '../../../../types';
 import { drawCardFromPlayersDeck, logPhaseToConsole } from '../../../../utils';
 import { fxEnd } from '../../../config.bgio-effects';
-import { playerTurnDone } from '../../../state';
+import { actionPoints, playerTurnDone } from '../../../state';
 import determineActionPoints from '../utils/determine-action-points';
 
 /**
  * Increments the game turn (note: ***not*** `ctx.turn`).
  */
 export default <PhaseConfig>{
-  next: 'incrementActionPoints',
+  next: 'drawCard',
   onBegin(G: GameState, ctx: Ctx) {
     if (G.gameConfig.debugConfig.logPhaseToConsole) {
-      logPhaseToConsole(G.turn, ctx.phase, undefined, {
-        key: 'TURNS',
-        value: `${G.turn} => ${add(G.turn, 1)}`,
+      const apT = G.actionPoints[ctx.currentPlayer].total;
+      logPhaseToConsole(G.turn, ctx.phase, ctx.currentPlayer, {
+        key: 'VALUE',
+        value: `${apT} => ${add(apT, 1)}`,
       });
     }
 
-    G.turn = add(G.turn, 1);
-
-    fxEnd(ctx);
-    playerTurnDone.reset(G);
+    actionPoints.incrementTotal(G, ctx.currentPlayer);
+    actionPoints.matchTotal(G, ctx.currentPlayer);
     ctx.events?.endPhase();
   },
   turn: {

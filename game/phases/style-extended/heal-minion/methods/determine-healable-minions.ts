@@ -2,12 +2,7 @@ import { GameState, PlayerID } from '../../../../../types';
 import { cardIsNotSelf, getContextualPlayerIds } from '../../../../../utils';
 import { selectedCardData, selectedCardIndex } from '../../../../state';
 
-interface Props {
-  G: GameState;
-  player: PlayerID;
-}
-
-export const determineHealableMinions = ({ G, player }: Props) => {
+export const determineHealableMinions = (G: GameState, player: PlayerID) => {
   const { playedCards } = G;
   const { opponent } = getContextualPlayerIds(player);
   const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
@@ -26,6 +21,6 @@ export const determineHealableMinions = ({ G, player }: Props) => {
     });
   });
 
-  selectedCardData.reset(G, player);
-  selectedCardIndex.reset(G, player);
+  // selectedCardData.reset(G, player);
+  // selectedCardIndex.reset(G, player);
 };

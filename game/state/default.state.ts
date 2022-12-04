@@ -16,6 +16,8 @@ import zonesCardsReference from './zones-cards-reference.state';
 
 const DefaultState = {
   aiLoading: true,
+  aiPossibleCards: [],
+  lastMoveMade: undefined,
   actionPoints: actionPoints.defaultState,
   canUndo: canUndo.defaultState,
   counts: counts.defaultState,

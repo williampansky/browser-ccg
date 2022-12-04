@@ -1,12 +1,7 @@
 import { GameState, PlayerID } from '../../../../../types';
 import { getContextualPlayerIds } from '../../../../../utils';
 
-interface Props {
-  G: GameState;
-  player: PlayerID;
-}
-
-export const resetHealableMinions = ({ G, player }: Props) => {
+export const resetHealableMinions = (G: GameState, player: PlayerID) => {
   const { opponent } = getContextualPlayerIds(player);
   
   G.zones.forEach((z) => {

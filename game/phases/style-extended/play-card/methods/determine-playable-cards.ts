@@ -1,16 +1,19 @@
+import { gte } from 'lodash';
 import { GameState, PlayerID } from '../../../../../types';
 
-interface Props {
-  G: GameState;
-  player: PlayerID;
-}
-
-export const determinePlayableCards = ({ G, player }: Props) => {
+export const determinePlayableCards = (G: GameState, player: PlayerID) => {
   const { actionPoints, players } = G;
   const playerHand = players[player].cards.hand;
   const currentAP = actionPoints[player].current;
 
   playerHand.forEach((c) => {
-    if (currentAP >= c.currentCost) c.canPlay = true;
+    if (gte(currentAP, c.currentCost)) c.canPlay = true;
+    else c.canPlay = false;
   });
+
+  if (player === '1') {
+    playerHand.forEach((c) => {
+      if (c.canPlay) G.aiPossibleCards.push(c)
+    });
+  }
 };

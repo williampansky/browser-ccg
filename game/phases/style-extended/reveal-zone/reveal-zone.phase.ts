@@ -1,3 +1,4 @@
+import { TurnOrder } from 'boardgame.io/core';
 import { Ctx, PhaseConfig } from 'boardgame.io';
 import { GameState, Zone } from '../../../../types';
 import { logPhaseToConsole } from '../../../../utils';
@@ -40,4 +41,7 @@ export default<PhaseConfig> {
     // @ts-ignore
     ctx.effects?.fxEnd();
   },
+  turn: {
+    order: TurnOrder.CUSTOM_FROM('turnOrder'),
+  }
 };

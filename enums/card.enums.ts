@@ -81,3 +81,11 @@ export enum CardType {
   Spell = 'SPELL',
   Weapon = 'WEAPON',
 }
+
+/**
+ * Enum values for the `Card.playType`
+ */
+export enum CardPlayType {
+  Global = 'GLOBAL',
+  Targeted = 'TARGETED',
+}
