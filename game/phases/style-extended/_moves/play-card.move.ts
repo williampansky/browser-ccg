@@ -70,10 +70,12 @@ export const playCard = ({ ...props }: PlayCardMove) => {
       case CardPlayType.Targeted:
         // --targeted
         switch (card.playContext) {
-          case Mechanics.Heal:
-            return ctx.events?.setPhase('healMinion');
+          case Mechanics.Buff:
+            return ctx.events?.setPhase('buffMinion');
           case Mechanics.Damage:
             return ctx.events?.setPhase('attackMinion');
+          case Mechanics.Heal:
+            return ctx.events?.setPhase('healMinion');
           default:
             break;
         }

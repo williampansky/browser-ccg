@@ -13,17 +13,18 @@ import type { Card, GameState, PlayerID } from '../../../../types';
 
 import { calculateZoneSidePower, drawCardFromPlayersDeck, handleCardDestructionMechanics, logPhaseToConsole } from '../../../../utils';
 import { fxEnd } from '../../../config.bgio-effects';
-import { noAttackableMinionsAvailable } from './methods/no-attackable-minions-available';
+import { noBuffableMinionsAvailable } from './methods/no-buffable-minions-available';
 import { attackMinion } from '../_moves/attack-minion.move';
-import { determineAttackableMinions } from './methods/determine-attackable-minions';
+import { determineBuffableMinions } from './methods/determine-buffable-minions';
 import { unsetPlayableCards } from '../_utils/unset-playable-cards';
 import { resetHealableMinions } from '../heal-minion/methods/reset-healable-minions';
 import removeCardFromHand from '../_utils/remove-card-from-hand';
-import { resetAttackableMinions } from './methods/reset-attackable-minions';
+import { resetBuffableMinions } from './methods/reset-buffable-minions';
 import { lte } from 'lodash';
 import { counts } from '../../../state';
 import handleDestroyedCards from '../_utils/handle-destroyed-cards';
 import handleZonePowersCalculations from '../_utils/handle-zone-powers-calculations';
+import { buffMinion } from '../_moves/buff-minion.move';
 // import { moves } from './play-cards.phase.moves';
 
 export default <PhaseConfig>{
@@ -35,12 +36,12 @@ export default <PhaseConfig>{
   },
   endIf(G: GameState, ctx: Ctx) {
     return (
-      noAttackableMinionsAvailable(G, ctx.currentPlayer) ||
+      noBuffableMinionsAvailable(G, ctx.currentPlayer) ||
       G.playerTurnDone[ctx.currentPlayer] === true
     );
   },
   moves: {
-    attackMinion: {
+    buffMinion: {
       client: false,
       noLimit: true,
       ignoreStaleStateID: true,
@@ -48,11 +49,11 @@ export default <PhaseConfig>{
       move: (
         G: GameState,
         ctx: Ctx,
-        cardToAttack: Card,
+        cardToBuff: Card,
         lastPlayedCard: Card,
         targetPlayer: PlayerID
       ) => {
-        return attackMinion(G, ctx, cardToAttack, lastPlayedCard, targetPlayer);
+        return buffMinion(G, ctx, cardToBuff, lastPlayedCard, targetPlayer);
       },
     },
     // setDone: {
@@ -71,7 +72,7 @@ export default <PhaseConfig>{
   turn: {
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
     onBegin(G, ctx) {
-      determineAttackableMinions(G, ctx.currentPlayer);
+      determineBuffableMinions(G, ctx.currentPlayer);
       unsetPlayableCards(G, ctx.currentPlayer);
     },
     onEnd(G, ctx) {
@@ -82,15 +83,13 @@ export default <PhaseConfig>{
       const cardIdx = selectedCardIndex[currentPlayer]!;
 
       removeCardFromHand(G, currentPlayer, cardUuid, cardIdx);
-      resetAttackableMinions(G, currentPlayer);
+      resetBuffableMinions(G, currentPlayer);
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;
     },
     onMove(G: GameState, ctx: Ctx) {
-      if (G.lastMoveMade === 'attackMinion') {
-        handleDestroyedCards(G, ctx);
-      }
+      
     },
   },
 };
