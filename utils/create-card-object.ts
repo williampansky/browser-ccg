@@ -80,7 +80,7 @@ const createCardObject = (obj: CardBase): Card => {
     numberPrimary: obj?.numberPrimary,
     numberRNG: obj?.numberRNG,
     numberSecondary: obj?.numberSecondary,
-    playContext: replaceAllConstants(obj?.playContext, 'value'),
+    mechanicsContext: replaceAllConstants(obj?.mechanicsContext, 'value'),
     playType: replaceAllConstants(obj?.playType, 'value'),
     powerStream: [],
     race: replaceAllConstants(obj?.race, 'value'),

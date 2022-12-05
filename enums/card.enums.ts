@@ -1,3 +1,5 @@
+import { Mechanics } from './mechanics.enums';
+
 /**
  * Enum values for the `Card.race` base format
  */
@@ -91,7 +93,25 @@ export enum CardPlayType {
 }
 
 /**
- * Enum values for game mechanics
+ * Enum values for `Card.mechanicsContext`
+ */
+export enum CardMechanicsContext {
+  AddCard = Mechanics.AddCard,
+  Boon = Mechanics.Boon,
+  Buff = Mechanics.Buff,
+  Damage = Mechanics.Damage,
+  Debuff = Mechanics.Debuff,
+  Destroy = Mechanics.Destroy,
+  Disable = Mechanics.Disable,
+  DiscardCard = Mechanics.DiscardCard,
+  Heal = Mechanics.Heal,
+  None = Mechanics.None,
+  SetValue = Mechanics.SetValue,
+  Summon = Mechanics.Summon
+}
+
+/**
+ * Enum values for `Card.mechanicsSide`
  */
 export enum CardMechanicsSide {
   Both = 'BOTH',

@@ -4,6 +4,7 @@ import {
   CardSet as CardSetEnums,
   CardType as CardTypeEnums,
   CardMechanicsSide as CardMechanicsSideEnums,
+  CardMechanicsContext as CardMechanicsContextEnums,
 } from '../enums';
 
 export declare type CardId = string;
@@ -99,12 +100,12 @@ export interface CardBase {
   key: string;
   mechanics?: string[];
   mechanicsEnabled?: boolean;
+  mechanicsContext: string;
   mechanicsSide: CardMechanicsSide | string;
   name: string;
   numberPrimary: number;
   numberRNG: number;
   numberSecondary: number;
-  playContext: string;
   playType: string;
   power: number;
   race: CardRace | string;
@@ -203,7 +204,7 @@ export interface Card {
   numberPrimary: number;
   numberRNG: number;
   numberSecondary: number;
-  playContext: string;
+  mechanicsContext: string;
   playType: string;
   powerOverride?: number; // use this power instead of base or latest stream
   powerStream: CardPowerStream[];

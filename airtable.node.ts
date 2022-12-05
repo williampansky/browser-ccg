@@ -52,8 +52,8 @@ function createCardKey(id?: string, set?: string): string {
 
 function parseMechanics(arr: string[]) {
   if (!arr || typeof arr === 'undefined') return [];
-  return arr.map((s) => s.replace(/\%/g, ''));
-  // return arr.map((s) => replaceAllConstants(s, 'value'));
+  // return arr.map((s) => s.replace(/\%/g, ''));
+  return arr.map((s) => replaceAllConstants(s, 'value'));
 }
 
 function parseArtistUrl(str?: string) {
@@ -168,7 +168,7 @@ const fetchSetCoreData = async (tableId: string) => {
           mechanicsEnabled: fields?.mechanicsEnabled || false,
           mechanicsSide: fields?.mechanicsSide || 'NONE',
           playType: fields?.playType || '%NONE%',
-          playContext: fields?.playContext || '%GLOBAL%',
+          mechanicsContext: fields?.mechanicsContext || '%GLOBAL%',
           numberPrimary: fields?.numberPrimary || 0,
           numberRNG: fields?.numberRNG || 0,
           numberSecondary: fields?.numberSecondary || 0,
@@ -223,7 +223,7 @@ const fetchSetEntourageData = async (tableId: string) => {
           mechanicsEnabled: fields?.mechanicsEnabled || false,
           mechanicsSide: fields?.mechanicsSide || 'NONE',
           playType: fields?.playType || '%NONE%',
-          playContext: fields?.playContext || '%GLOBAL%',
+          mechanicsContext: fields?.mechanicsContext || '%GLOBAL%',
           numberPrimary: fields?.numberPrimary || 0,
           numberRNG: fields?.numberRNG || 0,
           numberSecondary: fields?.numberSecondary || 0,

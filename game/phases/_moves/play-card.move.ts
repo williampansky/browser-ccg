@@ -95,7 +95,7 @@ function initOnPlayGlobalMechanic(
   card: Card,
   player: PlayerID
 ) {
-  switch (card.playContext) {
+  switch (card.mechanicsContext) {
     case Mechanics.Debuff:
       debuffPowerOfCardsInZone(G, zoneNumber, card, player);
       break;
@@ -105,7 +105,7 @@ function initOnPlayGlobalMechanic(
 }
 
 function initOnPlayTargetPhase(ctx: Ctx, card: Card) {
-  switch (card.playContext) {
+  switch (card.mechanicsContext) {
     case Mechanics.Buff:
       return ctx.events?.setPhase('buffMinion');
     case Mechanics.Damage:
