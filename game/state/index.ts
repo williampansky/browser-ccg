@@ -13,3 +13,4 @@ export { default as turn } from './turn.state';
 export { default as turnOrder } from './turn-order.state';
 export { default as zones } from './zones.state';
 export { default as zonesCardsReference } from './zones-cards-reference.state';
+export { default as lastCardPlayed } from './last-card-played.state';

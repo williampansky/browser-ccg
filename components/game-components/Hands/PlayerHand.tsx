@@ -16,6 +16,7 @@ import type { Card, GameState, PlayerID } from '../../../types';
 
 import fn from './fn';
 import styles from './player-hand.module.scss';
+import { LastMoveMade } from '../../../enums';
 
 interface Props {
   G: GameState;
@@ -258,8 +259,8 @@ export const PlayerHand = ({
                     className={styles['drag-slot']}
                     data-index={i}
                     data-last-played={
-                      G.selectedCardData[player]?.uuid === uuid &&
-                      G.lastMoveMade === 'playCard'
+                      G.lastCardPlayed?.card?.uuid === uuid &&
+                      G.lastMoveMade === LastMoveMade.PlayCard
                     }
                     onMouseDownCapture={() => select(canPlay, i)}
                     onMouseUpCapture={() => deselect()}
@@ -285,8 +286,8 @@ export const PlayerHand = ({
                     data-index={i}
                     data-component='PlayerHandSlot'
                     data-last-played={
-                      G.selectedCardData[player]?.uuid === uuid &&
-                      G.lastMoveMade === 'playCard'
+                      G.lastCardPlayed?.card?.uuid === uuid &&
+                      G.lastMoveMade === LastMoveMade.PlayCard
                     }
                     style={{
                       zIndex,

@@ -20,11 +20,12 @@ export const gameConfig: GameConfig = {
     debugScenario: 'heal-player-minion',
     useDebugScenario: false,
 
-    logPhaseToConsole: true,
-    showDebugBar: false,
+    logPhaseToConsole: false,
+    showDebugBar: true,
     showBoardgameIoSidebar: false,
   },
   ai: {
+    botToUse: 'MCTSBot',
     enableBotAi: true,
     enableBotAiMoves: true,
     logBotAiMovesToConsole: true,

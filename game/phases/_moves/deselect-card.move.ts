@@ -1,6 +1,6 @@
 import { Ctx } from 'boardgame.io';
 import { GameState } from '../../../types';
-import { selectedCardData } from '../../state';
+import { selectedCardData, selectedCardIndex } from '../../state';
 
 export interface DeselectCardMove {
   G: GameState;
@@ -13,9 +13,7 @@ export const deselectCard = ({ ...props }: DeselectCardMove) => {
     ctx: { currentPlayer },
   } = props;
 
-  if (G.lastMoveMade !== 'playCard') {
-    selectedCardData.reset(G, currentPlayer);
-    G.selectedCardIndex[currentPlayer] = undefined;
-    G.lastMoveMade = 'deselectCard';
-  }
+  selectedCardData.reset(G, currentPlayer);
+  selectedCardIndex.reset(G, currentPlayer);
+  G.lastMoveMade = 'deselectCard';
 };

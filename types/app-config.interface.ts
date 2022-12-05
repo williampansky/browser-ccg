@@ -48,6 +48,11 @@ export interface GameConfig {
      * Logs the `moves` array created inside the `ai.ts` file
      */
     logBotAiMovesToConsole: boolean;
+
+    /**
+     * Bot to import and use from 'boardgame.io/ai'
+     */
+    botToUse: 'MCTSBot' | 'RandomBot';
   };
 
   numerics: {

@@ -4,15 +4,24 @@ import type { Ctx, PhaseConfig } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
 
 import { aiPlayCard } from '../../ai';
-import { aiSetDone } from '../../ai/ai.moves';
+import { AiPlayCardMove, aiSetDone } from '../../ai/ai.moves';
 import { deselectCard } from '../_moves/deselect-card.move';
-import { determinePlayableCards } from './methods/determine-playable-cards';
-import { logPhaseToConsole } from '../../../utils';
+import { determinePlayableCards } from '../_utils/determine-playable-cards';
+import {
+  drawCardFromPlayersDeck,
+  isBotGame,
+  logPhaseToConsole,
+} from '../../../utils';
 import { playCard } from '../_moves/play-card.move';
 import { selectCard } from '../_moves/select-card.move';
-import { unsetPlayableCards } from './methods/unset-playable-cards';
 import handleZonePowersCalculations from '../_utils/handle-zone-powers-calculations';
 import setDoneMove from '../_moves/set-done.move';
+import { unsetPlayableCards } from '../_utils/unset-playable-cards';
+import determineActionPoints from '../_utils/determine-action-points';
+import { lastCardPlayed } from '../../state';
+import removeLastPlayedCardFromHand from '../_utils/remove-last-played-card-from-hand';
+import { LastMoveMade } from '../../../enums';
+import removeDestroyedCards from '../_utils/remove-destroyed-cards';
 
 export default <PhaseConfig>{
   next(G, ctx) {
@@ -75,12 +84,9 @@ export default <PhaseConfig>{
       move: (
         G: GameState,
         ctx: Ctx,
-        aiID: PlayerID,
-        zoneNumber: number,
-        card: Card,
-        cardIndex: number
+        { aiID, zoneNumber, card, cardIndex }: AiPlayCardMove
       ) => {
-        return aiPlayCard({ G, ctx, aiID, zoneNumber, card, cardIndex });
+        return aiPlayCard(G, ctx, { aiID, zoneNumber, card, cardIndex });
       },
     },
     aiSetDone: {
@@ -96,16 +102,35 @@ export default <PhaseConfig>{
   turn: {
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
     onBegin(G, ctx) {
-      determinePlayableCards(G, ctx.currentPlayer);
+      if (isBotGame(ctx) && ctx.currentPlayer === '1') {
+        determineActionPoints(G, '1')
+        drawCardFromPlayersDeck(G, '1');
+      }
+      
+      determinePlayableCards(G, ctx, ctx.currentPlayer);
     },
     onEnd(G: GameState, ctx: Ctx) {
       unsetPlayableCards(G, ctx.currentPlayer);
+      removeDestroyedCards(G, ctx);
+
+      // if (ctx.currentPlayer === '1') {
+      // drawCardFromPlayersDeck(G, ctx.playOrder.filter(n => n !== ctx.currentPlayer).pop()!)
+
+      // }
+      // ctx.events?.setPhase('removeDestroyedCards');
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;
     },
     onMove(G: GameState, ctx: Ctx) {
       handleZonePowersCalculations(G, ctx);
+
+      if (G.lastMoveMade === LastMoveMade.PlayCard) {
+        removeLastPlayedCardFromHand(G, ctx.currentPlayer);
+        determinePlayableCards(G, ctx, ctx.currentPlayer);
+      } else if (G.lastMoveMade === LastMoveMade.aiPlayCard) {
+        determinePlayableCards(G, ctx, '1');
+      }
     },
   },
 };

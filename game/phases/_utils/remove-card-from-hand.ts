@@ -1,6 +1,6 @@
 import { GameState, PlayerID } from '../../../types';
 import { filterArray } from '../../../utils';
-import { counts } from '../../state';
+import { counts, lastCardPlayed } from '../../state';
 
 export default function removeCardFromHand(
   G: GameState,
@@ -10,4 +10,5 @@ export default function removeCardFromHand(
 ) {
   filterArray(G.players[player].cards.hand, cardUuid, cardIndex);
   counts.decrementHand(G, player);
+  lastCardPlayed.reset(G);
 }

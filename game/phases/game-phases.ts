@@ -9,6 +9,7 @@ import initHandsPhase from './init-hands/init-hands.phase';
 import initPlayersPhase from './init-players/init-players.phase';
 import initZonesPhase from './init-zones/init-zones.phase';
 import playCardPhase from './play-card/play-card.phase';
+import removeDestroyedCardsPhase from './remove-destroyed-cards/remove-destroyed-cards.phase';
 import revealZonePhase from './reveal-zone/reveal-zone.phase';
 
 /**
@@ -31,4 +32,5 @@ export default {
   attackMinion: attackMinionPhase,
   buffMinion: buffMinionPhase,
   destroyMinion: destroyMinionPhase,
+  removeDestroyedCards: removeDestroyedCardsPhase,
 };

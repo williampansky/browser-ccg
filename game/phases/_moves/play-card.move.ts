@@ -5,9 +5,10 @@ import { CardPlayType, Mechanics } from '../../../enums';
 import { Card, GameState, PlayerID } from '../../../types';
 import { filterArray, getCardPower } from '../../../utils';
 import { fxEnd } from '../../config.bgio-effects';
-import { actionPoints, counts, playedCards } from '../../state';
-import { determinePlayableCards } from '../play-card/methods/determine-playable-cards';
+import { actionPoints, counts, lastCardPlayed, playedCards } from '../../state';
+import { determinePlayableCards } from '../_utils/determine-playable-cards';
 import removeCardFromHand from '../_utils/remove-card-from-hand';
+import { deselectCard } from './deselect-card.move';
 
 export interface PlayCardMove {
   G: GameState;
@@ -39,7 +40,7 @@ export const playCard = ({ ...props }: PlayCardMove) => {
   const playerObj = players[player];
   const card = G.selectedCardData[player]! as Card;
   const cardUuid = G.selectedCardData[player]!.uuid;
-  const cardIdx = G.selectedCardIndex[player]!;
+  const index = G.selectedCardIndex[player]!;
   const zone = zones[zoneNumber];
   const cantAffordCard = !gte(ap[player].current, card.currentCost);
 
@@ -64,6 +65,8 @@ export const playCard = ({ ...props }: PlayCardMove) => {
   });
 
   G.lastMoveMade = 'playCard';
+  lastCardPlayed.set(G, { card, index });
+  deselectCard({ G, ctx });
   
   if (card.mechanics?.includes(Mechanics.OnPlay)) {
     switch (card.playType) {
@@ -88,7 +91,7 @@ export const playCard = ({ ...props }: PlayCardMove) => {
         break;
     }
   } else {
-    removeCardFromHand(G, player, cardUuid, cardIdx);
-    determinePlayableCards(G, player);
+    removeCardFromHand(G, player, cardUuid, index);
+    determinePlayableCards(G, ctx, player);
   }
 };

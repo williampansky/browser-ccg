@@ -14,3 +14,5 @@ export {
 } from './card.enums';
 
 export { Mechanics } from './mechanics.enums';
+
+export { LastMoveMade } from './moves.enums';

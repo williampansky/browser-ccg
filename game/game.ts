@@ -64,7 +64,9 @@ const BrowserCCG: Game<GameState, CtxWithEffects> = {
    * will figure out the right combination of moves to make it happen!
    * @see https://boardgame.io/documentation/#/tutorial?id=bots
    */
-  ai: aiEnumeration,
+  ai: {
+    enumerate: aiEnumeration,
+  },
 
   /**
    * End the game if G.turn hits the max per config.

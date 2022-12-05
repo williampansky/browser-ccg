@@ -2,42 +2,45 @@ import { Ctx } from 'boardgame.io';
 import { Mechanics } from '../../enums';
 import { Card, GameState, PlayerID } from '../../types';
 import { filterArray, getCardPower } from '../../utils';
-import { actionPoints, counts, playedCards, playerTurnDone } from '../state';
+import { actionPoints, counts, lastCardPlayed, playedCards, playerTurnDone } from '../state';
 import { fxEnd } from '../config.bgio-effects';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { gte, lt, lte } from 'lodash';
 
 export interface AiPlayCardMove {
-  G: GameState;
-  ctx: Ctx;
   aiID: PlayerID;
   zoneNumber: number;
   card: Card;
   cardIndex: number;
 }
 
-export const aiPlayCard = ({ ...props }: AiPlayCardMove) => {
+export const aiPlayCard = (
+  G: GameState,
+  ctx: Ctx,
+  { ...args }: AiPlayCardMove
+) => {
   const {
-    G,
-    G: {
-      gameConfig: {
-        numerics: { numberOfSlotsPerZone },
-      },
-      players,
-      zones,
+    gameConfig: {
+      numerics: { numberOfSlotsPerZone },
     },
-    ctx,
-    aiID,
-    zoneNumber,
-    card,
-    cardIndex,
-  } = props;
+    players,
+    zones,
+  } = G;
+
+  const { aiID, zoneNumber, card, cardIndex } = args;
 
   const player = aiID;
   const ap = G.actionPoints;
   const playerObj = players[player];
   const cardUuid = card.uuid;
   const zone = zones[zoneNumber];
+  const cantAffordCard = !gte(ap[player].current, card.currentCost);
+
+  if (cantAffordCard) return INVALID_MOVE;
+  if (zone.disabled[player]) return INVALID_MOVE;
+  if (zone.sides[player].length > numberOfSlotsPerZone) return INVALID_MOVE;
+
+  // lastCardPlayed.set(G, { card, index: cardIndex });
 
   // add card to PlayedCards array
   playedCards.push(G, player, card);
@@ -54,8 +57,9 @@ export const aiPlayCard = ({ ...props }: AiPlayCardMove) => {
   });
 
   // remove card from hand
-  const newHand = G.players[aiID].cards.hand.filter(o => o.uuid !== cardUuid);
-  G.players[aiID].cards.hand = newHand;
+  // const newHand = G.players[aiID].cards.hand.filter(o => o.uuid !== cardUuid);
+  // G.players[aiID].cards.hand = newHand;
+  filterArray(G.players[aiID].cards.hand, cardUuid, cardIndex);
 
   // recount cards in hand
   counts.decrementHand(G, player);
@@ -63,12 +67,11 @@ export const aiPlayCard = ({ ...props }: AiPlayCardMove) => {
   G.lastMoveMade = 'aiPlayCard';
   fxEnd(ctx);
 
-  if (card.mechanics?.includes(Mechanics.OnPlay)) {
-    // ctx.events?.setPhase('healMinion');
-  }
+  // if (card.mechanics?.includes(Mechanics.OnPlay)) {
+  // ctx.events?.setPhase('healMinion');
+  // }
 
   // temp test
-  G.aiPossibleCards = []
   // G.players[aiID].cards.hand.forEach((c) => {
   //   if (c.canPlay) G.aiPossibleCards.push(c);
   // });

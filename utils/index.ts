@@ -42,3 +42,4 @@ export { default as removeSymbols } from './remove-symbols';
 export { default as replaceAllConstants } from './replace-all-constants';
 export { default as replaceDynamicText } from './replace-dynamic-text';
 export { default as healMinion } from './heal-minion'
+export { default as isBotGame } from './is-bot-game'

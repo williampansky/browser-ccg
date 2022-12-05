@@ -13,19 +13,21 @@ import turn from './turn.state';
 import turnOrder from './turn-order.state';
 import zones from './zones.state';
 import zonesCardsReference from './zones-cards-reference.state';
+import lastCardPlayed from './last-card-played.state';
 
 const DefaultState = {
+  actionPoints: actionPoints.defaultState,
   aiLoading: true,
   aiPossibleCards: [],
-  lastMoveMade: undefined,
-  actionPoints: actionPoints.defaultState,
   canUndo: canUndo.defaultState,
   counts: counts.defaultState,
   firstRevealer: firstRevealer.defaultState,
   gameConfig: gameConfig,
+  lastCardPlayed: lastCardPlayed.defaultState,
+  lastMoveMade: undefined,
   playedCards: playedCards.defaultState,
-  players: players.defaultState,
   playerNames: playerNames.defaultState,
+  players: players.defaultState,
   playerTurnDone: playerTurnDone.defaultState,
   selectedCardData: selectedCardData.defaultState,
   selectedCardIndex: selectedCardIndex.defaultState,

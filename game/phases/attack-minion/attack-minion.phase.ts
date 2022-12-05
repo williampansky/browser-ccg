@@ -24,6 +24,8 @@ import { lte } from 'lodash';
 import { counts } from '../../state';
 import handleDestroyedCards from '../_utils/handle-destroyed-cards';
 import handleZonePowersCalculations from '../_utils/handle-zone-powers-calculations';
+import removeLastPlayedCardFromHand from '../_utils/remove-last-played-card-from-hand';
+import { LastMoveMade } from '../../../enums';
 // import { moves } from './play-cards.phase.moves';
 
 export default <PhaseConfig>{
@@ -75,20 +77,14 @@ export default <PhaseConfig>{
       unsetPlayableCards(G, ctx.currentPlayer);
     },
     onEnd(G, ctx) {
-      const { selectedCardData, selectedCardIndex } = G;
-      const { currentPlayer } = ctx;
-
-      const cardUuid = selectedCardData[currentPlayer]!.uuid;
-      const cardIdx = selectedCardIndex[currentPlayer]!;
-
-      removeCardFromHand(G, currentPlayer, cardUuid, cardIdx);
-      resetAttackableMinions(G, currentPlayer);
+      removeLastPlayedCardFromHand(G, ctx.currentPlayer);
+      resetAttackableMinions(G, ctx.currentPlayer);
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;
     },
     onMove(G: GameState, ctx: Ctx) {
-      if (G.lastMoveMade === 'attackMinion') {
+      if (G.lastMoveMade === LastMoveMade.AttackMinion) {
         handleDestroyedCards(G, ctx);
       }
     },

@@ -25,6 +25,8 @@ import { counts } from '../../state';
 import handleDestroyedCards from '../_utils/handle-destroyed-cards';
 import handleZonePowersCalculations from '../_utils/handle-zone-powers-calculations';
 import { destroyMinion } from '../_moves/destroy-minion.move';
+import removeLastPlayedCardFromHand from '../_utils/remove-last-played-card-from-hand';
+import { LastMoveMade } from '../../../enums';
 // import { moves } from './play-cards.phase.moves';
 
 export default <PhaseConfig>{
@@ -76,20 +78,14 @@ export default <PhaseConfig>{
       unsetPlayableCards(G, ctx.currentPlayer);
     },
     onEnd(G, ctx) {
-      const { selectedCardData, selectedCardIndex } = G;
-      const { currentPlayer } = ctx;
-
-      const cardUuid = selectedCardData[currentPlayer]!.uuid;
-      const cardIdx = selectedCardIndex[currentPlayer]!;
-
-      removeCardFromHand(G, currentPlayer, cardUuid, cardIdx);
-      resetDestroyableMinions(G, currentPlayer);
+      removeLastPlayedCardFromHand(G, ctx.currentPlayer);
+      resetDestroyableMinions(G, ctx.currentPlayer);
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;
     },
     onMove(G: GameState, ctx: Ctx) {
-      if (G.lastMoveMade === 'destroyMinion') {
+      if (G.lastMoveMade === LastMoveMade.DestroyMinion) {
         handleDestroyedCards(G, ctx);
       }
     },

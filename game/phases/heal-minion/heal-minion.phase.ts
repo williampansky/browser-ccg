@@ -21,6 +21,7 @@ import { noHealableMinionsAvailable } from './methods/no-healable-minions-availa
 import setDoneMove from '../_moves/set-done.move';
 import removeCardFromHand from '../_utils/remove-card-from-hand';
 import { playerTurnDone } from '../../state';
+import removeLastPlayedCardFromHand from '../_utils/remove-last-played-card-from-hand';
 // import { moves } from './play-cards.phase.moves';
 
 export default <PhaseConfig>{
@@ -66,19 +67,13 @@ export default <PhaseConfig>{
   },
   turn: {
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
-    onBegin(G, ctx) {
+    onBegin(G: GameState, ctx: Ctx) {
       determineHealableMinions(G, ctx.currentPlayer);
       unsetPlayableCards(G, ctx.currentPlayer);
     },
-    onEnd(G, ctx) {
-      const { selectedCardData, selectedCardIndex } = G;
-      const { currentPlayer } = ctx;
-
-      const cardUuid = selectedCardData[currentPlayer]!.uuid;
-      const cardIdx = selectedCardIndex[currentPlayer]!;
-
-      removeCardFromHand(G, currentPlayer, cardUuid, cardIdx);
-      resetHealableMinions(G, currentPlayer);
+    onEnd(G: GameState, ctx: Ctx) {
+      removeLastPlayedCardFromHand(G, ctx.currentPlayer);
+      resetHealableMinions(G, ctx.currentPlayer);
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;

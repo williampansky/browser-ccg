@@ -43,7 +43,16 @@ export interface GameProps extends BoardProps<GameState> {}
 export const Board = (props: GameProps) => {
   const {
     moves,
-    moves: { attackMinion, buffMinion, destroyMinion, deselectCard, playCard, selectCard, setDone, healMinion },
+    moves: {
+      attackMinion,
+      buffMinion,
+      destroyMinion,
+      deselectCard,
+      playCard,
+      selectCard,
+      setDone,
+      healMinion,
+    },
     events,
     events: { endPhase, endTurn },
     reset,
@@ -61,6 +70,8 @@ export const Board = (props: GameProps) => {
       lastMoveMade,
       playedCards,
       playerTurnDone,
+      selectedCardData,
+      selectedCardIndex,
     },
     ctx,
     ctx: { currentPlayer, phase },
@@ -92,10 +103,10 @@ export const Board = (props: GameProps) => {
   const onCardSlotDrop = (zNum: number) => playCard(zNum);
 
   const onCardDeselect = useCallback(() => {
-    if (lastMoveMade !== 'playCard') {
-      return setTimeout(() => deselectCard(), 100);
+    if (selectedCardData[yourID] && selectedCardIndex[yourID]) {
+      return deselectCard();
     }
-  }, [lastMoveMade]);
+  }, [selectedCardData[yourID], selectedCardIndex[yourID]]);
 
   const onAttackMinionClick = useCallback(
     (targetPlayer?: PlayerID, cardToAttack?: Card) => {
