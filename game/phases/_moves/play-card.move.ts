@@ -1,10 +1,12 @@
 import { Ctx } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { gte } from 'lodash';
-import { CardPlayType, Mechanics } from '../../../enums';
+import { CardMechanicsSide, CardPlayType, Mechanics } from '../../../enums';
 import { Card, GameState, PlayerID } from '../../../types';
 import { filterArray, getCardPower } from '../../../utils';
 import { fxEnd } from '../../config.bgio-effects';
+import { core002 } from '../../mechanics/card-mechanics-by-key/core-002.mechanic';
+import { debuffPowerOfCardsInZone } from '../../mechanics/on-play-mechanics';
 import { actionPoints, counts, lastCardPlayed, playedCards } from '../../state';
 import { determinePlayableCards } from '../_utils/determine-playable-cards';
 import removeCardFromHand from '../_utils/remove-card-from-hand';
@@ -24,7 +26,7 @@ export const playCard = ({ ...props }: PlayCardMove) => {
         numerics: { numberOfSlotsPerZone },
       },
       players,
-      zones
+      zones,
     },
     ctx,
     ctx: { currentPlayer },
@@ -67,27 +69,17 @@ export const playCard = ({ ...props }: PlayCardMove) => {
   G.lastMoveMade = 'playCard';
   lastCardPlayed.set(G, { card, index });
   deselectCard({ G, ctx });
-  
+
   if (card.mechanics?.includes(Mechanics.OnPlay)) {
     switch (card.playType) {
       case CardPlayType.Targeted:
-        // --targeted
-        switch (card.playContext) {
-          case Mechanics.Buff:
-            return ctx.events?.setPhase('buffMinion');
-          case Mechanics.Damage:
-            return ctx.events?.setPhase('attackMinion');
-          case Mechanics.Destroy:
-            return ctx.events?.setPhase('destroyMinion');
-          case Mechanics.Heal:
-            return ctx.events?.setPhase('healMinion');
-          default:
-            break;
-        }
-        // --targeted
+        initOnPlayTargetPhase(ctx, card);
         break;
-    
+
       default:
+        initOnPlayGlobalMechanic(G, ctx, zoneNumber, card, player);
+        removeCardFromHand(G, player, cardUuid, index);
+        determinePlayableCards(G, ctx, player);
         break;
     }
   } else {
@@ -95,3 +87,34 @@ export const playCard = ({ ...props }: PlayCardMove) => {
     determinePlayableCards(G, ctx, player);
   }
 };
+
+function initOnPlayGlobalMechanic(
+  G: GameState,
+  ctx: Ctx,
+  zoneNumber: number,
+  card: Card,
+  player: PlayerID
+) {
+  switch (card.playContext) {
+    case Mechanics.Debuff:
+      debuffPowerOfCardsInZone(G, zoneNumber, card, player);
+      break;
+    default:
+      break;
+  }
+}
+
+function initOnPlayTargetPhase(ctx: Ctx, card: Card) {
+  switch (card.playContext) {
+    case Mechanics.Buff:
+      return ctx.events?.setPhase('buffMinion');
+    case Mechanics.Damage:
+      return ctx.events?.setPhase('attackMinion');
+    case Mechanics.Destroy:
+      return ctx.events?.setPhase('destroyMinion');
+    case Mechanics.Heal:
+      return ctx.events?.setPhase('healMinion');
+    default:
+      break;
+  }
+}

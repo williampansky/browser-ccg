@@ -75,6 +75,7 @@ const createCardObject = (obj: CardBase): Card => {
     key: createCardKey(obj?.id, obj?.set),
     mechanics: obj?.mechanicsEnabled ? obj?.mechanics : [],
     mechanicsEnabled: obj?.mechanicsEnabled || false,
+    mechanicsSide: obj?.mechanicsSide,
     name: obj?.name,
     numberPrimary: obj?.numberPrimary,
     numberRNG: obj?.numberRNG,

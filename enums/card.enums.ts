@@ -89,3 +89,13 @@ export enum CardPlayType {
   Global = 'GLOBAL',
   Targeted = 'TARGETED',
 }
+
+/**
+ * Enum values for game mechanics
+ */
+export enum CardMechanicsSide {
+  Both = 'BOTH',
+  None = 'NONE',
+  Player = 'PLAYER',
+  Opponent = 'OPPONENT',
+}

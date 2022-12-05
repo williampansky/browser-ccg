@@ -11,6 +11,7 @@ export {
   CardSet,
   CardType,
   CardPlayType,
+  CardMechanicsSide,
 } from './card.enums';
 
 export { Mechanics } from './mechanics.enums';

@@ -3,9 +3,15 @@ import {
   CardRarity as CardRarityEnums,
   CardSet as CardSetEnums,
   CardType as CardTypeEnums,
+  CardMechanicsSide as CardMechanicsSideEnums,
 } from '../enums';
 
 export declare type CardId = string;
+export declare type CardMechanicsSide =
+  | CardMechanicsSideEnums.Both
+  | CardMechanicsSideEnums.None
+  | CardMechanicsSideEnums.Player
+  | CardMechanicsSideEnums.Opponent;
 export declare type CardRace =
   | CardRaceEnums.Android
   | CardRaceEnums.Creature
@@ -93,6 +99,7 @@ export interface CardBase {
   key: string;
   mechanics?: string[];
   mechanicsEnabled?: boolean;
+  mechanicsSide: CardMechanicsSide | string;
   name: string;
   numberPrimary: number;
   numberRNG: number;
@@ -131,7 +138,7 @@ export interface CardHealthStream {
   /**
    * unique id of the blame target
    */
-   uuid: string;
+  uuid: string;
 }
 
 /**
@@ -157,7 +164,7 @@ export interface CardPowerStream {
   /**
    * unique id of the blame target
    */
-   uuid: string;
+  uuid: string;
 }
 
 export interface Card {
@@ -191,6 +198,7 @@ export interface Card {
   isGolden?: boolean;
   mechanics?: string[];
   mechanicsEnabled?: boolean;
+  mechanicsSide: CardMechanicsSide | string;
   name: string;
   numberPrimary: number;
   numberRNG: number;
