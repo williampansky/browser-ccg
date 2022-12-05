@@ -3,15 +3,7 @@ import { TurnOrder } from 'boardgame.io/core';
 import type { Ctx, PhaseConfig } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
 
-// import {
-//   onTurnBeginLoop,
-//   onTurnEndLoop,
-//   onTurnMoveLoop,
-//   resetDoneState,
-//   unsetPlayableCardsInHand,
-// } from './methods';
-
-import { calculateZoneSidePower, drawCardFromPlayersDeck, handleCardDestructionMechanics, logPhaseToConsole } from '../../../utils';
+import { logPhaseToConsole } from '../../../utils';
 import { fxEnd } from '../../config.bgio-effects';
 import { noAttackableMinionsAvailable } from './methods/no-attackable-minions-available';
 import { attackMinion } from '../_moves/attack-minion.move';
@@ -32,12 +24,12 @@ export default <PhaseConfig>{
   next: 'playCard',
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase, ctx.currentPlayer);
+    determineAttackableMinions(G, ctx.currentPlayer)
   },
-  onEnd(G: GameState, ctx: Ctx) {
-  },
+  onEnd(G: GameState, ctx: Ctx) {},
   endIf(G: GameState, ctx: Ctx) {
     return (
-      noAttackableMinionsAvailable(G, ctx.currentPlayer) ||
+      //noAttackableMinionsAvailable(G, ctx.currentPlayer) ||
       G.playerTurnDone[ctx.currentPlayer] === true
     );
   },
@@ -73,8 +65,14 @@ export default <PhaseConfig>{
   turn: {
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
     onBegin(G, ctx) {
-      determineAttackableMinions(G, ctx.currentPlayer);
       unsetPlayableCards(G, ctx.currentPlayer);
+      // determineAttackableMinions(G, ctx.currentPlayer
+      //   (G) => {
+        if (noAttackableMinionsAvailable(G, ctx.currentPlayer)) {
+          ctx.events?.endPhase();
+        }
+      // }
+      // );
     },
     onEnd(G, ctx) {
       removeLastPlayedCardFromHand(G, ctx.currentPlayer);

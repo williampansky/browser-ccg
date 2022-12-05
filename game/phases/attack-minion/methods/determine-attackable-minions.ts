@@ -1,26 +1,34 @@
 import { GameState, PlayerID } from '../../../../types';
 import { cardIsNotSelf, getContextualPlayerIds } from '../../../../utils';
 
-export const determineAttackableMinions = (G: GameState, player: PlayerID) => {
-  const { playedCards } = G;
+export const determineAttackableMinions = (
+  G: GameState,
+  player: PlayerID,
+  callback?: (G: GameState) => void
+) => {
   const { opponent } = getContextualPlayerIds(player);
-  const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
+  const lastCardPlayed = G.lastCardPlayed.card!;
 
   G.zones.forEach((z) => {
     z.sides[opponent].forEach((c) => {
-      if (cardIsNotSelf(c, lastPlayedCard) && c.booleans.hasHealthReduced) {
+      if (cardIsNotSelf(c, lastCardPlayed) && c.booleans.isDestroyed === false) {
         c.booleans.canBeAttackedBySpell = true;
+        // switch (lastCardPlayed.key) {
+        //   case 'SET_CORE_060':
+        //     if (c.booleans.hasHealthReduced) {
+        //       c.booleans.canBeAttackedBySpell = true;
+        //     }
+        //     break;
+
+        //   default:
+        //     c.booleans.canBeAttackedBySpell = true;
+        //     break;
+        // }
       }
     });
 
-    // @todo future enhancement
-    // z.sides[player].forEach((c) => {
-    //   if (cardIsNotSelf(c, lastPlayedCard) && c.booleans.hasHealthReduced) {
-    //     c.booleans.canBeHealed = true;
-    //   }
-    // });
+    // @todo future enhancement - enable self attacks
   });
 
-  // selectedCardData.reset(G, player);
-  // selectedCardIndex.reset(G, player);
+  if (callback) return callback;
 };

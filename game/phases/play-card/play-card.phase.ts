@@ -32,6 +32,10 @@ export default <PhaseConfig>{
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase, ctx.currentPlayer);
     handleZonePowersCalculations(G, ctx);
+
+    if (isBotGame(ctx) && ctx.currentPlayer === '1') {
+      removeDestroyedCards(G, ctx);
+    }
   },
   onEnd(G: GameState, ctx: Ctx) {
     // unsetPlayableCards({ G, player: ctx.currentPlayer })
@@ -111,7 +115,6 @@ export default <PhaseConfig>{
     },
     onEnd(G: GameState, ctx: Ctx) {
       unsetPlayableCards(G, ctx.currentPlayer);
-      removeDestroyedCards(G, ctx);
 
       // if (ctx.currentPlayer === '1') {
       // drawCardFromPlayersDeck(G, ctx.playOrder.filter(n => n !== ctx.currentPlayer).pop()!)
