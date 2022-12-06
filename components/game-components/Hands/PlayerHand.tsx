@@ -105,8 +105,10 @@ export const PlayerHand = ({
   );
 
   useEffect(() => {
-    setHandLength(playerHand?.length);
-  }, [playerHand, setHandLength]);
+    setHandLength(playerHand.length);
+    setLastIdx(undefined);
+    setLastUuid(undefined);
+  }, [playerHand.length, setHandLength]);
 
   // rerenders hand correctly based on new array length
   useEffect(() => {
