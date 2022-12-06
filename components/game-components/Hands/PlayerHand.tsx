@@ -46,6 +46,7 @@ export const PlayerHand = ({
     gameConfig: {
       numerics: { cardsPerHand },
     },
+    lastMoveMade,
     selectedCardData,
   } = G;
 
@@ -70,6 +71,8 @@ export const PlayerHand = ({
   const [cardHeight, setCardHeight] = useState<number>(0);
   const [cardWidth, setCardWidth] = useState<number>(0);
   const [cardTap, setCardTap] = useState<boolean>(false);
+  const [lastIdx, setLastIdx] = useState<number | undefined>(undefined);
+  const [lastUuid, setLastUuid] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const hString = '--card-height';
@@ -170,7 +173,11 @@ export const PlayerHand = ({
         if (elem && elem.dataset.receive) {
           // console.log('🚀 target', elem);
           const zoneNumber = Number(elem.getAttribute('data-index'));
-          if (zoneNumber) onCardSlotDrop({ zoneNumber });
+          if (zoneNumber) {
+            setLastIdx(originalIndex);
+            setLastUuid(playerHand[originalIndex].uuid);
+            onCardSlotDrop({ zoneNumber });
+          }
         } else {
           deselect();
         }
@@ -180,24 +187,6 @@ export const PlayerHand = ({
         const curIndex = order.current?.indexOf(originalIndex);
         setSprings(fn(handLength, width, down, dragging, active, curIndex));
       },
-      // onMouseDownCapture: ({ event, args: [originalIndex, canPlay] }) => {
-      //   event.preventDefault();
-      //   return select(canPlay, originalIndex);
-      // },
-      // onMouseUpCapture: ({ event }) => {
-      //   event.preventDefault();
-      //   return deselect();
-      // },
-      // onTouchStartCapture: ({ event, args: [originalIndex, canPlay] }) => {
-      //   return select(canPlay, originalIndex);
-      // },
-      // onTouchEndCapture: ({ event }) => {
-      //   return deselect();
-      // },
-      // onClickCapture: ({ event, args: [originalIndex, canPlay] }) => {
-      //   event.preventDefault();
-      //   return inspect(originalIndex);
-      // },
     },
     {
       // @ts-ignore
@@ -305,17 +294,10 @@ export const PlayerHand = ({
                     {...bind(i, canPlay)}
                     key={`DragSlot_${i}`}
                     className={styles['drag-slot']}
+                    data-component='PlayerHandDragSlot'
                     data-index={i}
-                    data-last-played={
-                      G.lastCardPlayed.card &&
-                      G.lastCardPlayed?.card?.uuid === uuid &&
-                      G.lastMoveMade === LastMoveMade.PlayCard
-                    }
-                    // onMouseDownCapture={() => select(canPlay, i)}
-                    // onMouseUpCapture={() => deselect()}
-                    // onTouchStartCapture={() => select(canPlay, i)}
-                    // onTouchEndCapture={() => deselect()}
-                    // onClickCapture={() => inspect(i)}
+                    data-uuid={uuid}
+                    data-last-played={lastIdx === i}
                     style={{
                       zIndex: 110 - i,
                       cursor: canPlay ? cursor : 'default',
@@ -333,13 +315,10 @@ export const PlayerHand = ({
                     {...bind(i, canPlay)}
                     key={`HandSlot_${i}`}
                     className={[styles['hand-slot']].join(' ')}
+                    data-component='PlayerHandCardSlot'
                     data-index={i}
-                    data-component='PlayerHandSlot'
-                    data-last-played={
-                      G.lastCardPlayed.card &&
-                      G.lastCardPlayed?.card?.uuid === uuid &&
-                      G.lastMoveMade === LastMoveMade.PlayCard
-                    }
+                    data-uuid={uuid}
+                    data-last-played={lastIdx === i}
                     style={{
                       zIndex,
                       marginLeft,
