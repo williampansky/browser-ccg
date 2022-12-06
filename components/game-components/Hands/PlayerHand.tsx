@@ -17,9 +17,9 @@ import type { Card, GameState, PlayerID } from '../../../types';
 import fn from './fn';
 import styles from './player-hand.module.scss';
 import { LastMoveMade } from '../../../enums';
-import { SelectCardMove } from '../../../game/phases/_moves/select-card.move';
-import { DeselectCardMove } from '../../../game/phases/_moves/deselect-card.move';
-import { PlayCardMove } from '../../../game/phases/_moves/play-card.move';
+import { SelectCardMove } from '../../../game/moves/select-card.move';
+import { DeselectCardMove } from '../../../game/moves/deselect-card.move';
+import { PlayCardMove } from '../../../game/moves/play-card.move';
 
 interface Props {
   G: GameState;

@@ -3,32 +3,22 @@ import { TurnOrder } from 'boardgame.io/core';
 import type { Ctx, PhaseConfig } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
 
-import { determinePlayableCards } from '../_utils/determine-playable-cards';
+import playCardStages from './play-card.stages';
+import { LastMoveMade } from '../../../enums';
+import { aiPlayCard, aiSetDone, aiSetDoneMove } from '../../ai';
+import { deselectCard, playCard, selectCard, setDone } from '../../moves';
 import {
-  drawCardFromPlayersDeck,
+  determinePlayableCards,
+  handleZonePowersCalculations,
   isBotGame,
   logPhaseToConsole,
+  removeDestroyedCards,
+  removeLastPlayedCardFromHand,
+  unsetPlayableCards,
 } from '../../../utils';
-import handleZonePowersCalculations from '../_utils/handle-zone-powers-calculations';
-import { unsetPlayableCards } from '../_utils/unset-playable-cards';
-import determineActionPoints from '../_utils/determine-action-points';
-import { lastCardPlayed } from '../../state';
-import removeLastPlayedCardFromHand from '../_utils/remove-last-played-card-from-hand';
-import { LastMoveMade } from '../../../enums';
-import removeDestroyedCards from '../_utils/remove-destroyed-cards';
-import { aiPlayCard, aiSetDone } from '../../ai';
-import {
-  attackMinion,
-  buffMinion,
-  deselectCard,
-  playCard,
-  selectCard,
-  setDone,
-} from '../_moves/_moves';
-import { aiSetDoneMove } from '../../ai/ai.moves';
 
 export default <PhaseConfig>{
-  next(G, ctx) {
+  next(G: GameState, ctx: Ctx) {
     if (G.turn === 1) return 'revealZone';
     if (G.turn === 2) return 'revealZone';
     else return 'incrementTurn';
@@ -36,6 +26,7 @@ export default <PhaseConfig>{
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase, ctx.currentPlayer);
     handleZonePowersCalculations(G, ctx);
+    removeDestroyedCards(G, ctx);
   },
   onEnd(G: GameState, ctx: Ctx) {
     // unsetPlayableCards({ G, player: ctx.currentPlayer })
@@ -53,7 +44,7 @@ export default <PhaseConfig>{
   },
   turn: {
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
-    onBegin(G, ctx) {
+    onBegin(G: GameState, ctx: Ctx) {
       determinePlayableCards(G, ctx, ctx.currentPlayer);
 
       if (isBotGame(ctx) && ctx.currentPlayer === '1') {
@@ -78,19 +69,6 @@ export default <PhaseConfig>{
         }
       }
     },
-    stages: {
-      attackMinion: {
-        moves: {
-          deselectCard,
-          attackMinion,
-        },
-      },
-      buffMinion: {
-        moves: {
-          deselectCard,
-          buffMinion,
-        },
-      },
-    },
+    stages: playCardStages,
   },
 };

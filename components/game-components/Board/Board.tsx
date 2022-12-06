@@ -32,12 +32,13 @@ import {
 import { Ctx } from 'boardgame.io';
 import { gt } from 'lodash';
 import { setDiscardedCard } from '../../../features';
-import { SelectCardMove } from '../../../game/phases/_moves/select-card.move';
-import { DeselectCardMove } from '../../../game/phases/_moves/deselect-card.move';
-import { PlayCardMove } from '../../../game/phases/_moves/play-card.move';
-import { AttackMinionMove } from '../../../game/phases/_moves/attack-minion.move';
-import { BuffMinionMove } from '../../../game/phases/_moves/buff-minion.move';
-import { SetDoneMove } from '../../../game/phases/_moves/set-done.move';
+import { SelectCardMove } from '../../../game/moves/select-card.move';
+import { DeselectCardMove } from '../../../game/moves/deselect-card.move';
+import { PlayCardMove } from '../../../game/moves/play-card.move';
+import { AttackMinionMove } from '../../../game/moves/attack-minion.move';
+import { BuffMinionMove } from '../../../game/moves/buff-minion.move';
+import { SetDoneMove } from '../../../game/moves/set-done.move';
+import { DestroyMinionMove, HealMinionMove } from '../../../game/moves';
 
 interface PropsOnEffect {
   G: GameState;
@@ -74,6 +75,7 @@ export const Board = (props: GameProps) => {
         ai: { enableBotAi },
       },
       lastMoveMade,
+      lastCardPlayed,
       playedCards,
       playerTurnDone,
       selectedCardData,
@@ -103,12 +105,13 @@ export const Board = (props: GameProps) => {
   );
 
   // moves
-  // const onEndTurnButtonClick = () => setTimeout(() => setDone(yourID), 1500);
   const onEndTurnButtonClick = useCallback(() => {
     return setDone({ player: yourID });
   }, []);
 
-  const onCardClick = (obj: Card) => dispatch(showCardModal(obj));
+  const onCardClick = useCallback((obj: Card) => {
+    return dispatch(showCardModal(obj));
+  }, []);
 
   const onCardDeselect = useCallback(({ player }: DeselectCardMove) => {
     return deselectCard({ player });
@@ -130,7 +133,7 @@ export const Board = (props: GameProps) => {
           `ERROR: onAttackMinionClick(${targetPlayer}, ${card})`
         );
     },
-    [currentPlayer, playedCards]
+    [currentPlayer]
   );
 
   const onBuffMinionClick = useCallback(
@@ -141,39 +144,29 @@ export const Board = (props: GameProps) => {
           `ERROR: onBuffMinionClick(${targetPlayer}, ${card})`
         );
     },
-    [currentPlayer, playedCards]
+    [currentPlayer]
   );
 
   const onDestroyMinionClick = useCallback(
-    (targetPlayer?: PlayerID, cardToDestroy?: Card) => {
-      if (targetPlayer && cardToDestroy)
-        return destroyMinion(
-          cardToDestroy,
-          playedCards[yourID][playedCards[yourID].length - 1],
-          targetPlayer
-        );
+    ({ card, targetPlayer }: DestroyMinionMove) => {
+      if (card && targetPlayer) return destroyMinion({ card, targetPlayer });
       else
         return console.error(
-          `ERROR: onDestroyMinionClick(${targetPlayer}, ${cardToDestroy})`
+          `ERROR: onDestroyMinionClick(${targetPlayer}, ${card})`
         );
     },
-    [currentPlayer, playedCards]
+    [currentPlayer]
   );
 
   const onHealMinionClick = useCallback(
-    (targetPlayer?: PlayerID, cardToHeal?: Card) => {
-      if (targetPlayer && cardToHeal)
-        return healMinion(
-          cardToHeal,
-          playedCards[yourID][playedCards[yourID].length - 1],
-          targetPlayer
-        );
+    ({ card, targetPlayer }: HealMinionMove) => {
+      if (card && targetPlayer) return healMinion({ card, targetPlayer });
       else
         return console.error(
-          `ERROR: onHealMinionClick(${targetPlayer}, ${cardToHeal})`
+          `ERROR: onHealMinionClick(${targetPlayer}, ${card})`
         );
     },
-    [currentPlayer, playedCards]
+    [currentPlayer]
   );
 
   return (

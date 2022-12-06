@@ -9,8 +9,9 @@ import { Zone } from './Zone';
 import styles from './TheZonesContainer.module.scss';
 import { Ctx } from 'boardgame.io';
 import { LastMoveMade } from '../../../enums';
-import { AttackMinionMove } from '../../../game/phases/_moves/attack-minion.move';
-import { BuffMinionMove } from '../../../game/phases/_moves/buff-minion.move';
+import { AttackMinionMove } from '../../../game/moves/attack-minion.move';
+import { BuffMinionMove } from '../../../game/moves/buff-minion.move';
+import { DestroyMinionMove, HealMinionMove } from '../../../game/moves';
 
 interface Props {
   ctx: Ctx;
@@ -20,8 +21,8 @@ interface Props {
   yourID: PlayerID;
   onAttackMinionClick: ({ card, targetPlayer }: AttackMinionMove) => void;
   onBuffMinionClick: ({ card, targetPlayer }: BuffMinionMove) => void;
-  onDestroyMinionClick: (zS?: PlayerID, c?: Card) => void;
-  onHealMinionClick: (zS?: PlayerID, c?: Card) => void;
+  onDestroyMinionClick: ({ card, targetPlayer }: DestroyMinionMove) => void;
+  onHealMinionClick: ({ card, targetPlayer }: HealMinionMove) => void;
 }
 
 export const TheZonesContainer = ({

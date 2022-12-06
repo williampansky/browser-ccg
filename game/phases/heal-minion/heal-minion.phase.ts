@@ -13,12 +13,12 @@ import type { Card, GameState, PlayerID } from '../../../types';
 
 import { logPhaseToConsole } from '../../../utils';
 import { fxEnd } from '../../config.bgio-effects';
-import { determineHealableMinions } from './methods/determine-healable-minions';
-import { healMinion, HealMinionMove } from './moves/heal-minion.move';
+import { determineHealableMinions } from '../../../utils/determine-healable-minions';
+import { healMinion, HealMinionMove } from '../../moves/heal-minion.move';
 import { resetHealableMinions } from './methods/reset-healable-minions';
 import { unsetPlayableCards } from '../_utils/unset-playable-cards';
 import { noHealableMinionsAvailable } from './methods/no-healable-minions-available';
-import setDoneMove from '../_moves/set-done.move';
+import setDoneMove from '../../moves/set-done.move';
 import removeCardFromHand from '../_utils/remove-card-from-hand';
 import { playerTurnDone } from '../../state';
 import removeLastPlayedCardFromHand from '../_utils/remove-last-played-card-from-hand';

@@ -1,11 +1,12 @@
-import { Ctx, PhaseConfig } from 'boardgame.io';
-import { TurnOrder } from 'boardgame.io/core';
 import { add } from 'mathjs';
-import { GameState } from '../../../types';
-import { drawCardFromPlayersDeck, logPhaseToConsole } from '../../../utils';
+import { TurnOrder } from 'boardgame.io/core';
+
+import type { Ctx, PhaseConfig } from 'boardgame.io';
+import type { GameState } from '../../../types';
+
+import { actionPoints } from '../../state';
 import { fxEnd } from '../../config.bgio-effects';
-import { actionPoints, playerTurnDone } from '../../state';
-import determineActionPoints from '../_utils/determine-action-points';
+import { logPhaseToConsole } from '../../../utils';
 
 /**
  * Increments the game turn (note: ***not*** `ctx.turn`).
@@ -23,11 +24,13 @@ export default <PhaseConfig>{
 
     actionPoints.incrementTotal(G, ctx.currentPlayer);
     actionPoints.matchTotal(G, ctx.currentPlayer);
+
+    fxEnd(ctx);
     ctx.events?.endPhase();
   },
   turn: {
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
-  }
+  },
   // endIf(G, ctx) {
   //   return G.playerTurnDone['0'] === false && G.playerTurnDone['1'] === false;
   // },

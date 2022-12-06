@@ -1,12 +1,13 @@
-import { Ctx, PhaseConfig } from 'boardgame.io';
-import { GameState, Zone, Zones } from '../../../types';
-import { zones } from '../../state';
-import { createZoneObject, logPhaseToConsole } from '../../../utils';
-import ZONE_DATABASE from '../../data/zones.json';
+import type { Ctx, PhaseConfig } from 'boardgame.io';
+import type { GameState, Zone, Zones } from '../../../types';
 
+import { zones } from '../../state';
+import { fxEnd } from '../../config.bgio-effects';
+import { createZoneObject, logPhaseToConsole } from '../../../utils';
+
+import ZONE_DATABASE from '../../data/zones.json';
 import healPlayerMinionScenario from '../../debug/scenarios/heal-player-minion.scenario';
 import dealAoeDmgScenario from '../../debug/scenarios/deal-aoe-damage.scenario';
-import { fxEnd } from '../../config.bgio-effects';
 
 const scenarios = {
   'heal-player-minion': healPlayerMinionScenario,

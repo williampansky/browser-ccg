@@ -28,9 +28,5 @@ export default {
   incrementActionPoints: incrementActionPointsPhase,
   drawCard: drawCardPhase,
   playCard: playCardPhase,
-  healMinion: healMinionPhase,
-  attackMinion: attackMinionPhase,
-  buffMinion: buffMinionPhase,
-  destroyMinion: destroyMinionPhase,
-  removeDestroyedCards: removeDestroyedCardsPhase,
+  // removeDestroyedCards: removeDestroyedCardsPhase,
 };
