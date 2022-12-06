@@ -1,17 +1,14 @@
 import { GameState, PlayerID } from '../../../../types';
 import { cardIsNotSelf, getContextualPlayerIds } from '../../../../utils';
 
-export const determineAttackableMinions = (
-  G: GameState,
-  player: PlayerID,
-  callback?: (G: GameState) => void
-) => {
+export const determineAttackableMinions = (G: GameState, player: PlayerID) => {
   const { opponent } = getContextualPlayerIds(player);
   const lastCardPlayed = G.lastCardPlayed.card!;
 
   G.zones.forEach((z) => {
     z.sides[opponent].forEach((c) => {
-      if (cardIsNotSelf(c, lastCardPlayed) && c.booleans.isDestroyed === false) {
+      const { booleans } = c;
+      if (cardIsNotSelf(c, lastCardPlayed) && booleans.isDestroyed === false) {
         c.booleans.canBeAttackedBySpell = true;
         // switch (lastCardPlayed.key) {
         //   case 'SET_CORE_060':
@@ -29,6 +26,4 @@ export const determineAttackableMinions = (
 
     // @todo future enhancement - enable self attacks
   });
-
-  if (callback) return callback;
 };

@@ -14,6 +14,8 @@ import {
   ZonePower,
   ZoneRevealOverlay,
 } from '..';
+import { AttackMinionMove } from '../../../../game/phases/_moves/attack-minion.move';
+import { BuffMinionMove } from '../../../../game/phases/_moves/buff-minion.move';
 
 interface Props {
   gameConfig: GameConfig;
@@ -24,8 +26,8 @@ interface Props {
   zone: IZone;
   zoneNumber: number;
   zonesAreActive: boolean;
-  onAttackMinionClick: (zS?: PlayerID, c?: Card) => void
-  onBuffMinionClick: (zS?: PlayerID, c?: Card) => void
+  onAttackMinionClick: ({ card, targetPlayer }: AttackMinionMove) => void;
+  onBuffMinionClick: ({ card, targetPlayer }: BuffMinionMove) => void;
   onDestroyMinionClick: (zS?: PlayerID, c?: Card) => void
   onHealMinionClick: (zS?: PlayerID, c?: Card) => void
 }

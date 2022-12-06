@@ -8,6 +8,8 @@ import { MinionOnPlayAnimation } from './MinionOnPlayAnimation';
 import { MinionEventAnimation } from './MinionEventAnimation';
 
 import SUBTYPE_RACE_DEMONIC from '../../../../public/images/card-assets/SUBTYPE_RACE_DEMONIC.png';
+import { AttackMinionMove } from '../../../../game/phases/_moves/attack-minion.move';
+import { BuffMinionMove } from '../../../../game/phases/_moves/buff-minion.move';
 
 // import styles from './MinionSlotWrapper.module.scss';
 
@@ -23,8 +25,8 @@ interface Props {
   yourID?: PlayerID;
   zoneNumber?: number;
   zoneSide?: PlayerID;
-  onAttackMinionClick: (zS?: PlayerID, c?: Card) => void;
-  onBuffMinionClick: (zS?: PlayerID, c?: Card) => void;
+  onAttackMinionClick: ({ card, targetPlayer }: AttackMinionMove) => void;
+  onBuffMinionClick: ({ card, targetPlayer }: BuffMinionMove) => void;
   onDestroyMinionClick: (zS?: PlayerID, c?: Card) => void;
   onHealMinionClick: (zS?: PlayerID, c?: Card) => void;
 }
@@ -67,11 +69,11 @@ export const MinionSlotWrapper = ({
   const move = (context: string): void => {
     switch (context) {
       case Context.CanBeAttackedBySpell:
-        return onAttackMinionClick(zoneSide, data);
+        return onAttackMinionClick({ card: data!, targetPlayer: zoneSide! });
       case Context.CanBeAttackedByWeapon:
         return attackMinion(player, zoneSide, data?.uuid, zoneNumber);
       case Context.CanBeBuffed:
-        return onBuffMinionClick(zoneSide, data);
+        return onBuffMinionClick({ card: data!, targetPlayer: zoneSide! });
       case Context.CanBeDestroyed:
         return onDestroyMinionClick(zoneSide, data);
       case Context.CanBeHealed:

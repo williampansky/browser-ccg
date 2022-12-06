@@ -30,7 +30,7 @@ export const DebugBar = ({
       </div>
 
       <div>
-        g.turn: <code>{G.turn}</code> / ctx.phase: <code>{ctx?.phase}</code>
+        g.turn: <code>{G.turn}</code> / ctx.phase: <code>{ctx?.phase}</code> / stage: <code>{ctx?.activePlayers !== null ? ctx.activePlayers[0] : 'null'}</code>
       </div>
 
       <div>
@@ -39,7 +39,7 @@ export const DebugBar = ({
       </div>
 
       <div>
-        currentPlayer: <code>{curP}</code>
+        currentPlayer: <code>{curP}</code> / lastMoveMade: <code>{G.lastMoveMade}</code>
       </div>
 
       <div>

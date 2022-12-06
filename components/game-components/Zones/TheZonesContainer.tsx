@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffectListener, useLatestPropsOnEffect } from 'bgio-effects/react';
 
@@ -8,6 +8,9 @@ import type { Card, GameState, PlayerID } from '../../../types';
 import { Zone } from './Zone';
 import styles from './TheZonesContainer.module.scss';
 import { Ctx } from 'boardgame.io';
+import { LastMoveMade } from '../../../enums';
+import { AttackMinionMove } from '../../../game/phases/_moves/attack-minion.move';
+import { BuffMinionMove } from '../../../game/phases/_moves/buff-minion.move';
 
 interface Props {
   ctx: Ctx;
@@ -15,10 +18,10 @@ interface Props {
   moves: any;
   theirID: PlayerID;
   yourID: PlayerID;
-  onAttackMinionClick: (zS?: PlayerID, c?: Card) => void
-  onBuffMinionClick: (zS?: PlayerID, c?: Card) => void
-  onDestroyMinionClick: (zS?: PlayerID, c?: Card) => void
-  onHealMinionClick: (zS?: PlayerID, c?: Card) => void
+  onAttackMinionClick: ({ card, targetPlayer }: AttackMinionMove) => void;
+  onBuffMinionClick: ({ card, targetPlayer }: BuffMinionMove) => void;
+  onDestroyMinionClick: (zS?: PlayerID, c?: Card) => void;
+  onHealMinionClick: (zS?: PlayerID, c?: Card) => void;
 }
 
 export const TheZonesContainer = ({
@@ -30,10 +33,9 @@ export const TheZonesContainer = ({
   onAttackMinionClick,
   onBuffMinionClick,
   onDestroyMinionClick,
-  onHealMinionClick
+  onHealMinionClick,
 }: Props) => {
   const { lastMoveMade, selectedCardData } = G;
-  const yourCard = selectedCardData[yourID];
 
   const dispatch = useDispatch();
   const { gameConfig } = useSelector((state: RootState) => state.config);
@@ -51,15 +53,20 @@ export const TheZonesContainer = ({
   //   })
   // }, [G.zones]);
 
-  useEffect(() => {
-    if (lastMoveMade === 'selectCard') {
-      setZonesAreActive(true);
-      setCardType(yourCard?.type);
-    } else {
-      setZonesAreActive(false);
-      setCardType(undefined);
+  const handleZonesAreActive = useCallback((move?: string, card?: Card) => {
+    switch (move) {
+      case LastMoveMade.SelectCard:
+        if (card !== undefined) return setZonesAreActive(true);
+        else return setZonesAreActive(false);
+
+      default:
+        return setZonesAreActive(false);
     }
-  }, [yourCard, lastMoveMade]);
+  }, []);
+
+  useEffect(() => {
+    handleZonesAreActive(lastMoveMade, selectedCardData[yourID]);
+  }, [lastMoveMade, selectedCardData[yourID]]);
 
   return (
     <div className={styles['wrapper']}>

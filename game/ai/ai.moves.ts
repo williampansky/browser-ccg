@@ -1,11 +1,27 @@
-import { Ctx } from 'boardgame.io';
-import { Mechanics } from '../../enums';
+import { Ctx, LongFormMove } from 'boardgame.io';
+import { LastMoveMade, Mechanics } from '../../enums';
 import { Card, GameState, PlayerID } from '../../types';
 import { filterArray, getCardPower } from '../../utils';
-import { actionPoints, counts, lastCardPlayed, playedCards, playerTurnDone } from '../state';
+import {
+  actionPoints,
+  counts,
+  lastCardPlayed,
+  playedCards,
+  playerTurnDone,
+} from '../state';
 import { fxEnd } from '../config.bgio-effects';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { gte, lt, lte } from 'lodash';
+
+export const aiPlayCard: LongFormMove = {
+  client: false,
+  noLimit: true,
+  ignoreStaleStateID: true,
+  undoable: false,
+  move: (G: GameState, ctx: Ctx, { ...args }: AiPlayCardMove) => {
+    return aiPlayCardMove(G, ctx, { ...args });
+  },
+};
 
 export interface AiPlayCardMove {
   aiID: PlayerID;
@@ -14,7 +30,7 @@ export interface AiPlayCardMove {
   cardIndex: number;
 }
 
-export const aiPlayCard = (
+export const aiPlayCardMove = (
   G: GameState,
   ctx: Ctx,
   { ...args }: AiPlayCardMove
@@ -77,8 +93,30 @@ export const aiPlayCard = (
   // });
 };
 
-export const aiSetDone = (G: GameState, ctx: Ctx, aiID: PlayerID) => {
-  G.lastMoveMade = 'aiSetDone';
+export const aiSetDone: LongFormMove = {
+  client: false,
+  noLimit: true,
+  ignoreStaleStateID: true,
+  undoable: false,
+  move: (G: GameState, ctx: Ctx, { aiID }: AiPlayCardMove) => {
+    return aiSetDoneMove(G, ctx, { aiID });
+  },
+};
+
+export interface AiSetDoneMove {
+  aiID: PlayerID;
+}
+
+export const aiSetDoneMove = (
+  G: GameState,
+  ctx: Ctx,
+  { aiID }: AiSetDoneMove
+) => {
+  G.lastMoveMade = LastMoveMade.AiSetDone;
   G.aiPossibleCards = [];
   playerTurnDone.set(G, aiID);
+  // ctx.events?.endTurn();
+  if (G.gameConfig.debugConfig.logPhaseToConsole) {
+    console.log(`--- setDoneMove(${aiID}) ---`);
+  }
 };

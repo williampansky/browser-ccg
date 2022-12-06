@@ -17,14 +17,17 @@ import type { Card, GameState, PlayerID } from '../../../types';
 import fn from './fn';
 import styles from './player-hand.module.scss';
 import { LastMoveMade } from '../../../enums';
+import { SelectCardMove } from '../../../game/phases/_moves/select-card.move';
+import { DeselectCardMove } from '../../../game/phases/_moves/deselect-card.move';
+import { PlayCardMove } from '../../../game/phases/_moves/play-card.move';
 
 interface Props {
   G: GameState;
   ctx: Ctx;
   onCardClick: (card: Card) => void;
-  onCardSelect: (playerId: string, uuid: string) => void;
-  onCardDeselect: (playerId: string) => void;
-  onCardSlotDrop: (zoneNumber: number) => void;
+  onCardSelect: ({ player, cardUuid }: SelectCardMove) => void;
+  onCardDeselect: ({ player }: DeselectCardMove) => void;
+  onCardSlotDrop: ({ zoneNumber }: PlayCardMove) => void;
   player: PlayerID;
   moves: any;
 }
@@ -66,6 +69,7 @@ export const PlayerHand = ({
   const prevHand = usePrevious(playerHand);
   const [cardHeight, setCardHeight] = useState<number>(0);
   const [cardWidth, setCardWidth] = useState<number>(0);
+  const [cardTap, setCardTap] = useState<boolean>(false);
 
   useEffect(() => {
     const hString = '--card-height';
@@ -109,9 +113,20 @@ export const PlayerHand = ({
   const bind: any = useGesture(
     {
       // ts-ignore
-      onDragStart: ({ active, args: [originalIndex], down, dragging }) => {
+      onDragStart: ({
+        active,
+        args: [originalIndex, canPlay],
+        down,
+        dragging,
+        tap,
+      }) => {
         const curIndex = order.current?.indexOf(originalIndex);
-        setSprings(fn(handLength, width, down, dragging, active, curIndex));
+        if (tap) {
+          inspect(originalIndex);
+        } else {
+          select(canPlay, originalIndex);
+          setSprings(fn(handLength, width, down, dragging, active, curIndex));
+        }
       },
       // ts-ignore
       onDrag: ({
@@ -127,11 +142,11 @@ export const PlayerHand = ({
         const curIndex = order.current?.indexOf(originalIndex);
 
         if (tap) {
-          return onCardClick(playerHand[originalIndex]);
+          inspect(originalIndex);
         } else if (!canPlay) {
-          return cancel();
+          cancel();
         } else {
-          return setSprings(
+          setSprings(
             fn(
               handLength,
               width,
@@ -154,7 +169,10 @@ export const PlayerHand = ({
         // @ts-ignore
         if (elem && elem.dataset.receive) {
           // console.log('🚀 target', elem);
-          onCardSlotDrop(Number(elem.getAttribute('data-index')));
+          const zoneNumber = Number(elem.getAttribute('data-index'));
+          if (zoneNumber) onCardSlotDrop({ zoneNumber });
+        } else {
+          deselect();
         }
       },
       // ts-ignore
@@ -162,6 +180,24 @@ export const PlayerHand = ({
         const curIndex = order.current?.indexOf(originalIndex);
         setSprings(fn(handLength, width, down, dragging, active, curIndex));
       },
+      // onMouseDownCapture: ({ event, args: [originalIndex, canPlay] }) => {
+      //   event.preventDefault();
+      //   return select(canPlay, originalIndex);
+      // },
+      // onMouseUpCapture: ({ event }) => {
+      //   event.preventDefault();
+      //   return deselect();
+      // },
+      // onTouchStartCapture: ({ event, args: [originalIndex, canPlay] }) => {
+      //   return select(canPlay, originalIndex);
+      // },
+      // onTouchEndCapture: ({ event }) => {
+      //   return deselect();
+      // },
+      // onClickCapture: ({ event, args: [originalIndex, canPlay] }) => {
+      //   event.preventDefault();
+      //   return inspect(originalIndex);
+      // },
     },
     {
       // @ts-ignore
@@ -184,17 +220,29 @@ export const PlayerHand = ({
    */
   const select = useCallback(
     (canPlay: boolean, i: number) => {
-      if (canPlay) onCardSelect(player, playerHand[i].uuid);
+      if (canPlay && !cardTap && !selectedCardData[player]) {
+        return onCardSelect({ player, cardUuid: playerHand[i].uuid });
+      }
     },
-    [playerHand, onCardSelect]
+    [cardTap, playerHand, onCardSelect, selectedCardData[player]]
   );
 
   /**
    * Deselects card
    */
   const deselect = useCallback(() => {
-    onCardDeselect(player);
+    return onCardDeselect({ player });
   }, [onCardDeselect]);
+
+  /**
+   * Inspects card vvia modal
+   */
+  const inspect = useCallback(
+    (i: number) => {
+      return onCardClick(playerHand[i]);
+    },
+    [onCardClick, playerHand, setCardTap]
+  );
 
   /**
    * Returns card's canPlay boolean value if the object
@@ -259,20 +307,22 @@ export const PlayerHand = ({
                     className={styles['drag-slot']}
                     data-index={i}
                     data-last-played={
+                      G.lastCardPlayed.card &&
                       G.lastCardPlayed?.card?.uuid === uuid &&
                       G.lastMoveMade === LastMoveMade.PlayCard
                     }
-                    onMouseDownCapture={() => select(canPlay, i)}
-                    onMouseUpCapture={() => deselect()}
-                    onTouchStartCapture={() => select(canPlay, i)}
-                    onTouchEndCapture={() => deselect()}
+                    // onMouseDownCapture={() => select(canPlay, i)}
+                    // onMouseUpCapture={() => deselect()}
+                    // onTouchStartCapture={() => select(canPlay, i)}
+                    // onTouchEndCapture={() => deselect()}
+                    // onClickCapture={() => inspect(i)}
                     style={{
                       zIndex: 110 - i,
                       cursor: canPlay ? cursor : 'default',
                       marginLeft,
                       height: 65,
                       width: `${cardWidth}px`,
-                      transform: to([x, y, rotate, scale], (x, y, rt, sc) => {
+                      transform: to([scale], (sc) => {
                         if (width && width >= 1024) return `scale(${sc})`;
                         return '';
                       }),
@@ -286,6 +336,7 @@ export const PlayerHand = ({
                     data-index={i}
                     data-component='PlayerHandSlot'
                     data-last-played={
+                      G.lastCardPlayed.card &&
                       G.lastCardPlayed?.card?.uuid === uuid &&
                       G.lastMoveMade === LastMoveMade.PlayCard
                     }

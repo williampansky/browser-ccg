@@ -1,31 +1,28 @@
-import { Ctx } from 'boardgame.io';
-import { Card, GameState } from '../../../types';
+import type { Ctx } from 'boardgame.io';
+import type { GameState, PlayerID } from '../../../types';
+import { LastMoveMade } from '../../../enums';
 import { selectedCardData } from '../../state';
 
 export interface SelectCardMove {
-  G: GameState;
-  ctx: Ctx;
+  player: PlayerID;
   cardUuid: string;
 }
 
-export const selectCard = ({ ...props }: SelectCardMove) => {
-  const {
-    G,
-    ctx: { currentPlayer },
-    cardUuid,
-  } = props;
-
-  const player = currentPlayer;
+export const selectCardMove = (
+  G: GameState,
+  ctx: Ctx,
+  { player, cardUuid }: SelectCardMove
+) => {
   const hand = G.players[player].cards.hand;
-  const cardMatch = hand.find((c: Card) => c.uuid === cardUuid);
-  const cardMatchIndex = hand.findIndex((c: Card) => c.uuid === cardUuid);
+  const cardMatch = hand.find((c) => c.uuid === cardUuid);
+  const cardMatchIndex = hand.findIndex((c) => c.uuid === cardUuid);
 
-  if (G.selectedCardData[player]?.uuid === cardMatch!.uuid) {
+  if (G.selectedCardData[player]?.uuid === cardMatch?.uuid) {
     selectedCardData.reset(G, player);
-    G.lastMoveMade = 'deselectCard';
+    G.lastMoveMade = LastMoveMade.DeselectCard;
   } else {
     selectedCardData.set(G, player, cardMatch!);
     G.selectedCardIndex[player] = cardMatchIndex;
-    G.lastMoveMade = 'selectCard';
+    G.lastMoveMade = LastMoveMade.SelectCard;
   }
 };

@@ -1,30 +1,22 @@
-import type { Ctx, PlayerID } from "boardgame.io";
-import type { GameState } from "../../../types";
-import { playerTurnDone } from "../../state";
+import type { Ctx, PlayerID } from 'boardgame.io';
+import { LastMoveMade } from '../../../enums';
+import type { GameState } from '../../../types';
+import { playerTurnDone } from '../../state';
 
 export interface SetDoneMove {
-  G: GameState;
-  ctx: Ctx;
   player: PlayerID;
 }
 
-export default function({ ...props }: SetDoneMove) {
-  const { G, ctx, player } = props;
-  // const { opponent } = getContextualPlayerIds(player);
-
-  G.lastMoveMade = 'setDone';
+export const setDoneMove = (
+  G: GameState,
+  ctx: Ctx,
+  { player }: SetDoneMove
+) => {
+  G.lastMoveMade = LastMoveMade.SetDone;
   playerTurnDone.set(G, player);
+  // ctx.events?.endTurn();
 
-  // ctx.events?.setActivePlayers({
-  //   currentPlayer: opponent,
-  //   value: {
-  //     '0': 'drawCard',
-  //     '1': 'drawCard'
-  //   }
-  // });
-
-  // events?.setActivePlayers({ currentPlayer: currentPlayer === '0' ? '1' : '0' });
-  // events?.endTurn({ next: opponent });
-  // events?.setPhase('drawCard');
-  // events?.endPhase();
+  if (G.gameConfig.debugConfig.logPhaseToConsole) {
+    console.log(`--- setDoneMove(${player}) ---`);
+  }
 };

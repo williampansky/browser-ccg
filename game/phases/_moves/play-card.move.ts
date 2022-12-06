@@ -1,42 +1,44 @@
 import { Ctx } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { gte } from 'lodash';
-import { CardMechanicsSide, CardPlayType, Mechanics } from '../../../enums';
+import { CardPlayType, LastMoveMade, Mechanics } from '../../../enums';
 import { Card, GameState, PlayerID } from '../../../types';
-import { filterArray, getCardPower } from '../../../utils';
-import { fxEnd } from '../../config.bgio-effects';
-import { core002 } from '../../mechanics/card-mechanics-by-key/core-002.mechanic';
+import { getCardPower } from '../../../utils';
 import { debuffPowerOfCardsInZone } from '../../mechanics/on-play-mechanics';
-import { actionPoints, counts, lastCardPlayed, playedCards } from '../../state';
+import { actionPoints, lastCardPlayed, playedCards } from '../../state';
+import { determineAttackableMinions } from '../attack-minion/methods/determine-attackable-minions';
+import { noAttackableMinionsAvailable } from '../attack-minion/methods/no-attackable-minions-available';
+import { determineBuffableMinions } from '../buff-minion/methods/determine-buffable-minions';
+import { noBuffableMinionsAvailable } from '../buff-minion/methods/no-buffable-minions-available';
 import { determinePlayableCards } from '../_utils/determine-playable-cards';
 import removeCardFromHand from '../_utils/remove-card-from-hand';
-import { deselectCard } from './deselect-card.move';
+import removeLastPlayedCardFromHand from '../_utils/remove-last-played-card-from-hand';
+import { unsetPlayableCards } from '../_utils/unset-playable-cards';
+import { deselectCardMove } from './deselect-card.move';
 
 export interface PlayCardMove {
-  G: GameState;
-  ctx: Ctx;
   zoneNumber: number;
 }
 
-export const playCard = ({ ...props }: PlayCardMove) => {
+export const playCardMove = (
+  G: GameState,
+  ctx: Ctx,
+  { zoneNumber }: PlayCardMove
+) => {
   const {
-    G,
-    G: {
-      gameConfig: {
-        numerics: { numberOfSlotsPerZone },
-      },
-      players,
-      zones,
+    gameConfig: {
+      numerics: { numberOfSlotsPerZone },
     },
-    ctx,
-    ctx: { currentPlayer },
-    zoneNumber,
-  } = props;
+    players,
+    zones,
+  } = G;
+  const { currentPlayer } = ctx;
 
   const player = currentPlayer;
 
   // validate selected card
   if (G.selectedCardData[player] === undefined) return INVALID_MOVE;
+  if (G.selectedCardIndex[player] === undefined) return INVALID_MOVE;
 
   const ap = G.actionPoints;
   const playerObj = players[player];
@@ -66,14 +68,14 @@ export const playCard = ({ ...props }: PlayCardMove) => {
     revealedOnTurn: G.turn, // set revealedOnTurn value
   });
 
-  G.lastMoveMade = 'playCard';
+  G.lastMoveMade = LastMoveMade.PlayCard;
   lastCardPlayed.set(G, { card, index });
-  deselectCard({ G, ctx });
+  deselectCardMove(G, ctx, { player });
 
   if (card.mechanics?.includes(Mechanics.OnPlay)) {
     switch (card.playType) {
       case CardPlayType.Targeted:
-        initOnPlayTargetPhase(ctx, card);
+        initOnPlayTargetStage(G, ctx, card);
         break;
 
       default:
@@ -104,16 +106,32 @@ function initOnPlayGlobalMechanic(
   }
 }
 
-function initOnPlayTargetPhase(ctx: Ctx, card: Card) {
+function initOnPlayTargetStage(G: GameState, ctx: Ctx, card: Card) {
+  const { currentPlayer } = ctx;
+
   switch (card.mechanicsContext) {
     case Mechanics.Buff:
-      return ctx.events?.setPhase('buffMinion');
+      determineBuffableMinions(G, currentPlayer);
+      if (noBuffableMinionsAvailable(G, currentPlayer)) {
+        removeLastPlayedCardFromHand(G, currentPlayer)
+        return determinePlayableCards(G, ctx, currentPlayer);
+      } else {
+        unsetPlayableCards(G, currentPlayer);
+        return ctx.events?.setStage('buffMinion');
+      }
     case Mechanics.Damage:
-      return ctx.events?.setPhase('attackMinion');
+      determineAttackableMinions(G, currentPlayer);
+      if (noAttackableMinionsAvailable(G, currentPlayer)) {
+        removeLastPlayedCardFromHand(G, currentPlayer)
+        return determinePlayableCards(G, ctx, currentPlayer);
+      } else {
+        unsetPlayableCards(G, currentPlayer);
+        return ctx.events?.setStage('attackMinion');
+      }
     case Mechanics.Destroy:
-      return ctx.events?.setPhase('destroyMinion');
+      return ctx.events?.setStage('destroyMinion');
     case Mechanics.Heal:
-      return ctx.events?.setPhase('healMinion');
+      return ctx.events?.setStage('healMinion');
     default:
       break;
   }

@@ -2,13 +2,12 @@ import { GameState, PlayerID } from '../../../../types';
 import { cardIsNotSelf, getContextualPlayerIds } from '../../../../utils';
 
 export const determineBuffableMinions = (G: GameState, player: PlayerID) => {
-  const { playedCards } = G;
   const { opponent } = getContextualPlayerIds(player);
-  const lastPlayedCard = playedCards[player][playedCards[player].length - 1];
+  const lastCardPlayed = G.lastCardPlayed.card!;
 
   G.zones.forEach((z) => {
     z.sides[player].forEach((c) => {
-      if (cardIsNotSelf(c, lastPlayedCard)) {
+      if (cardIsNotSelf(c, lastCardPlayed)) {
         c.booleans.canBeBuffed = true;
       }
     });

@@ -20,10 +20,11 @@ const aiEnumeration = (G: GameState, ctx: Ctx, player: PlayerID) => {
     
     let moves: any[] = [];
 
-    if (gameConfig.ai.enableBotAiMoves === false) {
-      if (G.playerTurnDone[aiID] === false) pushSetDoneMove(moves, aiID);
-      return moves;
-    }
+    // if (gameConfig.ai.enableBotAiMoves === false) {
+    //   // pushSetDoneMove(moves, aiID);
+    //   return ctx.events?.endTurn()
+    //   // return moves;
+    // }
 
     // avoids onslaught of INVALID_MOVE errors
     // prettier-ignore

@@ -5,7 +5,7 @@ const core = `SET_CORE_`;
 export const gameConfig: GameConfig = {
   asynchronousTurns: false,
   debugConfig: {
-    debugHandCardKey: core + '060',
+    debugHandCardKey: core + '110',
     debugBoardCardKey: core + '001',
     debugBoardCardKeyAmount: 3,
     useDebugHandCardKey: true,
@@ -18,7 +18,7 @@ export const gameConfig: GameConfig = {
     useDebugOpponentBoardCardKey: false,
 
     debugScenario: 'heal-player-minion',
-    useDebugScenario: true,
+    useDebugScenario: false,
 
     logPhaseToConsole: true,
     showDebugBar: true,
@@ -27,7 +27,7 @@ export const gameConfig: GameConfig = {
   ai: {
     botToUse: 'MCTSBot',
     enableBotAi: true,
-    enableBotAiMoves: true,
+    enableBotAiMoves: false,
     logBotAiMovesToConsole: true,
   },
   numerics: {

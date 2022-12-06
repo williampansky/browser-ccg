@@ -32,6 +32,12 @@ import {
 import { Ctx } from 'boardgame.io';
 import { gt } from 'lodash';
 import { setDiscardedCard } from '../../../features';
+import { SelectCardMove } from '../../../game/phases/_moves/select-card.move';
+import { DeselectCardMove } from '../../../game/phases/_moves/deselect-card.move';
+import { PlayCardMove } from '../../../game/phases/_moves/play-card.move';
+import { AttackMinionMove } from '../../../game/phases/_moves/attack-minion.move';
+import { BuffMinionMove } from '../../../game/phases/_moves/buff-minion.move';
+import { SetDoneMove } from '../../../game/phases/_moves/set-done.move';
 
 interface PropsOnEffect {
   G: GameState;
@@ -97,44 +103,42 @@ export const Board = (props: GameProps) => {
   );
 
   // moves
-  const onEndTurnButtonClick = () => setTimeout(() => setDone(yourID), 1500);
-  const onCardClick = (obj: Card) => dispatch(showCardModal(obj));
-  const onCardSelect = (pl: PlayerID, uuid: string) => selectCard(uuid);
-  const onCardSlotDrop = (zNum: number) => playCard(zNum);
+  // const onEndTurnButtonClick = () => setTimeout(() => setDone(yourID), 1500);
+  const onEndTurnButtonClick = useCallback(() => {
+    return setDone({ player: yourID });
+  }, []);
 
-  const onCardDeselect = useCallback(() => {
-    if (selectedCardData[yourID] && selectedCardIndex[yourID]) {
-      return deselectCard();
-    }
-  }, [selectedCardData[yourID], selectedCardIndex[yourID]]);
+  const onCardClick = (obj: Card) => dispatch(showCardModal(obj));
+
+  const onCardDeselect = useCallback(({ player }: DeselectCardMove) => {
+    return deselectCard({ player });
+  }, []);
+
+  const onCardSelect = useCallback(({ player, cardUuid }: SelectCardMove) => {
+    return selectCard({ player, cardUuid });
+  }, []);
+
+  const onCardSlotDrop = useCallback(({ zoneNumber }: PlayCardMove) => {
+    return playCard({ zoneNumber: zoneNumber });
+  }, []);
 
   const onAttackMinionClick = useCallback(
-    (targetPlayer?: PlayerID, cardToAttack?: Card) => {
-      if (targetPlayer && cardToAttack)
-        return attackMinion(
-          cardToAttack,
-          playedCards[yourID][playedCards[yourID].length - 1],
-          targetPlayer
-        );
+    ({ card, targetPlayer }: AttackMinionMove) => {
+      if (card && targetPlayer) return attackMinion({ card, targetPlayer });
       else
         return console.error(
-          `ERROR: onAttackMinionClick(${targetPlayer}, ${cardToAttack})`
+          `ERROR: onAttackMinionClick(${targetPlayer}, ${card})`
         );
     },
     [currentPlayer, playedCards]
   );
 
   const onBuffMinionClick = useCallback(
-    (targetPlayer?: PlayerID, cardToBuff?: Card) => {
-      if (targetPlayer && cardToBuff)
-        return buffMinion(
-          cardToBuff,
-          playedCards[yourID][playedCards[yourID].length - 1],
-          targetPlayer
-        );
+    ({ card, targetPlayer }: BuffMinionMove) => {
+      if (card && targetPlayer) return buffMinion({ card, targetPlayer });
       else
         return console.error(
-          `ERROR: onBuffMinionClick(${targetPlayer}, ${cardToBuff})`
+          `ERROR: onBuffMinionClick(${targetPlayer}, ${card})`
         );
     },
     [currentPlayer, playedCards]
