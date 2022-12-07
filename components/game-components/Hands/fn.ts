@@ -14,9 +14,7 @@ const fn =
     isHovered: any = false,
     curIndex: any = 0,
     x: any = 0,
-    y: any = 0,
-    rotateX: any = 0,
-    rotateY: any = 0,
+    y: any = 0
   ) =>
   (index: number) => {
     const logMatch = false;
@@ -44,14 +42,11 @@ const fn =
         x: x,
         y: y + (hoverOffsetY / 2),
         rotate: 0,
-        rotateX: rotateX,
-        rotateY: rotateY,
         scale: 1.465,
         marginTop: 0,
         zIndex: 100,
-        perspective: 600,
         cursor: 'grabbing',
-        immediate: (n: string) => n === 'Y' || n === 'y' || n === 'scale' || n === 'zIndex',
+        immediate: (n: string) => n === 'x' || n === 'y' || n === 'scale' || n === 'zIndex',
         config: {
           ...springConfig.default,
           easing: easings.easeInOutQuart
@@ -63,12 +58,9 @@ const fn =
         x: 0,
         y: hoverOffsetY,
         rotate: 0,
-        rotateX: rotateX,
-        rotateY: rotateY,
         scale: 2,
         marginTop: 0,
         zIndex: 100,
-        perspective: 600,
         cursor: 'grab',
         immediate: true,
         config: {
@@ -84,25 +76,16 @@ const fn =
         x: 0,
         y: 0,
         rotate: 0,
-        rotateX: 0,
-        rotateY: 0,
         scale: calcScale(items, windowWidth),
         marginLeft: calcOffsetX(index, items, windowWidth),
         marginTop: 0,
         zIndex: index * 1,
-        perspective: 600,
         cursor: 'grab',
         display: 'block',
         // immediate: (n: string) => n === 'zIndex',
         immediate: false,
         config: {
           ...springConfig.default,
-          mass: 1,
-          tension: 170,
-          friction: 26,
-          clamp: false,
-          precision: 0.01,
-          velocity: 0,
           easing: easings.easeInOutQuart
         },
       };
