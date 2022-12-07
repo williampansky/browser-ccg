@@ -23,10 +23,10 @@ import {
   noBuffableMinionsAvailable,
   noDestroyableMinionsAvailable,
   noHealableMinionsAvailable,
-  removeCardFromHand,
   removeLastPlayedCardFromHand,
   unsetPlayableCards,
 } from '../../utils';
+import { activateAnyEventListeners } from '../phases/play-card/play-card.turn.on-move';
 
 export interface PlayCardMove {
   zoneNumber: number;
@@ -61,10 +61,20 @@ export const playCardMove = (
   if (zoneIsDisabled) return INVALID_MOVE;
   if (zoneIsFull) return INVALID_MOVE;
 
-  initValidMove(G, ctx, player, zoneNumber, card, cardUuid, cardIndex)
+  initValidPlayCardMove(G, ctx, player, zoneNumber, card, cardIndex);
 };
 
-export const initValidMove = (G: GameState, ctx: Ctx, player: PlayerID, zoneNumber: number, card: Card, cardUuid: string, cardIndex: number) => {
+export const initValidPlayCardMove = (
+  G: GameState,
+  ctx: Ctx,
+  player: PlayerID,
+  zoneNumber: number,
+  card: Card,
+  cardIndex: number
+) => {
+  const hasOnPlayMechanic = card.mechanics?.includes(Mechanics.OnPlay);
+  const playTypeIsTargeted = card.playType === CardPlayType.Targeted;
+
   // add card to PlayedCards array
   playedCards.push(G, player, card);
 
@@ -82,26 +92,16 @@ export const initValidMove = (G: GameState, ctx: Ctx, player: PlayerID, zoneNumb
   selectedCardData.reset(G, player);
   selectedCardIndex.reset(G, player);
   lastCardPlayed.set(G, { card, index: cardIndex });
+  removeLastPlayedCardFromHand(G, player);
   G.lastMoveMade = LastMoveMade.PlayCard;
 
-  if (card.mechanics?.includes(Mechanics.OnPlay)) {
-    switch (card.playType) {
-      case CardPlayType.Targeted:
-        determineTargetedOnPlayContext(G, ctx, card);
-        break;
-
-      default:
-        initOnPlayGlobalMechanic(G, ctx, zoneNumber, card, player);
-        // removeCardFromHand(G, player, cardUuid, cardIndex);
-        // determinePlayableCards(G, ctx, player);
-        break;
-    }
+  if (hasOnPlayMechanic && playTypeIsTargeted) {
+    determineTargetedOnPlayContext(G, ctx, card);
+  } else {
+    initOnPlayGlobalMechanic(G, ctx, zoneNumber, card, player);
+    activateAnyEventListeners(G, ctx);
   }
-  //  else {
-  //   removeCardFromHand(G, player, cardUuid, cardIndex);
-  //   determinePlayableCards(G, ctx, player);
-  // }
-}
+};
 
 export const initOnPlayGlobalMechanic = (
   G: GameState,
@@ -113,9 +113,9 @@ export const initOnPlayGlobalMechanic = (
   switch (card.mechanicsContext) {
     case Mechanics.Debuff:
       debuffPowerOfCardsInZone(G, zoneNumber, card, player);
-      return;
+      break;
     default:
-      return;
+      break;
   }
 };
 
@@ -130,15 +130,15 @@ export const determineTargetedOnPlayContext = (
     case Mechanics.Damage:  return initOnPlayDamageStage(G, ctx);
     case Mechanics.Destroy: return initOnPlayDestroyStage(G, ctx);
     case Mechanics.Heal:    return initOnPlayHealStage(G, ctx);
-    default:                break;
   }
 };
 
 export const initOnPlayBuffStage = (G: GameState, ctx: Ctx) => {
   const { currentPlayer } = ctx;
   determineBuffableMinions(G, currentPlayer);
+  const noTargetsAvailable = noBuffableMinionsAvailable(G, currentPlayer);
 
-  if (noBuffableMinionsAvailable(G, currentPlayer)) {
+  if (noTargetsAvailable) {
     return determinePlayableCards(G, ctx, currentPlayer);
   } else {
     unsetPlayableCards(G, currentPlayer);
@@ -149,8 +149,9 @@ export const initOnPlayBuffStage = (G: GameState, ctx: Ctx) => {
 export const initOnPlayDamageStage = (G: GameState, ctx: Ctx) => {
   const { currentPlayer } = ctx;
   determineAttackableMinions(G, currentPlayer);
+  const noTargetsAvailable = noAttackableMinionsAvailable(G, currentPlayer);
 
-  if (noAttackableMinionsAvailable(G, currentPlayer)) {
+  if (noTargetsAvailable) {
     return determinePlayableCards(G, ctx, currentPlayer);
   } else {
     unsetPlayableCards(G, currentPlayer);
@@ -161,8 +162,9 @@ export const initOnPlayDamageStage = (G: GameState, ctx: Ctx) => {
 export const initOnPlayDestroyStage = (G: GameState, ctx: Ctx) => {
   const { currentPlayer } = ctx;
   determineDestroyableMinions(G, currentPlayer);
+  const noTargetsAvailable = noDestroyableMinionsAvailable(G, currentPlayer);
 
-  if (noDestroyableMinionsAvailable(G, currentPlayer)) {
+  if (noTargetsAvailable) {
     return determinePlayableCards(G, ctx, currentPlayer);
   } else {
     unsetPlayableCards(G, currentPlayer);
@@ -173,8 +175,9 @@ export const initOnPlayDestroyStage = (G: GameState, ctx: Ctx) => {
 export const initOnPlayHealStage = (G: GameState, ctx: Ctx) => {
   const { currentPlayer } = ctx;
   determineHealableMinions(G, currentPlayer);
+  const noTargetsAvailable = noHealableMinionsAvailable(G, currentPlayer);
 
-  if (noHealableMinionsAvailable(G, currentPlayer)) {
+  if (noTargetsAvailable) {
     return determinePlayableCards(G, ctx, currentPlayer);
   } else {
     unsetPlayableCards(G, currentPlayer);

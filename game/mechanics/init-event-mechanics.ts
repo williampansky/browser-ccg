@@ -1,5 +1,6 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameConfig, GameState, PlayerID, Zone } from '../../types';
+import { drawCardFromPlayersDeck } from '../../utils';
 import { core008 } from './card-mechanics-by-key/core-008.mechanic';
 import { core009 } from './card-mechanics-by-key/core-009.mechanic';
 import { core012 } from './card-mechanics-by-key/core-012.mechanic';
@@ -24,17 +25,22 @@ const initEventMechanics = (
   // prettier-ignore
   switch (card?.key) {
     case 'SET_CORE_008':
-      return core008(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+      core008(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+      break;
     case 'SET_CORE_009':
-      return core009(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+      core009(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+      break;
     case 'SET_CORE_012':
-      return core012(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+      core012(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+      break;
     case 'SET_CORE_032':
-      return core032(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+      core032(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player);
+      break;
     case 'SET_CORE_085':
-      return core085(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
+      core085(G, ctx, gameConfig, zone, zoneIdx, card, cardIdx, player, opponent);
+      break;
     default:
-      return;
+      break;
   }
 };
 

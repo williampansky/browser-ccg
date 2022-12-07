@@ -112,17 +112,46 @@ export const MinionSlotWrapper = ({
         )}
 
         {children}
-        
-        <MinionEventAnimation
-          data={data}
-          index={index}
-          zoneNumber={zoneNumber}
-        />
-        <MinionOnPlayAnimation
-          data={data}
-          index={index}
-          zoneNumber={zoneNumber}
-        />
+
+        {data?.eventStream.map((e, i) => {
+          switch (e.event) {
+            case 'eventWasTriggered':
+              return (
+                <MinionEventAnimation
+                  key={`${i}_${e.uuid}`}
+                  index={index}
+                  zoneNumber={zoneNumber}
+                />
+              );
+            case 'onPlayWasTriggered':
+              return (
+                <MinionOnPlayAnimation
+                  key={`${i}_${e.uuid}`}
+                  data={data}
+                  index={index}
+                  zoneNumber={zoneNumber}
+                />
+              );
+          
+            default:
+              break;
+          }
+        })}
+
+        {/* {b && (
+          <>
+            <MinionEventAnimation
+              eventWasTriggered={b?.eventWasTriggered}
+              index={index}
+              zoneNumber={zoneNumber}
+            />
+            <MinionOnPlayAnimation
+              data={data}
+              index={index}
+              zoneNumber={zoneNumber}
+            />
+          </>
+        )} */}
       </>
     </div>
   );

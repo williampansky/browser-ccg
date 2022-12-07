@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import type { Card, GameState, PlayerID } from "../../../types"
 import { filterArray } from "../../../utils";
 import { InitGameMechanic, initTurnEnd } from "../../mechanics";
-import resetCardBooleans from "./reset-card-booleans";
+import resetCardBooleans from "../../../utils/reset-card-booleans";
 
 const loop = (G: GameState, ctx: Ctx, zoneIdx: number, playerId: PlayerID) => {
   G.zones[zoneIdx].sides[playerId].forEach((card: Card, cardIdx) => {

@@ -51,6 +51,7 @@ const createCardObject = (obj: CardBase): Card => {
       onPlayWasTriggered: false,
       wasDiscarded: false,
       wasDiscovered: false,
+      wasHealed: false,
       wasResurrected: false,
       wasReturned: false,
       wasTransferred: false,
@@ -65,6 +66,7 @@ const createCardObject = (obj: CardBase): Card => {
     displayPower: obj?.power,
     elite: obj?.elite || false,
     entourage: obj?.entourage,
+    eventStream: [],
     flavorText: obj?.flavorText
       ? replaceAllConstants(obj?.flavorText)
       : undefined,

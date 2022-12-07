@@ -12,7 +12,10 @@ const pushPowerStreamAndSetDisplay = (
   currentPower: number
 ): void => {
   // set boolean tag
-  if (cardToAdjust.displayPower < currentPower) {
+  if (cardToAdjust.basePower === currentPower) {
+    cardToAdjust.booleans.hasPowerIncreased = false;
+    cardToAdjust.booleans.hasPowerReduced = false;
+  } else if (cardToAdjust.displayPower < currentPower) {
     cardToAdjust.booleans.hasPowerIncreased = true;
     cardToAdjust.booleans.hasPowerReduced = false;
   } else if (cardToAdjust.displayPower > currentPower) {

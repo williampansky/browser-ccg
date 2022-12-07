@@ -9,7 +9,7 @@ import type {
   Zone,
 } from '../../../types';
 import { CardType } from '../../../enums';
-import { pushPowerStreamAndSetDisplay } from '../../../utils';
+import { pushEventStream, pushPowerStreamAndSetDisplay } from '../../../utils';
 
 /**
  * buff +1 power whenever you play a minion card
@@ -38,6 +38,7 @@ export const core008 = (
           // find the core009 card node
           const self = G.zones[zoneIdx].sides[player][cardIdx];
           self.booleans.eventWasTriggered = true;
+          pushEventStream(self, c, 'eventWasTriggered');
 
           // push powerStream and set it
           pushPowerStreamAndSetDisplay(
@@ -50,4 +51,6 @@ export const core008 = (
       }
     });
   });
+
+  // G.zones[zoneIdx].sides[player][cardIdx].booleans.eventWasTriggered = false;
 };

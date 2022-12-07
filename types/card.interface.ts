@@ -68,6 +68,7 @@ export interface CardStateBooleans {
   onPlayWasTriggered: boolean;
   wasDiscarded: boolean;
   wasDiscovered: boolean;
+  wasHealed: boolean;
   wasResurrected: boolean;
   wasReturned: boolean;
   wasTransferred: boolean;
@@ -114,6 +115,27 @@ export interface CardBase {
   targetingText?: string;
   text?: string;
   type: CardType | string;
+}
+
+/**
+ * Used to track a card's event activations;
+ * e.g. EVENT, ON_PLAY, DEBUFF, etc...
+ */
+export interface CardEventStream {
+  /**
+   * card that activated this event
+   */
+  blame: string;
+
+  /**
+   * event that was made or triggered
+   */
+  event: string;
+
+  /**
+   * unique id of the blame target
+   */
+  uuid: string;
 }
 
 /**
@@ -181,10 +203,12 @@ export interface Card {
   collectible: boolean;
   currentCost: number;
   description?: string;
+  destroyedOnTurn?: number;
   displayPower: number;
   displayHealth: number;
   elite: boolean;
   entourage?: string[];
+  eventStream: CardEventStream[];
   flavorText?: string;
   fpoArt?: boolean;
   healthStream: CardHealthStream[];

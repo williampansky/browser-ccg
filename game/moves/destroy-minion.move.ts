@@ -1,12 +1,11 @@
 import type { Ctx, LongFormMove } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../types';
 import { LastMoveMade } from '../../enums';
+import { lastCardPlayed } from '../state';
 import {
   cardUuidMatch,
-  determinePlayableCards,
   getContextualPlayerIds,
   handleDestroyedCards,
-  removeLastPlayedCardFromHand,
   resetDestroyableMinions,
 } from '../../utils';
 
@@ -23,7 +22,7 @@ export const destroyMinionMove = (
   const { currentPlayer } = ctx;
   const { opponent } = getContextualPlayerIds(currentPlayer);
   const cardToDestroy = card;
-  const lastCardPlayed = G.lastCardPlayed?.card!;
+  const lastCard = G.lastCardPlayed?.card!;
 
   const init = (c: Card) => {
     if (cardUuidMatch(c, cardToDestroy)) {
@@ -31,7 +30,7 @@ export const destroyMinionMove = (
       c.booleans.canBeDestroyed = false;
     }
 
-    if (cardUuidMatch(c, lastCardPlayed)) {
+    if (cardUuidMatch(c, lastCard)) {
       c.booleans.onPlayWasTriggered = true;
     }
   };
@@ -42,10 +41,9 @@ export const destroyMinionMove = (
   });
 
   G.lastMoveMade = LastMoveMade.AttackMinion;
-  removeLastPlayedCardFromHand(G, currentPlayer);
   resetDestroyableMinions(G, currentPlayer);
-  handleDestroyedCards(G, ctx);
-  determinePlayableCards(G, ctx, currentPlayer);
+  lastCardPlayed.reset(G);
+  // handleDestroyedCards(G, ctx);
   ctx.events?.endStage();
 };
 

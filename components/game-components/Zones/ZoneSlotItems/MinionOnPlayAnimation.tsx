@@ -12,8 +12,8 @@ export const MinionOnPlayAnimation = ({ data, index, zoneNumber }: Props) => {
   return (
     <div
       className={[
-        'minionslot',
-        b?.onPlayWasTriggered ? 'minionslot--onplay-was-triggered' : '',
+        'minionslot minionslot--onplay-was-triggered',
+        // b?.onPlayWasTriggered ? 'minionslot--onplay-was-triggered' : '',
       ].join(' ')}
       data-component='MinionOnPlayAnimation'
       data-index={index}

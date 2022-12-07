@@ -3,14 +3,15 @@ import { subtract } from 'mathjs';
 import type { Ctx, LongFormMove } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../types';
 import { LastMoveMade } from '../../enums';
+import { lastCardPlayed } from '../state';
 import {
   cardUuidMatch,
-  determinePlayableCards,
   getContextualPlayerIds,
   handleDestroyedCards,
+  pushEventStream,
   pushHealthStreamAndSetDisplay,
-  removeLastPlayedCardFromHand,
   resetAttackableMinions,
+  resetCardTargetBooleans,
 } from '../../utils';
 
 export interface AttackMinionMove {
@@ -26,35 +27,40 @@ export const attackMinionMove = (
   const { currentPlayer } = ctx;
   const { opponent } = getContextualPlayerIds(currentPlayer);
   const cardToAttack = card;
-  const lastCardPlayed = G.lastCardPlayed?.card!;
+  const lastCard = G.lastCardPlayed?.card!;
 
   const init = (c: Card) => {
     if (cardUuidMatch(c, cardToAttack)) {
+      pushEventStream(c, lastCard, 'wasAttacked');
       pushHealthStreamAndSetDisplay(
         c,
-        lastCardPlayed,
-        lastCardPlayed.numberPrimary,
-        subtract(c.displayHealth, lastCardPlayed.numberPrimary)
+        lastCard,
+        lastCard.numberPrimary,
+        subtract(c.displayHealth, lastCard.numberPrimary)
       );
 
-      if (lte(c.displayHealth, 0)) c.booleans.isDestroyed = true;
+      if (lte(c.displayHealth, 0)) {
+        c.booleans.isDestroyed = true;
+        c.destroyedOnTurn = G.turn;
+      }
     }
 
-    if (cardUuidMatch(c, lastCardPlayed)) {
+    if (cardUuidMatch(c, lastCard)) {
       c.booleans.onPlayWasTriggered = true;
+      pushEventStream(c, cardToAttack, 'onPlayWasTriggered');
     }
   };
 
   G.zones.forEach((z) => {
+    z.sides[currentPlayer].forEach((c) => init(c));
     z.sides[targetPlayer].forEach((c) => init(c));
-    z.sides[opponent].forEach((c) => init(c));
   });
 
   G.lastMoveMade = LastMoveMade.AttackMinion;
-  removeLastPlayedCardFromHand(G, currentPlayer);
-  resetAttackableMinions(G, currentPlayer);
   handleDestroyedCards(G, ctx);
-  determinePlayableCards(G, ctx, currentPlayer);
+  resetCardTargetBooleans(G, ctx);
+  // resetAttackableMinions(G, currentPlayer);
+  lastCardPlayed.reset(G);
   ctx.events?.endStage();
 };
 

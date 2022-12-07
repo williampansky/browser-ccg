@@ -1,13 +1,12 @@
 import type { Ctx, LongFormMove } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../types';
 import { LastMoveMade } from '../../enums';
+import { lastCardPlayed } from '../state';
 import { core031Buff } from '../mechanics/core-mechanics-by-key/mechanic.core.031';
 import { core110Buff } from '../mechanics/core-mechanics-by-key/mechanic.core.110';
 import {
   cardUuidMatch,
-  determinePlayableCards,
   getContextualPlayerIds,
-  removeLastPlayedCardFromHand,
   resetBuffableMinions,
 } from '../../utils';
 
@@ -24,23 +23,23 @@ export const buffMinionMove = (
   const { currentPlayer } = ctx;
   const { opponent } = getContextualPlayerIds(currentPlayer);
   const cardToBuff = card;
-  const lastCardPlayed = G.lastCardPlayed?.card!;
+  const lastCard = G.lastCardPlayed?.card!;
 
   const init = (c: Card) => {
     if (cardUuidMatch(c, cardToBuff)) {
-      switch (lastCardPlayed.key) {
+      switch (lastCard.key) {
         case 'SET_CORE_031':
-          core031Buff(G, ctx, targetPlayer, c?.uuid, lastCardPlayed);
+          core031Buff(G, ctx, targetPlayer, c?.uuid, lastCard);
           break;
         case 'SET_CORE_110':
-          core110Buff(G, ctx, targetPlayer, c?.uuid, lastCardPlayed);
+          core110Buff(G, ctx, targetPlayer, c?.uuid, lastCard);
           break;
         default:
           break;
       }
     }
 
-    if (cardUuidMatch(c, lastCardPlayed)) {
+    if (cardUuidMatch(c, lastCard)) {
       c.booleans.onPlayWasTriggered = true;
     }
   };
@@ -51,9 +50,8 @@ export const buffMinionMove = (
   });
 
   G.lastMoveMade = LastMoveMade.BuffMinion;
-  removeLastPlayedCardFromHand(G, currentPlayer);
   resetBuffableMinions(G, currentPlayer);
-  determinePlayableCards(G, ctx, currentPlayer);
+  lastCardPlayed.reset(G);
   ctx.events?.endStage();
 };
 

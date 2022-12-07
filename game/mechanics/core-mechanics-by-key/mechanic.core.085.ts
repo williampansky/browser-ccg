@@ -6,17 +6,8 @@ import type {
   PlayerID,
   Zone,
 } from '../../../types';
-import { drawCardFromPlayersDeck } from '../../../utils';
+import { cardWasHealed, drawCardFromPlayersDeck, pushEventStream } from '../../../utils';
 import { gt, gte } from 'lodash';
-
-const wasHealed = (c: Card) => {
-  if (gte(c.healthStream.length, 2)) {
-    return gt(
-      c.healthStream[c.healthStream.length - 1]?.currentHealth,
-      c.healthStream[c.healthStream.length - 2]?.currentHealth
-    );
-  }
-}
 
 /**
  * draw a card anytime a minion is healed
@@ -34,17 +25,20 @@ export const core085 = (
 ) => {
   G.zones.forEach((z, zIdx) => {
     z.sides[player].forEach((c, cIdx) => {
-      if (wasHealed(c)) {
+      if (c.booleans.wasHealed === true) {
+        console.log(c.name, card.name, card.booleans.eventWasTriggered)
         drawCardFromPlayersDeck(G, player);
         card.booleans.eventWasTriggered = true;
+        pushEventStream(card, c, 'eventWasTriggered');
+        // card.booleans.eventWasTriggered = true;
       }
     });
 
-    z.sides[opponent].forEach((c, cIdx) => {
-      if (wasHealed(c)) {
-        drawCardFromPlayersDeck(G, player);
-        card.booleans.eventWasTriggered = true;
-      }
-    });
+    // z.sides[opponent].forEach((c, cIdx) => {
+    //   if (cardWasHealed(c)) {
+    //     drawCardFromPlayersDeck(G, player);
+    //     // card.booleans.eventWasTriggered = true;
+    //   }
+    // });
   });
 };

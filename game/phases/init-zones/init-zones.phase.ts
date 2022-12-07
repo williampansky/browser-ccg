@@ -6,12 +6,16 @@ import { fxEnd } from '../../config.bgio-effects';
 import { createZoneObject, logPhaseToConsole } from '../../../utils';
 
 import ZONE_DATABASE from '../../data/zones.json';
+import core008Scenario from '../../debug/scenarios/core-008.scenario';
 import healPlayerMinionScenario from '../../debug/scenarios/heal-player-minion.scenario';
 import dealAoeDmgScenario from '../../debug/scenarios/deal-aoe-damage.scenario';
+import opponentMinionsBoonedScenario from '../../debug/scenarios/opponent-minions-have-boon.scenario';
 
 const scenarios = {
+  'core-008': core008Scenario,
   'heal-player-minion': healPlayerMinionScenario,
   'deal-aoe-damage': dealAoeDmgScenario,
+  'opponent-minions-have-boon': opponentMinionsBoonedScenario,
 } as Record<string, any>
 
 export default<PhaseConfig> {
