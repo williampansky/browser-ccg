@@ -49,6 +49,7 @@ export { default as noAttackableMinionsAvailable } from './no-attackable-minions
 export { default as noBuffableMinionsAvailable } from './no-buffable-minions-available';
 export { default as noDestroyableMinionsAvailable } from './no-destroyable-minions-available';
 export { default as noHealableMinionsAvailable } from './no-healable-minions-available';
+export { default as noStageActive } from './no-stage-active';
 export { default as pushHealthStreamAndSetDisplay } from './push-healthstream-and-set-display';
 export { default as pushPowerStreamAndSetDisplay } from './push-powerstream-and-set-display';
 export { default as removeBoonFromCards } from './remove-boon-from-cards';

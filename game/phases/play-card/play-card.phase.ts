@@ -16,6 +16,7 @@ import {
   removeLastPlayedCardFromHand,
   unsetPlayableCards,
 } from '../../../utils';
+import playCardTurnOnMove from './play-card.turn.on-move';
 
 export default <PhaseConfig>{
   next(G: GameState, ctx: Ctx) {
@@ -59,16 +60,7 @@ export default <PhaseConfig>{
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;
     },
-    onMove(G: GameState, ctx: Ctx) {
-      if (G.lastMoveMade === LastMoveMade.PlayCard) {
-        handleZonePowersCalculations(G, ctx);
-
-        if (ctx.activePlayers === null) {
-          removeLastPlayedCardFromHand(G, ctx.currentPlayer);
-          determinePlayableCards(G, ctx, ctx.currentPlayer);
-        }
-      }
-    },
+    onMove: playCardTurnOnMove,
     stages: playCardStages,
   },
 };
