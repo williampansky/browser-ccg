@@ -183,8 +183,8 @@ export const PlayerHand = ({
         if (elem && elem.dataset.receive) {
           // console.log('🚀 target', elem);
           const zoneNumber = Number(elem.getAttribute('data-index'));
-          setLastIdx(originalIndex);
-          setLastUuid(hand[originalIndex].uuid);
+          // setLastIdx(originalIndex);
+          // setLastUuid(hand[originalIndex].uuid);
           onCardSlotDrop({ zoneNumber });
         } else {
           deselect();

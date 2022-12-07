@@ -1,11 +1,17 @@
 import { gte } from 'lodash';
+import { current } from 'immer';
 import { INVALID_MOVE } from 'boardgame.io/core';
-import type { Ctx, LongFormMove } from 'boardgame.io';
+import type { Ctx, Game, LongFormMove } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../types';
 import { CardPlayType, LastMoveMade, Mechanics } from '../../enums';
 import { debuffPowerOfCardsInZone } from '../mechanics/on-play-mechanics';
-import { actionPoints, lastCardPlayed, playedCards } from '../state';
-import { deselectCardMove } from './deselect-card.move';
+import {
+  actionPoints,
+  lastCardPlayed,
+  playedCards,
+  selectedCardData,
+  selectedCardIndex,
+} from '../state';
 import {
   determineAttackableMinions,
   determineBuffableMinions,
@@ -31,35 +37,34 @@ export const playCardMove = (
   ctx: Ctx,
   { zoneNumber }: PlayCardMove
 ) => {
-  const {
-    gameConfig: {
-      numerics: { numberOfSlotsPerZone },
-    },
-    players,
-    zones,
-  } = G;
   const { currentPlayer } = ctx;
-
   const player = currentPlayer;
+  const slotsPerZone = G.gameConfig.numerics.numberOfSlotsPerZone;
+  const noSelectedCardData = G.selectedCardData[player] === undefined;
+  const noSelectedCardIndex = G.selectedCardIndex[player] === undefined;
 
   // validate selected card
-  if (G.selectedCardData[player] === undefined) return INVALID_MOVE;
-  if (G.selectedCardIndex[player] === undefined) return INVALID_MOVE;
+  if (noSelectedCardData) return INVALID_MOVE;
+  if (noSelectedCardIndex) return INVALID_MOVE;
 
   const ap = G.actionPoints;
-  const playerObj = players[player];
-  const card = G.selectedCardData[player]! as Card;
-  const cardUuid = G.selectedCardData[player]!.uuid;
-  const index = G.selectedCardIndex[player]!;
-  const zone = zones[zoneNumber];
+  const card = current(G.selectedCardData[player]!) as Card;
+  const cardUuid = G.selectedCardData[player]!.uuid!;
+  const cardIndex = G.selectedCardIndex[player]!;
+  const zone = G.zones[zoneNumber];
   const cantAffordCard = !gte(ap[player].current, card.currentCost);
+  const zoneIsDisabled = zone.disabled[player];
+  const zoneIsFull = zone.sides[player].length > slotsPerZone;
 
+  // validate move playability
   if (cantAffordCard) return INVALID_MOVE;
+  if (zoneIsDisabled) return INVALID_MOVE;
+  if (zoneIsFull) return INVALID_MOVE;
 
-  // validate zone playability
-  if (zone.disabled[player]) return INVALID_MOVE;
-  if (zone.sides[player].length > numberOfSlotsPerZone) return INVALID_MOVE;
+  initValidMove(G, ctx, player, zoneNumber, card, cardUuid, cardIndex)
+};
 
+export const initValidMove = (G: GameState, ctx: Ctx, player: PlayerID, zoneNumber: number, card: Card, cardUuid: string, cardIndex: number) => {
   // add card to PlayedCards array
   playedCards.push(G, player, card);
 
@@ -67,16 +72,17 @@ export const playCardMove = (
   actionPoints.subtract(G, player, card.currentCost);
 
   // push card to zone side array
-  zone.sides[player].push({
+  G.zones[zoneNumber].sides[player].push({
     ...card,
     revealed: true, // reveal card
     displayPower: getCardPower(card), // set display power
     revealedOnTurn: G.turn, // set revealedOnTurn value
   });
 
+  selectedCardData.reset(G, player);
+  selectedCardIndex.reset(G, player);
+  lastCardPlayed.set(G, { card, index: cardIndex });
   G.lastMoveMade = LastMoveMade.PlayCard;
-  lastCardPlayed.set(G, { card, index });
-  deselectCardMove(G, ctx, { player });
 
   if (card.mechanics?.includes(Mechanics.OnPlay)) {
     switch (card.playType) {
@@ -86,15 +92,16 @@ export const playCardMove = (
 
       default:
         initOnPlayGlobalMechanic(G, ctx, zoneNumber, card, player);
-        removeCardFromHand(G, player, cardUuid, index);
-        determinePlayableCards(G, ctx, player);
+        // removeCardFromHand(G, player, cardUuid, cardIndex);
+        // determinePlayableCards(G, ctx, player);
         break;
     }
-  } else {
-    removeCardFromHand(G, player, cardUuid, index);
-    determinePlayableCards(G, ctx, player);
   }
-};
+  //  else {
+  //   removeCardFromHand(G, player, cardUuid, cardIndex);
+  //   determinePlayableCards(G, ctx, player);
+  // }
+}
 
 export const initOnPlayGlobalMechanic = (
   G: GameState,
@@ -106,9 +113,9 @@ export const initOnPlayGlobalMechanic = (
   switch (card.mechanicsContext) {
     case Mechanics.Debuff:
       debuffPowerOfCardsInZone(G, zoneNumber, card, player);
-      break;
+      return;
     default:
-      break;
+      return;
   }
 };
 
@@ -132,7 +139,6 @@ export const initOnPlayBuffStage = (G: GameState, ctx: Ctx) => {
   determineBuffableMinions(G, currentPlayer);
 
   if (noBuffableMinionsAvailable(G, currentPlayer)) {
-    removeLastPlayedCardFromHand(G, currentPlayer);
     return determinePlayableCards(G, ctx, currentPlayer);
   } else {
     unsetPlayableCards(G, currentPlayer);
@@ -145,7 +151,6 @@ export const initOnPlayDamageStage = (G: GameState, ctx: Ctx) => {
   determineAttackableMinions(G, currentPlayer);
 
   if (noAttackableMinionsAvailable(G, currentPlayer)) {
-    removeLastPlayedCardFromHand(G, currentPlayer);
     return determinePlayableCards(G, ctx, currentPlayer);
   } else {
     unsetPlayableCards(G, currentPlayer);
@@ -158,7 +163,6 @@ export const initOnPlayDestroyStage = (G: GameState, ctx: Ctx) => {
   determineDestroyableMinions(G, currentPlayer);
 
   if (noDestroyableMinionsAvailable(G, currentPlayer)) {
-    removeLastPlayedCardFromHand(G, currentPlayer);
     return determinePlayableCards(G, ctx, currentPlayer);
   } else {
     unsetPlayableCards(G, currentPlayer);
@@ -171,7 +175,6 @@ export const initOnPlayHealStage = (G: GameState, ctx: Ctx) => {
   determineHealableMinions(G, currentPlayer);
 
   if (noHealableMinionsAvailable(G, currentPlayer)) {
-    removeLastPlayedCardFromHand(G, currentPlayer);
     return determinePlayableCards(G, ctx, currentPlayer);
   } else {
     unsetPlayableCards(G, currentPlayer);

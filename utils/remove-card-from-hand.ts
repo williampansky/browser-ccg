@@ -10,5 +10,4 @@ export default function removeCardFromHand(
 ) {
   filterArray(G.players[player].cards.hand, cardUuid, cardIndex);
   counts.decrementHand(G, player);
-  lastCardPlayed.reset(G);
 }

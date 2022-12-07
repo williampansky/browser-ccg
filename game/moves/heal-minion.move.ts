@@ -1,4 +1,5 @@
 import { add } from 'mathjs';
+import { current } from 'immer';
 import type { Ctx, LongFormMove } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../types';
 import { LastMoveMade } from '../../enums';
@@ -11,6 +12,7 @@ import {
   removeLastPlayedCardFromHand,
   resetHealableMinions,
 } from '../../utils';
+import { lastCardPlayed } from '../state';
 
 export interface HealMinionMove {
   card: Card;
@@ -25,23 +27,23 @@ export const healMinionMove = (
   const { currentPlayer } = ctx;
   const { opponent } = getContextualPlayerIds(currentPlayer);
   const cardToDestroy = card;
-  const lastCardPlayed = G.lastCardPlayed?.card!;
+  const lastCard = G.lastCardPlayed?.card!;
 
   const init = (c: Card) => {
     if (cardUuidMatch(c, cardToDestroy)) {
       pushHealthStreamAndSetDisplay(
         c,
-        lastCardPlayed,
-        lastCardPlayed.numberPrimary,
+        lastCard,
+        lastCard.numberPrimary,
         limitNumberWithinRange(
-          add(c.displayHealth, lastCardPlayed.numberPrimary),
+          add(c.displayHealth, lastCard.numberPrimary),
           c.baseHealth,
-          lastCardPlayed.numberPrimary
+          lastCard.numberPrimary
         )
       );
     }
 
-    if (cardUuidMatch(c, lastCardPlayed)) {
+    if (cardUuidMatch(c, lastCard)) {
       c.booleans.onPlayWasTriggered = true;
     }
   };
@@ -51,10 +53,11 @@ export const healMinionMove = (
     z.sides[opponent].forEach((c) => init(c));
   });
 
-  G.lastMoveMade = LastMoveMade.AttackMinion;
-  removeLastPlayedCardFromHand(G, currentPlayer);
+  G.lastMoveMade = LastMoveMade.HealMinion;
+  // removeLastPlayedCardFromHand(G, currentPlayer);
+  // determinePlayableCards(G, ctx, currentPlayer);
   resetHealableMinions(G, currentPlayer);
-  determinePlayableCards(G, ctx, currentPlayer);
+  lastCardPlayed.reset(G);
   ctx.events?.endStage();
 };
 

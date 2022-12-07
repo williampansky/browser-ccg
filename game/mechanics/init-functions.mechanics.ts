@@ -50,8 +50,9 @@ export function initEvent(
 ) {
   const { opponent } = getContextualPlayerIds(player);
   const hasEvent = card.mechanics?.includes(Mechanics.Event);
+  const hasNotTriggered = card.booleans.eventWasTriggered === false;
 
-  if (hasEvent) {
+  if (hasEvent && hasNotTriggered) {
     initEventMechanics(
       G,
       ctx,
