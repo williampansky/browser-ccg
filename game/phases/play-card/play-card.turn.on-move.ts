@@ -11,13 +11,15 @@ import {
 const { PlayCard } = LastMoveMade;
 
 export default function playCardTurnOnMove(G: GameState, ctx: Ctx) {
+  handleZonePowersCalculations(G, ctx);
+
   if (G.lastMoveMade === PlayCard) {
     lastMoveWasPlayCardFlow(G, ctx);
   }
 }
 
 export const lastMoveWasPlayCardFlow = (G: GameState, ctx: Ctx) => {
-  handleZonePowersCalculations(G, ctx);
+  // handleZonePowersCalculations(G, ctx);
   if (noStageActive(ctx)) noStageActiveFlow(G, ctx);
 }
 
