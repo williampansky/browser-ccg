@@ -32,6 +32,9 @@ export interface PlayCardMove {
   zoneNumber: number;
 }
 
+/**
+ * 
+ */
 export const playCardMove = (
   G: GameState,
   ctx: Ctx,
@@ -49,7 +52,6 @@ export const playCardMove = (
 
   const ap = G.actionPoints;
   const card = G.selectedCardData[player]!;
-  const cardUuid = G.selectedCardData[player]!.uuid!;
   const cardInHandIndex = G.selectedCardIndex[player]!;
   const zone = G.zones[zoneNumber];
   const cantAffordCard = !gte(ap[player].current, card.currentCost);
@@ -61,9 +63,13 @@ export const playCardMove = (
   if (zoneIsDisabled) return INVALID_MOVE;
   if (zoneIsFull) return INVALID_MOVE;
 
+  // if valid, init move
   initValidPlayCardMove(G, ctx, player, zoneNumber, card, cardInHandIndex);
 };
 
+/**
+ * 
+ */
 export const initValidPlayCardMove = (
   G: GameState,
   ctx: Ctx,
@@ -90,12 +96,16 @@ export const initValidPlayCardMove = (
     revealedOnTurn: G.turn, // set revealedOnTurn value
   });
 
+  // reset datas
   selectedCardData.reset(G, player);
   selectedCardIndex.reset(G, player);
   lastCardPlayed.set(G, { card, index: cardInHandIndex });
   removeLastPlayedCardFromHand(G, player);
+
+  // set last move
   G.lastMoveMade = LastMoveMade.PlayCard;
 
+  // init card mechs
   if (hasOnPlayMechanic && playTypeIsTargeted) {
     determineTargetedOnPlayContext(G, ctx, card);
   } else if (hasOnPlayMechanic && playTypeIsGlobal) {
@@ -114,15 +124,48 @@ export const determineOnPlayGlobalMechanic = (
   player: PlayerID
 ) => {
   switch (card.mechanicsContext) {
+    case Mechanics.AddCard:
+      console.log('@todo init global AddCard');
+      break;
+    case Mechanics.Boon:
+      console.log('@todo init global Boon');
+      break;
+    case Mechanics.Buff:
+      console.log('@todo init global Buff');
+      break;
+    case Mechanics.Bulwark:
+      console.log('@todo init global Bulwark');
+      break;
+    case Mechanics.Damage:
+      console.log('@todo init global Damage');
+      break;
     case Mechanics.Debuff:
-      initGlobalDebuffMechanic(G, ctx, zoneNumber, card, player);
+      initGlobalDebuffMechanicByCardKey(G, ctx, zoneNumber, card, player);
+      break;
+    case Mechanics.Destroy:
+      console.log('@todo init global Destroy');
+      break;
+    case Mechanics.Disable:
+      console.log('@todo init global Disable');
+      break;
+    case Mechanics.DiscardCard:
+      console.log('@todo init global DiscardCard');
+      break;
+    case Mechanics.Heal:
+      console.log('@todo init global Heal');
+      break;
+    case Mechanics.Summon:
+      console.log('@todo init global Summon');
       break;
     default:
       break;
   }
 };
 
-export const initGlobalDebuffMechanic = (
+/**
+ * 
+ */
+export const initGlobalDebuffMechanicByCardKey = (
   G: GameState,
   ctx: Ctx,
   zoneNumber: number,
@@ -136,6 +179,9 @@ export const initGlobalDebuffMechanic = (
   }
 };
 
+/**
+ * 
+ */
 export const determineTargetedOnPlayContext = (
   G: GameState,
   ctx: Ctx,
@@ -150,6 +196,9 @@ export const determineTargetedOnPlayContext = (
   }
 };
 
+/**
+ * 
+ */
 export const initTargetedOnPlayBuffStage = (G: GameState, ctx: Ctx) => {
   const { currentPlayer } = ctx;
   determineBuffableMinions(G, currentPlayer);
@@ -163,6 +212,9 @@ export const initTargetedOnPlayBuffStage = (G: GameState, ctx: Ctx) => {
   }
 };
 
+/**
+ * 
+ */
 export const initTargetedOnPlayDamageStage = (G: GameState, ctx: Ctx) => {
   const { currentPlayer } = ctx;
   determineAttackableMinions(G, currentPlayer);
@@ -176,6 +228,9 @@ export const initTargetedOnPlayDamageStage = (G: GameState, ctx: Ctx) => {
   }
 };
 
+/**
+ * 
+ */
 export const initTargetedOnPlayDestroyStage = (G: GameState, ctx: Ctx) => {
   const { currentPlayer } = ctx;
   determineDestroyableMinions(G, currentPlayer);
@@ -189,6 +244,9 @@ export const initTargetedOnPlayDestroyStage = (G: GameState, ctx: Ctx) => {
   }
 };
 
+/**
+ * 
+ */
 export const initTargetedOnPlayHealStage = (G: GameState, ctx: Ctx) => {
   const { currentPlayer } = ctx;
   determineHealableMinions(G, currentPlayer);
@@ -202,6 +260,9 @@ export const initTargetedOnPlayHealStage = (G: GameState, ctx: Ctx) => {
   }
 };
 
+/**
+ * 
+ */
 export const playCard: LongFormMove = {
   client: false,
   noLimit: true,
