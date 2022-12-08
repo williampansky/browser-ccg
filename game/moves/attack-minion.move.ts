@@ -25,17 +25,18 @@ export const attackMinionMove = (
   { card, targetPlayer }: AttackMinionMove
 ) => {
   const { currentPlayer } = ctx;
-  const { opponent } = getContextualPlayerIds(currentPlayer);
+  // const { opponent } = getContextualPlayerIds(currentPlayer);
   const cardToAttack = card;
   const lastCard = G.lastCardPlayed?.card!;
 
   const init = (c: Card) => {
     if (cardUuidMatch(c, cardToAttack)) {
+      c.booleans.hasHealthReduced = true;
       pushEventStream(c, lastCard, 'wasAttacked');
       pushHealthStreamAndSetDisplay(
         c,
         lastCard,
-        lastCard.numberPrimary,
+        -lastCard.numberPrimary,
         subtract(c.displayHealth, lastCard.numberPrimary)
       );
 

@@ -9,6 +9,7 @@ export interface MinionPowerProps {
   alternate?: boolean;
   isIncreased?: boolean;
   isReduced?: boolean;
+  isDestroyed?: boolean;
 }
 
 export const MinionPower = ({
@@ -18,6 +19,7 @@ export const MinionPower = ({
   alternate = false,
   isIncreased = false,
   isReduced = false,
+  isDestroyed = false,
 }: MinionPowerProps) => {
   return (
     <div
@@ -26,6 +28,7 @@ export const MinionPower = ({
         alternate ? styles['alternate'] : '',
         isIncreased ? styles['power--buffed'] : '',
         isReduced ? styles['power--debuffed'] : '',
+        isDestroyed ? styles['power--nulled'] : '',
       ].join(' ')}
       data-component='MinionPower'
       data-value={current}

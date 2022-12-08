@@ -68,3 +68,5 @@ export { default as resetDestroyableMinions } from './reset-destroyable-minions'
 export { default as resetHealableMinions } from './reset-healable-minions';
 export { default as unsetPlayableCards } from './unset-playable-cards';
 export { default as cardWasHealed } from './card-was-healed'
+export { default as removeFromPowerStreamAndSetDisplay } from './remove-from-powerstream-and-set-display'
+export { default as removeFromHealthStreamAndSetDisplay } from './remove-from-healthstream-and-set-display'

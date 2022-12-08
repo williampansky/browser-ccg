@@ -11,7 +11,6 @@ const resetCardTargetBooleans = (G: GameState, ctx: Ctx, player?: PlayerID) => {
       canBeDestroyed: false,
       canBeHealed: false,
       eventWasTriggered: false,
-      wasHealedThisTurn: false,
     };
   };
 

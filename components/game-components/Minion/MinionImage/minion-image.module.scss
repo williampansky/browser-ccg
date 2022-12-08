@@ -1,6 +1,8 @@
-$useFullBorder: true;
 
 .wrapper {
+  $useFullBorder: true;
+  $borderRadius: #{var(--minion-border-radius)};
+
   align-items: center;
   background-color: #191919;
   border-bottom-left-radius: var(--minion-border-radius);
@@ -85,19 +87,27 @@ $useFullBorder: true;
   }
 
   &:before {
-    background: transparent;
-    border-radius: var(--avatar-border-radius);
+    background: black;
+    border-radius: $borderRadius;
     bottom: 0;
     // box-shadow: inset 0px 0px 0px 2px rgba(190, 190, 190, 0.265);
     content: '';
     height: 100%;
     left: 0;
     pointer-events: none;
+    touch-action: none;
     position: absolute;
     right: 0;
     top: 0;
     width: 100%;
-    z-index: 0;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 200ms ease-in;
+    will-change: opacity;
+  }
+
+  &.is-destroyed:before {
+    opacity: 0.45;
   }
 }
 

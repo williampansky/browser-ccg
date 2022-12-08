@@ -14,6 +14,7 @@ const calculateZoneSidePower = (
   // looping thru each side and add each card's current power
   // to the sidePowerX variable defined above
   G.zones[zoneNumber].sides[playerId].forEach((obj: Card) => {
+    if (obj.booleans.isDestroyed) return;
     return (sidePower = add(obj.displayPower, sidePower));
   });
 

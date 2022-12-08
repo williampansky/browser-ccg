@@ -6,6 +6,8 @@ import {
   cardUuidMatch,
   getContextualPlayerIds,
   handleDestroyedCards,
+  pushEventStream,
+  resetCardTargetBooleans,
   resetDestroyableMinions,
 } from '../../utils';
 
@@ -20,30 +22,34 @@ export const destroyMinionMove = (
   { card, targetPlayer }: DestroyMinionMove
 ) => {
   const { currentPlayer } = ctx;
-  const { opponent } = getContextualPlayerIds(currentPlayer);
+  // const { opponent } = getContextualPlayerIds(currentPlayer);
   const cardToDestroy = card;
   const lastCard = G.lastCardPlayed?.card!;
 
   const init = (c: Card) => {
     if (cardUuidMatch(c, cardToDestroy)) {
+      c.destroyedOnTurn = G.turn;
       c.booleans.isDestroyed = true;
       c.booleans.canBeDestroyed = false;
+      pushEventStream(c, lastCard, 'wasDestroyed');
     }
 
     if (cardUuidMatch(c, lastCard)) {
       c.booleans.onPlayWasTriggered = true;
+      pushEventStream(c, cardToDestroy, 'onPlayWasTriggered');
     }
   };
 
   G.zones.forEach((z) => {
+    z.sides[currentPlayer].forEach((c) => init(c));
     z.sides[targetPlayer].forEach((c) => init(c));
-    z.sides[opponent].forEach((c) => init(c));
   });
 
-  G.lastMoveMade = LastMoveMade.AttackMinion;
-  resetDestroyableMinions(G, currentPlayer);
+  G.lastMoveMade = LastMoveMade.DestroyMinion;
+  handleDestroyedCards(G, ctx);
+  resetCardTargetBooleans(G, ctx);
+  // resetDestroyableMinions(G, currentPlayer);
   lastCardPlayed.reset(G);
-  // handleDestroyedCards(G, ctx);
   ctx.events?.endStage();
 };
 

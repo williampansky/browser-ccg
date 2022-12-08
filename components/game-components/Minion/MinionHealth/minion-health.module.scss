@@ -92,7 +92,8 @@
     color: #1aff1a;
   }
 
-  &.power--debuffed .text {
+  &.power--debuffed .text,
+  &.power--is-destroyed .text {
     color: #ff5555;
   }
 }
