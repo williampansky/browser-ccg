@@ -1,5 +1,4 @@
 import { add } from 'mathjs';
-import { current } from 'immer';
 import type { Ctx, LongFormMove } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../types';
 import { LastMoveMade } from '../../enums';
@@ -7,13 +6,12 @@ import { lastCardPlayed } from '../state';
 import {
   cardUuidMatch,
   getContextualPlayerIds,
+  initActivateEventListeners,
   limitNumberWithinRange,
   pushEventStream,
   pushHealthStreamAndSetDisplay,
-  resetCardTargetBooleans,
   resetHealableMinions,
 } from '../../utils';
-import { activateAnyEventListeners } from '../phases/play-card/play-card.turn.on-move';
 
 export interface HealMinionMove {
   card: Card;
@@ -58,7 +56,7 @@ export const healMinionMove = (
   });
 
   G.lastMoveMade = LastMoveMade.HealMinion;
-  activateAnyEventListeners(G, ctx);
+  initActivateEventListeners(G, ctx);
   resetHealableMinions(G, currentPlayer);
   lastCardPlayed.reset(G);
   ctx.events?.endStage();

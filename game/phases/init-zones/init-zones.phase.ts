@@ -3,13 +3,18 @@ import type { GameState, Zone, Zones } from '../../../types';
 
 import { zones } from '../../state';
 import { fxEnd } from '../../config.bgio-effects';
-import { createZoneObject, logPhaseToConsole } from '../../../utils';
+import { createCardObject, createZoneObject, logPhaseToConsole } from '../../../utils';
 
 import ZONE_DATABASE from '../../data/zones.json';
+import setsCore from '../../../data/setsCore.json';
 import core008Scenario from '../../debug/scenarios/core-008.scenario';
 import healPlayerMinionScenario from '../../debug/scenarios/heal-player-minion.scenario';
 import dealAoeDmgScenario from '../../debug/scenarios/deal-aoe-damage.scenario';
 import opponentMinionsBoonedScenario from '../../debug/scenarios/opponent-minions-have-boon.scenario';
+
+const db = [
+  ...setsCore
+]
 
 const scenarios = {
   'core-008': core008Scenario,
@@ -21,24 +26,40 @@ const scenarios = {
 export default<PhaseConfig> {
   next: 'revealZone',
   onBegin(G: GameState, ctx: Ctx) {
+    const {
+      gameConfig: {
+        debugConfig,
+        debugConfig: {
+          debugBoardCardKey,
+          debugBoardCardKeyAmount,
+          debugOpponentBoardCardKey,
+          debugOpponentBoardCardKeyAmount,
+          debugScenario,
+          useDebugBoardCardKey,
+          useDebugOpponentBoardCardKey,
+          useDebugScenario,
+        },
+        numerics: {
+          numberOfZones
+        }
+      },
+    } = G;
     const { random } = ctx;
     const randomZonesArray = random?.Shuffle(ZONE_DATABASE);
     const withUuid = true;
     let newZones: Zone[] = [];
 
-    for (let idx = 0; idx < G.gameConfig.numerics.numberOfZones; idx++) {
+    // push random zone entries to newZones arr
+    for (let idx = 0; idx < numberOfZones; idx++) {
       let newZone = createZoneObject(randomZonesArray![idx], withUuid);
       newZones.push(newZone);
     }
 
+    // set the zones to G state
     zones.set(G, newZones);
-    // playerNames.set(G, '0', 'Player');
-    // playerNames.set(G, '1', 'Opponent');
 
-    // @ts-ignore
-    ctx.effects?.fxEnd();
-
-    if (G.gameConfig.debugConfig.logPhaseToConsole) {
+    // log phase info to console
+    if (debugConfig.logPhaseToConsole) {
       const zone0 = `${newZones[0].name} (${newZones[0].id})`;
       const zone1 = `${newZones[1].name} (${newZones[1].id})`;
       const zone2 = `${newZones[2].name} (${newZones[2].id})`;
@@ -49,10 +70,36 @@ export default<PhaseConfig> {
       });
     }
 
-    if (G.gameConfig.debugConfig.useDebugScenario) {
-      const name = G.gameConfig.debugConfig.debugScenario;
-      G.zones[0].sides[0] = scenarios[name].zones[0].sides[0];
-      G.zones[0].sides[1] = scenarios[name].zones[0].sides[1];
+    // [your side] debug card or side interactions
+    if (useDebugBoardCardKey) {
+      for (let index = 0; index < debugBoardCardKeyAmount; index++) {
+        let debugCardBase = db.find(o => o.key === debugBoardCardKey);
+        let debugCard = createCardObject(debugCardBase!);
+        G.zones[0].sides['0'].push({ ...debugCard, revealed: true });
+      }
+    }
+
+    // [their side] debug card or side interactions
+    if (useDebugOpponentBoardCardKey) {
+      for (let index = 0; index < debugOpponentBoardCardKeyAmount; index++) {
+        let debugCardBase = db.find(o => o.key === debugOpponentBoardCardKey);
+        let debugCard = createCardObject(debugCardBase!);
+        G.zones[0].sides['1'].push({ ...debugCard, revealed: true });
+      }
+    }
+
+    // init possible debug scenario
+    if (useDebugScenario && (!useDebugBoardCardKey || useDebugOpponentBoardCardKey)) {
+      const name = debugScenario;
+      G.zones.forEach((z, zI) => {
+        if (scenarios[name].zones[zI] && scenarios[name].zones[zI].sides['0']) {
+          z.sides['0'] = scenarios[name].zones[zI].sides['0'];
+        }
+
+        if (scenarios[name].zones[zI] && scenarios[name].zones[zI].sides['1']) {
+          z.sides['1'] = scenarios[name].zones[zI].sides['1'];
+        }
+      })
     }
   },
   endIf: (G: GameState) => zones.areReady(G),

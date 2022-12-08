@@ -1,19 +1,9 @@
 import type { Ctx, PhaseConfig } from 'boardgame.io';
 import type { GameState } from '../../../types';
 import { fxEnd } from '../../config.bgio-effects';
-import {
-  drawCardFromPlayersDeck,
-  logPhaseToConsole,
-  createCardObject,
-} from '../../../utils';
+import { drawCardFromPlayersDeck, logPhaseToConsole } from '../../../utils';
 
-import setsCore from '../../../data/setsCore.json';
-
-const db = [
-  ...setsCore
-]
-
-export default<PhaseConfig> {
+export default <PhaseConfig>{
   next: 'initZones',
   onBegin(G: GameState, ctx: Ctx) {
     const {
@@ -24,32 +14,12 @@ export default<PhaseConfig> {
           debugBoardCardKeyAmount,
           debugOpponentBoardCardKey,
           useDebugOpponentBoardCardKey,
-          debugOpponentBoardCardKeyAmount
+          debugOpponentBoardCardKeyAmount,
         },
       },
     } = G;
 
     logPhaseToConsole(G.turn, ctx.phase);
-
-    // [your side] debug card or side interactions
-    if (useDebugBoardCardKey) {
-      for (let index = 0; index < debugBoardCardKeyAmount; index++) {
-        let debugCardBase = db.find(o => o.key === debugBoardCardKey);
-        let debugCard = createCardObject(debugCardBase!);
-        G.zones[0].sides['0'].push({ ...debugCard, revealed: true });
-        G.zonesCardsReference[0]['0'].push({ ...debugCard, revealed: true });
-      }
-    }
-
-    // [their side] debug card or side interactions
-    if (useDebugOpponentBoardCardKey) {
-      for (let index = 0; index < debugOpponentBoardCardKeyAmount; index++) {
-        let debugCardBase = db.find(o => o.key === debugOpponentBoardCardKey);
-        let debugCard = createCardObject(debugCardBase!);
-        G.zones[0].sides['1'].push({ ...debugCard, revealed: true });
-        G.zonesCardsReference[0]['1'].push({ ...debugCard, revealed: true });
-      }
-    }
 
     // init hands
     [...Array(G.gameConfig.numerics.cardsPerStartingHand)].forEach(() => {
