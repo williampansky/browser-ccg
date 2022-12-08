@@ -1,93 +1,86 @@
-import type { Ctx } from 'boardgame.io';
 import { multiply } from 'mathjs';
 import { CardType } from '../../../enums';
-import type {
-  Card,
-  GameConfig,
-  GameState,
-  PlayerID,
-  Zone,
-} from '../../../types';
-import { pushPowerStreamAndSetDisplay } from '../../../utils';
+import type { Card, GameState as G, PlayerID } from '../../../types';
+import {
+  cardUuidMatch,
+  getContextualPlayerIds,
+  pushEventStream,
+  pushPowerStreamAndSetDisplay,
+} from '../../../utils';
 
 /**
  * double a minion's attack power
  */
-export const core110 = (
-  G: GameState,
-  ctx: Ctx,
-  gameConfig: GameConfig,
-  zone: Zone,
-  zoneIdx: number,
-  card: Card,
-  cardIdx: number,
-  player: PlayerID,
-  opponent: PlayerID,
-) => {
-  G.zones.forEach((z) => {
-    z.sides[opponent].forEach((c) => {
-      const isNotSelf = c.uuid !== card.uuid;
-      const isMinion = c.type === CardType.Minion;
-      if (isNotSelf && isMinion) c.booleans.canBeBuffed = true;
-    });
+const core110 = {
+  init: (G: G, player: PlayerID, card: Card) => {
+    const { opponent } = getContextualPlayerIds(player);
+    G.zones.forEach((z) => {
+      z.sides[opponent].forEach((c) => {
+        const isNotSelf = c.uuid !== card.uuid;
+        const isMinion = c.type === CardType.Minion;
+        if (isNotSelf && isMinion) c.booleans.canBeBuffed = true;
+      });
 
-    z.sides[player].forEach((c) => {
-      const isNotSelf = c.uuid !== card.uuid;
-      const isMinion = c.type === CardType.Minion;
-      if (isNotSelf && isMinion) c.booleans.canBeBuffed = true;
+      z.sides[player].forEach((c) => {
+        const isNotSelf = c.uuid !== card.uuid;
+        const isMinion = c.type === CardType.Minion;
+        if (isNotSelf && isMinion) c.booleans.canBeBuffed = true;
+      });
     });
-  });
-};
+  },
+  exec: (G: G, targetPlayer: PlayerID, targetCard: Card, playedCard: Card) => {
+    const { player, opponent } = getContextualPlayerIds(targetPlayer);
 
-export const core110Buff = (
-  G: GameState,
-  ctx: Ctx,
-  targetPlayer: PlayerID,
-  cardToBuffUuid: string,
-  cardBuffedFrom: Card
-) => {
-  // prettier-ignore
-  let target: {
+    // prettier-ignore
+    let target: {
     card: Card,
     cardIdx: number,
     zoneNumber: number
   } | undefined;
 
-  G.zones.forEach((z, zi) => {
-    z.sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === cardToBuffUuid) {
-        target = {
-          card: c,
-          cardIdx: ci,
-          zoneNumber: zi,
-        };
-      }
-    });
-  });
-
-  if (target !== undefined) {
-    const { card, cardIdx, zoneNumber } = target;
-
-    G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === card.uuid) {
-        pushPowerStreamAndSetDisplay(
-          c,
-          cardBuffedFrom,
-          multiply(c.displayPower, 2),
-          multiply(c.displayPower, 2)
-        );
-      }
-    });
-  }
-
-  G.zones.forEach((z, zi) => {
-    z.sides['0'].forEach((c, ci) => {
-      c.booleans.canBeBuffed = false;
-      if (c.uuid === cardBuffedFrom.uuid) c.booleans.onPlayWasTriggered = true;
+    G.zones.forEach((z, zi) => {
+      z.sides[targetPlayer].forEach((c, ci) => {
+        if (cardUuidMatch(c, targetCard)) {
+          target = {
+            card: c,
+            cardIdx: ci,
+            zoneNumber: zi,
+          };
+        }
+      });
     });
 
-    z.sides['1'].forEach((c, ci) => {
-      c.booleans.canBeBuffed = false;
+    if (target !== undefined) {
+      const { card, cardIdx, zoneNumber } = target;
+
+      G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
+        const isTargetedCard = cardUuidMatch(c, card) && ci === cardIdx;
+        if (isTargetedCard) {
+          c.booleans.hasPowerIncreased = true;
+          pushPowerStreamAndSetDisplay(
+            c,
+            playedCard,
+            multiply(c.displayPower, 2),
+            multiply(c.displayPower, 2)
+          );
+        }
+      });
+    }
+
+    G.zones.forEach((z) => {
+      z.sides[player].forEach((c) => {
+        c.booleans.canBeBuffed = false;
+        if (target !== undefined && cardUuidMatch(c, playedCard)) {
+          c.booleans.onPlayWasTriggered = true;
+          pushEventStream(c, c, 'onPlayWasTriggered');
+        }
+      });
+
+      z.sides[opponent].forEach((c) => {
+        c.booleans.canBeBuffed = false;
+      });
     });
-  });
+  },
 };
+
+export default core110;

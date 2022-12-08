@@ -2,13 +2,13 @@ import type { Ctx, LongFormMove } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../types';
 import { LastMoveMade } from '../../enums';
 import { lastCardPlayed } from '../state';
-import { core031Buff } from '../mechanics/core-mechanics-by-key/mechanic.core.031';
-import { core110Buff } from '../mechanics/core-mechanics-by-key/mechanic.core.110';
 import {
   cardUuidMatch,
   getContextualPlayerIds,
   resetBuffableMinions,
 } from '../../utils';
+
+import {core031, core110 } from '../mechanics';
 
 export interface BuffMinionMove {
   card: Card;
@@ -27,20 +27,12 @@ export const buffMinionMove = (
 
   const init = (c: Card) => {
     if (cardUuidMatch(c, cardToBuff)) {
+      // prettier-ignore
       switch (lastCard.key) {
-        case 'SET_CORE_031':
-          core031Buff(G, ctx, targetPlayer, c?.uuid, lastCard);
-          break;
-        case 'SET_CORE_110':
-          core110Buff(G, ctx, targetPlayer, c?.uuid, lastCard);
-          break;
-        default:
-          break;
+        case 'SET_CORE_031': core031.exec(G, targetPlayer, c, lastCard); break;
+        case 'SET_CORE_110': core110.exec(G, targetPlayer, c, lastCard); break;
+        default: break;
       }
-    }
-
-    if (cardUuidMatch(c, lastCard)) {
-      c.booleans.onPlayWasTriggered = true;
     }
   };
 

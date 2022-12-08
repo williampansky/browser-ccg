@@ -27,13 +27,17 @@ import {
   removeLastPlayedCardFromHand,
   unsetPlayableCards,
 } from '../../utils';
+import {
+  determineOnPlayGlobalMechanic,
+  determineTargetedOnPlayContext,
+} from './on-play.move.methods';
 
 export interface PlayCardMove {
   zoneNumber: number;
 }
 
 /**
- * 
+ *
  */
 export const playCardMove = (
   G: GameState,
@@ -68,7 +72,7 @@ export const playCardMove = (
 };
 
 /**
- * 
+ *
  */
 export const initValidPlayCardMove = (
   G: GameState,
@@ -116,152 +120,8 @@ export const initValidPlayCardMove = (
   }
 };
 
-export const determineOnPlayGlobalMechanic = (
-  G: GameState,
-  ctx: Ctx,
-  zoneNumber: number,
-  card: Card,
-  player: PlayerID
-) => {
-  switch (card.mechanicsContext) {
-    case Mechanics.AddCard:
-      console.log('@todo init global AddCard');
-      break;
-    case Mechanics.Boon:
-      console.log('@todo init global Boon');
-      break;
-    case Mechanics.Buff:
-      console.log('@todo init global Buff');
-      break;
-    case Mechanics.Bulwark:
-      console.log('@todo init global Bulwark');
-      break;
-    case Mechanics.Damage:
-      console.log('@todo init global Damage');
-      break;
-    case Mechanics.Debuff:
-      initGlobalDebuffMechanicByCardKey(G, ctx, zoneNumber, card, player);
-      break;
-    case Mechanics.Destroy:
-      console.log('@todo init global Destroy');
-      break;
-    case Mechanics.Disable:
-      console.log('@todo init global Disable');
-      break;
-    case Mechanics.DiscardCard:
-      console.log('@todo init global DiscardCard');
-      break;
-    case Mechanics.Heal:
-      console.log('@todo init global Heal');
-      break;
-    case Mechanics.Summon:
-      console.log('@todo init global Summon');
-      break;
-    default:
-      break;
-  }
-};
-
 /**
- * 
- */
-export const initGlobalDebuffMechanicByCardKey = (
-  G: GameState,
-  ctx: Ctx,
-  zoneNumber: number,
-  card: Card,
-  player: PlayerID
-) => {
-  switch (card.key) {
-    default:
-      debuffPowerOfCardsInZone(G, ctx, zoneNumber, card, player);
-      break;
-  }
-};
-
-/**
- * 
- */
-export const determineTargetedOnPlayContext = (
-  G: GameState,
-  ctx: Ctx,
-  card: Card
-) => {
-  // prettier-ignore
-  switch (card.mechanicsContext) {
-    case Mechanics.Buff:    return initTargetedOnPlayBuffStage(G, ctx);
-    case Mechanics.Damage:  return initTargetedOnPlayDamageStage(G, ctx);
-    case Mechanics.Destroy: return initTargetedOnPlayDestroyStage(G, ctx);
-    case Mechanics.Heal:    return initTargetedOnPlayHealStage(G, ctx);
-  }
-};
-
-/**
- * 
- */
-export const initTargetedOnPlayBuffStage = (G: GameState, ctx: Ctx) => {
-  const { currentPlayer } = ctx;
-  determineBuffableMinions(G, currentPlayer);
-  const noTargetsAvailable = noBuffableMinionsAvailable(G, currentPlayer);
-
-  if (noTargetsAvailable) {
-    return determinePlayableCards(G, ctx, currentPlayer);
-  } else {
-    unsetPlayableCards(G, currentPlayer);
-    return ctx.events?.setStage('buffMinion');
-  }
-};
-
-/**
- * 
- */
-export const initTargetedOnPlayDamageStage = (G: GameState, ctx: Ctx) => {
-  const { currentPlayer } = ctx;
-  determineAttackableMinions(G, currentPlayer);
-  const noTargetsAvailable = noAttackableMinionsAvailable(G, currentPlayer);
-
-  if (noTargetsAvailable) {
-    return determinePlayableCards(G, ctx, currentPlayer);
-  } else {
-    unsetPlayableCards(G, currentPlayer);
-    return ctx.events?.setStage('attackMinion');
-  }
-};
-
-/**
- * 
- */
-export const initTargetedOnPlayDestroyStage = (G: GameState, ctx: Ctx) => {
-  const { currentPlayer } = ctx;
-  determineDestroyableMinions(G, currentPlayer);
-  const noTargetsAvailable = noDestroyableMinionsAvailable(G, currentPlayer);
-
-  if (noTargetsAvailable) {
-    return determinePlayableCards(G, ctx, currentPlayer);
-  } else {
-    unsetPlayableCards(G, currentPlayer);
-    return ctx.events?.setStage('destroyMinion');
-  }
-};
-
-/**
- * 
- */
-export const initTargetedOnPlayHealStage = (G: GameState, ctx: Ctx) => {
-  const { currentPlayer } = ctx;
-  determineHealableMinions(G, currentPlayer);
-  const noTargetsAvailable = noHealableMinionsAvailable(G, currentPlayer);
-
-  if (noTargetsAvailable) {
-    return determinePlayableCards(G, ctx, currentPlayer);
-  } else {
-    unsetPlayableCards(G, currentPlayer);
-    return ctx.events?.setStage('healMinion');
-  }
-};
-
-/**
- * 
+ *
  */
 export const playCard: LongFormMove = {
   client: false,

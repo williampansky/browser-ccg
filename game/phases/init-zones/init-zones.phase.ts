@@ -8,9 +8,11 @@ import { createCardObject, createZoneObject, logPhaseToConsole } from '../../../
 import ZONE_DATABASE from '../../data/zones.json';
 import setsCore from '../../../data/setsCore.json';
 import core008Scenario from '../../debug/scenarios/core-008.scenario';
+import core031Scenario from '../../debug/scenarios/core-031.scenario';
 import healPlayerMinionScenario from '../../debug/scenarios/heal-player-minion.scenario';
 import dealAoeDmgScenario from '../../debug/scenarios/deal-aoe-damage.scenario';
-import opponentMinionsBoonedScenario from '../../debug/scenarios/opponent-minions-have-boon.scenario';
+import opponentMinionsBoonScenario from '../../debug/scenarios/opponent-minions-have-boon.scenario';
+import opponentMinionsBuffScenario from '../../debug/scenarios/opponent-minions-have-buff.scenario';
 
 const db = [
   ...setsCore
@@ -18,9 +20,11 @@ const db = [
 
 const scenarios = {
   'core-008': core008Scenario,
+  'core-031': core031Scenario,
   'heal-player-minion': healPlayerMinionScenario,
   'deal-aoe-damage': dealAoeDmgScenario,
-  'opponent-minions-have-boon': opponentMinionsBoonedScenario,
+  'opponent-minions-have-boon': opponentMinionsBoonScenario,
+  'opponent-minions-have-buff': opponentMinionsBuffScenario,
 } as Record<string, any>
 
 export default<PhaseConfig> {
