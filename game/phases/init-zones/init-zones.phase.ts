@@ -9,6 +9,8 @@ import ZONE_DATABASE from '../../data/zones.json';
 import setsCore from '../../../data/setsCore.json';
 import core008Scenario from '../../debug/scenarios/core-008.scenario';
 import core031Scenario from '../../debug/scenarios/core-031.scenario';
+import core050Scenario from '../../debug/scenarios/core-050.scenario';
+import core058Scenario from '../../debug/scenarios/core-058.scenario';
 import healPlayerMinionScenario from '../../debug/scenarios/heal-player-minion.scenario';
 import dealAoeDmgScenario from '../../debug/scenarios/deal-aoe-damage.scenario';
 import opponentMinionsBoonScenario from '../../debug/scenarios/opponent-minions-have-boon.scenario';
@@ -21,6 +23,8 @@ const db = [
 const scenarios = {
   'core-008': core008Scenario,
   'core-031': core031Scenario,
+  'core-050': core050Scenario,
+  'core-058': core058Scenario,
   'heal-player-minion': healPlayerMinionScenario,
   'deal-aoe-damage': dealAoeDmgScenario,
   'opponent-minions-have-boon': opponentMinionsBoonScenario,

@@ -6,25 +6,19 @@ const determineAttackableMinions = (G: GameState, player: PlayerID) => {
   const lastCardPlayed = G.lastCardPlayed.card!;
 
   G.zones.forEach((z) => {
-    z.sides[opponent].forEach((c) => {
-      const { booleans } = c;
-      if (cardIsNotSelf(c, lastCardPlayed) && booleans.isDestroyed === false) {
+    z.sides[player].forEach((c) => {
+      const cardIsNotDestroyed = c.booleans.isDestroyed === false;
+      if (cardIsNotSelf(c, lastCardPlayed) && cardIsNotDestroyed) {
         c.booleans.canBeAttackedBySpell = true;
-        // switch (lastCardPlayed.key) {
-        //   case 'SET_CORE_060':
-        //     if (c.booleans.hasHealthReduced) {
-        //       c.booleans.canBeAttackedBySpell = true;
-        //     }
-        //     break;
-
-        //   default:
-        //     c.booleans.canBeAttackedBySpell = true;
-        //     break;
-        // }
       }
     });
 
-    // @todo future enhancement - enable self attacks
+    z.sides[opponent].forEach((c) => {
+      const cardIsNotDestroyed = c.booleans.isDestroyed === false;
+      if (cardIsNotSelf(c, lastCardPlayed) && cardIsNotDestroyed) {
+        c.booleans.canBeAttackedBySpell = true;
+      }
+    });
   });
 };
 

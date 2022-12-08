@@ -8,7 +8,7 @@ import {
   resetBuffableMinions,
 } from '../../utils';
 
-import {core031, core110 } from '../mechanics';
+import { core031, core110 } from '../mechanics';
 
 export interface BuffMinionMove {
   card: Card;

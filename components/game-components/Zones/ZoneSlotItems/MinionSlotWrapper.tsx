@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, SyntheticEvent, useEffect, useState } from 'react';
 import type { Card, PlayerID } from '../../../../types';
 
 import { getRandomNumberBetween } from '../../../../utils';
@@ -60,7 +60,10 @@ export const MinionSlotWrapper = ({
     setOffsetY(getRandomNumberBetween(-2, 2));
   }, []);
 
-  const handleOnClick = (): void => {
+  const handleOnClick = (event: SyntheticEvent): void => {
+    const target = event.target as HTMLDivElement;
+    target.blur();
+    
     if (b?.canBeAttackedBySpell) move(Context.CanBeAttackedBySpell);
     if (b?.canBeBuffed) move(Context.CanBeBuffed);
     if (b?.canBeDestroyed) move(Context.CanBeDestroyed);

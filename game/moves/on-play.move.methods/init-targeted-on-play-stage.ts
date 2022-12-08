@@ -12,7 +12,7 @@ import {
   noHealableMinionsAvailable,
   unsetPlayableCards,
 } from '../../../utils';
-import { core031, core110 } from '../../mechanics';
+import { core031, core050, core110 } from '../../mechanics';
 
 /**
  *
@@ -41,9 +41,14 @@ const initTargetedOnPlayBuffStage = (G: GameState, ctx: Ctx, card: Card) => {
  */
 const initTargetedOnPlayDamageStage = (G: GameState, ctx: Ctx, card: Card) => {
   const { currentPlayer } = ctx;
-  determineAttackableMinions(G, currentPlayer);
-  const noTargetsAvailable = noAttackableMinionsAvailable(G, currentPlayer);
 
+  // prettier-ignore
+  switch (card.key) {
+    // case 'SET_CORE_050': core050.init(G, currentPlayer, card); break;
+    default: determineAttackableMinions(G, currentPlayer); break;
+  }
+
+  const noTargetsAvailable = noAttackableMinionsAvailable(G, currentPlayer);
   if (noTargetsAvailable) {
     return determinePlayableCards(G, ctx, currentPlayer);
   } else {

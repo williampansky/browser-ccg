@@ -1,89 +1,87 @@
-import type { Ctx } from 'boardgame.io';
 import { subtract } from 'mathjs';
-import type {
-  Card,
-  GameConfig,
-  GameState,
-  PlayerID,
-  Zone,
-} from '../../../types';
+import { CardType } from '../../../enums';
+import type { Card, GameState as G, PlayerID } from '../../../types';
 import {
-  handleCardDestructionMechanics,
+  cardUuidMatch,
+  getContextualPlayerIds,
+  pushEventStream,
   pushHealthStreamAndSetDisplay,
 } from '../../../utils';
 
 /**
  * deal 1 dmg to a minion
  */
-export const core044 = (
-  G: GameState,
-  ctx: Ctx,
-  gameConfig: GameConfig,
-  zone: Zone,
-  zoneIdx: number,
-  card: Card,
-  cardIdx: number,
-  player: PlayerID,
-  opponent: PlayerID
-) => {
-  G.zones.forEach((z) => {
-    z.sides[opponent].forEach((c) => (c.booleans.canBeAttackedBySpell = true));
-    z.sides[player].forEach((c) => {
-      if (c.uuid !== card.uuid) c.booleans.canBeAttackedBySpell = true;
+const core044 = {
+  init: (G: G, player: PlayerID, card: Card) => {
+    const { opponent } = getContextualPlayerIds(player);
+    G.zones.forEach((z) => {
+      z.sides[opponent].forEach((c) => {
+        const isNotSelf = c.uuid !== card.uuid;
+        const isMinion = c.type === CardType.Minion;
+        if (isNotSelf && isMinion) c.booleans.canBeAttackedBySpell = true;
+      });
+
+      z.sides[player].forEach((c) => {
+        const isNotSelf = c.uuid !== card.uuid;
+        const isMinion = c.type === CardType.Minion;
+        if (isNotSelf && isMinion) c.booleans.canBeAttackedBySpell = true;
+      });
     });
-  });
-};
+  },
+  exec: (G: G, targetPlayer: PlayerID, targetCard: Card, playedCard: Card) => {
+    const { player, opponent } = getContextualPlayerIds(targetPlayer);
 
-export const core044Attack = (
-  G: GameState,
-  ctx: Ctx,
-  targetPlayer: PlayerID,
-  cardToAttackUuid: string,
-  cardToBlame: Card
-) => {
-  // prettier-ignore
-  let target: {
-    card: Card,
-    cardIdx: number,
-    zoneNumber: number
-  } | undefined;
-
-  G.zones.forEach((z, zi) => {
-    z.sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === cardToAttackUuid) {
-        target = {
-          card: c,
-          cardIdx: ci,
-          zoneNumber: zi,
-        };
-      }
-    });
-  });
-
-  if (target !== undefined) {
-    const { card, cardIdx, zoneNumber } = target;
-
-    G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === card.uuid && ci === cardIdx) {
-        c.booleans.canBeAttackedBySpell = false;
-        pushHealthStreamAndSetDisplay(
-          c,
-          cardToBlame,
-          cardToBlame.numberPrimary,
-          subtract(c.displayHealth, cardToBlame.numberPrimary)
-        );
-      }
-    });
+    // prettier-ignore
+    let target: {
+      card: Card,
+      cardIdx: number,
+      zoneNumber: number
+    } | undefined;
 
     G.zones.forEach((z, zi) => {
-      z.sides['0'].forEach((c, ci) => {
-        c.booleans.canBeAttackedBySpell = false;
-        if (c.uuid === cardToBlame.uuid) c.booleans.onPlayWasTriggered = true;
-      });
-
-      z.sides['1'].forEach((c, ci) => {
-        c.booleans.canBeAttackedBySpell = false;
+      z.sides[targetPlayer].forEach((c, ci) => {
+        if (cardUuidMatch(c, targetCard)) {
+          target = {
+            card: c,
+            cardIdx: ci,
+            zoneNumber: zi,
+          };
+        }
       });
     });
-  }
+
+    if (target !== undefined) {
+      const { card, cardIdx, zoneNumber } = target;
+
+      G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
+        const isTargetedCard = cardUuidMatch(c, card) && ci === cardIdx;
+        if (isTargetedCard) {
+          c.booleans.hasHealthReduced = true;
+          pushEventStream(c, playedCard, 'wasAttacked');
+          pushHealthStreamAndSetDisplay(
+            c,
+            playedCard,
+            -playedCard.numberPrimary,
+            subtract(c.displayHealth, playedCard.numberPrimary)
+          );
+        }
+      });
+
+      G.zones.forEach((z, zi) => {
+        z.sides[player].forEach((c) => {
+          c.booleans.canBeAttackedBySpell = false;
+          if (cardUuidMatch(c, playedCard)) {
+            c.booleans.onPlayWasTriggered = true;
+            pushEventStream(c, c, 'onPlayWasTriggered');
+          }
+        });
+
+        z.sides[opponent].forEach((c) => {
+          c.booleans.canBeAttackedBySpell = false;
+        });
+      });
+    }
+  },
 };
+
+export default core044;
