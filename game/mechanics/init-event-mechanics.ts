@@ -1,6 +1,6 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID, Zone } from '../../types';
-import { core008, core009 } from './';
+import { core008, core009, core012 } from './';
 
 const initEventMechanics = (
   G: GameState,
@@ -9,7 +9,7 @@ const initEventMechanics = (
   zoneIdx: number,
   card: Card,
   cardIdx: number,
-  player: PlayerID,
+  player: PlayerID
 ) => {
   if (!card) return;
   if (card.booleans.isDisabled) return;
@@ -23,9 +23,9 @@ const initEventMechanics = (
     case 'SET_CORE_009':
       core009.exec(G, ctx, zone, zoneIdx, card, cardIdx, player);
       break;
-    // case 'SET_CORE_012':
-    //   core012(G, ctx, zone, zoneIdx, card, cardIdx, player);
-    //   break;
+    case 'SET_CORE_012':
+      core012.exec(G, ctx, zone, zoneIdx, card, cardIdx, player);
+      break;
     // case 'SET_CORE_032':
     //   core032(G, ctx, zone, zoneIdx, card, cardIdx, player);
     //   break;

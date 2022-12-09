@@ -6,6 +6,7 @@ export type { InitGameMechanic } from './init-functions.mechanics';
 
 export { default as core008 } from './core-mechanics-by-key/mechanic.core.008';
 export { default as core009 } from './core-mechanics-by-key/mechanic.core.009';
+export { default as core012 } from './core-mechanics-by-key/mechanic.core.012';
 export { default as core031 } from './core-mechanics-by-key/mechanic.core.031';
 export { default as core044 } from './core-mechanics-by-key/mechanic.core.044';
 export { default as core050 } from './core-mechanics-by-key/mechanic.core.050';
