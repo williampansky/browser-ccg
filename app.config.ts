@@ -6,7 +6,7 @@ export const gameConfig: GameConfig = {
   asynchronousTurns: false,
   debugConfig: {
     debugHandCardKey: core + '001',
-    debugBoardCardKey: core + '008',
+    debugBoardCardKey: core + '009',
     debugBoardCardKeyAmount: 1,
     useDebugHandCardKey: true,
     useDebugBoardCardKey: true,

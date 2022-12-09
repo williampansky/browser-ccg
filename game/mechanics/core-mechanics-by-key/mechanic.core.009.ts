@@ -1,7 +1,7 @@
 import { add } from 'mathjs';
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID, Zone } from '../../../types';
-import { CardType } from '../../../enums';
+import { CardRace } from '../../../enums';
 import {
   cardIsNotSelf,
   pushEventStream,
@@ -9,9 +9,9 @@ import {
 } from '../../../utils';
 
 /**
- * buff +num1 power whenever you play a minion card
+ * buff +num1 power whenever you play a sprite card
  */
-const core008 = {
+const core009 = {
   exec: (
     G: GameState,
     ctx: Ctx,
@@ -26,12 +26,12 @@ const core008 = {
     G.zones.forEach((z) => {
       z.sides[player].forEach((c) => {
         const revealedThisTurn = c.revealedOnTurn === G.turn;
-        const cardIsMinion = c.type === CardType.Minion;
+        const cardIsSprite = c.race === CardRace.Sprite;
         const cardNotInStream = !powerStream.find((o) => o.uuid === c.uuid);
 
         if (cardIsNotSelf(c, listenerCard)) {
-          if (cardIsMinion && revealedThisTurn && cardNotInStream) {
-            // find the core008 card node
+          if (cardIsSprite && revealedThisTurn && cardNotInStream) {
+            // find the core009 card node
             const self = G.zones[zoneIndex].sides[player][listenerCardIndex];
 
             // set animations and bools
@@ -62,4 +62,4 @@ const core008 = {
   },
 };
 
-export default core008;
+export default core009;

@@ -1,37 +1,20 @@
-import { useEffect, useState } from 'react';
-import type { Card } from '../../../../types';
+import { add, multiply } from 'mathjs';
 
 interface Props {
-  eventWasTriggered?: boolean;
-  index?: number;
-  zoneNumber?: number;
+  index: number;
+  mapIndex: number;
 }
 
-export const MinionEventAnimation = ({ eventWasTriggered, index, zoneNumber }: Props) => {
-  const [play, setPlay] = useState<boolean>(false);
-  // const b = data && data?.booleans;
-
-  useEffect(() => {
-    console.log(eventWasTriggered)
-    if (eventWasTriggered === true) {
-      setPlay(true);
-    }
-    
-    return () => setPlay(false);
-  }, [eventWasTriggered])
-
-  // useEffect(() => {
-  //   if (play === true) setTimeout(() => setPlay(false), 200);
-  // }, [play])
-
+export const MinionEventAnimation = ({ index, mapIndex }: Props) => {
   return (
     <div
-      className={[
-        'minionslot minionslot--event-was-triggered',
-        // play ? 'minionslot--event-was-triggered' : '',
-      ].join(' ')}
+      className='minionslot minionslot--event-was-triggered'
       data-component='MinionEventAnimation'
       data-index={index}
+      data-map-index={mapIndex}
+      style={{
+        animationDelay: `${multiply(add(mapIndex, 1), 200)}ms`,
+      }}
     />
   );
 };

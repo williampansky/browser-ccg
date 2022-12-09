@@ -29,21 +29,6 @@ const initActivateEventListeners = (G: GameState, ctx: Ctx) => {
   
   G.zones.forEach((z, zI) => {
     z.sides[currentPlayer].forEach((c, cI) => {
-      // const props: InitGameMechanic = {
-      //   G,
-      //   ctx,
-      //   zone: z,
-      //   zoneIdx: zI,
-      //   card: c,
-      //   cardIdx: cI,
-      //   player: currentPlayer,
-      // };
-
-      // const onEvent = (cb?: () => void) => initEvent({ ...props }, cb);
-      // onEvent();
-      
-      // const hasNotTriggered = c.booleans.eventWasTriggered === false;
-
       if (cardHasEvent(c)) {
         initEventMechanics(
           G,
@@ -54,28 +39,22 @@ const initActivateEventListeners = (G: GameState, ctx: Ctx) => {
           cI,
           currentPlayer,
         );
-
-
-        // c.booleans.eventWasTriggered = false;
       }
-
-      // G.zones[zI].sides[currentPlayer][cI].booleans.eventWasTriggered = false;
     });
 
-    // z.sides[opponent].forEach((c: Card, cI) => {
-    //   const props: InitGameMechanic = {
-    //     G,
-    //     ctx,
-    //     zone: z,
-    //     zoneIdx: zI,
-    //     card: c,
-    //     cardIdx: cI,
-    //     player: opponent,
-    //   };
-
-    //   const onEvent = (cb?: () => void) => initEvent({ ...props }, cb);
-    //   onEvent(() => c.booleans.eventWasTriggered = false);
-    // });
+    z.sides[opponent].forEach((c, cI) => {
+      if (cardHasEvent(c)) {
+        initEventMechanics(
+          G,
+          ctx,
+          z,
+          zI,
+          c,
+          cI,
+          opponent,
+        );
+      }
+    });
   });
 };
 

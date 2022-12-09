@@ -123,7 +123,7 @@ export const MinionSlotWrapper = ({
                 <MinionEventAnimation
                   key={`${i}_${e.uuid}`}
                   index={index}
-                  zoneNumber={zoneNumber}
+                  mapIndex={i}
                 />
               );
             case 'onPlayWasTriggered':

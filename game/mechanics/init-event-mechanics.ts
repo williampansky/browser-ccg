@@ -1,10 +1,6 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID, Zone } from '../../types';
-import { core008 } from './';
-import { core009 } from './card-mechanics-by-key/core-009.mechanic';
-import { core012 } from './card-mechanics-by-key/core-012.mechanic';
-import { core032 } from './card-mechanics-by-key/core-032.mechanic';
-import { core085 } from './core-mechanics-by-key/mechanic.core.085';
+import { core008, core009 } from './';
 
 const initEventMechanics = (
   G: GameState,
@@ -25,8 +21,8 @@ const initEventMechanics = (
       core008.exec(G, ctx, zone, zoneIdx, card, cardIdx, player);
       break;
     case 'SET_CORE_009':
-    //   core009(G, ctx, zone, zoneIdx, card, cardIdx, player);
-    //   break;
+      core009.exec(G, ctx, zone, zoneIdx, card, cardIdx, player);
+      break;
     // case 'SET_CORE_012':
     //   core012(G, ctx, zone, zoneIdx, card, cardIdx, player);
     //   break;
@@ -35,7 +31,7 @@ const initEventMechanics = (
     //   break;
     // case 'SET_CORE_085':
     //   core085(G, ctx, zone, zoneIdx, card, cardIdx, player);
-      break;
+      // break;
     default:
       break;
   }
