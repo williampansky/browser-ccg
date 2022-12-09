@@ -17,7 +17,7 @@ import { DestroyMinionMove, HealMinionMove } from '../../../../game/moves';
 interface Props {
   children: ReactNode;
   data?: Card;
-  index?: number;
+  index: number;
   moves?: any;
   opponent?: PlayerID;
   player?: PlayerID;
@@ -130,9 +130,8 @@ export const MinionSlotWrapper = ({
               return (
                 <MinionOnPlayAnimation
                   key={`${i}_${e.uuid}`}
-                  data={data}
                   index={index}
-                  zoneNumber={zoneNumber}
+                  mapIndex={i}
                 />
               );
           
