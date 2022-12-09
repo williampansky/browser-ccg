@@ -24,9 +24,15 @@ const core012 = {
         const revealedThisTurn = c.revealedOnTurn === G.turn;
         const cardIsASpell = c.type === CardType.Spell;
         const cardNotInStream = !powerStream.find((o) => o.uuid === c.uuid);
+        const cardIsNotSelf = c.uuid !== card.uuid;
 
-        // make sure to only check spells revealed this turn
-        if (cardIsASpell && revealedThisTurn && cardNotInStream) {
+        const requirementsMet = (): boolean => {
+          return (
+            cardIsNotSelf && cardIsASpell && cardNotInStream && revealedThisTurn
+          );
+        };
+
+        if (requirementsMet()) {
           // find the core012 card node
           const self = G.zones[zoneIdx].sides[player][cardIdx];
 
