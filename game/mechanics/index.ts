@@ -4,6 +4,7 @@ export { default as initOnTurnEndMechanics } from './init-turn-end-mechanics';
 export { initOnPlay, initEvent, initTurnEnd } from './init-functions.mechanics';
 export type { InitGameMechanic } from './init-functions.mechanics';
 
+export { default as core008 } from './core-mechanics-by-key/mechanic.core.008';
 export { default as core031 } from './core-mechanics-by-key/mechanic.core.031';
 export { default as core044 } from './core-mechanics-by-key/mechanic.core.044';
 export { default as core050 } from './core-mechanics-by-key/mechanic.core.050';

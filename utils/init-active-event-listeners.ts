@@ -48,13 +48,11 @@ const initActivateEventListeners = (G: GameState, ctx: Ctx) => {
         initEventMechanics(
           G,
           ctx,
-          G.gameConfig,
           z,
           zI,
           c,
           cI,
           currentPlayer,
-          opponent
         );
 
 

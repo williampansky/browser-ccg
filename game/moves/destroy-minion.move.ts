@@ -6,6 +6,7 @@ import {
   cardUuidMatch,
   getContextualPlayerIds,
   handleDestroyedCards,
+  initActivateEventListeners,
   pushEventStream,
   resetCardTargetBooleans,
   resetDestroyableMinions,
@@ -47,6 +48,7 @@ export const destroyMinionMove = (
 
   G.lastMoveMade = LastMoveMade.DestroyMinion;
   handleDestroyedCards(G, ctx);
+  initActivateEventListeners(G, ctx);
   resetCardTargetBooleans(G, ctx);
   // resetDestroyableMinions(G, currentPlayer);
   lastCardPlayed.reset(G);

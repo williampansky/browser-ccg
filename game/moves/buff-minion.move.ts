@@ -5,6 +5,7 @@ import { lastCardPlayed } from '../state';
 import {
   cardUuidMatch,
   getContextualPlayerIds,
+  initActivateEventListeners,
   resetBuffableMinions,
 } from '../../utils';
 
@@ -42,6 +43,7 @@ export const buffMinionMove = (
   });
 
   G.lastMoveMade = LastMoveMade.BuffMinion;
+  initActivateEventListeners(G, ctx);
   resetBuffableMinions(G, currentPlayer);
   lastCardPlayed.reset(G);
   ctx.events?.endStage();
