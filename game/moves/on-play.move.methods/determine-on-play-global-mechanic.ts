@@ -3,6 +3,7 @@ import { Mechanics } from "../../../enums";
 import type { Card, GameState, PlayerID } from "../../../types";
 import initGlobalDamageMechanicByCardKey from "./init-global-damage-mechanic-by-card-key";
 import initGlobalDebuffMechanicByCardKey from "./init-global-debuff-mechanic-by-card-key";
+import initGlobalDestroyMechanicByCardKey from "./init-global-destroy-mechanic-by-card-key";
 
 /**
  * Determines the context of the `card` param's mechanic context
@@ -35,7 +36,7 @@ import initGlobalDebuffMechanicByCardKey from "./init-global-debuff-mechanic-by-
       initGlobalDebuffMechanicByCardKey(G, ctx, zoneNumber, card, player);
       break;
     case Mechanics.Destroy:
-      console.log('@todo init global Destroy');
+      initGlobalDestroyMechanicByCardKey(G, ctx, zoneNumber, card, player);
       break;
     case Mechanics.Disable:
       console.log('@todo init global Disable');
