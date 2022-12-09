@@ -1,7 +1,9 @@
 import type { Ctx } from "boardgame.io";
+import { lte } from "lodash";
 import type { Card, GameState, PlayerID } from "../../../types";
+import { cardUuidMatch, getContextualPlayerIds, pushEventStream } from "../../../utils";
 import { core060 } from "../../mechanics";
-import { debuffPowerOfCardsInZone } from "../../mechanics/on-play-mechanics";
+import { dealAoeDamageOnPlay } from "../../mechanics/on-play-mechanics";
 
 /**
  * 
@@ -13,8 +15,31 @@ export default function initGlobalDamageMechanicByCardKey (
   card: Card,
   player: PlayerID
 ) {
+  const { opponent } = getContextualPlayerIds(player);
+
   switch (card.key) {
     case 'SET_CORE_060':
       core060.exec(G, ctx, player, zoneNumber, card);
+      break;
+    case 'SET_CORE_122':
+      dealAoeDamageOnPlay(G, player, card);
+      break;
   }
+
+  const check = (c: Card) => {
+    if (lte(c.displayHealth, 0)) {
+      c.booleans.isDestroyed = true;
+      c.destroyedOnTurn = G.turn;
+    }
+
+    // if (cardUuidMatch(c, card)) {
+    //   c.booleans.onPlayWasTriggered = true;
+    //   pushEventStream(c, c, 'onPlayWasTriggered');
+    // }
+  };
+
+  G.zones.forEach((z) => {
+    z.sides[player].forEach((c) => check(c));
+    z.sides[opponent].forEach((c) => check(c));
+  });
 };
