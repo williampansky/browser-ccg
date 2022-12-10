@@ -10,6 +10,7 @@ export { default as core006 } from './core-mechanics-by-key/mechanic.core.006';
 export { default as core007 } from './core-mechanics-by-key/mechanic.core.007';
 export { default as core008 } from './core-mechanics-by-key/mechanic.core.008';
 export { default as core009 } from './core-mechanics-by-key/mechanic.core.009';
+export { default as core011 } from './core-mechanics-by-key/mechanic.core.011';
 export { default as core012 } from './core-mechanics-by-key/mechanic.core.012';
 export { default as core031 } from './core-mechanics-by-key/mechanic.core.031';
 export { default as core032 } from './core-mechanics-by-key/mechanic.core.032';
