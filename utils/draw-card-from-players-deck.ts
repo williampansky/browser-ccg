@@ -13,7 +13,7 @@ const drawCardFromPlayersDeck = (
   G: GameState,
   player: PlayerID,
   amountToDraw: number = 1,
-  drawContext?: 'next' | 'random'
+  drawContext?: 'next' | 'random' | string
 ): void => {
   const maxHandSize = G.gameConfig.numerics.cardsPerHand;
 

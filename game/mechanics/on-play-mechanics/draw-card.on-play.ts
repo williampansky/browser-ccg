@@ -2,14 +2,15 @@ import type { Card, GameState, PlayerID } from '../../../types';
 import {
   drawCardFromPlayersDeck,
   getContextualPlayerIds,
+  pushEventStream,
 } from '../../../utils';
 
 const drawCardOnPlay = (
   G: GameState,
   player: PlayerID,
   cardPlayed: Card,
-  drawFromWhichDeck: 'player' | 'opponent' = 'player',
-  drawContext: 'next' | 'random' = 'next'
+  drawFromWhichDeck: 'player' | 'opponent' | string = 'player',
+  drawContext: 'next' | 'random' | string = 'next'
 ) => {
   const { numerics } = G.gameConfig;
   const { numberPrimary } = cardPlayed;
@@ -35,6 +36,7 @@ const drawCardOnPlay = (
 
   if (onPlayWasTriggered) {
     cardPlayed.booleans.onPlayWasTriggered = true;
+    pushEventStream(cardPlayed, cardPlayed, 'onPlayWasTriggered');
   }
 };
 
