@@ -81,8 +81,8 @@ export default<PhaseConfig> {
     // [your side] debug card or side interactions
     if (useDebugBoardCardKey) {
       for (let index = 0; index < debugBoardCardKeyAmount; index++) {
-        let debugCardBase = db.find(o => o.key === debugBoardCardKey);
-        let debugCard = createCardObject(debugCardBase!);
+        const debugCardBase = db.find(o => o.key === debugBoardCardKey);
+        const debugCard = createCardObject(debugCardBase!);
         G.zones[0].sides['0'].push({ ...debugCard, revealed: true });
       }
     }
@@ -90,8 +90,8 @@ export default<PhaseConfig> {
     // [their side] debug card or side interactions
     if (useDebugOpponentBoardCardKey) {
       for (let index = 0; index < debugOpponentBoardCardKeyAmount; index++) {
-        let debugCardBase = db.find(o => o.key === debugOpponentBoardCardKey);
-        let debugCard = createCardObject(debugCardBase!);
+        const debugCardBase = db.find(o => o.key === debugOpponentBoardCardKey);
+        const debugCard = createCardObject(debugCardBase!);
         G.zones[0].sides['1'].push({ ...debugCard, revealed: true });
       }
     }
