@@ -44,15 +44,15 @@ const core006 = {
       if (choice) { 
         const target = G.zones[zoneNumber].sides[opponent][choice.cardIndex];
 
-        // pushEventStream(playedCard, choice.cardData, 'onPlayWasTriggered');
-        // playedCard.booleans.onPlayWasTriggered = true;
+        pushEventStream(playedCard, choice.cardData, 'onPlayWasTriggered');
+        playedCard.booleans.onPlayWasTriggered = true;
 
         target.booleans.isDestroyed = true;
-        // target.booleans.canBeDestroyed = false;
-        // target.destroyedOnTurn = G.turn;
-        // pushEventStream(target, playedCard, 'wasDestroyed');
-        // handleCardDestructionMechanics(G, target, opponent);
-        // initActivateEventListeners(G, ctx);
+        target.booleans.canBeDestroyed = false;
+        target.destroyedOnTurn = G.turn;
+        pushEventStream(target, playedCard, 'wasDestroyed');
+        handleCardDestructionMechanics(G, target, opponent);
+        initActivateEventListeners(G, ctx);
       }
     }
   },

@@ -7,6 +7,7 @@ import initGlobalDamageMechanicByCardKey from "./init-global-damage-mechanic-by-
 import initGlobalDebuffMechanicByCardKey from "./init-global-debuff-mechanic-by-card-key";
 import initGlobalDestroyMechanicByCardKey from "./init-global-destroy-mechanic-by-card-key";
 import initGlobalDrawCardMechanicByCardKey from "./init-global-drawcard-mechanic-by-card-key";
+import initGlobalSummonMechanicByCardKey from "./init-global-summon-mechanic-by-card-key";
 
 /**
  * Determines the context of the `card` param's mechanic context
@@ -66,7 +67,7 @@ import initGlobalDrawCardMechanicByCardKey from "./init-global-drawcard-mechanic
       console.log('@todo init global Silence');
       break;
     case Mechanics.Summon:
-      console.log('@todo init global Summon');
+      initGlobalSummonMechanicByCardKey(G, ctx, zoneNumber, card, player);
       break;
     case Mechanics.Transform:
       console.log('@todo init global Transform');

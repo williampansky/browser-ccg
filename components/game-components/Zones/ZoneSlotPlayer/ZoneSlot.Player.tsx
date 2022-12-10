@@ -54,6 +54,19 @@ export const PlayerZoneSlot = ({
     }
   };
 
+  const getTransitionDelay = (obj?: Card) => {
+    if (obj && obj.revealed) {
+      if (obj.isEntourage) {
+        const idx = slotIndex + 1;
+        return `${idx * 400}ms`;
+      }
+
+      return `${slotIndex * 200}ms`;
+    }
+
+    return '0ms';
+  }
+
   useEffect(() => {
     if (data && data?.revealed && playerId === yourID) {
       setObjData(data);
@@ -65,6 +78,7 @@ export const PlayerZoneSlot = ({
   return (
     <div
       onClick={() => objData && dispatch(showCardModal(objData))}
+      data-component='PlayerZoneSlot'
       style={{
         height: 'var(--minion-height)',
         width: 'calc(var(--minion-height) / 1.25)',
@@ -74,7 +88,8 @@ export const PlayerZoneSlot = ({
         opacity: objData ? 1 : 0,
         zIndex: objData ? '1' : '-1',
         transform: `${getAnimationDirection(zoneNumber, objData)}`,
-        transitionDelay: objData?.revealed ? `${slotIndex * 200}ms` : '0ms',
+        // transitionDelay: objData?.revealed ? `${slotIndex * 200}ms` : '0ms',
+        transitionDelay: getTransitionDelay(objData)
       }}
     >
       <Minion {...objData!} />
