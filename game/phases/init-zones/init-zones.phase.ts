@@ -79,7 +79,7 @@ export default<PhaseConfig> {
     }
 
     // [your side] debug card or side interactions
-    if (useDebugBoardCardKey) {
+    if (useDebugBoardCardKey && !useDebugScenario) {
       for (let index = 0; index < debugBoardCardKeyAmount; index++) {
         const debugCardBase = db.find(o => o.key === debugBoardCardKey);
         const debugCard = createCardObject(debugCardBase!);
@@ -88,7 +88,7 @@ export default<PhaseConfig> {
     }
 
     // [their side] debug card or side interactions
-    if (useDebugOpponentBoardCardKey) {
+    if (useDebugOpponentBoardCardKey && !useDebugScenario) {
       for (let index = 0; index < debugOpponentBoardCardKeyAmount; index++) {
         const debugCardBase = db.find(o => o.key === debugOpponentBoardCardKey);
         const debugCard = createCardObject(debugCardBase!);
@@ -97,7 +97,7 @@ export default<PhaseConfig> {
     }
 
     // init possible debug scenario
-    if (useDebugScenario && (!useDebugBoardCardKey || useDebugOpponentBoardCardKey)) {
+    if (useDebugScenario) {
       const name = debugScenario;
       G.zones.forEach((z, zI) => {
         if (scenarios[name].zones[zI] && scenarios[name].zones[zI].sides['0']) {
