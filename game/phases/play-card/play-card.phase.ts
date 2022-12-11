@@ -9,6 +9,7 @@ import { aiPlayCard, aiSetDone, aiSetDoneMove } from '../../ai';
 import { deselectCard, playCard, selectCard, setDone } from '../../moves';
 import {
   determinePlayableCards,
+  handleZoneDisabledForXTurns,
   handleZonePowersCalculations,
   initActivateEventListeners,
   initActiveOnTurnEndListeners,
@@ -30,6 +31,7 @@ export default <PhaseConfig>{
     logPhaseToConsole(G.turn, ctx.phase, ctx.currentPlayer);
     handleZonePowersCalculations(G, ctx);
     removeDestroyedCards(G, ctx);
+    handleZoneDisabledForXTurns(G, ctx);
   },
   onEnd(G: GameState, ctx: Ctx) {
     // unsetPlayableCards({ G, player: ctx.currentPlayer })

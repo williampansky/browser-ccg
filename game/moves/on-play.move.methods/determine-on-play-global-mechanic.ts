@@ -7,6 +7,7 @@ import initGlobalBuffMechanicByCardKey from "./init-global-buff-mechanic-by-card
 import initGlobalDamageMechanicByCardKey from "./init-global-damage-mechanic-by-card-key";
 import initGlobalDebuffMechanicByCardKey from "./init-global-debuff-mechanic-by-card-key";
 import initGlobalDestroyMechanicByCardKey from "./init-global-destroy-mechanic-by-card-key";
+import initGlobalDisableMechanicByCardKey from "./init-global-disable-mechanic-by-card-key";
 import initGlobalDiscardMechanicByCardKey from "./init-global-discard-mechanic-by-card-key";
 import initGlobalDrawCardMechanicByCardKey from "./init-global-drawcard-mechanic-by-card-key";
 import initGlobalEnergyMechanicByCardKey from "./init-global-energy-mechanic-by-card-key";
@@ -47,7 +48,7 @@ import initGlobalSummonMechanicByCardKey from "./init-global-summon-mechanic-by-
       initGlobalDestroyMechanicByCardKey(G, ctx, zoneNumber, card, player);
       break;
     case Mechanics.Disable:
-      console.log('@todo init global Disable');
+      initGlobalDisableMechanicByCardKey(G, ctx, zoneNumber, card, player);
       break;
     case Mechanics.DrawCard:
       initGlobalDrawCardMechanicByCardKey(G, ctx, zoneNumber, card, player);
