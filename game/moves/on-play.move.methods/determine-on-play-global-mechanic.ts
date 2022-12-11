@@ -54,6 +54,7 @@ import initGlobalSummonMechanicByCardKey from "./init-global-summon-mechanic-by-
       console.log('@todo init global DiscardCard');
       break;
     case Mechanics.Energy:
+    case Mechanics.EnergySlot:
       initGlobalEnergyMechanicByCardKey(G, ctx, zoneNumber, card, player);
       break;
     case Mechanics.Heal:

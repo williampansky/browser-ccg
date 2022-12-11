@@ -21,7 +21,7 @@ export enum Mechanics {
   DrawCard = 'DRAW_CARD',
   Durability = 'DURABILITY',
   Energy = 'ENERGY',
-  EnergySlot = 'ENERGY_CRYSTAL',
+  EnergySlot = 'ENERGY_SLOT',
   Event = 'EVENT',
   GlobalSpell = 'GLOBAL_SPELL',
   Heal = 'HEAL',
