@@ -2,6 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { Mechanics } from "../../../enums";
 import type { Card, GameState, PlayerID } from "../../../types";
 import initGlobalAddCardMechanicByCardKey from "./init-global-addcard-mechanic-by-card-key";
+import initGlobalBoonMechanicByCardKey from "./init-global-boon-mechanic-by-card-key";
 import initGlobalBuffMechanicByCardKey from "./init-global-buff-mechanic-by-card-key";
 import initGlobalDamageMechanicByCardKey from "./init-global-damage-mechanic-by-card-key";
 import initGlobalDebuffMechanicByCardKey from "./init-global-debuff-mechanic-by-card-key";
@@ -27,7 +28,7 @@ import initGlobalSummonMechanicByCardKey from "./init-global-summon-mechanic-by-
       initGlobalAddCardMechanicByCardKey(G, ctx, zoneNumber, card, player);
       break;
     case Mechanics.Boon:
-      console.log('@todo init global Boon');
+      initGlobalBoonMechanicByCardKey(G, ctx, zoneNumber, card, player);
       break;
     case Mechanics.Buff:
       initGlobalBuffMechanicByCardKey(G, ctx, zoneNumber, card, player);
