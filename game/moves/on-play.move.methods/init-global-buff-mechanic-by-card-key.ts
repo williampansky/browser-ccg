@@ -16,6 +16,7 @@ export default function initGlobalBuffMechanicByCardKey (
   switch (card.key) {
     case 'SET_CORE_005':
       core005.exec(G, ctx, player, zoneNumber, card);
+      break;
     case 'SET_CORE_029':
       core029.exec(G, ctx, player, zoneNumber, card);
       break;

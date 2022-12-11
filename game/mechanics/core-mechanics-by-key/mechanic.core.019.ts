@@ -4,7 +4,7 @@ import { getContextualPlayerIds, pushEventStream } from '../../../utils';
 import { counts } from '../../state';
 
 /**
- * add 2 cards opponent played to your deck
+ * add card(s) opponent played to your deck
  */
 const core019 = {
   exec: (
@@ -15,9 +15,9 @@ const core019 = {
     playedCard: Card
   ) => {
     const { opponent } = getContextualPlayerIds(player);
-    const { numberRNG } = playedCard;
+    const { numberPrimary } = playedCard;
 
-    for (let index = 0; index < numberRNG; index++) {
+    for (let index = 0; index < numberPrimary; index++) {
       if (G.playedCards[opponent].length !== 0) {
         const choice = ctx?.random?.Shuffle(G.playedCards[opponent])[0]!;
 

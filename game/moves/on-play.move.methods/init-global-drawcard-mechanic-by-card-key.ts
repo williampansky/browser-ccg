@@ -15,7 +15,11 @@ export default function initGlobalDrawCardMechanicByCardKey (
   switch (card.key) {
     case 'SET_CORE_003':
       drawCardOnPlay(G, player, card, card.mechanicsSide, 'random');
+      break;
     case 'SET_CORE_026':
+      drawCardOnPlay(G, player, card, card.mechanicsSide, 'next');
+      break;
+    case 'SET_CORE_040':
       drawCardOnPlay(G, player, card, card.mechanicsSide, 'next');
       break;
   }

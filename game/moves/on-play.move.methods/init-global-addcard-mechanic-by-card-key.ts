@@ -20,6 +20,7 @@ export default function initGlobalAddCardMechanicByCardKey (
       core011.exec(G, ctx, player, zoneNumber, card);
       break;
     case 'SET_CORE_019':
+    case 'SET_CORE_039':
       core019.exec(G, ctx, player, zoneNumber, card);
       break;
   }

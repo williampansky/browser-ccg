@@ -1,3 +1,4 @@
+import { CardMechanicsSide as Side } from '../../../enums';
 import type { Card, GameState, PlayerID } from '../../../types';
 import {
   drawCardFromPlayersDeck,
@@ -9,7 +10,7 @@ const drawCardOnPlay = (
   G: GameState,
   player: PlayerID,
   cardPlayed: Card,
-  drawFromWhichDeck: 'player' | 'opponent' | string = 'player',
+  drawFromWhichDeck: Side.Player | Side.Opponent | string = Side.Player,
   drawContext: 'next' | 'random' | string = 'next'
 ) => {
   const { numerics } = G.gameConfig;
@@ -25,10 +26,10 @@ const drawCardOnPlay = (
   }
 
   switch (drawFromWhichDeck) {
-    case 'opponent':
+    case Side.Opponent:
       invokeDraw(opponent, numberPrimary);
       break;
-    case 'player':
+    case Side.Player:
     default:
       invokeDraw(player, numberPrimary);
       break;
