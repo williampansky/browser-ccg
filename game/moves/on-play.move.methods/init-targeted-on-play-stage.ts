@@ -13,6 +13,7 @@ import {
   unsetPlayableCards,
 } from '../../../utils';
 import { core031, core050, core110 } from '../../mechanics';
+import core126 from '../../mechanics/core-mechanics-by-key/mechanic.core.126';
 
 /**
  *
@@ -44,7 +45,7 @@ const initTargetedOnPlayDamageStage = (G: GameState, ctx: Ctx, card: Card) => {
 
   // prettier-ignore
   switch (card.key) {
-    // case 'SET_CORE_050': core050.init(G, currentPlayer, card); break;
+    // case 'SET_CORE_126': core050.init(G, currentPlayer, card); break;
     default: determineAttackableMinions(G, currentPlayer); break;
   }
 
@@ -62,9 +63,14 @@ const initTargetedOnPlayDamageStage = (G: GameState, ctx: Ctx, card: Card) => {
  */
 const initTargetedOnPlayDestroyStage = (G: GameState, ctx: Ctx, card: Card) => {
   const { currentPlayer } = ctx;
-  determineDestroyableMinions(G, currentPlayer);
-  const noTargetsAvailable = noDestroyableMinionsAvailable(G, currentPlayer);
 
+  // prettier-ignore
+  switch (card.key) {
+    case 'SET_CORE_126': core126.init(G, ctx, currentPlayer, card); break;
+    default: determineDestroyableMinions(G, currentPlayer); break;
+  }
+
+  const noTargetsAvailable = noDestroyableMinionsAvailable(G, currentPlayer);
   if (noTargetsAvailable) {
     return determinePlayableCards(G, ctx, currentPlayer);
   } else {

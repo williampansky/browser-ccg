@@ -13,14 +13,7 @@ const determineDestroyableMinions = (G: GameState, player: PlayerID) => {
   G.zones.forEach((z) => {
     z.sides[opponent].forEach((c) => {
       if (cardIsNotSelf(c, lastPlayedCard) && cardIsNotDestroyed(c)) {
-        switch (lastPlayedCard.key) {
-          case 'SET_CORE_126':
-            if (c.booleans.hasHealthReduced) c.booleans.canBeDestroyed = true;
-            break;
-          default:
-            c.booleans.canBeDestroyed = true;
-            break;
-        }
+        c.booleans.canBeDestroyed = true;
       }
     });
   });

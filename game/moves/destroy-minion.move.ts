@@ -11,6 +11,7 @@ import {
   resetCardTargetBooleans,
   resetDestroyableMinions,
 } from '../../utils';
+import core126 from '../mechanics/core-mechanics-by-key/mechanic.core.126';
 
 export interface DestroyMinionMove {
   card: Card;
@@ -23,34 +24,43 @@ export const destroyMinionMove = (
   { card, targetPlayer }: DestroyMinionMove
 ) => {
   const { currentPlayer } = ctx;
-  // const { opponent } = getContextualPlayerIds(currentPlayer);
+  const { opponent, player } = getContextualPlayerIds(currentPlayer);
   const cardToDestroy = card;
   const lastCard = G.lastCardPlayed?.card!;
 
   const init = (c: Card) => {
     if (cardUuidMatch(c, cardToDestroy)) {
-      c.destroyedOnTurn = G.turn;
-      c.booleans.isDestroyed = true;
-      c.booleans.canBeDestroyed = false;
-      pushEventStream(c, lastCard, 'wasDestroyed');
-    }
+      switch (lastCard.key) {
+        case 'SET_CORE_126':
+          core126.exec(G, ctx, targetPlayer, c, lastCard);
+          break;
 
-    if (cardUuidMatch(c, lastCard)) {
-      c.booleans.onPlayWasTriggered = true;
-      pushEventStream(c, cardToDestroy, 'onPlayWasTriggered');
+        default:
+          if (cardUuidMatch(c, cardToDestroy)) {
+            c.destroyedOnTurn = G.turn;
+            c.booleans.isDestroyed = true;
+            c.booleans.canBeDestroyed = false;
+            pushEventStream(c, lastCard, 'wasDestroyed');
+          }
+
+          if (cardUuidMatch(c, lastCard)) {
+            c.booleans.onPlayWasTriggered = true;
+            pushEventStream(c, cardToDestroy, 'onPlayWasTriggered');
+          }
+          break;
+      }
     }
   };
 
   G.zones.forEach((z) => {
-    z.sides[currentPlayer].forEach((c) => init(c));
-    z.sides[targetPlayer].forEach((c) => init(c));
+    z.sides[player].forEach((c) => init(c));
+    z.sides[opponent].forEach((c) => init(c));
   });
 
   G.lastMoveMade = LastMoveMade.DestroyMinion;
   handleDestroyedCards(G, ctx);
   initActivateEventListeners(G, ctx);
   resetCardTargetBooleans(G, ctx);
-  // resetDestroyableMinions(G, currentPlayer);
   lastCardPlayed.reset(G);
   ctx.events?.endStage();
 };

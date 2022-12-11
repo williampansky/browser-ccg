@@ -8,13 +8,19 @@ const noDestroyableMinionsAvailable = (
   const { opponent } = getContextualPlayerIds(player);
   let noDestroyableMinionsAvailable = true;
 
-  G.zones.forEach((z, zi) => {
-    // @todo future enhancement
-    // z.sides[player].forEach((c) => {
-    //   if (c.booleans.hasHealthReduced) noDestroyableMinionsAvailable = false;
-    // });
+  G.zones.forEach((z) => {
+    z.sides[player].forEach((c) => {
+      console.log(player, c.name, c.booleans.canBeDestroyed, c.booleans.isDestroyed);
+      const canBeDestroyed = c.booleans.canBeDestroyed === true;
+      const isNotDestroyed = c.booleans.isDestroyed === false;
+
+      if (canBeDestroyed || isNotDestroyed) {
+        noDestroyableMinionsAvailable = false;
+      }
+    });
 
     z.sides[opponent].forEach((c) => {
+      console.log(opponent, c.name, c.booleans.canBeDestroyed, c.booleans.isDestroyed);
       const canBeDestroyed = c.booleans.canBeDestroyed === true;
       const isNotDestroyed = c.booleans.isDestroyed === false;
 
