@@ -103,7 +103,7 @@ export enum CardMechanicsContext {
   Debuff = Mechanics.Debuff,
   Destroy = Mechanics.Destroy,
   Disable = Mechanics.Disable,
-  DiscardCard = Mechanics.DiscardCard,
+  Discard = Mechanics.Discard,
   Heal = Mechanics.Heal,
   None = Mechanics.None,
   SetValue = Mechanics.SetValue,

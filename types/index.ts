@@ -10,7 +10,7 @@ export type {
 } from './app-config.interface';
 
 export type {
-  DiscardCardEffects,
+  DiscardEffects,
   RevealCardEffects,
   RevealZoneEffects,
 } from './bgio-effects.interface';

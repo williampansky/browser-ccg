@@ -1,6 +1,6 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
-import { filterArray } from '../../../utils';
+import { filterArray, pushEventStream } from '../../../utils';
 import { counts } from '../../state';
 
 const discardCardFromHandOnPlay = (
@@ -28,12 +28,18 @@ const discardCardFromHandOnPlay = (
 
   if (possibleTargets.length !== 0) {
     const choice = possibleTargets[0]!;
-    cardplayed.booleans.onPlayWasTriggered = true;
-    choice.cardData.booleans.wasDiscarded = true;
-    G.players[player].cards.discarded.push(choice.cardData);
-    counts.decrementHand(G, player);
-    counts.incrementDiscarded(G, player);
-    filterArray(hand, choice.cardData.uuid, choice.cardIndex);
+
+    if (choice) {
+      cardplayed.booleans.onPlayWasTriggered = true;
+      pushEventStream(cardplayed, choice.cardData, 'onPlayWasTriggered');
+  
+      choice.cardData.booleans.wasDiscarded = true;
+  
+      G.players[player].cards.discarded.push(choice.cardData);
+      counts.decrementHand(G, player);
+      counts.incrementDiscarded(G, player);
+      filterArray(hand, choice.cardData.uuid, choice.cardIndex);
+    }
   }
 };
 

@@ -2,7 +2,7 @@ import { Card } from './card.interface';
 import { PlayerID } from './player.interface';
 import { Zone } from './zone.interface';
 
-export interface DiscardCardEffects {
+export interface DiscardEffects {
   cardUuid: string;
   cardIdx: number;
   player: PlayerID;

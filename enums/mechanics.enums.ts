@@ -16,7 +16,7 @@ export enum Mechanics {
   Debuff = 'DEBUFF',
   Destroy = 'DESTROY',
   Disable = 'DISABLE',
-  DiscardCard = 'DISCARD_CARD',
+  Discard = 'DISCARD',
   Discover = 'DISCOVER',
   DrawCard = 'DRAW_CARD',
   Durability = 'DURABILITY',
