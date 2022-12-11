@@ -10,6 +10,8 @@ import { deselectCard, playCard, selectCard, setDone } from '../../moves';
 import {
   determinePlayableCards,
   handleZonePowersCalculations,
+  initActivateEventListeners,
+  initActiveOnTurnEndListeners,
   isBotGame,
   logPhaseToConsole,
   removeDestroyedCards,
@@ -56,6 +58,7 @@ export default <PhaseConfig>{
     },
     onEnd(G: GameState, ctx: Ctx) {
       unsetPlayableCards(G, ctx.currentPlayer);
+      initActiveOnTurnEndListeners(G, ctx);
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;

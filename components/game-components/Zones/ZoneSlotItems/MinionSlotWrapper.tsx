@@ -6,6 +6,7 @@ import { getRandomNumberBetween } from '../../../../utils';
 import { Context } from '../../../../enums';
 import { MinionOnPlayAnimation } from './MinionOnPlayAnimation';
 import { MinionEventAnimation } from './MinionEventAnimation';
+import { MinionOnTurnEndAnimation } from './MinionOnTurnEndAnimation';
 
 import SUBTYPE_RACE_DEMONIC from '../../../../public/images/card-assets/SUBTYPE_RACE_DEMONIC.png';
 import { AttackMinionMove } from '../../../../game/moves/attack-minion.move';
@@ -129,6 +130,14 @@ export const MinionSlotWrapper = ({
             case 'onPlayWasTriggered':
               return (
                 <MinionOnPlayAnimation
+                  key={`${i}_${e.uuid}`}
+                  index={index}
+                  mapIndex={i}
+                />
+              );
+            case 'onTurnEndWasTriggered':
+              return (
+                <MinionOnTurnEndAnimation
                   key={`${i}_${e.uuid}`}
                   index={index}
                   mapIndex={i}
