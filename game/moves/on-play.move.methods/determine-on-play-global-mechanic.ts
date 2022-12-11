@@ -7,6 +7,7 @@ import initGlobalDamageMechanicByCardKey from "./init-global-damage-mechanic-by-
 import initGlobalDebuffMechanicByCardKey from "./init-global-debuff-mechanic-by-card-key";
 import initGlobalDestroyMechanicByCardKey from "./init-global-destroy-mechanic-by-card-key";
 import initGlobalDrawCardMechanicByCardKey from "./init-global-drawcard-mechanic-by-card-key";
+import initGlobalSetCostMechanicByCardKey from "./init-global-setcost-mechanic-by-card-key";
 import initGlobalSummonMechanicByCardKey from "./init-global-summon-mechanic-by-card-key";
 
 /**
@@ -55,7 +56,7 @@ import initGlobalSummonMechanicByCardKey from "./init-global-summon-mechanic-by-
       console.log('@todo init global Heal');
       break;
     case Mechanics.SetCost:
-      console.log('@todo init global SetCost');
+      initGlobalSetCostMechanicByCardKey(G, ctx, zoneNumber, card, player);
       break;
     case Mechanics.SetValue:
       console.log('@todo init global SetValue');
