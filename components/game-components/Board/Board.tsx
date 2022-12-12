@@ -2,9 +2,10 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLatestPropsOnEffect } from 'bgio-effects/react';
 
+import type { Ctx } from 'boardgame.io';
 import type { BoardProps } from 'boardgame.io/react';
-import type { Card, GameConfig, GameState, PlayerID } from '../../../types';
 import type { RootState as Root } from '../../../store';
+import type { Card, GameState } from '../../../types';
 
 import {
   useEndPhase,
@@ -29,16 +30,17 @@ import {
   TheZonesContainer,
   TheDiscardedCardPopup,
 } from '../';
-import { Ctx } from 'boardgame.io';
-import { gt } from 'lodash';
-import { setDiscardedCard } from '../../../features';
-import { SelectCardMove } from '../../../game/moves/select-card.move';
-import { DeselectCardMove } from '../../../game/moves/deselect-card.move';
-import { PlayCardMove } from '../../../game/moves/play-card.move';
-import { AttackMinionMove } from '../../../game/moves/attack-minion.move';
-import { BuffMinionMove } from '../../../game/moves/buff-minion.move';
-import { SetDoneMove } from '../../../game/moves/set-done.move';
-import { DestroyMinionMove, HealMinionMove } from '../../../game/moves';
+
+import {
+  AttackMinionMove,
+  BuffMinionMove,
+  DebuffMinionMove,
+  DeselectCardMove,
+  DestroyMinionMove,
+  HealMinionMove,
+  PlayCardMove,
+  SelectCardMove,
+} from '../../../game/moves';
 
 interface PropsOnEffect {
   G: GameState;
@@ -53,6 +55,7 @@ export const Board = (props: GameProps) => {
     moves: {
       attackMinion,
       buffMinion,
+      debuffMinion,
       destroyMinion,
       deselectCard,
       playCard,
@@ -147,6 +150,17 @@ export const Board = (props: GameProps) => {
     [currentPlayer]
   );
 
+  const onDebuffMinionClick = useCallback(
+    ({ card, targetPlayer }: DebuffMinionMove) => {
+      if (card && targetPlayer) return debuffMinion({ card, targetPlayer });
+      else
+        return console.error(
+          `ERROR: onDebuffMinionClick(${targetPlayer}, ${card})`
+        );
+    },
+    [currentPlayer]
+  );
+
   const onDestroyMinionClick = useCallback(
     ({ card, targetPlayer }: DestroyMinionMove) => {
       if (card && targetPlayer) return destroyMinion({ card, targetPlayer });
@@ -204,6 +218,7 @@ export const Board = (props: GameProps) => {
           yourID={yourID}
           onAttackMinionClick={onAttackMinionClick}
           onBuffMinionClick={onBuffMinionClick}
+          onDebuffMinionClick={onDebuffMinionClick}
           onDestroyMinionClick={onDestroyMinionClick}
           onHealMinionClick={onHealMinionClick}
         />

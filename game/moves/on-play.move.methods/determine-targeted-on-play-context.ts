@@ -3,6 +3,7 @@ import type { Card, GameState } from '../../../types';
 import { Mechanics } from '../../../enums';
 import {
   initTargetedOnPlayBuffStage,
+  initTargetedOnPlayDebuffStage,
   initTargetedOnPlayDamageStage,
   initTargetedOnPlayDestroyStage,
   initTargetedOnPlayHealStage,
@@ -19,6 +20,7 @@ export default function determineTargetedOnPlayContext(
   // prettier-ignore
   switch (card.mechanicsContext) {
     case Mechanics.Buff:    return initTargetedOnPlayBuffStage(G, ctx, card);
+    case Mechanics.Debuff:  return initTargetedOnPlayDebuffStage(G, ctx, card);
     case Mechanics.Damage:  return initTargetedOnPlayDamageStage(G, ctx, card);
     case Mechanics.Destroy: return initTargetedOnPlayDestroyStage(G, ctx, card);
     case Mechanics.Heal:    return initTargetedOnPlayHealStage(G, ctx, card);

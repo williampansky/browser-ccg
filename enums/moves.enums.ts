@@ -7,6 +7,7 @@
   AiSetDone = 'aiSetDone',
   AttackMinion = 'attackMinion',
   BuffMinion = 'buffMinion',
+  DebuffMinion = 'debuffMinion',
   DeselectCard = 'deselectCard',
   DestroyMinion = 'destroyMinion',
   HealMinion = 'healMinion',

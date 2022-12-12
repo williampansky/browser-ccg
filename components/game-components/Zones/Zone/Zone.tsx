@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-import type { Card, GameConfig, PlayerID, Zone as IZone } from '../../../../types';
+import type { GameConfig, PlayerID, Zone as IZone } from '../../../../types';
 import { usePrevious } from '../../../../hooks';
 
 import {
@@ -14,9 +14,14 @@ import {
   ZonePower,
   ZoneRevealOverlay,
 } from '..';
-import { AttackMinionMove } from '../../../../game/moves/attack-minion.move';
-import { BuffMinionMove } from '../../../../game/moves/buff-minion.move';
-import { DestroyMinionMove, HealMinionMove } from '../../../../game/moves';
+
+import {
+  AttackMinionMove,
+  BuffMinionMove,
+  DebuffMinionMove,
+  DestroyMinionMove,
+  HealMinionMove,
+} from '../../../../game/moves';
 
 interface Props {
   gameConfig: GameConfig;
@@ -29,6 +34,7 @@ interface Props {
   zonesAreActive: boolean;
   onAttackMinionClick: ({ card, targetPlayer }: AttackMinionMove) => void;
   onBuffMinionClick: ({ card, targetPlayer }: BuffMinionMove) => void;
+  onDebuffMinionClick: ({ card, targetPlayer }: DebuffMinionMove) => void;
   onDestroyMinionClick: ({ card, targetPlayer }: DestroyMinionMove) => void;
   onHealMinionClick: ({ card, targetPlayer }: HealMinionMove) => void;
 }
@@ -44,8 +50,9 @@ export const Zone = ({
   zonesAreActive,
   onAttackMinionClick,
   onBuffMinionClick,
+  onDebuffMinionClick,
   onDestroyMinionClick,
-  onHealMinionClick
+  onHealMinionClick,
 }: Props) => {
   const { powers } = zone;
   const { numerics, zonesConfig } = gameConfig;
@@ -92,6 +99,7 @@ export const Zone = ({
                 zoneSide={theirID}
                 onAttackMinionClick={onAttackMinionClick}
                 onBuffMinionClick={onBuffMinionClick}
+                onDebuffMinionClick={onDebuffMinionClick}
                 onDestroyMinionClick={onDestroyMinionClick}
                 onHealMinionClick={onHealMinionClick}
               >
@@ -179,6 +187,7 @@ export const Zone = ({
                   zoneSide={yourID}
                   onAttackMinionClick={onAttackMinionClick}
                   onBuffMinionClick={onBuffMinionClick}
+                  onDebuffMinionClick={onDebuffMinionClick}
                   onDestroyMinionClick={onDestroyMinionClick}
                   onHealMinionClick={onHealMinionClick}
                 >

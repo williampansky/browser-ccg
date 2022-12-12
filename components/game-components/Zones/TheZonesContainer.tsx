@@ -2,16 +2,22 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffectListener, useLatestPropsOnEffect } from 'bgio-effects/react';
 
+import type { Ctx } from 'boardgame.io';
 import type { RootState } from '../../../store';
 import type { Card, GameState, PlayerID } from '../../../types';
 
 import { Zone } from './Zone';
-import styles from './TheZonesContainer.module.scss';
-import { Ctx } from 'boardgame.io';
 import { LastMoveMade } from '../../../enums';
-import { AttackMinionMove } from '../../../game/moves/attack-minion.move';
-import { BuffMinionMove } from '../../../game/moves/buff-minion.move';
-import { DestroyMinionMove, HealMinionMove } from '../../../game/moves';
+
+import {
+  AttackMinionMove,
+  BuffMinionMove,
+  DebuffMinionMove,
+  DestroyMinionMove,
+  HealMinionMove,
+} from '../../../game/moves';
+
+import styles from './TheZonesContainer.module.scss';
 
 interface Props {
   ctx: Ctx;
@@ -21,6 +27,7 @@ interface Props {
   yourID: PlayerID;
   onAttackMinionClick: ({ card, targetPlayer }: AttackMinionMove) => void;
   onBuffMinionClick: ({ card, targetPlayer }: BuffMinionMove) => void;
+  onDebuffMinionClick: ({ card, targetPlayer }: DebuffMinionMove) => void;
   onDestroyMinionClick: ({ card, targetPlayer }: DestroyMinionMove) => void;
   onHealMinionClick: ({ card, targetPlayer }: HealMinionMove) => void;
 }
@@ -33,6 +40,7 @@ export const TheZonesContainer = ({
   yourID,
   onAttackMinionClick,
   onBuffMinionClick,
+  onDebuffMinionClick,
   onDestroyMinionClick,
   onHealMinionClick,
 }: Props) => {
@@ -85,6 +93,7 @@ export const TheZonesContainer = ({
             gameConfig={gameConfig}
             onAttackMinionClick={onAttackMinionClick}
             onBuffMinionClick={onBuffMinionClick}
+            onDebuffMinionClick={onDebuffMinionClick}
             onDestroyMinionClick={onDestroyMinionClick}
             onHealMinionClick={onHealMinionClick}
           />

@@ -2,6 +2,7 @@ import type { StageMap } from 'boardgame.io';
 import {
   attackMinion,
   buffMinion,
+  debuffMinion,
   deselectCard,
   destroyMinion,
   healMinion,
@@ -18,6 +19,12 @@ export default <StageMap>{
     moves: {
       deselectCard,
       buffMinion,
+    },
+  },
+  debuffMinion: {
+    moves: {
+      deselectCard,
+      debuffMinion,
     },
   },
   destroyMinion: {

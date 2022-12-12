@@ -4,6 +4,9 @@ export { attackMinionMove, attackMinion } from './attack-minion.move';
 export type { BuffMinionMove } from './buff-minion.move';
 export { buffMinionMove, buffMinion } from './buff-minion.move';
 
+export type { DebuffMinionMove } from './debuff-minion.move';
+export { debuffMinionMove, debuffMinion } from './debuff-minion.move';
+
 export type { DeselectCardMove } from './deselect-card.move';
 export { deselectCardMove, deselectCard } from './deselect-card.move';
 

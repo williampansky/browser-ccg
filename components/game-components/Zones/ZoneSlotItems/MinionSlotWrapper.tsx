@@ -9,9 +9,14 @@ import { MinionEventAnimation } from './MinionEventAnimation';
 import { MinionOnTurnEndAnimation } from './MinionOnTurnEndAnimation';
 
 import SUBTYPE_RACE_DEMONIC from '../../../../public/images/card-assets/SUBTYPE_RACE_DEMONIC.png';
-import { AttackMinionMove } from '../../../../game/moves/attack-minion.move';
-import { BuffMinionMove } from '../../../../game/moves/buff-minion.move';
-import { DestroyMinionMove, HealMinionMove } from '../../../../game/moves';
+
+import {
+  AttackMinionMove,
+  BuffMinionMove,
+  DebuffMinionMove,
+  DestroyMinionMove,
+  HealMinionMove,
+} from '../../../../game/moves';
 
 // import styles from './MinionSlotWrapper.module.scss';
 
@@ -29,6 +34,7 @@ interface Props {
   zoneSide: PlayerID;
   onAttackMinionClick: ({ card, targetPlayer }: AttackMinionMove) => void;
   onBuffMinionClick: ({ card, targetPlayer }: BuffMinionMove) => void;
+  onDebuffMinionClick: ({ card, targetPlayer }: DebuffMinionMove) => void;
   onDestroyMinionClick: ({ card, targetPlayer }: DestroyMinionMove) => void;
   onHealMinionClick: ({ card, targetPlayer }: HealMinionMove) => void;
 }
@@ -46,6 +52,7 @@ export const MinionSlotWrapper = ({
   zoneSide,
   onAttackMinionClick,
   onBuffMinionClick,
+  onDebuffMinionClick,
   onDestroyMinionClick,
   onHealMinionClick,
 }: Props) => {
@@ -67,6 +74,7 @@ export const MinionSlotWrapper = ({
     
     if (b?.canBeAttackedBySpell) move(Context.CanBeAttackedBySpell);
     if (b?.canBeBuffed) move(Context.CanBeBuffed);
+    if (b?.canBeDebuffed) move(Context.CanBeDebuffed);
     if (b?.canBeDestroyed) move(Context.CanBeDestroyed);
     if (b?.canBeHealed) move(Context.CanBeHealed);
   };
@@ -79,6 +87,8 @@ export const MinionSlotWrapper = ({
         return attackMinion(player, zoneSide, data?.uuid, zoneNumber);
       case Context.CanBeBuffed:
         return onBuffMinionClick({ card: data!, targetPlayer: zoneSide });
+      case Context.CanBeDebuffed:
+        return onDebuffMinionClick({ card: data!, targetPlayer: zoneSide });
       case Context.CanBeDestroyed:
         return onDestroyMinionClick({ card: data!, targetPlayer: zoneSide });
       case Context.CanBeHealed:
@@ -94,6 +104,7 @@ export const MinionSlotWrapper = ({
         'minionslot',
         b?.canBeAttackedBySpell ? 'minionslot--can-be-attacked' : '',
         b?.canBeBuffed ? 'minionslot--can-be-buffed' : '',
+        b?.canBeDebuffed ? 'minionslot--can-be-debuffed' : '',
         b?.canBeDestroyed ? 'minionslot--can-be-destroyed' : '',
         b?.canBeHealed ? 'minionslot--can-be-healed' : '',
         b?.isDestroyed ? 'minionslot--is-destroyed' : '',

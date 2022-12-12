@@ -3,16 +3,21 @@ import type { Card, GameState } from '../../../types';
 import {
   determineAttackableMinions,
   determineBuffableMinions,
+  determineDebuffableMinions,
   determineDestroyableMinions,
   determineHealableMinions,
   determinePlayableCards,
   noAttackableMinionsAvailable,
   noBuffableMinionsAvailable,
+  noDebuffableMinionsAvailable,
   noDestroyableMinionsAvailable,
   noHealableMinionsAvailable,
   unsetPlayableCards,
 } from '../../../utils';
-import { core031, core050, core110 } from '../../mechanics';
+
+import core031 from '../../mechanics/core-mechanics-by-key/mechanic.core.031';
+import core056 from '../../mechanics/core-mechanics-by-key/mechanic.core.056';
+import core110 from '../../mechanics/core-mechanics-by-key/mechanic.core.110';
 import core126 from '../../mechanics/core-mechanics-by-key/mechanic.core.126';
 
 /**
@@ -34,6 +39,27 @@ const initTargetedOnPlayBuffStage = (G: GameState, ctx: Ctx, card: Card) => {
   } else {
     unsetPlayableCards(G, currentPlayer);
     return ctx.events?.setStage('buffMinion');
+  }
+};
+
+/**
+ *
+ */
+const initTargetedOnPlayDebuffStage = (G: GameState, ctx: Ctx, card: Card) => {
+  const { currentPlayer } = ctx;
+
+  // prettier-ignore
+  switch (card.key) {
+    case 'SET_CORE_056': core056.init(G, ctx, card); break;
+    default: determineDebuffableMinions(G, currentPlayer); break;
+  }
+
+  const noTargetsAvailable = noDebuffableMinionsAvailable(G, currentPlayer);
+  if (noTargetsAvailable) {
+    return determinePlayableCards(G, ctx, currentPlayer);
+  } else {
+    unsetPlayableCards(G, currentPlayer);
+    return ctx.events?.setStage('debuffMinion');
   }
 };
 
@@ -97,6 +123,7 @@ const initTargetedOnPlayHealStage = (G: GameState, ctx: Ctx, card: Card) => {
 
 export {
   initTargetedOnPlayBuffStage,
+  initTargetedOnPlayDebuffStage,
   initTargetedOnPlayDamageStage,
   initTargetedOnPlayDestroyStage,
   initTargetedOnPlayHealStage,
