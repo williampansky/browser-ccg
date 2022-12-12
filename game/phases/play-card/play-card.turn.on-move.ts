@@ -8,5 +8,6 @@ import {
 export default function playCardTurnOnMove(G: GameState, ctx: Ctx) {
   const { currentPlayer } = ctx;
   handleZonePowersCalculations(G, ctx);
+  // handleActiveCardBoons(G, ctx);
   determinePlayableCards(G, ctx, currentPlayer);
 }
