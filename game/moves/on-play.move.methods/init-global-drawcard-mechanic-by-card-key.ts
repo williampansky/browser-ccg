@@ -1,11 +1,11 @@
-import type { Ctx } from "boardgame.io";
-import type { Card, GameState, PlayerID } from "../../../types";
-import { drawCardOnPlay } from "../../mechanics/on-play-mechanics";
+import type { Ctx } from 'boardgame.io';
+import type { Card, GameState, PlayerID } from '../../../types';
+import { drawCardOnPlay } from '../../mechanics/on-play-mechanics';
 
 /**
- * 
+ *
  */
-export default function initGlobalDrawCardMechanicByCardKey (
+export default function initGlobalDrawCardMechanicByCardKey(
   G: GameState,
   ctx: Ctx,
   zoneNumber: number,
@@ -23,4 +23,4 @@ export default function initGlobalDrawCardMechanicByCardKey (
       drawCardOnPlay(G, player, card, card.mechanicsSide, 'next');
       break;
   }
-};
+}

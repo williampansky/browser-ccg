@@ -1,12 +1,12 @@
-import type { Ctx } from "boardgame.io";
-import type { Card, GameState, PlayerID } from "../../../types";
-import { core034 } from "../../mechanics/core-mechanics-by-key/mechanic.core.034";
-import { core037 } from "../../mechanics/core-mechanics-by-key/mechanic.core.037";
+import type { Ctx } from 'boardgame.io';
+import type { Card, GameState, PlayerID } from '../../../types';
+import core034 from '../../mechanics/core-mechanics-by-key/mechanic.core.034';
+import core037 from '../../mechanics/core-mechanics-by-key/mechanic.core.037';
 
 /**
- * 
+ *
  */
-export default function initGlobalEnergyMechanicByCardKey (
+export default function initGlobalEnergyMechanicByCardKey(
   G: GameState,
   ctx: Ctx,
   zoneNumber: number,
@@ -21,4 +21,4 @@ export default function initGlobalEnergyMechanicByCardKey (
       core037.exec(G, ctx, player, zoneNumber, card);
       break;
   }
-};
+}

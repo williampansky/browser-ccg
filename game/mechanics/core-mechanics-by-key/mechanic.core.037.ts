@@ -1,5 +1,5 @@
-import type { Ctx } from 'boardgame.io';
 import { add } from 'mathjs';
+import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
 import { pushEventStream } from '../../../utils';
 import { actionPoints } from '../../state';
@@ -7,7 +7,7 @@ import { actionPoints } from '../../state';
 /**
  * get 1 additional energy slot
  */
-export const core037 = {
+const core037 = {
   exec: (
     G: GameState,
     ctx: Ctx,
@@ -25,3 +25,5 @@ export const core037 = {
     pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
   },
 };
+
+export default core037;

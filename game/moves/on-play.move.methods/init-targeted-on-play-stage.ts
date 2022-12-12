@@ -1,5 +1,6 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState } from '../../../types';
+
 import {
   determineAttackableMinions,
   determineBuffableMinions,
@@ -127,4 +128,4 @@ export {
   initTargetedOnPlayDamageStage,
   initTargetedOnPlayDestroyStage,
   initTargetedOnPlayHealStage,
-}
+};

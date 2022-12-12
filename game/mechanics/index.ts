@@ -1,27 +1,3 @@
 export { default as initEventMechanics } from './init-event-mechanics';
-// export { * as initOnPlayMechanics } from './init-on-play-mechanics';
 export { default as initOnTurnEndMechanics } from './init-on-turn-end-mechanics';
-export { initOnPlay, initEvent, initTurnEnd } from './init-functions.mechanics';
-export type { InitGameMechanic } from './init-functions.mechanics';
 export * from './core-mechanics-by-key';
-
-export { default as core004 } from './core-mechanics-by-key/mechanic.core.004';
-export { default as core005 } from './core-mechanics-by-key/mechanic.core.005';
-export { default as core006 } from './core-mechanics-by-key/mechanic.core.006';
-export { default as core007 } from './core-mechanics-by-key/mechanic.core.007';
-export { default as core008 } from './core-mechanics-by-key/mechanic.core.008';
-export { default as core009 } from './core-mechanics-by-key/mechanic.core.009';
-export { default as core011 } from './core-mechanics-by-key/mechanic.core.011';
-export { default as core012 } from './core-mechanics-by-key/mechanic.core.012';
-export { default as core013 } from './core-mechanics-by-key/mechanic.core.013';
-export { default as core014 } from './core-mechanics-by-key/mechanic.core.014';
-export { default as core019 } from './core-mechanics-by-key/mechanic.core.019';
-export { default as core025 } from './core-mechanics-by-key/mechanic.core.025';
-export { default as core031 } from './core-mechanics-by-key/mechanic.core.031';
-export { default as core032 } from './core-mechanics-by-key/mechanic.core.032';
-export { default as core041 } from './core-mechanics-by-key/mechanic.core.041';
-export { default as core044 } from './core-mechanics-by-key/mechanic.core.044';
-export { default as core050 } from './core-mechanics-by-key/mechanic.core.050';
-export { default as core058 } from './core-mechanics-by-key/mechanic.core.058';
-export { default as core060 } from './core-mechanics-by-key/mechanic.core.060';
-export { default as core110 } from './core-mechanics-by-key/mechanic.core.110';

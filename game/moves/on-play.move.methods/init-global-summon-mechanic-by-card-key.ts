@@ -1,7 +1,8 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
-import { core007, core025 } from '../../mechanics';
-import { core036 } from '../../mechanics/core-mechanics-by-key/mechanic.core.036';
+import core007 from '../../mechanics/core-mechanics-by-key/mechanic.core.007';
+import core025 from '../../mechanics/core-mechanics-by-key/mechanic.core.025';
+import core036 from '../../mechanics/core-mechanics-by-key/mechanic.core.036';
 
 /**
  *

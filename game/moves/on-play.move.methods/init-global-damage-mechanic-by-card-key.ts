@@ -1,14 +1,14 @@
-import type { Ctx } from "boardgame.io";
-import { lte } from "lodash";
-import type { Card, GameState, PlayerID } from "../../../types";
-import { getContextualPlayerIds } from "../../../utils";
-import { dealAoeDamageOnPlay } from "../../mechanics/on-play-mechanics";
-import { core060 } from "../../mechanics";
+import { lte } from 'lodash';
+import type { Ctx } from 'boardgame.io';
+import type { Card, GameState, PlayerID } from '../../../types';
+import { getContextualPlayerIds } from '../../../utils';
+import { dealAoeDamageOnPlay } from '../../mechanics/on-play-mechanics';
+import core060 from '../../mechanics/core-mechanics-by-key/mechanic.core.060';
 
 /**
- * 
+ *
  */
-export default function initGlobalDamageMechanicByCardKey (
+export default function initGlobalDamageMechanicByCardKey(
   G: GameState,
   ctx: Ctx,
   zoneNumber: number,
@@ -34,15 +34,10 @@ export default function initGlobalDamageMechanicByCardKey (
       c.booleans.isDestroyed = true;
       c.destroyedOnTurn = G.turn;
     }
-
-    // if (cardUuidMatch(c, card)) {
-    //   c.booleans.onPlayWasTriggered = true;
-    //   pushEventStream(c, c, 'onPlayWasTriggered');
-    // }
   };
 
   G.zones.forEach((z) => {
     z.sides[player].forEach((c) => check(c));
     z.sides[opponent].forEach((c) => check(c));
   });
-};
+}

@@ -2,12 +2,11 @@ import { add } from 'mathjs';
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
 import { pushEventStream } from '../../../utils';
-import { actionPoints } from '../../state';
 
 /**
  * +1 current AP for this turn only
  */
-export const core034 = {
+const core034 = {
   exec: (
     G: GameState,
     ctx: Ctx,
@@ -22,3 +21,5 @@ export const core034 = {
     pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
   },
 };
+
+export default core034;

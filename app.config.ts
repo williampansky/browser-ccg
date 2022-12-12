@@ -8,8 +8,8 @@ export const gameConfig: GameConfig = {
     debugHandCardKey: core + '056',
     debugBoardCardKey: core + '001',
     debugBoardCardKeyAmount: 3,
-    useDebugHandCardKey: true,
-    useDebugBoardCardKey: true,
+    useDebugHandCardKey: false,
+    useDebugBoardCardKey: false,
 
     debugOpponentHandCardKey: core + '126',
     debugOpponentBoardCardKey: core + '003',
@@ -18,7 +18,7 @@ export const gameConfig: GameConfig = {
     useDebugOpponentBoardCardKey: false,
 
     debugScenario: 'opponent-minions-have-buff',
-    useDebugScenario: true,
+    useDebugScenario: false,
 
     logPhaseToConsole: true,
     showDebugBar: true,

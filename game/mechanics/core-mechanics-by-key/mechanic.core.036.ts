@@ -6,7 +6,7 @@ import setsEntourage from '../../data/setsEntourage.json';
 /**
  * summon random relative entourage card
  */
-export const core036 = {
+const core036 = {
   exec: (
     G: GameState,
     ctx: Ctx,
@@ -41,3 +41,5 @@ export const core036 = {
     });
   },
 };
+
+export default core036;

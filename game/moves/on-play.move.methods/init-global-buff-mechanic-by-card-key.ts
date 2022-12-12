@@ -1,13 +1,13 @@
-import type { Ctx } from "boardgame.io";
-import type { Card, GameState, PlayerID } from "../../../types";
-import { core005 } from "../../mechanics";
-import { core029 } from "../../mechanics/core-mechanics-by-key/mechanic.core.029";
-import { buffPowerOfCardsInZone } from "../../mechanics/on-play-mechanics";
+import type { Ctx } from 'boardgame.io';
+import type { Card, GameState, PlayerID } from '../../../types';
+import { buffPowerOfCardsInZone } from '../../mechanics/on-play-mechanics';
+import core005 from '../../mechanics/core-mechanics-by-key/mechanic.core.005';
+import core029 from '../../mechanics/core-mechanics-by-key/mechanic.core.029';
 
 /**
- * 
+ *
  */
-export default function initGlobalBuffMechanicByCardKey (
+export default function initGlobalBuffMechanicByCardKey(
   G: GameState,
   ctx: Ctx,
   zoneNumber: number,
@@ -25,4 +25,4 @@ export default function initGlobalBuffMechanicByCardKey (
       buffPowerOfCardsInZone(G, ctx, zoneNumber, card, player);
       break;
   }
-};
+}

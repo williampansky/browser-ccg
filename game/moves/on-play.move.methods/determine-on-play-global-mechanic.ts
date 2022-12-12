@@ -1,24 +1,25 @@
-import type { Ctx } from "boardgame.io";
-import { Mechanics } from "../../../enums";
-import type { Card, GameState, PlayerID } from "../../../types";
-import initGlobalAddCardMechanicByCardKey from "./init-global-addcard-mechanic-by-card-key";
-import initGlobalBoonMechanicByCardKey from "./init-global-boon-mechanic-by-card-key";
-import initGlobalBuffMechanicByCardKey from "./init-global-buff-mechanic-by-card-key";
-import initGlobalDamageMechanicByCardKey from "./init-global-damage-mechanic-by-card-key";
-import initGlobalDebuffMechanicByCardKey from "./init-global-debuff-mechanic-by-card-key";
-import initGlobalDestroyMechanicByCardKey from "./init-global-destroy-mechanic-by-card-key";
-import initGlobalDisableMechanicByCardKey from "./init-global-disable-mechanic-by-card-key";
-import initGlobalDiscardMechanicByCardKey from "./init-global-discard-mechanic-by-card-key";
-import initGlobalDrawCardMechanicByCardKey from "./init-global-drawcard-mechanic-by-card-key";
-import initGlobalEnergyMechanicByCardKey from "./init-global-energy-mechanic-by-card-key";
-import initGlobalSetCostMechanicByCardKey from "./init-global-setcost-mechanic-by-card-key";
-import initGlobalSummonMechanicByCardKey from "./init-global-summon-mechanic-by-card-key";
+import type { Ctx } from 'boardgame.io';
+import type { Card, GameState, PlayerID } from '../../../types';
+import { Mechanics } from '../../../enums';
+
+import initGlobalAddCardMechanicByCardKey from './init-global-addcard-mechanic-by-card-key';
+import initGlobalBoonMechanicByCardKey from './init-global-boon-mechanic-by-card-key';
+import initGlobalBuffMechanicByCardKey from './init-global-buff-mechanic-by-card-key';
+import initGlobalDamageMechanicByCardKey from './init-global-damage-mechanic-by-card-key';
+import initGlobalDebuffMechanicByCardKey from './init-global-debuff-mechanic-by-card-key';
+import initGlobalDestroyMechanicByCardKey from './init-global-destroy-mechanic-by-card-key';
+import initGlobalDisableMechanicByCardKey from './init-global-disable-mechanic-by-card-key';
+import initGlobalDiscardMechanicByCardKey from './init-global-discard-mechanic-by-card-key';
+import initGlobalDrawCardMechanicByCardKey from './init-global-drawcard-mechanic-by-card-key';
+import initGlobalEnergyMechanicByCardKey from './init-global-energy-mechanic-by-card-key';
+import initGlobalSetCostMechanicByCardKey from './init-global-setcost-mechanic-by-card-key';
+import initGlobalSummonMechanicByCardKey from './init-global-summon-mechanic-by-card-key';
 
 /**
  * Determines the context of the `card` param's mechanic context
  * and continues path based on that determination.
  */
- export default function determineOnPlayGlobalMechanic (
+export default function determineOnPlayGlobalMechanic(
   G: GameState,
   ctx: Ctx,
   zoneNumber: number,
@@ -84,4 +85,4 @@ import initGlobalSummonMechanicByCardKey from "./init-global-summon-mechanic-by-
     default:
       break;
   }
-};
+}

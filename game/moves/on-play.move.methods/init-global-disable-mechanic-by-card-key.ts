@@ -1,11 +1,11 @@
-import type { Ctx } from "boardgame.io";
-import type { Card, GameState, PlayerID } from "../../../types";
-import core071 from "../../mechanics/core-mechanics-by-key/mechanic.core.071";
+import type { Ctx } from 'boardgame.io';
+import type { Card, GameState, PlayerID } from '../../../types';
+import core071 from '../../mechanics/core-mechanics-by-key/mechanic.core.071';
 
 /**
- * 
+ *
  */
-export default function initGlobalDisableMechanicByCardKey (
+export default function initGlobalDisableMechanicByCardKey(
   G: GameState,
   ctx: Ctx,
   zoneNumber: number,
@@ -17,4 +17,4 @@ export default function initGlobalDisableMechanicByCardKey (
       core071.exec(G, ctx, player, zoneNumber, card);
       break;
   }
-};
+}

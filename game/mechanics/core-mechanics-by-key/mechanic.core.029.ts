@@ -11,7 +11,7 @@ import {
 /**
  * boon: your other sprites have +2 attack power
  */
-export const core029 = {
+const core029 = {
   exec: (
     G: GameState,
     ctx: Ctx,
@@ -43,3 +43,5 @@ export const core029 = {
     });
   },
 };
+
+export default core029;

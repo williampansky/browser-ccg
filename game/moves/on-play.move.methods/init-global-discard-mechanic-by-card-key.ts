@@ -1,12 +1,12 @@
-import type { Ctx } from "boardgame.io";
-import type { Card, GameState, PlayerID } from "../../../types";
-import { discardRandomCardFromHandOnPlay } from "../../mechanics/on-play-mechanics";
-import core133 from "../../mechanics/core-mechanics-by-key/mechanic.core.133";
+import type { Ctx } from 'boardgame.io';
+import type { Card, GameState, PlayerID } from '../../../types';
+import { discardRandomCardFromHandOnPlay } from '../../mechanics/on-play-mechanics';
+import core133 from '../../mechanics/core-mechanics-by-key/mechanic.core.133';
 
 /**
- * 
+ *
  */
-export default function initGlobalDiscardMechanicByCardKey (
+export default function initGlobalDiscardMechanicByCardKey(
   G: GameState,
   ctx: Ctx,
   zoneNumber: number,
@@ -21,4 +21,4 @@ export default function initGlobalDiscardMechanicByCardKey (
       core133.exec(G, ctx, card, player);
       break;
   }
-};
+}
