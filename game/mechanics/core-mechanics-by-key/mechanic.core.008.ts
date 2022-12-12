@@ -34,7 +34,7 @@ const core008 = {
         if (cardIsNotSelf(c, listenerCard)) {
           if (cardIsMinion && revealedThisTurn && cardNotInStream) {
             if (isBotGame(ctx)) {
-              spread(G, ctx, player, zoneIndex, listenerCard, c);
+              aiSpread(G, ctx, player, zoneIndex, listenerCard, c);
             } else {
               // find the core008 card node
               const self = G.zones[zoneIndex].sides[player][listenerCardIndex];
@@ -68,7 +68,7 @@ const core008 = {
   },
 };
 
-function spread(
+function aiSpread(
   G: GameState,
   ctx: Ctx,
   player: PlayerID,
