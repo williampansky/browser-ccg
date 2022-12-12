@@ -20,14 +20,14 @@ export const gameConfig: GameConfig = {
     debugScenario: 'opponent-minions-have-buff',
     useDebugScenario: false,
 
-    logPhaseToConsole: true,
+    logPhaseToConsole: false,
     showDebugBar: true,
     showBoardgameIoSidebar: false,
   },
   ai: {
     botToUse: 'MCTSBot',
     enableBotAi: true,
-    enableBotAiMoves: false,
+    enableBotAiMoves: true,
     logBotAiMovesToConsole: true,
   },
   numerics: {

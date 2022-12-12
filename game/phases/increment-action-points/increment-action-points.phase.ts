@@ -2,7 +2,7 @@ import { add } from 'mathjs';
 import { TurnOrder } from 'boardgame.io/core';
 
 import type { Ctx, PhaseConfig } from 'boardgame.io';
-import type { GameState } from '../../../types';
+import type { GameState, PlayerID } from '../../../types';
 
 import { actionPoints } from '../../state';
 import { fxEnd } from '../../config.bgio-effects';
@@ -22,8 +22,13 @@ export default <PhaseConfig>{
       });
     }
 
-    actionPoints.incrementTotal(G, ctx.currentPlayer);
-    actionPoints.matchTotal(G, ctx.currentPlayer);
+    const init = (player: PlayerID) => {
+      actionPoints.incrementTotal(G, player);
+      actionPoints.matchTotal(G, player);
+    }
+
+    init('0');
+    init('1');
 
     fxEnd(ctx);
     ctx.events?.endPhase();

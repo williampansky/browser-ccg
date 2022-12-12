@@ -1,7 +1,7 @@
 import { Ctx, LongFormMove } from 'boardgame.io';
-import { LastMoveMade, Mechanics } from '../../enums';
+import { CardPlayType, LastMoveMade, Mechanics } from '../../enums';
 import { Card, GameState, PlayerID } from '../../types';
-import { filterArray, getCardPower } from '../../utils';
+import { filterArray, getCardPower, initActivateEventListeners, removeLastPlayedCardFromHand } from '../../utils';
 import {
   actionPoints,
   counts,
@@ -12,6 +12,7 @@ import {
 import { fxEnd } from '../config.bgio-effects';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { gte, lt, lte } from 'lodash';
+import { determineOnPlayGlobalMechanic, determineTargetedOnPlayContext } from '../moves/on-play.move.methods';
 
 export const aiPlayCard: LongFormMove = {
   client: false,
@@ -35,28 +36,24 @@ export const aiPlayCardMove = (
   ctx: Ctx,
   { ...args }: AiPlayCardMove
 ) => {
-  const {
-    gameConfig: {
-      numerics: { numberOfSlotsPerZone },
-    },
-    players,
-    zones,
-  } = G;
+  const { currentPlayer } = ctx;
+  const player = currentPlayer;
+  const slotsPerZone = G.gameConfig.numerics.numberOfSlotsPerZone;
 
   const { aiID, zoneNumber, card, cardIndex } = args;
 
-  const player = aiID;
   const ap = G.actionPoints;
-  const playerObj = players[player];
-  const cardUuid = card.uuid;
-  const zone = zones[zoneNumber];
+  const zone = G.zones[zoneNumber];
   const cantAffordCard = !gte(ap[player].current, card.currentCost);
+  const zoneIsDisabled = zone.disabled[player];
+  const zoneIsFull = zone.sides[player].length > slotsPerZone;
+  const hasOnPlayMechanic = card.mechanics?.includes(Mechanics.OnPlay);
+  const playTypeIsTargeted = card.playType === CardPlayType.Targeted;
+  const playTypeIsGlobal = card.playType === CardPlayType.Global;
 
   if (cantAffordCard) return INVALID_MOVE;
-  if (zone.disabled[player]) return INVALID_MOVE;
-  if (zone.sides[player].length > numberOfSlotsPerZone) return INVALID_MOVE;
-
-  // lastCardPlayed.set(G, { card, index: cardIndex });
+  if (zoneIsDisabled) return INVALID_MOVE;
+  if (zoneIsFull) return INVALID_MOVE;
 
   // add card to PlayedCards array
   playedCards.push(G, player, card);
@@ -72,25 +69,22 @@ export const aiPlayCardMove = (
     revealedOnTurn: G.turn, // set revealedOnTurn value
   });
 
-  // remove card from hand
-  // const newHand = G.players[aiID].cards.hand.filter(o => o.uuid !== cardUuid);
-  // G.players[aiID].cards.hand = newHand;
-  filterArray(G.players[aiID].cards.hand, cardUuid, cardIndex);
+  // reset datas
+  lastCardPlayed.set(G, { card, index: cardIndex });
+  removeLastPlayedCardFromHand(G, player);
 
-  // recount cards in hand
-  counts.decrementHand(G, player);
+  // set last move
+  G.lastMoveMade = LastMoveMade.aiPlayCard;
 
-  G.lastMoveMade = 'aiPlayCard';
-  fxEnd(ctx);
-
-  // if (card.mechanics?.includes(Mechanics.OnPlay)) {
-  // ctx.events?.setPhase('healMinion');
-  // }
-
-  // temp test
-  // G.players[aiID].cards.hand.forEach((c) => {
-  //   if (c.canPlay) G.aiPossibleCards.push(c);
-  // });
+  // init card mechs
+  if (hasOnPlayMechanic && playTypeIsTargeted) {
+    determineTargetedOnPlayContext(G, ctx, card);
+  } else if (hasOnPlayMechanic && playTypeIsGlobal) {
+    determineOnPlayGlobalMechanic(G, ctx, zoneNumber, card, player);
+    initActivateEventListeners(G, ctx);
+  } else {
+    initActivateEventListeners(G, ctx);
+  }
 };
 
 export const aiSetDone: LongFormMove = {
@@ -110,12 +104,13 @@ export interface AiSetDoneMove {
 export const aiSetDoneMove = (
   G: GameState,
   ctx: Ctx,
-  { aiID }: AiSetDoneMove
+  { ...args }: AiSetDoneMove
 ) => {
+  // const { aiID } = args;
+  const aiID = '1';
   G.lastMoveMade = LastMoveMade.AiSetDone;
-  G.aiPossibleCards = [];
   playerTurnDone.set(G, aiID);
-  // ctx.events?.endTurn();
+  
   if (G.gameConfig.debugConfig.logPhaseToConsole) {
     console.log(`--- setDoneMove(${aiID}) ---`);
   }

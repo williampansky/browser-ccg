@@ -1,7 +1,7 @@
 import { gte, lt, lte } from 'lodash';
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID, Zone } from '../types';
-import { getContextualPlayerIds, getRandomNumberBetween } from '../utils';
+import { getContextualPlayerIds, getRandomNumberBetween, noPlayableCardsAvailable } from '../utils';
 import { gameConfig } from '../app.config';
 
 const {
@@ -34,17 +34,24 @@ const aiEnumeration = (G: GameState, ctx: Ctx, player: PlayerID) => {
         ...aiHand
       ]
 
-      for (let i = 0; i < G.players[aiID].cards.hand.length; i++) {
-        const card = G.players[aiID].cards.hand[i];
-        // if (lte(card.currentCost, G.actionPoints[aiID].current)) {
-        if (card.canPlay) {
-          pushPlayCardMovesV2(G, ctx, moves, aiID, card, i, 0, perZone);
-          pushPlayCardMovesV2(G, ctx, moves, aiID, card, i, 1, perZone);
-          pushPlayCardMovesV2(G, ctx, moves, aiID, card, i, 2, perZone);
-        }
+      if (noPlayableCardsAvailable(G, ctx.currentPlayer)) {
+        // pushSetDoneMove(moves, ctx.currentPlayer);
+        logBotAiMovesToConsole(moves, gameConfig.ai.logBotAiMovesToConsole);
+        // return moves;
+        return [{ move: 'aiSetDone', args: ['1'] }]
       }
-      
-      pushSetDoneMove(moves, aiID);
+      else {
+        for (let i = 0; i < G.players[aiID].cards.hand.length; i++) {
+          const card = G.players[aiID].cards.hand[i];
+          if (card.canPlay) {
+            pushPlayCardMovesV2(G, ctx, moves, aiID, card, i, 0, perZone);
+            pushPlayCardMovesV2(G, ctx, moves, aiID, card, i, 1, perZone);
+            pushPlayCardMovesV2(G, ctx, moves, aiID, card, i, 2, perZone);
+          }
+        }
+
+        pushSetDoneMove(moves, ctx.currentPlayer);
+      }
     }
 
     logBotAiMovesToConsole(moves, gameConfig.ai.logBotAiMovesToConsole);
@@ -78,7 +85,10 @@ export const pushSetDoneMove = (moves: any, aiID: PlayerID) => {
 };
 
 export const logBotAiMovesToConsole = (moves: any, perConfig: boolean) => {
-  if (perConfig === true && moves.length !== 0) console.log(moves);
+  if (perConfig === true && moves.length !== 0) {
+    console.clear();
+    console.log(moves);
+  }
 };
 
 export default aiEnumeration;

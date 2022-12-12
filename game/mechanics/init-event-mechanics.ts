@@ -1,6 +1,9 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID, Zone } from '../../types';
-import { core008, core009, core012, core032 } from './';
+import core008 from './core-mechanics-by-key/mechanic.core.008';
+import core009 from './core-mechanics-by-key/mechanic.core.009';
+import core012 from './core-mechanics-by-key/mechanic.core.012';
+import core032 from './core-mechanics-by-key/mechanic.core.032';
 
 const initEventMechanics = (
   G: GameState,

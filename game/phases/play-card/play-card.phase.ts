@@ -9,17 +9,20 @@ import { aiPlayCard, aiSetDone, aiSetDoneMove } from '../../ai';
 import { deselectCard, playCard, selectCard, setDone } from '../../moves';
 import {
   determinePlayableCards,
+  drawCardFromPlayersDeck,
   handleZoneDisabledForXTurns,
   handleZonePowersCalculations,
   initActivateEventListeners,
   initActiveOnTurnEndListeners,
   isBotGame,
   logPhaseToConsole,
+  noPlayableCardsAvailable,
   removeDestroyedCards,
   removeLastPlayedCardFromHand,
   unsetPlayableCards,
 } from '../../../utils';
 import playCardTurnOnMove from './play-card.turn.on-move';
+import { actionPoints } from '../../state';
 
 export default <PhaseConfig>{
   next(G: GameState, ctx: Ctx) {
@@ -32,6 +35,12 @@ export default <PhaseConfig>{
     handleZonePowersCalculations(G, ctx);
     removeDestroyedCards(G, ctx);
     handleZoneDisabledForXTurns(G, ctx);
+
+    // if (isBotGame(ctx) && ctx.currentPlayer === '1') {
+    //   actionPoints.incrementTotal(G, ctx.currentPlayer);
+    //   actionPoints.matchTotal(G, ctx.currentPlayer);
+    //   drawCardFromPlayersDeck(G, '1', 1, 'next');
+    // }
   },
   onEnd(G: GameState, ctx: Ctx) {
     // unsetPlayableCards({ G, player: ctx.currentPlayer })
@@ -56,6 +65,10 @@ export default <PhaseConfig>{
         if (G.gameConfig.ai.enableBotAiMoves === false) {
           return aiSetDoneMove(G, ctx, { aiID: '1' });
         }
+
+        // if (noPlayableCardsAvailable(G, ctx.currentPlayer)) {
+        //   return aiSetDoneMove(G, ctx, { aiID: '1' });
+        // }
       }
     },
     onEnd(G: GameState, ctx: Ctx) {

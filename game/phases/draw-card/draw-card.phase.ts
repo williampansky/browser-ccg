@@ -17,7 +17,13 @@ export default <PhaseConfig>{
     logPhaseToConsole(G.turn, phase, currentPlayer);
 
     removeDestroyedCards(G, ctx);
-    drawCardFromPlayersDeck(G, currentPlayer);
+    
+    const init = (player: PlayerID) => {
+      drawCardFromPlayersDeck(G, player);
+    }
+
+    init('0');
+    init('1');
 
     fxEnd(ctx);
     ctx.events?.endPhase();
