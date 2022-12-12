@@ -25,11 +25,12 @@ const boonPowerOfCardsInZone = (
     return c.uuid === cardPlayed.uuid;
   });
 
-  const init = (c: Card, ci: number, cardPlayedIndex: number) => {
+  const init = (p: PlayerID, c: Card, ci: number, zi: number) => {
+    const isCardPlayed = cardPlayed.uuid === c.uuid;
     const isNotCardPlayed = cardPlayed.uuid !== c.uuid;
 
-    if (cardPlayed.uuid === c.uuid) {
-      c.booleans.onPlayWasTriggered = true;
+    if (isCardPlayed) {
+      G.zones[zi].sides[p][ci].booleans.onPlayWasTriggered = true;
       pushEventStream(c, c, 'onPlayWasTriggered');
     } else if (isNotCardPlayed) {
       c.booleans.isBooned = true;
@@ -48,11 +49,11 @@ const boonPowerOfCardsInZone = (
     G.zones.forEach((_, zi) => {
       if (zi === zoneNumber) {
         G.zones[zi].sides[player].forEach((c, ci) => {
-          init(c, ci, cardPlayedIdx);
+          init(player, c, ci, zi);
         });
 
         G.zones[zi].sides[opponent].forEach((c, ci) => {
-          init(c, ci, cardPlayedIdx);
+          init(opponent, c, ci, zi);
         });
       }
     });
@@ -60,7 +61,7 @@ const boonPowerOfCardsInZone = (
     G.zones.forEach((_, zi) => {
       if (zi === zoneNumber) {
         G.zones[zi].sides[targetPlayerSide].forEach((c, ci) => {
-          init(c, ci, cardPlayedIdx);
+          init(targetPlayerSide, c, ci, zi);
         });
       }
     });

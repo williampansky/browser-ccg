@@ -1,7 +1,7 @@
 import { gte, lt, lte } from 'lodash';
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID, Zone } from '../types';
-import { getContextualPlayerIds, getRandomNumberBetween, noPlayableCardsAvailable } from '../utils';
+import { getContextualPlayerIds, getRandomNumberBetween, noPlayableCardsAvailable, noStageActive } from '../utils';
 import { gameConfig } from '../app.config';
 
 const {
@@ -18,7 +18,20 @@ const aiEnumeration = (G: GameState, ctx: Ctx, player: PlayerID) => {
     const aiHand = aiPlayer.cards.hand;
     const ap = G.actionPoints[aiID].current;
     
+    let counter: number = 0;
     let moves: any[] = [];
+
+    const debugPerTurn = () => {
+      if (lte(G.turn, 1)) return 1;
+      if (lte(G.turn, 5)) return 5;
+      if (lte(G.turn, 8)) return 8;
+      if (lte(G.turn, 12)) return 12;
+      return 18;
+    }
+
+    if (gameConfig.ai.logBotAiMovesToConsole) {
+      // console.clear();
+    }
 
     // if (gameConfig.ai.enableBotAiMoves === false) {
     //   // pushSetDoneMove(moves, aiID);
@@ -34,13 +47,18 @@ const aiEnumeration = (G: GameState, ctx: Ctx, player: PlayerID) => {
         ...aiHand
       ]
 
+      G.zones.forEach(z => {
+        z.sides[aiID].forEach(c => {
+          if (c) counter++
+        })
+      })
+
       if (noPlayableCardsAvailable(G, ctx.currentPlayer)) {
         // pushSetDoneMove(moves, ctx.currentPlayer);
         logBotAiMovesToConsole(moves, gameConfig.ai.logBotAiMovesToConsole);
         // return moves;
         return [{ move: 'aiSetDone', args: ['1'] }]
-      }
-      else {
+      } else if (lt(counter, debugPerTurn())) {
         for (let i = 0; i < G.players[aiID].cards.hand.length; i++) {
           const card = G.players[aiID].cards.hand[i];
           if (card.canPlay) {
@@ -50,6 +68,8 @@ const aiEnumeration = (G: GameState, ctx: Ctx, player: PlayerID) => {
           }
         }
 
+        if (noStageActive(ctx)) pushSetDoneMove(moves, ctx.currentPlayer);
+      } else {
         pushSetDoneMove(moves, ctx.currentPlayer);
       }
     }
@@ -86,7 +106,6 @@ export const pushSetDoneMove = (moves: any, aiID: PlayerID) => {
 
 export const logBotAiMovesToConsole = (moves: any, perConfig: boolean) => {
   if (perConfig === true && moves.length !== 0) {
-    console.clear();
     console.log(moves);
   }
 };

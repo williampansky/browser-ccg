@@ -1,6 +1,8 @@
 import type { Ctx } from 'boardgame.io';
+import { CardType } from '../../../enums';
 import type { Card, GameState, PlayerID } from '../../../types';
 import {
+  cardIsNotSelf,
   getContextualPlayerIds,
   handleCardDestructionMechanics,
   initActivateEventListeners,
@@ -19,6 +21,10 @@ const core041 = {
     playedCard: Card
   ) => {
     const { opponent } = getContextualPlayerIds(player);
+    const zoneSide = G.zones[zoneNumber].sides[player];
+    const playedCardIdx = zoneSide.findIndex((o) => o.uuid === playedCard.uuid);
+    const playedCardNode = G.zones[zoneNumber].sides[player][playedCardIdx];
+
     let possibleTargets: {
       zoneNumber: number;
       cardData: Card;
@@ -27,7 +33,11 @@ const core041 = {
 
     G.zones.forEach((z, zI) => {
       z.sides[opponent].forEach((c, cI) => {
-        if (!c.booleans.isDestroyed) {
+        const isNotSelf = cardIsNotSelf(c, playedCard);
+        const isNotDestroyed = c.booleans.isDestroyed === false;
+        const isMinion = c.type === CardType.Minion;
+
+        if (isNotSelf && isMinion && isNotDestroyed) {
           possibleTargets.push({
             zoneNumber: zI,
             cardData: c,
@@ -35,7 +45,7 @@ const core041 = {
           });
         }
       });
-    })
+    });
 
     for (let index = 0; index < playedCard.numberPrimary; index++) {
       // if there is a target
@@ -44,8 +54,8 @@ const core041 = {
         const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
 
         if (choice) {
-          pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
-          playedCard.booleans.onPlayWasTriggered = true;
+          playedCardNode.booleans.onPlayWasTriggered = true;
+          pushEventStream(playedCardNode, playedCardNode, 'onPlayWasTriggered');
 
           choice.cardData.booleans.isDestroyed = true;
           choice.cardData.booleans.canBeDestroyed = false;
