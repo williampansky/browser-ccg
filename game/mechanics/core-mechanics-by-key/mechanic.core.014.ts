@@ -1,3 +1,4 @@
+import { gte } from 'lodash';
 import { add } from 'mathjs';
 
 import type { Ctx } from 'boardgame.io';
@@ -5,9 +6,8 @@ import type { Card, GameState, PlayerID } from '../../../types';
 import {
   cardUuidMatch,
   getContextualPlayerIds,
-  pushEventStream,
+  pushEventStreamAndSetBoolean,
 } from '../../../utils';
-import { gte } from 'lodash';
 
 /**
  * Increase the cost of a card in your opponent's hand by 1
@@ -32,8 +32,15 @@ const core014 = {
             c.currentCost = add(c.currentCost, 1);
             c.booleans.hasCostIncreased = true;
 
-            playedCard.booleans.onPlayWasTriggered = true;
-            pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+            pushEventStreamAndSetBoolean(
+              G,
+              ctx,
+              player,
+              zoneNumber,
+              playedCard,
+              playedCard,
+              'onPlayWasTriggered'
+            );
           }
         });
     }

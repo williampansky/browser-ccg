@@ -6,6 +6,7 @@ import {
   getContextualPlayerIds,
   handleCardDestructionMechanics,
   initActivateEventListeners,
+  isBotTurn,
   pushEventStream,
 } from '../../../utils';
 
@@ -21,9 +22,6 @@ const core041 = {
     playedCard: Card
   ) => {
     const { opponent } = getContextualPlayerIds(player);
-    const zoneSide = G.zones[zoneNumber].sides[player];
-    const playedCardIdx = zoneSide.findIndex((o) => o.uuid === playedCard.uuid);
-    const playedCardNode = G.zones[zoneNumber].sides[player][playedCardIdx];
 
     let possibleTargets: {
       zoneNumber: number;
@@ -54,8 +52,12 @@ const core041 = {
         const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
 
         if (choice) {
-          playedCardNode.booleans.onPlayWasTriggered = true;
-          pushEventStream(playedCardNode, playedCardNode, 'onPlayWasTriggered');
+          if (isBotTurn(ctx)) {
+            aiSpreadMove(G, ctx, player, zoneNumber, playedCard);
+          } else {
+            playedCard.booleans.onPlayWasTriggered = true;
+            pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+          }
 
           choice.cardData.booleans.isDestroyed = true;
           choice.cardData.booleans.canBeDestroyed = false;
@@ -68,5 +70,32 @@ const core041 = {
     }
   },
 };
+
+function aiSpreadMove(
+  G: GameState,
+  ctx: Ctx,
+  player: PlayerID,
+  zoneNumber: number,
+  playedCard: Card
+) {
+  const zoneSide = G.zones[zoneNumber].sides[player];
+  const playedCardIdx = zoneSide.findIndex((o) => o.uuid === playedCard.uuid);
+
+  G.zones[zoneNumber].sides[player][playedCardIdx] = {
+    ...G.zones[zoneNumber].sides[player][playedCardIdx],
+    booleans: {
+      ...G.zones[zoneNumber].sides[player][playedCardIdx].booleans,
+      onPlayWasTriggered: true,
+    },
+    eventStream: [
+      ...G.zones[zoneNumber].sides[player][playedCardIdx].eventStream,
+      {
+        blame: playedCard.name,
+        event: 'onPlayWasTriggered',
+        uuid: playedCard.uuid,
+      },
+    ],
+  };
+}
 
 export default core041;

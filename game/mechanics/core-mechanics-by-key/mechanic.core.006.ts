@@ -1,9 +1,11 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
 import {
+  aiSpreadEventStreamAndOnPlayBoolean,
   getContextualPlayerIds,
   handleCardDestructionMechanics,
   initActivateEventListeners,
+  isBotTurn,
   pushEventStream,
 } from '../../../utils';
 
@@ -41,11 +43,23 @@ const core006 = {
       // get a random one from the list
       const choice = ctx?.random?.Shuffle(possibleTargets)[0];
 
-      if (choice) { 
+      if (choice) {
         const target = G.zones[zoneNumber].sides[opponent][choice.cardIndex];
 
-        pushEventStream(playedCard, choice.cardData, 'onPlayWasTriggered');
-        playedCard.booleans.onPlayWasTriggered = true;
+        if (isBotTurn(ctx)) {
+          aiSpreadEventStreamAndOnPlayBoolean(
+            G,
+            ctx,
+            player,
+            zoneNumber,
+            playedCard,
+            choice.cardData,
+            'onPlayWasTriggered'
+          );
+        } else {
+          pushEventStream(playedCard, choice.cardData, 'onPlayWasTriggered');
+          playedCard.booleans.onPlayWasTriggered = true;
+        }
 
         target.booleans.isDestroyed = true;
         target.booleans.canBeDestroyed = false;

@@ -3,9 +3,9 @@ import type { Card, CardBase, GameState, PlayerID } from '../../../types';
 
 import { counts } from '../../state';
 import { CardBaseRarity, CardBaseType } from '../../../enums';
-import { createCardObject, pushEventStream } from '../../../utils';
-import setsCore from '../../data/setsCore.json';
+import { aiSpreadEventStreamAndOnPlayBoolean, createCardObject, isBotTurn, pushEventStream } from '../../../utils';
 
+import setsCore from '../../data/setsCore.json';
 const db = [...setsCore];
 
 /**
@@ -37,8 +37,20 @@ const core011 = {
         G.players[player].cards.hand.push(randomCard);
         counts.incrementHand(G, player);
 
-        playedCard.booleans.onPlayWasTriggered = true;
-        pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+        if (isBotTurn(ctx)) {
+          aiSpreadEventStreamAndOnPlayBoolean(
+            G,
+            ctx,
+            player,
+            zoneNumber,
+            playedCard,
+            playedCard,
+            'onPlayWasTriggered'
+          );
+        } else {
+          playedCard.booleans.onPlayWasTriggered = true;
+          pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+        }
       }
     }
   },

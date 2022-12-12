@@ -1,7 +1,14 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
-import { createCardObject, pushEventStream } from '../../../utils';
 import { counts } from '../../state';
+
+import {
+  aiSpreadEventStreamAndOnPlayBoolean,
+  createCardObject,
+  isBotTurn,
+  pushEventStream,
+} from '../../../utils';
+
 import setsCore from '../../data/setsCore.json';
 
 /**
@@ -24,8 +31,20 @@ const core004 = {
       G.players[player].cards.hand.push(randomCard);
       counts.incrementHand(G, player);
 
-      playedCard.booleans.onPlayWasTriggered = true;
-      pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+      if (isBotTurn(ctx)) {
+        aiSpreadEventStreamAndOnPlayBoolean(
+          G,
+          ctx,
+          player,
+          zoneNumber,
+          playedCard,
+          playedCard,
+          'onPlayWasTriggered',
+        );
+      } else {
+        playedCard.booleans.onPlayWasTriggered = true;
+        pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+      }
     }
   },
 };

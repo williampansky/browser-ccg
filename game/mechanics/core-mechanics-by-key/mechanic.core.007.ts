@@ -2,8 +2,10 @@ import type { Ctx } from 'boardgame.io';
 import type { Card, CardBase, GameState, PlayerID } from '../../../types';
 
 import {
+  aiSpreadEventStreamAndOnPlayBoolean,
   createCardObject,
   getRandomNumberBetween as randomNum,
+  isBotTurn,
   pushEventStream,
 } from '../../../utils';
 
@@ -36,8 +38,20 @@ const core007 = {
           const entCardObj = { ...entourageCard, revealed: true };
           z.sides[player].push(entCardObj);
 
-          pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
-          playedCard.booleans.onPlayWasTriggered = true;
+          if (isBotTurn(ctx)) {
+            aiSpreadEventStreamAndOnPlayBoolean(
+              G,
+              ctx,
+              player,
+              zoneNumber,
+              playedCard,
+              playedCard,
+              'onPlayWasTriggered',
+            );
+          } else {
+            pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+            playedCard.booleans.onPlayWasTriggered = true;
+          }
         }
       }
     });
