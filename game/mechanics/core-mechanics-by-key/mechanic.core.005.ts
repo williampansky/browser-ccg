@@ -8,7 +8,6 @@ import {
   cardIsNotSelf,
   cardUuidMatch,
   getCardPower,
-  isBotGame,
   pushEventStream,
   pushPowerStreamAndSetDisplay,
 } from '../../../utils';
@@ -33,76 +32,71 @@ const core005 = {
     });
 
     if (gte(counter, playedCard.numberSecondary)) {
-      if (isBotGame(ctx)) {
-        aiSpread(G, ctx, player, zoneNumber, playedCard);
-      } else {
-        const selfIdx = zoneSide.findIndex((c) => cardUuidMatch(c, playedCard));
-        const self = G.zones[zoneNumber].sides[player][selfIdx];
+      const selfIdx = zoneSide.findIndex((c) => cardUuidMatch(c, playedCard));
+      const self = G.zones[zoneNumber].sides[player][selfIdx];
 
-        pushPowerStreamAndSetDisplay(
-          self,
-          self,
-          self.numberPrimary,
-          add(self.displayPower, self.numberPrimary)
-        );
+      pushPowerStreamAndSetDisplay(
+        self,
+        self,
+        self.numberPrimary,
+        add(self.displayPower, self.numberPrimary)
+      );
 
-        self.booleans.hasPowerIncreased = true;
-        self.booleans.onPlayWasTriggered = true;
-        pushEventStream(self, self, 'onPlayWasTriggered');
-      }
+      self.booleans.hasPowerIncreased = true;
+      self.booleans.onPlayWasTriggered = true;
+      pushEventStream(self, self, 'onPlayWasTriggered');
     }
   },
+
+  execAi: (
+    G: GameState,
+    ctx: Ctx,
+    aiID: PlayerID,
+    zoneNumber: number,
+    playedCard: Card
+  ) => {
+    const zoneSide = G.zones[zoneNumber].sides[aiID];
+
+    if (gte(zoneSide.length, playedCard.numberSecondary + 1))
+      G.zones[zoneNumber].sides[aiID].forEach((c, cI) => {
+        if (cardUuidMatch(c, playedCard)) {
+          G.zones[zoneNumber].sides[aiID][cI] = {
+            ...G.zones[zoneNumber].sides[aiID][cI],
+            booleans: {
+              ...G.zones[zoneNumber].sides[aiID][cI].booleans,
+              onPlayWasTriggered: true,
+              hasPowerIncreased: true,
+            },
+            eventStream: [
+              ...G.zones[zoneNumber].sides[aiID][cI].eventStream,
+              {
+                blame: playedCard.name,
+                event: 'onPlayWasTriggered',
+                uuid: playedCard.uuid,
+              },
+            ],
+            powerStream: [
+              ...G.zones[zoneNumber].sides[aiID][cI].powerStream,
+              {
+                blame: playedCard.name,
+                adjustment: playedCard.numberPrimary,
+                currentPower: add(
+                  playedCard.displayPower,
+                  playedCard.numberPrimary
+                ),
+                uuid: playedCard.uuid,
+              },
+            ],
+          };
+
+          // set display power
+          G.zones[zoneNumber].sides[aiID][cI] = {
+            ...G.zones[zoneNumber].sides[aiID][cI],
+            displayPower: getCardPower(G.zones[zoneNumber].sides[aiID][cI]),
+          };
+        }
+      });
+  },
 };
-
-function aiSpread(
-  G: GameState,
-  ctx: Ctx,
-  player: PlayerID,
-  zoneNumber: number,
-  cardToAdjust: Card,
-  cardToBlame?: Card
-) {
-  const cardToAdjustIdx = G.zones[zoneNumber].sides[player].findIndex((o) => {
-    return o.uuid === cardToAdjust.uuid;
-  });
-
-  // push streams
-  G.zones[zoneNumber].sides[player][cardToAdjustIdx] = {
-    ...G.zones[zoneNumber].sides[player][cardToAdjustIdx],
-    booleans: {
-      ...G.zones[zoneNumber].sides[player][cardToAdjustIdx].booleans,
-      onPlayWasTriggered: true,
-      hasPowerIncreased: true,
-    },
-    eventStream: [
-      ...G.zones[zoneNumber].sides[player][cardToAdjustIdx].eventStream,
-      {
-        blame: cardToBlame ? cardToBlame.name : cardToAdjust.name,
-        event: 'onPlayWasTriggered',
-        uuid: cardToBlame ? cardToBlame.uuid : cardToAdjust.uuid,
-      },
-    ],
-    powerStream: [
-      ...G.zones[zoneNumber].sides[player][cardToAdjustIdx].powerStream,
-      {
-        blame: cardToBlame ? cardToBlame.name : cardToAdjust.name,
-        adjustment: cardToAdjust.numberPrimary,
-        currentPower: add(
-          cardToAdjust.displayPower,
-          cardToAdjust.numberPrimary
-        ),
-        uuid: cardToBlame ? cardToBlame.uuid : cardToAdjust.uuid,
-      },
-    ],
-  };
-
-  // set display power
-  G.zones[zoneNumber].sides[player][cardToAdjustIdx] = {
-    ...G.zones[zoneNumber].sides[player][cardToAdjustIdx],
-    displayPower: getCardPower(
-      G.zones[zoneNumber].sides[player][cardToAdjustIdx]
-    ),
-  };
-}
 
 export default core005;

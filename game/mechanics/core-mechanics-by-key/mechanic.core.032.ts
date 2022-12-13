@@ -1,7 +1,10 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID, Zone } from '../../../types';
 import { CardRace } from '../../../enums';
-import { drawCardFromPlayersDeck, pushEventStream } from '../../../utils';
+import {
+  drawCardFromPlayersDeck,
+  pushEventStreamAndSetBoolean,
+} from '../../../utils';
 
 /**
  * draw a card anytime you summon a creature
@@ -41,10 +44,15 @@ const core032 = {
           const self = G.zones[zoneIdx].sides[player][cardIdx];
 
           // set animations and bools
-          pushEventStream(self, c, 'eventWasTriggered');
-          if (!self.booleans.eventWasTriggered) {
-            self.booleans.eventWasTriggered = true;
-          }
+          pushEventStreamAndSetBoolean(
+            G,
+            ctx,
+            player,
+            zoneIdx,
+            self,
+            self,
+            'eventWasTriggered'
+          );
         }
       });
     });

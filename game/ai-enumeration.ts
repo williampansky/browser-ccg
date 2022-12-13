@@ -1,8 +1,10 @@
+import { current } from 'immer';
 import { gte, lt, lte } from 'lodash';
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID, Zone } from '../types';
 import { getContextualPlayerIds, getRandomNumberBetween, noPlayableCardsAvailable, noStageActive } from '../utils';
 import { gameConfig } from '../app.config';
+import { AiPlayCardMove } from './ai/ai.moves';
 
 const {
   debugConfig: { useDebugOpponentHandCardKey },
@@ -63,9 +65,9 @@ const aiEnumeration = (G: GameState, ctx: Ctx, player: PlayerID) => {
           const card = G.players[aiID].cards.hand[i];
           if (card.canPlay) {
             const rngZone = getRandomNumberBetween(0, 2);
-            pushPlayCardMovesV2(G, ctx, moves, aiID, card, i, rngZone, perZone);
-            // pushPlayCardMovesV2(G, ctx, moves, aiID, card, i, 1, perZone);
-            // pushPlayCardMovesV2(G, ctx, moves, aiID, card, i, 2, perZone);
+            pushPlayCardMove(G, ctx, moves, aiID, card, i, 0, perZone);
+            // pushPlayCardMove(G, ctx, moves, aiID, card, i, 1, perZone);
+            // pushPlayCardMove(G, ctx, moves, aiID, card, i, 2, perZone);
           }
         }
 
@@ -80,7 +82,7 @@ const aiEnumeration = (G: GameState, ctx: Ctx, player: PlayerID) => {
   // },
 }
 
-export const pushPlayCardMovesV2 = (
+export const pushPlayCardMove = (
   G: GameState,
   ctx: Ctx,
   moves: any,
@@ -96,7 +98,7 @@ export const pushPlayCardMovesV2 = (
   if (notDisabled && notFull) {
     moves.push({
       move: 'aiPlayCard',
-      args: [{ aiID, zoneNumber, card, cardIndex }],
+      args: [aiID, zoneNumber, card, cardIndex],
     });
   }
 };

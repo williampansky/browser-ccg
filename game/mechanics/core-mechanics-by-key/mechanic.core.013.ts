@@ -1,15 +1,12 @@
 import { add } from 'mathjs';
 
 import type { Ctx } from 'boardgame.io';
-import type {
-  Card,
-  GameState,
-  PlayerID,
-  Zone,
-} from '../../../types';
+import type { Card, GameState, PlayerID, Zone } from '../../../types';
 import { CardRace } from '../../../enums';
 import {
   cardIsNotSelf,
+  getCardPower,
+  isBotGame,
   pushEventStream,
   pushPowerStreamAndSetDisplay,
 } from '../../../utils';
@@ -33,7 +30,7 @@ const core013 = {
       cardIndex: number;
     }[] = [];
 
-    console.log('l')
+    console.log('l');
 
     G.zones.forEach((z, zIdx) => {
       z.sides[player].forEach((c, cIdx) => {
@@ -55,30 +52,66 @@ const core013 = {
       // get a random one from the list
       const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
 
-      // find the target node amonst the board zones
-      const node = G.zones[choice.zoneNumber].sides[player][choice.cardIndex];
+      if (choice) {
+        // find the target node amonst the board zones
+        const node = G.zones[choice.zoneNumber].sides[player][choice.cardIndex];
 
-      if (!node.booleans.isBuffed) {
-        node.booleans.isBuffed = true;
+        if (!node.booleans.isBuffed) {
+          node.booleans.isBuffed = true;
+        }
+
+        if (!node.booleans.hasPowerIncreased) {
+          node.booleans.hasPowerIncreased = true;
+        }
+
+        // push powerStream and set display
+        pushPowerStreamAndSetDisplay(
+          node,
+          listenerCard,
+          listenerCard.numberPrimary,
+          add(node.displayPower, listenerCard.numberPrimary)
+        );
+
+        // set animations
+        if (isBotGame(ctx)) {
+          aiSpread(G, ctx, player, zoneIndex, listenerCard, choice.cardData);
+        } else {
+          listenerCard.booleans.eventWasTriggered = true;
+          pushEventStream(listenerCard, node, 'onTurnEndWasTriggered');
+        }
       }
-
-      if (!node.booleans.hasPowerIncreased) {
-        node.booleans.hasPowerIncreased = true;
-      }
-
-      // push powerStream and set display
-      pushPowerStreamAndSetDisplay(
-        node,
-        listenerCard,
-        1,
-        add(node.displayPower, 1)
-      );
-
-      // set animations
-      listenerCard.booleans.eventWasTriggered = true;
-      pushEventStream(listenerCard, node, 'onTurnEndWasTriggered');
     }
   },
 };
+
+function aiSpread(
+  G: GameState,
+  ctx: Ctx,
+  player: PlayerID,
+  zoneNumber: number,
+  cardToAdjust: Card,
+  cardToBlame?: Card
+) {
+  const cardToAdjustIdx = G.zones[zoneNumber].sides[player].findIndex((o) => {
+    return o.uuid === cardToAdjust.uuid;
+  });
+
+  // push streams
+  G.zones[zoneNumber].sides[player][cardToAdjustIdx] = {
+    ...G.zones[zoneNumber].sides[player][cardToAdjustIdx],
+    booleans: {
+      ...G.zones[zoneNumber].sides[player][cardToAdjustIdx].booleans,
+      eventWasTriggered: true,
+    },
+    eventStream: [
+      ...G.zones[zoneNumber].sides[player][cardToAdjustIdx].eventStream,
+      {
+        blame: cardToBlame ? cardToBlame.name : cardToAdjust.name,
+        event: 'onTurnEndWasTriggered',
+        uuid: cardToBlame ? cardToBlame.uuid : cardToAdjust.uuid,
+      },
+    ],
+  };
+}
 
 export default core013;

@@ -1,3 +1,4 @@
+import { Ctx } from 'boardgame.io';
 import { add } from 'mathjs';
 import { CardRace } from '../../../enums';
 import type { Card, GameState as G, PlayerID } from '../../../types';
@@ -5,6 +6,7 @@ import {
   cardUuidMatch,
   getContextualPlayerIds,
   pushEventStream,
+  pushEventStreamAndSetBoolean,
   pushPowerStreamAndSetDisplay,
 } from '../../../utils';
 
@@ -64,7 +66,7 @@ const core031 = {
             c,
             playedCard,
             numberPrimary,
-            add(c.displayPower, 2)
+            add(c.displayPower, numberPrimary)
           );
         }
       });
@@ -84,6 +86,60 @@ const core031 = {
       });
     });
   },
+
+  execAi: (G: G, ctx: Ctx, aiID: PlayerID, playedCard: Card) => {
+    let possibleTargets: {
+      zoneNumber: number;
+      cardData: Card;
+      cardIndex: number;
+    }[] = [];
+
+    G.zones.forEach((z, zI) => {
+      z.sides[aiID].forEach((c, cI) => {
+        const isNotSelf = c.uuid !== playedCard.uuid;
+        const isCreature = c.race === CardRace.Creature;
+        const isNotDestroyed = c.booleans.isDestroyed === false;
+        if (isNotSelf && isCreature && isNotDestroyed)
+          possibleTargets.push({
+            zoneNumber: zI,
+            cardData: c,
+            cardIndex: cI,
+          });
+      });
+    });
+
+    if (possibleTargets.length !== 0) {
+      const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
+      G.zones.forEach((z, zI) => {
+        z.sides[aiID].forEach((c) => {
+          const isTargetedCard = cardUuidMatch(c, choice.cardData);
+          if (isTargetedCard) {
+            c.booleans.isBuffed = true;
+            c.booleans.hasPowerIncreased = true;
+            pushPowerStreamAndSetDisplay(
+              c,
+              playedCard,
+              playedCard.numberPrimary,
+              add(c.displayPower, playedCard.numberPrimary)
+            );
+          }
+
+          const isCardPlayed = cardUuidMatch(c, playedCard);
+          if (isCardPlayed) {
+            pushEventStreamAndSetBoolean(
+              G,
+              ctx,
+              aiID,
+              zI,
+              c,
+              choice.cardData,
+              'onPlayWasTriggered'
+            );
+          }
+        });
+      });
+    }
+  }
 };
 
 export default core031;

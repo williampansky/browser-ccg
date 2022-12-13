@@ -2,6 +2,7 @@ import type { Ctx, LongFormMove } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../types';
 import { LastMoveMade } from '../../enums';
 import { lastCardPlayed } from '../state';
+
 import {
   cardUuidMatch,
   getContextualPlayerIds,
@@ -9,7 +10,8 @@ import {
   resetBuffableMinions,
 } from '../../utils';
 
-import { core031, core110 } from '../mechanics';
+import core031 from '../mechanics/core-mechanics-by-key/mechanic.core.031';
+import core110 from '../mechanics/core-mechanics-by-key/mechanic.core.110';
 
 export interface BuffMinionMove {
   card: Card;

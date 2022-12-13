@@ -5,6 +5,7 @@ import { CardType } from '../../../enums';
 import {
   cardIsNotSelf,
   pushEventStream,
+  pushEventStreamAndSetBoolean,
   pushPowerStreamAndSetDisplay,
 } from '../../../utils';
 
@@ -36,8 +37,15 @@ const core029 = {
             add(c.displayPower, numberPrimary)
           );
 
-          playedCard.booleans.onPlayWasTriggered = true;
-          pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+          pushEventStreamAndSetBoolean(
+            G,
+            ctx,
+            player,
+            zoneNumber,
+            playedCard,
+            playedCard,
+            'onPlayWasTriggered'
+          );
         }
       });
     });

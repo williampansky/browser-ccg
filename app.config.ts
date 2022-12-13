@@ -11,11 +11,11 @@ export const gameConfig: GameConfig = {
     useDebugHandCardKey: false,
     useDebugBoardCardKey: false,
 
-    debugOpponentHandCardKey: core + '008',
-    debugOpponentBoardCardKey: core + '003',
-    debugOpponentBoardCardKeyAmount: 4,
-    useDebugOpponentHandCardKey: false,
-    useDebugOpponentBoardCardKey: false,
+    debugOpponentHandCardKey: core + '005',
+    debugOpponentBoardCardKey: core + '017',
+    debugOpponentBoardCardKeyAmount: 2,
+    useDebugOpponentHandCardKey: true,
+    useDebugOpponentBoardCardKey: true,
 
     debugScenario: 'opponent-minions-have-buff',
     useDebugScenario: false,
@@ -28,7 +28,7 @@ export const gameConfig: GameConfig = {
     botToUse: 'MCTSBot',
     enableBotAi: true,
     enableBotAiMoves: true,
-    logBotAiMovesToConsole: true,
+    logBotAiMovesToConsole: false,
   },
   numerics: {
     actionPointsPerTurn: 1,

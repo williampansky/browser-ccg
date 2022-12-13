@@ -29,6 +29,10 @@ const pushEventStreamAndSetBoolean = (
     );
   } else {
     pushEventStream(cardToAdjust, cardToBlame, event);
+    cardToAdjust.booleans = {
+      ...cardToAdjust.booleans,
+      [`${event}`]: true
+    }
   }
 };
 
