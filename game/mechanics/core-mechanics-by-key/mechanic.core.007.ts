@@ -38,20 +38,47 @@ const core007 = {
           const entCardObj = { ...entourageCard, revealed: true };
           z.sides[player].push(entCardObj);
 
-          if (isBotTurn(ctx)) {
-            aiSpreadEventStreamAndOnPlayBoolean(
-              G,
-              ctx,
-              player,
-              zoneNumber,
-              playedCard,
-              playedCard,
-              'onPlayWasTriggered',
-            );
-          } else {
-            pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
-            playedCard.booleans.onPlayWasTriggered = true;
-          }
+          pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+          playedCard.booleans.onPlayWasTriggered = true;
+        }
+      }
+    });
+  },
+
+  execAi: (
+    G: GameState,
+    ctx: Ctx,
+    player: PlayerID,
+    zoneNumber: number,
+    playedCard: Card,
+    playedCardIdx: number
+  ) => {
+    const { numerics } = G.gameConfig;
+
+    G.zones.forEach((z, i) => {
+      if (zoneNumber !== i) {
+        if (z.sides[player].length < numerics.numberOfSlotsPerZone) {
+          const entArr = setsEntourage.filter((ent: CardBase) => {
+            const set = ent.set.replace(/\%/g, '');
+            const id = playedCard.id;
+            return ent.key.includes(`${set}_${id}`);
+          });
+
+          const entObj = entArr[randomNum(0, playedCard.entourage!.length - 1)];
+          const entourageCard = createCardObject(entObj);
+          const entCardObj = { ...entourageCard, revealed: true };
+          z.sides[player].push(entCardObj);
+
+          aiSpreadEventStreamAndOnPlayBoolean(
+            G,
+            ctx,
+            player,
+            zoneNumber,
+            playedCard,
+            playedCardIdx,
+            undefined,
+            'onPlayWasTriggered'
+          );
         }
       }
     });

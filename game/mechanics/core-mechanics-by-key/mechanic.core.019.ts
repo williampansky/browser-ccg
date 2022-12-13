@@ -4,7 +4,6 @@ import { counts } from '../../state';
 import {
   aiSpreadEventStreamAndOnPlayBoolean,
   getContextualPlayerIds,
-  isBotTurn,
   pushEventStream,
 } from '../../../utils';
 
@@ -30,20 +29,42 @@ const core019 = {
           G.players[player].cards.deck.push(choice);
           counts.incrementDeck(G, player);
 
-          if (isBotTurn(ctx)) {
-            aiSpreadEventStreamAndOnPlayBoolean(
-              G,
-              ctx,
-              player,
-              zoneNumber,
-              playedCard,
-              playedCard,
-              'onPlayWasTriggered',
-            );
-          } else {
-            playedCard.booleans.onPlayWasTriggered = true;
-            pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
-          }
+          playedCard.booleans.onPlayWasTriggered = true;
+          pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+        }
+      }
+    }
+  },
+
+  execAi: (
+    G: GameState,
+    ctx: Ctx,
+    player: PlayerID,
+    zoneNumber: number,
+    playedCard: Card,
+    playedCardIdx: number
+  ) => {
+    const { opponent } = getContextualPlayerIds(player);
+    const { numberPrimary } = playedCard;
+
+    for (let index = 0; index < numberPrimary; index++) {
+      if (G.playedCards[opponent].length !== 0) {
+        const choice = ctx?.random?.Shuffle(G.playedCards[opponent])[0]!;
+
+        if (choice) {
+          G.players[player].cards.deck.push(choice);
+          counts.incrementDeck(G, player);
+
+          aiSpreadEventStreamAndOnPlayBoolean(
+            G,
+            ctx,
+            player,
+            zoneNumber,
+            playedCard,
+            playedCardIdx,
+            undefined,
+            'onPlayWasTriggered'
+          );
         }
       }
     }

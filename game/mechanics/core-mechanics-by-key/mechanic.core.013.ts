@@ -30,8 +30,6 @@ const core013 = {
       cardIndex: number;
     }[] = [];
 
-    console.log('l');
-
     G.zones.forEach((z, zIdx) => {
       z.sides[player].forEach((c, cIdx) => {
         const isNotSelf = cardIsNotSelf(c, listenerCard);
