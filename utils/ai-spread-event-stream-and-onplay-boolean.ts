@@ -13,13 +13,10 @@ export default function aiSpreadEventStreamAndOnPlayBoolean(
   player: PlayerID,
   zoneNumber: number,
   cardToAdjust: Card,
+  cardToAdjustIdx: number,
   cardToBlame?: Card,
-  event?: string
+  event?: string,
 ) {
-  const cardToAdjustIdx = G.zones[zoneNumber].sides[player].findIndex((o) => {
-    return o.uuid === cardToAdjust.uuid;
-  });
-
   G.zones[zoneNumber].sides[player][cardToAdjustIdx] = {
     ...G.zones[zoneNumber].sides[player][cardToAdjustIdx],
     booleans: {
@@ -30,7 +27,7 @@ export default function aiSpreadEventStreamAndOnPlayBoolean(
       ...G.zones[zoneNumber].sides[player][cardToAdjustIdx].eventStream,
       {
         blame: cardToBlame ? cardToBlame.name : cardToAdjust.name,
-        event: 'onPlayWasTriggered',
+        event: `${event}`,
         uuid: cardToBlame ? cardToBlame.uuid : cardToAdjust.uuid,
       },
     ],

@@ -5,7 +5,6 @@ import { counts } from '../../state';
 import {
   aiSpreadEventStreamAndOnPlayBoolean,
   createCardObject,
-  isBotTurn,
   pushEventStream,
 } from '../../../utils';
 
@@ -28,22 +27,44 @@ const core004 = {
       const randomCardBase = ctx.random!.Shuffle(setsCore)[0];
       const randomCard = createCardObject(randomCardBase!);
 
-      G.players[player].cards.hand.push(randomCard);
-      counts.incrementHand(G, player);
+      if (randomCard) {
+        G.players[player].cards.hand.push(randomCard);
+        counts.incrementHand(G, player);
 
-      if (isBotTurn(ctx)) {
+        playedCard.booleans.onPlayWasTriggered = true;
+        pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+      }
+    }
+  },
+
+  execAi: (
+    G: GameState,
+    ctx: Ctx,
+    player: PlayerID,
+    zoneNumber: number,
+    playedCard: Card,
+    playedCardIdx: number,
+  ) => {
+    const { numerics } = G.gameConfig;
+
+    if (G.players[player].cards.hand.length < numerics.cardsPerHand) {
+      const randomCardBase = ctx.random!.Shuffle(setsCore)[0];
+      const randomCard = createCardObject(randomCardBase!);
+
+      if (randomCard) {
+        G.players[player].cards.hand.push(randomCard);
+        counts.incrementHand(G, player);
+
         aiSpreadEventStreamAndOnPlayBoolean(
           G,
           ctx,
           player,
           zoneNumber,
           playedCard,
+          playedCardIdx,
           playedCard,
-          'onPlayWasTriggered',
+          'onPlayWasTriggered'
         );
-      } else {
-        playedCard.booleans.onPlayWasTriggered = true;
-        pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
       }
     }
   },

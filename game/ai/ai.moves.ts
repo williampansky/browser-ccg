@@ -29,6 +29,8 @@ import {
 import { add } from 'mathjs';
 import core031 from '../mechanics/core-mechanics-by-key/mechanic.core.031';
 import core005 from '../mechanics/core-mechanics-by-key/mechanic.core.005';
+import core004 from '../mechanics/core-mechanics-by-key/mechanic.core.004';
+import core006 from '../mechanics/core-mechanics-by-key/mechanic.core.006';
 
 export const aiPlayCard: LongFormMove = {
   client: false,
@@ -71,12 +73,23 @@ export const aiPlayCardMove = (
   const zone = G.zones[zoneNumber];
   const cantAffordCard = !gte(ap[player].current, card.currentCost);
   const zoneIsDisabled = zone.disabled[player];
-  const zoneIsFull = zone.sides[player].length > slotsPerZone;
+  const zoneIsFull = lt(zone.sides[player].length, slotsPerZone);
 
   // validate move
-  if (cantAffordCard) return INVALID_MOVE;
-  if (zoneIsDisabled) return INVALID_MOVE;
-  if (zoneIsFull) return INVALID_MOVE;
+  if (cantAffordCard) {
+    console.error('INVALID_MOVE(cantAffordCard)', 'apC: ' + ap[player].current, 'cost: ' + card.currentCost);
+    return INVALID_MOVE;
+  }
+
+  if (zoneIsDisabled) {
+    console.error('INVALID_MOVE(zoneIsDisabled)', 'zone ' + zoneNumber, 'disabled: ' + zone.disabled[player]);
+    return INVALID_MOVE;
+  }
+
+  // if (zoneIsFull) {
+  //   console.error('INVALID_MOVE(zoneIsFull)', 'zone ' + zoneNumber, 'length: ' + zone.sides[player].length);
+  //   return INVALID_MOVE;
+  // }
 
   // add card to PlayedCards array
   playedCards.push(G, player, card);
@@ -99,10 +112,21 @@ export const aiPlayCardMove = (
   // set last move
   G.lastMoveMade = LastMoveMade.aiPlayCard;
 
+  // get played card index in zone
+  const playedCardIdx = G.zones[zoneNumber].sides[player].findIndex((o) => {
+    return o.uuid === card.uuid;
+  });
+
   // init card mechs
   switch (card.key) {
+    case 'SET_CORE_004':
+      core004.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+      break;
     case 'SET_CORE_005':
       core005.execAi(G, ctx, aiID, zoneNumber, card);
+      break;
+    case 'SET_CORE_006':
+      core006.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
       break;
     case 'SET_CORE_031':
       core031.execAi(G, ctx, aiID, card);

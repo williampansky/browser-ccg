@@ -6,16 +6,16 @@ export const gameConfig: GameConfig = {
   asynchronousTurns: false,
   debugConfig: {
     debugHandCardKey: core + '005',
-    debugBoardCardKey: core + '001',
+    debugBoardCardKey: core + '006',
     debugBoardCardKeyAmount: 3,
     useDebugHandCardKey: false,
-    useDebugBoardCardKey: false,
+    useDebugBoardCardKey: true,
 
-    debugOpponentHandCardKey: core + '005',
+    debugOpponentHandCardKey: core + '006',
     debugOpponentBoardCardKey: core + '017',
     debugOpponentBoardCardKeyAmount: 2,
     useDebugOpponentHandCardKey: true,
-    useDebugOpponentBoardCardKey: true,
+    useDebugOpponentBoardCardKey: false,
 
     debugScenario: 'opponent-minions-have-buff',
     useDebugScenario: false,

@@ -18,12 +18,17 @@ const pushEventStreamAndSetBoolean = (
   event: string
 ): void => {
   if (isBotTurn(ctx)) {
+    const cardToAdjustIdx = G.zones[zoneNumber].sides[player].findIndex((o) => {
+      return o.uuid === cardToAdjust.uuid;
+    });
+
     aiSpreadEventStreamAndOnPlayBoolean(
       G,
       ctx,
       player,
       zoneNumber,
       cardToAdjust,
+      cardToAdjustIdx,
       cardToBlame,
       event
     );
