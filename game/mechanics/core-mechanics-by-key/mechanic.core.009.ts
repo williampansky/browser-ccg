@@ -23,6 +23,7 @@ const core009 = {
     listenerCardIndex: number,
     player: PlayerID
   ) => {
+    const { card } = G.lastCardPlayed;
     const { numberPrimary, powerStream } = listenerCard;
 
     G.zones.forEach((z) => {
@@ -34,7 +35,7 @@ const core009 = {
         if (cardIsNotSelf(c, listenerCard)) {
           if (cardIsSprite && revealedThisTurn && cardNotInStream) {
             if (isBotGame(ctx)) {
-              aiSpread(G, ctx, player, zoneIndex, listenerCard, listenerCard);
+              aiSpread(G, ctx, player, zoneIndex, listenerCard, card);
             } else {
               // find the core009 card node
               const self = G.zones[zoneIndex].sides[player][listenerCardIndex];

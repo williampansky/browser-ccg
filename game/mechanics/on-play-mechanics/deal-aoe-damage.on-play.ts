@@ -9,21 +9,23 @@ import {
   pushHealthStreamAndSetDisplay,
 } from '../../../utils';
 
+const { Player, Opponent, Both, None } = Side;
+
 const dealAoeDamageOnPlay = (
   G: GameState,
   player: PlayerID,
   card: Card,
-  target?:
-    | Side.Player
-    | Side.Opponent
-    | Side.Both
-    | string
+  targetSide?: Side.Player | Side.Opponent | Side.Both | Side.None | string
 ) => {
   const { numberPrimary } = card;
   const { opponent } = getContextualPlayerIds(player);
+  const targetBothSides = targetSide === Both;
+  const noTargetSide = !targetSide || targetSide === None || targetBothSides;
+  const targetPlayerSide = targetSide === Player || noTargetSide;
+  const targetOpponentSide = targetSide === Opponent || noTargetSide;
 
   G.zones.forEach((z) => {
-    if (!target || target === Side.Player || target === Side.Both) {
+    if (targetPlayerSide) {
       z.sides[player].forEach((c) => {
         if (cardIsNotSelf(c, card) && !c.booleans.isDestroyed) {
           c.booleans.hasHealthReduced = true;
@@ -37,7 +39,7 @@ const dealAoeDamageOnPlay = (
       });
     }
 
-    if (!target || target === Side.Opponent || target === Side.Both) {
+    if (targetOpponentSide) {
       z.sides[opponent].forEach((c) => {
         if (cardIsNotSelf(c, card) && !c.booleans.isDestroyed) {
           c.booleans.hasHealthReduced = true;

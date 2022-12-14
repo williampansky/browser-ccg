@@ -60,6 +60,7 @@ export default<PhaseConfig> {
           useDebugOpponentHandCardKey
             ? createDebugDeck(G, ctx, db, debugOpponentHandCardKey)
             : createAiDeck(G, ctx),
+            // : createRandomDeck(G, ctx, db),
         destroyed: [],
         discarded: [],
         hand: [],

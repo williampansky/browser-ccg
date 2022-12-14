@@ -5,13 +5,13 @@ const core = `SET_CORE_`;
 export const gameConfig: GameConfig = {
   asynchronousTurns: false,
   debugConfig: {
-    debugHandCardKey: core + '005',
+    debugHandCardKey: core + '122',
     debugBoardCardKey: core + '006',
     debugBoardCardKeyAmount: 3,
     useDebugHandCardKey: false,
     useDebugBoardCardKey: false,
 
-    debugOpponentHandCardKey: core + '022',
+    debugOpponentHandCardKey: core + '036',
     debugOpponentBoardCardKey: core + '032',
     debugOpponentBoardCardKeyAmount: 1,
     useDebugOpponentHandCardKey: false,

@@ -38,6 +38,8 @@ import core029 from '../mechanics/core-mechanics-by-key/mechanic.core.029';
 import core042 from '../mechanics/core-mechanics-by-key/mechanic.core.042';
 import core043 from '../mechanics/core-mechanics-by-key/mechanic.core.043';
 import core044 from '../mechanics/core-mechanics-by-key/mechanic.core.044';
+import core110 from '../mechanics/core-mechanics-by-key/mechanic.core.110';
+import core036 from '../mechanics/core-mechanics-by-key/mechanic.core.036';
 
 export const aiPlayCard: LongFormMove = {
   client: false,
@@ -150,6 +152,9 @@ export const aiPlayCardMove = (
     case 'SET_CORE_031':
       core031.execAi(G, ctx, aiID, card);
       break;
+    case 'SET_CORE_036':
+      core036.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+      break;
     case 'SET_CORE_042':
       core042.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
       break;
@@ -158,6 +163,9 @@ export const aiPlayCardMove = (
       break;
     case 'SET_CORE_044':
       core044.execAi(G, ctx, aiID, card);
+      break;
+    case 'SET_CORE_110':
+      core110.execAi(G, ctx, aiID, card);
       break;
     default:
       break;
