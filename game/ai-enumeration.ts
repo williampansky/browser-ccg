@@ -65,7 +65,7 @@ const aiEnumeration = (G: GameState, ctx: Ctx, player: PlayerID) => {
           const card = G.players[aiID].cards.hand[i];
           if (card.canPlay) {
             const rngZone = getRandomNumberBetween(0, 2);
-            pushPlayCardMove(G, ctx, moves, aiID, card, i, 0, perZone);
+            pushPlayCardMove(G, ctx, moves, aiID, card, i, rngZone, perZone);
             // pushPlayCardMove(G, ctx, moves, aiID, card, i, 1, perZone);
             // pushPlayCardMove(G, ctx, moves, aiID, card, i, 2, perZone);
           }

@@ -1,3 +1,4 @@
+import { Ctx } from 'boardgame.io';
 import { subtract } from 'mathjs';
 import { CardType } from '../../../enums';
 import type { Card, GameState as G, PlayerID } from '../../../types';
@@ -5,6 +6,7 @@ import {
   cardUuidMatch,
   getContextualPlayerIds,
   pushEventStream,
+  pushEventStreamAndSetBoolean,
   pushHealthStreamAndSetDisplay,
 } from '../../../utils';
 
@@ -28,6 +30,7 @@ const core044 = {
       });
     });
   },
+
   exec: (G: G, targetPlayer: PlayerID, targetCard: Card, playedCard: Card) => {
     const { player, opponent } = getContextualPlayerIds(targetPlayer);
 
@@ -78,6 +81,60 @@ const core044 = {
 
         z.sides[opponent].forEach((c) => {
           c.booleans.canBeAttackedBySpell = false;
+        });
+      });
+    }
+  },
+
+  execAi: (G: G, ctx: Ctx, aiID: PlayerID, playedCard: Card) => {
+    let possibleTargets: {
+      zoneNumber: number;
+      cardData: Card;
+      cardIndex: number;
+    }[] = [];
+
+    G.zones.forEach((z, zI) => {
+      z.sides[aiID].forEach((c, cI) => {
+        const isNotSelf = c.uuid !== playedCard.uuid;
+        const isMinion = c.type === CardType.Minion;
+        const isNotDestroyed = c.booleans.isDestroyed === false;
+        if (isNotSelf && isMinion && isNotDestroyed)
+          possibleTargets.push({
+            zoneNumber: zI,
+            cardData: c,
+            cardIndex: cI,
+          });
+      });
+    });
+
+    if (possibleTargets.length !== 0) {
+      const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
+      G.zones.forEach((z, zI) => {
+        z.sides[aiID].forEach((c) => {
+          const isTargetedCard = cardUuidMatch(c, choice.cardData);
+          if (isTargetedCard) {
+            c.booleans.isBuffed = true;
+            c.booleans.hasPowerIncreased = true;
+            pushHealthStreamAndSetDisplay(
+              c,
+              playedCard,
+              -playedCard.numberPrimary,
+              subtract(c.displayHealth, playedCard.numberPrimary)
+            );
+          }
+
+          const isCardPlayed = cardUuidMatch(c, playedCard);
+          if (isCardPlayed) {
+            pushEventStreamAndSetBoolean(
+              G,
+              ctx,
+              aiID,
+              zI,
+              c,
+              choice.cardData,
+              'onPlayWasTriggered'
+            );
+          }
         });
       });
     }

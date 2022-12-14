@@ -1,6 +1,6 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, CardBase, GameState, PlayerID } from '../../../types';
-import { createCardObject, pushEventStream } from '../../../utils';
+import { createCardObject, pushEventStream, pushEventStreamAndSetBoolean } from '../../../utils';
 import setsEntourage from '../../data/setsEntourage.json';
 
 /**
@@ -33,8 +33,15 @@ const core036 = {
 
             z.sides[player].push(entCardObj);
 
-            playedCard.booleans.onPlayWasTriggered = true;
-            pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+            pushEventStreamAndSetBoolean(
+              G,
+              ctx,
+              player,
+              zoneNumber,
+              playedCard,
+              playedCard,
+              'onPlayWasTriggered'
+            );
           }
         }
       }

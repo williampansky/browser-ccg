@@ -4,6 +4,7 @@ import type { Ctx, LongFormMove } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../types';
 import { LastMoveMade } from '../../enums';
 import { lastCardPlayed } from '../state';
+
 import {
   cardUuidMatch,
   getContextualPlayerIds,
@@ -13,7 +14,9 @@ import {
   resetAttackableMinions,
 } from '../../utils';
 
-import { core050, core058 } from '../mechanics';
+import core050 from '../mechanics/core-mechanics-by-key/mechanic.core.050';
+import core058 from '../mechanics/core-mechanics-by-key/mechanic.core.058';
+import core053 from '../mechanics/core-mechanics-by-key/mechanic.core.053';
 
 export interface AttackMinionMove {
   card: Card;
@@ -33,10 +36,15 @@ export const attackMinionMove = (
   const init = (c: Card) => {
     if (cardUuidMatch(c, cardToAttack)) {
       switch (lastCard.key) {
+        case 'SET_CORE_053':
+          core053.exec(G, ctx, targetPlayer, c, lastCard);
+          break;
         case 'SET_CORE_050':
-          return core050.exec(G, targetPlayer, c, lastCard);
+          core050.exec(G, targetPlayer, c, lastCard);
+          break;
         case 'SET_CORE_058':
-          return core058.exec(G, targetPlayer, c, lastCard);
+          core058.exec(G, targetPlayer, c, lastCard);
+          break;
         default:
           if (cardUuidMatch(c, cardToAttack)) {
             c.booleans.hasHealthReduced = true;
@@ -48,7 +56,7 @@ export const attackMinionMove = (
               subtract(c.displayHealth, lastCard.numberPrimary)
             );
           }
-          return;
+          break;
       }
     }
   };

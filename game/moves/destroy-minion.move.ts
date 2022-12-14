@@ -31,6 +31,7 @@ export const destroyMinionMove = (
   const init = (c: Card) => {
     if (cardUuidMatch(c, cardToDestroy)) {
       switch (lastCard.key) {
+        case 'SET_CORE_043':
         case 'SET_CORE_126':
           core126.exec(G, ctx, targetPlayer, c, lastCard);
           break;
