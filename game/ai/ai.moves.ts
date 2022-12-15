@@ -3,6 +3,7 @@ import { Ctx, LongFormMove } from 'boardgame.io';
 import { CardPlayType, CardRace, LastMoveMade, Mechanics } from '../../enums';
 import { Card, GameState, PlayerID } from '../../types';
 import {
+  aiDealTargetedDamageToMinion,
   cardUuidMatch,
   filterArray,
   getCardPower,
@@ -43,6 +44,8 @@ import core036 from '../mechanics/core-mechanics-by-key/mechanic.core.036';
 import core133 from '../mechanics/core-mechanics-by-key/mechanic.core.133';
 import core126 from '../mechanics/core-mechanics-by-key/mechanic.core.126';
 import { boonPowerOfCardsInZone } from '../mechanics/on-play-mechanics';
+import core071 from '../mechanics/core-mechanics-by-key/mechanic.core.071';
+import core060 from '../mechanics/core-mechanics-by-key/mechanic.core.060';
 
 export const aiPlayCard: LongFormMove = {
   client: false,
@@ -165,7 +168,19 @@ export const aiPlayCardMove = (
       core043.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
       break;
     case 'SET_CORE_044':
-      core044.execAi(G, ctx, aiID, card);
+      aiDealTargetedDamageToMinion(G, ctx, aiID, card);
+      break;
+    case 'SET_CORE_050':
+      core005.execAi(G, ctx, aiID, zoneNumber, card);
+      break;
+    case 'SET_CORE_058':
+      aiDealTargetedDamageToMinion(G, ctx, aiID, card);
+      break;
+    case 'SET_CORE_060':
+      core060.execAi(G, ctx, aiID, zoneNumber, card);
+      break;
+    case 'SET_CORE_071':
+      core071.execAi(G, ctx, aiID, zoneNumber, card);
       break;
     case 'SET_CORE_108':
       boonPowerOfCardsInZone(G, ctx, zoneNumber, card, aiID);
@@ -174,7 +189,7 @@ export const aiPlayCardMove = (
       core110.execAi(G, ctx, aiID, card);
       break;
     case 'SET_CORE_112':
-      core044.execAi(G, ctx, aiID, card);
+      aiDealTargetedDamageToMinion(G, ctx, aiID, card);
       break;
     case 'SET_CORE_126':
       core126.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);

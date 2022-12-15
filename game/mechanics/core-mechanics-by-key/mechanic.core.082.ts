@@ -1,101 +1,106 @@
-import type { Ctx } from 'boardgame.io';
 import { add } from 'mathjs';
-import type {
-  Card,
-  GameConfig,
-  GameState,
-  PlayerID,
-  Zone,
-} from '../../../types';
+import type { Ctx } from 'boardgame.io';
+import type { Card, GameState, PlayerID } from '../../../types';
 import {
+  cardIsNotSelf,
+  cardUuidMatch,
   limitNumberWithinRange,
+  pushEventStreamAndSetBoolean,
   pushHealthStreamAndSetDisplay,
 } from '../../../utils';
 
 /**
  * heal a minion for num1 hp
  */
-export const core082 = (
-  G: GameState,
-  ctx: Ctx,
-  gameConfig: GameConfig,
-  zone: Zone,
-  zoneIdx: number,
-  card: Card,
-  cardIdx: number,
-  player: PlayerID,
-  opponent: PlayerID
-) => {
-  G.zones.forEach((z) => {
-    z.sides[player].forEach((c) => {
-      if (c.uuid !== card.uuid && c.booleans.hasHealthReduced) {
-        c.booleans.canBeHealed = true;
-      }
-    });
+const core082 = {
+  execAi: (
+    G: GameState,
+    ctx: Ctx,
+    aiID: PlayerID,
+    zoneIdx: number,
+    playedCard: Card,
+    playedCardIdx: number
+  ) => {
+    let possibleTargets: {
+      zoneNumber: number;
+      cardData: Card;
+      cardIndex: number;
+    }[] = [];
 
-    z.sides[opponent].forEach((c) => {
-      if (c.uuid !== card.uuid && c.booleans.hasHealthReduced) {
-        c.booleans.canBeHealed = true;
-      }
-    });
-  });
-};
+    const isNotSelf = (c: Card) => {
+      return cardIsNotSelf(c, playedCard);
+    };
 
-export const core082Heal = (
-  G: GameState,
-  ctx: Ctx,
-  player: PlayerID,
-  targetPlayer: PlayerID,
-  cardToHealUuid: string,
-  cardToBlame: Card
-) => {
-  // prettier-ignore
-  let target: {
-    card: Card,
-    cardIdx: number,
-    zoneNumber: number
-  } | undefined;
+    const cardIsNotDestroyed = (c: Card) => {
+      return c.booleans.isDestroyed === false;
+    };
 
-  G.zones.forEach((z, zi) => {
-    z.sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === cardToHealUuid) {
-        target = {
-          card: c,
-          cardIdx: ci,
-          zoneNumber: zi,
-        };
-      }
-    });
-  });
+    const cardHasHealthReduced = (c: Card) => {
+      return c.booleans.hasHealthReduced === true;
+    };
 
-  if (target !== undefined) {
-    const { card, cardIdx, zoneNumber } = target;
-
-    G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === card.uuid && ci === cardIdx) {
-        pushHealthStreamAndSetDisplay(
-          c,
-          cardToBlame,
-          cardToBlame.numberPrimary,
-          limitNumberWithinRange(
-            add(c.displayHealth, cardToBlame.numberPrimary),
-            c.baseHealth,
-            cardToBlame.numberPrimary
-          )
-        );
-      }
-    });
-    
     G.zones.forEach((z, zi) => {
-      z.sides['0'].forEach((c, ci) => {
-        c.booleans.canBeHealed = false;
-        if (c.uuid === cardToBlame.uuid) c.booleans.onPlayWasTriggered = true;
-      });
-
-      z.sides['1'].forEach((c, ci) => {
-        c.booleans.canBeHealed = false;
+      z.sides[aiID].forEach((c, ci) => {
+        if (isNotSelf(c) && cardIsNotDestroyed(c) && cardHasHealthReduced(c)) {
+          possibleTargets.push({
+            zoneNumber: zi,
+            cardData: c,
+            cardIndex: ci,
+          });
+        }
       });
     });
-  }
 
+    if (possibleTargets.length !== 0) {
+      const choice = ctx?.random?.Shuffle(possibleTargets)[0];
+
+      if (choice) {
+        const { zoneNumber, cardData, cardIndex } = choice;
+
+        G.zones[zoneNumber].sides[aiID].forEach((c, ci) => {
+          const isTargetedCard = cardUuidMatch(c, cardData) && ci === cardIndex;
+          if (isTargetedCard) {
+            pushHealthStreamAndSetDisplay(
+              c,
+              playedCard,
+              playedCard.numberPrimary,
+              limitNumberWithinRange(
+                add(c.displayHealth, playedCard.numberPrimary),
+                c.baseHealth,
+                playedCard.numberPrimary
+              )
+            );
+            pushEventStreamAndSetBoolean(
+              G,
+              ctx,
+              aiID,
+              zoneNumber,
+              c,
+              choice.cardData,
+              'wasHealed'
+            );
+          }
+        });
+
+        G.zones.forEach((z, zI) => {
+          z.sides[aiID].forEach((c) => {
+            const isCardPlayed = cardUuidMatch(c, playedCard);
+            if (isCardPlayed) {
+              pushEventStreamAndSetBoolean(
+                G,
+                ctx,
+                aiID,
+                zI,
+                c,
+                choice.cardData,
+                'onPlayWasTriggered'
+              );
+            }
+          });
+        });
+      }
+    }
+  },
 };
+
+export default core082;

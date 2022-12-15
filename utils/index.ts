@@ -1,4 +1,5 @@
 export { default as aiSpreadEventStreamAndOnPlayBoolean } from './ai-spread-event-stream-and-onplay-boolean';
+export { default as aiDealTargetedDamageToMinion } from './ai-deal-targeted-damage-to-minion';
 export { default as calculateZoneSidePower } from './calculate-zone-side-power';
 export { default as cardHasBoon } from './card-has-boon';
 export { default as cardHasEvent } from './card-has-event';
