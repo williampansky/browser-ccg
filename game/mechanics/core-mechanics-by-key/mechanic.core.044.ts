@@ -1,10 +1,12 @@
 import { Ctx } from 'boardgame.io';
+import { lte } from 'lodash';
 import { subtract } from 'mathjs';
 import { CardType } from '../../../enums';
 import type { Card, GameState as G, PlayerID } from '../../../types';
 import {
   cardUuidMatch,
   getContextualPlayerIds,
+  handleDestroyedCards,
   pushEventStream,
   pushEventStreamAndSetBoolean,
   pushHealthStreamAndSetDisplay,
@@ -87,6 +89,7 @@ const core044 = {
   },
 
   execAi: (G: G, ctx: Ctx, aiID: PlayerID, playedCard: Card) => {
+    const { opponent } = getContextualPlayerIds(aiID);
     let possibleTargets: {
       zoneNumber: number;
       cardData: Card;
@@ -94,7 +97,7 @@ const core044 = {
     }[] = [];
 
     G.zones.forEach((z, zI) => {
-      z.sides[aiID].forEach((c, cI) => {
+      z.sides[opponent].forEach((c, cI) => {
         const isNotSelf = c.uuid !== playedCard.uuid;
         const isMinion = c.type === CardType.Minion;
         const isNotDestroyed = c.booleans.isDestroyed === false;
@@ -111,18 +114,6 @@ const core044 = {
       const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
       G.zones.forEach((z, zI) => {
         z.sides[aiID].forEach((c) => {
-          const isTargetedCard = cardUuidMatch(c, choice.cardData);
-          if (isTargetedCard) {
-            c.booleans.isBuffed = true;
-            c.booleans.hasPowerIncreased = true;
-            pushHealthStreamAndSetDisplay(
-              c,
-              playedCard,
-              -playedCard.numberPrimary,
-              subtract(c.displayHealth, playedCard.numberPrimary)
-            );
-          }
-
           const isCardPlayed = cardUuidMatch(c, playedCard);
           if (isCardPlayed) {
             pushEventStreamAndSetBoolean(
@@ -134,6 +125,26 @@ const core044 = {
               choice.cardData,
               'onPlayWasTriggered'
             );
+          }
+        });
+      });
+
+      G.zones.forEach((z, zI) => {
+        z.sides[opponent].forEach((c) => {
+          const isTargetedCard = cardUuidMatch(c, choice.cardData);
+          if (isTargetedCard) {
+            c.booleans.hasHealthReduced = true;
+            pushHealthStreamAndSetDisplay(
+              c,
+              playedCard,
+              -playedCard.numberPrimary,
+              subtract(c.displayHealth, playedCard.numberPrimary)
+            );
+
+            if (lte(subtract(c.displayHealth, playedCard.numberPrimary), 0)) {
+              c.booleans.isDestroyed = true;
+              c.destroyedOnTurn = G.turn;
+            }
           }
         });
       });

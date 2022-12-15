@@ -9,9 +9,9 @@ export const gameConfig: GameConfig = {
     debugBoardCardKey: core + '006',
     debugBoardCardKeyAmount: 3,
     useDebugHandCardKey: false,
-    useDebugBoardCardKey: false,
+    useDebugBoardCardKey: true,
 
-    debugOpponentHandCardKey: core + '133',
+    debugOpponentHandCardKey: core + '112',
     debugOpponentBoardCardKey: core + '032',
     debugOpponentBoardCardKeyAmount: 1,
     useDebugOpponentHandCardKey: true,

@@ -6,6 +6,7 @@ import {
   getContextualPlayerIds,
   getMechanicTargetSide,
   pushEventStream,
+  pushEventStreamAndSetBoolean,
   pushPowerStreamAndSetDisplay,
 } from '../../../utils';
 
@@ -30,7 +31,15 @@ const boonPowerOfCardsInZone = (
     const isNotCardPlayed = cardPlayed.uuid !== c.uuid;
 
     if (isCardPlayed) {
-      G.zones[zi].sides[p][ci].booleans.onPlayWasTriggered = true;
+      pushEventStreamAndSetBoolean(
+        G,
+        ctx,
+        p,
+        zoneNumber,
+        c,
+        cardPlayed,
+        'onPlayWasTriggered'
+      );
       pushEventStream(c, c, 'onPlayWasTriggered');
     } else if (isNotCardPlayed) {
       c.booleans.isBooned = true;

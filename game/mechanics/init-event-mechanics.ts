@@ -4,6 +4,7 @@ import core008 from './core-mechanics-by-key/mechanic.core.008';
 import core009 from './core-mechanics-by-key/mechanic.core.009';
 import core012 from './core-mechanics-by-key/mechanic.core.012';
 import core032 from './core-mechanics-by-key/mechanic.core.032';
+import { core085 } from './core-mechanics-by-key/mechanic.core.085';
 
 const initEventMechanics = (
   G: GameState,
@@ -32,9 +33,9 @@ const initEventMechanics = (
     case 'SET_CORE_032':
       core032.exec(G, ctx, zone, zoneIdx, card, cardIdx, player);
       break;
-    // case 'SET_CORE_085':
-    //   core085(G, ctx, zone, zoneIdx, card, cardIdx, player);
-      // break;
+    case 'SET_CORE_085':
+      core085.exec(G, ctx, zoneIdx, card, cardIdx, player);
+      break;
     default:
       break;
   }

@@ -7,6 +7,7 @@ import {
   handleCardDestructionMechanics,
   initActivateEventListeners,
   pushEventStream,
+  pushEventStreamAndSetBoolean,
 } from '../../../utils';
 
 /**
@@ -100,6 +101,82 @@ const core126 = {
           c.booleans.canBeAttackedBySpell = false;
         });
       });
+    }
+  },
+
+  execAi: (
+    G: GameState,
+    ctx: Ctx,
+    aiID: PlayerID,
+    zoneNumber: number,
+    playedCard: Card,
+    playedCardIdx: number,
+  ) => {
+    const { opponent } = getContextualPlayerIds(aiID);
+    let possibleTargets: {
+      zoneNumber: number;
+      cardData: Card;
+      cardIndex: number;
+    }[] = [];
+
+    const isNotSelf = (c: Card) => {
+      return cardIsNotSelf(c, playedCard);
+    };
+
+    const cardIsNotDestroyed = (c: Card) => {
+      return c.booleans.isDestroyed === false;
+    };
+
+    const cardHasHealthReduced = (c: Card) => {
+      return c.booleans.hasHealthReduced === true;
+    };
+
+    G.zones.forEach((z, zi) => {
+      z.sides[opponent].forEach((c, ci) => {
+        if (isNotSelf(c) && cardIsNotDestroyed(c) && cardHasHealthReduced(c)) {
+          possibleTargets.push({
+            zoneNumber: zi,
+            cardData: c,
+            cardIndex: ci,
+          });
+        }
+      });
+    });
+
+    if (possibleTargets.length !== 0) {
+      const choice = ctx?.random?.Shuffle(possibleTargets)[0];
+
+      if (choice) {
+        const { zoneNumber, cardData, cardIndex } = choice;
+
+        G.zones[zoneNumber].sides[opponent].forEach((c, ci) => {
+          const isTargetedCard = cardUuidMatch(c, cardData) && ci === cardIndex;
+          if (isTargetedCard) {
+            c.destroyedOnTurn = G.turn;
+            c.booleans.isDestroyed = true;
+            c.booleans.canBeDestroyed = false;
+            pushEventStream(c, playedCard, 'wasDestroyed');
+            handleCardDestructionMechanics(G, c, opponent);
+          }
+        });
+
+        G.zones.forEach((z, zI) => {
+          z.sides[aiID].forEach((c, cI) => {
+            const isCardPlayed = cardUuidMatch(c, playedCard);
+            if (isCardPlayed) {
+              pushEventStreamAndSetBoolean(
+                G,
+                ctx,
+                aiID,
+                zI,
+                c,
+                choice.cardData,
+                'onPlayWasTriggered'
+              );
+            }
+          });
+        });
+      }
     }
   },
 };
