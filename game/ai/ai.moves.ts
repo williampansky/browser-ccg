@@ -46,6 +46,7 @@ import core126 from '../mechanics/core-mechanics-by-key/mechanic.core.126';
 import { boonPowerOfCardsInZone } from '../mechanics/on-play-mechanics';
 import core071 from '../mechanics/core-mechanics-by-key/mechanic.core.071';
 import core060 from '../mechanics/core-mechanics-by-key/mechanic.core.060';
+import core050 from '../mechanics/core-mechanics-by-key/mechanic.core.050';
 
 export const aiPlayCard: LongFormMove = {
   client: false,
@@ -171,7 +172,7 @@ export const aiPlayCardMove = (
       aiDealTargetedDamageToMinion(G, ctx, aiID, card);
       break;
     case 'SET_CORE_050':
-      core005.execAi(G, ctx, aiID, zoneNumber, card);
+      core050.execAi(G, ctx, aiID, card);
       break;
     case 'SET_CORE_058':
       aiDealTargetedDamageToMinion(G, ctx, aiID, card);
