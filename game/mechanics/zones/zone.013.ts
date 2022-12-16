@@ -4,6 +4,9 @@ import { createCardObject } from '../../../utils';
 
 import setsEntourage from '../../data/setsEntourage.json';
 
+/**
+ * Add two 10-Power %RACE_ELEMENT%s to each side
+ */
 const zone013 = {
   init: (G: GameState, ctx: Ctx, zone: Zone, zoneNumber: number) => {
     for (let index = 0; index < zone.effectAdjustment; index++) {

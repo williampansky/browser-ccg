@@ -3,6 +3,9 @@ import { gt, lt } from 'lodash';
 import type { Card, GameState, Zone } from '../../../types';
 import { getCardPower } from '../../../utils';
 
+/**
+ * Cards here have -3 %POWER%
+ */
 const zone001 = {
   exec: (G: GameState, ctx: Ctx, zone: Zone, zoneNumber: number) => {
     G.zones[zoneNumber].sides['0'].forEach((c) => {

@@ -1,8 +1,11 @@
 import type { Ctx } from 'boardgame.io';
 import type { GameState, Zone } from '../../types';
-import zone001 from './zones/zone.001';
 import zone013 from './zones/zone.013';
 
+/**
+ * ***Initiates*** zone mechanics; i.e. only mechanics that
+ * need to be invoked once per game.
+ */
 const initZoneMechanics = (
   G: GameState,
   ctx: Ctx,
@@ -10,9 +13,6 @@ const initZoneMechanics = (
   zoneNumber: number
 ) => {
   switch (zone.id) {
-    // case '001':
-    //   zone001.exec(G, ctx, zone, zoneNumber);
-    //   break;
     case '013':
       zone013.init(G, ctx, zone, zoneNumber);
       break;

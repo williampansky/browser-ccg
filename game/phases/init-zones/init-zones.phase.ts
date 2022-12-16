@@ -15,7 +15,7 @@ import healPlayerMinionScenario from '../../debug/scenarios/heal-player-minion.s
 import dealAoeDmgScenario from '../../debug/scenarios/deal-aoe-damage.scenario';
 import opponentMinionsBoonScenario from '../../debug/scenarios/opponent-minions-have-boon.scenario';
 import opponentMinionsBuffScenario from '../../debug/scenarios/opponent-minions-have-buff.scenario';
-import initZoneMechanics from '../../mechanics/init-zone-interactions';
+import initZoneMechanics from '../../mechanics/init-zone-mechanics';
 
 const db = [
   ...setsCore

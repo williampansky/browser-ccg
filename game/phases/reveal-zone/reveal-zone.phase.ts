@@ -3,7 +3,7 @@ import { Ctx, PhaseConfig } from 'boardgame.io';
 import { GameState, Zone } from '../../../types';
 import { logPhaseToConsole } from '../../../utils';
 import { fxEnd } from '../../config.bgio-effects';
-import initZoneMechanics from '../../mechanics/init-zone-interactions';
+import initZoneMechanics from '../../mechanics/init-zone-mechanics';
 
 export default<PhaseConfig> {
   next: 'incrementTurn',

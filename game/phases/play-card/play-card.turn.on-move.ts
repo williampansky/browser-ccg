@@ -5,7 +5,7 @@ import {
   handleZonePowersCalculations,
   handleActiveCardBoons
 } from '../../../utils';
-import handleZoneMechanics from '../../mechanics/handle-zone-interactions';
+import handleZoneMechanics from '../../mechanics/handle-zone-mechanics';
 
 export default function playCardTurnOnMove(G: GameState, ctx: Ctx) {
   const { currentPlayer } = ctx;

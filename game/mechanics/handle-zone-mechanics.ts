@@ -1,7 +1,11 @@
 import type { Ctx } from 'boardgame.io';
-import type { GameState, Zone } from '../../types';
+import type { GameState } from '../../types';
 import zone001 from './zones/zone.001';
 
+/**
+ * ***Handles*** zone mechanics; i.e. only mechanics that
+ * need to be invoked multiple times per game.
+ */
 const handleZoneMechanics = (
   G: GameState,
   ctx: Ctx,
