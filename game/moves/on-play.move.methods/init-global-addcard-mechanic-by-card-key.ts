@@ -3,6 +3,7 @@ import type { Card, GameState, PlayerID } from '../../../types';
 import core004 from '../../mechanics/core-mechanics-by-key/mechanic.core.004';
 import core011 from '../../mechanics/core-mechanics-by-key/mechanic.core.011';
 import core019 from '../../mechanics/core-mechanics-by-key/mechanic.core.019';
+import core039 from '../../mechanics/core-mechanics-by-key/mechanic.core.039';
 
 /**
  *
@@ -22,8 +23,10 @@ export default function initGlobalAddCardMechanicByCardKey(
       core011.exec(G, ctx, player, zoneNumber, card);
       break;
     case 'SET_CORE_019':
-    case 'SET_CORE_039':
       core019.exec(G, ctx, player, zoneNumber, card);
+      break;
+    case 'SET_CORE_039':
+      core039.exec(G, ctx, player, zoneNumber, card);
       break;
   }
 }
