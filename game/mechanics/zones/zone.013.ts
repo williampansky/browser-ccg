@@ -11,17 +11,27 @@ const zone013 = {
   init: (G: GameState, ctx: Ctx, zone: Zone, zoneNumber: number) => {
     for (let index = 0; index < zone.effectAdjustment; index++) {
       const minion = zone013.createMinion(zone);
-      zone013.summonMinion(G, zoneNumber, '0', minion);
-      zone013.summonMinion(G, zoneNumber, '1', minion);
+      if (minion) {
+        zone013.summonMinion(G, zoneNumber, '0', minion);
+        zone013.summonMinion(G, zoneNumber, '1', minion);
+      }
     }
   },
 
-  createMinion(zone: Zone): Card {
-    const entArr = setsEntourage.find((ent: CardBase) => {
+  createMinion(zone: Zone): Card | undefined {
+    let shouldCreate = false;
+
+    const entObj = setsEntourage.find((ent: CardBase) => {
       return ent.refId === zone.entourage[0];
     });
 
-    return { ...createCardObject(entArr!), revealed: true };
+    zone.sides['0'].forEach((c) => {
+      if (c.refId !== entObj!.refId) shouldCreate = true;
+    });
+
+    return shouldCreate
+      ? { ...createCardObject(entObj!), revealed: true }
+      : undefined;
   },
 
   summonMinion(G: GameState, zoneNumber: number, player: PlayerID, c: Card) {

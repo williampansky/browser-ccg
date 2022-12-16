@@ -3,6 +3,7 @@ import { subtract } from 'mathjs';
 import type { Ctx } from 'boardgame.io';
 import type { GameState, PlayerID, Zone } from '../types';
 import getContextualPlayerIds from './get-contextual-player-ids';
+import { Mechanics } from '../enums';
 
 export default function handleZoneDisabledForXTurns(G: GameState, ctx: Ctx) {
   const { opponent, player } = getContextualPlayerIds(ctx.currentPlayer);
@@ -13,7 +14,9 @@ export default function handleZoneDisabledForXTurns(G: GameState, ctx: Ctx) {
     }
 
     if (z.disabled[player] === true && z.disabledForXTurns[player] === 0) {
-      z.disabled[player] = false;
+      if (!z.mechanics?.includes(Mechanics.Disable)) {
+        z.disabled[player] = false;
+      }
     }
   };
 

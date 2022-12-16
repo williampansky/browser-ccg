@@ -14,7 +14,7 @@ export interface ZoneBase {
   artistUrl?: string;
   effectAdjustment?: number;
   effectText?: string;
-  entourage: string[];
+  entourage?: string[];
   flavorText?: string;
   id: string;
   name: string;

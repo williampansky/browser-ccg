@@ -1,5 +1,6 @@
 import type { Ctx } from 'boardgame.io';
 import type { GameState, Zone } from '../../types';
+import { zones } from '../state';
 import zone013 from './zones/zone.013';
 
 /**
@@ -13,6 +14,9 @@ const initZoneMechanics = (
   zoneNumber: number
 ) => {
   switch (zone.id) {
+    case '007':
+      zones.disableZone(G, zoneNumber);
+      break;
     case '013':
       zone013.init(G, ctx, zone, zoneNumber);
       break;

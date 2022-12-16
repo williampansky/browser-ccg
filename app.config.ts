@@ -5,10 +5,10 @@ const core = `SET_CORE_`;
 export const gameConfig: GameConfig = {
   asynchronousTurns: false,
   debugConfig: {
-    debugHandCardKey: core + '122',
+    debugHandCardKey: core + '007',
     debugBoardCardKey: core + '006',
     debugBoardCardKeyAmount: 3,
-    useDebugHandCardKey: false,
+    useDebugHandCardKey: true,
     useDebugBoardCardKey: false,
 
     debugOpponentHandCardKey: core + '112',
@@ -20,12 +20,13 @@ export const gameConfig: GameConfig = {
     debugScenario: 'opponent-minions-have-buff',
     useDebugScenario: false,
 
-    debugZone0id: '001',
+    debugZone0id: '007',
     useDebugZone0: true,
     debugZone1id: '013',
     useDebugZone1: true,
     debugZone2id: '001',
     useDebugZone2: true,
+    disableZoneReveals: false,
 
     logPhaseToConsole: false,
     showDebugBar: true,

@@ -3,7 +3,11 @@ import type { GameState, Zone, Zones } from '../../../types';
 
 import { zones } from '../../state';
 import { fxEnd } from '../../config.bgio-effects';
-import { createCardObject, createZoneObject, logPhaseToConsole } from '../../../utils';
+import {
+  createCardObject,
+  createZoneObject,
+  logPhaseToConsole,
+} from '../../../utils';
 
 import ZONE_DATABASE from '../../data/zones.json';
 import setsCore from '../../../data/setsCore.json';
@@ -17,9 +21,7 @@ import opponentMinionsBoonScenario from '../../debug/scenarios/opponent-minions-
 import opponentMinionsBuffScenario from '../../debug/scenarios/opponent-minions-have-buff.scenario';
 import initZoneMechanics from '../../mechanics/init-zone-mechanics';
 
-const db = [
-  ...setsCore
-]
+const db = [...setsCore];
 
 const scenarios = {
   'core-008': core008Scenario,
@@ -30,9 +32,9 @@ const scenarios = {
   'deal-aoe-damage': dealAoeDmgScenario,
   'opponent-minions-have-boon': opponentMinionsBoonScenario,
   'opponent-minions-have-buff': opponentMinionsBuffScenario,
-} as Record<string, any>
+} as Record<string, any>;
 
-export default<PhaseConfig> {
+export default <PhaseConfig>{
   next: 'revealZone',
   onBegin(G: GameState, ctx: Ctx) {
     const {
@@ -53,10 +55,9 @@ export default<PhaseConfig> {
           debugZone1id,
           useDebugZone2,
           debugZone2id,
+          disableZoneReveals,
         },
-        numerics: {
-          numberOfZones
-        }
+        numerics: { numberOfZones },
       },
     } = G;
     const { random } = ctx;
@@ -75,23 +76,29 @@ export default<PhaseConfig> {
 
     // if debug zone
     if (useDebugZone0) {
-      const debug = ZONE_DATABASE.find(o => o.id === `${debugZone0id}`)!;
-      zones.setZone(G, 0, { ...createZoneObject(debug, true), revealed: true });
+      const debug = ZONE_DATABASE.find((o) => o.id === `${debugZone0id}`)!;
+      zones.setZone(G, 0, { ...createZoneObject(debug, true) });
       initZoneMechanics(G, ctx, G.zones[0], 0);
     }
 
     // if debug zone
     if (useDebugZone1) {
-      const debug = ZONE_DATABASE.find(o => o.id === `${debugZone1id}`)!;
-      zones.setZone(G, 1, { ...createZoneObject(debug, true), revealed: true });
+      const debug = ZONE_DATABASE.find((o) => o.id === `${debugZone1id}`)!;
+      zones.setZone(G, 1, { ...createZoneObject(debug, true) });
       initZoneMechanics(G, ctx, G.zones[1], 1);
     }
 
     // if debug zone
     if (useDebugZone2) {
-      const debug = ZONE_DATABASE.find(o => o.id === `${debugZone2id}`)!;
-      zones.setZone(G, 2, { ...createZoneObject(debug, true), revealed: true });
+      const debug = ZONE_DATABASE.find((o) => o.id === `${debugZone2id}`)!;
+      zones.setZone(G, 2, { ...createZoneObject(debug, true) });
       initZoneMechanics(G, ctx, G.zones[2], 2);
+    }
+
+    if (disableZoneReveals) {
+      G.zones.forEach((z) => {
+        z.revealed = true;
+      });
     }
 
     // log phase info to console
@@ -109,7 +116,7 @@ export default<PhaseConfig> {
     // [your side] debug card or side interactions
     if (useDebugBoardCardKey && !useDebugScenario) {
       for (let index = 0; index < debugBoardCardKeyAmount; index++) {
-        const debugCardBase = db.find(o => o.key === debugBoardCardKey);
+        const debugCardBase = db.find((o) => o.key === debugBoardCardKey);
         const debugCard = createCardObject(debugCardBase!);
         G.zones[0].sides['0'].push({ ...debugCard, revealed: true });
       }
@@ -118,7 +125,9 @@ export default<PhaseConfig> {
     // [their side] debug card or side interactions
     if (useDebugOpponentBoardCardKey && !useDebugScenario) {
       for (let index = 0; index < debugOpponentBoardCardKeyAmount; index++) {
-        const debugCardBase = db.find(o => o.key === debugOpponentBoardCardKey);
+        const debugCardBase = db.find(
+          (o) => o.key === debugOpponentBoardCardKey
+        );
         const debugCard = createCardObject(debugCardBase!);
         G.zones[0].sides['1'].push({ ...debugCard, revealed: true });
       }
@@ -135,11 +144,11 @@ export default<PhaseConfig> {
         if (scenarios[name].zones[zI] && scenarios[name].zones[zI].sides['1']) {
           z.sides['1'] = scenarios[name].zones[zI].sides['1'];
         }
-      })
+      });
     }
   },
   endIf: (G: GameState) => zones.areReady(G),
   onEnd(G: GameState, ctx: Ctx) {
-    fxEnd(ctx)
+    fxEnd(ctx);
   },
 };

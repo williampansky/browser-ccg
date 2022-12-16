@@ -32,6 +32,7 @@ export interface GameConfig {
     useDebugZone1: boolean;
     debugZone2id: string;
     useDebugZone2: boolean;
+    disableZoneReveals: boolean;
 
     logPhaseToConsole: boolean;
 
