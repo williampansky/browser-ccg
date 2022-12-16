@@ -23,5 +23,4 @@ export default {
   incrementActionPoints: incrementActionPointsPhase,
   drawCard: drawCardPhase,
   playCard: playCardPhase,
-  // removeDestroyedCards: removeDestroyedCardsPhase,
 };

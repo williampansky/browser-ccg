@@ -21,12 +21,12 @@ export const gameConfig: GameConfig = {
     useDebugScenario: false,
 
     debugZone0id: 'z002',
-    useDebugZone0: true,
+    useDebugZone0: false,
     debugZone1id: 'z013',
-    useDebugZone1: true,
+    useDebugZone1: false,
     debugZone2id: 'z001',
-    useDebugZone2: true,
-    disableZoneReveals: true,
+    useDebugZone2: false,
+    disableZoneReveals: false,
 
     logPhaseToConsole: false,
     showDebugBar: true,
