@@ -244,6 +244,7 @@ export interface Card {
   type: CardType | string;
   uuid: string;
   zonePowerAdjustment: number;
+  zoneCostAdjustment: number;
 
   /**
    * Required by `react-select`

@@ -87,6 +87,7 @@ const createCardObject = (obj: CardBase): Card => {
     powerStream: [],
     race: replaceAllConstants(obj?.race, 'value'),
     rarity: replaceAllConstants(obj?.rarity, 'value'),
+    refId: obj?.refId,
     revealed: false,
     revealedOnTurn: 0,
     targetingText: obj?.targetingText
@@ -97,6 +98,7 @@ const createCardObject = (obj: CardBase): Card => {
     uuid: uuid(),
     value: obj?.name,
     zonePowerAdjustment: 0,
+    zoneCostAdjustment: 0,
   };
 };
 

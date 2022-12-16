@@ -96,8 +96,9 @@ export default <PhaseConfig>{
     }
 
     if (disableZoneReveals) {
-      G.zones.forEach((z) => {
+      G.zones.forEach((z, zi) => {
         z.revealed = true;
+        initZoneMechanics(G, ctx, G.zones[zi], zi);
       });
     }
 

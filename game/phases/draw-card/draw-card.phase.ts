@@ -3,6 +3,7 @@ import { TurnOrder } from 'boardgame.io/core';
 import type { Ctx, PhaseConfig } from 'boardgame.io';
 import type { GameState, PlayerID } from '../../../types';
 
+import handleZoneMechanics from '../../mechanics/handle-zone-mechanics';
 import { fxEnd } from '../../config.bgio-effects';
 import {
   drawCardFromPlayersDeck,
@@ -25,6 +26,7 @@ export default <PhaseConfig>{
     init('0');
     init('1');
 
+    handleZoneMechanics(G, ctx);
     fxEnd(ctx);
     ctx.events?.endPhase();
   },
