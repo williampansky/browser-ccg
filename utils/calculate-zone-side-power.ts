@@ -1,4 +1,5 @@
 import { add } from 'mathjs';
+import { CardType } from '../enums';
 import { GameState, Card } from '../types';
 
 const calculateZoneSidePower = (
@@ -15,6 +16,7 @@ const calculateZoneSidePower = (
   // to the sidePowerX variable defined above
   G.zones[zoneNumber].sides[playerId].forEach((obj: Card) => {
     if (obj.booleans.isDestroyed) return;
+    if (obj.type !== CardType.Minion) return;
     return (sidePower = add(obj.displayPower, sidePower));
   });
 

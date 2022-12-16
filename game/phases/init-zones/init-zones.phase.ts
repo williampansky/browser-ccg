@@ -46,6 +46,8 @@ export default<PhaseConfig> {
           useDebugBoardCardKey,
           useDebugOpponentBoardCardKey,
           useDebugScenario,
+          useDebugZone0,
+          debugZone0id
         },
         numerics: {
           numberOfZones
@@ -65,6 +67,12 @@ export default<PhaseConfig> {
 
     // set the zones to G state
     zones.set(G, newZones);
+
+    // if debug zone
+    if (useDebugZone0) {
+      const debug = ZONE_DATABASE.find(o => o.id === `ZONE_${debugZone0id}`)!;
+      zones.setZone(G, 0, { ...createZoneObject(debug, true), revealed: true });
+    }
 
     // log phase info to console
     if (debugConfig.logPhaseToConsole) {

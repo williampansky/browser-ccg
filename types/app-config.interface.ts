@@ -25,6 +25,9 @@ export interface GameConfig {
     
     debugScenario: string;
     useDebugScenario: boolean;
+    
+    debugZone0id: string;
+    useDebugZone0: boolean;
 
     logPhaseToConsole: boolean;
 

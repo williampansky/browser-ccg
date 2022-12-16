@@ -20,6 +20,9 @@ export const gameConfig: GameConfig = {
     debugScenario: 'opponent-minions-have-buff',
     useDebugScenario: false,
 
+    debugZone0id: '001',
+    useDebugZone0: true,
+
     logPhaseToConsole: false,
     showDebugBar: true,
     showBoardgameIoSidebar: false,
@@ -85,7 +88,7 @@ export const gameConfig: GameConfig = {
     TRANSFORM: false,
   },
   zonesConfig: {
-    effectAdjustments: false,
+    effectAdjustments: true,
     zoneImages: true,
     zoneNames: true,
     zoneReveals: true,

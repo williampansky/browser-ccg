@@ -2,6 +2,8 @@ import { TurnOrder } from 'boardgame.io/core';
 import { Ctx, PhaseConfig } from 'boardgame.io';
 import { GameState, Zone } from '../../../types';
 import { logPhaseToConsole } from '../../../utils';
+import { fxEnd } from '../../config.bgio-effects';
+import initZoneMechanics from '../../mechanics/init-zone-interactions';
 
 export default<PhaseConfig> {
   next: 'incrementTurn',
@@ -13,33 +15,28 @@ export default<PhaseConfig> {
     if (G.turn === 0 && !G.zones[0].revealed) {
       logPhaseToConsole(turn, phase, player, { key: 'ZONE#', value: '0' });
       G.zones[0].revealed = true;
-      // initOnZoneRevealInteractions();
+      initZoneMechanics(G, ctx, G.zones[0], 0);
+      fxEnd(ctx);
       ctx.events?.endPhase();
-      // @ts-ignore
-      ctx.effects?.fxEnd();
     } else if (G.turn === 1 && !G.zones[1].revealed) {
       logPhaseToConsole(turn, phase, player, { key: 'ZONE#', value: '1' });
       G.zones[1].revealed = true;
-      // initOnZoneRevealInteractions();
+      initZoneMechanics(G, ctx, G.zones[1], 1);
+      fxEnd(ctx);
       ctx.events?.endPhase();
-      // @ts-ignore
-      ctx.effects?.fxEnd();
     } else if (G.turn === 2 && !G.zones[2].revealed) {
       logPhaseToConsole(turn, phase, player, { key: 'ZONE#', value: '2' });
       G.zones[2].revealed = true;
-      // initOnZoneRevealInteractions();
+      initZoneMechanics(G, ctx, G.zones[2], 2);
+      fxEnd(ctx);
       ctx.events?.endPhase();
-      // @ts-ignore
-      ctx.effects?.fxEnd();
     } else {
+      fxEnd(ctx);
       ctx.events?.endPhase();
-      // @ts-ignore
-      ctx.effects?.fxEnd();
     }
   },
   onEnd(G: GameState, ctx: Ctx) {
-    // @ts-ignore
-    ctx.effects?.fxEnd();
+    fxEnd(ctx);
   },
   turn: {
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
