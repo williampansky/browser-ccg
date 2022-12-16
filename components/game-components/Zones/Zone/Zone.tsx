@@ -158,7 +158,7 @@ export const Zone = ({
               alt=''
               role='presentation'
               layout='fill'
-              src={`/images/zones/${zone.id.replace('ZONE_', '')}.jpg`}
+              src={`/images/zones/${zone.id}.jpg`}
             />
           </div>
         )}

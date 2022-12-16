@@ -50,6 +50,10 @@ function createCardKey(id?: string, set?: string): string {
   return set && id ? `${replaceAllConstants(set, 'value')}_${id}` : v4();
 }
 
+function createZoneKey(id?: string, set?: string): string {
+  return set && id ? `${replaceAllConstants(set, 'value')}_ZONE_${id}` : v4();
+}
+
 function parseMechanics(arr: string[]) {
   if (!arr || typeof arr === 'undefined') return [];
   // return arr.map((s) => s.replace(/\%/g, ''));
@@ -148,7 +152,7 @@ const fetchSetCoreData = async (tableId: string) => {
     .list({ maxRecords: 200 })
     .then((resp: any) => {
       const map = resp.records.map((item: any) => {
-        const { fields } = item;
+        const { fields, id } = item;
         return {
           name: fields?.name,
           id: fields.id,
@@ -185,6 +189,7 @@ const fetchSetCoreData = async (tableId: string) => {
           fpoArt: fields?.fpoArt || false,
           description: fields?.description,
           key: createCardKey(fields.id, fields.set),
+          refId: id
         };
       }).filter((obj: any) => obj.active);
 
@@ -203,7 +208,7 @@ const fetchSetEntourageData = async (tableId: string) => {
     .list({ maxRecords: 200 })
     .then((resp: any) => {
       const map = resp.records.map((item: any) => {
-        const { fields } = item;
+        const { fields, id } = item;
         return {
           isEntourage: true,
           name: fields?.name,
@@ -234,6 +239,7 @@ const fetchSetEntourageData = async (tableId: string) => {
           fpoArt: fields?.fpoArt || false,
           description: fields?.description,
           key: createCardKey(fields.id, fields.set),
+          refId: id
         };
       }).filter((obj: any) => obj.active);
 
@@ -252,18 +258,21 @@ const fetchZonesData = async (tableId: string) => {
     .list({ maxRecords: 20 })
     .then((resp: any) => {
       const map = resp.records.map((item: any) => {
-        const { fields } = item;
+        const { fields, id } = item;
         return {
           artist: createArtistHtmlLink(fields?.artistName),
           artistName: fields?.artistName,
           artistUrl: fields?.artistUrl,
           effectAdjustment: fields?.effectAdjustment,
           effectText: replaceAllConstants(fields?.effectText),
+          entourage: fields?.entourage || [],
           flavorText: fields?.flavorText,
           id: fields?.id,
           mechanics: parseMechanics(fields?.mechanics),
           name: fields?.name,
           set: replaceAllConstants(fields?.set, 'value'),
+          key: createZoneKey(fields.id, fields.set),
+          refId: id
         };
       });
 

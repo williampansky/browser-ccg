@@ -28,6 +28,10 @@ export interface GameConfig {
     
     debugZone0id: string;
     useDebugZone0: boolean;
+    debugZone1id: string;
+    useDebugZone1: boolean;
+    debugZone2id: string;
+    useDebugZone2: boolean;
 
     logPhaseToConsole: boolean;
 

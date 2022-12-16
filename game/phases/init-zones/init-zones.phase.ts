@@ -15,6 +15,7 @@ import healPlayerMinionScenario from '../../debug/scenarios/heal-player-minion.s
 import dealAoeDmgScenario from '../../debug/scenarios/deal-aoe-damage.scenario';
 import opponentMinionsBoonScenario from '../../debug/scenarios/opponent-minions-have-boon.scenario';
 import opponentMinionsBuffScenario from '../../debug/scenarios/opponent-minions-have-buff.scenario';
+import initZoneMechanics from '../../mechanics/init-zone-interactions';
 
 const db = [
   ...setsCore
@@ -47,7 +48,11 @@ export default<PhaseConfig> {
           useDebugOpponentBoardCardKey,
           useDebugScenario,
           useDebugZone0,
-          debugZone0id
+          debugZone0id,
+          useDebugZone1,
+          debugZone1id,
+          useDebugZone2,
+          debugZone2id,
         },
         numerics: {
           numberOfZones
@@ -70,8 +75,23 @@ export default<PhaseConfig> {
 
     // if debug zone
     if (useDebugZone0) {
-      const debug = ZONE_DATABASE.find(o => o.id === `ZONE_${debugZone0id}`)!;
+      const debug = ZONE_DATABASE.find(o => o.id === `${debugZone0id}`)!;
       zones.setZone(G, 0, { ...createZoneObject(debug, true), revealed: true });
+      initZoneMechanics(G, ctx, G.zones[0], 0);
+    }
+
+    // if debug zone
+    if (useDebugZone1) {
+      const debug = ZONE_DATABASE.find(o => o.id === `${debugZone1id}`)!;
+      zones.setZone(G, 1, { ...createZoneObject(debug, true), revealed: true });
+      initZoneMechanics(G, ctx, G.zones[1], 1);
+    }
+
+    // if debug zone
+    if (useDebugZone2) {
+      const debug = ZONE_DATABASE.find(o => o.id === `${debugZone2id}`)!;
+      zones.setZone(G, 2, { ...createZoneObject(debug, true), revealed: true });
+      initZoneMechanics(G, ctx, G.zones[2], 2);
     }
 
     // log phase info to console

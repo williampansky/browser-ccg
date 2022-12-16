@@ -8,7 +8,7 @@ const handleZoneMechanics = (
 ) => {
   G.zones.forEach((z, zi) => {
     switch (z.id) {
-      case 'ZONE_001':
+      case '001':
         zone001.exec(G, ctx, z, zi);
         break;
     }

@@ -14,6 +14,7 @@ export interface ZoneBase {
   artistUrl?: string;
   effectAdjustment?: number;
   effectText?: string;
+  entourage: string[];
   flavorText?: string;
   id: string;
   name: string;
@@ -29,6 +30,7 @@ export interface Zone {
   disabledForXTurns: Record<PlayerID, number>;
   effectAdjustment: number;
   effectText?: string;
+  entourage: string[];
   flavorText?: string;
   id: string;
   name: string;

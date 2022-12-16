@@ -111,6 +111,7 @@ export interface CardBase {
   power: number;
   race: CardRace | string;
   rarity: CardRarity | string;
+  refId: string;
   set: CardSet | string;
   targetingText?: string;
   text?: string;
@@ -253,6 +254,13 @@ export interface Card {
    * Required by `react-select`
    */
   value: string;
+
+  /**
+   * The uuid created by airtable which acts as a lookup reference
+   * for the `entourage` field as it "Link(s) to another record"
+   * on the airtable UI interface.
+   */
+  refId: string;
 }
 
 export interface Deck {
