@@ -55,15 +55,15 @@ const core036 = {
                 healMinion(c, entCardObj);
               });
 
-              pushEventStreamAndSetBoolean(
-                G,
-                ctx,
-                player,
-                zoneNumber,
-                entCardObj,
-                entCardObj,
-                'onPlayWasTriggered'
-              );
+              // pushEventStreamAndSetBoolean(
+              //   G,
+              //   ctx,
+              //   player,
+              //   zoneNumber,
+              //   entCardObj,
+              //   entCardObj,
+              //   'onPlayWasTriggered'
+              // );
             }
 
             if (entCardObj?.mechanics?.includes(Mechanics.Hidden)) {
@@ -112,6 +112,26 @@ const core036 = {
               playedCard,
               'onPlayWasTriggered'
             );
+
+            if (entCardObj?.mechanics?.includes(Mechanics.Heal)) {
+              z.sides[player].forEach((c) => {
+                healMinion(c, entCardObj);
+              });
+
+              // pushEventStreamAndSetBoolean(
+              //   G,
+              //   ctx,
+              //   player,
+              //   zoneNumber,
+              //   entCardObj,
+              //   entCardObj,
+              //   'onPlayWasTriggered'
+              // );
+            }
+
+            if (entCardObj?.mechanics?.includes(Mechanics.Hidden)) {
+              entCardObj.booleans.isHidden = true;
+            }
           }
         }
       }

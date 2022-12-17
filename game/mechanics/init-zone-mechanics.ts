@@ -3,6 +3,7 @@ import type { GameState, Zone } from '../../types';
 import { zones } from '../state';
 import zone002 from './zones/zone.002';
 import zone013 from './zones/zone.013';
+import zone015 from './zones/zone.015';
 
 /**
  * ***Initiates*** zone mechanics; i.e. only mechanics that
@@ -23,6 +24,9 @@ const initZoneMechanics = (
       break;
     case 'z013':
       zone013.init(G, ctx, zone, zoneNumber);
+      break;
+    case 'z015':
+      zone015.init(G, ctx, zone);
       break;
   }
 };
