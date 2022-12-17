@@ -1,6 +1,13 @@
 import type { Ctx } from 'boardgame.io';
 import type { Card, CardBase, GameState, PlayerID } from '../../../types';
-import { aiSpreadEventStreamAndOnPlayBoolean, createCardObject, pushEventStreamAndSetBoolean } from '../../../utils';
+import { Mechanics } from '../../../enums';
+import {
+  aiSpreadEventStreamAndOnPlayBoolean,
+  createCardObject,
+  healMinion,
+  pushEventStreamAndSetBoolean,
+} from '../../../utils';
+
 import setsEntourage from '../../data/setsEntourage.json';
 
 /**
@@ -42,6 +49,26 @@ const core036 = {
               playedCard,
               'onPlayWasTriggered'
             );
+
+            if (entCardObj?.mechanics?.includes(Mechanics.Heal)) {
+              z.sides[player].forEach((c) => {
+                healMinion(c, entCardObj);
+              });
+
+              pushEventStreamAndSetBoolean(
+                G,
+                ctx,
+                player,
+                zoneNumber,
+                entCardObj,
+                entCardObj,
+                'onPlayWasTriggered'
+              );
+            }
+
+            if (entCardObj?.mechanics?.includes(Mechanics.Hidden)) {
+              entCardObj.booleans.isHidden = true;
+            }
           }
         }
       }
@@ -54,7 +81,7 @@ const core036 = {
     player: PlayerID,
     zoneNumber: number,
     playedCard: Card,
-    playedCardIdx: number,
+    playedCardIdx: number
   ) => {
     const { numerics } = G.gameConfig;
 
