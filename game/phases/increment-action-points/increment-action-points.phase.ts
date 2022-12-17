@@ -12,7 +12,11 @@ import { logPhaseToConsole } from '../../../utils';
  * Increments the game turn (note: ***not*** `ctx.turn`).
  */
 export default <PhaseConfig>{
-  next: 'drawCard',
+  next(G: GameState, ctx: Ctx) {
+    if (G.turn === 1) return 'revealZone';
+    if (G.turn === 2) return 'revealZone';
+    else return 'drawCard';
+  },
   onBegin(G: GameState, ctx: Ctx) {
     if (G.gameConfig.debugConfig.logPhaseToConsole) {
       const apT = G.actionPoints[ctx.currentPlayer].total;

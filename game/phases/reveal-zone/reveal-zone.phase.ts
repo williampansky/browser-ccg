@@ -7,7 +7,7 @@ import initZoneMechanics from '../../mechanics/init-zone-mechanics';
 import handleZoneMechanics from '../../mechanics/handle-zone-mechanics';
 
 export default<PhaseConfig> {
-  next: 'incrementTurn',
+  next: 'drawCard',
   onBegin(G: GameState, ctx: Ctx) {
     const { turn } = G;
     const { phase } = ctx;

@@ -52,18 +52,20 @@ const core036 = {
 
             if (entCardObj?.mechanics?.includes(Mechanics.Heal)) {
               z.sides[player].forEach((c) => {
-                healMinion(c, entCardObj);
+                const isNotSelf = c.uuid !== entCardObj.uuid;
+                const hasHealthReduced = c.booleans.hasHealthReduced === true;
+                if (isNotSelf && hasHealthReduced) healMinion(c, entCardObj);
               });
 
-              // pushEventStreamAndSetBoolean(
-              //   G,
-              //   ctx,
-              //   player,
-              //   zoneNumber,
-              //   entCardObj,
-              //   entCardObj,
-              //   'onPlayWasTriggered'
-              // );
+              pushEventStreamAndSetBoolean(
+                G,
+                ctx,
+                player,
+                zoneNumber,
+                entCardObj,
+                entCardObj,
+                'onPlayWasTriggered'
+              );
             }
 
             if (entCardObj?.mechanics?.includes(Mechanics.Hidden)) {
@@ -115,7 +117,9 @@ const core036 = {
 
             if (entCardObj?.mechanics?.includes(Mechanics.Heal)) {
               z.sides[player].forEach((c) => {
-                healMinion(c, entCardObj);
+                const isNotSelf = c.uuid !== entCardObj.uuid;
+                const hasHealthReduced = c.booleans.hasHealthReduced === true;
+                if (isNotSelf && hasHealthReduced) healMinion(c, entCardObj);
               });
 
               // pushEventStreamAndSetBoolean(

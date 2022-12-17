@@ -25,11 +25,7 @@ import playCardTurnOnMove from './play-card.turn.on-move';
 import { actionPoints } from '../../state';
 
 export default <PhaseConfig>{
-  next(G: GameState, ctx: Ctx) {
-    if (G.turn === 1) return 'revealZone';
-    if (G.turn === 2) return 'revealZone';
-    else return 'incrementTurn';
-  },
+  next: 'incrementTurn',
   onBegin(G: GameState, ctx: Ctx) {
     logPhaseToConsole(G.turn, ctx.phase, ctx.currentPlayer);
     handleZonePowersCalculations(G, ctx);

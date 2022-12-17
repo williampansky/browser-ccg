@@ -3,6 +3,7 @@ import type { GameState, Zone } from '../../types';
 import { zones } from '../state';
 import zone002 from './zones/zone.002';
 import zone013 from './zones/zone.013';
+import zone014 from './zones/zone.014';
 import zone015 from './zones/zone.015';
 
 /**
@@ -24,6 +25,9 @@ const initZoneMechanics = (
       break;
     case 'z013':
       zone013.init(G, ctx, zone, zoneNumber);
+      break;
+    case 'z014':
+      zone014.init(G, ctx, zone);
       break;
     case 'z015':
       zone015.init(G, ctx, zone);

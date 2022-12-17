@@ -13,14 +13,25 @@ import revealZonePhase from './reveal-zone/reveal-zone.phase';
  * mechanics and interactions that take place during a player's
  * turn. Due to the logic increasing—the performance and AI is
  * starting to take a hit; hence this variant's birth.
+ * 
+ * This flow is as follows:
+ *  - initPlayers
+ *  - initHands
+ *  - initZones
+ *  - (the loop):
+ *    - incrementTurn
+ *    - incrementActionPoints
+ *    - revealZone
+ *    - drawCard
+ *    - playCard
  */
 export default {
   initPlayers: initPlayersPhase,
   initHands: initHandsPhase,
   initZones: initZonesPhase,
-  revealZone: revealZonePhase,
   incrementTurn: incrementTurnPhase,
   incrementActionPoints: incrementActionPointsPhase,
+  revealZone: revealZonePhase,
   drawCard: drawCardPhase,
   playCard: playCardPhase,
 };
