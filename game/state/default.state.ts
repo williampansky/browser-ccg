@@ -32,6 +32,7 @@ const DefaultState = {
   selectedCardData: selectedCardData.defaultState,
   selectedCardIndex: selectedCardIndex.defaultState,
   turn: turn.defaultState,
+  totalTurns: gameConfig.numerics.numberOfSingleTurnsPerGame,
   turnOrder: turnOrder.defaultState,
   zones: zones.defaultState,
   zonesCardsReference: zonesCardsReference.defaultState,

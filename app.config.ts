@@ -22,7 +22,7 @@ export const gameConfig: GameConfig = {
 
     debugZone0id: 'z002',
     useDebugZone0: false,
-    debugZone1id: 'z014',
+    debugZone1id: 'z012',
     useDebugZone1: true,
     debugZone2id: 'z001',
     useDebugZone2: false,
@@ -47,7 +47,7 @@ export const gameConfig: GameConfig = {
     cardsPerTurn: 1,
     maxNumberOfDecks: 10,
     numberOfPlayers: 2,
-    numberOfSingleTurnsPerGame: 20,
+    numberOfSingleTurnsPerGame: 12,
     numberOfSlotsPerZone: 6,
     numberOfZones: 3,
   },

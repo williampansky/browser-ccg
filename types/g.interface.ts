@@ -48,6 +48,7 @@ export interface GameState {
   selectedCardData: Record<PlayerID, Card | undefined>;
   selectedCardIndex: SelectedCardIndex;
   turn: number;
+  totalTurns: number;
   zones: Zone[];
   zonesCardsReference: Record<PlayerID, Card[]>[];
 }

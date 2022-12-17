@@ -73,7 +73,7 @@ const BrowserCCG: Game<GameState, CtxWithEffects> = {
    */
   endIf: (G: GameState, ctx: Ctx) => {
     // prettier-ignore
-    if (G.turn === G.gameConfig.numerics.numberOfSingleTurnsPerGame) {
+    if (G.turn === G.totalTurns) {
       switch (getGameResult(G.zones)) {
         case '1': return { winner: '1' };
         case '0': return { winner: '0' };

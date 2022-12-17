@@ -110,7 +110,7 @@ const core050 = {
               -playedCard.numberPrimary,
               subtract(c.displayHealth, playedCard.numberPrimary)
             );
-          } else {
+          } else if (c.uuid !== playedCard.uuid) {
             c.booleans.hasHealthReduced = true;
             pushEventStream(c, playedCard, 'wasAttacked');
             pushHealthStreamAndSetDisplay(

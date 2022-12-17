@@ -234,7 +234,7 @@ export const Board = (props: GameProps) => {
           endTurnIsDisabled={endTurnIsDisabled}
           onEndTurnButtonClick={onEndTurnButtonClick}
           player={G.players[yourID]}
-          turnsPerGame={gameConfig.numerics.numberOfSingleTurnsPerGame}
+          turnsPerGame={G.totalTurns}
         />
 
         <PlayerHand
