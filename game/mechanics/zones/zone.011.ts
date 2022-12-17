@@ -3,15 +3,14 @@ import type { Ctx } from 'boardgame.io';
 import type { GameState, PlayerID, Zone } from '../../../types';
 import { actionPoints } from '../../state';
 
-
 /**
- * +6 %ENERGY%s this turn
+ * +2 %ENERGY_SLOT%
  */
-const zone014 = {
+const zone011 = {
   init: (G: GameState, ctx: Ctx, zone: Zone) => {
     if (zone.revealed) {
-      zone014.exec(G, ctx, zone.effectAdjustment, '0');
-      zone014.exec(G, ctx, zone.effectAdjustment, '1');
+      zone011.exec(G, ctx, zone.effectAdjustment, '0');
+      zone011.exec(G, ctx, zone.effectAdjustment, '1');
     }
   },
 
@@ -21,9 +20,10 @@ const zone014 = {
     adjustment: number,
     player: PlayerID
   ) => {
-    const cur = G.actionPoints[player].current;
-    actionPoints.setCurrent(G, player, add(cur, adjustment));
+    const cur = G.actionPoints[player].total;
+    actionPoints.setTotal(G, player, add(cur, adjustment));
+    actionPoints.matchTotal(G, player);
   },
 };
 
-export default zone014;
+export default zone011;
