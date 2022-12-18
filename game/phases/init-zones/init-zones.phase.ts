@@ -35,7 +35,7 @@ const scenarios = {
 } as Record<string, any>;
 
 export default <PhaseConfig>{
-  next: 'revealZone',
+  next: 'incrementTurn',
   onBegin(G: GameState, ctx: Ctx) {
     const {
       gameConfig: {

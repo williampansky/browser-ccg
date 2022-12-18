@@ -12,7 +12,7 @@ export default<PhaseConfig> {
     const { turn } = G;
     const { phase } = ctx;
 
-    if (G.turn === 0 && !G.zones[0].revealed) {
+    if (G.turn === 1 && !G.zones[0].revealed) {
       logPhaseToConsole(turn, phase, undefined, { key: 'ZONE#', value: '0' });
       
       // ---
@@ -23,7 +23,7 @@ export default<PhaseConfig> {
 
       fxEnd(ctx);
       ctx.events?.endPhase();
-    } else if (G.turn === 1 && !G.zones[1].revealed) {
+    } else if (G.turn === 2 && !G.zones[1].revealed) {
       logPhaseToConsole(turn, phase, undefined, { key: 'ZONE#', value: '1' });
       
       // ---
@@ -34,7 +34,7 @@ export default<PhaseConfig> {
       
       fxEnd(ctx);
       ctx.events?.endPhase();
-    } else if (G.turn === 2 && !G.zones[2].revealed) {
+    } else if (G.turn === 3 && !G.zones[2].revealed) {
       logPhaseToConsole(turn, phase, undefined, { key: 'ZONE#', value: '2' });
       
       // ---

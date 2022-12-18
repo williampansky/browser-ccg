@@ -20,8 +20,8 @@ const zone011 = {
     adjustment: number,
     player: PlayerID
   ) => {
-    const cur = G.actionPoints[player].total;
-    actionPoints.setTotal(G, player, add(cur, adjustment));
+    const total = G.actionPoints[player].total;
+    actionPoints.setTotal(G, player, add(total, adjustment));
     actionPoints.matchTotal(G, player);
   },
 };

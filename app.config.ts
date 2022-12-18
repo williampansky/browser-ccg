@@ -22,7 +22,7 @@ export const gameConfig: GameConfig = {
 
     debugZone0id: 'z010',
     useDebugZone0: false,
-    debugZone1id: 'z010',
+    debugZone1id: 'z009',
     useDebugZone1: true,
     debugZone2id: 'z001',
     useDebugZone2: false,

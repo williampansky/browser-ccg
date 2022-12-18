@@ -23,6 +23,7 @@ import {
 } from '../../../utils';
 import playCardTurnOnMove from './play-card.turn.on-move';
 import { actionPoints } from '../../state';
+import handleZoneMechanics from '../../mechanics/handle-zone-mechanics';
 
 export default <PhaseConfig>{
   next: 'incrementTurn',
@@ -56,6 +57,7 @@ export default <PhaseConfig>{
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
     onBegin(G: GameState, ctx: Ctx) {
       determinePlayableCards(G, ctx, ctx.currentPlayer);
+      handleZoneMechanics(G, ctx, 'onTurnBegin')
 
       if (isBotGame(ctx) && ctx.currentPlayer === '1') {
         if (G.gameConfig.ai.enableBotAiMoves === false) {

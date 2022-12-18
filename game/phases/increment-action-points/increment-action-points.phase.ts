@@ -14,7 +14,8 @@ import { logPhaseToConsole } from '../../../utils';
 export default <PhaseConfig>{
   next(G: GameState, ctx: Ctx) {
     if (G.turn === 1) return 'revealZone';
-    if (G.turn === 2) return 'revealZone';
+    else if (G.turn === 2) return 'revealZone';
+    else if (G.turn === 3) return 'revealZone';
     else return 'drawCard';
   },
   onBegin(G: GameState, ctx: Ctx) {
