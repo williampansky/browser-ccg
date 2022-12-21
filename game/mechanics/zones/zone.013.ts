@@ -10,29 +10,31 @@ import setsEntourage from '../../data/setsEntourage.json';
 const zone013 = {
   init: (G: GameState, ctx: Ctx, zone: Zone, zoneNumber: number) => {
     if (zone.revealed) {
-      for (let index = 0; index < zone.effectAdjustment; index++) {
-        const minion = zone013.createMinion(zone);
-        if (minion) {
-          zone013.summonMinion(G, zoneNumber, '0', minion);
-          zone013.summonMinion(G, zoneNumber, '1', minion);
+      const entObj = setsEntourage.find((ent: CardBase) => {
+        return ent.refId === zone.entourage[0];
+      })!;
+
+      if (entObj) {
+        for (let index = 0; index < zone.effectAdjustment; index++) {
+          zone013.summonMinion(G, zoneNumber, '0', {
+            ...createCardObject(entObj),
+            revealed: true,
+          });
+          
+          zone013.summonMinion(G, zoneNumber, '1', {
+            ...createCardObject(entObj),
+            revealed: true,
+          });
         }
       }
     }
-  },
-
-  createMinion(zone: Zone): Card | undefined {
-    const entObj = setsEntourage.find((ent: CardBase) => {
-      return ent.refId === zone.entourage[0];
-    })!;
-
-    return { ...createCardObject(entObj), revealed: true }
   },
 
   summonMinion(G: GameState, zoneNumber: number, player: PlayerID, c: Card) {
     const {
       numerics: { numberOfSlotsPerZone },
     } = G.gameConfig;
-    
+
     if (G.zones[zoneNumber].sides[player].length < numberOfSlotsPerZone) {
       G.zones[zoneNumber].sides[player].push(c);
     }
