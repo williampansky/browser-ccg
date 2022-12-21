@@ -20,8 +20,8 @@ export const gameConfig: GameConfig = {
     debugScenario: 'heal-player-minion',
     useDebugScenario: false,
 
-    debugZone0id: 'z010',
-    useDebugZone0: false,
+    debugZone0id: 'z004',
+    useDebugZone0: true,
     debugZone1id: 'z005',
     useDebugZone1: true,
     debugZone2id: 'z001',
