@@ -57,7 +57,7 @@ export default <PhaseConfig>{
     order: TurnOrder.CUSTOM_FROM('turnOrder'),
     onBegin(G: GameState, ctx: Ctx) {
       determinePlayableCards(G, ctx, ctx.currentPlayer);
-      handleZoneMechanics(G, ctx, 'onTurnBegin')
+      handleZoneMechanics(G, ctx, 'onTurnBegin');
 
       if (isBotGame(ctx) && ctx.currentPlayer === '1') {
         if (G.gameConfig.ai.enableBotAiMoves === false) {
@@ -72,6 +72,7 @@ export default <PhaseConfig>{
     onEnd(G: GameState, ctx: Ctx) {
       unsetPlayableCards(G, ctx.currentPlayer);
       initActiveOnTurnEndListeners(G, ctx);
+      handleZoneMechanics(G, ctx, 'onTurnEnd');
     },
     endIf(G: GameState, ctx: Ctx) {
       return G.playerTurnDone[ctx.currentPlayer] === true;
