@@ -14,14 +14,14 @@ export const gameConfig: GameConfig = {
     debugOpponentHandCardKey: core + '053',
     debugOpponentBoardCardKey: core + '032',
     debugOpponentBoardCardKeyAmount: 1,
-    useDebugOpponentHandCardKey: true,
+    useDebugOpponentHandCardKey: false,
     useDebugOpponentBoardCardKey: false,
 
     debugScenario: 'heal-player-minion',
     useDebugScenario: false,
 
     debugZone0id: 'z013',
-    useDebugZone0: true,
+    useDebugZone0: false,
     debugZone1id: 'z005',
     useDebugZone1: false,
     debugZone2id: 'z001',
