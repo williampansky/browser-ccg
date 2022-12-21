@@ -1,4 +1,5 @@
 import type { Ctx } from 'boardgame.io';
+import { gt, lt } from 'lodash';
 import { subtract } from 'mathjs';
 import type { Card, GameState, PlayerID } from '../../../types';
 import { cardUuidMatch, pushHealthStreamAndSetDisplay } from '../../../utils';
@@ -39,12 +40,21 @@ const core053 = {
       G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
         if (c.uuid === card.uuid && ci === cardIdx) {
           c.booleans.canBeAttackedBySpell = false;
-          pushHealthStreamAndSetDisplay(
-            c,
-            cardToBlame,
-            -cardToBlame.numberPrimary,
-            subtract(c.displayHealth, cardToBlame.numberPrimary)
-          );
+
+          // makes sure this doesn't trigger twice
+          if (!c.healthStream.find(obj => obj.uuid === cardToBlame.uuid)) {
+            pushHealthStreamAndSetDisplay(  
+              c,
+              cardToBlame,
+              -cardToBlame.numberPrimary,
+              subtract(c.displayHealth, cardToBlame.numberPrimary)
+            );
+
+            if (lt(c.displayHealth, c.baseHealth)) {
+              c.booleans.hasHealthIncreased = false;
+              c.booleans.hasHealthReduced = true;
+            }
+          }
         }
       });
 
