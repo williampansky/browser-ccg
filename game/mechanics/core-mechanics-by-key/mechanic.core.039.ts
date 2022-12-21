@@ -28,7 +28,8 @@ const core039 = {
         const choice = ctx?.random?.Shuffle(G.playedCards[opponent])[0]!;
 
         if (choice && G.players[player].cards.hand.length < maxHandSize) {
-          G.players[player].cards.hand.push(choice);
+          const dupe = { ...choice, uuid: v4() };
+          G.players[player].cards.hand.push(dupe);
           counts.incrementHand(G, player);
 
           playedCard.booleans.onPlayWasTriggered = true;
