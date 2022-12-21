@@ -1,5 +1,5 @@
 import { Ctx } from 'boardgame.io';
-import { lte } from 'lodash';
+import { lt, lte } from 'lodash';
 import { subtract } from 'mathjs';
 import { CardType } from '../enums';
 import { Card, GameState, PlayerID } from '../types';
@@ -59,17 +59,23 @@ export default function aiDealTargetedDamageToMinion(
       z.sides[opponent].forEach((c) => {
         const isTargetedCard = cardUuidMatch(c, choice.cardData);
         if (isTargetedCard) {
-          c.booleans.hasHealthReduced = true;
-          pushHealthStreamAndSetDisplay(
-            c,
-            playedCard,
-            -playedCard.numberPrimary,
-            subtract(c.displayHealth, playedCard.numberPrimary)
-          );
+          if (!c.healthStream.find(obj => obj.uuid === playedCard.uuid)) {
+            pushHealthStreamAndSetDisplay(
+              c,
+              playedCard,
+              -playedCard.numberPrimary,
+              subtract(c.displayHealth, playedCard.numberPrimary)
+            );
 
-          if (lte(subtract(c.displayHealth, playedCard.numberPrimary), 0)) {
-            c.booleans.isDestroyed = true;
-            c.destroyedOnTurn = G.turn;
+            if (lt(c.displayHealth, c.baseHealth)) {
+              c.booleans.hasHealthIncreased = false;
+              c.booleans.hasHealthReduced = true;
+            }
+
+            if (lte(subtract(c.displayHealth, playedCard.numberPrimary), 0)) {
+              c.booleans.isDestroyed = true;
+              c.destroyedOnTurn = G.turn;
+            }
           }
         }
       });

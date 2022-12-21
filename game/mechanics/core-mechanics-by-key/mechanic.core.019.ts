@@ -52,7 +52,8 @@ const core019 = {
         const choice = ctx?.random?.Shuffle(G.playedCards[opponent])[0]!;
 
         if (choice) {
-          G.players[player].cards.deck.push(choice);
+          const dupe = { ...choice, uuid: v4() };
+          G.players[player].cards.deck.push(dupe);
           counts.incrementDeck(G, player);
 
           aiSpreadEventStreamAndOnPlayBoolean(

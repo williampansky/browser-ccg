@@ -174,6 +174,9 @@ export const aiPlayCardMove = (
     case 'SET_CORE_050':
       core050.execAi(G, ctx, aiID, card);
       break;
+    case 'SET_CORE_053':
+      aiDealTargetedDamageToMinion(G, ctx, aiID, card);
+      break;
     case 'SET_CORE_058':
       aiDealTargetedDamageToMinion(G, ctx, aiID, card);
       break;
