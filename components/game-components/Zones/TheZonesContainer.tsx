@@ -1,22 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffectListener, useLatestPropsOnEffect } from 'bgio-effects/react';
 
+import type { Ctx } from 'boardgame.io';
 import type { RootState } from '../../../store';
-import type { GameState, PlayerID } from '../../../types';
+import type { Card, GameState, PlayerID } from '../../../types';
 
 import { Zone } from './Zone';
+import { LastMoveMade } from '../../../enums';
+
+import {
+  AttackMinionMove,
+  BuffMinionMove,
+  DebuffMinionMove,
+  DestroyMinionMove,
+  HealMinionMove,
+} from '../../../game/moves';
+
 import styles from './TheZonesContainer.module.scss';
 
-interface ZonesProps {
+interface Props {
+  ctx: Ctx;
+  G: GameState;
   moves: any;
-  yourID: PlayerID;
   theirID: PlayerID;
+  yourID: PlayerID;
+  onAttackMinionClick: ({ card, targetPlayer }: AttackMinionMove) => void;
+  onBuffMinionClick: ({ card, targetPlayer }: BuffMinionMove) => void;
+  onDebuffMinionClick: ({ card, targetPlayer }: DebuffMinionMove) => void;
+  onDestroyMinionClick: ({ card, targetPlayer }: DestroyMinionMove) => void;
+  onHealMinionClick: ({ card, targetPlayer }: HealMinionMove) => void;
 }
 
-export const TheZonesContainer = ({ yourID, theirID, moves }: ZonesProps) => {
+export const TheZonesContainer = ({
+  ctx,
+  G,
+  moves,
+  theirID,
+  yourID,
+  onAttackMinionClick,
+  onBuffMinionClick,
+  onDebuffMinionClick,
+  onDestroyMinionClick,
+  onHealMinionClick,
+}: Props) => {
+  const { lastMoveMade, selectedCardData } = G;
+
   const dispatch = useDispatch();
-  const { G, ctx } = useLatestPropsOnEffect<GameState, any>('effects:end');
   const { gameConfig } = useSelector((state: RootState) => state.config);
   const [zonesAreActive, setZonesAreActive] = useState<boolean>(false);
   const [_, setCardType] = useState<string | undefined>(undefined);
@@ -32,12 +62,20 @@ export const TheZonesContainer = ({ yourID, theirID, moves }: ZonesProps) => {
   //   })
   // }, [G.zones]);
 
+  const handleZonesAreActive = useCallback((move?: string, card?: Card) => {
+    switch (move) {
+      case LastMoveMade.SelectCard:
+        if (card !== undefined) return setZonesAreActive(true);
+        else return setZonesAreActive(false);
+
+      default:
+        return setZonesAreActive(false);
+    }
+  }, []);
+
   useEffect(() => {
-    setTimeout(() => {
-      setZonesAreActive(G.selectedCardData[yourID] !== undefined);
-      setCardType(G.selectedCardData[yourID]?.type);
-    }, 100);
-  }, [G.selectedCardData[yourID], yourID]);
+    handleZonesAreActive(lastMoveMade, selectedCardData[yourID]);
+  }, [lastMoveMade, selectedCardData[yourID]]);
 
   return (
     <div className={styles['wrapper']}>
@@ -48,11 +86,16 @@ export const TheZonesContainer = ({ yourID, theirID, moves }: ZonesProps) => {
             zone={zone}
             zoneNumber={idx}
             zonesAreActive={zonesAreActive}
-            key={idx}
+            key={zone.uuid || idx}
             yourID={yourID}
             theirID={theirID}
             turn={G.turn}
             gameConfig={gameConfig}
+            onAttackMinionClick={onAttackMinionClick}
+            onBuffMinionClick={onBuffMinionClick}
+            onDebuffMinionClick={onDebuffMinionClick}
+            onDestroyMinionClick={onDestroyMinionClick}
+            onHealMinionClick={onHealMinionClick}
           />
         );
       })}

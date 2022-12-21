@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLatestPropsOnEffect } from 'bgio-effects/react';
 
+import type { Ctx } from 'boardgame.io';
 import type { BoardProps } from 'boardgame.io/react';
-import type { Card, GameConfig, GameState, PlayerID } from '../../../types';
 import type { RootState as Root } from '../../../store';
+import type { Card, GameState } from '../../../types';
 
 import {
   useEndPhase,
@@ -29,9 +30,17 @@ import {
   TheZonesContainer,
   TheDiscardedCardPopup,
 } from '../';
-import { Ctx } from 'boardgame.io';
-import { gt } from 'lodash';
-import { setDiscardedCard } from '../../../features';
+
+import {
+  AttackMinionMove,
+  BuffMinionMove,
+  DebuffMinionMove,
+  DeselectCardMove,
+  DestroyMinionMove,
+  HealMinionMove,
+  PlayCardMove,
+  SelectCardMove,
+} from '../../../game/moves';
 
 interface PropsOnEffect {
   G: GameState;
@@ -42,9 +51,18 @@ export interface GameProps extends BoardProps<GameState> {}
 
 export const Board = (props: GameProps) => {
   const {
-    ctx: { phase },
     moves,
-    moves: { deselectCard, playCard, selectCard, setDone },
+    moves: {
+      attackMinion,
+      buffMinion,
+      debuffMinion,
+      destroyMinion,
+      deselectCard,
+      playCard,
+      selectCard,
+      setDone,
+      healMinion,
+    },
     events,
     events: { endPhase, endTurn },
     reset,
@@ -52,13 +70,23 @@ export const Board = (props: GameProps) => {
     undo,
   } = props;
 
-  const { G, ctx }: PropsOnEffect = useLatestPropsOnEffect('effects:end');
   const {
-    gameConfig,
-    gameConfig: {
-      ai: { enableBotAi },
+    G,
+    G: {
+      gameConfig,
+      gameConfig: {
+        ai: { enableBotAi },
+      },
+      lastMoveMade,
+      lastCardPlayed,
+      playedCards,
+      playerTurnDone,
+      selectedCardData,
+      selectedCardIndex,
     },
-  } = G;
+    ctx,
+    ctx: { currentPlayer, phase },
+  }: PropsOnEffect = useLatestPropsOnEffect('effects:end');
 
   // player IDs
   const yourID = playerID === '0' ? '0' : '1';
@@ -67,24 +95,93 @@ export const Board = (props: GameProps) => {
   // hooks
   const dispatch = useDispatch();
   const { height, width } = useWindowSize();
-  useEndPhase(events, phase, G.playerTurnDone);
+  // useEndPhase(events, phase, playerTurnDone);
   useGameOver(ctx?.gameover);
 
   // states
   const abSize = useSelector(({ addressBarSize }: Root) => addressBarSize);
   const endTurnIsDisabled = useEndTurnButton(
     phase,
-    G.playerTurnDone,
+    playerTurnDone,
     yourID,
-    ctx.currentPlayer
+    currentPlayer
   );
 
   // moves
-  const onEndTurnButtonClick = () => setTimeout(() => setDone(yourID), 1500);
-  const onCardClick = (obj: Card) => dispatch(showCardModal(obj));
-  const onCardSelect = (pl: PlayerID, uuid: string) => selectCard(pl, uuid);
-  const onCardDeselect = (pl: PlayerID) => deselectCard(pl);
-  const onCardSlotDrop = (pl: PlayerID, zNum: number) => playCard(pl, zNum);
+  const onEndTurnButtonClick = useCallback(() => {
+    return setDone({ player: yourID });
+  }, []);
+
+  const onCardClick = useCallback((obj: Card) => {
+    return dispatch(showCardModal(obj));
+  }, []);
+
+  const onCardDeselect = useCallback(({ player }: DeselectCardMove) => {
+    return deselectCard({ player });
+  }, []);
+
+  const onCardSelect = useCallback(({ player, cardUuid }: SelectCardMove) => {
+    return selectCard({ player, cardUuid });
+  }, []);
+
+  const onCardSlotDrop = useCallback(({ zoneNumber }: PlayCardMove) => {
+    return playCard({ zoneNumber: zoneNumber });
+  }, []);
+
+  const onAttackMinionClick = useCallback(
+    ({ card, targetPlayer }: AttackMinionMove) => {
+      if (card && targetPlayer) return attackMinion({ card, targetPlayer });
+      else
+        return console.error(
+          `ERROR: onAttackMinionClick(${targetPlayer}, ${card})`
+        );
+    },
+    [currentPlayer]
+  );
+
+  const onBuffMinionClick = useCallback(
+    ({ card, targetPlayer }: BuffMinionMove) => {
+      if (card && targetPlayer) return buffMinion({ card, targetPlayer });
+      else
+        return console.error(
+          `ERROR: onBuffMinionClick(${targetPlayer}, ${card})`
+        );
+    },
+    [currentPlayer]
+  );
+
+  const onDebuffMinionClick = useCallback(
+    ({ card, targetPlayer }: DebuffMinionMove) => {
+      if (card && targetPlayer) return debuffMinion({ card, targetPlayer });
+      else
+        return console.error(
+          `ERROR: onDebuffMinionClick(${targetPlayer}, ${card})`
+        );
+    },
+    [currentPlayer]
+  );
+
+  const onDestroyMinionClick = useCallback(
+    ({ card, targetPlayer }: DestroyMinionMove) => {
+      if (card && targetPlayer) return destroyMinion({ card, targetPlayer });
+      else
+        return console.error(
+          `ERROR: onDestroyMinionClick(${targetPlayer}, ${card})`
+        );
+    },
+    [currentPlayer]
+  );
+
+  const onHealMinionClick = useCallback(
+    ({ card, targetPlayer }: HealMinionMove) => {
+      if (card && targetPlayer) return healMinion({ card, targetPlayer });
+      else
+        return console.error(
+          `ERROR: onHealMinionClick(${targetPlayer}, ${card})`
+        );
+    },
+    [currentPlayer]
+  );
 
   return (
     <>
@@ -113,7 +210,18 @@ export const Board = (props: GameProps) => {
           minWidth: width ? width : `100vw`,
         }}
       >
-        <TheZonesContainer yourID={yourID} theirID={theirID} moves={moves} />
+        <TheZonesContainer
+          ctx={ctx}
+          G={G}
+          moves={moves}
+          theirID={theirID}
+          yourID={yourID}
+          onAttackMinionClick={onAttackMinionClick}
+          onBuffMinionClick={onBuffMinionClick}
+          onDebuffMinionClick={onDebuffMinionClick}
+          onDestroyMinionClick={onDestroyMinionClick}
+          onHealMinionClick={onHealMinionClick}
+        />
 
         {/* {height && width ? (
           <DragLayer height={height - abSize} width={width} />
@@ -126,7 +234,7 @@ export const Board = (props: GameProps) => {
           endTurnIsDisabled={endTurnIsDisabled}
           onEndTurnButtonClick={onEndTurnButtonClick}
           player={G.players[yourID]}
-          turnsPerGame={gameConfig.numerics.numberOfSingleTurnsPerGame}
+          turnsPerGame={G.totalTurns}
         />
 
         <PlayerHand

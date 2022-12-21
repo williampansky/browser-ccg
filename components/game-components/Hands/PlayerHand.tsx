@@ -16,14 +16,18 @@ import type { Card, GameState, PlayerID } from '../../../types';
 
 import fn from './fn';
 import styles from './player-hand.module.scss';
+import { LastMoveMade } from '../../../enums';
+import { SelectCardMove } from '../../../game/moves/select-card.move';
+import { DeselectCardMove } from '../../../game/moves/deselect-card.move';
+import { PlayCardMove } from '../../../game/moves/play-card.move';
 
 interface Props {
   G: GameState;
   ctx: Ctx;
   onCardClick: (card: Card) => void;
-  onCardSelect: (playerId: string, uuid: string) => void;
-  onCardDeselect: (playerId: string) => void;
-  onCardSlotDrop: (playerId: string, zoneNumber: number) => void;
+  onCardSelect: ({ player, cardUuid }: SelectCardMove) => void;
+  onCardDeselect: ({ player }: DeselectCardMove) => void;
+  onCardSlotDrop: ({ zoneNumber }: PlayCardMove) => void;
   player: PlayerID;
   moves: any;
 }
@@ -42,6 +46,7 @@ export const PlayerHand = ({
     gameConfig: {
       numerics: { cardsPerHand },
     },
+    lastMoveMade,
     selectedCardData,
   } = G;
 
@@ -60,11 +65,15 @@ export const PlayerHand = ({
   // }, [playerHand])
 
   // states
+  const [hand, setHand] = useState<Card[]>([]);
+  const prevHand = usePrevious(hand);
   const [handLength, setHandLength] = useState<number>(0);
   const prevHandLength = usePrevious(handLength);
-  const prevHand = usePrevious(playerHand);
   const [cardHeight, setCardHeight] = useState<number>(0);
   const [cardWidth, setCardWidth] = useState<number>(0);
+  const [cardTap, setCardTap] = useState<boolean>(false);
+  const [lastIdx, setLastIdx] = useState<number | undefined>(undefined);
+  const [lastUuid, setLastUuid] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const hString = '--card-height';
@@ -97,8 +106,19 @@ export const PlayerHand = ({
   );
 
   useEffect(() => {
-    setHandLength(playerHand?.length);
-  }, [playerHand, setHandLength]);
+    setHand(playerHand);
+  }, [playerHand, setHand]);
+  
+  useEffect(() => {
+    setHandLength(hand.length);
+  }, [hand, setHandLength]);
+  
+  useEffect(() => {
+    if (handLength !== prevHandLength) {
+      setLastIdx(undefined);
+      setLastUuid(undefined);
+    }
+  }, [handLength, prevHandLength, setLastIdx, setLastUuid]);
 
   // rerenders hand correctly based on new array length
   useEffect(() => {
@@ -108,9 +128,18 @@ export const PlayerHand = ({
   const bind: any = useGesture(
     {
       // ts-ignore
-      onDragStart: ({ active, args: [originalIndex], down, dragging }) => {
+      onDragStart: ({
+        active,
+        args: [originalIndex, canPlay],
+        down,
+        dragging,
+        tap,
+      }) => {
         const curIndex = order.current?.indexOf(originalIndex);
-        setSprings(fn(handLength, width, down, dragging, active, curIndex));
+        if (!tap) {
+          select(canPlay, originalIndex);
+          setSprings(fn(handLength, width, down, dragging, active, curIndex));
+        }
       },
       // ts-ignore
       onDrag: ({
@@ -126,11 +155,11 @@ export const PlayerHand = ({
         const curIndex = order.current?.indexOf(originalIndex);
 
         if (tap) {
-          return onCardClick(playerHand[originalIndex]);
+          inspect(originalIndex);
         } else if (!canPlay) {
-          return cancel();
+          cancel();
         } else {
-          return setSprings(
+          setSprings(
             fn(
               handLength,
               width,
@@ -153,7 +182,12 @@ export const PlayerHand = ({
         // @ts-ignore
         if (elem && elem.dataset.receive) {
           // console.log('🚀 target', elem);
-          onCardSlotDrop(player, Number(elem.getAttribute('data-index')));
+          const zoneNumber = Number(elem.getAttribute('data-index'));
+          // setLastIdx(originalIndex);
+          // setLastUuid(hand[originalIndex].uuid);
+          onCardSlotDrop({ zoneNumber });
+        } else {
+          deselect();
         }
       },
       // ts-ignore
@@ -183,46 +217,58 @@ export const PlayerHand = ({
    */
   const select = useCallback(
     (canPlay: boolean, i: number) => {
-      if (canPlay) onCardSelect(player, playerHand[i].uuid);
+      if (canPlay && !selectedCardData[player]) {
+        return onCardSelect({ player, cardUuid: hand[i].uuid });
+      }
     },
-    [playerHand, onCardSelect]
+    [hand, selectedCardData[player], onCardSelect]
   );
 
   /**
    * Deselects card
    */
   const deselect = useCallback(() => {
-    onCardDeselect(player);
+    return onCardDeselect({ player });
   }, [onCardDeselect]);
 
   /**
+   * Inspects card vvia modal
+   */
+  const inspect = useCallback(
+    (i: number) => {
+      return onCardClick(hand[i]);
+    },
+    [onCardClick, hand]
+  );
+
+  /**
    * Returns card's canPlay boolean value if the object
-   * exists in playerHand[i]; otherwise returns false.
+   * exists in hand[i]; otherwise returns false.
    *
    * Note that this avoids breaking crashes when playing cards
    * and running `setSprings(fn(handLength));`
    */
   const getCanPlay = useCallback(
     (i: number) => {
-      if (playerHand && playerHand[i]) return playerHand[i]?.canPlay;
+      if (hand && hand[i]) return hand[i]?.canPlay;
       return false;
     },
-    [playerHand]
+    [hand]
   );
 
   /**
    * Returns card's uuid string value if the object
-   * exists in playerHand[i]; otherwise returns `''`.
+   * exists in hand[i]; otherwise returns `''`.
    *
    * Note that this avoids breaking crashes when playing cards
    * and running `setSprings(fn(handLength));`
    */
   const getUuid = useCallback(
     (i: number) => {
-      if (playerHand && playerHand[i]) return playerHand[i]?.uuid;
+      if (hand && hand[i]) return hand[i]?.uuid;
       return '';
     },
-    [playerHand]
+    [hand]
   );
 
   return (
@@ -247,27 +293,27 @@ export const PlayerHand = ({
             ) => {
               const canPlay = getCanPlay(i);
               const uuid = getUuid(i);
-              return playerHand &&
-                playerHand[i] &&
-                order &&
-                order.current![i] === i ? (
+              // return hand &&
+              //   hand[i] &&
+              //   order &&
+              //   order.current![i] === i ? (
+              return hand ? (
                 <Fragment key={i}>
                   <animated.div
                     {...bind(i, canPlay)}
                     key={`DragSlot_${i}`}
                     className={styles['drag-slot']}
+                    data-component='PlayerHandDragSlot'
                     data-index={i}
-                    onMouseDownCapture={() => select(canPlay, i)}
-                    onMouseUpCapture={() => deselect()}
-                    onTouchStartCapture={() => select(canPlay, i)}
-                    onTouchEndCapture={() => deselect()}
+                    data-uuid={uuid}
+                    data-last-played={lastIdx === i}
                     style={{
                       zIndex: 110 - i,
                       cursor: canPlay ? cursor : 'default',
                       marginLeft,
                       height: 65,
                       width: `${cardWidth}px`,
-                      transform: to([x, y, rotate, scale], (x, y, rt, sc) => {
+                      transform: to([scale], (sc) => {
                         if (width && width >= 1024) return `scale(${sc})`;
                         return '';
                       }),
@@ -278,8 +324,10 @@ export const PlayerHand = ({
                     {...bind(i, canPlay)}
                     key={`HandSlot_${i}`}
                     className={[styles['hand-slot']].join(' ')}
+                    data-component='PlayerHandCardSlot'
                     data-index={i}
-                    data-component='PlayerHandSlot'
+                    data-uuid={uuid}
+                    data-last-played={lastIdx === i}
                     style={{
                       zIndex,
                       marginLeft,
@@ -294,14 +342,14 @@ export const PlayerHand = ({
                     }}
                   >
                     <HandSlotCardWrapper
-                      data={playerHand[i]}
+                      data={hand[i]}
                       index={i}
                       moves={moves}
                       prevHand={prevHand}
                       player={player}
                     >
                       <CardComponent
-                        {...playerHand[i]}
+                        {...hand[i]}
                         key={uuid}
                         isSelected={selectedCard?.uuid === uuid}
                       />

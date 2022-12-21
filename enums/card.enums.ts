@@ -1,3 +1,5 @@
+import { Mechanics } from './mechanics.enums';
+
 /**
  * Enum values for the `Card.race` base format
  */
@@ -80,4 +82,40 @@ export enum CardType {
   Minion = 'MINION',
   Spell = 'SPELL',
   Weapon = 'WEAPON',
+}
+
+/**
+ * Enum values for the `Card.playType`
+ */
+export enum CardPlayType {
+  Global = 'GLOBAL',
+  Targeted = 'TARGETED',
+}
+
+/**
+ * Enum values for `Card.mechanicsContext`
+ */
+export enum CardMechanicsContext {
+  AddCard = Mechanics.AddCard,
+  Boon = Mechanics.Boon,
+  Buff = Mechanics.Buff,
+  Damage = Mechanics.Damage,
+  Debuff = Mechanics.Debuff,
+  Destroy = Mechanics.Destroy,
+  Disable = Mechanics.Disable,
+  Discard = Mechanics.Discard,
+  Heal = Mechanics.Heal,
+  None = Mechanics.None,
+  SetValue = Mechanics.SetValue,
+  Summon = Mechanics.Summon
+}
+
+/**
+ * Enum values for `Card.mechanicsSide`
+ */
+export enum CardMechanicsSide {
+  Both = 'BOTH',
+  None = 'NONE',
+  Player = 'PLAYER',
+  Opponent = 'OPPONENT',
 }

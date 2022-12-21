@@ -53,7 +53,7 @@
 .zone .zone__side {
   $rows: #{var(--config-numberOfSlotsPerZone) / 2};
   display: grid;
-  grid-gap: 0.3em;
+  grid-gap: 0.5em;
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;

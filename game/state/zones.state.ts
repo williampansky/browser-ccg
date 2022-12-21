@@ -1,5 +1,5 @@
 import { gameConfig } from '../../app.config';
-import { GameState, Zone, ZoneBase } from '../../types';
+import { GameState, PlayerID, Zone, ZoneBase } from '../../types';
 import zonesDatabase from '../data/zones.json';
 import createZoneObject from '../../utils/create-zone-object';
 import getRandomNumberBetween from '../../utils/get-random-number-between';
@@ -30,6 +30,17 @@ const zones = {
 
   setZone: (G: GameState, zoneNumber: number, zoneObj: Zone): void => {
     G.zones[zoneNumber] = zoneObj;
+  },
+
+  disableZone: (G: GameState, zoneNumber: number, player?: PlayerID): void => {
+    if (player) {
+      G.zones[zoneNumber].disabled[player] = true;
+    } else {
+      G.zones[zoneNumber].disabled = {
+        '0': true,
+        '1': true,
+      };
+    }
   },
 
   areReady: (G: GameState): boolean => {

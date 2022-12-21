@@ -1,89 +1,81 @@
 import type { Ctx } from 'boardgame.io';
-import { subtract } from 'mathjs';
-import type {
-  Card,
-  GameConfig,
-  GameState,
-  PlayerID,
-  Zone,
-} from '../../../types';
+import type { Card, GameState as G, PlayerID } from '../../../types';
 import {
-  handleCardDestructionMechanics,
+  cardIsNotSelf,
+  cardUuidMatch,
+  getContextualPlayerIds,
+  pushEventStream,
   pushHealthStreamAndSetDisplay,
 } from '../../../utils';
 
 /**
  * set minion's hp to num1
  */
-export const core056 = (
-  G: GameState,
-  ctx: Ctx,
-  gameConfig: GameConfig,
-  zone: Zone,
-  zoneIdx: number,
-  card: Card,
-  cardIdx: number,
-  player: PlayerID,
-  opponent: PlayerID
-) => {
-  G.zones.forEach((z) => {
-    z.sides[opponent].forEach((c) => (c.booleans.canBeAttackedBySpell = true));
-    z.sides[player].forEach((c) => {
-      if (c.uuid !== card.uuid) c.booleans.canBeAttackedBySpell = true;
+const core056 = {
+  init: (G: G, ctx: Ctx, card: Card) => {
+    const { opponent, player } = getContextualPlayerIds(ctx.currentPlayer);
+
+    const check = (c: Card) => {
+      if (cardIsNotSelf(c, card)) c.booleans.canBeDebuffed = true;
+    };
+
+    G.zones.forEach((z) => {
+      z.sides[player].forEach((c) => check(c));
+      z.sides[opponent].forEach((c) => check(c));
     });
-  });
-};
-
-export const core056Attack = (
-  G: GameState,
-  ctx: Ctx,
-  targetPlayer: PlayerID,
-  cardToAttackUuid: string,
-  cardToBlame: Card
-) => {
-  // prettier-ignore
-  let target: {
-    card: Card,
-    cardIdx: number,
-    zoneNumber: number
-  } | undefined;
-
-  G.zones.forEach((z, zi) => {
-    z.sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === cardToAttackUuid) {
-        target = {
-          card: c,
-          cardIdx: ci,
-          zoneNumber: zi,
-        };
-      }
-    });
-  });
-
-  if (target !== undefined) {
-    const { card, cardIdx, zoneNumber } = target;
-
-    G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === card.uuid && ci === cardIdx) {
-        pushHealthStreamAndSetDisplay(
-          card,
-          cardToBlame,
-          cardToBlame.numberPrimary,
-          cardToBlame.numberPrimary
-        );
-        c.booleans.hasHealthReduced = false;
-      }
-    });
+  },
+  exec: (G: G, targetPlayer: PlayerID, targetCard: Card, playedCard: Card) => {
+    // prettier-ignore
+    let target: {
+      card: Card,
+      cardIdx: number,
+      zoneNumber: number
+    } | undefined;
 
     G.zones.forEach((z, zi) => {
-      z.sides['0'].forEach((c, ci) => {
-        c.booleans.canBeAttackedBySpell = false;
-        if (c.uuid === cardToBlame.uuid) c.booleans.onPlayWasTriggered = true;
-      });
-
-      z.sides['1'].forEach((c, ci) => {
-        c.booleans.canBeAttackedBySpell = false;
+      z.sides[targetPlayer].forEach((c, ci) => {
+        if (cardUuidMatch(c, targetCard)) {
+          target = {
+            card: c,
+            cardIdx: ci,
+            zoneNumber: zi,
+          };
+        }
       });
     });
-  }
+
+    if (target !== undefined) {
+      const { card, cardIdx, zoneNumber } = target;
+
+      G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
+        if (c.uuid === card.uuid && ci === cardIdx) {
+          c.booleans.isDebuffed = true;
+          c.booleans.hasHealthReduced = false;
+          pushEventStream(c, c, 'wasDebuffed');
+          pushHealthStreamAndSetDisplay(
+            card,
+            playedCard,
+            playedCard.numberPrimary,
+            playedCard.numberPrimary
+          );
+        }
+      });
+
+      G.zones.forEach((z) => {
+        z.sides['0'].forEach((c) => {
+          c.booleans.canBeDebuffed = false;
+          if (cardUuidMatch(c, playedCard)) {
+            c.booleans.onPlayWasTriggered = true;
+            pushEventStream(c, c, 'onPlayWasTriggered');
+          }
+        });
+
+        z.sides['1'].forEach((c, ci) => {
+          c.booleans.canBeDebuffed = false;
+        });
+      });
+    }
+  },
 };
+
+export default core056;

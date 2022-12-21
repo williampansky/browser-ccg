@@ -8,20 +8,38 @@ const value = chalk.bold.green;
 const logPhaseToConsole = (
   turn: number = 0,
   phase: string = '',
+  player?: string,
   custom?: { key: string; value: string }
 ) => {
   if (gameConfig.debugConfig.logPhaseToConsole) {
     if (custom) {
-      log(`
-   TURN: ${value(turn)}
-  PHASE: ${value(phase)}
-  ${custom.key}: ${value(custom.value)}
-      `);
+      if (player) {
+        log(`
+    TURN: ${value(turn)}
+  PLAYER: ${value(player)}
+   PHASE: ${value(phase)}
+   ${custom.key}: ${value(custom.value)}
+        `);
+      } else {
+        log(`
+    TURN: ${value(turn)}
+   PHASE: ${value(phase)}
+   ${custom.key}: ${value(custom.value)}
+        `);
+      }
     } else {
-      log(`
-   TURN: ${value(turn)}
-  PHASE: ${value(phase)}
-      `);
+      if (player) {
+        log(`
+    TURN: ${value(turn)}
+  PLAYER: ${value(player)}
+   PHASE: ${value(phase)}
+        `);
+      } else {
+        log(`
+    TURN: ${value(turn)}
+   PHASE: ${value(phase)}
+        `);
+      }
     }
   }
 };

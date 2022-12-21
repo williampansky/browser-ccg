@@ -51,6 +51,7 @@ const createCardObject = (obj: CardBase): Card => {
       onPlayWasTriggered: false,
       wasDiscarded: false,
       wasDiscovered: false,
+      wasHealed: false,
       wasResurrected: false,
       wasReturned: false,
       wasTransferred: false,
@@ -65,6 +66,7 @@ const createCardObject = (obj: CardBase): Card => {
     displayPower: obj?.power,
     elite: obj?.elite || false,
     entourage: obj?.entourage,
+    eventStream: [],
     flavorText: obj?.flavorText
       ? replaceAllConstants(obj?.flavorText)
       : undefined,
@@ -75,19 +77,17 @@ const createCardObject = (obj: CardBase): Card => {
     key: createCardKey(obj?.id, obj?.set),
     mechanics: obj?.mechanicsEnabled ? obj?.mechanics : [],
     mechanicsEnabled: obj?.mechanicsEnabled || false,
+    mechanicsSide: obj?.mechanicsSide,
     name: obj?.name,
     numberPrimary: obj?.numberPrimary,
     numberRNG: obj?.numberRNG,
     numberSecondary: obj?.numberSecondary,
-    playContext: obj?.playContext
-      ? replaceAllConstants(obj?.playContext, 'value')
-      : undefined,
-    playType: obj?.playType
-      ? replaceAllConstants(obj?.playType, 'value')
-      : undefined,
+    mechanicsContext: replaceAllConstants(obj?.mechanicsContext, 'value'),
+    playType: replaceAllConstants(obj?.playType, 'value'),
     powerStream: [],
     race: replaceAllConstants(obj?.race, 'value'),
     rarity: replaceAllConstants(obj?.rarity, 'value'),
+    refId: obj?.refId,
     revealed: false,
     revealedOnTurn: 0,
     targetingText: obj?.targetingText
@@ -98,6 +98,7 @@ const createCardObject = (obj: CardBase): Card => {
     uuid: uuid(),
     value: obj?.name,
     zonePowerAdjustment: 0,
+    zoneCostAdjustment: 0,
   };
 };
 

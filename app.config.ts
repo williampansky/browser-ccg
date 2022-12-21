@@ -5,29 +5,38 @@ const core = `SET_CORE_`;
 export const gameConfig: GameConfig = {
   asynchronousTurns: false,
   debugConfig: {
-    debugHandCardKey: core + '112',
-    debugBoardCardKey: core + '001',
+    debugHandCardKey: core + '053',
+    debugBoardCardKey: core + '006',
     debugBoardCardKeyAmount: 3,
     useDebugHandCardKey: false,
     useDebugBoardCardKey: false,
 
-    debugOpponentHandCardKey: core + '126',
-    debugOpponentBoardCardKey: core + '052',
-    debugOpponentBoardCardKeyAmount: 4,
+    debugOpponentHandCardKey: core + '053',
+    debugOpponentBoardCardKey: core + '032',
+    debugOpponentBoardCardKeyAmount: 1,
     useDebugOpponentHandCardKey: false,
     useDebugOpponentBoardCardKey: false,
 
     debugScenario: 'heal-player-minion',
     useDebugScenario: false,
 
+    debugZone0id: 'z013',
+    useDebugZone0: false,
+    debugZone1id: 'z005',
+    useDebugZone1: false,
+    debugZone2id: 'z001',
+    useDebugZone2: false,
+    disableZoneReveals: false,
+
     logPhaseToConsole: false,
-    showDebugBar: false,
+    showDebugBar: true,
     showBoardgameIoSidebar: false,
   },
   ai: {
+    botToUse: 'MCTSBot',
     enableBotAi: true,
     enableBotAiMoves: true,
-    logBotAiMovesToConsole: true,
+    logBotAiMovesToConsole: false,
   },
   numerics: {
     actionPointsPerTurn: 1,
@@ -38,7 +47,7 @@ export const gameConfig: GameConfig = {
     cardsPerTurn: 1,
     maxNumberOfDecks: 10,
     numberOfPlayers: 2,
-    numberOfSingleTurnsPerGame: 20,
+    numberOfSingleTurnsPerGame: 12,
     numberOfSlotsPerZone: 6,
     numberOfZones: 3,
   },
@@ -84,7 +93,7 @@ export const gameConfig: GameConfig = {
     TRANSFORM: false,
   },
   zonesConfig: {
-    effectAdjustments: false,
+    effectAdjustments: true,
     zoneImages: true,
     zoneNames: true,
     zoneReveals: true,

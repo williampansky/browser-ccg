@@ -25,6 +25,14 @@ export interface GameConfig {
     
     debugScenario: string;
     useDebugScenario: boolean;
+    
+    debugZone0id: string;
+    useDebugZone0: boolean;
+    debugZone1id: string;
+    useDebugZone1: boolean;
+    debugZone2id: string;
+    useDebugZone2: boolean;
+    disableZoneReveals: boolean;
 
     logPhaseToConsole: boolean;
 
@@ -48,6 +56,11 @@ export interface GameConfig {
      * Logs the `moves` array created inside the `ai.ts` file
      */
     logBotAiMovesToConsole: boolean;
+
+    /**
+     * Bot to import and use from 'boardgame.io/ai'
+     */
+    botToUse: 'MCTSBot' | 'RandomBot';
   };
 
   numerics: {

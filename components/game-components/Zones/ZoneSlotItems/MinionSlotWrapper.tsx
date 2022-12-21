@@ -1,20 +1,29 @@
 import Image from 'next/image';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, SyntheticEvent, useEffect, useState } from 'react';
 import type { Card, PlayerID } from '../../../../types';
 
 import { getRandomNumberBetween } from '../../../../utils';
 import { Context } from '../../../../enums';
 import { MinionOnPlayAnimation } from './MinionOnPlayAnimation';
 import { MinionEventAnimation } from './MinionEventAnimation';
+import { MinionOnTurnEndAnimation } from './MinionOnTurnEndAnimation';
 
 import SUBTYPE_RACE_DEMONIC from '../../../../public/images/card-assets/SUBTYPE_RACE_DEMONIC.png';
+
+import {
+  AttackMinionMove,
+  BuffMinionMove,
+  DebuffMinionMove,
+  DestroyMinionMove,
+  HealMinionMove,
+} from '../../../../game/moves';
 
 // import styles from './MinionSlotWrapper.module.scss';
 
 interface Props {
   children: ReactNode;
   data?: Card;
-  index?: number;
+  index: number;
   moves?: any;
   opponent?: PlayerID;
   player?: PlayerID;
@@ -22,7 +31,12 @@ interface Props {
   theirID?: PlayerID;
   yourID?: PlayerID;
   zoneNumber?: number;
-  zoneSide?: PlayerID;
+  zoneSide: PlayerID;
+  onAttackMinionClick: ({ card, targetPlayer }: AttackMinionMove) => void;
+  onBuffMinionClick: ({ card, targetPlayer }: BuffMinionMove) => void;
+  onDebuffMinionClick: ({ card, targetPlayer }: DebuffMinionMove) => void;
+  onDestroyMinionClick: ({ card, targetPlayer }: DestroyMinionMove) => void;
+  onHealMinionClick: ({ card, targetPlayer }: HealMinionMove) => void;
 }
 
 export const MinionSlotWrapper = ({
@@ -36,6 +50,11 @@ export const MinionSlotWrapper = ({
   yourID,
   zoneNumber,
   zoneSide,
+  onAttackMinionClick,
+  onBuffMinionClick,
+  onDebuffMinionClick,
+  onDestroyMinionClick,
+  onHealMinionClick,
 }: Props) => {
   const b = data && data?.booleans;
   const playerView = zoneSide === yourID;
@@ -49,27 +68,31 @@ export const MinionSlotWrapper = ({
     setOffsetY(getRandomNumberBetween(-2, 2));
   }, []);
 
-  const handleOnClick = (): void => {
+  const handleOnClick = (event: SyntheticEvent): void => {
+    const target = event.target as HTMLDivElement;
+    target.blur();
+    
     if (b?.canBeAttackedBySpell) move(Context.CanBeAttackedBySpell);
     if (b?.canBeBuffed) move(Context.CanBeBuffed);
+    if (b?.canBeDebuffed) move(Context.CanBeDebuffed);
     if (b?.canBeDestroyed) move(Context.CanBeDestroyed);
     if (b?.canBeHealed) move(Context.CanBeHealed);
   };
 
-  const move = (
-    context: string,
-  ): void => {
+  const move = (context: string): void => {
     switch (context) {
       case Context.CanBeAttackedBySpell:
-        return attackMinion(player, zoneSide, data?.uuid, zoneNumber);
+        return onAttackMinionClick({ card: data!, targetPlayer: zoneSide });
       case Context.CanBeAttackedByWeapon:
         return attackMinion(player, zoneSide, data?.uuid, zoneNumber);
       case Context.CanBeBuffed:
-        return buffMinion(player, zoneSide, data?.uuid, zoneNumber);
+        return onBuffMinionClick({ card: data!, targetPlayer: zoneSide });
+      case Context.CanBeDebuffed:
+        return onDebuffMinionClick({ card: data!, targetPlayer: zoneSide });
       case Context.CanBeDestroyed:
-        return destroyMinion(player, zoneSide, data?.uuid, zoneNumber);
+        return onDestroyMinionClick({ card: data!, targetPlayer: zoneSide });
       case Context.CanBeHealed:
-        return healMinion(player, zoneSide, data?.uuid, zoneNumber);
+        return onHealMinionClick({ card: data!, targetPlayer: zoneSide });
       default:
         return;
     }
@@ -81,6 +104,7 @@ export const MinionSlotWrapper = ({
         'minionslot',
         b?.canBeAttackedBySpell ? 'minionslot--can-be-attacked' : '',
         b?.canBeBuffed ? 'minionslot--can-be-buffed' : '',
+        b?.canBeDebuffed ? 'minionslot--can-be-debuffed' : '',
         b?.canBeDestroyed ? 'minionslot--can-be-destroyed' : '',
         b?.canBeHealed ? 'minionslot--can-be-healed' : '',
         b?.isDestroyed ? 'minionslot--is-destroyed' : '',
@@ -88,6 +112,7 @@ export const MinionSlotWrapper = ({
       data-component='MinionSlotWrapper'
       data-index={index}
       data-zone-side={zoneSide}
+      data-uuid={data?.uuid}
       onClick={handleOnClick}
       style={{
         transform: `rotate(${rotation}deg)`,
@@ -95,18 +120,60 @@ export const MinionSlotWrapper = ({
       }}
     >
       <>
-      {b?.isDestroyed && (
-        <div className='dead-graphic'>
-          <Image
-            src={SUBTYPE_RACE_DEMONIC}
-            layout='fill'
-          />
-        </div>
-      )}
+        {b?.isDestroyed && (
+          <div className='dead-graphic'>
+            <Image src={SUBTYPE_RACE_DEMONIC} layout='fill' />
+          </div>
+        )}
 
         {children}
-        <MinionEventAnimation data={data} index={index} zoneNumber={zoneNumber} />
-        <MinionOnPlayAnimation data={data} index={index} zoneNumber={zoneNumber} />
+
+        {data?.eventStream.map((e, i) => {
+          switch (e.event) {
+            case 'eventWasTriggered':
+              return (
+                <MinionEventAnimation
+                  key={`${i}_${e.uuid}`}
+                  index={index}
+                  mapIndex={i}
+                />
+              );
+            case 'onPlayWasTriggered':
+              return (
+                <MinionOnPlayAnimation
+                  key={`${i}_${e.uuid}`}
+                  index={index}
+                  mapIndex={i}
+                />
+              );
+            case 'onTurnEndWasTriggered':
+              return (
+                <MinionOnTurnEndAnimation
+                  key={`${i}_${e.uuid}`}
+                  index={index}
+                  mapIndex={i}
+                />
+              );
+          
+            default:
+              break;
+          }
+        })}
+
+        {/* {b && (
+          <>
+            <MinionEventAnimation
+              eventWasTriggered={b?.eventWasTriggered}
+              index={index}
+              zoneNumber={zoneNumber}
+            />
+            <MinionOnPlayAnimation
+              data={data}
+              index={index}
+              zoneNumber={zoneNumber}
+            />
+          </>
+        )} */}
       </>
     </div>
   );

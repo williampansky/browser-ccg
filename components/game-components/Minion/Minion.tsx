@@ -81,16 +81,18 @@ export const Minion = ({ isSelected = false, ...card }: ReactMinionProps) => {
             base={baseHealth}
             current={displayHealth}
             elite={elite}
-            isIncreased={booleans.hasHealthIncreased}
-            isReduced={booleans.hasHealthReduced}
+            isIncreased={booleans?.hasHealthIncreased}
+            isReduced={booleans?.hasHealthReduced}
+            isDestroyed={booleans?.isDestroyed}
           />
           <MinionPower
             alternate={true}
             base={basePower}
             current={displayPower}
             elite={elite}
-            isIncreased={booleans.hasPowerIncreased}
-            isReduced={booleans.hasPowerReduced}
+            isIncreased={booleans?.hasPowerIncreased}
+            isReduced={booleans?.hasPowerReduced}
+            isDestroyed={booleans?.isDestroyed}
           />
         </>
       )}
@@ -102,6 +104,7 @@ export const Minion = ({ isSelected = false, ...card }: ReactMinionProps) => {
         rarity={rarity}
         src={imageFlairSrc}
         fpoArt={fpoArt}
+        isDestroyed={booleans?.isDestroyed}
         isHidden={mechanics?.find((m) => m === 'HIDDEN') ? true : false}
       />
     </div>

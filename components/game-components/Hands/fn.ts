@@ -40,16 +40,18 @@ const fn =
     if (context() === 'isDown' && match)
       return {
         x: x,
-        y: y + hoverOffsetY,
+        y: y + hoverOffsetY / 2,
         rotate: 0,
         scale: 1.465,
         marginTop: 0,
         zIndex: 100,
         cursor: 'grabbing',
-        immediate: (n: string) => n === 'x' || n === 'y' || n === 'scale',
+        immediate: (n: string) => {
+          return n === 'x' || n === 'y' || n === 'scale' || n === 'zIndex';
+        },
         config: {
           ...springConfig.default,
-          easing: easings.easeInOutQuart
+          easing: easings.easeInOutQuart,
         },
       };
     else if (context() === 'isHovered' && match)
@@ -68,7 +70,7 @@ const fn =
           tension: 500,
           friction: 38,
           duration: 75,
-          easing: easings.easeInOutQuart
+          easing: easings.easeInOutQuart,
         },
       };
     else
@@ -82,10 +84,11 @@ const fn =
         zIndex: index * 1,
         cursor: 'grab',
         display: 'block',
-        immediate: (n: string) => n === 'zIndex' || n === 'marginLeft',
+        // immediate: (n: string) => n === 'zIndex',
+        immediate: false,
         config: {
           ...springConfig.default,
-          easing: easings.easeInOutQuart
+          easing: easings.easeInOutQuart,
         },
       };
   };

@@ -17,6 +17,11 @@ export interface GameOver {
   winner?: PlayerID;
 }
 
+export interface LastCardPlayed {
+  card?: Card;
+  index?: number;
+}
+
 export interface LastMoveMade {
   args: any[],
   playerID: PlayerID,
@@ -27,20 +32,23 @@ export declare type CardIndex = number | undefined;
 export declare type SelectedCardIndex = Record<PlayerID, CardIndex>;
 
 export interface GameState {
-  aiLoading: boolean;
-  lastMoveMade?: string;
   actionPoints: Record<PlayerID, ActionPoints>;
-  gameConfig: GameConfig;
+  aiLoading: boolean;
+  aiPossibleCards: Card[];
   canUndo: Record<PlayerID, boolean>;
   counts: Record<PlayerID, Counts>;
   firstRevealer: PlayerID;
+  gameConfig: GameConfig;
+  lastCardPlayed: LastCardPlayed;
+  lastMoveMade: string | undefined;
   playedCards: Record<PlayerID, Card[]>;
-  players: Record<PlayerID, Player>;
   playerNames: Record<PlayerID, PlayerName>;
+  players: Record<PlayerID, Player>;
   playerTurnDone: Record<PlayerID, boolean>;
   selectedCardData: Record<PlayerID, Card | undefined>;
   selectedCardIndex: SelectedCardIndex;
   turn: number;
+  totalTurns: number;
   zones: Zone[];
   zonesCardsReference: Record<PlayerID, Card[]>[];
 }

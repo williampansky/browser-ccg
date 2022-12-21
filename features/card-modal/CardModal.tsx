@@ -7,6 +7,7 @@ import { hideCardModal } from './card-modal.slice';
 import type { CardModal as ICardModal } from './card-modal.slice';
 import { Card as CardComponent } from '../../components/game-components/Card/Card';
 import styles from './card-modal.module.scss';
+import { isNegative } from 'mathjs';
 
 export const CardModal = (): ReactElement | null => {
   const dispatch = useDispatch();
@@ -94,7 +95,7 @@ export const CardModal = (): ReactElement | null => {
                     marginBottom: 4,
                   }}
                 >
-                  {s.currentPower}
+                  {isNegative(s.adjustment) ? s.adjustment : `+${s.adjustment}`}
                 </div>
                 <div style={{ color: 'white', fontSize: 9 }}>{s.blame}</div>
               </div>

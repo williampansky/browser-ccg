@@ -1,93 +1,145 @@
+import { Ctx } from 'boardgame.io';
 import { add } from 'mathjs';
-
-import type { Ctx } from 'boardgame.io';
-import type {
-  Card,
-  GameConfig,
-  GameState,
-  PlayerID,
-  Zone,
-} from '../../../types';
 import { CardRace } from '../../../enums';
+import type { Card, GameState as G, PlayerID } from '../../../types';
 import {
+  cardUuidMatch,
   getContextualPlayerIds,
+  pushEventStream,
+  pushEventStreamAndSetBoolean,
   pushPowerStreamAndSetDisplay,
 } from '../../../utils';
 
 /**
- * boon: give a creature +4 attack power
+ * buff: give a creature +4 attack power
  */
-export const core031 = (
-  G: GameState,
-  ctx: Ctx,
-  gameConfig: GameConfig,
-  zone: Zone,
-  zoneIdx: number,
-  card: Card,
-  cardIdx: number,
-  player: PlayerID
-) => {
-  const { opponent } = getContextualPlayerIds(player);
-  G.zones.forEach((z) => {
-    z.sides[opponent].forEach((c) => {
-      const isNotSelf = c.uuid !== card.uuid;
-      const isCreature = c.race === CardRace.Creature;
-      if (isNotSelf && isCreature) c.booleans.canBeBuffed = true;
+const core031 = {
+  init: (G: G, player: PlayerID, card: Card) => {
+    const { opponent } = getContextualPlayerIds(player);
+    G.zones.forEach((z) => {
+      z.sides[player].forEach((c) => {
+        const isNotSelf = c.uuid !== card.uuid;
+        const isCreature = c.race === CardRace.Creature;
+        if (isNotSelf && isCreature) c.booleans.canBeBuffed = true;
+      });
+
+      z.sides[opponent].forEach((c) => {
+        const isNotSelf = c.uuid !== card.uuid;
+        const isCreature = c.race === CardRace.Creature;
+        if (isNotSelf && isCreature) c.booleans.canBeBuffed = true;
+      });
+    });
+  },
+
+  exec: (G: G, targetPlayer: PlayerID, targetCard: Card, playedCard: Card) => {
+    const { player, opponent } = getContextualPlayerIds(targetPlayer);
+    const { numberPrimary } = playedCard;
+
+    // prettier-ignore
+    let target: {
+      card: Card,
+      cardIdx: number,
+      zoneNumber: number
+    } | undefined;
+
+    G.zones.forEach((z, zi) => {
+      z.sides[targetPlayer].forEach((c, ci) => {
+        if (cardUuidMatch(c, targetCard)) {
+          target = {
+            card: c,
+            cardIdx: ci,
+            zoneNumber: zi,
+          };
+        }
+      });
     });
 
-    z.sides[player].forEach((c) => {
-      const isNotSelf = c.uuid !== card.uuid;
-      const isCreature = c.race === CardRace.Creature;
-      if (isNotSelf && isCreature) c.booleans.canBeBuffed = true;
+    if (target !== undefined) {
+      const { card, cardIdx, zoneNumber } = target;
+
+      G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
+        const isTargetedCard = cardUuidMatch(c, card) && ci === cardIdx;
+        if (isTargetedCard) {
+          c.booleans.isBuffed = true;
+          c.booleans.hasPowerIncreased = true;
+          pushPowerStreamAndSetDisplay(
+            c,
+            playedCard,
+            numberPrimary,
+            add(c.displayPower, numberPrimary)
+          );
+        }
+      });
+    }
+
+    G.zones.forEach((z) => {
+      z.sides[player].forEach((c) => {
+        c.booleans.canBeBuffed = false;
+        if (target !== undefined && cardUuidMatch(c, playedCard)) {
+          c.booleans.onPlayWasTriggered = true;
+          pushEventStream(c, c, 'onPlayWasTriggered');
+        }
+      });
+
+      z.sides[opponent].forEach((c) => {
+        c.booleans.canBeBuffed = false;
+      });
     });
-  });
-};
+  },
 
-export const core031Buff = (
-  G: GameState,
-  ctx: Ctx,
-  targetPlayer: PlayerID,
-  cardToBuffUuid: string,
-  cardBuffedFrom: Card
-) => {
-  const { numberPrimary } = cardBuffedFrom;
-  // prettier-ignore
-  let target: {
-    card: Card,
-    cardIdx: number,
-    zoneNumber: number
-  } | undefined;
+  execAi: (G: G, ctx: Ctx, aiID: PlayerID, playedCard: Card) => {
+    let possibleTargets: {
+      zoneNumber: number;
+      cardData: Card;
+      cardIndex: number;
+    }[] = [];
 
-  G.zones.forEach((z, zi) => {
-    z.sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === cardToBuffUuid) {
-        target = {
-          card: c,
-          cardIdx: ci,
-          zoneNumber: zi,
-        };
-      }
+    G.zones.forEach((z, zI) => {
+      z.sides[aiID].forEach((c, cI) => {
+        const isNotSelf = c.uuid !== playedCard.uuid;
+        const isCreature = c.race === CardRace.Creature;
+        const isNotDestroyed = c.booleans.isDestroyed === false;
+        if (isNotSelf && isCreature && isNotDestroyed)
+          possibleTargets.push({
+            zoneNumber: zI,
+            cardData: c,
+            cardIndex: cI,
+          });
+      });
     });
-  });
 
-  if (target !== undefined) {
-    const { card, cardIdx, zoneNumber } = target;
+    if (possibleTargets.length !== 0) {
+      const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
+      G.zones.forEach((z, zI) => {
+        z.sides[aiID].forEach((c) => {
+          const isTargetedCard = cardUuidMatch(c, choice.cardData);
+          if (isTargetedCard) {
+            c.booleans.isBuffed = true;
+            c.booleans.hasPowerIncreased = true;
+            pushPowerStreamAndSetDisplay(
+              c,
+              playedCard,
+              playedCard.numberPrimary,
+              add(c.displayPower, playedCard.numberPrimary)
+            );
+          }
 
-    G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === card.uuid) {
-        card.booleans.onPlayWasTriggered = true;
-        pushPowerStreamAndSetDisplay(
-          c,
-          cardBuffedFrom,
-          numberPrimary,
-          add(c.displayPower, 2)
-        );
-      }
-    });
+          const isCardPlayed = cardUuidMatch(c, playedCard);
+          if (isCardPlayed) {
+            pushEventStreamAndSetBoolean(
+              G,
+              ctx,
+              aiID,
+              zI,
+              c,
+              choice.cardData,
+              'onPlayWasTriggered'
+            );
+          }
+        });
+      });
+    }
   }
-
-  G.zones.forEach((z, zi) => {
-    z.sides['0'].forEach((c) => (c.booleans.canBeBuffed = false));
-    z.sides['1'].forEach((c) => (c.booleans.canBeBuffed = false));
-  });
 };
+
+export default core031;

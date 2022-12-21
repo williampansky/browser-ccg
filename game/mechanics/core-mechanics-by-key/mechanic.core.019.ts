@@ -1,36 +1,76 @@
 import type { Ctx } from 'boardgame.io';
-import type {
-  Card,
-  GameConfig,
-  GameState,
-  PlayerID,
-  Zone,
-} from '../../../types';
-
+import type { Card, GameState, PlayerID } from '../../../types';
 import { counts } from '../../state';
+import {
+  aiSpreadEventStreamAndOnPlayBoolean,
+  getContextualPlayerIds,
+  pushEventStream,
+} from '../../../utils';
 
 /**
- * add 2 cards opponent played to your deck
+ * add card(s) opponent played to your deck
  */
-export const core019 = (
-  G: GameState,
-  ctx: Ctx,
-  gameConfig: GameConfig,
-  zone: Zone,
-  zoneIdx: number,
-  card: Card,
-  cardIdx: number,
-  player: PlayerID,
-  opponent: PlayerID,
-) => {
-  const { numberRNG } = card;
-  
-  for (let index = 0; index < numberRNG; index++) {
-    if (G.playedCards[opponent].length !== 0) {
-      const choice = ctx?.random?.Shuffle(G.playedCards[opponent])[0]!;
-      G.players[player].cards.deck.push(choice);
-      counts.incrementDeck(G, player);
-      card.booleans.onPlayWasTriggered = true;
+const core019 = {
+  exec: (
+    G: GameState,
+    ctx: Ctx,
+    player: PlayerID,
+    zoneNumber: number,
+    playedCard: Card
+  ) => {
+    const { opponent } = getContextualPlayerIds(player);
+    const { numberPrimary } = playedCard;
+
+    for (let index = 0; index < numberPrimary; index++) {
+      if (G.playedCards[opponent].length !== 0) {
+        const choice = ctx?.random?.Shuffle(G.playedCards[opponent])[0]!;
+
+        if (choice) {
+          const dupe = { ...choice, uuid: v4() };
+          G.players[player].cards.deck.push(dupe);
+          counts.incrementDeck(G, player);
+
+          playedCard.booleans.onPlayWasTriggered = true;
+          pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+        }
+      }
     }
-  }
+  },
+
+  execAi: (
+    G: GameState,
+    ctx: Ctx,
+    player: PlayerID,
+    zoneNumber: number,
+    playedCard: Card,
+    playedCardIdx: number
+  ) => {
+    const { opponent } = getContextualPlayerIds(player);
+    const { numberPrimary } = playedCard;
+
+    for (let index = 0; index < numberPrimary; index++) {
+      if (G.playedCards[opponent].length !== 0) {
+        const choice = ctx?.random?.Shuffle(G.playedCards[opponent])[0]!;
+
+        if (choice) {
+          const dupe = { ...choice, uuid: v4() };
+          G.players[player].cards.deck.push(dupe);
+          counts.incrementDeck(G, player);
+
+          aiSpreadEventStreamAndOnPlayBoolean(
+            G,
+            ctx,
+            player,
+            zoneNumber,
+            playedCard,
+            playedCardIdx,
+            undefined,
+            'onPlayWasTriggered'
+          );
+        }
+      }
+    }
+  },
 };
+
+export default core019;

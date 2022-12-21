@@ -1,6 +1,6 @@
 import { Ctx } from 'boardgame.io';
 import {
-  DiscardCardEffects,
+  DiscardEffects,
   RevealCardEffects,
   RevealZoneEffects,
 } from '../types';
@@ -27,7 +27,7 @@ const bgioEffectsConfig = {
     },
     discardCard: {
       duration: 2,
-      create: ({ ...value }: DiscardCardEffects) => {
+      create: ({ ...value }: DiscardEffects) => {
         const { cardUuid, cardIdx, player } = value;
         return {
           cardUuid,

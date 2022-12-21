@@ -15,6 +15,14 @@ import {
   ZoneRevealOverlay,
 } from '..';
 
+import {
+  AttackMinionMove,
+  BuffMinionMove,
+  DebuffMinionMove,
+  DestroyMinionMove,
+  HealMinionMove,
+} from '../../../../game/moves';
+
 interface Props {
   gameConfig: GameConfig;
   moves: any;
@@ -24,6 +32,11 @@ interface Props {
   zone: IZone;
   zoneNumber: number;
   zonesAreActive: boolean;
+  onAttackMinionClick: ({ card, targetPlayer }: AttackMinionMove) => void;
+  onBuffMinionClick: ({ card, targetPlayer }: BuffMinionMove) => void;
+  onDebuffMinionClick: ({ card, targetPlayer }: DebuffMinionMove) => void;
+  onDestroyMinionClick: ({ card, targetPlayer }: DestroyMinionMove) => void;
+  onHealMinionClick: ({ card, targetPlayer }: HealMinionMove) => void;
 }
 
 export const Zone = ({
@@ -35,6 +48,11 @@ export const Zone = ({
   zone,
   zoneNumber,
   zonesAreActive,
+  onAttackMinionClick,
+  onBuffMinionClick,
+  onDebuffMinionClick,
+  onDestroyMinionClick,
+  onHealMinionClick,
 }: Props) => {
   const { powers } = zone;
   const { numerics, zonesConfig } = gameConfig;
@@ -79,6 +97,11 @@ export const Zone = ({
                 yourID={yourID}
                 zoneNumber={zoneNumber}
                 zoneSide={theirID}
+                onAttackMinionClick={onAttackMinionClick}
+                onBuffMinionClick={onBuffMinionClick}
+                onDebuffMinionClick={onDebuffMinionClick}
+                onDestroyMinionClick={onDestroyMinionClick}
+                onHealMinionClick={onHealMinionClick}
               >
                 <OpponentZoneSlot
                   key={idx}
@@ -135,7 +158,7 @@ export const Zone = ({
               alt=''
               role='presentation'
               layout='fill'
-              src={`/images/zones/${zone.id.replace('ZONE_', '')}.jpg`}
+              src={`/images/zones/${zone.id}.jpg`}
             />
           </div>
         )}
@@ -162,6 +185,11 @@ export const Zone = ({
                   yourID={yourID}
                   zoneNumber={zoneNumber}
                   zoneSide={yourID}
+                  onAttackMinionClick={onAttackMinionClick}
+                  onBuffMinionClick={onBuffMinionClick}
+                  onDebuffMinionClick={onDebuffMinionClick}
+                  onDestroyMinionClick={onDestroyMinionClick}
+                  onHealMinionClick={onHealMinionClick}
                 >
                   <PlayerZoneSlot
                     data={zone.sides[yourID][idx]}

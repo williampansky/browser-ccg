@@ -1,88 +1,184 @@
 import type { Ctx } from 'boardgame.io';
-import type {
-  Card,
-  GameConfig,
-  GameState,
-  PlayerID,
-  Zone,
-} from '../../../types';
-import { cardIsNotSelf, filterArray, handleCardDestructionMechanics } from '../../../utils';
-import { counts } from '../../state';
+import type { Card, GameState, PlayerID } from '../../../types';
+import {
+  cardIsNotSelf,
+  cardUuidMatch,
+  getContextualPlayerIds,
+  handleCardDestructionMechanics,
+  initActivateEventListeners,
+  pushEventStream,
+  pushEventStreamAndSetBoolean,
+} from '../../../utils';
 
 /**
  * destroy an already damaged minion
  */
-export const core126 = (
-  G: GameState,
-  ctx: Ctx,
-  gameConfig: GameConfig,
-  zone: Zone,
-  zoneIdx: number,
-  card: Card,
-  cardIdx: number,
-  player: PlayerID,
-  opponent: PlayerID
-) => {
-  G.zones.forEach((z) => {
-    z.sides[player].forEach((c) => {
-      if (cardIsNotSelf(c, card) && c.booleans.hasHealthReduced) {
-        c.booleans.canBeDestroyed = true;
-      }
+const core126 = {
+  init: (G: GameState, ctx: Ctx, player: PlayerID, playedCard: Card) => {
+    const { opponent } = getContextualPlayerIds(player);
+
+    const isNotSelf = (c: Card) => {
+      return cardIsNotSelf(c, playedCard);
+    };
+
+    const cardIsNotDestroyed = (c: Card) => {
+      return c.booleans.isDestroyed === false;
+    };
+
+    const cardHasHealthReduced = (c: Card) => {
+      return c.booleans.hasHealthReduced === true;
+    };
+
+    G.zones.forEach((z) => {
+      z.sides[player].forEach((c) => {
+        if (isNotSelf(c) && cardIsNotDestroyed(c) && cardHasHealthReduced(c)) {
+          c.booleans.canBeDestroyed = true;
+        }
+      });
+
+      z.sides[opponent].forEach((c) => {
+        if (isNotSelf(c) && cardIsNotDestroyed(c) && cardHasHealthReduced(c)) {
+          c.booleans.canBeDestroyed = true;
+        }
+      });
+    });
+  },
+
+  exec: (
+    G: GameState,
+    ctx: Ctx,
+    targetPlayer: PlayerID,
+    targetCard: Card,
+    playedCard: Card
+  ) => {
+    const { opponent, player } = getContextualPlayerIds(targetPlayer);
+
+    // prettier-ignore
+    let target: {
+      card: Card,
+      cardIdx: number,
+      zoneNumber: number
+    } | undefined;
+
+    G.zones.forEach((z, zi) => {
+      z.sides[targetPlayer].forEach((c, ci) => {
+        if (cardUuidMatch(c, targetCard)) {
+          target = {
+            card: c,
+            cardIdx: ci,
+            zoneNumber: zi,
+          };
+        }
+      });
     });
 
-    z.sides[opponent].forEach((c) => {
-      if (cardIsNotSelf(c, card) && c.booleans.hasHealthReduced) {
-        c.booleans.canBeDestroyed = true;
-      }
+    if (target !== undefined) {
+      const { card, cardIdx, zoneNumber } = target;
+
+      G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
+        const isTargetedCard = cardUuidMatch(c, card) && ci === cardIdx;
+
+        if (isTargetedCard) {
+          c.destroyedOnTurn = G.turn;
+          c.booleans.isDestroyed = true;
+          c.booleans.canBeDestroyed = false;
+          pushEventStream(c, playedCard, 'wasDestroyed');
+          handleCardDestructionMechanics(G, c, opponent);
+        }
+      });
+
+      G.zones.forEach((z) => {
+        z.sides[player].forEach((c) => {
+          c.booleans.canBeAttackedBySpell = false;
+
+          if (cardUuidMatch(c, playedCard)) {
+            c.booleans.onPlayWasTriggered = true;
+            pushEventStream(c, playedCard, 'onPlayWasTriggered');
+          }
+        });
+
+        z.sides[opponent].forEach((c) => {
+          c.booleans.canBeAttackedBySpell = false;
+        });
+      });
+    }
+  },
+
+  execAi: (
+    G: GameState,
+    ctx: Ctx,
+    aiID: PlayerID,
+    zoneNumber: number,
+    playedCard: Card,
+    playedCardIdx: number,
+  ) => {
+    const { opponent } = getContextualPlayerIds(aiID);
+    let possibleTargets: {
+      zoneNumber: number;
+      cardData: Card;
+      cardIndex: number;
+    }[] = [];
+
+    const isNotSelf = (c: Card) => {
+      return cardIsNotSelf(c, playedCard);
+    };
+
+    const cardIsNotDestroyed = (c: Card) => {
+      return c.booleans.isDestroyed === false;
+    };
+
+    const cardHasHealthReduced = (c: Card) => {
+      return c.booleans.hasHealthReduced === true;
+    };
+
+    G.zones.forEach((z, zi) => {
+      z.sides[opponent].forEach((c, ci) => {
+        if (isNotSelf(c) && cardIsNotDestroyed(c) && cardHasHealthReduced(c)) {
+          possibleTargets.push({
+            zoneNumber: zi,
+            cardData: c,
+            cardIndex: ci,
+          });
+        }
+      });
     });
-  });
+
+    if (possibleTargets.length !== 0) {
+      const choice = ctx?.random?.Shuffle(possibleTargets)[0];
+
+      if (choice) {
+        const { zoneNumber, cardData, cardIndex } = choice;
+
+        G.zones[zoneNumber].sides[opponent].forEach((c, ci) => {
+          const isTargetedCard = cardUuidMatch(c, cardData) && ci === cardIndex;
+          if (isTargetedCard) {
+            c.destroyedOnTurn = G.turn;
+            c.booleans.isDestroyed = true;
+            c.booleans.canBeDestroyed = false;
+            pushEventStream(c, playedCard, 'wasDestroyed');
+            handleCardDestructionMechanics(G, c, opponent);
+          }
+        });
+
+        G.zones.forEach((z, zI) => {
+          z.sides[aiID].forEach((c, cI) => {
+            const isCardPlayed = cardUuidMatch(c, playedCard);
+            if (isCardPlayed) {
+              pushEventStreamAndSetBoolean(
+                G,
+                ctx,
+                aiID,
+                zI,
+                c,
+                choice.cardData,
+                'onPlayWasTriggered'
+              );
+            }
+          });
+        });
+      }
+    }
+  },
 };
 
-export const core126Destroy = (
-  G: GameState,
-  ctx: Ctx,
-  targetPlayer: PlayerID,
-  cardToDestroyUuid: string,
-  cardToBlame: Card
-) => {
-  // prettier-ignore
-  let target: {
-    card: Card,
-    cardIdx: number,
-    zoneNumber: number
-  } | undefined;
-
-  G.zones.forEach((z, zi) => {
-    z.sides[targetPlayer].forEach((c, ci) => {
-      if (c.uuid === cardToDestroyUuid) {
-        target = {
-          card: c,
-          cardIdx: ci,
-          zoneNumber: zi,
-        };
-      }
-    });
-  });
-
-  if (target !== undefined) {
-    const { card, cardIdx, zoneNumber } = target;
-
-    // push to targetPlayers destroyed arr
-    G.players[targetPlayer].cards.destroyed.push(card);
-    counts.incrementDestroyed(G, targetPlayer);
-
-    filterArray(G.zones[zoneNumber].sides[targetPlayer], card.uuid, cardIdx);
-    handleCardDestructionMechanics(G, card, targetPlayer);
-  }
-
-  G.zones.forEach((z, zi) => {
-    z.sides['0'].forEach((c, ci) => {
-      c.booleans.canBeDestroyed = false;
-      if (c.uuid === cardToBlame.uuid) c.booleans.onPlayWasTriggered = true;
-    });
-
-    z.sides['1'].forEach((c, ci) => {
-      c.booleans.canBeDestroyed = false;
-    });
-  });
-};
+export default core126;

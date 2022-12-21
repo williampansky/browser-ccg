@@ -4,7 +4,7 @@ import { EffectsPlugin } from 'bgio-effects/plugin';
 import type { EffectsCtxMixin } from 'bgio-effects/dist/types';
 import type { GameState, PlayerID } from '../types';
 
-import { asyncPhases, defaultPhases } from './phases';
+import phases from './phases';
 import { defaultState } from './state';
 import { gameConfig } from '../app.config';
 import aiEnumeration from './ai-enumeration';
@@ -53,7 +53,7 @@ const BrowserCCG: Game<GameState, CtxWithEffects> = {
    * etc. Turns happen inside phases.
    * @see https://boardgame.io/documentation/#/phases
    */
-  phases: gameUsesAsyncTurns ? {...asyncPhases} : {...defaultPhases},
+  phases: phases,
 
   /**
    * The framework will come bundled with a few different bot algorithms, 
@@ -64,14 +64,16 @@ const BrowserCCG: Game<GameState, CtxWithEffects> = {
    * will figure out the right combination of moves to make it happen!
    * @see https://boardgame.io/documentation/#/tutorial?id=bots
    */
-  ai: aiEnumeration,
+  ai: {
+    enumerate: aiEnumeration,
+  },
 
   /**
    * End the game if G.turn hits the max per config.
    */
   endIf: (G: GameState, ctx: Ctx) => {
     // prettier-ignore
-    if (G.turn === G.gameConfig.numerics.numberOfSingleTurnsPerGame) {
+    if (G.turn === G.totalTurns) {
       switch (getGameResult(G.zones)) {
         case '1': return { winner: '1' };
         case '0': return { winner: '0' };

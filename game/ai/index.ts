@@ -1,4 +1,10 @@
-export { aiPlayCard } from './ai.moves';
+// moves
+export {
+  aiPlayCard,
+  aiPlayCardMove,
+  aiSetDone,
+  aiSetDoneMove,
+} from './ai.moves';
 
 // mechanics
 export { aiOnPlayDestroy } from './interactions/ai.on-play.destroy';

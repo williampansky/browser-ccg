@@ -1,7 +1,7 @@
 import { current } from 'immer';
 import { ReactNode, useEffect, useState } from 'react';
 import { useEffectListener } from 'bgio-effects/react';
-import type { Card, DiscardCardEffects, PlayerID } from '../../../../types';
+import type { Card, DiscardEffects, PlayerID } from '../../../../types';
 import { useDispatch } from 'react-redux';
 import { setDiscardedCard } from '../../../../features';
 
@@ -41,7 +41,7 @@ export const HandSlotCardWrapper = ({
   // useEffectListener(
   //   'discardCard',
   //   (effectPayload: any) => {
-  //     const payload: DiscardCardEffects = {
+  //     const payload: DiscardEffects = {
   //       cardUuid: effectPayload?.card,
   //       cardIdx: effectPayload?.cardIdx,
   //       player: effectPayload?.player

@@ -3,9 +3,16 @@ import {
   CardRarity as CardRarityEnums,
   CardSet as CardSetEnums,
   CardType as CardTypeEnums,
+  CardMechanicsSide as CardMechanicsSideEnums,
+  CardMechanicsContext as CardMechanicsContextEnums,
 } from '../enums';
 
 export declare type CardId = string;
+export declare type CardMechanicsSide =
+  | CardMechanicsSideEnums.Both
+  | CardMechanicsSideEnums.None
+  | CardMechanicsSideEnums.Player
+  | CardMechanicsSideEnums.Opponent;
 export declare type CardRace =
   | CardRaceEnums.Android
   | CardRaceEnums.Creature
@@ -61,6 +68,7 @@ export interface CardStateBooleans {
   onPlayWasTriggered: boolean;
   wasDiscarded: boolean;
   wasDiscovered: boolean;
+  wasHealed: boolean;
   wasResurrected: boolean;
   wasReturned: boolean;
   wasTransferred: boolean;
@@ -93,19 +101,42 @@ export interface CardBase {
   key: string;
   mechanics?: string[];
   mechanicsEnabled?: boolean;
+  mechanicsContext: string;
+  mechanicsSide: CardMechanicsSide | string;
   name: string;
   numberPrimary: number;
   numberRNG: number;
   numberSecondary: number;
-  playContext?: string;
-  playType?: string;
+  playType: string;
   power: number;
   race: CardRace | string;
   rarity: CardRarity | string;
+  refId: string;
   set: CardSet | string;
   targetingText?: string;
   text?: string;
   type: CardType | string;
+}
+
+/**
+ * Used to track a card's event activations;
+ * e.g. EVENT, ON_PLAY, DEBUFF, etc...
+ */
+export interface CardEventStream {
+  /**
+   * card that activated this event
+   */
+  blame: string;
+
+  /**
+   * event that was made or triggered
+   */
+  event: string;
+
+  /**
+   * unique id of the blame target
+   */
+  uuid: string;
 }
 
 /**
@@ -131,7 +162,7 @@ export interface CardHealthStream {
   /**
    * unique id of the blame target
    */
-   uuid: string;
+  uuid: string;
 }
 
 /**
@@ -157,7 +188,7 @@ export interface CardPowerStream {
   /**
    * unique id of the blame target
    */
-   uuid: string;
+  uuid: string;
 }
 
 export interface Card {
@@ -173,10 +204,12 @@ export interface Card {
   collectible: boolean;
   currentCost: number;
   description?: string;
+  destroyedOnTurn?: number;
   displayPower: number;
   displayHealth: number;
   elite: boolean;
   entourage?: string[];
+  eventStream: CardEventStream[];
   flavorText?: string;
   fpoArt?: boolean;
   healthStream: CardHealthStream[];
@@ -191,12 +224,13 @@ export interface Card {
   isGolden?: boolean;
   mechanics?: string[];
   mechanicsEnabled?: boolean;
+  mechanicsSide: CardMechanicsSide | string;
   name: string;
   numberPrimary: number;
   numberRNG: number;
   numberSecondary: number;
-  playContext?: string;
-  playType?: string;
+  mechanicsContext: string;
+  playType: string;
   powerOverride?: number; // use this power instead of base or latest stream
   powerStream: CardPowerStream[];
   race: CardRace | string;
@@ -210,6 +244,7 @@ export interface Card {
   type: CardType | string;
   uuid: string;
   zonePowerAdjustment: number;
+  zoneCostAdjustment: number;
 
   /**
    * Required by `react-select`
@@ -220,6 +255,13 @@ export interface Card {
    * Required by `react-select`
    */
   value: string;
+
+  /**
+   * The uuid created by airtable which acts as a lookup reference
+   * for the `entourage` field as it "Link(s) to another record"
+   * on the airtable UI interface.
+   */
+  refId: string;
 }
 
 export interface Deck {

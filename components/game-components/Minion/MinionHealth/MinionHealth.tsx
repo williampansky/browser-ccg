@@ -9,6 +9,7 @@ export interface MinionHealthProps {
   alternate?: boolean;
   isIncreased?: boolean;
   isReduced?: boolean;
+  isDestroyed?: boolean;
 }
 
 export const MinionHealth = ({
@@ -18,6 +19,7 @@ export const MinionHealth = ({
   alternate = false,
   isIncreased = false,
   isReduced = false,
+  isDestroyed = false,
 }: MinionHealthProps) => {
   return (
     <div
@@ -26,6 +28,7 @@ export const MinionHealth = ({
         alternate ? styles['alternate'] : '',
         isIncreased ? styles['power--buffed'] : '',
         isReduced ? styles['power--debuffed'] : '',
+        isDestroyed ? styles['power--is-destroyed'] : '',
       ].join(' ')}
       data-component='MinionPower'
       data-value={current}

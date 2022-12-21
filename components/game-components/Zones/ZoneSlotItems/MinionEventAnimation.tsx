@@ -1,22 +1,20 @@
-import type { Card } from '../../../../types';
+import { add, multiply } from 'mathjs';
 
 interface Props {
-  data?: Card;
-  index?: number;
-  zoneNumber?: number;
+  index: number;
+  mapIndex: number;
 }
 
-export const MinionEventAnimation = ({ data, index, zoneNumber }: Props) => {
-  const b = data && data?.booleans;
-
+export const MinionEventAnimation = ({ index, mapIndex }: Props) => {
   return (
     <div
-      className={[
-        'minionslot',
-        b?.eventWasTriggered ? 'minionslot--event-was-triggered' : '',
-      ].join(' ')}
+      className='minionslot minionslot--event-was-triggered'
       data-component='MinionEventAnimation'
       data-index={index}
+      data-map-index={mapIndex}
+      style={{
+        animationDelay: `${multiply(add(mapIndex, 1), 200)}ms`,
+      }}
     />
   );
 };
