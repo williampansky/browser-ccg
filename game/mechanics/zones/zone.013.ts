@@ -29,7 +29,13 @@ const zone013 = {
   },
 
   summonMinion(G: GameState, zoneNumber: number, player: PlayerID, c: Card) {
-    G.zones[zoneNumber].sides[player].push(c);
+    const {
+      numerics: { numberOfSlotsPerZone },
+    } = G.gameConfig;
+    
+    if (G.zones[zoneNumber].sides[player].length < numberOfSlotsPerZone) {
+      G.zones[zoneNumber].sides[player].push(c);
+    }
   },
 };
 

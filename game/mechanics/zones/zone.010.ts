@@ -1,5 +1,5 @@
-import type { Ctx } from 'boardgame.io';
 import { gt, lt } from 'lodash';
+import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, Zone } from '../../../types';
 import { getCardPower } from '../../../utils';
 

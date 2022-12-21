@@ -1,4 +1,5 @@
 import type { Ctx } from 'boardgame.io';
+import { LastMoveMade } from '../../../enums';
 import type { GameState } from '../../../types';
 import {
   determinePlayableCards,
@@ -13,4 +14,8 @@ export default function playCardTurnOnMove(G: GameState, ctx: Ctx) {
   handleZonePowersCalculations(G, ctx);
   // handleActiveCardBoons.init(G, ctx); // @todo
   determinePlayableCards(G, ctx, currentPlayer);
+
+  if (G.lastMoveMade === LastMoveMade.PlayCard) {
+    handleZoneMechanics(G, ctx, 'onPlayCard');
+  }
 }

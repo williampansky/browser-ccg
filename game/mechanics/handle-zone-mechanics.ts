@@ -2,6 +2,7 @@ import type { Ctx } from 'boardgame.io';
 import type { GameState } from '../../types';
 import zone001 from './zones/zone.001';
 import zone002 from './zones/zone.002';
+import zone008 from './zones/zone.008';
 import zone009 from './zones/zone.009';
 import zone010 from './zones/zone.010';
 
@@ -11,6 +12,18 @@ import zone010 from './zones/zone.010';
  */
 const handleZoneMechanics = (G: GameState, ctx: Ctx, context?: string) => {
   switch (context) {
+    case 'onPlayCard':
+      G.zones.forEach((z, zi) => {
+        if (z.revealed) {
+          switch (z.id) {
+            case 'z008':
+              zone008.exec(G, ctx, z, zi);
+              break;
+          }
+        }
+      });
+      break;
+
     case 'onTurnBegin':
       G.zones.forEach((z, zi) => {
         if (z.revealed) {
