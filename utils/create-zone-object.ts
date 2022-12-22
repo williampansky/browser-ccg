@@ -42,6 +42,7 @@ const createZoneObject = (obj: ZoneBase, withUuid: boolean = false): Zone => {
     id: id,
     name: name,
     mechanics: mechanics,
+    mechanicsEnabled: obj?.mechanicsEnabled,
     powers: {
       '0': 0,
       '1': 0,

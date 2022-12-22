@@ -19,6 +19,7 @@ export interface ZoneBase {
   id: string;
   name: string;
   mechanics?: string[];
+  mechanicsEnabled?: boolean;
   set?: string;
 }
 
@@ -35,6 +36,7 @@ export interface Zone {
   id: string;
   name: string;
   mechanics?: string[];
+  mechanicsEnabled?: boolean;
   powers: Record<PlayerID, number>;
   revealed: boolean;
   set: string;

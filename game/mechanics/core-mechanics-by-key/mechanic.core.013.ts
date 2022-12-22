@@ -32,7 +32,7 @@ const core013 = {
 
     G.zones.forEach((z, zIdx) => {
       z.sides[player].forEach((c, cIdx) => {
-        const isNotSelf = cardIsNotSelf(c, listenerCard);
+        const isNotSelf = cardIsNotSelf(c, listenerCard) === true;
         const cardIsSprite = c.race === CardRace.Sprite;
 
         if (isNotSelf && cardIsSprite) {

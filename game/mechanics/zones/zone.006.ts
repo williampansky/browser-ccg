@@ -37,6 +37,30 @@ const zone006 = {
 
   setPower(z: Zone, c: Card) {
     c.displayPower--;
+    // push to stream
+    // c.powerStream.push({
+    //   blame: z.name,
+    //   adjustment: z.effectAdjustment,
+    //   currentPower: add(c.displayPower, z.effectAdjustment),
+    //   uuid: z.uuid,
+    // });
+
+    // // set display value
+    // const newPower = () => {
+    //   let initialPower: number = c.basePower;
+
+    //   if (c?.powerOverride) {
+    //     initialPower = c?.powerOverride;
+    //   }
+    
+    //   if (c.powerStream.length !== 0) {
+    //     initialPower = c.powerStream[c.powerStream.length - 1].currentPower;
+    //   }
+
+    //   return initialPower;
+    // }
+
+    // c.displayPower = newPower();
   },
 
   setBoolens(c: Card) {

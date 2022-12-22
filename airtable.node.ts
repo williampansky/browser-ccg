@@ -269,6 +269,7 @@ const fetchZonesData = async (tableId: string) => {
           flavorText: fields?.flavorText,
           id: fields?.id,
           mechanics: parseMechanics(fields?.mechanics),
+          mechanicsEnabled: fields?.mechanicsEnabled || false,
           name: fields?.name,
           set: replaceAllConstants(fields?.set, 'value'),
           key: createZoneKey(fields.id, fields.set),
