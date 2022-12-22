@@ -19,31 +19,33 @@ const initZoneMechanics = (
   zone: Zone,
   zoneNumber: number
 ) => {
-  switch (zone.id) {
-    case 'z002':
-      zone002.exec(G, ctx, zone);
-      break;
-    case 'z005':
-      zone005.init(G, ctx, zone, zoneNumber);
-      break;
-    case 'z007':
-      zones.disableZone(G, zoneNumber);
-      break;
-    case 'z011':
-      zone011.init(G, ctx, zone);
-      break;
-    case 'z012':
-      zone012.init(G, ctx, zone);
-      break;
-    case 'z013':
-      zone013.init(G, ctx, zone, zoneNumber);
-      break;
-    case 'z014':
-      zone014.init(G, ctx, zone);
-      break;
-    case 'z015':
-      zone015.init(G, ctx, zone);
-      break;
+  if (zone.revealed && zone.mechanicsEnabled) {
+    switch (zone.id) {
+      case 'z002':
+        zone002.exec(G, ctx, zone);
+        break;
+      case 'z005':
+        zone005.init(G, ctx, zone, zoneNumber);
+        break;
+      case 'z007':
+        zones.disableZone(G, zoneNumber);
+        break;
+      case 'z011':
+        zone011.init(G, ctx, zone);
+        break;
+      case 'z012':
+        zone012.init(G, ctx, zone);
+        break;
+      case 'z013':
+        zone013.init(G, ctx, zone, zoneNumber);
+        break;
+      case 'z014':
+        zone014.init(G, ctx, zone);
+        break;
+      case 'z015':
+        zone015.init(G, ctx, zone);
+        break;
+    }
   }
 };
 

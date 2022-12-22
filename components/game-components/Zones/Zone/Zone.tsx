@@ -123,7 +123,11 @@ export const Zone = ({
         <ZoneName
           name={zonesConfig.zoneNames ? zone?.name : ''}
           effectText={
-            zonesConfig.effectAdjustments ? zone?.effectText : undefined
+            zonesConfig.effectAdjustments
+              ? zone.mechanicsEnabled
+                ? zone?.effectText
+                : undefined
+              : undefined
           }
         />
 

@@ -93,12 +93,20 @@ export const aiPlayCardMove = (
 
   // validate move
   if (cantAffordCard) {
-    console.error('INVALID_MOVE(cantAffordCard)', 'apC: ' + ap[player].current, 'cost: ' + card.currentCost);
+    console.error(
+      'INVALID_MOVE(cantAffordCard)',
+      'apC: ' + ap[player].current,
+      'cost: ' + card.currentCost
+    );
     return INVALID_MOVE;
   }
 
   if (zoneIsDisabled) {
-    console.error('INVALID_MOVE(zoneIsDisabled)', 'zone ' + zoneNumber, 'disabled: ' + zone.disabled[player]);
+    console.error(
+      'INVALID_MOVE(zoneIsDisabled)',
+      'zone ' + zoneNumber,
+      'disabled: ' + zone.disabled[player]
+    );
     return INVALID_MOVE;
   }
 
@@ -134,75 +142,77 @@ export const aiPlayCardMove = (
   });
 
   // init card mechs
-  switch (card.key) {
-    case 'SET_CORE_004':
-      core004.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
-      break;
-    case 'SET_CORE_005':
-      core005.execAi(G, ctx, aiID, zoneNumber, card);
-      break;
-    case 'SET_CORE_006':
-      core006.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
-      break;
-    case 'SET_CORE_007':
-      core007.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
-      break;
-    case 'SET_CORE_011':
-      core011.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
-      break;
-    case 'SET_CORE_019':
-      core019.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
-      break;
-    case 'SET_CORE_029':
-      core029.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
-      break;
-    case 'SET_CORE_031':
-      core031.execAi(G, ctx, aiID, card);
-      break;
-    case 'SET_CORE_036':
-      core036.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
-      break;
-    case 'SET_CORE_042':
-      core042.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
-      break;
-    case 'SET_CORE_043':
-      core043.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
-      break;
-    case 'SET_CORE_044':
-      aiDealTargetedDamageToMinion(G, ctx, aiID, card);
-      break;
-    case 'SET_CORE_050':
-      core050.execAi(G, ctx, aiID, card);
-      break;
-    case 'SET_CORE_053':
-      aiDealTargetedDamageToMinion(G, ctx, aiID, card);
-      break;
-    case 'SET_CORE_058':
-      aiDealTargetedDamageToMinion(G, ctx, aiID, card);
-      break;
-    case 'SET_CORE_060':
-      core060.execAi(G, ctx, aiID, zoneNumber, card);
-      break;
-    case 'SET_CORE_071':
-      core071.execAi(G, ctx, aiID, zoneNumber, card);
-      break;
-    case 'SET_CORE_108':
-      boonPowerOfCardsInZone(G, ctx, zoneNumber, card, aiID);
-      break;
-    case 'SET_CORE_110':
-      core110.execAi(G, ctx, aiID, card);
-      break;
-    case 'SET_CORE_112':
-      aiDealTargetedDamageToMinion(G, ctx, aiID, card);
-      break;
-    case 'SET_CORE_126':
-      core126.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
-      break;
-    case 'SET_CORE_133':
-      core133.execAi(G, ctx, card, aiID);
-      break;
-    default:
-      break;
+  if (playedCardIdx) {
+    switch (card.key) {
+      case 'SET_CORE_004':
+        core004.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        break;
+      case 'SET_CORE_005':
+        core005.execAi(G, ctx, aiID, zoneNumber, card);
+        break;
+      case 'SET_CORE_006':
+        core006.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        break;
+      case 'SET_CORE_007':
+        core007.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        break;
+      case 'SET_CORE_011':
+        core011.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        break;
+      case 'SET_CORE_019':
+        core019.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        break;
+      case 'SET_CORE_029':
+        core029.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        break;
+      case 'SET_CORE_031':
+        core031.execAi(G, ctx, aiID, card);
+        break;
+      case 'SET_CORE_036':
+        core036.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        break;
+      case 'SET_CORE_042':
+        core042.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        break;
+      case 'SET_CORE_043':
+        core043.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        break;
+      case 'SET_CORE_044':
+        aiDealTargetedDamageToMinion(G, ctx, aiID, card);
+        break;
+      case 'SET_CORE_050':
+        core050.execAi(G, ctx, aiID, card);
+        break;
+      case 'SET_CORE_053':
+        aiDealTargetedDamageToMinion(G, ctx, aiID, card);
+        break;
+      case 'SET_CORE_058':
+        aiDealTargetedDamageToMinion(G, ctx, aiID, card);
+        break;
+      case 'SET_CORE_060':
+        core060.execAi(G, ctx, aiID, zoneNumber, card);
+        break;
+      case 'SET_CORE_071':
+        core071.execAi(G, ctx, aiID, zoneNumber, card);
+        break;
+      case 'SET_CORE_108':
+        boonPowerOfCardsInZone(G, ctx, zoneNumber, card, aiID);
+        break;
+      case 'SET_CORE_110':
+        core110.execAi(G, ctx, aiID, card);
+        break;
+      case 'SET_CORE_112':
+        aiDealTargetedDamageToMinion(G, ctx, aiID, card);
+        break;
+      case 'SET_CORE_126':
+        core126.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        break;
+      case 'SET_CORE_133':
+        core133.execAi(G, ctx, card, aiID);
+        break;
+      default:
+        break;
+    }
   }
 
   // check active listeners

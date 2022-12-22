@@ -100,12 +100,7 @@ export const Board = (props: GameProps) => {
 
   // states
   const abSize = useSelector(({ addressBarSize }: Root) => addressBarSize);
-  const endTurnIsDisabled = useEndTurnButton(
-    phase,
-    playerTurnDone,
-    yourID,
-    currentPlayer
-  );
+  const endTurnIsDisabled = useEndTurnButton(ctx, playerTurnDone, yourID);
 
   // moves
   const onEndTurnButtonClick = useCallback(() => {

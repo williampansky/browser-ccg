@@ -2,6 +2,7 @@ import { add } from 'lodash';
 import type { Ctx } from 'boardgame.io';
 import type { GameState, PlayerID, Zone } from '../../../types';
 import { actionPoints } from '../../state';
+import { determinePlayableCards } from '../../../utils';
 
 /**
  * +1 %ENERGY% if your side here is empty
@@ -14,18 +15,14 @@ const zone009 = {
     }
   },
 
-  exec: (
-    G: GameState,
-    ctx: Ctx,
-    zone: Zone,
-    player: PlayerID
-  ) => {
+  exec: (G: GameState, ctx: Ctx, zone: Zone, player: PlayerID) => {
     if (zone.sides[player].length === 0) {
+      G.actionPoints[player].current++;
       const cur = G.actionPoints[player].current;
-      const newCur = add(cur, zone.effectAdjustment);
-      
+
       if (G.actionPoints[player].current !== cur + zone.effectAdjustment) {
         actionPoints.setCurrent(G, player, add(cur, zone.effectAdjustment));
+        determinePlayableCards(G, ctx, player);
       }
     }
   },

@@ -16,7 +16,7 @@ const handleZoneMechanics = (G: GameState, ctx: Ctx, context?: string) => {
   switch (context) {
     case 'onPlayCard':
       G.zones.forEach((z, zi) => {
-        if (z.revealed) {
+        if (z.revealed && z.mechanicsEnabled) {
           switch (z.id) {
             case 'z008':
               zone008.exec(G, ctx, z, zi);
@@ -28,7 +28,7 @@ const handleZoneMechanics = (G: GameState, ctx: Ctx, context?: string) => {
 
     case 'onTurnBegin':
       G.zones.forEach((z, zi) => {
-        if (z.revealed) {
+        if (z.revealed && z.mechanicsEnabled) {
           switch (z.id) {
             case 'z009':
               zone009.init(G, ctx, z);
@@ -40,7 +40,7 @@ const handleZoneMechanics = (G: GameState, ctx: Ctx, context?: string) => {
 
     case 'onTurnEnd':
       G.zones.forEach((z, zi) => {
-        if (z.revealed) {
+        if (z.revealed && z.mechanicsEnabled) {
           switch (z.id) {
             case 'z004':
               zone004.exec(G, ctx, z, zi);
@@ -52,10 +52,10 @@ const handleZoneMechanics = (G: GameState, ctx: Ctx, context?: string) => {
         }
       });
       break;
-  
+
     default:
       G.zones.forEach((z, zi) => {
-        if (z.revealed) {
+        if (z.revealed && z.mechanicsEnabled) {
           switch (z.id) {
             case 'z001':
               zone001.exec(G, ctx, z, zi);

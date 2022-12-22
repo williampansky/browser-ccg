@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import type { Ctx } from 'boardgame.io';
 import type { Card, GameState, PlayerID } from '../../../types';
 import { counts } from '../../state';
@@ -6,7 +7,6 @@ import {
   getContextualPlayerIds,
   pushEventStream,
 } from '../../../utils';
-import { v4 } from 'uuid';
 
 /**
  * add card opponent played to your hand
