@@ -8,8 +8,8 @@ export const gameConfig: GameConfig = {
     debugHandCardKey: core + '009',
     debugBoardCardKey: core + '013',
     debugBoardCardKeyAmount: 1,
-    useDebugHandCardKey: true,
-    useDebugBoardCardKey: true,
+    useDebugHandCardKey: false,
+    useDebugBoardCardKey: false,
 
     debugOpponentHandCardKey: core + '053',
     debugOpponentBoardCardKey: core + '032',
