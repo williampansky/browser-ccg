@@ -17,7 +17,7 @@ const pushEventStreamAndSetBoolean = (
   cardToBlame: Card,
   event: string
 ): void => {
-  if (isBotTurn(ctx)) {
+  if (isBotTurn(ctx, player)) {
     const cardToAdjustIdx = G.zones[zoneNumber].sides[player].findIndex((o) => {
       return o.uuid === cardToAdjust.uuid;
     });

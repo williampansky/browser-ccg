@@ -43,7 +43,7 @@ import core110 from '../mechanics/core-mechanics-by-key/mechanic.core.110';
 import core036 from '../mechanics/core-mechanics-by-key/mechanic.core.036';
 import core133 from '../mechanics/core-mechanics-by-key/mechanic.core.133';
 import core126 from '../mechanics/core-mechanics-by-key/mechanic.core.126';
-import { boonPowerOfCardsInZone } from '../mechanics/on-play-mechanics';
+import { boonPowerOfCardsInZone, dealAoeDamageOnPlay } from '../mechanics/on-play-mechanics';
 import core071 from '../mechanics/core-mechanics-by-key/mechanic.core.071';
 import core060 from '../mechanics/core-mechanics-by-key/mechanic.core.060';
 import core050 from '../mechanics/core-mechanics-by-key/mechanic.core.050';
@@ -82,20 +82,18 @@ export const aiPlayCardMove = (
   card: Card,
   cardIndex: number
 ) => {
-  const { currentPlayer } = ctx;
-  const player = currentPlayer;
   const slotsPerZone = G.gameConfig.numerics.numberOfSlotsPerZone;
   const ap = G.actionPoints;
   const zone = G.zones[zoneNumber];
-  const cantAffordCard = !gte(ap[player].current, card.currentCost);
-  const zoneIsDisabled = zone.disabled[player];
-  const zoneIsFull = lt(zone.sides[player].length, slotsPerZone);
+  const cantAffordCard = !gte(ap[aiID].current, card.currentCost);
+  const zoneIsDisabled = zone.disabled[aiID];
+  const zoneIsFull = lt(zone.sides[aiID].length, slotsPerZone);
 
   // validate move
   if (cantAffordCard) {
     console.error(
       'INVALID_MOVE(cantAffordCard)',
-      'apC: ' + ap[player].current,
+      'apC: ' + ap[aiID].current,
       'cost: ' + card.currentCost
     );
     return INVALID_MOVE;
@@ -105,7 +103,7 @@ export const aiPlayCardMove = (
     console.error(
       'INVALID_MOVE(zoneIsDisabled)',
       'zone ' + zoneNumber,
-      'disabled: ' + zone.disabled[player]
+      'disabled: ' + zone.disabled[aiID]
     );
     return INVALID_MOVE;
   }
@@ -116,13 +114,13 @@ export const aiPlayCardMove = (
   // }
 
   // add card to PlayedCards array
-  playedCards.push(G, player, card);
+  playedCards.push(G, aiID, card);
 
   // remove cost from current action points
-  actionPoints.subtract(G, player, card.currentCost);
+  actionPoints.subtract(G, aiID, card.currentCost);
 
   // push card to zone side array
-  zone.sides[player].push({
+  zone.sides[aiID].push({
     ...card,
     revealed: true, // reveal card
     displayPower: getCardPower(card), // set display power
@@ -131,51 +129,46 @@ export const aiPlayCardMove = (
 
   // reset datas
   lastCardPlayed.set(G, { card, index: cardIndex });
-  removeLastPlayedCardFromHand(G, player);
+  removeLastPlayedCardFromHand(G, aiID);
 
   // set last move
   G.lastMoveMade = LastMoveMade.aiPlayCard;
 
-  // get played card index in zone
-  const playedCardIdx = G.zones[zoneNumber].sides[player].findIndex((o) => {
-    return o.uuid === card.uuid;
-  });
-
   // init card mechs
-  if (playedCardIdx) {
+  if (cardIndex) {
     switch (card.key) {
       case 'SET_CORE_004':
-        core004.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        core004.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_005':
         core005.execAi(G, ctx, aiID, zoneNumber, card);
         break;
       case 'SET_CORE_006':
-        core006.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        core006.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_007':
-        core007.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        core007.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_011':
-        core011.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        core011.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_019':
-        core019.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        core019.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_029':
-        core029.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        core029.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_031':
         core031.execAi(G, ctx, aiID, card);
         break;
       case 'SET_CORE_036':
-        core036.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        core036.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_042':
-        core042.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        core042.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_043':
-        core043.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        core043.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_044':
         aiDealTargetedDamageToMinion(G, ctx, aiID, card);
@@ -204,8 +197,14 @@ export const aiPlayCardMove = (
       case 'SET_CORE_112':
         aiDealTargetedDamageToMinion(G, ctx, aiID, card);
         break;
+      case 'SET_CORE_121':
+        dealAoeDamageOnPlay(G, ctx, aiID, card, card.mechanicsSide);
+        break;
+      case 'SET_CORE_122':
+        dealAoeDamageOnPlay(G, ctx, aiID, card, card.mechanicsSide);
+        break;
       case 'SET_CORE_126':
-        core126.execAi(G, ctx, aiID, zoneNumber, card, playedCardIdx);
+        core126.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_133':
         core133.execAi(G, ctx, card, aiID);

@@ -19,13 +19,16 @@ export default function initGlobalDamageMechanicByCardKey(
 
   switch (card.key) {
     case 'SET_CORE_038':
-      dealAoeDamageOnPlay(G, player, card, card.mechanicsSide);
+      dealAoeDamageOnPlay(G, ctx, player, card, card.mechanicsSide);
       break;
     case 'SET_CORE_060':
       core060.exec(G, ctx, player, zoneNumber, card);
       break;
+    case 'SET_CORE_121':
+      dealAoeDamageOnPlay(G, ctx, player, card, card.mechanicsSide);
+      break;
     case 'SET_CORE_122':
-      dealAoeDamageOnPlay(G, player, card, card.mechanicsSide);
+      dealAoeDamageOnPlay(G, ctx, player, card, card.mechanicsSide);
       break;
   }
 
