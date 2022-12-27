@@ -4,8 +4,10 @@ import { counts } from '../../state';
 
 import {
   aiSpreadEventStreamAndOnPlayBoolean,
+  cardUuidMatch,
   createCardObject,
   pushEventStream,
+  pushEventStreamAndSetBoolean,
 } from '../../../utils';
 
 import setsCore from '../../data/setsCore.json';
@@ -43,7 +45,7 @@ const core004 = {
     player: PlayerID,
     zoneNumber: number,
     playedCard: Card,
-    playedCardIdx: number,
+    playedCardIdx: number
   ) => {
     const { numerics } = G.gameConfig;
 
@@ -55,16 +57,19 @@ const core004 = {
         G.players[player].cards.hand.push(randomCard);
         counts.incrementHand(G, player);
 
-        aiSpreadEventStreamAndOnPlayBoolean(
-          G,
-          ctx,
-          player,
-          zoneNumber,
-          playedCard,
-          playedCardIdx,
-          playedCard,
-          'onPlayWasTriggered'
-        );
+        G.zones[zoneNumber].sides[player].forEach((c, ci) => {
+          if (playedCard.uuid === c.uuid && playedCardIdx === ci) {
+            pushEventStreamAndSetBoolean(
+              G,
+              ctx,
+              player,
+              zoneNumber,
+              c,
+              c,
+              'onPlayWasTriggered'
+            );
+          }
+        });
       }
     }
   },

@@ -52,7 +52,7 @@ const core041 = {
         const choice = ctx?.random?.Shuffle(possibleTargets)[0]!;
 
         if (choice) {
-          if (isBotTurn(ctx)) {
+          if (isBotTurn(ctx, player)) {
             aiSpreadMove(G, ctx, player, zoneNumber, playedCard);
           } else {
             playedCard.booleans.onPlayWasTriggered = true;
@@ -81,21 +81,23 @@ function aiSpreadMove(
   const zoneSide = G.zones[zoneNumber].sides[player];
   const playedCardIdx = zoneSide.findIndex((o) => o.uuid === playedCard.uuid);
 
-  G.zones[zoneNumber].sides[player][playedCardIdx] = {
-    ...G.zones[zoneNumber].sides[player][playedCardIdx],
-    booleans: {
-      ...G.zones[zoneNumber].sides[player][playedCardIdx].booleans,
-      onPlayWasTriggered: true,
-    },
-    eventStream: [
-      ...G.zones[zoneNumber].sides[player][playedCardIdx].eventStream,
-      {
-        blame: playedCard.name,
-        event: 'onPlayWasTriggered',
-        uuid: playedCard.uuid,
+  if (playedCardIdx) {
+    G.zones[zoneNumber].sides[player][playedCardIdx] = {
+      ...G.zones[zoneNumber].sides[player][playedCardIdx],
+      booleans: {
+        ...G.zones[zoneNumber].sides[player][playedCardIdx].booleans,
+        onPlayWasTriggered: true,
       },
-    ],
-  };
+      eventStream: [
+        ...G.zones[zoneNumber].sides[player][playedCardIdx].eventStream,
+        {
+          blame: playedCard.name,
+          event: 'onPlayWasTriggered',
+          uuid: playedCard.uuid,
+        },
+      ],
+    };
+  }
 }
 
 export default core041;

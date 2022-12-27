@@ -4,6 +4,7 @@ import type { Card, GameState, PlayerID } from '../../../types';
 import { counts } from '../../state';
 import {
   aiSpreadEventStreamAndOnPlayBoolean,
+  cardUuidMatch,
   getContextualPlayerIds,
   pushEventStream,
 } from '../../../utils';
@@ -60,16 +61,20 @@ const core039 = {
           G.players[player].cards.hand.push(dupe);
           counts.incrementHand(G, player);
 
-          aiSpreadEventStreamAndOnPlayBoolean(
-            G,
-            ctx,
-            player,
-            zoneNumber,
-            playedCard,
-            playedCardIdx,
-            undefined,
-            'onPlayWasTriggered'
-          );
+          G.zones[zoneNumber].sides[player].forEach((c, ci) => {
+            if (cardUuidMatch(playedCard, c) && playedCardIdx === ci) {
+              aiSpreadEventStreamAndOnPlayBoolean(
+                G,
+                ctx,
+                player,
+                zoneNumber,
+                c,
+                ci,
+                undefined,
+                'onPlayWasTriggered'
+              );
+            }
+          });
         }
       }
     }

@@ -5,6 +5,7 @@ import { counts } from '../../state';
 import { CardBaseRarity, CardBaseType } from '../../../enums';
 import {
   aiSpreadEventStreamAndOnPlayBoolean,
+  cardUuidMatch,
   createCardObject,
   isBotTurn,
   pushEventStream,
@@ -74,16 +75,20 @@ const core011 = {
         G.players[player].cards.hand.push(randomCard);
         counts.incrementHand(G, player);
 
-        aiSpreadEventStreamAndOnPlayBoolean(
-          G,
-          ctx,
-          player,
-          zoneNumber,
-          playedCard,
-          playedCardIdx,
-          undefined,
-          'onPlayWasTriggered'
-        );
+        G.zones[zoneNumber].sides[player].forEach((c, ci) => {
+          if (cardUuidMatch(playedCard, c) && playedCardIdx === ci) {
+            aiSpreadEventStreamAndOnPlayBoolean(
+              G,
+              ctx,
+              player,
+              zoneNumber,
+              playedCard,
+              playedCardIdx,
+              undefined,
+              'onPlayWasTriggered'
+            );
+          }
+        })
       }
     }
   },

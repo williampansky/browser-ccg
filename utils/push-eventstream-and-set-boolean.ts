@@ -22,16 +22,18 @@ const pushEventStreamAndSetBoolean = (
       return o.uuid === cardToAdjust.uuid;
     });
 
-    aiSpreadEventStreamAndOnPlayBoolean(
-      G,
-      ctx,
-      player,
-      zoneNumber,
-      cardToAdjust,
-      cardToAdjustIdx,
-      cardToBlame,
-      event
-    );
+    if (cardToAdjustIdx) {
+      aiSpreadEventStreamAndOnPlayBoolean(
+        G,
+        ctx,
+        player,
+        zoneNumber,
+        cardToAdjust,
+        cardToAdjustIdx,
+        cardToBlame,
+        event
+      );
+    }
   } else {
     pushEventStream(cardToAdjust, cardToBlame, event);
     cardToAdjust.booleans = {

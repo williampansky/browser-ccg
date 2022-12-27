@@ -3,6 +3,7 @@ import type { Card, CardBase, GameState, PlayerID } from '../../../types';
 
 import {
   aiSpreadEventStreamAndOnPlayBoolean,
+  cardUuidMatch,
   createCardObject,
   getRandomNumberBetween as randomNum,
   isBotTurn,
@@ -37,10 +38,10 @@ const core007 = {
           const entourageCard = createCardObject(entObj);
           const entCardObj = { ...entourageCard, revealed: true };
           z.sides[player].push(entCardObj);
-
-          pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
-          playedCard.booleans.onPlayWasTriggered = true;
         }
+
+        pushEventStream(playedCard, playedCard, 'onPlayWasTriggered');
+        playedCard.booleans.onPlayWasTriggered = true;
       }
     });
   },
@@ -68,20 +69,24 @@ const core007 = {
           const entourageCard = createCardObject(entObj);
           const entCardObj = { ...entourageCard, revealed: true };
           z.sides[player].push(entCardObj);
-
-          aiSpreadEventStreamAndOnPlayBoolean(
-            G,
-            ctx,
-            player,
-            zoneNumber,
-            playedCard,
-            playedCardIdx,
-            undefined,
-            'onPlayWasTriggered'
-          );
         }
       }
     });
+
+    G.zones[zoneNumber].sides[player].forEach((c, ci) => {
+      if (cardUuidMatch(playedCard, c) && playedCardIdx === ci) {
+        aiSpreadEventStreamAndOnPlayBoolean(
+          G,
+          ctx,
+          player,
+          zoneNumber,
+          playedCard,
+          playedCardIdx,
+          undefined,
+          'onPlayWasTriggered'
+        );
+      }
+    })
   },
 };
 

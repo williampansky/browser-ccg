@@ -28,6 +28,7 @@ import {
   determineTargetedOnPlayContext,
 } from '../moves/on-play.move.methods';
 import { add } from 'mathjs';
+import { boonPowerOfCardsInZone, dealAoeDamageOnPlay } from '../mechanics/on-play-mechanics';
 import core031 from '../mechanics/core-mechanics-by-key/mechanic.core.031';
 import core005 from '../mechanics/core-mechanics-by-key/mechanic.core.005';
 import core004 from '../mechanics/core-mechanics-by-key/mechanic.core.004';
@@ -43,10 +44,14 @@ import core110 from '../mechanics/core-mechanics-by-key/mechanic.core.110';
 import core036 from '../mechanics/core-mechanics-by-key/mechanic.core.036';
 import core133 from '../mechanics/core-mechanics-by-key/mechanic.core.133';
 import core126 from '../mechanics/core-mechanics-by-key/mechanic.core.126';
-import { boonPowerOfCardsInZone, dealAoeDamageOnPlay } from '../mechanics/on-play-mechanics';
 import core071 from '../mechanics/core-mechanics-by-key/mechanic.core.071';
 import core060 from '../mechanics/core-mechanics-by-key/mechanic.core.060';
 import core050 from '../mechanics/core-mechanics-by-key/mechanic.core.050';
+import core025 from '../mechanics/core-mechanics-by-key/mechanic.core.025';
+import core037 from '../mechanics/core-mechanics-by-key/mechanic.core.037';
+import core039 from '../mechanics/core-mechanics-by-key/mechanic.core.039';
+import core041 from '../mechanics/core-mechanics-by-key/mechanic.core.041';
+import core056 from '../mechanics/core-mechanics-by-key/mechanic.core.056';
 
 export const aiPlayCard: LongFormMove = {
   client: false,
@@ -155,6 +160,9 @@ export const aiPlayCardMove = (
       case 'SET_CORE_019':
         core019.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
+      case 'SET_CORE_025':
+        core025.exec(G, ctx, aiID, zoneNumber, card);
+        break;
       case 'SET_CORE_029':
         core029.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
@@ -163,6 +171,15 @@ export const aiPlayCardMove = (
         break;
       case 'SET_CORE_036':
         core036.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
+        break;
+      case 'SET_CORE_037':
+        core037.exec(G, ctx, aiID, zoneNumber, card);
+        break;
+      case 'SET_CORE_039':
+        core039.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
+        break;
+      case 'SET_CORE_041':
+        core041.exec(G, ctx, aiID, zoneNumber, card);
         break;
       case 'SET_CORE_042':
         core042.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
@@ -178,6 +195,9 @@ export const aiPlayCardMove = (
         break;
       case 'SET_CORE_053':
         aiDealTargetedDamageToMinion(G, ctx, aiID, card);
+        break;
+      case 'SET_CORE_056':
+        core056.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_058':
         aiDealTargetedDamageToMinion(G, ctx, aiID, card);
@@ -195,6 +215,9 @@ export const aiPlayCardMove = (
         core110.execAi(G, ctx, aiID, card);
         break;
       case 'SET_CORE_112':
+        aiDealTargetedDamageToMinion(G, ctx, aiID, card);
+        break;
+      case 'SET_CORE_120':
         aiDealTargetedDamageToMinion(G, ctx, aiID, card);
         break;
       case 'SET_CORE_121':

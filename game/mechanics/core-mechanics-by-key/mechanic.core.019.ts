@@ -6,6 +6,7 @@ import {
   aiSpreadEventStreamAndOnPlayBoolean,
   getContextualPlayerIds,
   pushEventStream,
+  pushEventStreamAndSetBoolean,
 } from '../../../utils';
 
 /**
@@ -58,16 +59,19 @@ const core019 = {
           G.players[player].cards.deck.push(dupe);
           counts.incrementDeck(G, player);
 
-          aiSpreadEventStreamAndOnPlayBoolean(
-            G,
-            ctx,
-            player,
-            zoneNumber,
-            playedCard,
-            playedCardIdx,
-            undefined,
-            'onPlayWasTriggered'
-          );
+          G.zones[zoneNumber].sides[player].forEach((c, ci) => {
+            if (playedCard.uuid === c.uuid && playedCardIdx === ci) {
+              pushEventStreamAndSetBoolean(
+                G,
+                ctx,
+                player,
+                zoneNumber,
+                c,
+                c,
+                'onPlayWasTriggered'
+              );
+            }
+          });
         }
       }
     }
