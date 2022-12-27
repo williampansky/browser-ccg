@@ -70,6 +70,7 @@ const core082 = {
                 playedCard.numberPrimary
               )
             );
+            
             pushEventStreamAndSetBoolean(
               G,
               ctx,
@@ -82,21 +83,19 @@ const core082 = {
           }
         });
 
-        G.zones.forEach((z, zI) => {
-          z.sides[aiID].forEach((c) => {
-            const isCardPlayed = cardUuidMatch(c, playedCard);
-            if (isCardPlayed) {
-              pushEventStreamAndSetBoolean(
-                G,
-                ctx,
-                aiID,
-                zI,
-                c,
-                choice.cardData,
-                'onPlayWasTriggered'
-              );
-            }
-          });
+        G.zones[zoneIdx].sides[aiID].forEach((c) => {
+          const isCardPlayed = cardUuidMatch(c, playedCard);
+          if (isCardPlayed) {
+            pushEventStreamAndSetBoolean(
+              G,
+              ctx,
+              aiID,
+              zoneIdx,
+              c,
+              choice.cardData,
+              'onPlayWasTriggered'
+            );
+          }
         });
       }
     }

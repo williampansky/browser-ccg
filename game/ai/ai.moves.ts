@@ -52,6 +52,7 @@ import core037 from '../mechanics/core-mechanics-by-key/mechanic.core.037';
 import core039 from '../mechanics/core-mechanics-by-key/mechanic.core.039';
 import core041 from '../mechanics/core-mechanics-by-key/mechanic.core.041';
 import core056 from '../mechanics/core-mechanics-by-key/mechanic.core.056';
+import core082 from '../mechanics/core-mechanics-by-key/mechanic.core.082';
 
 export const aiPlayCard: LongFormMove = {
   client: false,
@@ -207,6 +208,9 @@ export const aiPlayCardMove = (
         break;
       case 'SET_CORE_071':
         core071.execAi(G, ctx, aiID, zoneNumber, card);
+        break;
+      case 'SET_CORE_082':
+        core082.execAi(G, ctx, aiID, zoneNumber, card, cardIndex);
         break;
       case 'SET_CORE_108':
         boonPowerOfCardsInZone(G, ctx, zoneNumber, card, aiID);
