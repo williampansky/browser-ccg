@@ -12,6 +12,7 @@ import {
 
 import core031 from '../mechanics/core-mechanics-by-key/mechanic.core.031';
 import core110 from '../mechanics/core-mechanics-by-key/mechanic.core.110';
+import core123 from '../mechanics/core-mechanics-by-key/mechanic.core.123';
 
 export interface BuffMinionMove {
   card: Card;
@@ -34,6 +35,7 @@ export const buffMinionMove = (
       switch (lastCard.key) {
         case 'SET_CORE_031': core031.exec(G, targetPlayer, c, lastCard); break;
         case 'SET_CORE_110': core110.exec(G, targetPlayer, c, lastCard); break;
+        case 'SET_CORE_123': core123.exec(G, targetPlayer, c, lastCard); break;
         default: break;
       }
     }
