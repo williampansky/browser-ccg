@@ -13,12 +13,17 @@ import {
 import core031 from '../mechanics/core-mechanics-by-key/mechanic.core.031';
 import core110 from '../mechanics/core-mechanics-by-key/mechanic.core.110';
 import core123 from '../mechanics/core-mechanics-by-key/mechanic.core.123';
+import core129 from '../mechanics/core-mechanics-by-key/mechanic.core.129';
 
 export interface BuffMinionMove {
   card: Card;
   targetPlayer: PlayerID;
 }
 
+/**
+ * Make sure to also add the card key to the switch statement
+ * in `moves/buff-minion.move.ts`
+ */
 export const buffMinionMove = (
   G: GameState,
   ctx: Ctx,
@@ -36,6 +41,7 @@ export const buffMinionMove = (
         case 'SET_CORE_031': core031.exec(G, targetPlayer, c, lastCard); break;
         case 'SET_CORE_110': core110.exec(G, targetPlayer, c, lastCard); break;
         case 'SET_CORE_123': core123.exec(G, targetPlayer, c, lastCard); break;
+        case 'SET_CORE_129': core129.exec(G, targetPlayer, c, lastCard); break;
         default: break;
       }
     }

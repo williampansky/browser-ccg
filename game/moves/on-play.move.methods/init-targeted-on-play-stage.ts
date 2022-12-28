@@ -21,9 +21,11 @@ import core056 from '../../mechanics/core-mechanics-by-key/mechanic.core.056';
 import core110 from '../../mechanics/core-mechanics-by-key/mechanic.core.110';
 import core123 from '../../mechanics/core-mechanics-by-key/mechanic.core.123';
 import core126 from '../../mechanics/core-mechanics-by-key/mechanic.core.126';
+import core129 from '../../mechanics/core-mechanics-by-key/mechanic.core.129';
 
 /**
- *
+ * Make sure to also add the card key to the switch statement
+ * in `init-targeted-on-play-stage.ts`
  */
 const initTargetedOnPlayBuffStage = (G: GameState, ctx: Ctx, card: Card) => {
   const { currentPlayer } = ctx;
@@ -33,6 +35,7 @@ const initTargetedOnPlayBuffStage = (G: GameState, ctx: Ctx, card: Card) => {
     case 'SET_CORE_031': core031.init(G, currentPlayer, card); break;
     case 'SET_CORE_110': core110.init(G, currentPlayer, card); break;
     case 'SET_CORE_123': core123.init(G, currentPlayer, card); break;
+    case 'SET_CORE_129': core129.init(G, currentPlayer, card); break;
     default: determineBuffableMinions(G, currentPlayer); break;
   }
 

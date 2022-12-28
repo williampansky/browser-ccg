@@ -4,14 +4,15 @@ import type { Card, GameState as G, PlayerID } from '../../../types';
 import {
   cardIsNotSelf,
   cardUuidMatch,
+  drawCardFromPlayersDeck,
   pushEventStream,
-  pushPowerStreamAndSetDisplay,
+  pushHealthStreamAndSetDisplay,
 } from '../../../utils';
 
 /**
- * give minion +num1 power
+ * give minion +num1 hp and draw a card
  */
-const core123 = {
+const core129 = {
   init: (G: G, player: PlayerID, card: Card) => {
     const check = (c: Card) => {
       const isNotSelf = cardIsNotSelf(c, card);
@@ -50,13 +51,13 @@ const core123 = {
       G.zones[zoneNumber].sides[targetPlayer].forEach((c, ci) => {
         if (c.uuid === card.uuid && ci === cardIdx) {
           c.booleans.isBuffed = true;
-          c.booleans.hasPowerIncreased = true;
+          c.booleans.hasHealthIncreased = true;
           pushEventStream(c, c, 'wasBuffed');
-          pushPowerStreamAndSetDisplay(
+          pushHealthStreamAndSetDisplay(
             card,
             playedCard,
             playedCard.numberPrimary,
-            add(c.displayPower, playedCard.numberPrimary)
+            add(c.displayHealth, playedCard.numberPrimary)
           );
         }
       });
@@ -70,8 +71,10 @@ const core123 = {
           }
         });
       });
+
+      drawCardFromPlayersDeck(G, targetPlayer, playedCard.numberSecondary);
     }
   },
 };
 
-export default core123;
+export default core129;
