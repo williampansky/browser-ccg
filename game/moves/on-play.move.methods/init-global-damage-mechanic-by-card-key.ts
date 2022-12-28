@@ -33,6 +33,9 @@ export default function initGlobalDamageMechanicByCardKey(
     case 'SET_CORE_124':
       dealAoeDamageOnPlay(G, ctx, player, card, card.mechanicsSide);
       break;
+    case 'SET_CORE_125':
+      dealAoeDamageOnPlay(G, ctx, player, card, card.mechanicsSide);
+      break;
   }
 
   const check = (c: Card) => {
