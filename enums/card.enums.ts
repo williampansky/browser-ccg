@@ -104,6 +104,7 @@ export enum CardMechanicsContext {
   Destroy = Mechanics.Destroy,
   Disable = Mechanics.Disable,
   Discard = Mechanics.Discard,
+  Equip = Mechanics.Equip,
   Heal = Mechanics.Heal,
   None = Mechanics.None,
   SetValue = Mechanics.SetValue,

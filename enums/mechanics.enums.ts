@@ -22,6 +22,7 @@ export enum Mechanics {
   Durability = 'DURABILITY',
   Energy = 'ENERGY',
   EnergySlot = 'ENERGY_SLOT',
+  Equip = 'EQUIP',
   Event = 'EVENT',
   GlobalSpell = 'GLOBAL_SPELL',
   Heal = 'HEAL',
