@@ -84,8 +84,7 @@ const fn =
         zIndex: index * 1,
         cursor: 'grab',
         display: 'block',
-        // immediate: (n: string) => n === 'zIndex',
-        immediate: false,
+        immediate: (n: string) => n === 'zIndex',
         config: {
           ...springConfig.default,
           easing: easings.easeInOutQuart,
