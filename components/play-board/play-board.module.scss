@@ -462,3 +462,21 @@
   pointer-events: none;
   white-space: normal;
 }
+
+// Shown in the gap a minion would land in: it opens up, pushing the neighbours apart.
+.gapSpacer {
+  flex: 0 0 auto;
+  width: 4rem;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 2px dashed #5fd16a;
+  background: rgba(95, 209, 106, 0.25);
+  animation: gapOpen 0.12s ease-out;
+}
+
+@keyframes gapOpen {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+}

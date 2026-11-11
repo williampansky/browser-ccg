@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Action,
   applyAction,
@@ -230,6 +230,7 @@ export const PlayBoard = () => {
   }, [foeAim, dispatch]);
 
   // Space ends the turn (when you can), unless a choice dialog is open.
+  const [hoverGap, setHoverGap] = useState<number | null>(null);
   const modalOpenRef = useRef(false);
   const menuOpenRef = useRef(false);
   menuOpenRef.current = menuOpen;
@@ -343,6 +344,20 @@ export const PlayBoard = () => {
   const boardZone = placedPlays.length > 0 && !over;
   const areaZone = untargetedPlays.length > 0 && placedPlays.length === 0 && !over;
 
+  // The gap under the pointer, ignoring the spacer that marks it (so it does not move its own target).
+  const gapAt = (row: Element, clickX: number) =>
+    gapIndex(
+      Array.from(row.children)
+        .filter((el) => !el.hasAttribute('data-gap'))
+        .map((el) => {
+          const r = el.getBoundingClientRect();
+          return r.left + r.width / 2;
+        }),
+      clickX
+    );
+  const myBoard = state.players[me].board;
+  const gapMarker = boardZone && hoverGap !== null && myBoard.length > 0 ? Math.min(hoverGap, myBoard.length) : null;
+
   // Click-to-play: with a minion selected, click your board where you want it to land (between two minions, or at either end);
   // with a spell or other card that needs no aim, click anywhere in the play area.
   const playFromArea = (e: React.MouseEvent, zone: 'board' | 'table') => {
@@ -353,11 +368,7 @@ export const PlayBoard = () => {
     if (placed.length > 0) {
       if (zone !== 'board') return;
       // Land in the gap nearest the click: between two minions, or at either end.
-      const centres = Array.from(e.currentTarget.children).map((el) => {
-        const r = el.getBoundingClientRect();
-        return r.left + r.width / 2;
-      });
-      const boardIndex = gapIndex(centres, e.clientX);
+      const boardIndex = gapAt(e.currentTarget, e.clientX);
       const pick = placed[0];
       if (pick.type === 'PlayCard') dispatch({ ...pick, boardIndex });
     } else if (plain.length > 0) {
@@ -636,8 +647,19 @@ export const PlayBoard = () => {
         </div>
 
         <section className={styles.side}>
-          <div className={[styles.row, boardZone ? styles.zone : ''].join(' ')} onClick={(e) => playFromArea(e, 'board')}>
-            {state.players[me].board.map((m) => renderMinion(me, m))}
+          <div
+            className={[styles.row, boardZone ? styles.zone : ''].join(' ')}
+            onClick={(e) => playFromArea(e, 'board')}
+            onMouseMove={(e) => boardZone && setHoverGap(gapAt(e.currentTarget, e.clientX))}
+            onMouseLeave={() => setHoverGap(null)}
+          >
+            {myBoard.map((m, i) => (
+              <Fragment key={m.instanceId}>
+                {gapMarker === i && <div data-gap className={styles.gapSpacer} />}
+                {renderMinion(me, m)}
+              </Fragment>
+            ))}
+            {gapMarker === myBoard.length && <div data-gap className={styles.gapSpacer} />}
           </div>
           {renderHero(me, true)}
           <div className={styles.row}>
