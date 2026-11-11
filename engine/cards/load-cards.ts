@@ -101,6 +101,7 @@ export function loadCards(
     ['core', input.core],
     ['prime', input.prime],
     ['entourage', input.entourage],
+    ['game', input.game ?? []],
   ];
 
   for (const [source, records] of sources) {

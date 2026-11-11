@@ -34,7 +34,7 @@ const withHand = (...ids: string[]): GameState => {
   for (const id of ids) s = putInHand(s, '0', id);
   return setEnergy(s, '0', 10);
 };
-const attackHero = (attackerId: number): Action => ({ type: 'Attack', attackerId, target: { kind: 'hero' } });
+const attackHero = (attackerId: number): Action => ({ type: 'Attack', attackerId, target: { kind: 'hero', player: '1' } });
 const attackMinion = (attackerId: number, instanceId: number): Action => ({
   type: 'Attack',
   attackerId,

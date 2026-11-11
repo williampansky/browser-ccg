@@ -44,7 +44,7 @@ export const applyAction = (state: GameState, action: Action, ctx: EngineContext
         })
       );
     case 'PlayCard':
-      return finish(playCard(state, action, ctx.catalog, events));
+      return finish(playCard(state, action, ctx, events));
     case 'Attack':
       return finish(attack(state, action, events));
   }

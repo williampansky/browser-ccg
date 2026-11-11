@@ -8,7 +8,7 @@
 export type CardType = 'minion' | 'spell' | 'item' | 'weapon';
 
 /** Which raw file a card came from. Entourage cards are tokens created by other cards. */
-export type CardSource = 'core' | 'prime' | 'entourage';
+export type CardSource = 'core' | 'prime' | 'entourage' | 'game';
 
 export type PlayType = 'targeted' | 'global';
 
@@ -108,6 +108,8 @@ export interface LoadCardsInput {
   core: RawCard[];
   prime: RawCard[];
   entourage: RawCard[];
+  /** Cards the game itself hands out (`game.json`: The Orb). Optional. */
+  game?: RawCard[];
   mechanics: RawGlossaryEntry[];
   constants: RawGlossaryEntry[];
 }

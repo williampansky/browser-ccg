@@ -1,6 +1,6 @@
 /** Test helpers: tiny hand-made cards and state tweaks. Not used by the engine itself. */
 import { produce } from 'immer';
-import type { Card, CardCatalog } from '../cards/types';
+import type { Card, CardCatalog, CardNumbers } from '../cards/types';
 import { createMinion } from '../rules/minion';
 import type { GameState, MinionInstance, PlayerId } from '../state/types';
 
@@ -36,7 +36,10 @@ export const minionCard = (id: string, o: MinionOpts = {}): Card => ({
   health: o.health ?? 1,
 });
 
-export const spellCard = (id: string, cost = 1): Card => baseCard(id, 'spell', cost, []);
+export const spellCard = (id: string, cost = 1, numbers: CardNumbers = {}): Card => ({
+  ...baseCard(id, 'spell', cost, []),
+  numbers,
+});
 
 export const catalogOf = (...cards: Card[]): CardCatalog => new Map(cards.map((c) => [c.id, c]));
 

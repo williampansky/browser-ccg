@@ -56,13 +56,14 @@ export interface GameState {
   nextInstanceId: number;
 }
 
-export type AttackTarget = { kind: 'hero' } | { kind: 'minion'; instanceId: number };
+/** Something an attack or effect can aim at: a hero (either player's) or a minion on either board. */
+export type TargetRef = { kind: 'hero'; player: PlayerId } | { kind: 'minion'; instanceId: number };
 
 export type Action =
   | { type: 'EndTurn' }
   | { type: 'Concede' }
-  | { type: 'PlayCard'; handIndex: number; boardIndex?: number }
-  | { type: 'Attack'; attackerId: number; target: AttackTarget };
+  | { type: 'PlayCard'; handIndex: number; boardIndex?: number; target?: TargetRef }
+  | { type: 'Attack'; attackerId: number; target: TargetRef };
 
 export type ActionErrorCode =
   | 'GAME_OVER'
@@ -86,7 +87,11 @@ export type GameEvent =
   | { type: 'Fatigue'; player: PlayerId; damage: number }
   | { type: 'HeroDamaged'; player: PlayerId; amount: number }
   | { type: 'MinionPlayed'; player: PlayerId; instanceId: number; boardIndex: number }
-  | { type: 'MinionAttacked'; attackerId: number; target: AttackTarget }
+  | { type: 'MinionAttacked'; attackerId: number; target: TargetRef }
+  | { type: 'CardPlayed'; player: PlayerId; instanceId: number; cardId: string }
+  | { type: 'MinionDamaged'; instanceId: number; amount: number }
+  | { type: 'Healed'; target: TargetRef; amount: number }
+  | { type: 'EnergyGained'; player: PlayerId; amount: number }
   | { type: 'MinionDied'; player: PlayerId; instanceId: number }
   | { type: 'GameOver'; winner: PlayerId | 'draw' };
 
@@ -94,4 +99,6 @@ export interface GameSetup {
   /** Card ids, in any order; shuffled at setup */
   decks: Record<PlayerId, string[]>;
   firstPlayer: PlayerId;
+  /** A card added to the second player's opening hand (The Orb, `GAME_001`) */
+  secondPlayerBonusCard?: string;
 }

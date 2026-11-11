@@ -18,7 +18,7 @@ const emptyPlayer = (deck: CardInstance[]): PlayerState => ({
 
 /**
  * Builds a new game: shuffles both decks, deals opening hands (3 / 4), then starts turn 1.
- * (The second player's bonus "The Orb" card arrives with spells, a later slice.)
+ * The second player also gets `secondPlayerBonusCard` (The Orb) if given.
  */
 export const createGame = (setup: GameSetup, rng: Rng): GameState => {
   let nextInstanceId = 1;
@@ -44,6 +44,9 @@ export const createGame = (setup: GameSetup, rng: Rng): GameState => {
   const dealt = produce(initial, (g) => {
     g.players[first].hand = g.players[first].deck.splice(0, FIRST_PLAYER_HAND);
     g.players[second].hand = g.players[second].deck.splice(0, SECOND_PLAYER_HAND);
+    if (setup.secondPlayerBonusCard) {
+      g.players[second].hand.push({ instanceId: g.nextInstanceId++, cardId: setup.secondPlayerBonusCard });
+    }
   });
   return startTurn(dealt, first, []);
 };

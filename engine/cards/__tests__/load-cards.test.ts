@@ -188,10 +188,11 @@ describe('loadHsCards: the committed card data', () => {
   const bySource = (source: string) => cards.filter((c) => c.source === source);
 
   test('loads without errors, with the expected record counts', () => {
-    expect(cards).toHaveLength(429);
+    expect(cards).toHaveLength(430);
     expect(bySource('core')).toHaveLength(132);
     expect(bySource('prime')).toHaveLength(254);
     expect(bySource('entourage')).toHaveLength(43);
+    expect(bySource('game')).toHaveLength(1);
     expect(issues.filter((i) => i.level === 'error')).toEqual([]);
   });
 
@@ -266,5 +267,12 @@ describe('loadHsCards: the committed card data', () => {
   test('57 cards have no name and 35 cards disagree about targeting (reported, not hidden)', () => {
     expect(issues.filter((i) => i.code === 'missing-name')).toHaveLength(57);
     expect(issues.filter((i) => i.code === 'playtype-target-mismatch')).toHaveLength(35);
+  });
+});
+
+describe('loadHsCards: game cards', () => {
+  it('includes The Orb (GAME_001), the second player bonus spell', () => {
+    const orb = loadHsCards().byId.get('GAME_001');
+    expect(orb).toMatchObject({ source: 'game', type: 'spell', cost: 0, playType: 'global', numbers: { primary: 1 } });
   });
 });

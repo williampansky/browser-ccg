@@ -7,3 +7,6 @@ export { applyAction } from './rules/apply-action';
 export { createSeededRng } from './rng';
 export type { Rng } from './rng';
 export type { EngineContext, ActionResult } from './rules/apply-action';
+export { legalTargets } from './rules/targeting';
+export type { TargetSource } from './rules/targeting';
+export { getCardDef } from './definitions';

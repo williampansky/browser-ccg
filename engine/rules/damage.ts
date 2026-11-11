@@ -1,5 +1,5 @@
 import type { Draft } from 'immer';
-import type { GameEvent, GameState, PlayerId } from '../state/types';
+import { GameEvent, GameState, MAX_HEALTH, PlayerId, TargetRef } from '../state/types';
 
 /** Damages a hero: armor absorbs first, health is clamped at 0. Call inside `produce`. */
 export const damageHero = (g: Draft<GameState>, player: PlayerId, amount: number, events: GameEvent[]): void => {
@@ -8,4 +8,31 @@ export const damageHero = (g: Draft<GameState>, player: PlayerId, amount: number
   p.armor -= absorbed;
   p.health = Math.max(0, p.health - (amount - absorbed));
   events.push({ type: 'HeroDamaged', player, amount });
+};
+
+/** Damages a hero or a minion. Heroes lose armor first. Call inside `produce`. */
+export const damageTarget = (g: Draft<GameState>, target: TargetRef, amount: number, events: GameEvent[]): void => {
+  if (target.kind === 'hero') return damageHero(g, target.player, amount, events);
+  for (const player of ['0', '1'] as PlayerId[]) {
+    const m = g.players[player].board.find((x) => x.instanceId === target.instanceId);
+    if (m) {
+      m.health = Math.max(0, m.health - amount);
+      events.push({ type: 'MinionDamaged', instanceId: m.instanceId, amount });
+      return;
+    }
+  }
+};
+
+/** Heals a hero (max 30) or a minion (max health). Call inside `produce`. */
+export const healTarget = (g: Draft<GameState>, target: TargetRef, amount: number, events: GameEvent[]): void => {
+  if (target.kind === 'hero') {
+    const p = g.players[target.player];
+    p.health = Math.min(MAX_HEALTH, p.health + amount);
+  } else {
+    for (const player of ['0', '1'] as PlayerId[]) {
+      const m = g.players[player].board.find((x) => x.instanceId === target.instanceId);
+      if (m) m.health = Math.min(m.maxHealth, m.health + amount);
+    }
+  }
+  events.push({ type: 'Healed', target, amount });
 };
