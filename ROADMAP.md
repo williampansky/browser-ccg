@@ -42,6 +42,8 @@ them. Starts only after 1a is approved.
       base already has attack/health, class, mechanics and play type on every card table
 - [ ] Decide the new game-state shape (`G`) and a normalised in-engine card type, and note which
       raw fields (`%CONSTANT%` symbols, HTML text, number fields) the loader must clean up
+- [x] Card model and loader (`engine/cards/`): normalises `data/hs/` per RULES.md section 10, fails loudly
+      on bad data, 31 tests (each verified by deliberately breaking the loader)
 - [ ] Port the core `hsclone` rules to TypeScript: turn order, energy (+1 per turn, cap 10), draw,
       play minion/spell/weapon, minion vs minion and minion vs hero attacks, damage and death,
       Guard (only Guards may be attacked), summoning sickness, win/loss at 0 hero health

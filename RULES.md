@@ -180,7 +180,10 @@ The UI contract, to be replaced by one engine query `legalTargets(attackerOrCard
 
 ## 7. Keywords and mechanics
 
-`mechanics.json` defines 49 symbols; the card pool uses ~40. Counts are CORE / PRIME / ENTOURAGE.
+`mechanics.json` defines 49 symbols; the card pool uses ~40. The glossary gives the game's own display
+names, which differ from the symbols in places: `%BULWARK%` is shown as **Guard**, `%RUSH%` as
+**Stampede**, `%ON_PLAY%` as **Warcry**. This spec uses the symbol names (Rush, Guard) for consistency
+with the data; card text shown to players uses the display names. Counts are CORE / PRIME / ENTOURAGE.
 Role and status columns combine the data analysis [V-data for counts that I recomputed; A otherwise]
 and `hsclone`'s code [A].
 
@@ -376,7 +379,7 @@ The text of each question and its default is kept for the reasoning.
 | 19 | Hidden | untargetable by anything until it attacks | accepted |
 | 20 | Text vs behaviour | printed text wins; settle per card in Milestone 4 | accepted |
 | 21 | Triggers | general trigger system from the start | accepted |
-| 22 | Data-driven vs per-card | hybrid; **investigate coverage at the start of 1b** | accepted |
+| 22 | Data-driven vs per-card | hybrid; investigated, see below | accepted |
 | 23 | Number fields | defaults below | **provisional** |
 | 24 | Nameless/inactive PRIME | ignore for now | accepted |
 
@@ -396,6 +399,17 @@ The text of each question and its default is kept for the reasoning.
   card by card in Milestone 4 using RULES.md Appendix A and hsclone's behaviour.
 - **"Things not yet remembered."** The author found nothing egregiously wrong in this spec but
   expects memory to return as work proceeds. Corrections are expected; they go into this file.
+
+### Q22 investigation result (2026-11-11)
+Grouping the 132 CORE cards by what their data fields say (type, playType, playContext, mechanics,
+which numbers are present) gives **80 distinct signatures**. Only **54 cards (41%)** sit in a group of 3
+or more; **62 cards (47%)** have a signature no other card shares. So the card data alone cannot drive
+the effects, and a purely data-driven interpreter is **not viable**: effects such as "summon a 1/1
+creature" or "give all friendly minions +1 health" need details that live only in the text or the code.
+**Conclusion:** keep the hybrid, made precise. About 20 cards (vanilla and keyword-only) need no
+effect definition at all; the other ~110 get a small TypeScript definition built from shared typed
+effect primitives (damage, heal, draw, summon, buff...), with the data supplying the numbers and
+presentation. This keeps the per-card knowledge from hsclone without its five duplicated switch files.
 
 ### Mulligan, for reference
 A mulligan is an optional redraw at the very start of a game: after the opening hand is dealt, a

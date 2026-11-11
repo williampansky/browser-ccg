@@ -11,13 +11,17 @@ earlier `hsclone` repo as the rules reference. Read these first:
 
 - `VISION.md` - goals and priorities
 - `ROADMAP.md` - milestones and what's next
+- `RULES.md` - the approved rules spec for the new engine (the contract for tests); `RULES-ANSWERS.md`
+  holds the author's decisions
+- `ENGINE-DESIGN.md` - how the new engine is structured (proposal)
 - `PREVIOUS-VERSIONS.md` - the four earlier repos, how `hsclone` plays, and what to reuse
 - `CARD-AUDIT.md` - card/art/balance review (written against the old zone rules; see its note)
 
 ## Current state
 
 - **There is no playable game on this branch yet.** `game/game.ts` is a stub and `/play` is a
-  placeholder page.
+  placeholder page. The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`); so far it
+  has the card model and loader (`engine/cards/`), covered by tests.
 - The site shell works: home, `collection`, `deckbuilder`, `cards`, `store`, `profile`, `news`,
   `faq`, `changelog`, plus `pages/api/` for cards/users. The card renderers (`Card`, `Minion`) work.
 - `data/*.json` (read by the site) still describes the old zone game (fields such as
@@ -31,7 +35,8 @@ earlier `hsclone` repo as the rules reference. Read these first:
   If port 3000 is taken, Next silently uses 3001, so read the startup log for the URL.
 - `npm test` - jest (ts-jest, jsdom). Run one file: `npm test -- path/to/file.test.ts`.
 - `npx tsc --noEmit -p .` - type check.
-- `npm run build` / `npm run lint` - Next build and lint.
+- `npm run build` - Next build. (`npm run lint` is not set up: there is no ESLint config, so it just
+  prompts interactively. Don't run it.)
 - `npm run airtable:hs` - pulls the Hearthstone-style card pool (CORE 132, PRIME 254, ENTOURAGE 43,
   9 heroes, abilities, mechanics, constants) into `data/hs/`. This is the data the rebuild uses.
 - `npm run airtable` - the old zone-game pull into `data/` and `game/data/`. Only works against
@@ -42,6 +47,8 @@ earlier `hsclone` repo as the rules reference. Read these first:
 ## Layout
 
 - `pages/` - Next routes. `pages/api/` serves cards/users.
+- `engine/` - the new Hearthstone-style rules engine (plain TypeScript, no React or boardgame.io
+  in the core). `engine/cards/` loads `data/hs/` into normalised cards. Tests in `__tests__/`.
 - `game/` - boardgame.io game definition (currently a stub). `game/data/` is a copy of `data/`.
   **`data/` and `game/data/` are identical**, both written by `airtable.node.ts`. Edit via the
   script or change both. `data/hs/` is separate: written only by `airtable.hs.node.ts`.
