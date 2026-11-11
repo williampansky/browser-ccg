@@ -6,6 +6,7 @@
     "airtable": "ts-node -r ./airtable.node.ts",
     "airtable:hs": "ts-node --compiler-options '{\"module\":\"commonjs\"}' ./airtable.hs.node.ts",
     "sim": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\"}' ./engine/sim/run.node.ts",
+    "tune": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\"}' ./engine/sim/tune.node.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

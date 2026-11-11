@@ -63,6 +63,8 @@ order below. Candidates, roughly in the order discussed:
   prompts interactively. Don't run it.)
 - `npm run sim -- [gamesPerPair] [greedy|random]` - bot-vs-bot balance report: win-rate grid for the three starter decks
   (`engine/starter-decks.ts`) plus best/worst cards (`engine/sim/`). 100 games per pair takes about 15 seconds.
+- `npm run tune -- [gamesPerDeck]` - plays tweaked greedy-bot weights against the defaults (same deck both sides). A first run
+  (60 games per deck) found no variant clearly better than the defaults (all within noise, 44-51%), so the weights are not the bottleneck.
 - `npm run airtable:hs` - pulls the Hearthstone-style card pool (CORE 132, PRIME 254, ENTOURAGE 43,
   9 heroes, abilities, mechanics, constants) into `data/hs/`. This is the data the rebuild uses.
 - `npm run airtable` - the old zone-game pull into `data/` and `game/data/`. Only works against
