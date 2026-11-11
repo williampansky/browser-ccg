@@ -446,3 +446,19 @@
 .logCard {
   cursor: help;
 }
+
+.logTip {
+  position: fixed;
+  z-index: 1000;
+  max-width: 18rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  background: #111;
+  border: 1px solid #555;
+  color: #eee;
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: normal;
+  pointer-events: none;
+  white-space: normal;
+}

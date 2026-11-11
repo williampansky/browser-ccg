@@ -55,6 +55,28 @@ const tipByName = new Map(
     }: ${plain(c.text)}`,
   ])
 );
+/** Card name in the log with an instant tooltip (fixed-position, so the scrolling log can't clip it). */
+const LogCard = ({ name }: { name: string }) => {
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const tip = tipByName.get(name);
+  return (
+    <strong
+      className={styles.logCard}
+      onMouseEnter={(e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        setPos({ x: r.right + 8, y: r.top });
+      }}
+      onMouseLeave={() => setPos(null)}
+    >
+      <em>{name}</em>
+      {pos && tip && (
+        <span className={styles.logTip} style={{ left: pos.x, top: pos.y }}>
+          {tip}
+        </span>
+      )}
+    </strong>
+  );
+};
 const renderLogLine = (line: string) =>
   line.split(/(\*\*.+?\*\*|__.+?__)/g).map((part, i) => {
     if (part.startsWith('**')) {
@@ -68,9 +90,7 @@ const renderLogLine = (line: string) =>
     if (part.startsWith('__')) {
       const name = part.slice(2, -2);
       return (
-        <strong key={i} className={styles.logCard} title={tipByName.get(name)}>
-          <em>{name}</em>
-        </strong>
+        <LogCard key={i} name={name} />
       );
     }
     return part;
