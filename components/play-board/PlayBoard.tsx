@@ -687,7 +687,7 @@ export const PlayBoard = () => {
         </div>
       )}
       <div className={[styles.table, areaZone ? styles.zone : ''].join(' ')} onClick={(e) => playFromArea(e, 'table')}>
-        <section className={styles.side}>
+        <section className={[styles.side, styles.top].join(' ')}>
           <div className={styles.backs}>
             {state.players[foe].hand.map((_, i) => (
               <div
@@ -697,9 +697,10 @@ export const PlayBoard = () => {
             ))}
           </div>
           {renderHero(foe, false)}
-          <div className={styles.row}>{state.players[foe].board.map((m) => renderMinion(foe, m))}</div>
         </section>
 
+        <div className={styles.center}>
+          <div className={styles.row}>{state.players[foe].board.map((m) => renderMinion(foe, m))}</div>
         <div className={styles.middle}>
           <button
             type="button"
@@ -725,8 +726,7 @@ export const PlayBoard = () => {
           )}
           {message && <span className={styles.error}>{message}</span>}
         </div>
-
-        <section className={styles.side}>
+          <section className={styles.side}>
           <div
             className={[styles.row, boardZone ? styles.zone : ''].join(' ')}
             onClick={(e) => playFromArea(e, 'board')}
@@ -741,12 +741,17 @@ export const PlayBoard = () => {
             ))}
             {gapMarker === myBoard.length && <div data-gap className={styles.gapSpacer} />}
           </div>
+          </section>
+        </div>
+
+        <section className={[styles.side, styles.bottom].join(' ')}>
           {renderHero(me, true)}
           <div className={styles.row}>
             {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i))}
           </div>
+          {playButtons && (
           <div className={styles.controls}>
-            {playButtons && untargetedPlays.map((a, i) => (
+            {untargetedPlays.map((a, i) => (
               <button key={i} type="button" className={styles.primary} onClick={() => dispatch(a)}>
                 Play {selectedCard?.name}
                 {a.type === 'PlayCard' && a.boardIndex !== undefined && state.players[me].board.length > 0
@@ -757,6 +762,7 @@ export const PlayBoard = () => {
               </button>
             ))}
           </div>
+          )}
         </section>
       </div>
 
