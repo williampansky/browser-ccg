@@ -10,8 +10,8 @@
  * - Writes raw-ish records: Airtable field names are kept as they are, plus
  *   `refId` (the Airtable record id). Nothing is normalised here; the new
  *   engine's loader is responsible for that.
- * - Drops the `inspiration` column. It is private design notes and this repo
- *   is public.
+ * - Drops the `inspiration` column. It maps each entry to the Hearthstone card(s)
+ *   that inspired it, and this repo is public. Do not add it back.
  * - Fetches every table first and writes only if all of them succeed, so a
  *   failure can't leave half-updated files.
  */

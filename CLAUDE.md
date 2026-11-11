@@ -58,8 +58,9 @@ The same token can read both. Which one `AIRTABLE_BASE_ID` points at decides whi
   `npm run airtable:hs`. Tables: CONSTANTS, MECHANICS, HEROS, ABILITIES, GAME, CORE, PRIME,
   ENTOURAGE. Card tables already have attack, health, cost, cardClass, mechanics, playType.
 - **`browser-ccg`** (`REDACTED`) - the zone-game data behind `npm run airtable`.
-- The `inspiration` column exists in the `react-ccg` base. `airtable:hs` drops it on purpose
-  (private design notes; this repo is public). Don't add it back.
+- The `inspiration` column exists in the `react-ccg` base. It names the specific Hearthstone
+  card(s) that inspired each entry. `airtable:hs` drops it on purpose because this repo is public.
+  Don't add it back, and don't copy it in from the old repos' JSON (see `PREVIOUS-VERSIONS.md`).
 
 ## Things worth knowing
 

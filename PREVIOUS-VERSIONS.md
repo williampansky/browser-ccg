@@ -178,6 +178,11 @@ Observations:
 - **Rarity tiers match the current assets.** The Common / Superior / Remarkable / Mythic names
   correspond to the rarity gem images already in `public/images/card-assets/`; PRIME is where
   those tiers were designed, and the current CORE is all Free (plus 4 Mythic).
+- **The old card JSON contains an `inspiration` field** naming the Hearthstone card(s) behind each
+  entry. It is filled for every entry in `hsclone` and `react-card-game`
+  (`src/data/debug/cards-{CORE,PRIME,ENTOURAGE,GAME}.json`) and only for the single GAME card in
+  `react-ccg-dep` and `react-ccg-deprecated`. This repo's current data and Airtable pull omit it;
+  don't copy it across when reusing old data.
 - **Art credits:** the old data credits Rexard (a GraphicRiver asset seller) on CORE cards and
   named ArtStation artists on heroes. This is the same provenance question raised in
   `CARD-AUDIT.md` section 6.
