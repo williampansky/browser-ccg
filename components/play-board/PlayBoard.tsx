@@ -81,6 +81,33 @@ const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right') => {
     ) : null;
   return { handlers, node };
 };
+/** Hovering a hand card shows an enlarged copy above it, readable at a glance. */
+const HandPreview = ({ card, children }: { card?: Card; children: (h: { onMouseEnter: (e: React.MouseEvent<HTMLElement>) => void; onMouseLeave: () => void }) => React.ReactNode }) => {
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  return (
+    <>
+      {children({
+        onMouseEnter: (e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          setPos({ x: r.left + r.width / 2, y: r.top });
+        },
+        onMouseLeave: () => setPos(null),
+      })}
+      {pos && card && (
+        <div className={[styles.handPreview, styles.art].join(' ')} style={{ left: pos.x, top: pos.y, ...artStyle(card.id) }}>
+          <span className={styles.cost}>{card.cost}</span>
+          <strong>{card.name}</strong>
+          <span className={styles.type}>
+            {card.type}
+            {card.type === 'minion' || card.type === 'weapon' ? ` ${card.attack}/${card.health}` : ''}
+            {card.race && card.race !== 'NONE' ? ` · ${card.race.toLowerCase()}` : ''}
+          </span>
+          <span className={styles.previewText}>{plain(card.text)}</span>
+        </div>
+      )}
+    </>
+  );
+};
 const LogCard = ({ name }: { name: string }) => {
   const { handlers, node } = useTip(tipByName.get(name));
   return (
@@ -147,11 +174,12 @@ const renderLogLine = (line: string) =>
 const targetOf = (a: Action): TargetRef | undefined =>
   a.type === 'PlayCard' || a.type === 'Attack' || a.type === 'WeaponAttack' ? a.target : undefined;
 
-const newGame = (): { state: GameState; rng: Rng; decks: Record<PlayerId, string[]> } => {
+const newGame = (): { state: GameState; rng: Rng; decks: Record<PlayerId, string[]>; first: PlayerId } => {
   const rng = createSeededRng(Date.now() % 2147483647);
   const decks = { '0': buildDeck(pool, rng), '1': buildDeck(pool, rng) };
-  const state = createGame({ decks, firstPlayer: '0', secondPlayerBonusCard: 'GAME_001' }, rng);
-  return { state, rng, decks };
+  const first: PlayerId = rng.int(2) === 0 ? '0' : '1';
+  const state = createGame({ decks, firstPlayer: first, secondPlayerBonusCard: 'GAME_001' }, rng);
+  return { state, rng, decks, first };
 };
 
 /** Hot-seat board: the active player is always at the bottom, the other player's hand is hidden. */
@@ -189,7 +217,8 @@ export const PlayBoard = () => {
     rngRef.current = g.rng;
     setState(g.state);
     setStartDecks(g.decks);
-    setLog([['New game. **Player 1** goes first; **Player 2** starts with an extra card (__The Orb__).']]);
+    const [a, b] = g.first === '0' ? ['Player 1', 'Player 2'] : ['Player 2', 'Player 1'];
+    setLog([[`New game. **${a}** goes first; **${b}** starts with an extra card (__The Orb__).`]]);
     setSelection(null);
     setMessage('');
     setFoeAim(null);
@@ -278,6 +307,17 @@ export const PlayBoard = () => {
     }, AI_AIM_MS);
     return () => clearTimeout(timer);
   }, [foeAim, dispatch]);
+
+  // With nothing selected, Escape opens the menu (with a selection it cancels it, handled above).
+  const selectionRef = useRef<Selection | null>(null);
+  selectionRef.current = selection;
+  useEffect(() => {
+    const key = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !selectionRef.current && !menuOpenRef.current) setMenuOpen(true);
+    };
+    window.addEventListener('keydown', key);
+    return () => window.removeEventListener('keydown', key);
+  }, []);
 
   // Space ends the turn (when you can), unless a choice dialog is open.
   const [hoverGap, setHoverGap] = useState<number | null>(null);
@@ -523,15 +563,17 @@ export const PlayBoard = () => {
     const playable = actions.some((a) => a.type === 'PlayCard' && a.handIndex === index);
     const selected = selection?.kind === 'hand' && selection.index === index;
     return (
+      <HandPreview key={index} card={card}>
+        {(hover) => (
       <button
-        key={index}
+        {...hover}
         ref={track(`c${index}`)}
         type="button"
-        disabled={over || !playable}
+        aria-disabled={over || !playable}
         title={playable ? card?.text : `Can't play now. ${card?.text ?? ''}`}
         style={artStyle(card?.id)}
         className={[styles.handCard, styles.art, playable ? styles.ready : styles.dim, selected ? styles.selected : ''].join(' ')}
-        onClick={() => setSelection(selected ? null : { kind: 'hand', index })}
+        onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
       >
         <span className={styles.cost}>{card?.cost}</span>
         <span className={styles.name}>{card?.name}</span>
@@ -542,6 +584,8 @@ export const PlayBoard = () => {
         </span>
         <span className={styles.text}>{card?.text}</span>
       </button>
+        )}
+      </HandPreview>
     );
   };
 

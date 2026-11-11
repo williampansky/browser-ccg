@@ -564,3 +564,33 @@
   text-shadow: 0 1px 3px #000, 0 0 2px #000;
   background-color: #555b70;
 }
+
+// Enlarged hand card, shown above the hovered one.
+.handPreview {
+  position: fixed;
+  z-index: 40;
+  width: 17rem;
+  min-height: 19rem;
+  padding: 0.8rem 0.8rem 0.8rem 2.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transform: translate(-50%, calc(-100% - 0.5rem));
+  border: 2px solid #ffd45e;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px #000a;
+  pointer-events: none;
+  font-size: 1rem;
+
+  .cost {
+    width: 1.8rem;
+    height: 1.8rem;
+    line-height: 1.8rem;
+    top: 0.6rem;
+    left: 0.6rem;
+  }
+}
+
+.previewText {
+  font-size: 1rem;
+}

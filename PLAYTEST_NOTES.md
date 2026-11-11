@@ -39,3 +39,6 @@
 - [x] add the BACKS of the cards the on top of the enemy area (use hsclone to see what i mean) and show when the enemy has it selected
 - [x] show the "new game" button in the middle of the screen when a vs-bot game completed
 - [x] vertically center the game area. and lets pin the menu to somewhere else on the screen.
+- [x] def need a in-hand card tooltip similar to hsclone. maybe just increase the size for now
+- [x] if no card is selected. the escape key opens the game menu
+- [x] need to randomize who goes first at the start of fresh games, even vs bots
