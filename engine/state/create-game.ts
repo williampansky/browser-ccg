@@ -12,6 +12,7 @@ const emptyPlayer = (deck: CardInstance[]): PlayerState => ({
   energy: { current: 0, total: 0 },
   deck,
   hand: [],
+  board: [],
   fatigue: 0,
 });
 

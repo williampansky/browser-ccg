@@ -1,15 +1,17 @@
 import { createGame } from '../../state/create-game';
 import { applyAction } from '../apply-action';
 import { createSeededRng } from '../../rng';
+import type { Card } from '../../cards/types';
 import type { GameState, PlayerId } from '../../state/types';
 
 const deckOf = (n: number, prefix = 'C') => Array.from({ length: n }, (_, i) => `${prefix}${i}`);
 const rng = () => createSeededRng(1);
+const ctx = () => ({ rng: rng(), catalog: new Map<string, Card>() });
 const newGame = (deckSize = 30, first: PlayerId = '0') =>
   createGame({ decks: { '0': deckOf(deckSize, 'A'), '1': deckOf(deckSize, 'B') }, firstPlayer: first }, rng());
 
-const end = (s: GameState, r = rng()): GameState => {
-  const res = applyAction(s, { type: 'EndTurn' }, r);
+const end = (s: GameState): GameState => {
+  const res = applyAction(s, { type: 'EndTurn' }, ctx());
   if ('error' in res) throw new Error(res.error);
   return res.state;
 };
@@ -143,14 +145,14 @@ describe('winning', () => {
     expect(g.players['1'].health).toBeGreaterThanOrEqual(0);
   });
   it('concede makes the opponent win', () => {
-    const res = applyAction(newGame(), { type: 'Concede' }, rng());
+    const res = applyAction(newGame(), { type: 'Concede' }, ctx());
     if ('error' in res) throw new Error(res.error);
     expect(res.state).toMatchObject({ status: 'over', winner: '1' });
     expect(res.events).toContainEqual({ type: 'GameOver', winner: '1' });
   });
   it('rejects every action after the game is over', () => {
     const over = end(lowHealth('1', 1));
-    expect(applyAction(over, { type: 'EndTurn' }, rng())).toEqual({ error: 'GAME_OVER' });
-    expect(applyAction(over, { type: 'Concede' }, rng())).toEqual({ error: 'GAME_OVER' });
+    expect(applyAction(over, { type: 'EndTurn' }, ctx())).toEqual({ error: 'GAME_OVER' });
+    expect(applyAction(over, { type: 'Concede' }, ctx())).toEqual({ error: 'GAME_OVER' });
   });
 });

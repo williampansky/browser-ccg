@@ -122,3 +122,6 @@ export interface LoadCardsResult {
   byId: Map<string, Card>;
   issues: CardIssue[];
 }
+
+/** Read-only lookup of every card by id. State refers to cards only by id. */
+export type CardCatalog = ReadonlyMap<string, Card>;

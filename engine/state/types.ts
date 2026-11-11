@@ -13,12 +13,35 @@ export interface CardInstance {
   cardId: string;
 }
 
+export interface MinionKeywords {
+  guard: boolean;
+  rush: boolean;
+  bubble: boolean;
+  doubleAttack: boolean;
+  hidden: boolean;
+  noAttack: boolean;
+}
+
+export interface MinionInstance {
+  instanceId: number;
+  cardId: string;
+  attack: number;
+  health: number;
+  maxHealth: number;
+  /** `GameState.turn` when it entered play (summoning sickness compares this to the current turn) */
+  playedOnTurn: number;
+  attacksThisTurn: number;
+  keywords: MinionKeywords;
+}
+
 export interface PlayerState {
   health: number;
   armor: number;
   energy: { current: number; total: number };
   deck: CardInstance[];
   hand: CardInstance[];
+  /** Dense array, left to right, at most MAX_BOARD */
+  board: MinionInstance[];
   /** Fatigue counter: number of empty-deck draws so far (damage = the new value) */
   fatigue: number;
 }
@@ -33,9 +56,25 @@ export interface GameState {
   nextInstanceId: number;
 }
 
-export type Action = { type: 'EndTurn' } | { type: 'Concede' };
+export type AttackTarget = { kind: 'hero' } | { kind: 'minion'; instanceId: number };
 
-export type ActionErrorCode = 'GAME_OVER' | 'NOT_YOUR_TURN';
+export type Action =
+  | { type: 'EndTurn' }
+  | { type: 'Concede' }
+  | { type: 'PlayCard'; handIndex: number; boardIndex?: number }
+  | { type: 'Attack'; attackerId: number; target: AttackTarget };
+
+export type ActionErrorCode =
+  | 'GAME_OVER'
+  | 'BAD_HAND_INDEX'
+  | 'BAD_BOARD_INDEX'
+  | 'UNKNOWN_CARD'
+  | 'UNSUPPORTED_CARD'
+  | 'CANT_AFFORD'
+  | 'BOARD_FULL'
+  | 'UNKNOWN_ATTACKER'
+  | 'MINION_CANT_ATTACK'
+  | 'ILLEGAL_TARGET';
 export interface ActionError {
   error: ActionErrorCode;
 }
@@ -46,6 +85,9 @@ export type GameEvent =
   | { type: 'Burned'; player: PlayerId; instanceId: number }
   | { type: 'Fatigue'; player: PlayerId; damage: number }
   | { type: 'HeroDamaged'; player: PlayerId; amount: number }
+  | { type: 'MinionPlayed'; player: PlayerId; instanceId: number; boardIndex: number }
+  | { type: 'MinionAttacked'; attackerId: number; target: AttackTarget }
+  | { type: 'MinionDied'; player: PlayerId; instanceId: number }
   | { type: 'GameOver'; winner: PlayerId | 'draw' };
 
 export interface GameSetup {
