@@ -13,8 +13,11 @@ Why first: it's the one diagnosed bug, and it unblocks balance work.
 
 - [ ] Fix `game/ai-enumeration.ts`: enumerate only cards in hand with `currentCost <= AP`, in zones with an open slot
 - [ ] Console no longer floods with `INVALID_MOVE(cantAffordCard)` after End Turn
+- [ ] Fix `if (cardIndex)` in `aiPlayCardMove` (`game/ai/ai.moves.ts`): index `0` is falsy, so the bot's first-slot card never fires its ability
+- [ ] Fix zone-full checks: human path uses `length > slots` (should be `>=`); bot path computes `zoneIsFull` inverted and has the check commented out
+- [ ] Fix turn order (`game/state/turn-order.state.ts`): both ternary branches are `['0','1']`, so player 0 always goes first
 
-Done when: a full game against the bot produces no `cantAffordCard` errors.
+Done when: a full game against the bot produces no `cantAffordCard` errors, the bot's index-0 cards fire their abilities, and zones can't exceed 6 cards.
 
 ## Milestone 2: Safety net
 
@@ -39,9 +42,27 @@ Why: card balance is a top priority, and this turns it from gut feel into data.
 
 Done when: one command prints a win-rate table for all AI decks.
 
+## Milestone 3.5: Unify card play and card coverage
+
+Why: the human and bot play paths are separate (`play-card.move.ts` vs `aiPlayCardMove`), and 21 cards have both `exec` and `execAi` versions. Every new card is written twice, and bugs like the index-0 one appear in only one path.
+
+- [ ] Card coverage audit: which of the 69 cards actually work (see `CARD-AUDIT.md`)
+- [ ] One play path shared by human and bot (only the target-choosing step differs)
+- [ ] Decide what to do with the legacy Hearthstone-style cards (Bulwark x4, Armor, Spell Damage, Choose One; see `CARD-AUDIT.md`): cut or redesign as zone-style effects. Then delete the matching `@todo` stubs (Bulwark, Heal, SetValue, SpellDamage, Silence, Transform) and any unused `mechanics` toggles in `app.config.ts`
+- [ ] One test per card, so coverage stays visible
+- [ ] Move per-card rules out of scattered `case 'SET_CORE_…'` switches into each card's own file
+
+Done when: every card in `setsCore.json` has a passing test and there is a single play path.
+
 ## Milestone 4: Multiplayer spike
 
 Why: find out how much work multiplayer really is before committing to a design.
+
+Prerequisites found in the code review:
+
+- [ ] Gate `aiPlayCard` / `aiSetDone` so clients can't play or finish the opponent's turn (and stop hard-coding player `'1'`)
+- [ ] Replace `Math.random()` in game logic with `ctx.random` (`getRandomNumberBetween`, used by the bot)
+- [ ] Make `stripSecrets` actually hide the opponent's hand and deck (its filtering is currently commented out)
 
 - [ ] Spike: two browser tabs playing each other via a local boardgame.io server
 - [ ] Write down findings: what carried over, what broke, hidden-info handling (`stripSecrets`)
