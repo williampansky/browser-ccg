@@ -1,1 +1,0 @@
-export { HandSlotCardWrapper } from './HandSlotCardWrapper';

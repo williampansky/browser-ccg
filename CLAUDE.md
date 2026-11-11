@@ -1,11 +1,28 @@
 # Browser CCG
 
 Browser-based collectible card game: Next.js 12 + React 17 front end, with game logic in
-[boardgame.io](https://boardgame.io) 0.49 (plus `bgio-effects` for animation events).
-Single-player vs. a bot. See `README.md` for the current status and known issues,
-`VISION.md` for goals and priorities (card design/balance, multiplayer and player
-experience come first; store/collection/visuals are secondary), and `ROADMAP.md` for
-planned work.
+[boardgame.io](https://boardgame.io) 0.49.
+
+**Direction:** a Hearthstone-style game (minions that attack, hero health, alternating
+turns, Guard/taunt, spells, weapons, class skills). The earlier zone/SNAP-style game was
+removed on branch `hs-rebuild`; it is preserved at tag `snap-style-v0` and branch
+`archive/snap-style`. The new engine is being rebuilt from scratch, using the author's
+earlier `hsclone` repo as the rules reference. Read these first:
+
+- `VISION.md` - goals and priorities
+- `ROADMAP.md` - milestones and what's next
+- `PREVIOUS-VERSIONS.md` - the four earlier repos, how `hsclone` plays, and what to reuse
+- `CARD-AUDIT.md` - card/art/balance review (written against the old zone rules; see its note)
+
+## Current state
+
+- **There is no playable game on this branch yet.** `game/game.ts` is a stub and `/play` is a
+  placeholder page.
+- The site shell works: home, `collection`, `deckbuilder`, `cards`, `store`, `profile`, `news`,
+  `faq`, `changelog`, plus `pages/api/` for cards/users. The card renderers (`Card`, `Minion`) work.
+- Card data still describes the old game (zone-style fields such as `zonePowerAdjustment`,
+  `mechanicsSide`). It will need new fields for the Hearthstone rules (attack/health on every
+  card, class, keywords like Guard). That is an Airtable schema change.
 
 ## Commands
 
@@ -16,57 +33,35 @@ planned work.
 - `npm run build` / `npm run lint` - Next build and lint.
 - `npm run airtable` - re-pulls card/zone/mechanic data from Airtable into JSON. Needs
   `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID` in a `.env*.local` file (none checked in).
-  You don't need it to run the game; the JSON is committed.
+  You don't need it to run the site; the JSON is committed.
 
 ## Layout
 
-- `pages/` - Next routes. `/play` is the game; others: `collection`, `deckbuilder`, `store`,
-  `cards`, `zones`, `profile`, `news`, `faq`, `changelog`. `pages/api/` serves cards/zones/users.
-- `game/` - boardgame.io game definition. Start at `game/game.ts`.
-  - `phases/` - one folder per phase (init-*, reveal-zone, increment-*, draw-card, play-card).
-  - `moves/` - player moves (`play-card`, `select-card`, `deselect-card`, `attack-minion`, ...).
-  - `state/` - slices of `G` and `defaultState`. The `G` type is `types/g.interface.ts`.
-  - `mechanics/` - card/zone abilities. `core-mechanics-by-key/` is one file per card
-    (`mechanic.core.NNN.ts`); `zones/` is one file per zone (`zone.NNN.ts`).
-  - `ai/` + `ai-enumeration.ts` - bot moves and decks (bot is `MCTSBot`).
-  - `debug/` - debug scenarios, toggled in `app.config.ts`.
-  - `data/` - card/zone/mechanic JSON. **`data/` and `game/data/` are identical copies**,
-    both written by `airtable.node.ts`. Edit via the script or change both.
-- `components/game-components/` - board, hands (drag/drop in `Hands/PlayerHand.tsx`), zones,
-  cards. `components/site-components/` - non-game UI.
+- `pages/` - Next routes. `pages/api/` serves cards/users.
+- `game/` - boardgame.io game definition (currently a stub). `game/data/` is a copy of `data/`.
+  **`data/` and `game/data/` are identical**, both written by `airtable.node.ts`. Edit via the
+  script or change both.
+- `components/game-components/` - `Card`, `Minion`, `Avatar` (the rest of the old board UI was
+  removed). `components/site-components/` - non-game UI.
 - `features/` - Redux Toolkit slices (store in `store.ts`). `hooks/`, `utils/`, `enums/`, `types/`.
-- `app.config.ts` - central game config: numerics (12 turns, 3 zones, 6 slots per zone,
-  30-card decks, 10-card hands), mechanics toggles, AI toggles, and the debug switches.
+- `app.config.ts` - site pages/nav config plus `gameConfig.numerics` (deck/hand sizes, energy).
 
 ## Things worth knowing
 
-- **Card ids** look like `SET_CORE_010`. Mechanics are keyed by card, so a new card with a
-  special ability needs its own `mechanic.core.NNN.ts`.
-- **Debug switches** live in `gameConfig.debugConfig` in `app.config.ts` (force a hand card,
-  board card, opponent cards, zones, or a scenario). `showDebugBar` is currently `true`, which
-  is why the state header shows at the top of `/play`.
-- **Playing a card is drag-and-drop**: drag from the hand onto the red-outlined drop area on
-  *your* side of a zone. `PlayerHand.tsx` only plays the card if the element under the pointer
-  has `data-receive`; any other drop calls `deselectCard`. Plain clicks on a hand card open the
-  inspect modal.
-- **The opponent is player `'1'`**, you are `'0'`. `stripSecrets` hides the opponent's hand/deck.
-- **Known bug:** the AI floods the console with `INVALID_MOVE(cantAffordCard)` because
-  `game/ai-enumeration.ts` doesn't filter by AP. Don't treat that console noise as a new
-  regression. It's the first item in the README's known issues.
-
-## Testing the UI
-
-- A Playwright MCP server may be configured. Cards in the hand are covered by transparent
-  `PlayerHandDragSlot` divs, so a plain click on the card text fails; use mouse down/move/up
-  with several intermediate `steps` from the drag slot to the `[data-receive]` element.
-- `data-index` on `[data-receive]` is the zone number (0-2).
-- Screenshots land in `.playwright-mcp/` (gitignored).
+- **Card ids** look like `SET_CORE_010`. Card ids were reassigned between the old repos and
+  this one, so match cards across repos by name, not id.
+- **`utils/` is a one-function-per-file folder with a barrel** (`utils/index.ts`). Many helpers
+  there still assume the old zone-style card shape.
+- **`hsclone` is the reference, not a dependency.** It is a two-tab game (page with `3002` in
+  the URL is player 1); see `PREVIOUS-VERSIONS.md` for how to run it.
 
 ## Conventions
 
 - TypeScript, single quotes, Prettier-style formatting. Types live in `types/`, enums in
   `enums/`; both have an `index.ts` barrel.
-- Tests sit in `__tests__/` folders next to the code (`game/state/__tests__`, `utils/__tests__`).
+- Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
-- Existing tests have 5 failures and `tsc` has 15 errors, all in test files. See the README.
-  Don't "fix" unrelated failures as a drive-by; check what changed first.
+- Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.
+- Current checks: `npm test` passes (12 tests), `npm run build` passes, and `tsc` has 8 errors,
+  all `as Card` casts in `utils/__tests__/get-card-power.test.ts`. Don't "fix" unrelated
+  failures as a drive-by.

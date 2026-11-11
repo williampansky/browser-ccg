@@ -5,7 +5,6 @@ export { collectionSlice, setCollection } from './collection';
 export { gameOverSlice, setGameOver } from './game-over';
 export { popupOverlaysSlice, setDiscardedCard } from './popup-overlays';
 export { windowSizeSlice } from './windowSize';
-export { zonesSlice, zonesRefSlice } from './zones';
 
 export {
   decksSlice,

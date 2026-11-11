@@ -1,43 +1,6 @@
 import type { AppConfig, GameConfig, Pages, SiteConfig } from './types';
 
-const core = `SET_CORE_`;
-
 export const gameConfig: GameConfig = {
-  asynchronousTurns: false,
-  debugConfig: {
-    debugHandCardKey: core + '129',
-    debugBoardCardKey: core + '118',
-    debugBoardCardKeyAmount: 1,
-    useDebugHandCardKey: false,
-    useDebugBoardCardKey: false,
-
-    debugOpponentHandCardKey: core + '082',
-    debugOpponentBoardCardKey: core + '032',
-    debugOpponentBoardCardKeyAmount: 1,
-    useDebugOpponentHandCardKey: false,
-    useDebugOpponentBoardCardKey: false,
-
-    debugScenario: 'heal-player-minion',
-    useDebugScenario: false,
-
-    debugZone0id: 'z008',
-    useDebugZone0: false,
-    debugZone1id: 'z006',
-    useDebugZone1: false,
-    debugZone2id: 'z001',
-    useDebugZone2: false,
-    disableZoneReveals: false,
-
-    logPhaseToConsole: false,
-    showDebugBar: true,
-    showBoardgameIoSidebar: false,
-  },
-  ai: {
-    botToUse: 'MCTSBot',
-    enableBotAi: true,
-    enableBotAiMoves: true,
-    logBotAiMovesToConsole: false,
-  },
   numerics: {
     actionPointsPerTurn: 1,
     actionPointsTotal: 10,
@@ -47,57 +10,7 @@ export const gameConfig: GameConfig = {
     cardsPerTurn: 1,
     maxNumberOfDecks: 10,
     numberOfPlayers: 2,
-    numberOfSingleTurnsPerGame: 12,
-    numberOfSlotsPerZone: 6,
-    numberOfZones: 3,
   },
-  mechanics: {
-    _enabled: true,
-    ACTION_POINTS: true,
-    ADD_CARD: true,
-    AREA_OF_EFFECT: false,
-    ARMOR: false,
-    BOOLEAN: true,
-    BOON: false,
-    BUFF: true,
-    CHOOSE_ONE: false,
-    COMBO: false,
-    CURSE: false,
-    DEBUFF: true,
-    DESTROY_ON_NEXT_TURN: false,
-    DESTROY: true,
-    DISCARD_CARD: false,
-    DISCOVER: false,
-    DRAW_CARD: true,
-    DURABILITY: false,
-    EVENT: false,
-    GLOBAL_SPELL: false,
-    HIDDEN: false,
-    MYSTERY: false,
-    ON_DEATH: false,
-    ON_PLAY: true,
-    ON_TURN_END: false,
-    ON_TURN_START: false,
-    OVERLOAD: false,
-    RANDOM: true,
-    RESET_VALUE: false,
-    RESURRECT_MINION: false,
-    RETURN: false,
-    SET_COST: true,
-    SET_VALUE: true,
-    SILENCE_MECHANICS: false,
-    SPELL_DAMAGE: false,
-    SUMMON_MINION: true,
-    TARGET: false,
-    TRANSFER_OWNERSHIP: false,
-    TRANSFORM: false,
-  },
-  zonesConfig: {
-    effectAdjustments: true,
-    zoneImages: true,
-    zoneNames: true,
-    zoneReveals: true,
-  }
 };
 
 export const sitePages: Pages = {
@@ -166,12 +79,6 @@ export const sitePages: Pages = {
     description: '',
     name: 'Store',
     route: '/store',
-  },
-  zones: {
-    description: 'Zones database and information.',
-    name: 'Zones',
-    route: '/zones',
-    showInNav: true
   },
 };
 

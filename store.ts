@@ -8,8 +8,6 @@ import {
   gameOverSlice,
   popupOverlaysSlice,
   windowSizeSlice,
-  zonesRefSlice,
-  zonesSlice,
 } from './features';
 
 export const store = configureStore({
@@ -22,8 +20,6 @@ export const store = configureStore({
     gameOver: gameOverSlice,
     popupOverlays: popupOverlaysSlice,
     windowSize: windowSizeSlice,
-    zones: zonesSlice,
-    zonesRef: zonesRefSlice,
   },
 });
 

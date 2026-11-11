@@ -1,89 +1,103 @@
 # Roadmap
 
-Goals and priorities live in [VISION.md](VISION.md); current status and known issues are
-in [README.md](README.md). Work happens in evenings and weekends, so milestones are sized
-to be finishable in a session or two where possible. Claude drives the implementation; the
-owner reviews.
+Goals and priorities live in [VISION.md](VISION.md). Reference material is in
+[PREVIOUS-VERSIONS.md](PREVIOUS-VERSIONS.md) (the earlier repos, especially `hsclone`). Work happens
+in evenings and weekends, so milestones are sized to be finishable in a session or two where
+possible. Claude drives the implementation; the owner reviews.
 
 Order matters: each milestone makes the next one cheaper or safer.
 
-## Milestone 1: Fix the bot
+## Milestone 0: Reset (done on branch `hs-rebuild`)
 
-Why first: it's the one diagnosed bug, and it unblocks balance work.
+- [x] Archive the zone/SNAP-style game (tag `snap-style-v0`, branch `archive/snap-style`)
+- [x] Run `hsclone` and confirm it plays (two tabs; summoning, attacking and Guard verified)
+- [x] Remove the zone engine, board UI, zone pages and engine-only helpers (303 files, ~14.5k lines)
+- [x] Slim `app.config.ts`; rewrite `CLAUDE.md`, `README.md`, `VISION.md`
+- [ ] Merge `hs-rebuild` into `main` once Milestone 2 plays (decide when)
 
-- [ ] Fix `game/ai-enumeration.ts`: enumerate only cards in hand with `currentCost <= AP`, in zones with an open slot
-- [ ] Console no longer floods with `INVALID_MOVE(cantAffordCard)` after End Turn
-- [ ] Fix `if (cardIndex)` in `aiPlayCardMove` (`game/ai/ai.moves.ts`): index `0` is falsy, so the bot's first-slot card never fires its ability
-- [ ] Fix zone-full checks: human path uses `length > slots` (should be `>=`); bot path computes `zoneIsFull` inverted and has the check commented out
-- [ ] Fix turn order (`game/state/turn-order.state.ts`): both ternary branches are `['0','1']`, so player 0 always goes first
+## Milestone 1: Engine foundation (headless)
 
-Done when: a full game against the bot produces no `cantAffordCard` errors, the bot's index-0 cards fire their abilities, and zones can't exceed 6 cards.
+Why first: rules in plain tested TypeScript can be verified without any UI, and everything else
+sits on them.
 
-## Milestone 2: Safety net
+- [ ] Decide the new game-state shape (`G`) and card schema; list the new Airtable fields needed
+      (attack/health on every card, class, keywords like Guard, spell/minion/weapon types)
+- [ ] Port the core `hsclone` rules to TypeScript: turn order, energy (+1 per turn, cap 10), draw,
+      play minion/spell/weapon, minion vs minion and minion vs hero attacks, damage and death,
+      Guard (only Guards may be attacked), summoning sickness, win/loss at 0 hero health
+- [ ] Port `hsclone`'s unit tests as the starting suite (moves, state, spells, boons/buffs)
+- [ ] Avoid `hsclone`'s known problems: the `killMinion` "disallowed move" client errors, an extra
+      card drawn per turn, a tic-tac-toe leftover AI, stale test fixtures, and debug settings left on
+- [ ] CI running `tsc`, `jest` and `next build`
 
-Why: multiplayer will touch core game state, and dependency upgrades need tests to lean on.
+Done when: a scripted two-player game plays from start to a winner inside a test, and CI is green.
 
-- [ ] `jest` green (5 failing deck/hand count tests; check each expectation before changing it)
-- [ ] `tsc` clean (15 errors, all in test files)
-- [ ] CI running `tsc`, `jest` and `next build` on every push
-- [ ] Clean up console warnings (`next/image` parents, react-spring `start`)
-- [ ] Hide the debug header (`debugConfig.showDebugBar = false`) for user-facing builds
+## Milestone 2: Playable board
 
-Done when: CI is green on `main`.
+- [ ] A `/play` board for the new engine: hero portraits and health, boards, hand, energy, deck
+      counts, match log, End Turn
+- [ ] Interaction as in `hsclone`: click a card to select, click a slot or target to play it; valid
+      targets highlighted; attackers glow
+- [ ] Hot-seat/two-tab play via boardgame.io `Local`, with no hard-coded hosts or ports
+- [ ] Reuse the existing card art and `Card`/`Minion` renderers
 
-## Milestone 3: Balance tooling
+Done when: you can play a full game against yourself in the browser, to a win.
 
-Why: card balance is a top priority, and this turns it from gut feel into data.
+## Milestone 3: Bot and balance tooling
 
-- [ ] Self-play simulator: run N bot-vs-bot games per deck pairing, no UI
-- [ ] Report win rate per deck, and per-card stats (played, win rate when played)
-- [ ] Decide which bot to use for bulk runs (`MCTSBot` is slow and its skill biases results; a random or greedy bot may be better)
-- [ ] Create more AI decks (gives the simulator more matchups, and players more opponents)
+- [ ] A bot that only makes legal moves, so solo play works (start simple: random, then greedy)
+- [ ] Bot-vs-bot simulation: run N games per deck matchup and print win rates and per-card stats
+- [ ] A few starter decks for the bot
 
-Done when: one command prints a win-rate table for all AI decks.
+Done when: one command prints a win-rate table for the starter decks.
 
-## Milestone 3.5: Unify card play and card coverage
+## Milestone 4: The card set
 
-Why: the human and bot play paths are separate (`play-card.move.ts` vs `aiPlayCardMove`), and 21 cards have both `exec` and `execAi` versions. Every new card is written twice, and bugs like the index-0 one appear in only one path.
+Why here: card design and balance are the top priority, but they need working rules and a
+simulator first.
 
-- [ ] Card coverage audit: which of the 69 cards actually work (see `CARD-AUDIT.md`)
-- [ ] One play path shared by human and bot (only the target-choosing step differs)
-- [ ] Decide what to do with the legacy Hearthstone-style cards (Bulwark x4, Armor, Spell Damage, Choose One; see `CARD-AUDIT.md`): cut or redesign as zone-style effects. Then delete the matching `@todo` stubs (Bulwark, Heal, SetValue, SpellDamage, Silence, Transform) and any unused `mechanics` toggles in `app.config.ts`
-- [ ] One test per card, so coverage stays visible
-- [ ] Move per-card rules out of scattered `case 'SET_CORE_…'` switches into each card's own file
+- [ ] Choose the first-release pool from the current 69 cards, the old CORE 132 and the old PRIME 254
+      (see `PREVIOUS-VERSIONS.md`); Bulwark/Guard, Armor and similar cards are core again
+- [ ] Add the new fields to Airtable and re-pull; update `data/` and `game/data/`
+- [ ] Naming and text pass (duplicate names, typos, "Attack" vs "Deal" wording; see `CARD-AUDIT.md`)
+- [ ] Art match pass (mismatched art listed in `CARD-AUDIT.md` section 5)
+- [ ] Art provenance table: card, artist, source, licence, status; replace temporary art
 
-Done when: every card in `setsCore.json` has a passing test and there is a single play path.
+## Milestone 5: Keywords and mechanics
 
-## Milestone 4: Multiplayer spike
+Add one at a time, each with tests: Rush, Double Attack, Bubble, Disable, Expiration, energy shield,
+warcry and on-death effects, boons vs buffs, weapons, class skills/heroes. Order by what the first
+card pool needs.
 
-Why: find out how much work multiplayer really is before committing to a design.
+## Milestone 6: Multiplayer
 
-Prerequisites found in the code review:
+- [ ] Real server (boardgame.io `Server`) with lobby and matchmaking
+- [ ] Gate who may call which move; hide the opponent's hand and deck (`playerView`)
+- [ ] Reconnects, auth, hosting (Heroku or similar)
+- [ ] Use `ctx.random` for all randomness so games are reproducible
 
-- [ ] Gate `aiPlayCard` / `aiSetDone` so clients can't play or finish the opponent's turn (and stop hard-coding player `'1'`)
-- [ ] Replace `Math.random()` in game logic with `ctx.random` (`getRandomNumberBetween`, used by the bot)
-- [ ] Make `stripSecrets` actually hide the opponent's hand and deck (its filtering is currently commented out)
+Reference: `hsclone` and `react-card-game` had a two-client SocketIO setup hard-coded to
+localhost; `react-ccg-deprecated` had a single-process Heroku-style server and a lobby wired to a
+sample game. See `PREVIOUS-VERSIONS.md`.
 
-- [ ] Spike: two browser tabs playing each other via a local boardgame.io server
-- [ ] Write down findings: what carried over, what broke, hidden-info handling (`stripSecrets`)
-- [ ] Decide: accounts/auth, hosting (Heroku or similar), real-time vs. async turns
-- [ ] Turn the decisions into a proper multiplayer plan (replace this milestone's checklist)
+## Milestone 7: Stack upgrade
 
-Done when: the spike works locally and the design decisions are written down.
+Next 12 / React 17 / boardgame.io 0.49 are from late 2022. Upgrade as its own milestone, after the
+new engine plays, so it doesn't block the game. The engine is plain TypeScript and should move
+across with little change; the UI is where the upgrade work will be.
 
 ## Ongoing
 
-- Player experience: drag-and-drop feel, animation, a tutorial. Get one or two outside people to play it once there's something worth showing.
-- Card design and balance passes, informed by Milestone 3 data.
-- Smarter bot moveset (after Milestone 1).
-- Weapons (enums already prepped).
+- Player experience: board readability, animation, feedback, a tutorial. Get outside people to play
+  it once it plays.
+- Card balance passes, informed by Milestone 3 data.
 
 ## Later
 
-- Review `npm outdated` and security advisories; upgrade Next 12 / React 17 / boardgame.io 0.49 (only after Milestone 2)
 - Store, collection and visuals polish (secondary per `VISION.md`)
 - Monetization (needs a decision first; see open questions in `VISION.md`)
 
 ## Ideas / unscheduled
 
--
+- Collectible heroes with different abilities (the old repos had 9 heroes) as a monetization angle
+- Match history log as a player-facing feature (`hsclone` had one)

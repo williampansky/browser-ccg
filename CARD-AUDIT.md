@@ -5,6 +5,19 @@ pass over the card art in `public/images/sets/SET_CORE/`. Nothing in the data or
 changed. Card data is generated from Airtable (`npm run airtable`), so any card edits
 below should be made there, not hand-edited in the JSON.
 
+> **Status update (2026-11-11):** this audit was written against the old zone/SNAP-style rules.
+> The project has since moved back to a Hearthstone-style game and the zone engine was removed
+> (see `VISION.md`). What still applies and what doesn't:
+>
+> - **Section 1 (legacy cards):** reversed. Bulwark (Guard), Armor, Spell Damage and Choose One are
+>   Hearthstone-style mechanics and are core again. Treat the table as "cards to implement", not
+>   "cards to cut".
+> - **Section 2 (bot misplays):** moot, the old bot and play paths were deleted.
+> - **Section 3 (balance):** the stat-per-cost analysis assumed the zone game (a 12-turn game with no
+>   attacking). It needs redoing for Hearthstone-style combat and a simulator; treat it as a rough
+>   starting point at best. The "Destroy Random is strictly worse than Destroy" point still holds.
+> - **Sections 4-6 (naming/text, art match, art provenance):** unchanged and still valid.
+
 Method and limits: implementation coverage comes from reading the code and grepping for
 card keys, not from playing every card. Items marked *(verify)* should be confirmed in-game
 before acting. Balance comments are from the numbers only; none of this has been playtested.
