@@ -247,6 +247,11 @@ export const PlayBoard = () => {
     else setSelection({ ...selection, choice });
   };
 
+  // Drop zones: what a click would play right now (shown as a glow that brightens on hover).
+  const placedPlays = untargetedPlays.filter((a) => a.type === 'PlayCard' && a.boardIndex !== undefined);
+  const boardZone = placedPlays.length > 0 && !over;
+  const areaZone = untargetedPlays.length > 0 && placedPlays.length === 0 && !over;
+
   // Click-to-play: with a minion selected, click your board (left half = far left, right half = far right);
   // with a spell or other card that needs no aim, click anywhere in the play area.
   const playFromArea = (e: React.MouseEvent, zone: 'board' | 'table') => {
@@ -401,7 +406,7 @@ export const PlayBoard = () => {
           />
         </svg>
       )}
-      <div className={styles.table} onClick={(e) => playFromArea(e, 'table')}>
+      <div className={[styles.table, areaZone ? styles.zone : ''].join(' ')} onClick={(e) => playFromArea(e, 'table')}>
         <section className={styles.side}>
           {renderHero(foe, false)}
           <div className={styles.row}>{state.players[foe].board.map((m) => renderMinion(foe, m))}</div>
@@ -416,6 +421,8 @@ export const PlayBoard = () => {
             <span>
               Turn {state.turn}: {label(state.activePlayer)}
               {choiceOptions.length > 0 ? ' - choose one option' : ''}
+              {boardZone ? ' - click your board to play it (left half: far left, right half: far right)' : ''}
+              {areaZone ? ' - click the play area to cast it' : ''}
               {aimable.length > 0 ? ' - pick a target (Esc, right-click or clicking the selection again cancels)' : ''}
             </span>
           )}
@@ -423,7 +430,7 @@ export const PlayBoard = () => {
         </div>
 
         <section className={styles.side}>
-          <div className={styles.row} onClick={(e) => playFromArea(e, 'board')}>
+          <div className={[styles.row, boardZone ? styles.zone : ''].join(' ')} onClick={(e) => playFromArea(e, 'board')}>
             {state.players[me].board.map((m) => renderMinion(me, m))}
           </div>
           {renderHero(me, true)}
