@@ -42,6 +42,21 @@ const centerOf = (el: HTMLElement) => {
 const sameTarget = (a: TargetRef, b: TargetRef) =>
   a.kind === 'hero' ? b.kind === 'hero' && a.player === b.player : b.kind === 'minion' && a.instanceId === b.instanceId;
 
+/** Renders log markup: `**Player 1**` (coloured by side) and `__Card__` (bold italic). */
+const renderLogLine = (line: string) =>
+  line.split(/(\*\*.+?\*\*|__.+?__)/g).map((part, i) => {
+    if (part.startsWith('**')) {
+      const text = part.slice(2, -2);
+      return (
+        <strong key={i} className={text === 'Player 1' ? styles.logMe : styles.logFoe}>
+          {text}
+        </strong>
+      );
+    }
+    if (part.startsWith('__')) return <strong key={i}><em>{part.slice(2, -2)}</em></strong>;
+    return part;
+  });
+
 const newGame = (): { state: GameState; rng: Rng } => {
   const rng = createSeededRng(Date.now() % 2147483647);
   const state = createGame(
@@ -54,12 +69,15 @@ const newGame = (): { state: GameState; rng: Rng } => {
 /** Hot-seat board: the active player is always at the bottom, the other player's hand is hidden. */
 export const PlayBoard = () => {
   const [state, setState] = useState<GameState | null>(null);
-  /** One entry per action, so lines stay in order within an action while the newest action is on top. */
+  /** One entry per action, oldest first. */
   const [log, setLog] = useState<string[][]>([]);
   const [selection, setSelection] = useState<Selection | null>(null);
   const [message, setMessage] = useState('');
   const [mode, setMode] = useState<Mode>('ai');
   const rngRef = useRef<Rng | null>(null);
+  // The log shows the newest line at the bottom and stays pinned there unless you scroll up to read older events.
+  const logRef = useRef<HTMLDivElement | null>(null);
+  const logPinned = useRef(true);
   // Targeting line: where the pointer is, which character it is over, and the DOM nodes to draw between.
   const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
   const [hover, setHover] = useState<TargetRef | null>(null);
@@ -74,7 +92,7 @@ export const PlayBoard = () => {
     const g = newGame();
     rngRef.current = g.rng;
     setState(g.state);
-    setLog([['New game. Player 1 goes first; Player 2 starts with an extra card (The Orb).']]);
+    setLog([['New game. **Player 1** goes first; **Player 2** starts with an extra card (__The Orb__).']]);
     setSelection(null);
     setMessage('');
   }, []);
@@ -104,6 +122,11 @@ export const PlayBoard = () => {
       window.removeEventListener('contextmenu', rightClick);
     };
   }, [hasSelection]);
+
+  useEffect(() => {
+    const el = logRef.current;
+    if (el && logPinned.current) el.scrollTop = el.scrollHeight;
+  }, [log]);
 
   // Start on the client only: the deck shuffle uses the clock, which would not match server rendering.
   useEffect(start, [start]);
@@ -224,6 +247,24 @@ export const PlayBoard = () => {
     else setSelection({ ...selection, choice });
   };
 
+  // Click-to-play: with a minion selected, click your board (left half = far left, right half = far right);
+  // with a spell or other card that needs no aim, click anywhere in the play area.
+  const playFromArea = (e: React.MouseEvent, zone: 'board' | 'table') => {
+    if (over || selection?.kind !== 'hand' || (e.target as HTMLElement).closest('button')) return;
+    if (zone === 'board') e.stopPropagation();
+    const plain = untargetedPlays.filter((a): a is PlayAction => a.type === 'PlayCard');
+    const placed = plain.filter((a) => a.boardIndex !== undefined);
+    if (placed.length > 0) {
+      if (zone !== 'board') return;
+      const box = e.currentTarget.getBoundingClientRect();
+      const left = e.clientX < box.left + box.width / 2;
+      const pick = placed.find((a) => (a.boardIndex === 0) === left) ?? placed[0];
+      dispatch(pick);
+    } else if (plain.length > 0) {
+      dispatch(plain[0]);
+    }
+  };
+
   const renderMinion = (owner: PlayerId, m: MinionInstance) => {
     const card = byId.get(m.cardId);
     const selected = selection?.kind === 'minion' && selection.id === m.instanceId;
@@ -254,10 +295,12 @@ export const PlayBoard = () => {
           owner === me && canAttack(m) ? styles.ready : '',
           selected ? styles.selected : '',
           aim ? styles.aim : '',
+          aim && hover?.kind === 'minion' && hover.instanceId === m.instanceId ? styles.aimHover : '',
         ].join(' ')}
         onClick={() => clickMinion(owner, m)}
       >
         <span className={styles.name}>{card?.name ?? m.cardId}</span>
+        {card?.race && card.race !== 'NONE' && <span className={styles.race}>{card.race.toLowerCase()}</span>}
         <span className={styles.stats}>
           <span className={styles.atk}>{m.attack}</span>
           <span className={m.health < m.maxHealth ? styles.hurt : styles.hp}>{m.health}</span>
@@ -280,6 +323,7 @@ export const PlayBoard = () => {
         className={[
           styles.hero,
           aim ? styles.aim : '',
+          aim && hover?.kind === 'hero' && hover.player === owner ? styles.aimHover : '',
           selection?.kind === 'hero' && isMe ? styles.selected : '',
           isMe && heroCanSwing ? styles.ready : '',
         ].join(' ')}
@@ -321,20 +365,21 @@ export const PlayBoard = () => {
         <span className={styles.type}>
           {card?.type}
           {card?.type === 'minion' || card?.type === 'weapon' ? ` ${card?.attack}/${card?.health}` : ''}
+          {card?.race && card.race !== 'NONE' ? ` · ${card.race.toLowerCase()}` : ''}
         </span>
         <span className={styles.text}>{card?.text}</span>
       </button>
     );
   };
 
-  // The targeting line: from the selected card, minion or hero to the character under the pointer
-  // (green when it is a legal target) or else to the pointer itself (grey).
+  // The targeting line: from the selected card, minion or hero to the pointer (green over a legal target, else grey).
   const sourceKey =
     selection?.kind === 'hand' ? `c${selection.index}` : selection?.kind === 'minion' ? `m${selection.id}` : selection ? `h${me}` : null;
   const sourceEl = sourceKey ? nodes.current.get(sourceKey) : undefined;
+  // The arrow always follows the pointer; a legal target under it is shown by highlighting that target.
   const overTarget = hover && isAimable(hover) ? nodes.current.get(targetKey(hover)) : undefined;
   const lineFrom = sourceEl && aimable.length > 0 ? centerOf(sourceEl) : null;
-  const lineTo = overTarget ? centerOf(overTarget) : pointer;
+  const lineTo = pointer;
 
   return (
     <main className={styles.page}>
@@ -356,7 +401,7 @@ export const PlayBoard = () => {
           />
         </svg>
       )}
-      <div className={styles.table}>
+      <div className={styles.table} onClick={(e) => playFromArea(e, 'table')}>
         <section className={styles.side}>
           {renderHero(foe, false)}
           <div className={styles.row}>{state.players[foe].board.map((m) => renderMinion(foe, m))}</div>
@@ -378,7 +423,9 @@ export const PlayBoard = () => {
         </div>
 
         <section className={styles.side}>
-          <div className={styles.row}>{state.players[me].board.map((m) => renderMinion(me, m))}</div>
+          <div className={styles.row} onClick={(e) => playFromArea(e, 'board')}>
+            {state.players[me].board.map((m) => renderMinion(me, m))}
+          </div>
           {renderHero(me, true)}
           <div className={styles.row}>
             {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i))}
@@ -428,11 +475,18 @@ export const PlayBoard = () => {
 
       <aside className={styles.log}>
         <h2>Log</h2>
-        <div className={styles.logLines}>
-          {[...log].reverse().map((lines, i) => (
+        <div
+          className={styles.logLines}
+          ref={logRef}
+          onScroll={(e) => {
+            const el = e.currentTarget;
+            logPinned.current = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
+          }}
+        >
+          {log.map((lines, i) => (
             <div key={i} className={styles.logBatch}>
               {lines.map((l, j) => (
-                <div key={j}>{l}</div>
+                <div key={j}>{renderLogLine(l)}</div>
               ))}
             </div>
           ))}

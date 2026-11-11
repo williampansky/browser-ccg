@@ -29,6 +29,6 @@ describe('describeEvents', () => {
       s,
       s
     );
-    expect(lines).toEqual(["Grunt attacks Player 2's hero", "  Player 2's hero takes 2", 'Player 1 wins!']);
+    expect(lines).toEqual(["__Grunt__ attacks **Player 2**'s hero", "  **Player 2**'s hero takes 2", '**Player 1** wins!']);
   });
 });

@@ -12,7 +12,9 @@ export const nameOfInstance = (id: number, catalog: CardCatalog, ...states: Game
   return `minion #${id}`;
 };
 
-const who = (p: '0' | '1') => `Player ${Number(p) + 1}`;
+/** Log markup: `**Player 1**` is a player (coloured by side), `__Card__` is a card name (bold italic). */
+const who = (p: '0' | '1') => `**Player ${Number(p) + 1}**`;
+const card = (name: string) => `__${name}__`;
 
 /** Turns the events of one action into short log lines. Events with no player-facing meaning are skipped. */
 export const describeEvents = (
@@ -21,7 +23,8 @@ export const describeEvents = (
   before: GameState,
   after: GameState
 ): string[] => {
-  const name = (id: number) => nameOfInstance(id, catalog, before, after);
+  const name = (id: number) => card(nameOfInstance(id, catalog, before, after));
+  const cardName = (id: string) => card(catalog.get(id)?.name ?? id);
   const target = (t: TargetRef) => (t.kind === 'hero' ? `${who(t.player)}'s hero` : name(t.instanceId));
   const lines: string[] = [];
   for (const e of events) {
@@ -33,14 +36,14 @@ export const describeEvents = (
         lines.push(`${who(e.player)} plays ${name(e.instanceId)}`);
         break;
       case 'CardPlayed':
-        lines.push(`${who(e.player)} casts ${catalog.get(e.cardId)?.name ?? e.cardId}`);
+        lines.push(`${who(e.player)} casts ${cardName(e.cardId)}`);
         break;
       case 'WeaponEquipped':
-        lines.push(`${who(e.player)} equips ${catalog.get(e.cardId)?.name ?? e.cardId}`);
+        lines.push(`${who(e.player)} equips ${cardName(e.cardId)}`);
         break;
       case 'MinionSummoned':
         if (!events.some((x) => x.type === 'MinionPlayed' && x.instanceId === e.instanceId)) {
-          lines.push(`${catalog.get(e.cardId)?.name ?? e.cardId} is summoned for ${who(e.player)}`);
+          lines.push(`${cardName(e.cardId)} is summoned for ${who(e.player)}`);
         }
         break;
       case 'MinionAttacked':
@@ -77,7 +80,7 @@ export const describeEvents = (
         lines.push(`${who(e.player)}'s weapon breaks`);
         break;
       case 'MinionDied':
-        lines.push(`  ${catalog.get(e.cardId)?.name ?? e.cardId} dies`);
+        lines.push(`  ${cardName(e.cardId)} dies`);
         break;
       case 'GameOver':
         lines.push(e.winner === 'draw' ? 'Draw!' : `${who(e.winner)} wins!`);
