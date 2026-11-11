@@ -60,11 +60,12 @@ earlier `hsclone` repo as the rules reference. Read these first:
 ## Two Airtable bases
 
 The same token can read both. Which one `AIRTABLE_BASE_ID` points at decides which script works.
+Find the base ids in Airtable (they are not recorded here; this repo is public).
 
-- **`react-ccg`** (`REDACTED`) - the hsclone-era Hearthstone-style data. Used by
+- **`react-ccg`** - the hsclone-era Hearthstone-style data. Used by
   `npm run airtable:hs`. Tables: CONSTANTS, MECHANICS, HEROS, ABILITIES, GAME, CORE, PRIME,
   ENTOURAGE. Card tables already have attack, health, cost, cardClass, mechanics, playType.
-- **`browser-ccg`** (`REDACTED`) - the zone-game data behind `npm run airtable`.
+- **`browser-ccg`** - the zone-game data behind `npm run airtable`.
 - The `inspiration` column exists in the `react-ccg` base. It names the specific Hearthstone
   card(s) that inspired each entry. `airtable:hs` drops it on purpose because this repo is public.
   Don't add it back, and don't copy it in from the old repos' JSON (see `PREVIOUS-VERSIONS.md`).
