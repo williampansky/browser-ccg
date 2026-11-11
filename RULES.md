@@ -1,0 +1,454 @@
+# Rules spec (DRAFT for author approval)
+
+Status: **draft, Milestone 1a.** Nothing in here is final until the author answers the open
+questions in section 12. Once approved, this is the contract for the new TypeScript engine
+(Milestone 1b) and its tests.
+
+## 0. Summary: what the deep-dive found
+
+1. **`hsclone` is a playable but unfinished reference.** Core play (energy, drawing, playing
+   minions and spells, attacking, Guard, hero damage) works. A lot of its behaviour is accidental,
+   and some of it is wrong.
+2. **Its engine is hard-coded per card id; the live card data is richer.** `hsclone` reads an
+   older JSON schema (`spellType`, `warcryNumber`, `spellContext`). The Airtable base we pulled into
+   `data/hs/` has since gained `playType`, `playContext`, `numberPrimary/Secondary/RNG`, and
+   `mechanics` lists. So `hsclone` tells us **what each card does**, not what the data model is.
+3. **The CORE set is a realistic first-release pool.** Of 132 CORE cards, `hsclone` has code for
+   109, 8 are vanilla, 12 need only keywords, and just 3 have effects with no code. None of the
+   254 PRIME cards has any code, and PRIME leans on mechanics `hsclone` never built (events,
+   on-death, secrets, combo, overload).
+4. **Several things the engine must own that `hsclone` left to the browser:** removing dead
+   minions, detecting the winner, and enforcing the 7-minion board limit. Today a React effect or a
+   client timer does the first two, and the UI alone enforces the third.
+5. **Legality is scattered.** Whether a target is legal is decided in UI-oriented flags set by
+   `select*` moves and trusted by the `attack*` moves. The rewrite needs one `legalTargets`
+   function the engine itself enforces.
+6. **About 25 cards have text that disagrees with their implemented behaviour.** Each needs an
+   explicit decision (section 11 and Appendix A).
+
+## 0.1 How to read the evidence tags
+
+| Tag | Meaning |
+| --- | --- |
+| **[V-code]** | I read the cited source myself and confirmed it |
+| **[V-live]** | Observed in the running game (two browser tabs) |
+| **[V-data]** | Confirmed by computing over `data/hs/*.json` |
+| **[A]** | Reported by a research agent, not independently re-checked |
+| **[I]** | Inference |
+
+Paths are relative to the `hsclone` repo (`src/lib/...`) unless noted. The agents' reports were
+spot-checked, not re-derived: where I checked a claim it is tagged; one agent claim was wrong and is
+corrected in section 10 (four prime "minions with no attack/health" actually have both).
+
+---
+
+## 1. Scope
+
+- Two-player, turn-based, one shared board per side, hero with health, alternating turns.
+- First release candidate pool: the 132 **CORE** cards (section 9). PRIME (254), ENTOURAGE tokens
+  (43), 9 heroes and 18 hero abilities come later.
+- Out of scope for v1 unless the author says otherwise: classes, hero skills, secrets (`%MYSTERY%`),
+  turn timer.
+
+## 2. Setup
+
+| Rule | `hsclone` behaviour | Evidence |
+| --- | --- | --- |
+| Deck | 30 cards. Only a hard-coded debug "Sorcerer" deck is wired; the player-chosen deck path is a `@TODO`. Both players get the same deck and class | [A] `phases/initDecks.js:16-30` |
+| Shuffle | boardgame.io `ctx.random.Shuffle` (deterministic) | [A] `initDecks.js:23-24` |
+| Starting hand | First player draws 3. Second player draws 4 **and** gets "The Orb" (a +1 energy, this-turn-only spell), so 5 | [A] `phases/initHands.js:44-53` |
+| Mulligan | Code exists, **off by default**, untested; has a bug (kept cards stay in the deck as duplicates) | [A] `initHands.js:32-122`, `game.config.js:15` |
+| First player | Always player `'0'`. Random order is off by default, and when "on" it is computed once at module load with `Math.random` | [V-code] `config/game.config.js`, [A] `state.js:84-87` |
+
+## 3. Turn structure
+
+At the start of a player's turn, in this order (`phases/play.js:12-135`, [A]; the energy and debug
+parts [V-code]):
+
+1. Energy total +1 (cap 10) and refill (see 4.1).
+2. Draw one card (see 4.2).
+3. For each of the **current player's** minions: enable `canAttack` if attack >= 1 and not disabled;
+   reset `currentAttack` to its total; tick the Disabled and Expiration countdowns.
+4. Tick the same countdowns on the **opponent's** minions (so both boards tick every turn start).
+5. Reset hero-skill usage; enable the hero attack if a weapon is equipped.
+6. Clear UI selection state.
+7. *(debug, remove)* push a `CORE_063` card into hand every turn while `enableDebugCard` is true.
+
+At turn end: clear all minions' `canAttack` / target flags, clear hero attack flags and selections.
+
+**Bug/quirk list for this phase:** the `canAttack` check at step 3 reads last turn's boosted attack
+because the reset comes after it [V-code]; the two minion loops are copy-pasted and the
+current-player loop kills `otherPlayer`'s minion at the same index [A]; the global `turns.js`
+`onBegin` also increments energy (live test suggests it does not stack, but not rigorously) [V-live].
+
+## 4. Resources
+
+### 4.1 Energy
+- Starts 0/0. Each turn: total +1, capped at 10, then current = total. Standard 1-to-10 model.
+  [V-code] `turns.js`, [A] `state/energy.js`
+- "The Orb": current +1 for this turn only, uncapped. `energy.subtract` then clamps `current` to
+  `total`, so the extra energy can be lost on the next spend. [A] `spells/cast-the-orb.js`,
+  `energy.js:85-92`
+- No overload implemented, although PRIME has 10 `%OVERLOAD%` cards with `numberOvercharge`.
+- **Costs are not enforced by default.** `debugData.enableCost` is `false`. Minion/spell/weapon plays
+  only subtract energy when it is true, but targeted spells *always* subtract. [V-code]
+  `game.config.js`, `cast-targeted-spell.js:52`
+
+### 4.2 Drawing
+- One card at turn start if hand <= 9. If the hand is full the top card is **burned** (moved to
+  played cards). [V-code] `utils/draw-turn-start-card.js`
+- Draws from effects into a full hand are **silently dropped** and the card stays in the deck. [A]
+  `moves/draw-card.js:22`
+- Empty deck: draw is a no-op. "Fatigue" exists but always deals 0 because the counter it reads is
+  never negative. [V-code] `draw-turn-start-card.js:22-25`, [A] counts analysis
+- **The observed 5 -> 7 hand jump is a debug card, not a double draw** (draw 1 + debug card). [V-code]
+  `play.js:129-133`, `game.config.js:4`
+
+### 4.3 Hand and board limits
+- Hand max 10. [A] `draw-card.js:22`
+- Board max 7 per side. Enforced **only in the UI** for normal minion plays; some spells and skills
+  check `=== 7`. The engine's `playCard` has no capacity check. [A]
+- The board is a dense array; a minion is inserted at the chosen index and the rest shift right.
+  [A] `state/board-methods/place-card-on-board.js`
+
+## 5. Winning
+
+- Hero health starts at 30 and is clamped to [0, 30] (so healing cannot exceed 30). [A]
+- `endIf` is `G.winner !== null`, but **nothing in the engine sets `winner`**. A React effect in
+  `GameWrapper.jsx` calls the `setGameWinner` move when a hero reaches 0, and that move can be
+  called by any client. [V-code] `GameWrapper.jsx:85-86`
+- Both heroes at 0: the effect's second line wins, so the result is accidental. There is no draw.
+  Forfeit subtracts 1000 health. The turn timer is dead code. [A]
+
+---
+
+## 6. Minions and combat
+
+### 6.1 Minion state
+~40 fields per board slot. The ones that carry rules: `currentAttack/totalAttack`,
+`currentHealth/totalHealth`, `canAttack`, `hasGuard`, `hasEnergyShield` (this is **Bubble**),
+`hasOnslaught/hasOnslaughtAttack` (a 2-attack toggle), `isConcealed` (stealth-like),
+`isDisabled/isDisabledFor`, `willExpire/willExpireIn`, `isDead`. Many `can*` flags are transient
+targeting state, not rules. `hasAttacked`, `isAttackingMinionPlayer`, `canReceiveGuard` are dead. [A]
+`creators/create-board-slot-object.js:9-46`
+
+### 6.2 Summoning sickness
+- A new minion has `canAttack = false` and gets it at its owner's **next** turn start. [V-live] (a
+  Wondrous Wisp played this way showed no attack glow), [A] `play.js:26-28`
+- **Rush** sets `canAttack` immediately on play, with no attack >= 1 check. Behaviourally this is
+  Charge-like (it can hit the hero), not "Rush: minions only". [A] `init-stampede.js`
+- A hard-coded exception: CORE_062 lets played creatures attack at once. [A] `play-card.js:108-110`
+
+### 6.3 Attack resolution
+| Attack | Rule as implemented | Evidence |
+| --- | --- | --- |
+| Minion -> minion | Both take the other's attack **simultaneously**. A Bubble absorbs a hit (no damage). Then the attacker, then the defender, are checked for death | [V-live] two-way damage and a "was slain" log; [A] `attack-minion.js:11-112` |
+| Minion -> hero | Blocked if any enemy minion has Guard (re-checked in the move). Armor (shield points) is removed first, overflow to health. No counter-damage | [V-code] `attack-player.js:30-32`, [V-live] 30 -> 27 |
+| Hero/weapon -> minion | Hero takes the minion's attack as counter-damage **first**, then the minion takes the weapon's `playerAttackValue`. **The Guard check is commented out** | [V-code] `attack-minion-with-player.js:30-33` |
+| Hero/weapon -> hero | Uses `weapon.attack` (not `playerAttackValue`). Guard enforced. No counter-damage | [A] `attack-player-with-player.js` |
+
+- **Guard (`%BULWARK%`, "only these minions can be attacked").** Restricts minion attackers and the
+  weapon->hero attack; **not** the weapon->minion move, and not spells, warcries or skills. [V-live]
+  only Guards were highlighted as targets; [V-code] gaps above.
+- A hero has one weapon attack per turn; each attack costs 1 durability; weapon is removed at 0.
+  Weapon `attack` and `health` are attack and durability. [A]
+- Armor (`playerShieldPoints`) absorbs only attack damage; spell and warcry damage hits health directly.
+  [A/L]
+
+### 6.4 Death
+- Detection sets `isDead` when `currentHealth === 0` (`state/board-methods/kill-minion.js`). [V-code]
+- **Removal is done by the browser.** `BoardSlot.jsx` waits 900 ms after `isDead` and calls the
+  `killMinion` move. Both tabs render both boards, so both fire it, and the non-current player's call
+  is rejected. This is the most likely source of the repeated `disallowed move: killMinion` console
+  errors (observed 4 per death). [V-code] `BoardSlot.jsx:95-106`; the "non-active tab" part is
+  [A], not live-verified.
+- Dead minions stay on the board for 900 ms and still count as Guard/targets. [A]
+- **On-death effects do not exist** (`%ON_DEATH%` is wired to an empty stub). [A]
+- Both die in a trade: attacker marked first, then defender. [A]
+
+### 6.5 Targeting
+The UI contract, to be replaced by one engine query `legalTargets(attackerOrCard, G)`:
+- Minion attacker: if the enemy has any Guard, only Guards; otherwise every non-concealed enemy minion
+  plus the hero. [V-live], [A] `determinations.js:18-35`
+- Spells/warcries/skills: per-card id logic in `select-card.js` (a switch), with ad hoc filters
+  (attack <= 3, attack >= 5, damaged, undamaged). They ignore Guard; some exclude concealed. [A]
+- The hero is a separate set of `playerCanBeAttackedBy*` flags. [A]
+
+---
+
+## 7. Keywords and mechanics
+
+`mechanics.json` defines 49 symbols; the card pool uses ~40. Counts are CORE / PRIME / ENTOURAGE.
+Role and status columns combine the data analysis [V-data for counts that I recomputed; A otherwise]
+and `hsclone`'s code [A].
+
+| Mechanic | Cards (C/P/E) | `hsclone` status | Note |
+| --- | --- | --- | --- |
+| BULWARK (Guard) | 14 / 22 / 3 | working | HS "taunt" |
+| RUSH | 7 / 8 / 1 | working | behaves like Charge (6.2) |
+| BUBBLE | 1 / 8 / 0 | working | stored as `hasEnergyShield`; attacks only |
+| NO_ATTACK | 3 / 9 / 0 | label only | |
+| DOUBLE_ATTACK | 2 / 7 / 0 | partial | "Onslaught" 2-attack toggle, set only by spells |
+| HIDDEN / concealed | ~6 total | partial | `isConcealed`, set only by one token |
+| DISABLE | 5 / 3 / 0 | working | countdown, see Q17 |
+| EXPIRATION | 0 / 1 / 0 | partial | one spell; wrong-board kill bug |
+| ARMOR | 2 / 3 / 0 | working | hero shield points |
+| SPELL_DAMAGE | 4 / 2 / 0 | working | scales many non-damage effects, bug |
+| ON_PLAY (warcry) | 24 / 45 / 1 | working for CORE only | |
+| BOON | 8 / 8 / 0 | partial | temporary vs aura, two meanings |
+| BUFF | 12 / 16 / 2 | partial | only spell-damage buffs are mechanic-driven |
+| DESTROY, DRAW_CARD, SUMMON, HEAL, DAMAGE | many | working (bespoke) | per-card code |
+| EVENT | 4 / 48 / 0 | **none** | CORE cards 071, 085, 130 need it |
+| ON_DEATH | 0 / 18 / 0 | **none** | |
+| ON_END | 0 / 6 / 0 | **none** | |
+| COMBO | 0 / 7 / 0 | **none** | |
+| MYSTERY (secret) | 0 / 20 / 0 | **none** | |
+| OVERLOAD | 0 / 10 / 0 | **none** | |
+| SILENCE, STEAL, TRANSFORM, IMMUNE, POISON, LIFESTEAL, DISCOVER, CANT_TARGET | 1-6 each | mostly none | STEAL, TRANSFORM, LIFESTEAL partial |
+
+The data's implicit grammar is **(trigger)? + verb + qualifier\***: triggers (ON_PLAY, ON_DEATH,
+ON_END, EVENT, COMBO), verbs (DAMAGE, HEAL, DRAW_CARD, SUMMON, BUFF, DESTROY...), qualifiers (TARGET,
+AOE, RANDOM, SET_VALUE), plus standalone keywords. `%EVENT%` carries no event name; the actual event
+("whenever you play a minion...") exists only in the card `text`. [A, inferred]
+
+---
+
+## 8. Card effects model
+
+### 8.1 How `hsclone` dispatches (do not copy)
+- **Hard-coded switches by card id**: `play-card.js` (by type), `spells/core.spells.js` (global
+  spells), `moves/cast-targeted-spell.js` (targeted spells), `warcrys/core.warcrys.js`,
+  `select-card.js` (legal targets). A whitelist in `play-spell-card-by-id.js` duplicates a switch. [A]
+- Only keywords (Guard, Rush, Bubble, ON_PLAY) are data-driven, and only for CORE. PRIME has zero
+  bespoke code. [V-code] 0 `PRIME_` ids appear in `lib/`.
+- The numeric input was a single `warcryNumber`, wrapped as `|base + spellDamageBuff|`. That scaling
+  applies to heals, shield, and draw counts as well. [A] `cast-targeted-spell.js:42-44`
+
+### 8.2 Spells
+- Types: `GLOBAL` (cast by dropping on the board) and `TARGETED` (two-step: `selectCard` then
+  `castTargetedSpell`). Cost is paid, the card is moved to played cards, the effect runs, then all
+  target flags are cleared. [A]
+- Effects: damage, heal, destroy (implemented as **9000 damage**), disable, transform (replace the
+  slot with a token), steal, draw, discard, stat buff/debuff/overwrite, sacrifice, expire. [A]
+- Random effects use `Math.random` (not `ctx.random`) and `random.Die(n)` for discards, which returns
+  1..n, not an index. [V-code] `core.spells.js:31-33`, `cast-targeted-spell.js:395-400`
+
+### 8.3 Warcries (battlecry)
+- The minion is placed on the board first, then its warcry runs; the warcry knows its own slot. [A]
+- Immediate (no choice): CORE 007, 012, 013, 020, 025, 026, 032, 033, 035, 041, 082, 118, 122.
+  Targeted (player picks): 001, 006, 016, 021, 036, 054, 059, 099, 110, 112 and others. [A]
+- Several silently do nothing when no legal target exists, and 110's target list includes the caster.
+  Warcry amounts do not use the spell-damage bonus. [A]
+
+### 8.4 Weapons
+- 5 CORE weapons (Recruit's Mace 1/4, Reckoning 4/2 "restore 2 HP before every attack", Gladius 3/4,
+  Obsidian Axe 3/2, Vibroblade 5/2) plus CORE_127 (an item that equips a 4/1 weapon). Equipping
+  replaces any weapon. [A]
+- Inconsistent attack value: hero target uses `weapon.attack`, minion target uses a separate
+  `playerAttackValue` that is never reset when the weapon breaks. [A] (see Q9)
+
+### 8.5 Class / hero skills
+- 9 skills at cost 2, once per turn (Enhance, Snipe, Lightning Strike, Disciple, Mend, Katar, Raise
+  Dead, Power Within, Energy Shield). All have code, but **only the Sorcerer class is ever assigned**,
+  so 8 of 9 are unreachable in play. [A] `class-skills/class-skills.js`, `initDecks.js:29-30`
+- `data/hs/` has 9 heroes with 3 abilities each (one an ultimate, cooldown 1 or 2, or -1 for a
+  one-use ultimate), but abilities exist for only 6 heroes and only 5 heroes are marked active. [V-data]
+
+### 8.6 Boons, buffs, curses
+- **Boon**: either an aura-on-play that adds attack to other minions and is reversed when the source
+  dies (`core.boons.js`), or a turn-only bonus that edits `currentAttack` only and expires at the next
+  turn start. **Buff**: permanent stat change (`totalAttack/totalHealth`). **Curse/Debuff**: no
+  mechanism, just bespoke overwrites. Boon recalculation applies to both players using
+  `ctx.currentPlayer`, so it can strip the wrong side. [A]
+
+---
+
+## 9. Card pool coverage
+
+Computed by cross-referencing every CORE card in `data/hs/core.json` with the `CORE_xxx` ids that
+appear in `hsclone`'s `lib/` code. [V-data + V-code]
+
+| Class | CORE cards |
+| --- | --- |
+| A. Bespoke code exists in `hsclone` | **109** |
+| B. Vanilla (no effect needed) | 8 |
+| C. Keyword-only (generic keyword code) | 12 |
+| D. Has an effect, **no** `hsclone` code | **3**: CORE_071 Ice Primordial ("Disable anyone attacked by this minion"), CORE_085 Ifriit Ward ("draw a card whenever a minion is healed"), CORE_130 Sentry Post ("your minions have +1 AP") |
+
+"Bespoke code exists" is an upper bound on correctness: about 25 of those 109 disagree with their own
+text (Appendix A), and CORE_108 has dead code. **PRIME: 0 of 254 have code.** The 17+ ENTOURAGE
+tokens are created by CORE cards; none has its own logic. [A]
+
+---
+
+## 10. Data schema and loader rules
+
+`hsclone` read an **older schema** than the live Airtable data: [V-code]
+`hsclone`'s JSON has `spellType`, `warcryNumber`, `spellContext`, empty `mechanics` for many cards;
+the live data has `playType`, `playContext`, `numberPrimary/Secondary/RNG/Random/Overcharge`, and
+richer `mechanics` (e.g. Fireballs: `[%RANDOM%, %DAMAGE%]`, `numberRNG: 3`).
+
+Facts about `data/hs/` [V-data unless tagged]:
+- 429 card records: CORE 132, PRIME 254, ENTOURAGE 43. Ids are unique. Entourage ids are like
+  `CORE_057a`; `isEntourage: true` marks them.
+- Booleans are encoded as present-or-absent (`active`, `elite`, `collectible`, `isEntourage`).
+  Missing numbers mean "not applicable" and **0 is a real value**.
+- Symbols are wrapped as `%LIKE_THIS%`; `cardClass` is the literal string `"0 %CLASS_NONE%"` on 412
+  records (17 have none). **Every card is classless.**
+- `playType` is `TARGETED` or `GLOBAL` (no `%`). It disagrees with `%TARGET%` in `mechanics` on
+  32 TARGETED cards without it and 3 GLOBAL cards with it. [A]
+- Card `text` is HTML plus tokens: `%NUM%` (29 uses), `%NUM1%` (18), `%NUM2%` (2), and glossary
+  words such as `%BULWARK%`. `%NUM%`/`%NUM1%` map to `numberPrimary`, `%NUM2%` to
+  `numberSecondary` [I, consistent on all examples checked].
+- `numberRNG` (CORE, 5 cards) and `numberRandom` (PRIME, 25 cards) never appear together and mean
+  "number of random targets". `numberOvercharge` (9 PRIME cards) is overload. [V-data for the
+  non-overlap, I for the meaning]
+- Data quality: 57 cards have no `name` (51 prime + 6 entourage); 22 prime cards are inactive (all
+  nameless) and 29 active prime cards are nameless; duplicate names "Marauder" and "Frosted Sword";
+  54 entourage references with 18 unresolved (including typos like `PRIME112a`); constants has a
+  typo "Driod". [V-data]
+- **Correction to an agent claim:** four prime "minions" (PRIME_014 Archery Yard, _104 Perses, _251
+  Conquest and Glory, _252 War and Ruin) were reported as lacking attack/health. They have both; they
+  carry `%NO_ATTACK%` or special text. [V-data]
+- Heroes: 9 records, only Atlas has `ability1/2/3` strings (`cost(1)\ncooldown(1)\ntype(...)...`);
+  the others link through `abilities.json` by `hero`. [V-data]
+
+**Loader rules** the engine's card loader must apply: merge CORE/PRIME/ENTOURAGE by id; strip `%...%`
+to enums; treat absent booleans as false and never use `||` on numbers; resolve `entourage` strings
+and warn on unresolved ids; drop or flag inactive/nameless records; reconcile `playType` against
+`%TARGET%`; parse and sanitise HTML `text` and substitute number tokens; **fail loudly on a mechanic
+symbol not defined in `mechanics.json`.** `inspiration` is never loaded (see CLAUDE.md).
+
+---
+
+## 11. Things not to copy (consolidated)
+
+**Architecture**
+- Dead-minion removal, winner detection, and UI timers living in the client. The engine must own them.
+- Client-supplied objects trusted by moves (`selectedMinionObject`, the `data` passed to `killMinion`).
+  Moves must read state from `G`, not from arguments.
+- UI selection/hover/animation state stored inside `G`.
+- Per-card-id switch statements duplicated across five files, and an id whitelist duplicating a switch.
+- Non-determinism: `Math.random` in spells and turn order, `uuidv4()` inside moves, `random.Die` misuse.
+- `counts` bookkeeping duplicating array lengths; debug flags (`enableCost: false`, `enableDebugCard`,
+  pre-filled opponent board) enabled by default; a tic-tac-toe `ai.enumerate` left in `game.js`.
+
+**Rule bugs**
+- Fatigue deals 0; draw-into-full-hand silently drops the card; mulligan leaves duplicates in the deck.
+- Weapon->minion ignores Guard; hero damage uses two different attack values; stale `playerAttackValue`.
+- Armor ignores spell damage; Bubble ignores spell damage; spell-damage bonus scales heals and draws.
+- Board limit not enforced by the engine; both-heroes-dead has no draw rule.
+- `energy.subtract` clamps to `total`, losing extra Orb energy.
+- `Math.abs(n - 1)` countdown hacks; own-board expiration loop kills the other board; `currentAttack >= 1`
+  check runs before the reset.
+- Boon recalculation strips attack from the wrong side and from minions that never received it.
+- CORE_113 "sacrifice" never removes the minion; CORE_060/125 hit one target, not two (index 0 is falsy).
+
+---
+
+## 12. Open design questions
+
+Each has a **proposed default**. You can reply "accept all defaults" or override any number.
+
+**Scope and fidelity**
+1. **Classes and hero skills in v1?** All cards are classless today and only one class was ever
+   playable. *Default:* no classes in v1; hero skills are Milestone 5.
+2. **First-release pool.** *Default:* CORE only (132 cards); PRIME and heroes later.
+3. **Opening hands.** hsclone: first player 3 cards, second 4 plus "The Orb"; mulligan off.
+   *Default:* keep that; mulligan later.
+
+**Core rules**
+4. **Energy.** *Default:* standard +1 per turn to 10, costs always enforced; "The Orb" adds temporary
+   energy that is not lost.
+5. **Full hand.** *Default:* a card drawn into a full hand is burned, both at turn start and from
+   effects.
+6. **Fatigue.** *Default:* escalating damage on an empty-deck draw (1, 2, 3...).
+7. **Board limit.** *Default:* 7 per side, enforced by the engine; summons into a full board fizzle.
+8. **Simultaneous deaths of both heroes.** *Default:* the game is a draw. No turn timer in v1.
+9. **Weapons.** *Default:* the hero has no base attack; a weapon gives attack and durability; attacking
+   a minion with a weapon means the hero takes the minion's counter-damage (as hsclone does); one weapon
+   attack per turn; a single attack value taken from the weapon.
+
+**Combat semantics**
+10. **Guard scope.** *Default:* Guard restricts **attacks** only (minion and weapon), not spells,
+    warcries or skills.
+11. **What "Rush" means.** hsclone's Rush attacks immediately and can hit the hero (Charge-like).
+    *Default:* keep hsclone behaviour, but ask whether a minions-only Rush variant is wanted.
+12. **Double attack.** hsclone's "Onslaught" = two attacks per turn. *Default:* implement
+    `%DOUBLE_ATTACK%` as two attacks per turn.
+13. **Bubble.** *Default:* absorbs the first instance of damage from **any** source.
+14. **Hero armor.** *Default:* absorbs all damage, including spells.
+15. **Damage and death order.** *Default:* damage is simultaneous; deaths are resolved by the engine in
+    play order after each action; death triggers fire after removal.
+16. **Spell damage bonus.** *Default:* only increases damage numbers, not heals/draws/shields.
+17. **Disable.** hsclone: a disabled minion loses exactly one of its owner's attack opportunities
+    [likely, not live-verified]. *Default:* "cannot attack during its owner's next turn".
+18. **Expiration.** *Default:* the minion dies at the start of its owner's... or the caster's... next
+    turn; **needs your intent** (hsclone's own loop is buggy).
+19. **Hidden/concealed.** *Default:* cannot be targeted by anything until it attacks.
+
+**Cards and text**
+20. **Text vs behaviour** (Appendix A). *Default:* printed text is authoritative unless you say
+    otherwise; we resolve each card in Milestone 4 with a test.
+21. **Triggers.** EVENT/ON_DEATH/ON_END/COMBO/MYSTERY have no hsclone code but PRIME depends on them and
+    CORE_071/085/130 need EVENT. *Default:* design a general trigger system in 1b, even if only CORE needs it.
+22. **Data-driven or per-card code?** *Open, needs investigation at the start of 1b:* how many of
+    the 132 CORE cards can be expressed purely from `playType + playContext + mechanics + numbers`.
+    *Default:* a hybrid, with data-described effects for common verbs and small per-card scripts for the rest.
+
+**Data**
+23. **Number fields.** *Default:* loader treats `numberPrimary` as the main magnitude, `numberSecondary` as
+    the second (health for buffs), and `numberRNG`/`numberRandom` as the random-target count. Please
+    confirm, especially the cases where primary is 0 and secondary carries the amount.
+24. **Nameless/inactive PRIME cards.** Moot if the first release is CORE only. *Default:* ignore for now.
+
+## 13. Not verified
+
+- **No new live tests were run in this milestone** beyond the earlier session (selecting/casting
+  spells, summoning, attacking, Guard targeting, hero damage, playing a minion).
+- Not live-tested: Disable and Expiration timing, Onslaught, Rush, weapons, hero skills, Bubble,
+  warcry targets, the exact source and count of `killMinion` errors, double-death outcomes.
+- The agents' reports were spot-checked (items tagged [V-...]) but not re-derived; the per-card behaviour
+  list in Appendix A is agent-reported.
+- `boardgame.io` source was not available, so statements about how 0.35 rejects moves are inference.
+- Nothing here has been checked against the Airtable base's `inspiration` column, deliberately.
+
+## 14. Implications for the engine (1b)
+
+1. Pure TypeScript, deterministic: all randomness from `ctx.random`; ids from a counter, not `uuid`.
+2. The engine alone resolves death, win/draw, board limit, costs, and legality. No client timers, no
+   client-declared winners.
+3. `G` holds game state only, with no hover/selection/animation fields.
+4. One `legalTargets` query used by both the UI and the move validators.
+5. A trigger/event system designed up front (EVENT, ON_PLAY, ON_DEATH, ON_END, COMBO).
+6. A normalised card type and a loader with the rules in section 10; effect descriptors for common verbs,
+   escape-hatch scripts for odd cards.
+7. Tests first, headless: the first milestone test is a scripted game to a winner. Port `hsclone`'s unit
+   tests only where they match this spec (38 of its 101 fail).
+
+---
+
+## Appendix A: CORE cards whose text and implemented behaviour disagree
+
+From the card-effects review [A]; to be resolved card by card in Milestone 4 (see Q20).
+
+| Card | Text says | `hsclone` does |
+| --- | --- | --- |
+| 060 Shock and Awe, 125 Erratic Blitz | 2 random enemies | hits one (index 0 is falsy) |
+| 063 Fireballs | 3 random enemies | up to 3 picks that can collide |
+| 051 Nature's Wrath | damage then draw | no draw |
+| 098 Spin Chain | draw a card | draws N cards |
+| 055 Surveying Drone | draw 3, keep 1 | draws 2 |
+| 104 Armor Distribution | Demonic minions +2 HP | uses the Idol race |
+| 019 Little-big Leader | +1 HP | +1 attack |
+| 054 Wolpertinger | +1 HP | +1 attack, current only |
+| 075 Intimidation | HP to 1 | sets attack to 1 |
+| 106 Imbue Strength | this turn | permanent |
+| 127 Strength Implant | this turn only | persistent 4/1 weapon |
+| 096 Disabling Kick | disable (JSON) / "return to hand" (comment) | dead code |
+| 113 Ritual Sacrifice | sacrifice a minion | sacrifice never removes it |
+| 058 Focus Shot | JSON 4, comment "5 if Creature else 3" | flat N |
+| 088 Aspect of Enhancement | double health | doubles current, not total |
+| 089/090 Invocations | destroy (gated by attack) | 9000 damage; gate only in target selection |
+| 071, 085, 130 | see section 9 | no code |
+| 108 Unearthed Crater | adjacent +2 | dead code, never runs |

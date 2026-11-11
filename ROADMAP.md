@@ -15,10 +15,28 @@ Order matters: each milestone makes the next one cheaper or safer.
 - [x] Slim `app.config.ts`; rewrite `CLAUDE.md`, `README.md`, `VISION.md`
 - [ ] Merge `hs-rebuild` into `main` once Milestone 2 plays (decide when)
 
-## Milestone 1: Engine foundation (headless)
+## Milestone 1a: Rules spec (deep-dive, read-only)
 
-Why first: rules in plain tested TypeScript can be verified without any UI, and everything else
-sits on them.
+Why first: `hsclone` is the rules reference, but it was only lightly surveyed, its own tests are
+stale (38 of 101 fail) and it has known bugs. Porting from a shallow read would encode its
+accidents as rules. This milestone produces an authoritative `RULES.md` before any engine code.
+
+- [x] Read the `hsclone` rules code end to end: turn flow and draw, combat and targeting, card
+      effects (spells, warcries, weapons, class skills, boons/buffs), keyword semantics
+- [x] Analyse the card data (`data/hs/`): field semantics, mechanics grammar, number fields,
+      `%SYMBOL%` and text-token syntax, data-quality problems
+- [x] Mechanics coverage matrix: what the card pool uses vs. what `hsclone` actually implemented
+- [ ] Verify doubtful rules by driving `hsclone` live in two tabs (partly done; see `RULES.md` section 13)
+- [x] Bug/quirk list of things deliberately **not** to copy
+- [ ] Open design questions for the author, answered before 1b starts (`RULES.md` section 12)
+
+Done when: `RULES.md` is approved, every rule cites its source (`file:line` or a live test), and the
+author has approved it and answered the open design questions.
+
+## Milestone 1b: Engine foundation (headless)
+
+Why: rules in plain tested TypeScript can be verified without any UI, and everything else sits on
+them. Starts only after 1a is approved.
 
 - [x] Pull the Hearthstone-style card data into `data/hs/` (`npm run airtable:hs`); the `react-ccg`
       base already has attack/health, class, mechanics and play type on every card table
