@@ -19,6 +19,7 @@
     "airtable-node": "^0.1.20",
     "bgio-effects": "^0.7.1",
     "boardgame.io": "^0.49.12",
+    "immer": "^9.0.7",
     "chalk": "^4.1.2",
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",

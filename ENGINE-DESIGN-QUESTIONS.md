@@ -34,11 +34,11 @@ the exact same code path; and upgrading boardgame.io later can't break the rules
 
 **The cost:** I write the (small) turn loop myself instead of using boardgame.io's built-in phases.
 
-- [ ] Yes, independent engine with a thin adapter (recommended)
+- [x] Yes, independent engine with a thin adapter (recommended)
 - [ ] No, build directly on boardgame.io's phases and moves
 - [ ] Not sure, explain more
 
-> 
+> that's fine. as long as we still integrate into boardgame.io's phases and moves framework down the road
 
 ## 2. How should card effects be written?
 
@@ -58,7 +58,7 @@ Vanilla and keyword-only cards (about 20 of the 132 CORE cards) need no definiti
 and hsclone's approach of big per-card switch statements in five files is what we're avoiding. Short
 definitions over shared blocks keep each card to a line or two.
 
-- [ ] Yes, per-card definitions over shared building blocks (recommended)
+- [x] Yes, per-card definitions over shared building blocks (recommended)
 - [ ] I'd rather effects were driven purely by the Airtable data (note: I found that isn't enough on its own)
 - [ ] Something else:
 
@@ -72,7 +72,7 @@ undo, tests and bots). The repo already depends on it indirectly through boardga
 
 **Why I recommend it:** less code and fewer bugs than hand-writing the copying.
 
-- [ ] Yes, use immer (recommended)
+- [x] Yes, use immer (recommended)
 - [ ] No, copy the state by hand
 - [ ] No preference
 
@@ -88,7 +88,7 @@ undo, tests and bots). The repo already depends on it indirectly through boardga
   to find a specific card.
 - **Option C:** one big file per set (`core.ts`). Simplest, but long and noisy in diffs.
 
-- [ ] A: one file per non-trivial card (recommended)
+- [x] A: one file per non-trivial card (recommended)
 - [ ] B: grouped by effect type
 - [ ] C: one file per set
 - [ ] Other:
@@ -110,7 +110,7 @@ undo, tests and bots). The repo already depends on it indirectly through boardga
 **Things you might want changed:** getting a bot playing sooner (so you can try the game earlier),
 doing spells before keywords, or pulling weapons forward.
 
-- [ ] Order is fine (recommended)
+- [x] Order is fine (recommended)
 - [ ] Change it:
 
 > 
