@@ -25,6 +25,8 @@ type Mode = 'ai' | 'hotseat';
 type PlayAction = Extract<Action, { type: 'PlayCard' }>;
 const AI_PLAYER: PlayerId = '1';
 const AI_DELAY_MS = 800;
+/** How long the AI's aiming arrow shows before a targeted action happens. */
+const AI_AIM_MS = 1100;
 /** 'curve' or 'straight'; both are supported by `targetLinePath`. */
 const TARGET_LINE_STYLE: TargetLineStyle = 'curve';
 
@@ -57,6 +59,9 @@ const renderLogLine = (line: string) =>
     return part;
   });
 
+const targetOf = (a: Action): TargetRef | undefined =>
+  a.type === 'PlayCard' || a.type === 'Attack' || a.type === 'WeaponAttack' ? a.target : undefined;
+
 const newGame = (): { state: GameState; rng: Rng } => {
   const rng = createSeededRng(Date.now() % 2147483647);
   const state = createGame(
@@ -80,6 +85,8 @@ export const PlayBoard = () => {
   const logPinned = useRef(true);
   // Targeting line: where the pointer is, which character it is over, and the DOM nodes to draw between.
   const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
+  /** The AI's pending targeted action: shown as an arrow first (a card from hand starts at the hero, so it stays hidden). */
+  const [foeAim, setFoeAim] = useState<{ action: Action; from: string; to: TargetRef } | null>(null);
   const [hover, setHover] = useState<TargetRef | null>(null);
   const nodes = useRef(new Map<string, HTMLElement>());
   const track = (key: string) => (el: HTMLElement | null) => {
@@ -95,6 +102,7 @@ export const PlayBoard = () => {
     setLog([['New game. **Player 1** goes first; **Player 2** starts with an extra card (__The Orb__).']]);
     setSelection(null);
     setMessage('');
+    setFoeAim(null);
   }, []);
 
   // While something is selected: follow the pointer (for the targeting line), and let Escape or a
@@ -151,13 +159,27 @@ export const PlayBoard = () => {
   const viewer: PlayerId = !state ? '0' : mode === 'ai' ? '0' : state.activePlayer;
   const aiToMove = !!state && mode === 'ai' && state.status === 'playing' && state.activePlayer === AI_PLAYER;
 
-  // The AI takes one action per tick, so you can follow what it does.
+  // The AI takes one action per tick, so you can follow what it does. A targeted action first shows an aiming arrow.
   useEffect(() => {
-    if (!aiToMove || !state || !rngRef.current) return;
+    if (!aiToMove || !state || !rngRef.current || foeAim) return;
     const rng = rngRef.current;
-    const timer = setTimeout(() => dispatch(chooseRandomAction(state, byId, rng)), AI_DELAY_MS);
+    const timer = setTimeout(() => {
+      const action = chooseRandomAction(state, byId, rng);
+      const to = targetOf(action);
+      if (!to) return dispatch(action);
+      const from = action.type === 'Attack' ? `m${action.attackerId}` : `h${AI_PLAYER}`;
+      setFoeAim({ action, from, to });
+    }, AI_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [aiToMove, state, dispatch]);
+  }, [aiToMove, state, dispatch, foeAim]);
+  useEffect(() => {
+    if (!foeAim) return;
+    const timer = setTimeout(() => {
+      dispatch(foeAim.action);
+      setFoeAim(null);
+    }, AI_AIM_MS);
+    return () => clearTimeout(timer);
+  }, [foeAim, dispatch]);
 
   // `legalActions` is empty when it is not that player's turn, which also locks the board during the AI's turn.
   const actions = useMemo(() => (state ? legalActions(state, viewer, byId) : []), [state, viewer]);
@@ -182,8 +204,6 @@ export const PlayBoard = () => {
     return actions.filter((a) => a.type === 'WeaponAttack');
   };
   const options = optionsFor(selection);
-  const targetOf = (a: Action): TargetRef | undefined =>
-    a.type === 'PlayCard' || a.type === 'Attack' || a.type === 'WeaponAttack' ? a.target : undefined;
   const aimable = options.map(targetOf).filter((t): t is TargetRef => !!t);
   const isAimable = (t: TargetRef) => aimable.some((x) => sameTarget(x, t));
 
@@ -386,6 +406,11 @@ export const PlayBoard = () => {
   const lineFrom = sourceEl && aimable.length > 0 ? centerOf(sourceEl) : null;
   const lineTo = pointer;
 
+  const foeFromEl = foeAim ? nodes.current.get(foeAim.from) : undefined;
+  const foeToEl = foeAim ? nodes.current.get(targetKey(foeAim.to)) : undefined;
+  const foeFrom = foeFromEl ? centerOf(foeFromEl) : null;
+  const foeTo = foeToEl ? centerOf(foeToEl) : null;
+
   return (
     <main className={styles.page}>
       {lineFrom && lineTo && (
@@ -403,6 +428,23 @@ export const PlayBoard = () => {
             strokeLinecap="round"
             strokeDasharray={overTarget ? undefined : '8 6'}
             markerEnd="url(#arrowhead)"
+          />
+        </svg>
+      )}
+      {foeFrom && foeTo && (
+        <svg className={styles.targetLine} aria-hidden="true">
+          <defs>
+            <marker id="foe-arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 z" fill="#ff6b6b" />
+            </marker>
+          </defs>
+          <path
+            d={targetLinePath(foeFrom, foeTo, TARGET_LINE_STYLE)}
+            fill="none"
+            stroke="#ff6b6b"
+            strokeWidth={4}
+            strokeLinecap="round"
+            markerEnd="url(#foe-arrowhead)"
           />
         </svg>
       )}
