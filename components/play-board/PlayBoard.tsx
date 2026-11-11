@@ -166,6 +166,8 @@ export const PlayBoard = () => {
   const [mode, setMode] = useState<Mode>('ai');
   const [smartAi, setSmartAi] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  /** Accessibility: explicit "Play" buttons after selecting a card (off by default; clicking the board plays it). */
+  const [playButtons, setPlayButtons] = useState(false);
   const rngRef = useRef<Rng | null>(null);
   // The log shows the newest line at the bottom and stays pinned there unless you scroll up to read older events.
   const logRef = useRef<HTMLDivElement | null>(null);
@@ -620,6 +622,9 @@ export const PlayBoard = () => {
             <button type="button" onClick={() => { setMenuOpen(false); start(); }}>
               New game
             </button>
+            <button type="button" onClick={() => setPlayButtons(!playButtons)}>
+              Accessibility: "Play" buttons after selecting a card: {playButtons ? 'on' : 'off'}
+            </button>
             <button type="button" onClick={() => setSmartAi(!smartAi)}>
               AI: {smartAi ? 'greedy (looks one move ahead)' : 'random'} (click to switch)
             </button>
@@ -741,7 +746,7 @@ export const PlayBoard = () => {
             {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i))}
           </div>
           <div className={styles.controls}>
-            {untargetedPlays.map((a, i) => (
+            {playButtons && untargetedPlays.map((a, i) => (
               <button key={i} type="button" className={styles.primary} onClick={() => dispatch(a)}>
                 Play {selectedCard?.name}
                 {a.type === 'PlayCard' && a.boardIndex !== undefined && state.players[me].board.length > 0
