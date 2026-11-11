@@ -276,3 +276,18 @@ describe('loadHsCards: game cards', () => {
     expect(orb).toMatchObject({ source: 'game', type: 'spell', cost: 0, playType: 'global', numbers: { primary: 1 } });
   });
 });
+
+describe('card names that are glossary tokens', () => {
+  it('are replaced by the glossary display name', () => {
+    const { byId } = loadCards(input({ core: [spell({ id: 'CORE_901', name: '%DAMAGE%' })] }));
+    expect(byId.get('CORE_901')?.name).toBe('Damage');
+  });
+  it('are left alone (and reported) when the glossary does not know them', () => {
+    const r = loadCards(input({ core: [spell({ id: 'CORE_902', name: '%NOPE%' })] }), { strict: false });
+    expect(r.byId.get('CORE_902')?.name).toBe('%NOPE%');
+    expect(r.issues).toContainEqual(expect.objectContaining({ code: 'unknown-text-token', id: 'CORE_902' }));
+  });
+  it('real data: no card is left with a percent token in its name', () => {
+    for (const c of loadHsCards().cards) expect(c.name ?? '').not.toMatch(/%/);
+  });
+});

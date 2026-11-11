@@ -11,3 +11,4 @@ export { legalTargets } from './rules/targeting';
 export type { TargetSource } from './rules/targeting';
 export { getCardDef } from './definitions';
 export { legalActions } from './rules/legal-actions';
+export { buildDeck, isPlayable, needsBehaviour, playablePool } from './decks';

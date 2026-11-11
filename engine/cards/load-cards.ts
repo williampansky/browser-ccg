@@ -214,8 +214,14 @@ function normaliseCard(
   }
 
   // name
-  const name = typeof raw.name === 'string' && raw.name.trim() ? raw.name.trim() : undefined;
+  let name = typeof raw.name === 'string' && raw.name.trim() ? raw.name.trim() : undefined;
   if (!name) report('warning', 'missing-name', id, 'has no name');
+  // A few cards are named by a glossary symbol (e.g. `%BUBBLE%`); show the glossary's display name.
+  if (name && /^%[A-Z0-9_]+%$/.test(name)) {
+    const display = glossary.get(name);
+    if (display) name = display;
+    else report('warning', 'unknown-text-token', id, `name ${name} is not in the glossary`);
+  }
 
   // text
   const textTemplate = typeof raw.text === 'string' ? sanitizeText(raw.text) : '';

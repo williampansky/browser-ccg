@@ -1,14 +1,12 @@
+import dynamic from 'next/dynamic';
 import type { FunctionComponent } from 'react';
 
-/**
- * Placeholder. The previous zone-style game was removed on the `hs-rebuild`
- * branch while the Hearthstone-style engine is rebuilt. See ROADMAP.md.
- */
-const PlayPage: FunctionComponent = () => (
-  <main style={{ padding: '2rem', color: '#fff' }}>
-    <h1>Play</h1>
-    <p>The game is being rebuilt. Check back soon.</p>
-  </main>
-);
+// The board starts its game from the clock, so it renders on the client only.
+const PlayBoard = dynamic(() => import('../../components/play-board/PlayBoard').then((m) => m.PlayBoard), {
+  ssr: false,
+});
+
+/** Hot-seat board for the new Hearthstone-style engine (see ROADMAP Milestone 2). */
+const PlayPage: FunctionComponent = () => <PlayBoard />;
 
 export default PlayPage;

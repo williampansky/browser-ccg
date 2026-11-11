@@ -1,4 +1,5 @@
 import type { CardCatalog } from '../cards/types';
+import { needsBehaviour } from '../decks';
 import { getCardDef } from '../definitions';
 import type { DefLookup } from '../definitions/define-card';
 import { Action, GameState, MAX_BOARD, PlayerId } from '../state/types';
@@ -25,6 +26,7 @@ export const legalActions = (
     const card = catalog.get(inHand.cardId);
     if (!card || card.cost > me.energy.current) return;
     const def = defs(card);
+    if (!def && needsBehaviour(card)) return;
     if (card.type === 'spell' || card.type === 'item') {
       if (!def) return;
       if (!def.target) return void actions.push({ type: 'PlayCard', handIndex });

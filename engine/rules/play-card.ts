@@ -1,4 +1,5 @@
 import { produce } from 'immer';
+import { needsBehaviour } from '../decks';
 import { getCardDef } from '../definitions';
 import type { EngineContext } from './apply-action';
 import { ActionError, GameEvent, GameState, MAX_BOARD, TargetRef } from '../state/types';
@@ -34,7 +35,8 @@ export const playCard = (
   const def = defs(card);
   // Items (potions, scrolls, ...) are one-shot effects and play exactly like spells.
   const isSpellLike = card.type === 'spell' || card.type === 'item';
-  if (isSpellLike && !def) return { error: 'UNSUPPORTED_CARD' };
+  // A card that needs behaviour but has none is refused, rather than silently played as vanilla.
+  if (!def && (isSpellLike || needsBehaviour(card))) return { error: 'UNSUPPORTED_CARD' };
   if (card.cost > player.energy.current) return { error: 'CANT_AFFORD' };
 
   let index = 0;

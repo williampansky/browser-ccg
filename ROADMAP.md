@@ -50,13 +50,12 @@ them. Starts only after 1a is approved.
 - [ ] Port `hsclone`'s unit tests as the starting suite (moves, state, spells, boons/buffs)
 - [ ] Avoid `hsclone`'s known problems: the `killMinion` "disallowed move" client errors, an extra
       card drawn per turn, a tic-tac-toe leftover AI, stale test fixtures, and debug settings left on
-- [ ] CI running `tsc`, `jest` and `next build`
 
-Done when: a scripted two-player game plays from start to a winner inside a test, and CI is green.
+Done when: a scripted two-player game plays from start to a winner inside a test.
 
 ## Milestone 2: Playable board
 
-- [ ] A `/play` board for the new engine: hero portraits and health, boards, hand, energy, deck
+- [~] (first version done: hot-seat, text only, no art) A `/play` board for the new engine: hero portraits and health, boards, hand, energy, deck
       counts, match log, End Turn
 - [ ] Interaction as in `hsclone`: click a card to select, click a slot or target to play it; valid
       targets highlighted; attackers glow
@@ -118,6 +117,11 @@ across with little change; the UI is where the upgrade work will be.
 
 - Store, collection and visuals polish (secondary per `VISION.md`)
 - Monetization (needs a decision first; see open questions in `VISION.md`)
+
+## Way later: CI
+
+Deliberately last. Only after the game plays, has been played by real people, and the card set is
+settled: CI running `tsc`, `jest` and `next build`. Not before.
 
 ## Ideas / unscheduled
 
