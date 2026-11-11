@@ -21,8 +21,7 @@ earlier `hsclone` repo as the rules reference. Read these first:
 
 - **There is a playable hot-seat board at `/play`** (`components/play-board/`): one browser tab, both
   players, the active player at the bottom. It runs on the new engine with the real CORE cards the
-  engine fully supports (`playablePool` in `engine/decks.ts`: now all 132). It defaults to playing against a random-move AI (`engine/bots/random-bot.ts`, Player 2); a button
-  switches to hot-seat. There is no art yet and no multiplayer. "Choose one" cards show option buttons before aiming (not yet
+  engine fully supports (`playablePool` in `engine/decks.ts`: now all 132). It defaults to playing against a greedy AI (`engine/bots/greedy-bot.ts`: tries each legal move, scores the result, one move ahead; Player 2); the menu switches it to the random bot (`random-bot.ts`) or to hot-seat. There is no art yet and no multiplayer. "Choose one" cards show option buttons before aiming (not yet
   clicked through in a browser, only covered by engine tests). `game/game.ts` is still a stub (the
   boardgame.io adapter comes later). The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-6 of
   its build order are done and tested: card model and loader (`engine/cards/`), state and turn flow,
@@ -48,7 +47,7 @@ order below. Candidates, roughly in the order discussed:
    enemy hero attacking.
 2. **Port the card art** from `hsclone`'s `public/` dir (this repo lacks it) and use it on the board.
    Check provenance/licences. The board is text-only until then.
-3. **Greedy bot** (Milestone 3), then bot-vs-bot win-rate tables.
+3. **Bot-vs-bot win-rate tables** (Milestone 3; the greedy bot is done). Tune `evaluate` in `greedy-bot.ts` against them.
 4. Slice 7 of the engine plan (a dedicated random-bot invariant suite) is mostly covered already by
    `engine/__tests__/real-pool.test.ts` and `engine/bots/__tests__/`.
 

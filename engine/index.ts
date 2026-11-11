@@ -13,3 +13,4 @@ export { getCardDef } from './definitions';
 export { legalActions } from './rules/legal-actions';
 export { buildDeck, isPlayable, needsBehaviour, playablePool } from './decks';
 export { chooseRandomAction } from './bots/random-bot';
+export { chooseGreedyAction, evaluate } from './bots/greedy-bot';

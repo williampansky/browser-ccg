@@ -3,6 +3,7 @@ import {
   Action,
   applyAction,
   buildDeck,
+  chooseGreedyAction,
   chooseRandomAction,
   getCardDef,
   Card,
@@ -117,6 +118,7 @@ export const PlayBoard = () => {
   const [selection, setSelection] = useState<Selection | null>(null);
   const [message, setMessage] = useState('');
   const [mode, setMode] = useState<Mode>('ai');
+  const [smartAi, setSmartAi] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const rngRef = useRef<Rng | null>(null);
   // The log shows the newest line at the bottom and stays pinned there unless you scroll up to read older events.
@@ -212,14 +214,14 @@ export const PlayBoard = () => {
     if (!aiToMove || !state || !rngRef.current || foeAim) return;
     const rng = rngRef.current;
     const timer = setTimeout(() => {
-      const action = chooseRandomAction(state, byId, rng);
+      const action = (smartAi ? chooseGreedyAction : chooseRandomAction)(state, byId, rng);
       const to = targetOf(action);
       if (!to) return dispatch(action);
       const from = action.type === 'Attack' ? `m${action.attackerId}` : `h${AI_PLAYER}`;
       setFoeAim({ action, from, to });
     }, AI_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [aiToMove, state, dispatch, foeAim]);
+  }, [aiToMove, state, dispatch, foeAim, smartAi]);
   useEffect(() => {
     if (!foeAim) return;
     const timer = setTimeout(() => {
@@ -555,6 +557,9 @@ export const PlayBoard = () => {
             </button>
             <button type="button" onClick={() => { setMenuOpen(false); start(); }}>
               New game
+            </button>
+            <button type="button" onClick={() => setSmartAi(!smartAi)}>
+              AI: {smartAi ? 'greedy (looks one move ahead)' : 'random'} (click to switch)
             </button>
             <button
               type="button"

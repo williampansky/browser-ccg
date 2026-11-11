@@ -34,4 +34,4 @@
 - [x] enemy AI cast enhancement potion on my minion for no beneficial reason
 - [x] id like the be able to play cards besides just the far left or far right. am i able to place them in between two cards? say if i had a board of 4 cards, and i played a card that buffed two adjacent minions, id want to be able to select where i play it to benefit me the most
 - [x] for any choose card, show the modal (even like deal 1 dmg or get 1 armor)
-
+- some sort of hover effect on minions that would show their card original stats maybe?
