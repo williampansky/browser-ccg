@@ -37,3 +37,41 @@ export const randomEnemies =
     );
     return ctx.rng.shuffle(candidates).slice(0, count);
   };
+
+const minionRef = (m: { instanceId: number }): TargetRef => ({ kind: 'minion', instanceId: m.instanceId });
+
+/** The caster's own hero. */
+export const ownHero = (): Selector => (ctx) => [{ kind: 'hero', player: ctx.caster }];
+
+/** All of the caster's minions (a warcry's own minion included). */
+export const friendlyMinions = (): Selector => (ctx) => ctx.g.players[ctx.caster].board.map(minionRef);
+
+/** The caster's minions except the one this effect belongs to. */
+export const otherFriendlyMinions = (): Selector => (ctx) =>
+  ctx.g.players[ctx.caster].board.filter((m) => m.instanceId !== ctx.self).map(minionRef);
+
+/** The caster's hero and all their minions. */
+export const allFriendlies = (): Selector => (ctx) => [...ownHero()(ctx), ...friendlyMinions()(ctx)];
+
+/** The enemy hero and all enemy minions (hidden ones too: area effects still hit them, RULES Q19). */
+export const allEnemies = (): Selector => (ctx) => [...enemyHero()(ctx), ...allEnemyMinions()(ctx)];
+
+/** Both heroes and every minion. */
+export const everyone = (): Selector => (ctx) => [
+  { kind: 'hero', player: '0' },
+  { kind: 'hero', player: '1' },
+  ...allMinions()(ctx),
+];
+
+/** Everyone except the minion this effect belongs to. */
+export const everyoneElse = (): Selector => (ctx) =>
+  everyone()(ctx).filter((t) => !(t.kind === 'minion' && t.instanceId === ctx.self));
+
+/** Up to `count` distinct visible enemy minions, at random (never the hero). */
+export const randomEnemyMinions =
+  (count: number): Selector =>
+  (ctx) =>
+    ctx.rng.shuffle(allEnemyMinions()(ctx).filter((t) => t.kind === 'minion' && !isHidden(ctx, t.instanceId))).slice(0, count);
+
+const isHidden = (ctx: Parameters<Selector>[0], id: number): boolean =>
+  !!ctx.g.players[opponentOf(ctx.caster)].board.find((m) => m.instanceId === id)?.keywords.hidden;

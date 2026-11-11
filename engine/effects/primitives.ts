@@ -2,7 +2,7 @@ import { damageTarget, healTarget } from '../rules/damage';
 import { drawCard } from '../rules/draw';
 import { findMinion } from '../rules/lookup';
 import { summonMinion } from '../rules/summon';
-import type { MinionKeywords } from '../state/types';
+import { MAX_ENERGY, type MinionKeywords } from '../state/types';
 import type { Effect, Selector } from './types';
 
 /** Deals `amount` damage to everything the selector picks. */
@@ -104,3 +104,20 @@ export const buffWeapon =
     const weapon = ctx.g.players[ctx.caster].weapon;
     if (weapon) weapon.attack += attack;
   };
+
+/** Adds an empty energy slot (capped at 10). The new slot is not filled until next turn's refill. */
+export const gainEnergySlot =
+  (amount = 1): Effect =>
+  (ctx) => {
+    const e = ctx.g.players[ctx.caster].energy;
+    e.total = Math.min(MAX_ENERGY, e.total + amount);
+  };
+
+/** Summons one token chosen at random from the running card's entourage list. */
+export const summonRandomEntourage = (): Effect => (ctx) => {
+  const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+  const id = source && ctx.rng.shuffle([...source.entourage])[0];
+  const token = id && ctx.catalog.get(id);
+  if (!token) throw new Error(`${ctx.sourceCardId} has no entourage tokens in the catalog`);
+  summonMinion(ctx.g, ctx.caster, token, ctx.events, ctx.self);
+};

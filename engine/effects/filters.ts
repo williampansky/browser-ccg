@@ -10,3 +10,4 @@ export const enemyCharacter = (): TargetFilter => (c) => ownerOf(c) !== c.caster
 export const anyMinion = (): TargetFilter => (c) => c.candidate.kind === 'minion';
 export const enemyMinion = (): TargetFilter => (c) => c.candidate.kind === 'minion' && ownerOf(c) !== c.caster;
 export const friendlyMinion = (): TargetFilter => (c) => c.candidate.kind === 'minion' && ownerOf(c) === c.caster;
+export const friendlyCharacter = (): TargetFilter => (c) => ownerOf(c) === c.caster;

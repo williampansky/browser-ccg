@@ -1,30 +1,92 @@
-import type { Card } from '../cards/types';
-import { CardDef, Definition, numbersOf } from './define-card';
-import game001 from './game/game-001';
-import core001 from './core/core-001';
-import core012 from './core/core-012';
-import core013 from './core/core-013';
-import core021 from './core/core-021';
-import core035 from './core/core-035';
-import core061 from './core/core-061';
-import core071 from './core/core-071';
-import core085 from './core/core-085';
-import core043 from './core/core-043';
-import core044 from './core/core-044';
-import core063 from './core/core-063';
-import core065 from './core/core-065';
-import core068 from './core/core-068';
-import core074 from './core/core-074';
-import core094 from './core/core-094';
-import core095 from './core/core-095';
-import core096 from './core/core-096';
-import core102 from './core/core-102';
-import core107 from './core/core-107';
-import core114 from './core/core-114';
-import core129 from './core/core-129';
+import type { Card } from "../cards/types";
+import { CardDef, Definition, numbersOf } from "./define-card";
+import core006 from "./core/core-006";
+import core016 from "./core/core-016";
+import core036 from "./core/core-036";
+import core112 from "./core/core-112";
+import core054 from "./core/core-054";
+import core026 from "./core/core-026";
+import core082 from "./core/core-082";
+import core019 from "./core/core-019";
+import core041 from "./core/core-041";
+import core032 from "./core/core-032";
+import core122 from "./core/core-122";
+import core020 from "./core/core-020";
+import core025 from "./core/core-025";
+import core053 from "./core/core-053";
+import core083 from "./core/core-083";
+import core058 from "./core/core-058";
+import core120 from "./core/core-120";
+import core069 from "./core/core-069";
+import core072 from "./core/core-072";
+import core079 from "./core/core-079";
+import core121 from "./core/core-121";
+import core124 from "./core/core-124";
+import core060 from "./core/core-060";
+import core125 from "./core/core-125";
+import core047 from "./core/core-047";
+import core077 from "./core/core-077";
+import core087 from "./core/core-087";
+import core073 from "./core/core-073";
+import core078 from "./core/core-078";
+import core067 from "./core/core-067";
+import core049 from "./core/core-049";
+import game001 from "./game/game-001";
+import core001 from "./core/core-001";
+import core012 from "./core/core-012";
+import core013 from "./core/core-013";
+import core021 from "./core/core-021";
+import core035 from "./core/core-035";
+import core061 from "./core/core-061";
+import core071 from "./core/core-071";
+import core085 from "./core/core-085";
+import core043 from "./core/core-043";
+import core044 from "./core/core-044";
+import core063 from "./core/core-063";
+import core065 from "./core/core-065";
+import core068 from "./core/core-068";
+import core074 from "./core/core-074";
+import core094 from "./core/core-094";
+import core095 from "./core/core-095";
+import core096 from "./core/core-096";
+import core102 from "./core/core-102";
+import core107 from "./core/core-107";
+import core114 from "./core/core-114";
+import core129 from "./core/core-129";
 
 /** Every card with behaviour beyond its stats and keywords. Vanilla cards have no entry. */
 const all: Definition[] = [
+  core049,
+  core067,
+  core078,
+  core073,
+  core087,
+  core077,
+  core047,
+  core125,
+  core060,
+  core124,
+  core121,
+  core079,
+  core072,
+  core069,
+  core120,
+  core058,
+  core083,
+  core053,
+  core025,
+  core020,
+  core122,
+  core032,
+  core041,
+  core019,
+  core082,
+  core026,
+  core054,
+  core112,
+  core036,
+  core016,
+  core006,
   game001,
   core001,
   core012,
@@ -50,7 +112,7 @@ const all: Definition[] = [
 ];
 
 const byId = new Map(all.map((d) => [d.id, d]));
-if (byId.size !== all.length) throw new Error('duplicate card definition id');
+if (byId.size !== all.length) throw new Error("duplicate card definition id");
 
 /** The behaviour of a card, or undefined if it has none defined yet. */
 export const getCardDef = (card: Card): CardDef | undefined =>
