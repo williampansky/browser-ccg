@@ -44,6 +44,8 @@ const artStyle = (id?: string): React.CSSProperties | undefined => {
   const m = id?.match(/^(CORE|GAME)_(.+)$/);
   return m ? { backgroundImage: `url(/images/sets/SET_${m[1]}/${m[2]}-CARD.jpg)` } : undefined;
 };
+/** Zoom for the hand so `n` cards (9rem wide, 0.5rem apart) fit `width` px on one row. */
+const handScale = (width: number, n: number) => (width > 0 && n > 0 ? Math.min(1, (width + 8) / (n * (144 + 8))) : 1);
 const targetKey = (t: TargetRef) => (t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`);
 const centerOf = (el: HTMLElement) => {
   const r = el.getBoundingClientRect();
@@ -333,6 +335,18 @@ export const PlayBoard = () => {
     return () => clearTimeout(timer);
   }, [castFx]);
 
+  // Keep the hand on one row: past what fits, the cards shrink together.
+  const handRef = useRef<HTMLDivElement | null>(null);
+  const [handWidth, setHandWidth] = useState(0);
+  useEffect(() => {
+    const el = handRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setHandWidth(el.clientWidth));
+    ro.observe(el);
+    setHandWidth(el.clientWidth);
+    return () => ro.disconnect();
+  }, [state === null]);
+
   // Space ends the turn (when you can), unless a choice dialog is open.
   const [hoverGap, setHoverGap] = useState<number | null>(null);
   const modalOpenRef = useRef(false);
@@ -404,20 +418,27 @@ export const PlayBoard = () => {
   const canAttackHero = !over && myTurn && state.players[foe].board.length === 0 && heroHits.length > 0;
   const attackHero = () => {
     if (!canAttackHero || !rngRef.current) return;
+    const ctx = { rng: rngRef.current, catalog: byId };
     let cur = state;
     const lines: string[][] = [];
-    for (const m of state.players[me].board) {
-      const hit = legalActions(cur, me, byId).find(
-        (a) => a.type === 'Attack' && a.attackerId === m.instanceId && a.target.kind === 'hero' && a.target.player === foe
-      );
-      if (!hit) continue;
-      const r = applyAction(cur, hit, { rng: rngRef.current, catalog: byId });
-      if ('error' in r) break;
+    const run = (action: Action) => {
+      const r = applyAction(cur, action, ctx);
+      if ('error' in r) return false;
       lines.push(describeEvents(r.events, byId, cur, r.state));
       cur = r.state;
-      if (cur.status === 'over') break;
+      return true;
+    };
+    // Left to right; a minion keeps swinging while it can (Onslaught attacks twice).
+    for (const m of state.players[me].board) {
+      for (let swings = 0; swings < 4 && cur.status === 'playing'; swings++) {
+        const hit = legalActions(cur, me, byId).find(
+          (a) => a.type === 'Attack' && a.attackerId === m.instanceId && a.target.kind === 'hero' && a.target.player === foe
+        );
+        if (!hit || !run(hit)) break;
+      }
     }
     if (cur === state) return;
+    if (cur.status === 'playing') run({ type: 'EndTurn' });
     setSelection(null);
     (document.activeElement as HTMLElement | null)?.blur?.();
     setState(cur);
@@ -835,15 +856,16 @@ export const PlayBoard = () => {
             </span>
           )}
           {message && <span className={styles.error}>{message}</span>}
-          <button
-            type="button"
-            disabled={!canAttackHero}
-            className={styles.attackHero}
-            title="Attack the enemy hero with every ready minion, left to right (needs an empty enemy board)"
-            onClick={attackHero}
-          >
-            Attack hero
-          </button>
+          {canAttackHero && (
+            <button
+              type="button"
+              className={styles.attackHero}
+              title="Attack the enemy hero with every ready minion, left to right, then end your turn"
+              onClick={attackHero}
+            >
+              Attack hero
+            </button>
+          )}
         </div>
           <section className={styles.side}>
           <div
@@ -865,7 +887,11 @@ export const PlayBoard = () => {
 
         <section className={[styles.side, styles.bottom].join(' ')}>
           {renderHero(me, true)}
-          <div className={styles.row}>
+          <div
+            className={[styles.row, styles.hand].join(' ')}
+            ref={handRef}
+            style={{ ['--hand-zoom' as string]: handScale(handWidth, state.players[me].hand.length) }}
+          >
             {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i))}
           </div>
           {playButtons && (

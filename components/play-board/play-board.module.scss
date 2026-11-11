@@ -615,11 +615,11 @@
 // A cast spell flashes in the middle of the screen, then fades. Red-ringed when the enemy cast it.
 .castFx {
   position: fixed;
-  left: 50%;
+  left: 22rem; // between the log (ends at 21rem) and the board
   top: 45%;
   z-index: 35;
-  width: 13rem;
-  min-height: 15rem;
+  width: 11rem;
+  min-height: 13rem;
   padding: 0.8rem;
   display: flex;
   flex-direction: column;
@@ -637,21 +637,31 @@
 @keyframes castFlash {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.6);
+    transform: translateY(-50%) scale(0.6);
     box-shadow: 0 0 0 0 #fff;
   }
   20% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.1);
+    transform: translateY(-50%) scale(1.1);
     box-shadow: 0 0 60px 20px rgba(255, 255, 255, 0.7);
   }
   70% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translateY(-50%) scale(1);
     box-shadow: 0 0 30px 8px rgba(255, 255, 255, 0.25);
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+// The hand never wraps: the cards shrink together instead.
+.hand {
+  flex-wrap: nowrap;
+
+  .handCard {
+    zoom: var(--hand-zoom, 1);
+    flex: none;
   }
 }
