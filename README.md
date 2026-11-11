@@ -1,3 +1,6 @@
+A browser-only, turn-based collectible card game, played against a bot. See
+[VISION.md](VISION.md) for goals and priorities and [ROADMAP.md](ROADMAP.md) for what's next.
+
 ## Status check (2026-11-10)
 
 Smoke-tested `npm run dev` in a browser: the home page loads, Play opens `/play`, and a

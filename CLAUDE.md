@@ -2,7 +2,10 @@
 
 Browser-based collectible card game: Next.js 12 + React 17 front end, with game logic in
 [boardgame.io](https://boardgame.io) 0.49 (plus `bgio-effects` for animation events).
-Single-player vs. a bot. See `README.md` for the current status and known issues.
+Single-player vs. a bot. See `README.md` for the current status and known issues,
+`VISION.md` for goals and priorities (card design/balance, multiplayer and player
+experience come first; store/collection/visuals are secondary), and `ROADMAP.md` for
+planned work.
 
 ## Commands
 

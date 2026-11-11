@@ -22,6 +22,11 @@ Draft based on the TODOs and status check in `README.md`. Reorder or trim as you
 - [ ] More AI decks
 - [ ] Weapons (enums already prepped)
 
+## Later: multiplayer
+
+- [ ] Player-vs-player and multi-user support (a top priority per `VISION.md`; scope and design TBD)
+- [ ] Card balance pass
+
 ## Later: infrastructure
 
 - [ ] Host the game server / AI on Heroku or similar
