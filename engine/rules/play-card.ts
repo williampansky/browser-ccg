@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import { needsBehaviour } from '../decks';
 import { getCardDef } from '../definitions';
+import type { CardDef } from '../definitions/define-card';
 import type { EngineContext } from './apply-action';
 import { ActionError, GameEvent, GameState, MAX_BOARD, TargetRef } from '../state/types';
 import { createMinion } from './minion';
@@ -10,6 +11,7 @@ export interface PlayCardArgs {
   handIndex: number;
   boardIndex?: number;
   target?: TargetRef;
+  choice?: number;
 }
 
 /**
@@ -18,7 +20,7 @@ export interface PlayCardArgs {
  */
 export const playCard = (
   state: GameState,
-  { handIndex, boardIndex, target }: PlayCardArgs,
+  { handIndex, boardIndex, target, choice }: PlayCardArgs,
   ctx: EngineContext,
   events: GameEvent[]
 ): GameState | ActionError => {
@@ -39,6 +41,18 @@ export const playCard = (
   if (!def && (isSpellLike || needsBehaviour(card))) return { error: 'UNSUPPORTED_CARD' };
   if (card.cost > player.energy.current) return { error: 'CANT_AFFORD' };
 
+  // "Choose one" cards need a valid option; every other card refuses one. The chosen option's own
+  // target and effects replace the card's.
+  let play: { target?: CardDef['target']; onPlay?: CardDef['onPlay'] } | undefined = def;
+  if (def?.choices) {
+    if (!Number.isInteger(choice) || choice === undefined || choice < 0 || choice >= def.choices.length) {
+      return { error: 'BAD_CHOICE' };
+    }
+    play = def.choices[choice];
+  } else if (choice !== undefined) {
+    return { error: 'BAD_CHOICE' };
+  }
+
   let index = 0;
   if (card.type === 'minion') {
     index = boardIndex ?? player.board.length;
@@ -48,8 +62,8 @@ export const playCard = (
 
   // Targets. A spell that needs a target and has none is refused. A warcry with no legal target
   // still lets the minion be played; the warcry just does nothing.
-  if (def?.target) {
-    const legal = legalTargets(state, { kind: 'card', handIndex }, catalog, defs);
+  if (play?.target) {
+    const legal = legalTargets(state, { kind: 'card', handIndex, choice }, catalog, defs);
     if (legal.length > 0 || isSpellLike) {
       if (!isLegalTarget(legal, target)) return { error: 'ILLEGAL_TARGET' };
     } else if (target) {
@@ -76,7 +90,7 @@ export const playCard = (
     } else {
       events.push({ type: 'CardPlayed', player: me, instanceId: inHand.instanceId, cardId: card.id });
     }
-    for (const effect of def?.onPlay ?? []) {
+    for (const effect of play?.onPlay ?? []) {
       effect({ g, caster: me, target, self, rng, catalog, events, sourceCardId: card.id });
     }
   });

@@ -29,9 +29,19 @@ export const legalActions = (
     if (!def && needsBehaviour(card)) return;
     if (card.type === 'spell' || card.type === 'item') {
       if (!def) return;
-      if (!def.target) return void actions.push({ type: 'PlayCard', handIndex });
-      for (const target of legalTargets(state, { kind: 'card', handIndex }, catalog, defs)) {
-        actions.push({ type: 'PlayCard', handIndex, target });
+      // A "choose one" card is offered once per option (and per target that option allows).
+      const options = def.choices
+        ? def.choices.map((c, choice) => ({ choice, needsTarget: !!c.target }))
+        : [{ choice: undefined, needsTarget: !!def.target }];
+      for (const { choice, needsTarget } of options) {
+        const base: Action = choice === undefined ? { type: 'PlayCard', handIndex } : { type: 'PlayCard', handIndex, choice };
+        if (!needsTarget) {
+          actions.push(base);
+          continue;
+        }
+        for (const target of legalTargets(state, { kind: 'card', handIndex, choice }, catalog, defs)) {
+          actions.push({ ...base, target });
+        }
       }
     } else if (card.type === 'weapon') {
       actions.push({ type: 'PlayCard', handIndex });

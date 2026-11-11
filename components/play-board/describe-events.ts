@@ -67,6 +67,9 @@ export const describeEvents = (
       case 'Burned':
         lines.push(`${who(e.player)}'s hand is full: a card is burned`);
         break;
+      case 'Discarded':
+        lines.push(`${who(e.player)} discards a card`);
+        break;
       case 'ArmorGained':
         lines.push(`  ${who(e.player)} gains ${e.amount} armor`);
         break;

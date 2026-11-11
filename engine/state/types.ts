@@ -81,7 +81,7 @@ export type TargetRef = { kind: 'hero'; player: PlayerId } | { kind: 'minion'; i
 export type Action =
   | { type: 'EndTurn' }
   | { type: 'Concede' }
-  | { type: 'PlayCard'; handIndex: number; boardIndex?: number; target?: TargetRef }
+  | { type: 'PlayCard'; handIndex: number; boardIndex?: number; target?: TargetRef; choice?: number }
   | { type: 'Attack'; attackerId: number; target: TargetRef }
   | { type: 'WeaponAttack'; target: TargetRef };
 
@@ -96,6 +96,7 @@ export type ActionErrorCode =
   | 'UNKNOWN_ATTACKER'
   | 'MINION_CANT_ATTACK'
   | 'ILLEGAL_TARGET'
+  | 'BAD_CHOICE'
   | 'NO_WEAPON'
   | 'HERO_CANT_ATTACK'
   | 'TRIGGER_LOOP';

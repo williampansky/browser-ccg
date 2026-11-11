@@ -64,6 +64,9 @@ import core033 from "./core/core-033";
 import core007 from "./core/core-007";
 import core092 from "./core/core-092";
 import core113 from "./core/core-113";
+import core045 from "./core/core-045";
+import core051 from "./core/core-051";
+import core055 from "./core/core-055";
 import game001 from "./game/game-001";
 import core001 from "./core/core-001";
 import core012 from "./core/core-012";
@@ -89,6 +92,9 @@ import core129 from "./core/core-129";
 
 /** Every card with behaviour beyond its stats and keywords. Vanilla cards have no entry. */
 const all: Definition[] = [
+  core055,
+  core051,
+  core045,
   core113,
   core092,
   core007,

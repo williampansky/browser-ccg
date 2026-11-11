@@ -3,7 +3,7 @@ import { drawCard } from '../rules/draw';
 import { findMinion, opponentOf } from '../rules/lookup';
 import { createMinion } from '../rules/minion';
 import { summonMinion } from '../rules/summon';
-import { MAX_ENERGY, type MinionKeywords } from '../state/types';
+import { MAX_ENERGY, MAX_HAND, type MinionKeywords } from '../state/types';
 import type { Effect, Selector } from './types';
 
 /** Deals `amount` damage to everything the selector picks. */
@@ -255,4 +255,25 @@ export const sacrificeFor =
     if (victims.length === 0) return;
     destroy(select)(ctx);
     heal(ownHeroRef, healAmount)(ctx);
+  };
+
+/**
+ * Looks at the top `look` cards of the caster's deck, keeps the one at `keep` (the last one if fewer
+ * were available) and discards the rest. A full hand burns the kept card. An empty deck does nothing
+ * (looking is not drawing, so no fatigue).
+ */
+export const keepFromTop =
+  (look: number, keep: number): Effect =>
+  (ctx) => {
+    const p = ctx.g.players[ctx.caster];
+    const seen = p.deck.splice(0, look);
+    if (seen.length === 0) return;
+    const [kept] = seen.splice(Math.min(keep, seen.length - 1), 1);
+    for (const gone of seen) ctx.events.push({ type: 'Discarded', player: ctx.caster, instanceId: gone.instanceId });
+    if (p.hand.length >= MAX_HAND) {
+      ctx.events.push({ type: 'Burned', player: ctx.caster, instanceId: kept.instanceId });
+      return;
+    }
+    p.hand.push(kept);
+    ctx.events.push({ type: 'Drew', player: ctx.caster, instanceId: kept.instanceId });
   };

@@ -4,6 +4,7 @@ import {
   applyAction,
   buildDeck,
   chooseRandomAction,
+  getCardDef,
   Card,
   createGame,
   createSeededRng,
@@ -20,10 +21,11 @@ import { describeEvents } from './describe-events';
 import styles from './play-board.module.scss';
 
 type Mode = 'ai' | 'hotseat';
+type PlayAction = Extract<Action, { type: 'PlayCard' }>;
 const AI_PLAYER: PlayerId = '1';
 const AI_DELAY_MS = 800;
 
-type Selection = { kind: 'hand'; index: number } | { kind: 'minion'; id: number } | { kind: 'hero' };
+type Selection = { kind: 'hand'; index: number; choice?: number } | { kind: 'minion'; id: number } | { kind: 'hero' };
 
 const { cards, byId } = loadHsCards();
 const pool = playablePool(cards);
@@ -105,7 +107,12 @@ export const PlayBoard = () => {
   // What the current selection can aim at.
   const optionsFor = (sel: Selection | null): Action[] => {
     if (!sel) return [];
-    if (sel.kind === 'hand') return actions.filter((a) => a.type === 'PlayCard' && a.handIndex === sel.index);
+    if (sel.kind === 'hand') {
+      const plays = actions.filter((a): a is PlayAction => a.type === 'PlayCard' && a.handIndex === sel.index);
+      // A "choose one" card shows nothing to aim at until an option is picked.
+      if (plays.some((a) => a.choice !== undefined)) return plays.filter((a) => a.choice === sel.choice);
+      return plays;
+    }
     if (sel.kind === 'minion') return actions.filter((a) => a.type === 'Attack' && a.attackerId === sel.id);
     return actions.filter((a) => a.type === 'WeaponAttack');
   };
@@ -148,6 +155,32 @@ export const PlayBoard = () => {
   const selectedCard =
     selection?.kind === 'hand' ? byId.get(state.players[me].hand[selection.index]?.cardId ?? '') : undefined;
   const untargetedPlays = selection?.kind === 'hand' ? options.filter((a) => !targetOf(a)) : [];
+
+  // "Choose one" cards: one button per option. An option that needs no target plays right away.
+  const choiceOptions: number[] =
+    selection?.kind === 'hand' && selection.choice === undefined
+      ? Array.from(
+          new Set(
+            actions.flatMap((a) => (a.type === 'PlayCard' && a.handIndex === selection.index && a.choice !== undefined ? [a.choice] : []))
+          )
+        )
+      : [];
+  const choiceLabel = (choice: number): string => {
+    const card = selectedCard;
+    const def = card && getCardDef(card);
+    const base = def?.choices?.[choice]?.label ?? `Option ${choice + 1}`;
+    // Surveying Drone: show which card each option keeps.
+    const top = card?.id === 'CORE_055' ? byId.get(state.players[me].deck[choice]?.cardId ?? '') : undefined;
+    return top ? `${base}: ${top.name}` : base;
+  };
+  const pickChoice = (choice: number) => {
+    if (selection?.kind !== 'hand') return;
+    const plays = actions.filter(
+      (a): a is PlayAction => a.type === 'PlayCard' && a.handIndex === selection.index && a.choice === choice
+    );
+    if (plays.length > 0 && plays.every((a) => !a.target)) dispatch(plays[0]);
+    else setSelection({ ...selection, choice });
+  };
 
   const renderMinion = (owner: PlayerId, m: MinionInstance) => {
     const card = byId.get(m.cardId);
@@ -261,6 +294,7 @@ export const PlayBoard = () => {
           ) : (
             <span>
               Turn {state.turn}: {label(state.activePlayer)}
+              {choiceOptions.length > 0 ? ' - choose one option' : ''}
               {aimable.length > 0 ? ' - pick a target (click the selection again to cancel)' : ''}
             </span>
           )}
@@ -274,6 +308,11 @@ export const PlayBoard = () => {
             {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i))}
           </div>
           <div className={styles.controls}>
+            {choiceOptions.map((c) => (
+              <button key={`choice-${c}`} type="button" className={styles.primary} onClick={() => pickChoice(c)}>
+                {choiceLabel(c)}
+              </button>
+            ))}
             {untargetedPlays.map((a, i) => (
               <button key={i} type="button" className={styles.primary} onClick={() => dispatch(a)}>
                 Play {selectedCard?.name}

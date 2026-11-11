@@ -7,7 +7,7 @@ import { opponentOf } from './lookup';
 export type TargetSource =
   | { kind: 'attack'; attackerId: number }
   | { kind: 'weapon' }
-  | { kind: 'card'; handIndex: number };
+  | { kind: 'card'; handIndex: number; choice?: number };
 
 export const sameTarget = (a: TargetRef, b: TargetRef): boolean =>
   a.kind === 'hero' ? b.kind === 'hero' && a.player === b.player : b.kind === 'minion' && a.instanceId === b.instanceId;
@@ -48,7 +48,8 @@ export const legalTargets = (
   }
   const inHand = state.players[me].hand[source.handIndex];
   const card = inHand && catalog?.get(inHand.cardId);
-  const filter = card && defs(card)?.target;
+  const def = card ? defs(card) : undefined;
+  const filter = def?.choices ? def.choices[source.choice ?? -1]?.target : def?.target;
   if (!filter) return [];
   return visibleCharacters(state).filter((candidate) => filter({ state, caster: me, candidate, catalog }));
 };

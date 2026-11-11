@@ -29,12 +29,24 @@ export const on = <K extends GameEventType>(
   do: opts.do,
 });
 
+/** One option of a "choose one" card. */
+export interface Choice {
+  label: string;
+  target?: TargetFilter;
+  onPlay: Effect[];
+}
+
 /**
  * What a card does. Cards with no `target` are global. For a minion, `onPlay` is its warcry.
  * `onDeath` runs after the minion has been removed (owner is the caster). `triggers` are live
  * only while the minion is on the board (this covers end-of-turn and "whenever ..." cards).
  */
 export interface CardDef {
+  /**
+   * "Choose one" cards: the player picks an option when playing (`PlayCard.choice`), and that option's
+   * own `target` and `onPlay` apply instead of the card's. Options have a short `label` for the UI.
+   */
+  choices?: Choice[];
   /** Which characters the player may aim it at. Omit for a global card. */
   target?: TargetFilter;
   onPlay?: Effect[];
