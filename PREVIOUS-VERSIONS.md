@@ -57,6 +57,69 @@ Source layout: `src/lib/` (game logic, ~6k lines), `src/components/` (~10k lines
 - **Debug decks:** 11 prebuilt 30-card decks (Assassin, Augur, Berserker, Knight Commander,
   Mystic, Necromancer, Neutral x2, Sniper, Sorcerer, White Mage).
 
+## Does `hsclone` still run? (tested 2026-11-11)
+
+Yes, with small environment fixes. Done in a scratch copy under `/tmp`, so the original repo was
+not touched.
+
+- **Install:** `npm install --legacy-peer-deps` failed because the old native `node-sass`
+  cannot build on Node 24. Swapping it for the pure-JS `sass` package (in the scratch copy only)
+  fixed it. There is no `yarn` here, so `yarn.lock` was ignored and newer versions inside the
+  `^` ranges were installed.
+- **Client:** `react-app-rewired start` compiles (lint warnings only) with
+  `NODE_OPTIONS=--openssl-legacy-provider` (webpack 4 on a modern Node).
+- **Server:** `babel-node server.js` starts a boardgame.io server on port 8000. The client
+  needs it even in "single player" mode: without it the screen sits on "Loading".
+- **Result:** the game renders a recognisably Hearthstone-style board: hero portraits with 30 HP,
+  minions with attack/health, energy crystals, a hand with green glow on playable cards, a deck
+  list, a match log and an End Turn button. End Turn works (log line, "THEIR TURN", the opponent
+  draws).
+- **It is a two-tab game.** Even the "single player" entry (`AppSinglePlayer.jsx`) is two
+  boardgame.io socket clients: the page is player `'1'` if its URL contains `3002`, otherwise
+  player `'0'`. Open one tab normally and a second with `3002` in the URL (for example
+  `http://localhost:3000/?as=3002` works, since only `href.includes('3002')` is checked) and
+  they play each other through the server on port 8000. With a single tab the other side
+  just never acts.
+- **Playing works (verified in two tabs).** Interaction is **click a card to select it, then
+  click to drop/target**, not drag and drop. A selected targeted spell highlights every
+  valid target in red. Verified: casting Scholar's Desk (deck 26 -> 24, hand 5 -> 6 after the
+  draw) and Magic Missile on an enemy minion ("Player 0 cast Magic Missle on Player 1's
+  Aspiring Cleric for 6 damage", then "...was slain", board 6 -> 5 minions), with log lines
+  and both tabs in sync. End Turn works too.
+- **Summoning, minion attacks and minion play (verified in a second session):**
+  - **Summon from a spell:** Magic Barrier ("summon a pair of 0/2 minions with Guard") put two
+    0/2 "Primordial Defender" minions on the caster's side.
+  - **Turn handoff:** End Turn passes play to the other tab, whose minions then glow green
+    (able to attack) and the active player draws.
+  - **Minion attacks:** clicking a glowing minion highlights its valid targets in red. The
+    Guard rule is enforced: with a Guard alive, only Guards were targetable, not the hero. Combat
+    is two-way (attack vs health), kills show in the log ("was slain"), and a minion that has
+    attacked loses its glow. A 1-damage attack on a 0/2 Guard left it at 1 health, and a later
+    attack killed it.
+  - **Hero attack:** once no Guard was left, a minion attacked the hero for its full attack
+    (hero 30 -> 27, log "attacked Player 0 for 3 damage").
+  - **Playing a minion:** selecting a minion card shows dashed slots between the board minions;
+    clicking one logs "summoned a Wondrous Wisp minion" and places it with no glow (summoning
+    sickness). Its warcry (restore 2 HP) had nothing to heal, so it was not really exercised.
+  - **Console noise:** each minion death logged `ERROR: disallowed move: killMinion` four
+    times, probably a client calling a move it is not allowed to. Gameplay was unaffected.
+  - **Draw count:** starting a turn took the hand from 5 to 7 more than once, so something draws
+    an extra card per turn (not investigated).
+- **Not exercised:** weapons, class skills, the Guard "Disable" and other keyword effects in
+  depth, a full game to win/loss, player 0 attacking with its own minions (its only minions
+  were 0-attack).
+- **Debug settings are on:** energy cost is not enforced (`debugData.enableCost` is off, so
+  every card in hand glows playable even with 1 energy), and player 1 starts with 6 minions
+  on the board. The UI layout also expects a fixed-size window: at some sizes the bottom of the
+  hand is clipped.
+- **No bot:** `lib/game.js` still has the boardgame.io tic-tac-toe `ai.enumerate`
+  (`clickCell`) from the tutorial, so there is no working AI in this version. Playing solo
+  means driving both tabs yourself.
+- **Unit tests:** `npx jest` gives 63 passing and 38 failing of 101 tests. The failures I
+  looked at are stale fixtures (state fields such as `allPlayedCards` and `energy` missing from
+  test state), plus one test importing a module that no longer exists. They are not
+  environment problems.
+
 ## Multiplayer and hosting: what existed
 
 - **`hsclone` and `react-card-game`:** a boardgame.io `Server` (port 8000) and a `Client` using
