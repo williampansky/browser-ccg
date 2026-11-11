@@ -40,6 +40,14 @@ export interface MinionInstance {
   expiresOnTurn?: number;
 }
 
+/** A hero's equipped weapon. `durability` drops by 1 per attack; at 0 the weapon breaks. */
+export interface WeaponInstance {
+  instanceId: number;
+  cardId: string;
+  attack: number;
+  durability: number;
+}
+
 export interface PlayerState {
   health: number;
   armor: number;
@@ -48,6 +56,9 @@ export interface PlayerState {
   hand: CardInstance[];
   /** Dense array, left to right, at most MAX_BOARD */
   board: MinionInstance[];
+  weapon: WeaponInstance | null;
+  /** Weapon attacks made this turn (one allowed) */
+  weaponAttacksThisTurn: number;
   /** Fatigue counter: number of empty-deck draws so far (damage = the new value) */
   fatigue: number;
 }
@@ -71,7 +82,8 @@ export type Action =
   | { type: 'EndTurn' }
   | { type: 'Concede' }
   | { type: 'PlayCard'; handIndex: number; boardIndex?: number; target?: TargetRef }
-  | { type: 'Attack'; attackerId: number; target: TargetRef };
+  | { type: 'Attack'; attackerId: number; target: TargetRef }
+  | { type: 'WeaponAttack'; target: TargetRef };
 
 export type ActionErrorCode =
   | 'GAME_OVER'
@@ -84,6 +96,8 @@ export type ActionErrorCode =
   | 'UNKNOWN_ATTACKER'
   | 'MINION_CANT_ATTACK'
   | 'ILLEGAL_TARGET'
+  | 'NO_WEAPON'
+  | 'HERO_CANT_ATTACK'
   | 'TRIGGER_LOOP';
 export interface ActionError {
   error: ActionErrorCode;
@@ -97,6 +111,10 @@ export type GameEvent =
   | { type: 'Fatigue'; player: PlayerId; damage: number }
   | { type: 'HeroDamaged'; player: PlayerId; amount: number }
   | { type: 'MinionPlayed'; player: PlayerId; instanceId: number; boardIndex: number }
+  | { type: 'WeaponEquipped'; player: PlayerId; cardId: string }
+  | { type: 'WeaponAttacked'; target: TargetRef }
+  | { type: 'WeaponBroke'; player: PlayerId }
+  | { type: 'ArmorGained'; player: PlayerId; amount: number }
   | { type: 'MinionAttacked'; attackerId: number; target: TargetRef }
   | { type: 'CardPlayed'; player: PlayerId; instanceId: number; cardId: string }
   | { type: 'MinionDamaged'; instanceId: number; amount: number }

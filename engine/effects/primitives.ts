@@ -88,3 +88,19 @@ export const buff =
       minion.health += health;
     }
   };
+
+/** The caster's hero gains armor (no cap; armor does not decay). */
+export const addArmor =
+  (amount: number): Effect =>
+  (ctx) => {
+    ctx.g.players[ctx.caster].armor += amount;
+    ctx.events.push({ type: 'ArmorGained', player: ctx.caster, amount });
+  };
+
+/** Raises the caster's weapon attack. Does nothing without a weapon. */
+export const buffWeapon =
+  (attack: number): Effect =>
+  (ctx) => {
+    const weapon = ctx.g.players[ctx.caster].weapon;
+    if (weapon) weapon.attack += attack;
+  };

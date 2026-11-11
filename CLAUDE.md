@@ -20,10 +20,11 @@ earlier `hsclone` repo as the rules reference. Read these first:
 ## Current state
 
 - **There is no playable game on this branch yet.** `game/game.ts` is a stub and `/play` is a
-  placeholder page. The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-5 of
+  placeholder page. The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-6 of
   its build order are done and tested: card model and loader (`engine/cards/`), state and turn flow,
-  minions and combat, spells and `legalTargets`, keywords, and triggers/warcries/`legalActions`.
-  Still to build: weapons and armor (slice 6) and the random-bot invariant test (slice 7).
+  minions and combat, spells and `legalTargets`, keywords, triggers/warcries/`legalActions`, and
+  weapons/armor/items. Still to build: the dedicated random-bot invariant suite (slice 7; a first
+  version already runs in `legal-actions.test.ts`).
 - The site shell works: home, `collection`, `deckbuilder`, `cards`, `store`, `profile`, `news`,
   `faq`, `changelog`, plus `pages/api/` for cards/users. The card renderers (`Card`, `Minion`) work.
 - `data/*.json` (read by the site) still describes the old zone game (fields such as

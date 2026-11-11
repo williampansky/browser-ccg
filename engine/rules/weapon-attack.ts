@@ -1,0 +1,44 @@
+import { produce } from 'immer';
+import { ActionError, GameEvent, GameState, TargetRef } from '../state/types';
+import { damageHero, damageMinion } from './damage';
+import { opponentOf } from './lookup';
+import { isLegalTarget, legalTargets } from './targeting';
+
+/**
+ * The active hero attacks with its weapon (RULES Q9). One attack per turn, 1 durability each.
+ * Against a hero: damage only. Against a minion: the hero takes the minion's attack as
+ * counter-damage and the minion takes the weapon's attack, at the same time. Guard applies (Q10).
+ * Deaths and triggers are settled by the caller.
+ */
+export const weaponAttack = (
+  state: GameState,
+  { target }: { target: TargetRef },
+  events: GameEvent[]
+): GameState | ActionError => {
+  const me = state.activePlayer;
+  const foe = opponentOf(me);
+  const weapon = state.players[me].weapon;
+  if (!weapon) return { error: 'NO_WEAPON' };
+  if (weapon.attack < 1 || state.players[me].weaponAttacksThisTurn >= 1) return { error: 'HERO_CANT_ATTACK' };
+  if (!isLegalTarget(legalTargets(state, { kind: 'weapon' }), target)) return { error: 'ILLEGAL_TARGET' };
+
+  return produce(state, (g) => {
+    const p = g.players[me];
+    const w = p.weapon!;
+    p.weaponAttacksThisTurn += 1;
+    events.push({ type: 'WeaponAttacked', target });
+    if (target.kind === 'hero') {
+      damageHero(g, foe, w.attack, events);
+    } else {
+      const victim = g.players[foe].board.find((m) => m.instanceId === target.instanceId)!;
+      const counter = victim.attack;
+      damageMinion(victim, w.attack, events);
+      if (counter > 0) damageHero(g, me, counter, events);
+    }
+    w.durability -= 1;
+    if (w.durability <= 0) {
+      p.weapon = null;
+      events.push({ type: 'WeaponBroke', player: me });
+    }
+  });
+};

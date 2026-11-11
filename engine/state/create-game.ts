@@ -13,6 +13,8 @@ const emptyPlayer = (deck: CardInstance[]): PlayerState => ({
   deck,
   hand: [],
   board: [],
+  weapon: null,
+  weaponAttacksThisTurn: 0,
   fatigue: 0,
 });
 

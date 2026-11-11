@@ -366,7 +366,7 @@ The text of each question and its default is kept for the reasoning.
 | 6 | Fatigue | escalating 1, 2, 3... | accepted |
 | 7 | Board limit | 7, engine-enforced, summon into full board fizzles | accepted |
 | 8 | Double hero death | draw; no turn timer | accepted |
-| 9 | Weapons | no hero base attack; weapon attack and durability; counter-damage when hitting a minion | accepted |
+| 9 | Weapons | no hero base attack; weapon attack and durability; counter-damage when hitting a minion | accepted; engine readings (slice 6, not covered by the answer): a new weapon may attack the turn it is equipped; counter-damage and weapon damage are simultaneous; equipping replaces the old weapon silently |
 | 10 | Guard scope | attacks only (minion and weapon) | accepted |
 | 11 | Rush | attacks immediately, can hit hero | accepted |
 | 12 | Double attack | two attacks per turn | accepted |
@@ -526,3 +526,5 @@ From the card-effects review [A]; to be resolved card by card in Milestone 4 (se
 | 089/090 Invocations | destroy (gated by attack) | 9000 damage; gate only in target selection |
 | 071, 085, 130 | see section 9 | no code |
 | 108 Unearthed Crater | adjacent +2 | dead code, never runs |
+
+**Engine note (slice 6):** cards of type `item` (about 20 in CORE: potions, scrolls, buffs) are one-shot effects and play exactly like spells. CORE_081 ("restore 2 HP before every attack") needs a pre-attack hook and is left for Milestone 4.

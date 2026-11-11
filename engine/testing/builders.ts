@@ -38,6 +38,12 @@ export const minionCard = (id: string, o: MinionOpts = {}): Card => ({
   race: o.race,
 });
 
+export const weaponCard = (id: string, o: { cost?: number; attack?: number; durability?: number } = {}): Card => ({
+  ...baseCard(id, 'weapon', o.cost ?? 1, []),
+  attack: o.attack ?? 1,
+  health: o.durability ?? 1,
+});
+
 export const spellCard = (id: string, cost = 1, numbers: CardNumbers = {}): Card => ({
   ...baseCard(id, 'spell', cost, []),
   numbers,

@@ -2,7 +2,7 @@ import { createGame } from '../../state/create-game';
 import { applyAction } from '../apply-action';
 import { legalActions } from '../legal-actions';
 import { createSeededRng } from '../../rng';
-import { catalogOf, minionCard, putInHand, putOnBoard, setEnergy, spellCard } from '../../testing/builders';
+import { catalogOf, minionCard, putInHand, putOnBoard, setEnergy, spellCard, weaponCard } from '../../testing/builders';
 import type { Action, GameState, PlayerId } from '../../state/types';
 import { MAX_BOARD, MAX_HAND } from '../../state/types';
 
@@ -24,7 +24,11 @@ const sweep = spellCard('CORE_065', 2, { primary: 1 });
 const fireballs = spellCard('CORE_063', 1, { primary: 1, random: 3 });
 const burn = spellCard('CORE_095', 1, { primary: 3 });
 const study = spellCard('CORE_102', 3, { primary: 4 });
-const cards = [grunt, wall, ghost, rusher, spitter, sprite, token, shaman, witch, killer, raptor, ward, ice, zap, sweep, fireballs, burn, study];
+const mace = weaponCard('CORE_076', { cost: 1, attack: 1, durability: 4 });
+const axe = weaponCard('CORE_128', { cost: 3, attack: 3, durability: 2 });
+const shield = { ...spellCard('CORE_129', 3, { primary: 5 }), type: 'item' as const };
+const sharpen = { ...spellCard('CORE_094', 1, { primary: 2, secondary: 0 }), type: 'item' as const };
+const cards = [grunt, wall, ghost, rusher, spitter, sprite, token, shaman, witch, killer, raptor, ward, ice, zap, sweep, fireballs, burn, study, mace, axe, shield, sharpen];
 const catalog = catalogOf(...cards);
 const deckIds = cards.filter((c) => !c.isToken).map((c) => c.id);
 
@@ -115,6 +119,11 @@ describe('random play', () => {
       expect(pl.board.length).toBeLessThanOrEqual(MAX_BOARD);
       expect(pl.hand.length).toBeLessThanOrEqual(MAX_HAND);
       expect(pl.health).toBeLessThanOrEqual(30);
+      expect(pl.armor).toBeGreaterThanOrEqual(0);
+      if (pl.weapon) {
+        expect(pl.weapon.durability).toBeGreaterThan(0);
+        expect(pl.weapon.attack).toBeGreaterThanOrEqual(0);
+      }
       for (const m of pl.board) {
         expect(m.health).toBeGreaterThan(0);
         expect(m.health).toBeLessThanOrEqual(m.maxHealth);

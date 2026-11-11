@@ -30,10 +30,11 @@ export const playCard = (
   if (!Number.isInteger(handIndex) || !inHand) return { error: 'BAD_HAND_INDEX' };
   const card = catalog.get(inHand.cardId);
   if (!card) return { error: 'UNKNOWN_CARD' };
-  if (card.type !== 'minion' && card.type !== 'spell') return { error: 'UNSUPPORTED_CARD' };
 
   const def = defs(card);
-  if (card.type === 'spell' && !def) return { error: 'UNSUPPORTED_CARD' };
+  // Items (potions, scrolls, ...) are one-shot effects and play exactly like spells.
+  const isSpellLike = card.type === 'spell' || card.type === 'item';
+  if (isSpellLike && !def) return { error: 'UNSUPPORTED_CARD' };
   if (card.cost > player.energy.current) return { error: 'CANT_AFFORD' };
 
   let index = 0;
@@ -47,7 +48,7 @@ export const playCard = (
   // still lets the minion be played; the warcry just does nothing.
   if (def?.target) {
     const legal = legalTargets(state, { kind: 'card', handIndex }, catalog, defs);
-    if (legal.length > 0 || card.type === 'spell') {
+    if (legal.length > 0 || isSpellLike) {
       if (!isLegalTarget(legal, target)) return { error: 'ILLEGAL_TARGET' };
     } else if (target) {
       return { error: 'ILLEGAL_TARGET' };
@@ -61,7 +62,10 @@ export const playCard = (
     p.hand.splice(handIndex, 1);
     p.energy.current -= card.cost;
     let self: number | undefined;
-    if (card.type === 'minion') {
+    if (card.type === 'weapon') {
+      p.weapon = { instanceId: inHand.instanceId, cardId: card.id, attack: card.attack ?? 0, durability: card.health ?? 0 };
+      events.push({ type: 'WeaponEquipped', player: me, cardId: card.id });
+    } else if (card.type === 'minion') {
       const minion = createMinion(card, inHand.instanceId, g.turn, g.nextPlaySeq++);
       p.board.splice(index, 0, minion);
       self = minion.instanceId;

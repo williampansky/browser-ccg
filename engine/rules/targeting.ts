@@ -4,7 +4,10 @@ import type { DefLookup } from '../definitions/define-card';
 import { GameState, PlayerId, TargetRef } from '../state/types';
 import { opponentOf } from './lookup';
 
-export type TargetSource = { kind: 'attack'; attackerId: number } | { kind: 'card'; handIndex: number };
+export type TargetSource =
+  | { kind: 'attack'; attackerId: number }
+  | { kind: 'weapon' }
+  | { kind: 'card'; handIndex: number };
 
 export const sameTarget = (a: TargetRef, b: TargetRef): boolean =>
   a.kind === 'hero' ? b.kind === 'hero' && a.player === b.player : b.kind === 'minion' && a.instanceId === b.instanceId;
@@ -26,7 +29,7 @@ const visibleCharacters = (state: GameState): TargetRef[] => {
 
 /**
  * The one place that decides what may be targeted. The UI uses it to highlight, and `applyAction`
- * uses it to validate. Attacks: enemy characters, narrowed to Guard minions while any is present
+ * uses it to validate. Attacks (minion or weapon): enemy characters, narrowed to Guard minions while any is present
  * (RULES Q10: Guard restricts attacks only). Cards: whatever the card's own filter allows.
  */
 export const legalTargets = (
@@ -36,7 +39,7 @@ export const legalTargets = (
   defs: DefLookup = getCardDef
 ): TargetRef[] => {
   const me = state.activePlayer;
-  if (source.kind === 'attack') {
+  if (source.kind === 'attack' || source.kind === 'weapon') {
     const foe = opponentOf(me);
     const minions = state.players[foe].board.filter((m) => !m.keywords.hidden);
     const guards = minions.filter((m) => m.keywords.guard);

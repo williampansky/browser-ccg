@@ -44,7 +44,7 @@ them. Starts only after 1a is approved.
       raw fields (`%CONSTANT%` symbols, HTML text, number fields) the loader must clean up
 - [x] Card model and loader (`engine/cards/`): normalises `data/hs/` per RULES.md section 10, fails loudly
       on bad data, 31 tests (each verified by deliberately breaking the loader)
-- [~] Port the core `hsclone` rules to TypeScript (slices 1-5 done, weapons/armor next): turn order, energy (+1 per turn, cap 10), draw,
+- [~] Port the core `hsclone` rules to TypeScript (slices 1-6 done; slice 7 is the bot invariant suite): turn order, energy (+1 per turn, cap 10), draw,
       play minion/spell/weapon, minion vs minion and minion vs hero attacks, damage and death,
       Guard (only Guards may be attacked), summoning sickness, win/loss at 0 hero health
 - [ ] Port `hsclone`'s unit tests as the starting suite (moves, state, spells, boons/buffs)

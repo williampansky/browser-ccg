@@ -15,11 +15,13 @@ import core063 from './core/core-063';
 import core065 from './core/core-065';
 import core068 from './core/core-068';
 import core074 from './core/core-074';
+import core094 from './core/core-094';
 import core095 from './core/core-095';
 import core096 from './core/core-096';
 import core102 from './core/core-102';
 import core107 from './core/core-107';
 import core114 from './core/core-114';
+import core129 from './core/core-129';
 
 /** Every card with behaviour beyond its stats and keywords. Vanilla cards have no entry. */
 const all: Definition[] = [
@@ -38,11 +40,13 @@ const all: Definition[] = [
   core065,
   core068,
   core074,
+  core094,
   core095,
   core096,
   core102,
   core107,
   core114,
+  core129,
 ];
 
 const byId = new Map(all.map((d) => [d.id, d]));

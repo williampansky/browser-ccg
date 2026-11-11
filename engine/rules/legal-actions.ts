@@ -25,12 +25,14 @@ export const legalActions = (
     const card = catalog.get(inHand.cardId);
     if (!card || card.cost > me.energy.current) return;
     const def = defs(card);
-    if (card.type === 'spell') {
+    if (card.type === 'spell' || card.type === 'item') {
       if (!def) return;
       if (!def.target) return void actions.push({ type: 'PlayCard', handIndex });
       for (const target of legalTargets(state, { kind: 'card', handIndex }, catalog, defs)) {
         actions.push({ type: 'PlayCard', handIndex, target });
       }
+    } else if (card.type === 'weapon') {
+      actions.push({ type: 'PlayCard', handIndex });
     } else if (card.type === 'minion') {
       if (me.board.length >= MAX_BOARD) return;
       const positions = me.board.length === 0 ? [0] : [0, me.board.length];
@@ -41,6 +43,10 @@ export const legalActions = (
       }
     }
   });
+
+  if (me.weapon && me.weapon.attack >= 1 && me.weaponAttacksThisTurn < 1) {
+    for (const target of legalTargets(state, { kind: 'weapon' })) actions.push({ type: 'WeaponAttack', target });
+  }
 
   for (const m of me.board) {
     if (cantAttack(m, state.turn)) continue;

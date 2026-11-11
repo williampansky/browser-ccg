@@ -7,6 +7,7 @@ import { attack } from './attack';
 import { playCard } from './play-card';
 import { settle, TriggerLoopError } from './settle';
 import { startTurn } from './turn';
+import { weaponAttack } from './weapon-attack';
 
 export interface ActionResult {
   state: GameState;
@@ -59,8 +60,14 @@ export const applyAction = (state: GameState, action: Action, ctx: EngineContext
           events,
         };
       case 'PlayCard':
-      case 'Attack': {
-        const r = action.type === 'PlayCard' ? playCard(state, action, ctx, events) : attack(state, action, events);
+      case 'Attack':
+      case 'WeaponAttack': {
+        const r =
+          action.type === 'PlayCard'
+            ? playCard(state, action, ctx, events)
+            : action.type === 'Attack'
+            ? attack(state, action, events)
+            : weaponAttack(state, action, events);
         return isError(r) ? r : { state: settled(r, 0), events };
       }
     }
