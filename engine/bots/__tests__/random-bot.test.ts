@@ -92,6 +92,20 @@ describe('random bot', () => {
     const kick = putOnBoard(onlyHand(setEnergy(putInHand(start(), '0', 'CORE_096'), '0', 5)), '0', grunt);
     expect(types(kick)).not.toContain('PlayCard');
   });
+  it('does not buff an enemy minion (CORE_073, CORE_086) when that is the only target', () => {
+    const { byId } = loadHsCards();
+    const cat = new Map(byId);
+    cat.set('GRUNT', grunt);
+    const types = (s: GameState) =>
+      Array.from({ length: 100 }, (_, i) => chooseRandomAction(s, cat, createSeededRng(i + 1))).map((a) => a.type);
+    for (const id of ['CORE_073', 'CORE_086']) {
+      let s = putOnBoard(setEnergy(putInHand(start(), '0', id), '0', 5), '1', grunt);
+      s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: s.players['0'].hand.slice(-1) } } };
+      expect(types(s)).not.toContain('PlayCard');
+      // with a friendly minion to buff, it does play it
+      expect(types(putOnBoard(s, '0', grunt))).toContain('PlayCard');
+    }
+  });
   it('plays CORE_127 only if the hero can swing it, and then always swings it', () => {
     const { byId } = loadHsCards();
     const cat = new Map(byId);

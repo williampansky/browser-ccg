@@ -33,6 +33,20 @@ const targetWorse = (before: GameState, after: GameState, t: TargetRef): boolean
   return a.health < b.health || a.attack < b.attack || lostKeyword || newlyDisabled;
 };
 
+/** True when `after` is strictly better for the target than `before` (more health or attack, or a gained keyword) and not worse in any way. */
+const targetBetter = (before: GameState, after: GameState, t: TargetRef): boolean => {
+  if (targetWorse(before, after, t)) return false;
+  if (t.kind === 'hero') {
+    const [b, a] = [before.players[t.player], after.players[t.player]];
+    return a.health + a.armor > b.health + b.armor;
+  }
+  const b = findMinion(before, t.instanceId);
+  const a = findMinion(after, t.instanceId);
+  if (!b || !a) return false;
+  const gainedKeyword = (Object.keys(a.keywords) as (keyof typeof a.keywords)[]).some((k) => a.keywords[k] && !b.keywords[k]);
+  return a.health > b.health || a.attack > b.attack || gainedKeyword;
+};
+
 /** What a spell or item can change, flattened so two states can be compared. `handDelta` adjusts one player's hand size. */
 const snapshot = (s: GameState, handDelta: { player: PlayerId; by: number }) =>
   JSON.stringify(
@@ -45,7 +59,7 @@ const snapshot = (s: GameState, handDelta: { player: PlayerId; by: number }) =>
 
 /**
  * True when the action would be a bad play a person would not make: a targeted card that hurts the bot's
- * own character (a damage spell or Disable on its own minion), or a spell or item that changes nothing
+ * own character (a damage spell or Disable on its own minion) or buffs an enemy one, or a spell or item that changes nothing
  * (a weapon buff with no weapon). It plays the action on a copy with a throwaway rng and compares.
  */
 const isBadPlay = (state: GameState, a: Action, catalog: CardCatalog, defs?: DefLookup): boolean => {
@@ -53,6 +67,8 @@ const isBadPlay = (state: GameState, a: Action, catalog: CardCatalog, defs?: Def
   const result = applyAction(state, a, { rng: createSeededRng(1), catalog, defs });
   if ('error' in result) return false;
   if (a.target && isFriendly(state, a.target) && targetWorse(state, result.state, a.target)) return true;
+  // Buffing or healing one of the opponent's characters helps the opponent.
+  if (a.target && !isFriendly(state, a.target) && targetBetter(state, result.state, a.target)) return true;
   // A temporary weapon (Steel Gauntlet) is only worth playing if the hero can then swing it this turn.
   const me = state.activePlayer;
   const weapon = result.state.players[me].weapon;
