@@ -1,8 +1,10 @@
 # Rules spec (DRAFT for author approval)
 
-Status: **draft, Milestone 1a.** Nothing in here is final until the author answers the open
-questions in section 12. Once approved, this is the contract for the new TypeScript engine
-(Milestone 1b) and its tests.
+Status: **approved 2026-11-11 (Milestone 1a), with provisos.** The author accepted the proposed
+default for all 24 design questions (section 12). Three items are explicitly **provisional** and
+will be revisited as the engine and card work reveal more (Q16, Q23, and "things not yet
+remembered"). This is the contract for the new TypeScript engine (Milestone 1b) and its tests. It is a
+living document: when a rule changes, change it here, with the date.
 
 ## 0. Summary: what the deep-dive found
 
@@ -346,9 +348,66 @@ symbol not defined in `mechanics.json`.** `inspiration` is never loaded (see CLA
 
 ---
 
-## 12. Open design questions
+## 12. Design decisions (answered 2026-11-11)
 
-Each has a **proposed default**. You can reply "accept all defaults" or override any number.
+The questions below were answered in `RULES-ANSWERS.md`. **All 24 proposed defaults were accepted.**
+The text of each question and its default is kept for the reasoning.
+
+| Q | Topic | Decision | Status |
+| --- | --- | --- | --- |
+| 1 | Classes/hero skills | none in v1; skills in Milestone 5 | accepted |
+| 2 | First-release pool | CORE only (132) | accepted |
+| 3 | Opening hands | first player 3, second 4 + The Orb; mulligan later | accepted |
+| 4 | Energy | +1/turn to 10, costs always enforced, Orb energy not lost | accepted |
+| 5 | Full hand | burn the drawn card, both cases | accepted |
+| 6 | Fatigue | escalating 1, 2, 3... | accepted |
+| 7 | Board limit | 7, engine-enforced, summon into full board fizzles | accepted |
+| 8 | Double hero death | draw; no turn timer | accepted |
+| 9 | Weapons | no hero base attack; weapon attack and durability; counter-damage when hitting a minion | accepted |
+| 10 | Guard scope | attacks only (minion and weapon) | accepted |
+| 11 | Rush | attacks immediately, can hit hero | accepted |
+| 12 | Double attack | two attacks per turn | accepted |
+| 13 | Bubble | absorbs first damage from any source | accepted |
+| 14 | Hero armor | absorbs all damage | accepted |
+| 15 | Death order | simultaneous damage; engine removes dead in play order, then death effects | accepted |
+| 16 | Spell damage bonus | damage only for now | **provisional** |
+| 17 | Disable | cannot attack during its owner's next turn | accepted |
+| 18 | Expiration | dies at the start of the caster's next turn | accepted |
+| 19 | Hidden | untargetable by anything until it attacks | accepted |
+| 20 | Text vs behaviour | printed text wins; settle per card in Milestone 4 | accepted |
+| 21 | Triggers | general trigger system from the start | accepted |
+| 22 | Data-driven vs per-card | hybrid; **investigate coverage at the start of 1b** | accepted |
+| 23 | Number fields | defaults below | **provisional** |
+| 24 | Nameless/inactive PRIME | ignore for now | accepted |
+
+### Provisional items and how the engine accommodates them
+
+- **Q16, spell damage bonus.** The author floated broadening it from "spell damage" to a general
+  amplification stat (working names: *Spell Power*, *Enhancement*, *Potency*) that can also raise
+  healing, and is unsure. **Engine rule:** the stat is applied per *effect kind* through one small
+  config table (`damage: true, heal: false` for now), so changing the decision later is a config edit
+  plus a test, not a refactor. Whatever is chosen, it must **never** scale draw counts, shield, or
+  summon stats (hsclone's accidental behaviour).
+- **Q23, number fields.** The author does not remember what every number field means. **Engine rule:**
+  the loader keeps the raw fields (`numberPrimary`, `numberSecondary`, `numberRNG`, `numberRandom`,
+  `numberOvercharge`) untouched and exposes them to effects only through named accessors, so the
+  interpretation lives in one place. A consistency test asserts that each card's printed text, with
+  tokens substituted, matches the number the engine will actually use. Mismatches are resolved
+  card by card in Milestone 4 using RULES.md Appendix A and hsclone's behaviour.
+- **"Things not yet remembered."** The author found nothing egregiously wrong in this spec but
+  expects memory to return as work proceeds. Corrections are expected; they go into this file.
+
+### Mulligan, for reference
+A mulligan is an optional redraw at the very start of a game: after the opening hand is dealt, a
+player can pick cards they don't want and swap them for fresh cards from their deck, once, before the
+first turn. hsclone has the code (the first player is offered 3 cards, the second 4) but it is
+switched off (`enableInitHandsStage: false`), so opening hands are dealt automatically with no choice.
+Its remaining bug is that kept cards are not removed from the deck, so they would appear twice.
+"Mulligan later" means skipping it in v1 and adding it later as an optional pre-game step.
+
+## 12.1 The original questions (kept for the reasoning)
+
+Each has a **proposed default**.
 
 **Scope and fidelity**
 1. **Classes and hero skills in v1?** All cards are classless today and only one class was ever

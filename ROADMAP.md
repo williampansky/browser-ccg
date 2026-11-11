@@ -28,7 +28,7 @@ accidents as rules. This milestone produces an authoritative `RULES.md` before a
 - [x] Mechanics coverage matrix: what the card pool uses vs. what `hsclone` actually implemented
 - [ ] Verify doubtful rules by driving `hsclone` live in two tabs (partly done; see `RULES.md` section 13)
 - [x] Bug/quirk list of things deliberately **not** to copy
-- [ ] Open design questions for the author, answered before 1b starts (`RULES.md` section 12)
+- [x] Open design questions for the author, answered before 1b starts (`RULES.md` section 12; three provisional items)
 
 Done when: `RULES.md` is approved, every rule cites its source (`file:line` or a live test), and the
 author has approved it and answered the open design questions.
