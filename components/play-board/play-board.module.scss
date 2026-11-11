@@ -38,7 +38,7 @@
   display: flex;
   gap: 1rem;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 0.5rem 0.75rem;
   border-top: 1px solid #343846;
   border-bottom: 1px solid #343846;
@@ -418,4 +418,31 @@
   margin-top: auto;
   font-size: 0.75rem;
   color: #5fd16a;
+}
+
+.endTurn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  border: 1px solid #5a8cf0;
+  background: #3b6fd4;
+  color: inherit;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.disabledTag {
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: #5a2b2b;
+  color: #ff9b9b;
+  font-size: 0.75rem;
+}
+
+.logCard {
+  cursor: help;
 }

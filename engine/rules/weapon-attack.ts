@@ -22,6 +22,7 @@ export const weaponAttack = (
   const foe = opponentOf(me);
   const weapon = state.players[me].weapon;
   if (!weapon) return { error: 'NO_WEAPON' };
+  if (state.players[me].heroDisabledOnTurn === state.turn) return { error: 'HERO_CANT_ATTACK' };
   if (weapon.attack < 1 || state.players[me].weaponAttacksThisTurn >= 1) return { error: 'HERO_CANT_ATTACK' };
   if (!isLegalTarget(legalTargets(state, { kind: 'weapon' }), target)) return { error: 'ILLEGAL_TARGET' };
 

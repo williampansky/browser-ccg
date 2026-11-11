@@ -1,4 +1,4 @@
-import type { CardCatalog, GameEvent, GameState, TargetRef } from '../../engine';
+import type { CardCatalog, GameEvent, GameState, MinionInstance, TargetRef } from '../../engine';
 
 /** Finds a card name for an instance id, looking in every state given (an instance may have died). */
 export const nameOfInstance = (id: number, catalog: CardCatalog, ...states: GameState[]): string => {
@@ -33,10 +33,10 @@ export const describeEvents = (
         lines.push(`--- Turn ${e.turn}: ${who(e.player)} ---`);
         break;
       case 'MinionPlayed':
-        lines.push(`${who(e.player)} plays ${name(e.instanceId)}`);
+        lines.push(`${who(e.player)} plays ${name(e.instanceId)}${e.target ? ` (warcry on ${target(e.target)})` : ''}`);
         break;
       case 'CardPlayed':
-        lines.push(`${who(e.player)} casts ${cardName(e.cardId)}`);
+        lines.push(`${who(e.player)} casts ${cardName(e.cardId)}${e.target ? ` on ${target(e.target)}` : ''}`);
         break;
       case 'WeaponEquipped':
         lines.push(`${who(e.player)} equips ${cardName(e.cardId)}`);
@@ -88,6 +88,46 @@ export const describeEvents = (
       default:
         break;
     }
+  }
+  // Changes that have no event of their own (buffs, keywords, Disable, ...) are read from the before/after states.
+  // At turn changes "this turn" boosts wear off, which would only be noise, so skip those.
+  if (!events.some((e) => e.type === 'TurnEnded' || e.type === 'TurnStarted')) {
+    lines.push(...describeChanges(before, after, catalog));
+  }
+  return lines;
+};
+
+const KEYWORD_NAMES: Record<keyof MinionInstance['keywords'], string> = {
+  guard: 'Guard',
+  rush: 'Stampede',
+  bubble: 'Bubble',
+  doubleAttack: 'Onslaught',
+  hidden: 'Concealed',
+  noAttack: "Can't Attack",
+};
+
+/** Lines for minions that changed between two states in ways no event reports. Aura attack is ignored. */
+export const describeChanges = (before: GameState, after: GameState, catalog: CardCatalog): string[] => {
+  const lines: string[] = [];
+  for (const p of ['0', '1'] as const) {
+    for (const now of after.players[p].board) {
+      const was = before.players[p].board.find((m) => m.instanceId === now.instanceId);
+      if (!was) continue;
+      const parts: string[] = [];
+      const atk = now.attack - now.auraAttack - (was.attack - was.auraAttack);
+      const hp = now.maxHealth - was.maxHealth;
+      if (atk !== 0 || hp !== 0) parts.push(`${atk >= 0 ? '+' : ''}${atk}/${hp >= 0 ? '+' : ''}${hp} (now ${now.attack}/${now.health})`);
+      for (const k of Object.keys(KEYWORD_NAMES) as (keyof typeof KEYWORD_NAMES)[]) {
+        if (now.keywords[k] && !was.keywords[k] && !(k === 'rush' && now.auraRush)) parts.push(`gains ${KEYWORD_NAMES[k]}`);
+        if (!now.keywords[k] && was.keywords[k] && k !== 'hidden' && k !== 'bubble') parts.push(`loses ${KEYWORD_NAMES[k]}`);
+      }
+      if (now.disabledOnTurn !== undefined && now.disabledOnTurn !== was.disabledOnTurn) parts.push('is Disabled');
+      if (parts.length > 0) {
+        lines.push(`  ${card(catalog.get(now.cardId)?.name ?? now.cardId)}: ${parts.join(', ')}`);
+      }
+    }
+    const [h0, h1] = [before.players[p].heroDisabledOnTurn, after.players[p].heroDisabledOnTurn];
+    if (h1 !== undefined && h1 !== h0) lines.push(`  ${who(p)}'s hero is Disabled`);
   }
   return lines;
 };

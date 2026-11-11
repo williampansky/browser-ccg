@@ -163,8 +163,8 @@ describe('Ifriit Ward (draw whenever a minion is healed)', () => {
   });
 });
 
-describe('Ice Primordial (disable whoever it attacks)', () => {
-  it("the attacked minion misses its owner's next attack, and heroes are unaffected", () => {
+describe('CORE_071 (disable whoever it attacks)', () => {
+  it("the attacked minion misses its owner's next attack (hero disable is in core-071.test.ts)", () => {
     let s = putOnBoard(fresh(), '0', iceman);
     s = putOnBoard(s, '1', minionCard('V', { attack: 1, health: 9 }));
     const victim = idOf(s, '1');

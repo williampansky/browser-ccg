@@ -69,6 +69,8 @@ export interface PlayerState {
   weaponAttacksThisTurn: number;
   /** Fatigue counter: number of empty-deck draws so far (damage = the new value) */
   fatigue: number;
+  /** The turn number on which this hero may not attack with its weapon (set by Disable, e.g. Ice Primordial) */
+  heroDisabledOnTurn?: number;
 }
 
 export interface GameState {
@@ -121,13 +123,13 @@ export type GameEvent =
   | { type: 'Burned'; player: PlayerId; instanceId: number }
   | { type: 'Fatigue'; player: PlayerId; damage: number }
   | { type: 'HeroDamaged'; player: PlayerId; amount: number }
-  | { type: 'MinionPlayed'; player: PlayerId; instanceId: number; boardIndex: number }
+  | { type: 'MinionPlayed'; player: PlayerId; instanceId: number; boardIndex: number; target?: TargetRef }
   | { type: 'WeaponEquipped'; player: PlayerId; cardId: string }
   | { type: 'WeaponAttacked'; target: TargetRef }
   | { type: 'WeaponBroke'; player: PlayerId }
   | { type: 'ArmorGained'; player: PlayerId; amount: number }
   | { type: 'MinionAttacked'; attackerId: number; target: TargetRef }
-  | { type: 'CardPlayed'; player: PlayerId; instanceId: number; cardId: string }
+  | { type: 'CardPlayed'; player: PlayerId; instanceId: number; cardId: string; target?: TargetRef }
   | { type: 'MinionDamaged'; instanceId: number; amount: number }
   | { type: 'CardObtained'; player: PlayerId; instanceId: number }
   | { type: 'Discarded'; player: PlayerId; instanceId: number }

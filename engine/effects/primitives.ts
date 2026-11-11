@@ -57,10 +57,11 @@ export const grantKeyword =
 export const disable =
   (select: Selector): Effect =>
   (ctx) => {
-    for (const { owner, minion } of minionsOf(ctx, select)) {
-      // Turns alternate, so the owner's next turn is the next turn, or the one after if it is theirs now.
-      minion.disabledOnTurn = ctx.g.activePlayer === owner ? ctx.g.turn + 2 : ctx.g.turn + 1;
-    }
+    // Turns alternate, so the owner's next turn is the next turn, or the one after if it is theirs now.
+    const until = (owner: string) => (ctx.g.activePlayer === owner ? ctx.g.turn + 2 : ctx.g.turn + 1);
+    for (const { owner, minion } of minionsOf(ctx, select)) minion.disabledOnTurn = until(owner);
+    // A disabled hero cannot attack with its weapon.
+    for (const t of select(ctx)) if (t.kind === 'hero') ctx.g.players[t.player].heroDisabledOnTurn = until(t.player);
   };
 
 /** Expiration: the minion dies at the start of the caster's next turn (RULES Q18, provisional). */

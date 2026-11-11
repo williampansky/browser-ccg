@@ -74,4 +74,36 @@ describe('random bot', () => {
     }
     expect(sawEnemyAim).toBe(true);
   });
+  it('does not play a spell that would change nothing (CORE_111), or a debuff on its own minion (CORE_096)', () => {
+    const { byId } = loadHsCards();
+    const cat = new Map(byId);
+    cat.set('GRUNT', grunt);
+    const types = (s: GameState) =>
+      Array.from({ length: 200 }, (_, i) => chooseRandomAction(s, cat, createSeededRng(i + 1))).map((a) => a.type);
+    const onlyHand = (s: GameState): GameState => ({
+      ...s,
+      players: { ...s.players, '0': { ...s.players['0'], hand: s.players['0'].hand.slice(-1) } },
+    });
+    // CORE_111 gives your minions +3 Attack: with no minions it is wasted, with one it is fine.
+    const wrath = onlyHand(setEnergy(putInHand(start(), '0', 'CORE_111'), '0', 5));
+    expect(types(wrath)).not.toContain('PlayCard');
+    expect(types(putOnBoard(wrath, '0', grunt))).toContain('PlayCard');
+    // CORE_096 with only its own minion on the board has no good target.
+    const kick = putOnBoard(onlyHand(setEnergy(putInHand(start(), '0', 'CORE_096'), '0', 5)), '0', grunt);
+    expect(types(kick)).not.toContain('PlayCard');
+  });
+  it('plays CORE_127 only if the hero can swing it, and then always swings it', () => {
+    const { byId } = loadHsCards();
+    const cat = new Map(byId);
+    cat.set('GRUNT', grunt);
+    const types = (s: GameState) =>
+      Array.from({ length: 100 }, (_, i) => chooseRandomAction(s, cat, createSeededRng(i + 1))).map((a) => a.type);
+    let s = setEnergy(putInHand(start(), '0', 'CORE_127'), '0', 5);
+    s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: s.players['0'].hand.slice(-1) } } };
+    expect(types(s)).toContain('PlayCard');
+    const disabled = { ...s, players: { ...s.players, '0': { ...s.players['0'], heroDisabledOnTurn: s.turn } } };
+    expect(types(disabled)).not.toContain('PlayCard');
+    const armed = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [], weapon: { instanceId: 9999, cardId: 'CORE_127', attack: 4, durability: 1, temporary: true } } } };
+    expect(new Set(types(armed))).toEqual(new Set(['WeaponAttack']));
+  });
 });

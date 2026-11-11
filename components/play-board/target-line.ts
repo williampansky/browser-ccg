@@ -6,6 +6,9 @@ export type TargetLineStyle = 'curve' | 'straight';
 /** How far the curve bows, as a fraction of the line's length, but never less than MIN_BOW pixels so short lines still arc. */
 const BOW = 0.25;
 const MIN_BOW = 70;
+/** Straight-ish (steep) lines bow much less than the rest, as a fraction of length with a small floor in pixels. */
+const STEEP_BOW = 0.08;
+const STEEP_MIN_BOW = 14;
 /** A line this close to vertical (|dx| / length) always bows to the same side, so it does not flip left and right. */
 const STEEP = 0.2;
 
@@ -31,7 +34,8 @@ export const targetLinePath = (from: Point, to: Point, style: TargetLineStyle): 
   if (Math.abs(dx) < len * STEEP) {
     nx = -Math.sqrt(1 - ny * ny);
   }
-  const bow = Math.max(len * BOW, MIN_BOW);
+  const steep = Math.abs(dx) < len * STEEP;
+  const bow = steep ? Math.max(len * STEEP_BOW, STEEP_MIN_BOW) : Math.max(len * BOW, MIN_BOW);
   const cx = (from.x + to.x) / 2 + nx * bow;
   const cy = (from.y + to.y) / 2 + ny * bow;
   return `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;

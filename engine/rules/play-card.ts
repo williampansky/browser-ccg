@@ -89,10 +89,10 @@ export const playCard = (
       const minion = createMinion(card, inHand.instanceId, g.turn, g.nextPlaySeq++);
       p.board.splice(index, 0, minion);
       self = minion.instanceId;
-      events.push({ type: 'MinionPlayed', player: me, instanceId: self, boardIndex: index });
+      events.push({ type: 'MinionPlayed', player: me, instanceId: self, boardIndex: index, ...(target ? { target } : {}) });
       events.push({ type: 'MinionSummoned', player: me, instanceId: self, cardId: card.id });
     } else {
-      events.push({ type: 'CardPlayed', player: me, instanceId: inHand.instanceId, cardId: card.id });
+      events.push({ type: 'CardPlayed', player: me, instanceId: inHand.instanceId, cardId: card.id, ...(target ? { target } : {}) });
     }
     for (const effect of play?.onPlay ?? []) {
       effect({ g, caster: me, target, self, rng, catalog, events, sourceCardId: card.id, spellDamage });

@@ -17,4 +17,19 @@
 - [x] the log's scrollbar (at least on my macOS) going visible and hidden due to adding entries is kinda annoying. maybe style the bar to be thinner and less distracting. since i know we still want a scrollbar, and its native macOS browser chrome functionality
 - [x] part of deck building is knowing whats in your deck left to play vs what you have in hand. even though we're not there yet, lets pin to the right (similar to how the log is pinned) a deck view that shows horizontal rectangle slices of your current deck and what has already been drawn. this functionality was in the hsclone, so you can see it there. it was inspired by using third-party overlays when playing hearthstone.
 - [x] can we tune the arrow for this example: if i have 1 minion on the board and i am attacking the enemy hero, if i hover straight from the minion to the enemy hero the line is not curved (or the curve is signif less curved) as opposed to if i were to hover to the far side of the hero bar
+  - [x] lets reduce the curve even more on straight-ish a-to-b points
 - [x] playing vs AI doesnt cost me any anthropic credits, right? that's straight just "bot" code.
+- [x] lets move "new game" and "vs" mode to a somewhere else. they arent relevant to play-by-play game moments. (maybe a menu overlay). actually put concede there too.
+  - [x] lets also move end turn to the middle left of the board, similar to hearthstone
+- [x] Tribal Warrior said "stampede" on the card when in hand, but the minion read it as rush. they should both say stampede
+- [x] Ice Primordial attacked enemy hero; the enemy hero should be visible "disabled" for their next turn (as in, if they had a weapon, they cannot attack). 
+  - [x] the enemy AI's spriteback warrior was also able to attack on the turn it should be have disabled by ice prime
+- [x] after attcking the enemy AI hero with a weapon and pressing space bar to end the turn. the enemy hero was "focused". thats fine, but lets remove the focus state (or disabled when not your turn, idk)
+- [x] enemy AI cast Boon (core 005) on itself even though it had no weapon and therefore was unable to attack, thus wasting the card
+- [x] enemy AI cast disabling kick on its own minion for no reason
+- [x] the enemy AI cast aspect of enhancement on its own minion (this was a good choice) but the log didnt reflect that. it showed the AI cast it, but not which target, nor the buff it provided the target.
+- [x] can we add a simple tooltip to the log items to describe their effects? that way i dont have to tab over to Airtable to look up what the card did to know if it worked correctly or not. only need tooltips for cards or minions
+
+
+
+

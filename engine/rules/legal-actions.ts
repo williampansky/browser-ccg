@@ -56,7 +56,7 @@ export const legalActions = (
     }
   });
 
-  if (me.weapon && me.weapon.attack >= 1 && me.weaponAttacksThisTurn < 1) {
+  if (me.weapon && me.weapon.attack >= 1 && me.weaponAttacksThisTurn < 1 && me.heroDisabledOnTurn !== state.turn) {
     for (const target of legalTargets(state, { kind: 'weapon' })) actions.push({ type: 'WeaponAttack', target });
   }
 

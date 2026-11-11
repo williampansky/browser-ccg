@@ -46,6 +46,15 @@ const sameTarget = (a: TargetRef, b: TargetRef) =>
   a.kind === 'hero' ? b.kind === 'hero' && a.player === b.player : b.kind === 'minion' && a.instanceId === b.instanceId;
 
 /** Renders log markup: `**Player 1**` (coloured by side) and `__Card__` (bold italic). */
+const plain = (text?: string) => (text ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+const tipByName = new Map(
+  cards.map((c) => [
+    c.name,
+    `${c.name} (${c.cost})${c.type === 'minion' || c.type === 'weapon' ? ` ${c.attack}/${c.health}` : ''}${
+      c.race && c.race !== 'NONE' ? ` ${c.race.toLowerCase()}` : ''
+    }: ${plain(c.text)}`,
+  ])
+);
 const renderLogLine = (line: string) =>
   line.split(/(\*\*.+?\*\*|__.+?__)/g).map((part, i) => {
     if (part.startsWith('**')) {
@@ -56,7 +65,14 @@ const renderLogLine = (line: string) =>
         </strong>
       );
     }
-    if (part.startsWith('__')) return <strong key={i}><em>{part.slice(2, -2)}</em></strong>;
+    if (part.startsWith('__')) {
+      const name = part.slice(2, -2);
+      return (
+        <strong key={i} className={styles.logCard} title={tipByName.get(name)}>
+          <em>{name}</em>
+        </strong>
+      );
+    }
     return part;
   });
 
@@ -80,6 +96,7 @@ export const PlayBoard = () => {
   const [selection, setSelection] = useState<Selection | null>(null);
   const [message, setMessage] = useState('');
   const [mode, setMode] = useState<Mode>('ai');
+  const [menuOpen, setMenuOpen] = useState(false);
   const rngRef = useRef<Rng | null>(null);
   // The log shows the newest line at the bottom and stays pinned there unless you scroll up to read older events.
   const logRef = useRef<HTMLDivElement | null>(null);
@@ -138,6 +155,13 @@ export const PlayBoard = () => {
     if (el && logPinned.current) el.scrollTop = el.scrollHeight;
   }, [log]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const key = (e: KeyboardEvent) => e.key === 'Escape' && setMenuOpen(false);
+    window.addEventListener('keydown', key);
+    return () => window.removeEventListener('keydown', key);
+  }, [menuOpen]);
+
   // Start on the client only: the deck shuffle uses the clock, which would not match server rendering.
   useEffect(start, [start]);
 
@@ -151,6 +175,7 @@ export const PlayBoard = () => {
       }
       setMessage('');
       setSelection(null);
+      (document.activeElement as HTMLElement | null)?.blur?.(); // keep no button "focused" after an action
       setState(result.state);
       setLog((old) => [...old, describeEvents(result.events, byId, state, result.state)].slice(-100));
     },
@@ -185,11 +210,13 @@ export const PlayBoard = () => {
 
   // Space ends the turn (when you can), unless a choice dialog is open.
   const modalOpenRef = useRef(false);
+  const menuOpenRef = useRef(false);
+  menuOpenRef.current = menuOpen;
   const canEndTurn = !!state && state.status === 'playing' && !aiToMove;
   useEffect(() => {
     if (!canEndTurn) return;
     const down = (e: KeyboardEvent) => {
-      if (e.key !== ' ' || e.repeat || modalOpenRef.current) return;
+      if (e.key !== ' ' || e.repeat || modalOpenRef.current || menuOpenRef.current) return;
       e.preventDefault(); // no page scroll, and no click on a focused button
       dispatch({ type: 'EndTurn' });
     };
@@ -324,11 +351,11 @@ export const PlayBoard = () => {
     const sick = m.playedOnTurn === state.turn && !m.keywords.rush && owner === me;
     const tags = [
       m.keywords.guard && 'Guard',
-      m.keywords.rush && 'Rush',
+      m.keywords.rush && 'Stampede',
       m.keywords.bubble && 'Bubble',
-      m.keywords.hidden && 'Hidden',
-      m.keywords.doubleAttack && 'x2 attack',
-      m.keywords.noAttack && 'No attack',
+      m.keywords.hidden && 'Concealed',
+      m.keywords.doubleAttack && 'Onslaught',
+      m.keywords.noAttack && "Can't attack",
       m.disabledOnTurn !== undefined && m.disabledOnTurn >= state.turn && 'Disabled',
       m.expiresOnTurn !== undefined && 'Expiring',
       sick && 'zzz',
@@ -394,6 +421,9 @@ export const PlayBoard = () => {
         <span>
           Deck {p.deck.length} · Hand {p.hand.length}
         </span>
+        {p.heroDisabledOnTurn !== undefined && p.heroDisabledOnTurn >= state.turn && (
+          <span className={styles.disabledTag}>Disabled: no weapon attack</span>
+        )}
         <span>{weapon ? `Weapon: ${weapon.name} ${p.weapon?.attack}/${p.weapon?.durability}` : 'No weapon'}</span>
       </button>
     );
@@ -475,6 +505,32 @@ export const PlayBoard = () => {
           />
         </svg>
       )}
+      {menuOpen && (
+        <div className={styles.modalBackdrop} onClick={() => setMenuOpen(false)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <h3>Menu</h3>
+            <button type="button" onClick={() => setMenuOpen(false)}>
+              Resume
+            </button>
+            <button type="button" disabled={over || !myTurn} onClick={() => { setMenuOpen(false); dispatch({ type: 'Concede' }); }}>
+              Concede
+            </button>
+            <button type="button" onClick={() => { setMenuOpen(false); start(); }}>
+              New game
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMode(mode === 'ai' ? 'hotseat' : 'ai');
+                setMenuOpen(false);
+                setTimeout(start, 0);
+              }}
+            >
+              Mode: {mode === 'ai' ? 'vs AI' : 'hot-seat'} (click to switch, starts a new game)
+            </button>
+          </div>
+        </div>
+      )}
       {droneModal && (
         <div className={styles.modalBackdrop} onClick={() => setSelection(null)}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -510,6 +566,15 @@ export const PlayBoard = () => {
         </section>
 
         <div className={styles.middle}>
+          <button
+            type="button"
+            disabled={over || !myTurn}
+            className={styles.endTurn}
+            title="Space"
+            onClick={() => dispatch({ type: 'EndTurn' })}
+          >
+            End turn
+          </button>
           {over ? (
             <strong className={styles.banner}>
               {state.winner === 'draw' ? 'Draw!' : `${label(state.winner as PlayerId)} wins!`}
@@ -550,28 +615,8 @@ export const PlayBoard = () => {
                   : ''}
               </button>
             ))}
-            <button
-              type="button"
-              disabled={over || !myTurn}
-              className={styles.primary}
-              onClick={() => dispatch({ type: 'EndTurn' })}
-            >
-              End turn
-            </button>
-            <button type="button" disabled={over || !myTurn} onClick={() => dispatch({ type: 'Concede' })}>
-              Concede
-            </button>
-            <button type="button" onClick={start}>
-              New game
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMode(mode === 'ai' ? 'hotseat' : 'ai');
-                setTimeout(start, 0);
-              }}
-            >
-              Mode: {mode === 'ai' ? 'vs AI' : 'hot-seat'} (click to switch)
+            <button type="button" onClick={() => setMenuOpen(true)}>
+              Menu
             </button>
           </div>
         </section>
