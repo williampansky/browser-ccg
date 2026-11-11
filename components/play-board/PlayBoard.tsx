@@ -197,6 +197,8 @@ export const PlayBoard = () => {
   const [smartAi, setSmartAi] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   /** Accessibility: explicit "Play" buttons after selecting a card (off by default; clicking the board plays it). */
+  /** The spell just cast, shown briefly in the middle of the board. */
+  const [castFx, setCastFx] = useState<{ card: Card; owner: PlayerId; n: number } | null>(null);
   const [playButtons, setPlayButtons] = useState(false);
   const rngRef = useRef<Rng | null>(null);
   // The log shows the newest line at the bottom and stays pinned there unless you scroll up to read older events.
@@ -278,6 +280,10 @@ export const PlayBoard = () => {
       setMessage('');
       setSelection(null);
       (document.activeElement as HTMLElement | null)?.blur?.(); // keep no button "focused" after an action
+      if (action.type === 'PlayCard') {
+        const played = byId.get(state.players[state.activePlayer].hand[action.handIndex]?.cardId ?? '');
+        if (played?.type === 'spell') setCastFx({ card: played, owner: state.activePlayer, n: Date.now() });
+      }
       setState(result.state);
       setLog((old) => [...old, describeEvents(result.events, byId, state, result.state)].slice(-100));
     },
@@ -320,6 +326,12 @@ export const PlayBoard = () => {
     window.addEventListener('keydown', key);
     return () => window.removeEventListener('keydown', key);
   }, []);
+
+  useEffect(() => {
+    if (!castFx) return;
+    const timer = setTimeout(() => setCastFx(null), 1100);
+    return () => clearTimeout(timer);
+  }, [castFx]);
 
   // Space ends the turn (when you can), unless a choice dialog is open.
   const [hoverGap, setHoverGap] = useState<number | null>(null);
@@ -383,6 +395,33 @@ export const PlayBoard = () => {
     );
     dispatch(best);
     return true;
+  };
+
+  // "Attack hero": with no enemy minions in the way, every ready minion hits the enemy hero, left to right.
+  const heroHits = actions.filter(
+    (a): a is Extract<Action, { type: 'Attack' }> => a.type === 'Attack' && a.target.kind === 'hero' && a.target.player === foe
+  );
+  const canAttackHero = !over && myTurn && state.players[foe].board.length === 0 && heroHits.length > 0;
+  const attackHero = () => {
+    if (!canAttackHero || !rngRef.current) return;
+    let cur = state;
+    const lines: string[][] = [];
+    for (const m of state.players[me].board) {
+      const hit = legalActions(cur, me, byId).find(
+        (a) => a.type === 'Attack' && a.attackerId === m.instanceId && a.target.kind === 'hero' && a.target.player === foe
+      );
+      if (!hit) continue;
+      const r = applyAction(cur, hit, { rng: rngRef.current, catalog: byId });
+      if ('error' in r) break;
+      lines.push(describeEvents(r.events, byId, cur, r.state));
+      cur = r.state;
+      if (cur.status === 'over') break;
+    }
+    if (cur === state) return;
+    setSelection(null);
+    (document.activeElement as HTMLElement | null)?.blur?.();
+    setState(cur);
+    setLog((old) => [...old, ...lines].slice(-100));
   };
 
   const canAttack = (m: MinionInstance) => actions.some((a) => a.type === 'Attack' && a.attackerId === m.instanceId);
@@ -642,6 +681,12 @@ export const PlayBoard = () => {
           />
         </svg>
       )}
+      {castFx && (
+        <div key={castFx.n} className={[styles.castFx, styles.art, castFx.owner === me ? styles.castMine : styles.castFoe].join(' ')} style={artStyle(castFx.card.id)}>
+          <strong>{castFx.card.name}</strong>
+          <span>{plain(castFx.card.text)}</span>
+        </div>
+      )}
       {over && !menuOpen && (
         <div className={styles.gameOver}>
           <strong className={styles.banner}>
@@ -695,7 +740,7 @@ export const PlayBoard = () => {
               {choiceOptions.map((c) => {
                 const top = byId.get(state.players[me].deck[c]?.cardId ?? '');
                 return (
-                  <button key={c} type="button" className={styles.modalCard} onClick={() => pickChoice(c)}>
+                  <button key={c} type="button" style={artStyle(top?.id)} className={[styles.modalCard, styles.art].join(' ')} onClick={() => pickChoice(c)}>
                     <span className={styles.cost}>{top?.cost}</span>
                     <span className={styles.name}>{top?.name ?? 'Empty'}</span>
                     <span className={styles.type}>
@@ -720,11 +765,30 @@ export const PlayBoard = () => {
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <h3>{selectedCard?.name}: choose one</h3>
             <div className={styles.modalCards}>
-              {choiceOptions.map((c) => (
-                <button key={c} type="button" className={styles.modalCard} onClick={() => pickChoice(c)}>
-                  <span className={styles.name}>{choiceLabel(c)}</span>
-                </button>
-              ))}
+              {choiceOptions.map((c) => {
+                // Options print as their own entourage card where one exists (CORE_051a, CORE_128b...); else the card's own art.
+                const opt = byId.get(`${selectedCard?.id}${'abcdef'[c]}`);
+                return (
+                  <button
+                    key={c}
+                    type="button"
+                    style={artStyle(opt?.id) ?? artStyle(selectedCard?.id)}
+                    className={[styles.modalCard, styles.art].join(' ')}
+                    onClick={() => pickChoice(c)}
+                  >
+                    {opt && <span className={styles.cost}>{opt.cost}</span>}
+                    <span className={styles.name}>{opt?.name ?? choiceLabel(c)}</span>
+                    {opt && (
+                      <span className={styles.type}>
+                        {opt.type}
+                        {opt.type === 'minion' || opt.type === 'weapon' ? ` ${opt.attack}/${opt.health}` : ''}
+                      </span>
+                    )}
+                    {opt && <span className={styles.text}>{plain(opt.text)}</span>}
+                    <span className={styles.modalPick}>{choiceLabel(c)}</span>
+                  </button>
+                );
+              })}
             </div>
             <button type="button" onClick={() => setSelection(null)}>
               Cancel
@@ -771,6 +835,15 @@ export const PlayBoard = () => {
             </span>
           )}
           {message && <span className={styles.error}>{message}</span>}
+          <button
+            type="button"
+            disabled={!canAttackHero}
+            className={styles.attackHero}
+            title="Attack the enemy hero with every ready minion, left to right (needs an empty enemy board)"
+            onClick={attackHero}
+          >
+            Attack hero
+          </button>
         </div>
           <section className={styles.side}>
           <div

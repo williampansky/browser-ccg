@@ -42,3 +42,6 @@
 - [x] def need a in-hand card tooltip similar to hsclone. maybe just increase the size for now
 - [x] if no card is selected. the escape key opens the game menu
 - [x] need to randomize who goes first at the start of fresh games, even vs bots
+- [x] on the right side, opposite of end turn, lets have a "attack hero" button that can be active when the enemy has no minions on the board and the player does. clicking it will auto-attack the enemy player with the user's minions from left to right
+- [x] def need some sort of spell effect that occurs when a spell is cast. the enemy bot did Cosmic Blast and my minions disappeared. that's fine, i understand the mechanics and can read the log. but a very SIMPLE animation would suffice for the time being
+- [x] the choose overlay doesnt seem to render card art. that might be because those come from the entourage table

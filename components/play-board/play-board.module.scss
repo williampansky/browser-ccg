@@ -594,3 +594,64 @@
 .previewText {
   font-size: 1rem;
 }
+
+// "Attack hero" sits at the right end of the middle strip, opposite End turn.
+.attackHero {
+  margin-left: auto;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  border: 1px solid #ff8a8a;
+  background: #b83a3a;
+  color: inherit;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+// A cast spell flashes in the middle of the screen, then fades. Red-ringed when the enemy cast it.
+.castFx {
+  position: fixed;
+  left: 50%;
+  top: 45%;
+  z-index: 35;
+  width: 13rem;
+  min-height: 15rem;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border: 3px solid #5fd16a;
+  border-radius: 10px;
+  pointer-events: none;
+  animation: castFlash 1.1s ease-out forwards;
+}
+
+.castFoe {
+  border-color: #ff6b6b;
+}
+
+@keyframes castFlash {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+    box-shadow: 0 0 0 0 #fff;
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 0 60px 20px rgba(255, 255, 255, 0.7);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 30px 8px rgba(255, 255, 255, 0.25);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
