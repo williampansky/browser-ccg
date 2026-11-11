@@ -22,7 +22,8 @@ earlier `hsclone` repo as the rules reference. Read these first:
 - **There is a playable hot-seat board at `/play`** (`components/play-board/`): one browser tab, both
   players, the active player at the bottom. It runs on the new engine with the real CORE cards the
   engine fully supports (`playablePool` in `engine/decks.ts`; about 49 of 132, growing as definitions
-  are added). There is no art yet and no bot or multiplayer. `game/game.ts` is still a stub (the
+  are added). It defaults to playing against a random-move AI (`engine/bots/random-bot.ts`, Player 2); a button
+  switches to hot-seat. There is no art yet and no multiplayer. `game/game.ts` is still a stub (the
   boardgame.io adapter comes later). The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-6 of
   its build order are done and tested: card model and loader (`engine/cards/`), state and turn flow,
   minions and combat, spells and `legalTargets`, keywords, triggers/warcries/`legalActions`, and

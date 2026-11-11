@@ -3,6 +3,7 @@ import {
   Action,
   applyAction,
   buildDeck,
+  chooseRandomAction,
   Card,
   createGame,
   createSeededRng,
@@ -18,12 +19,16 @@ import {
 import { describeEvents } from './describe-events';
 import styles from './play-board.module.scss';
 
+type Mode = 'ai' | 'hotseat';
+const AI_PLAYER: PlayerId = '1';
+const AI_DELAY_MS = 800;
+
 type Selection = { kind: 'hand'; index: number } | { kind: 'minion'; id: number } | { kind: 'hero' };
 
 const { cards, byId } = loadHsCards();
 const pool = playablePool(cards);
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
-const label = (p: PlayerId) => `Player ${Number(p) + 1}`;
+const playerLabel = (p: PlayerId, mode: Mode) => `Player ${Number(p) + 1}${mode === 'ai' && p === AI_PLAYER ? ' (AI)' : ''}`;
 const sameTarget = (a: TargetRef, b: TargetRef) =>
   a.kind === 'hero' ? b.kind === 'hero' && a.player === b.player : b.kind === 'minion' && a.instanceId === b.instanceId;
 
@@ -43,7 +48,9 @@ export const PlayBoard = () => {
   const [log, setLog] = useState<string[][]>([]);
   const [selection, setSelection] = useState<Selection | null>(null);
   const [message, setMessage] = useState('');
+  const [mode, setMode] = useState<Mode>('ai');
   const rngRef = useRef<Rng | null>(null);
+  const label = (p: PlayerId) => playerLabel(p, mode);
 
   const start = useCallback(() => {
     const g = newGame();
@@ -57,25 +64,43 @@ export const PlayBoard = () => {
   // Start on the client only: the deck shuffle uses the clock, which would not match server rendering.
   useEffect(start, [start]);
 
-  const actions = useMemo(() => (state ? legalActions(state, state.activePlayer, byId) : []), [state]);
+  const dispatch = useCallback(
+    (action: Action) => {
+      if (!state || !rngRef.current) return;
+      const result = applyAction(state, action, { rng: rngRef.current, catalog: byId });
+      if ('error' in result) {
+        setMessage(`Not allowed: ${result.error}`);
+        return;
+      }
+      setMessage('');
+      setSelection(null);
+      setState(result.state);
+      setLog((old) => [...old, describeEvents(result.events, byId, state, result.state)].slice(-100));
+    },
+    [state]
+  );
+
+  // The viewer is who sits at the bottom: always Player 1 against the AI, the active player in hot-seat.
+  const viewer: PlayerId = !state ? '0' : mode === 'ai' ? '0' : state.activePlayer;
+  const aiToMove = !!state && mode === 'ai' && state.status === 'playing' && state.activePlayer === AI_PLAYER;
+
+  // The AI takes one action per tick, so you can follow what it does.
+  useEffect(() => {
+    if (!aiToMove || !state || !rngRef.current) return;
+    const rng = rngRef.current;
+    const timer = setTimeout(() => dispatch(chooseRandomAction(state, byId, rng)), AI_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [aiToMove, state, dispatch]);
+
+  // `legalActions` is empty when it is not that player's turn, which also locks the board during the AI's turn.
+  const actions = useMemo(() => (state ? legalActions(state, viewer, byId) : []), [state, viewer]);
 
   if (!state || !rngRef.current) return <main className={styles.page}>Loading...</main>;
 
-  const me = state.activePlayer;
+  const me = viewer;
   const foe = otherPlayer(me);
   const over = state.status === 'over';
-
-  const dispatch = (action: Action) => {
-    const result = applyAction(state, action, { rng: rngRef.current as Rng, catalog: byId });
-    if ('error' in result) {
-      setMessage(`Not allowed: ${result.error}`);
-      return;
-    }
-    setMessage('');
-    setSelection(null);
-    setState(result.state);
-    setLog((old) => [...old, describeEvents(result.events, byId, state, result.state)].slice(-100));
-  };
+  const myTurn = state.activePlayer === me;
 
   // What the current selection can aim at.
   const optionsFor = (sel: Selection | null): Action[] => {
@@ -181,7 +206,7 @@ export const PlayBoard = () => {
       >
         <strong>
           {label(owner)}
-          {owner === me ? ' (your turn)' : ''}
+          {owner === state.activePlayer ? (mode === 'ai' && owner === AI_PLAYER ? ' (thinking...)' : ' (your turn)') : ''}
         </strong>
         <span>
           Health {p.health}/30{p.armor > 0 ? ` + ${p.armor} armor` : ''}
@@ -235,7 +260,7 @@ export const PlayBoard = () => {
             </strong>
           ) : (
             <span>
-              Turn {state.turn}: {label(me)}
+              Turn {state.turn}: {label(state.activePlayer)}
               {aimable.length > 0 ? ' - pick a target (click the selection again to cancel)' : ''}
             </span>
           )}
@@ -259,14 +284,28 @@ export const PlayBoard = () => {
                   : ''}
               </button>
             ))}
-            <button type="button" disabled={over} className={styles.primary} onClick={() => dispatch({ type: 'EndTurn' })}>
+            <button
+              type="button"
+              disabled={over || !myTurn}
+              className={styles.primary}
+              onClick={() => dispatch({ type: 'EndTurn' })}
+            >
               End turn
             </button>
-            <button type="button" disabled={over} onClick={() => dispatch({ type: 'Concede' })}>
+            <button type="button" disabled={over || !myTurn} onClick={() => dispatch({ type: 'Concede' })}>
               Concede
             </button>
             <button type="button" onClick={start}>
               New game
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMode(mode === 'ai' ? 'hotseat' : 'ai');
+                setTimeout(start, 0);
+              }}
+            >
+              Mode: {mode === 'ai' ? 'vs AI' : 'hot-seat'} (click to switch)
             </button>
           </div>
         </section>

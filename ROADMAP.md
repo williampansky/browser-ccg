@@ -69,7 +69,8 @@ Done when: you can play a full game against yourself in the browser, to a win.
 
 ## Milestone 3: Bot and balance tooling
 
-- [ ] A bot that only makes legal moves, so solo play works (start simple: random, then greedy)
+- [~] A bot that only makes legal moves, so solo play works (start simple: random, then greedy).
+      Random bot done and wired into `/play`; greedy bot not started
 - [ ] Bot-vs-bot simulation: run N games per deck matchup and print win rates and per-card stats
 - [ ] A few starter decks for the bot
 
