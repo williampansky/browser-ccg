@@ -71,8 +71,8 @@ Done when: you can play a full game against yourself in the browser, to a win.
 
 - [~] A bot that only makes legal moves, so solo play works (start simple: random, then greedy).
       Random bot and greedy bot (`engine/bots/greedy-bot.ts`, one-move lookahead) done and wired into `/play`; the menu switches between them
-- [ ] Bot-vs-bot simulation: run N games per deck matchup and print win rates and per-card stats
-- [ ] A few starter decks for the bot
+- [x] Bot-vs-bot simulation: run N games per deck matchup and print win rates and per-card stats (`npm run sim`)
+- [x] A few starter decks for the bot (Aggro, Midrange, Control; `engine/starter-decks.ts`)
 
 Done when: one command prints a win-rate table for the starter decks.
 

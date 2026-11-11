@@ -61,6 +61,8 @@ order below. Candidates, roughly in the order discussed:
 - `npx tsc --noEmit -p .` - type check.
 - `npm run build` - Next build. (`npm run lint` is not set up: there is no ESLint config, so it just
   prompts interactively. Don't run it.)
+- `npm run sim -- [gamesPerPair] [greedy|random]` - bot-vs-bot balance report: win-rate grid for the three starter decks
+  (`engine/starter-decks.ts`) plus best/worst cards (`engine/sim/`). 100 games per pair takes about 15 seconds.
 - `npm run airtable:hs` - pulls the Hearthstone-style card pool (CORE 132, PRIME 254, ENTOURAGE 43,
   9 heroes, abilities, mechanics, constants) into `data/hs/`. This is the data the rebuild uses.
 - `npm run airtable` - the old zone-game pull into `data/` and `game/data/`. Only works against
