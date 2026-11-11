@@ -1,6 +1,14 @@
 import type { Card } from '../cards/types';
 import { CardDef, Definition, numbersOf } from './define-card';
 import game001 from './game/game-001';
+import core001 from './core/core-001';
+import core012 from './core/core-012';
+import core013 from './core/core-013';
+import core021 from './core/core-021';
+import core035 from './core/core-035';
+import core061 from './core/core-061';
+import core071 from './core/core-071';
+import core085 from './core/core-085';
 import core043 from './core/core-043';
 import core044 from './core/core-044';
 import core063 from './core/core-063';
@@ -16,6 +24,14 @@ import core114 from './core/core-114';
 /** Every card with behaviour beyond its stats and keywords. Vanilla cards have no entry. */
 const all: Definition[] = [
   game001,
+  core001,
+  core012,
+  core013,
+  core021,
+  core035,
+  core061,
+  core071,
+  core085,
   core043,
   core044,
   core063,

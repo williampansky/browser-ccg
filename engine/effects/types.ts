@@ -12,6 +12,12 @@ export interface EffectContext {
   rng: Rng;
   catalog: CardCatalog;
   events: GameEvent[];
+  /** The card whose definition is running (used to find its entourage tokens) */
+  sourceCardId?: string;
+  /** The minion this effect belongs to: a warcry's minion, or the owner of a trigger or death effect */
+  self?: number;
+  /** The event that fired this trigger, if it is one */
+  event?: GameEvent;
 }
 
 /** One step of a card's behaviour. Built from the primitives in `primitives.ts`. */

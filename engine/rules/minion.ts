@@ -2,7 +2,7 @@ import type { Card } from '../cards/types';
 import type { MinionInstance } from '../state/types';
 
 /** Builds a fresh minion from its card. Keyword flags come from the card's mechanics. */
-export const createMinion = (card: Card, instanceId: number, turn: number): MinionInstance => {
+export const createMinion = (card: Card, instanceId: number, turn: number, playSeq: number): MinionInstance => {
   const has = (symbol: string): boolean => card.mechanics.includes(symbol);
   const health = card.health ?? 0;
   return {
@@ -13,6 +13,7 @@ export const createMinion = (card: Card, instanceId: number, turn: number): Mini
     maxHealth: health,
     playedOnTurn: turn,
     attacksThisTurn: 0,
+    playSeq,
     keywords: {
       guard: has('BULWARK'),
       rush: has('RUSH'),

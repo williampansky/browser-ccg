@@ -9,6 +9,7 @@ interface MinionOpts {
   attack?: number;
   health?: number;
   mechanics?: string[];
+  race?: string;
 }
 
 const baseCard = (id: string, type: Card['type'], cost: number, mechanics: string[]): Card => ({
@@ -34,6 +35,7 @@ export const minionCard = (id: string, o: MinionOpts = {}): Card => ({
   ...baseCard(id, 'minion', o.cost ?? 1, o.mechanics ?? []),
   attack: o.attack ?? 1,
   health: o.health ?? 1,
+  race: o.race,
 });
 
 export const spellCard = (id: string, cost = 1, numbers: CardNumbers = {}): Card => ({
@@ -57,7 +59,7 @@ export const putOnBoard = (
   patch: Partial<MinionInstance> = {}
 ): GameState =>
   produce(state, (g) => {
-    const m = createMinion(card, g.nextInstanceId++, 0);
+    const m = createMinion(card, g.nextInstanceId++, 0, g.nextPlaySeq++);
     g.players[player].board.push({ ...m, ...patch });
   });
 

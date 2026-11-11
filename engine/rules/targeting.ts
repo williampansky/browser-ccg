@@ -1,5 +1,6 @@
 import type { CardCatalog } from '../cards/types';
 import { getCardDef } from '../definitions';
+import type { DefLookup } from '../definitions/define-card';
 import { GameState, PlayerId, TargetRef } from '../state/types';
 import { opponentOf } from './lookup';
 
@@ -28,7 +29,12 @@ const visibleCharacters = (state: GameState): TargetRef[] => {
  * uses it to validate. Attacks: enemy characters, narrowed to Guard minions while any is present
  * (RULES Q10: Guard restricts attacks only). Cards: whatever the card's own filter allows.
  */
-export const legalTargets = (state: GameState, source: TargetSource, catalog?: CardCatalog): TargetRef[] => {
+export const legalTargets = (
+  state: GameState,
+  source: TargetSource,
+  catalog?: CardCatalog,
+  defs: DefLookup = getCardDef
+): TargetRef[] => {
   const me = state.activePlayer;
   if (source.kind === 'attack') {
     const foe = opponentOf(me);
@@ -39,7 +45,7 @@ export const legalTargets = (state: GameState, source: TargetSource, catalog?: C
   }
   const inHand = state.players[me].hand[source.handIndex];
   const card = inHand && catalog?.get(inHand.cardId);
-  const filter = card && getCardDef(card)?.target;
+  const filter = card && defs(card)?.target;
   if (!filter) return [];
   return visibleCharacters(state).filter((candidate) => filter({ state, caster: me, candidate }));
 };

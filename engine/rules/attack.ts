@@ -1,9 +1,7 @@
 import { produce } from 'immer';
 import { ActionError, GameEvent, GameState, MinionInstance, PlayerId, TargetRef } from '../state/types';
 import { damageHero, damageMinion } from './damage';
-import { settleDeaths } from './death';
 import { isLegalTarget, legalTargets } from './targeting';
-import { checkWin } from './win';
 
 /** True if this minion may not attack right now (no attack, can't attack, disabled, out of attacks, or summoning sick). */
 export const cantAttack = (m: MinionInstance, turn: number): boolean => {
@@ -42,7 +40,5 @@ export const attack = (
       damageMinion(d, dealt, events);
       damageMinion(a, taken, events);
     }
-    settleDeaths(g, events);
-    checkWin(g, events);
   });
 };

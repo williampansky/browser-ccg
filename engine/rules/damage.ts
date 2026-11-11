@@ -19,18 +19,25 @@ export const damageTarget = (g: Draft<GameState>, target: TargetRef, amount: num
   }
 };
 
-/** Heals a hero (max 30) or a minion (max health). Call inside `produce`. */
+/** Heals a hero (max 30) or a minion (max health). Emits `Healed` only if something was restored. */
 export const healTarget = (g: Draft<GameState>, target: TargetRef, amount: number, events: GameEvent[]): void => {
+  let restored = 0;
   if (target.kind === 'hero') {
     const p = g.players[target.player];
-    p.health = Math.min(MAX_HEALTH, p.health + amount);
+    const next = Math.min(MAX_HEALTH, p.health + amount);
+    restored = next - p.health;
+    p.health = next;
   } else {
     for (const player of ['0', '1'] as PlayerId[]) {
       const m = g.players[player].board.find((x) => x.instanceId === target.instanceId);
-      if (m) m.health = Math.min(m.maxHealth, m.health + amount);
+      if (m) {
+        const next = Math.min(m.maxHealth, m.health + amount);
+        restored = next - m.health;
+        m.health = next;
+      }
     }
   }
-  events.push({ type: 'Healed', target, amount });
+  if (restored > 0) events.push({ type: 'Healed', target, amount: restored });
 };
 
 /**

@@ -1,6 +1,7 @@
 import { damageTarget, healTarget } from '../rules/damage';
 import { drawCard } from '../rules/draw';
 import { findMinion } from '../rules/lookup';
+import { summonMinion } from '../rules/summon';
 import type { MinionKeywords } from '../state/types';
 import type { Effect, Selector } from './types';
 
@@ -64,5 +65,26 @@ export const expire =
   (ctx) => {
     for (const { minion } of minionsOf(ctx, select)) {
       minion.expiresOnTurn = ctx.g.activePlayer === ctx.caster ? ctx.g.turn + 2 : ctx.g.turn + 1;
+    }
+  };
+
+/** Summons the `index`-th token from the running card's entourage list (full board: nothing happens). */
+export const summonEntourage =
+  (index = 0): Effect =>
+  (ctx) => {
+    const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+    const token = source && ctx.catalog.get(source.entourage[index]);
+    if (!token) throw new Error(`${ctx.sourceCardId} has no entourage token #${index} in the catalog`);
+    summonMinion(ctx.g, ctx.caster, token, ctx.events, ctx.self);
+  };
+
+/** Permanently adds attack and health (current and maximum) to minions. */
+export const buff =
+  (select: Selector, attack: number, health: number): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) {
+      minion.attack += attack;
+      minion.maxHealth += health;
+      minion.health += health;
     }
   };

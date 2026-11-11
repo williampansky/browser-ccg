@@ -1,8 +1,24 @@
 import { opponentOf } from '../rules/lookup';
+import type { TargetRef } from '../state/types';
 import type { Selector } from './types';
 
 /** The target the player picked when casting. */
 export const chosenTarget = (): Selector => (ctx) => (ctx.target ? [ctx.target] : []);
+
+/** Every minion on both boards. */
+export const allMinions = (): Selector => (ctx) =>
+  (['0', '1'] as const).flatMap((p) =>
+    ctx.g.players[p].board.map((m): TargetRef => ({ kind: 'minion', instanceId: m.instanceId }))
+  );
+
+/** The minion this effect belongs to (a warcry's own minion, or a trigger's owner minion). */
+export const self = (): Selector => (ctx) => (ctx.self !== undefined ? [{ kind: 'minion', instanceId: ctx.self }] : []);
+
+/** Who the triggering event was aimed at (an attack's victim, a heal's recipient). */
+export const eventTarget = (): Selector => (ctx) => {
+  const e = ctx.event;
+  return e && (e.type === 'MinionAttacked' || e.type === 'Healed') ? [e.target] : [];
+};
 
 export const enemyHero = (): Selector => (ctx) => [{ kind: 'hero', player: opponentOf(ctx.caster) }];
 

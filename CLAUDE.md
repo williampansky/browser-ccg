@@ -20,8 +20,10 @@ earlier `hsclone` repo as the rules reference. Read these first:
 ## Current state
 
 - **There is no playable game on this branch yet.** `game/game.ts` is a stub and `/play` is a
-  placeholder page. The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`); so far it
-  has the card model and loader (`engine/cards/`), covered by tests.
+  placeholder page. The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-5 of
+  its build order are done and tested: card model and loader (`engine/cards/`), state and turn flow,
+  minions and combat, spells and `legalTargets`, keywords, and triggers/warcries/`legalActions`.
+  Still to build: weapons and armor (slice 6) and the random-bot invariant test (slice 7).
 - The site shell works: home, `collection`, `deckbuilder`, `cards`, `store`, `profile`, `news`,
   `faq`, `changelog`, plus `pages/api/` for cards/users. The card renderers (`Card`, `Minion`) work.
 - `data/*.json` (read by the site) still describes the old zone game (fields such as
@@ -86,6 +88,6 @@ Find the base ids in Airtable (they are not recorded here; this repo is public).
 - Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
 - Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.
-- Current checks: `npm test` passes (12 tests), `npm run build` passes, and `tsc` has 8 errors,
+- Current checks: `npm test` passes (engine tests plus the older `utils` ones), `npm run build` passes, and `tsc` has 8 errors,
   all `as Card` casts in `utils/__tests__/get-card-power.test.ts`. Don't "fix" unrelated
   failures as a drive-by.

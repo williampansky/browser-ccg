@@ -32,6 +32,8 @@ export interface MinionInstance {
   playedOnTurn: number;
   attacksThisTurn: number;
   keywords: MinionKeywords;
+  /** Order of entering play (RULES Q15: dead minions are removed in this order) */
+  playSeq: number;
   /** The turn number on which this minion may not attack (set by Disable) */
   disabledOnTurn?: number;
   /** The turn number at whose start this minion dies (set by Expiration) */
@@ -58,6 +60,8 @@ export interface GameState {
   players: Record<PlayerId, PlayerState>;
   /** All instance ids come from this counter, never from uuid */
   nextInstanceId: number;
+  /** Source of `MinionInstance.playSeq` */
+  nextPlaySeq: number;
 }
 
 /** Something an attack or effect can aim at: a hero (either player's) or a minion on either board. */
@@ -79,13 +83,15 @@ export type ActionErrorCode =
   | 'BOARD_FULL'
   | 'UNKNOWN_ATTACKER'
   | 'MINION_CANT_ATTACK'
-  | 'ILLEGAL_TARGET';
+  | 'ILLEGAL_TARGET'
+  | 'TRIGGER_LOOP';
 export interface ActionError {
   error: ActionErrorCode;
 }
 
 export type GameEvent =
   | { type: 'TurnStarted'; player: PlayerId; turn: number }
+  | { type: 'TurnEnded'; player: PlayerId }
   | { type: 'Drew'; player: PlayerId; instanceId: number }
   | { type: 'Burned'; player: PlayerId; instanceId: number }
   | { type: 'Fatigue'; player: PlayerId; damage: number }
@@ -97,7 +103,8 @@ export type GameEvent =
   | { type: 'Healed'; target: TargetRef; amount: number }
   | { type: 'EnergyGained'; player: PlayerId; amount: number }
   | { type: 'BubblePopped'; instanceId: number }
-  | { type: 'MinionDied'; player: PlayerId; instanceId: number }
+  | { type: 'MinionSummoned'; player: PlayerId; instanceId: number; cardId: string }
+  | { type: 'MinionDied'; player: PlayerId; instanceId: number; cardId: string }
   | { type: 'GameOver'; winner: PlayerId | 'draw' };
 
 export interface GameSetup {
@@ -107,3 +114,5 @@ export interface GameSetup {
   /** A card added to the second player's opening hand (The Orb, `GAME_001`) */
   secondPlayerBonusCard?: string;
 }
+
+export type GameEventType = GameEvent['type'];
