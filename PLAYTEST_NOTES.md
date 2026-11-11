@@ -1,0 +1,20 @@
+- [x] i like the idea of a lock for the arrow, but wondering if it can have boundaries. like instead of snapping to the middle. not sure exactly how it would work. i think in hearthstone you can click anywhere on a valid object. maybe the target needs a "valid hover target" state instead of locking the arrow
+- [x] add a targeting arrow for the enemy as well; so the player who's turn it is NOT can see what the enemy is thinking about when targeting things (but not know exactly what it is - like a spell from their hand)
+- [x] after clicking a card; im fine with leaving the "play x" button. but id also like to click my board to play a minion. or click anywhere to in the play area to play a global spell. 
+- [x] lets center things too. hearthstone is centered.
+- [x] the log may need to move in the opposite direction? idk about this one. i dont want to have to scroll to see latest events, but im fine scrolling to see PAST events.
+- [x] some variation in the log (bold/italics/etc) to help legibility. like "**Player 1** plays **Rookie Lancer**" and player 1 is green. enemy is redish.
+- [x] i swear im not getting too bogged down in the UI. but i want the solid framework to be there during my playtests, if that makes sense.
+- [x] when playing creature tamer, i wasnt able to apply guard to a different card on the field. (Creature Tamer stays Creatures-only; race is now shown on cards.)
+  - [x] i was able to buff logrunds protector (core_029) with creature tamer. but 029 is not a creature
+- [x] the board needs a state when ive selected a card to show i can play it and am hover etc.
+- [x] remove or checkbox old fixed playtest notes
+- [x] lets put the log on the left side. its doesnt have to respect the "centered elements" thing. it can be pinned/fixed
+- [x] played surveying drone. was really cool. might want to add a simple overlay/modal to show the selection process so i can see the card stats and make the best choice for the current moment in the game
+- [x] lets wire the space bar to also end turn
+- [x] i saw the enemies arrow. that was cool.
+- [x] the AI cast magic missle on its own minion for some reason. i guess its own minion is a valid target technically, but no player would choose that unless that minion's death triggered some beneficial effect
+- [x] the log's scrollbar (at least on my macOS) going visible and hidden due to adding entries is kinda annoying. maybe style the bar to be thinner and less distracting. since i know we still want a scrollbar, and its native macOS browser chrome functionality
+- [x] part of deck building is knowing whats in your deck left to play vs what you have in hand. even though we're not there yet, lets pin to the right (similar to how the log is pinned) a deck view that shows horizontal rectangle slices of your current deck and what has already been drawn. this functionality was in the hsclone, so you can see it there. it was inspired by using third-party overlays when playing hearthstone.
+- [x] can we tune the arrow for this example: if i have 1 minion on the board and i am attacking the enemy hero, if i hover straight from the minion to the enemy hero the line is not curved (or the curve is signif less curved) as opposed to if i were to hover to the far side of the hero bar
+- [x] playing vs AI doesnt cost me any anthropic credits, right? that's straight just "bot" code.
