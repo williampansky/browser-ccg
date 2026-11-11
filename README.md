@@ -1,8 +1,3 @@
-## TODO
-- improve ai moveset
-- host game server / ai on heroku (or similar) instance
-- create more ai decks to use
-
 ## Status check (2026-11-10)
 
 Smoke-tested `npm run dev` in a browser: the home page loads, Play opens `/play`, and a
