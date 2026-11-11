@@ -362,7 +362,9 @@ export const PlayBoard = () => {
 
   // Surveying Drone: a dialog showing the cards you can keep, with their stats.
   const droneModal = selectedCard?.id === 'CORE_055' && choiceOptions.length > 0;
-  modalOpenRef.current = droneModal;
+  // Every "choose one" card asks in a dialog first, however small the options are.
+  const choiceModal = choiceOptions.length > 0 && !droneModal;
+  modalOpenRef.current = droneModal || choiceModal;
 
   const renderMinion = (owner: PlayerId, m: MinionInstance) => {
     const card = byId.get(m.cardId);
@@ -579,6 +581,23 @@ export const PlayBoard = () => {
           </div>
         </div>
       )}
+      {choiceModal && (
+        <div className={styles.modalBackdrop} onClick={() => setSelection(null)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <h3>{selectedCard?.name}: choose one</h3>
+            <div className={styles.modalCards}>
+              {choiceOptions.map((c) => (
+                <button key={c} type="button" className={styles.modalCard} onClick={() => pickChoice(c)}>
+                  <span className={styles.name}>{choiceLabel(c)}</span>
+                </button>
+              ))}
+            </div>
+            <button type="button" onClick={() => setSelection(null)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
       <div className={[styles.table, areaZone ? styles.zone : ''].join(' ')} onClick={(e) => playFromArea(e, 'table')}>
         <section className={styles.side}>
           {renderHero(foe, false)}
@@ -620,11 +639,6 @@ export const PlayBoard = () => {
             {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i))}
           </div>
           <div className={styles.controls}>
-            {(droneModal ? [] : choiceOptions).map((c) => (
-              <button key={`choice-${c}`} type="button" className={styles.primary} onClick={() => pickChoice(c)}>
-                {choiceLabel(c)}
-              </button>
-            ))}
             {untargetedPlays.map((a, i) => (
               <button key={i} type="button" className={styles.primary} onClick={() => dispatch(a)}>
                 Play {selectedCard?.name}

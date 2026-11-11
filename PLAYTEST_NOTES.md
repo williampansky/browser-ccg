@@ -33,5 +33,5 @@
 - [x] enemy AI cast scroll of power on MY minion for no reason. again, an instance where the play is technically playable, but offers no benefit to the AI in that instance. the only way I could see that play out is if they buffed an enemy minion with enough attack to cross the 5 threshold which would then allow them to cast Invocation of Extinction
 - [x] enemy AI cast enhancement potion on my minion for no beneficial reason
 - id like the be able to play cards besides just the far left or far right. am i able to place them in between two cards? say if i had a board of 4 cards, and i played a card that buffed two adjacent minions, id want to be able to select where i play it to benefit me the most
-- for any choose card, show the modal (even like deal 1 dmg or get 1 armor)
+- [x] for any choose card, show the modal (even like deal 1 dmg or get 1 armor)
 
