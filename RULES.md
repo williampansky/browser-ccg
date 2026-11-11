@@ -376,7 +376,7 @@ The text of each question and its default is kept for the reasoning.
 | 16 | Spell damage bonus | damage only for now | **provisional** |
 | 17 | Disable | cannot attack during its owner's next turn | accepted |
 | 18 | Expiration | dies at the start of the caster's next turn | accepted |
-| 19 | Hidden | untargetable by anything until it attacks | accepted |
+| 19 | Hidden | untargetable by anything until it attacks | accepted; engine reading (slice 4): chosen targets and random picks skip hidden minions, area effects still hit them, a hidden Guard does not guard |
 | 20 | Text vs behaviour | printed text wins; settle per card in Milestone 4 | accepted |
 | 21 | Triggers | general trigger system from the start | accepted |
 | 22 | Data-driven vs per-card | hybrid; investigated, see below | accepted |

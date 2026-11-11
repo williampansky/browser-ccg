@@ -1,5 +1,5 @@
 import type { Draft } from 'immer';
-import { GameEvent, GameState, MAX_HEALTH, PlayerId, TargetRef } from '../state/types';
+import { GameEvent, GameState, MAX_HEALTH, MinionInstance, PlayerId, TargetRef } from '../state/types';
 
 /** Damages a hero: armor absorbs first, health is clamped at 0. Call inside `produce`. */
 export const damageHero = (g: Draft<GameState>, player: PlayerId, amount: number, events: GameEvent[]): void => {
@@ -15,11 +15,7 @@ export const damageTarget = (g: Draft<GameState>, target: TargetRef, amount: num
   if (target.kind === 'hero') return damageHero(g, target.player, amount, events);
   for (const player of ['0', '1'] as PlayerId[]) {
     const m = g.players[player].board.find((x) => x.instanceId === target.instanceId);
-    if (m) {
-      m.health = Math.max(0, m.health - amount);
-      events.push({ type: 'MinionDamaged', instanceId: m.instanceId, amount });
-      return;
-    }
+    if (m) return damageMinion(m, amount, events);
   }
 };
 
@@ -35,4 +31,19 @@ export const healTarget = (g: Draft<GameState>, target: TargetRef, amount: numbe
     }
   }
   events.push({ type: 'Healed', target, amount });
+};
+
+/**
+ * Damages a minion. Bubble absorbs the first hit that would do damage, from any source (RULES Q13),
+ * and pops. A hit of 0 does nothing. Call inside `produce`.
+ */
+export const damageMinion = (m: Draft<MinionInstance>, amount: number, events: GameEvent[]): void => {
+  if (amount <= 0) return;
+  if (m.keywords.bubble) {
+    m.keywords.bubble = false;
+    events.push({ type: 'BubblePopped', instanceId: m.instanceId });
+    return;
+  }
+  m.health = Math.max(0, m.health - amount);
+  events.push({ type: 'MinionDamaged', instanceId: m.instanceId, amount });
 };

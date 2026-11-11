@@ -1,5 +1,7 @@
 import { damageTarget, healTarget } from '../rules/damage';
 import { drawCard } from '../rules/draw';
+import { findMinion } from '../rules/lookup';
+import type { MinionKeywords } from '../state/types';
 import type { Effect, Selector } from './types';
 
 /** Deals `amount` damage to everything the selector picks. */
@@ -29,4 +31,38 @@ export const gainEnergy =
   (ctx) => {
     ctx.g.players[ctx.caster].energy.current += amount;
     ctx.events.push({ type: 'EnergyGained', player: ctx.caster, amount });
+  };
+
+/** Finds the live (draft) minion a target refers to; heroes and missing minions give nothing. */
+const minionsOf = (ctx: Parameters<Effect>[0], select: Selector) =>
+  select(ctx).flatMap((t) => {
+    if (t.kind !== 'minion') return [];
+    const found = findMinion(ctx.g, t.instanceId);
+    return found ? [found] : [];
+  });
+
+/** Gives minions a keyword (Bubble, double attack, ...). */
+export const grantKeyword =
+  (select: Selector, keyword: keyof MinionKeywords): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) minion.keywords[keyword] = true;
+  };
+
+/** Disable: the minion cannot attack during its owner's next turn (RULES Q17). */
+export const disable =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { owner, minion } of minionsOf(ctx, select)) {
+      // Turns alternate, so the owner's next turn is the next turn, or the one after if it is theirs now.
+      minion.disabledOnTurn = ctx.g.activePlayer === owner ? ctx.g.turn + 2 : ctx.g.turn + 1;
+    }
+  };
+
+/** Expiration: the minion dies at the start of the caster's next turn (RULES Q18, provisional). */
+export const expire =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) {
+      minion.expiresOnTurn = ctx.g.activePlayer === ctx.caster ? ctx.g.turn + 2 : ctx.g.turn + 1;
+    }
   };

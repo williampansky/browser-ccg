@@ -32,6 +32,10 @@ export interface MinionInstance {
   playedOnTurn: number;
   attacksThisTurn: number;
   keywords: MinionKeywords;
+  /** The turn number on which this minion may not attack (set by Disable) */
+  disabledOnTurn?: number;
+  /** The turn number at whose start this minion dies (set by Expiration) */
+  expiresOnTurn?: number;
 }
 
 export interface PlayerState {
@@ -92,6 +96,7 @@ export type GameEvent =
   | { type: 'MinionDamaged'; instanceId: number; amount: number }
   | { type: 'Healed'; target: TargetRef; amount: number }
   | { type: 'EnergyGained'; player: PlayerId; amount: number }
+  | { type: 'BubblePopped'; instanceId: number }
   | { type: 'MinionDied'; player: PlayerId; instanceId: number }
   | { type: 'GameOver'; winner: PlayerId | 'draw' };
 

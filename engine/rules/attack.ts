@@ -1,14 +1,15 @@
 import { produce } from 'immer';
 import { ActionError, GameEvent, GameState, MinionInstance, PlayerId, TargetRef } from '../state/types';
-import { damageHero } from './damage';
+import { damageHero, damageMinion } from './damage';
 import { settleDeaths } from './death';
 import { isLegalTarget, legalTargets } from './targeting';
 import { checkWin } from './win';
 
-/** True if this minion may not attack right now (no attack, already attacked, or summoning sick). */
+/** True if this minion may not attack right now (no attack, can't attack, disabled, out of attacks, or summoning sick). */
 export const cantAttack = (m: MinionInstance, turn: number): boolean => {
-  if (m.attack < 1) return true;
-  if (m.attacksThisTurn >= 1) return true;
+  if (m.attack < 1 || m.keywords.noAttack) return true;
+  if (m.disabledOnTurn === turn) return true;
+  if (m.attacksThisTurn >= (m.keywords.doubleAttack ? 2 : 1)) return true;
   return !m.keywords.rush && m.playedOnTurn === turn; // summoning sickness
 };
 
@@ -29,6 +30,7 @@ export const attack = (
   return produce(state, (g) => {
     const a = g.players[me].board.find((m) => m.instanceId === args.attackerId)!;
     a.attacksThisTurn += 1;
+    a.keywords.hidden = false; // attacking reveals a hidden minion
     events.push({ type: 'MinionAttacked', attackerId: a.instanceId, target: args.target });
     if (args.target.kind === 'hero') {
       damageHero(g, args.target.player, a.attack, events);
@@ -37,8 +39,8 @@ export const attack = (
       const d = g.players[foe].board.find((m) => m.instanceId === id)!;
       // Simultaneous damage (RULES Q15): read both attack values before applying either.
       const [dealt, taken] = [a.attack, d.attack];
-      d.health = Math.max(0, d.health - dealt);
-      a.health = Math.max(0, a.health - taken);
+      damageMinion(d, dealt, events);
+      damageMinion(a, taken, events);
     }
     settleDeaths(g, events);
     checkWin(g, events);
