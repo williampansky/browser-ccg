@@ -57,26 +57,69 @@ const tipByName = new Map(
     }: ${plain(c.text)}`,
   ])
 );
-/** Card name in the log with an instant tooltip (fixed-position, so the scrolling log can't clip it). */
-const LogCard = ({ name }: { name: string }) => {
+/** Instant tooltip (fixed-position, so scrolling panels can't clip it). `side` is which way it opens from the element. */
+const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right') => {
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
-  const tip = tipByName.get(name);
+  const handlers = {
+    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
+      const r = e.currentTarget.getBoundingClientRect();
+      setPos({ x: side === 'right' ? r.right + 8 : r.left - 8, y: r.top });
+    },
+    onMouseLeave: () => setPos(null),
+  };
+  const node =
+    pos && tip ? (
+      <span
+        className={styles.logTip}
+        style={{ left: pos.x, top: pos.y, transform: side === 'left' ? 'translateX(-100%)' : undefined }}
+      >
+        {tip}
+      </span>
+    ) : null;
+  return { handlers, node };
+};
+const LogCard = ({ name }: { name: string }) => {
+  const { handlers, node } = useTip(tipByName.get(name));
   return (
-    <strong
-      className={styles.logCard}
-      onMouseEnter={(e) => {
-        const r = e.currentTarget.getBoundingClientRect();
-        setPos({ x: r.right + 8, y: r.top });
-      }}
-      onMouseLeave={() => setPos(null)}
-    >
+    <strong className={styles.logCard} {...handlers}>
       <em>{name}</em>
-      {pos && tip && (
-        <span className={styles.logTip} style={{ left: pos.x, top: pos.y }}>
-          {tip}
-        </span>
-      )}
+      {node}
     </strong>
+  );
+};
+/** A deck-tracker row; its tooltip opens to the left because the panel is pinned to the right edge. */
+const DeckRow = ({ name, children, className }: { name: string; children: React.ReactNode; className: string }) => {
+  const { handlers, node } = useTip(tipByName.get(name), 'left');
+  return (
+    <div className={className} {...handlers}>
+      {children}
+      {node}
+    </div>
+  );
+};
+/** A board minion: hovering shows its printed card next to its current stats. */
+const MinionTip = ({ card, m, className, onClick, children, nodeRef, ...rest }: any) => {
+  const printed = card ? `${tipByName.get(card.name)}` : undefined;
+  const { handlers, node } = useTip(printed && `${printed}\nNow: ${m.attack}/${m.health} (max ${m.maxHealth})`);
+  return (
+    <button
+      {...rest}
+      ref={nodeRef}
+      type="button"
+      className={className}
+      onClick={onClick}
+      onMouseEnter={(e) => {
+        handlers.onMouseEnter(e);
+        rest.onMouseEnter?.(e);
+      }}
+      onMouseLeave={(e) => {
+        handlers.onMouseLeave();
+        rest.onMouseLeave?.(e);
+      }}
+    >
+      {children}
+      {node}
+    </button>
   );
 };
 const renderLogLine = (line: string) =>
@@ -401,13 +444,13 @@ export const PlayBoard = () => {
       sick && 'zzz',
     ].filter(Boolean);
     return (
-      <button
+      <MinionTip
         key={m.instanceId}
-        ref={track(`m${m.instanceId}`)}
+        card={card}
+        m={m}
+        nodeRef={track(`m${m.instanceId}`)}
         onMouseEnter={() => setHover({ kind: 'minion', instanceId: m.instanceId })}
         onMouseLeave={() => setHover(null)}
-        type="button"
-        title={card?.text}
         className={[
           styles.minion,
           m.keywords.guard ? styles.guard : '',
@@ -425,7 +468,7 @@ export const PlayBoard = () => {
           <span className={m.health < m.maxHealth ? styles.hurt : styles.hp}>{m.health}</span>
         </span>
         <span className={styles.tags}>{tags.join(' · ')}</span>
-      </button>
+      </MinionTip>
     );
   };
 
@@ -545,6 +588,19 @@ export const PlayBoard = () => {
           />
         </svg>
       )}
+      {over && !menuOpen && (
+        <div className={styles.gameOver}>
+          <strong className={styles.banner}>
+            {state.winner === 'draw' ? 'Draw!' : `${label(state.winner as PlayerId)} wins!`}
+          </strong>
+          <button type="button" className={styles.endTurn} onClick={start}>
+            New game
+          </button>
+        </div>
+      )}
+      <button type="button" className={styles.menuButton} onClick={() => setMenuOpen(true)}>
+        Menu
+      </button>
       {menuOpen && (
         <div className={styles.modalBackdrop} onClick={() => setMenuOpen(false)}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -621,6 +677,14 @@ export const PlayBoard = () => {
       )}
       <div className={[styles.table, areaZone ? styles.zone : ''].join(' ')} onClick={(e) => playFromArea(e, 'table')}>
         <section className={styles.side}>
+          <div className={styles.backs}>
+            {state.players[foe].hand.map((_, i) => (
+              <div
+                key={i}
+                className={[styles.cardBack, foeAim?.action.type === 'PlayCard' && foeAim.action.handIndex === i ? styles.backPicked : ''].join(' ')}
+              />
+            ))}
+          </div>
           {renderHero(foe, false)}
           <div className={styles.row}>{state.players[foe].board.map((m) => renderMinion(foe, m))}</div>
         </section>
@@ -681,9 +745,6 @@ export const PlayBoard = () => {
                   : ''}
               </button>
             ))}
-            <button type="button" onClick={() => setMenuOpen(true)}>
-              Menu
-            </button>
           </div>
         </section>
       </div>
@@ -694,11 +755,11 @@ export const PlayBoard = () => {
         </h2>
         <div className={styles.deckRows}>
           {deckRows(startDecks[me], state.players[me].deck.map((c) => c.cardId), byId).map((r) => (
-            <div key={r.id} className={[styles.deckRow, r.left === 0 ? styles.deckGone : ''].join(' ')} title={byId.get(r.id)?.text}>
+            <DeckRow key={r.id} name={r.name} className={[styles.deckRow, r.left === 0 ? styles.deckGone : ''].join(' ')}>
               <span className={styles.deckCost}>{r.cost}</span>
               <span className={styles.deckName}>{r.name}</span>
               <span className={styles.deckCount}>{r.total > 1 ? `${r.left}/${r.total}` : r.left}</span>
-            </div>
+            </DeckRow>
           ))}
         </div>
       </aside>
