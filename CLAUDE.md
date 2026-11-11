@@ -36,6 +36,24 @@ earlier `hsclone` repo as the rules reference. Read these first:
   base and is pulled into `data/hs/` (see "Two Airtable bases" below). The site has not been
   switched over to it yet (ROADMAP Milestone 4).
 
+## Next up (as of the last session)
+
+The author was about to **playtest `/play`** (vs the random AI) and give feedback before deciding the
+order below. Candidates, roughly in the order discussed:
+
+1. **Port the missing card behaviour from `hsclone`.** Of 132 CORE cards only about 49 are playable.
+   The other ~83 are refused by the engine (`needsBehaviour` in `engine/decks.ts`) rather than played
+   wrongly: warcries, auras ("Boon"), spell damage, and most spells/items. `hsclone` already has warcry
+   behaviour for them; port it as definitions in `engine/definitions/`, one card per file, tests first.
+   Known extra work: spell power (RULES Q16), auras, `CORE_081` needs a pre-attack hook.
+2. **Port the card art** from `hsclone`'s `public/` dir (this repo lacks it) and use it on the board.
+   Check provenance/licences. The board is text-only until then.
+3. **Greedy bot** (Milestone 3), then bot-vs-bot win-rate tables.
+4. Slice 7 of the engine plan (a dedicated random-bot invariant suite) is mostly covered already by
+   `engine/__tests__/real-pool.test.ts` and `engine/bots/__tests__/`.
+
+**CI is deliberately the very last roadmap item** ("Way later: CI"). Do not suggest or build it early.
+
 ## Commands
 
 - `npm run dev` - dev server (use npm; `yarn` isn't installed here, though `yarn.lock` exists).

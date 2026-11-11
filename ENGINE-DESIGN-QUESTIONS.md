@@ -14,13 +14,10 @@ when you're done. Leaving one blank means "go with my recommendation".
 
 ## Where we left off
 
-- Done: archive of the old zone game, `hsclone` verified, old engine and UI removed, card data pulled
-  into `data/hs/`, rules spec written and approved (all 24 questions answered), card loader built with
-  31 tests.
-- Next: the rules engine itself (turn flow, energy, drawing, playing minions, attacking, Guard, death,
-  winning), built in slices with tests first. See ENGINE-DESIGN.md section 10.
-- Still provisional from your earlier answers: spell-damage scope (Q16) and what the number fields mean
-  (Q23). The engine is built so both are cheap to change.
+**Superseded.** All five questions below were answered (the recommendations were accepted) and the
+engine was built from them: slices 1-6 of ENGINE-DESIGN.md section 10 are done and there is a playable
+board at `/play`. See "Current state" and "Next up" in CLAUDE.md for the live status. This file is kept
+as the record of the decisions.
 
 ---
 
