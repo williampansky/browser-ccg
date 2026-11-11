@@ -17,6 +17,7 @@ import {
   Rng,
   TargetRef,
 } from '../../engine';
+import { gapIndex } from './board-position';
 import { deckRows } from './deck-rows';
 import { describeEvents } from './describe-events';
 import { targetLinePath, TargetLineStyle } from './target-line';
@@ -342,7 +343,7 @@ export const PlayBoard = () => {
   const boardZone = placedPlays.length > 0 && !over;
   const areaZone = untargetedPlays.length > 0 && placedPlays.length === 0 && !over;
 
-  // Click-to-play: with a minion selected, click your board (left half = far left, right half = far right);
+  // Click-to-play: with a minion selected, click your board where you want it to land (between two minions, or at either end);
   // with a spell or other card that needs no aim, click anywhere in the play area.
   const playFromArea = (e: React.MouseEvent, zone: 'board' | 'table') => {
     if (over || selection?.kind !== 'hand' || (e.target as HTMLElement).closest('button')) return;
@@ -351,10 +352,14 @@ export const PlayBoard = () => {
     const placed = plain.filter((a) => a.boardIndex !== undefined);
     if (placed.length > 0) {
       if (zone !== 'board') return;
-      const box = e.currentTarget.getBoundingClientRect();
-      const left = e.clientX < box.left + box.width / 2;
-      const pick = placed.find((a) => (a.boardIndex === 0) === left) ?? placed[0];
-      dispatch(pick);
+      // Land in the gap nearest the click: between two minions, or at either end.
+      const centres = Array.from(e.currentTarget.children).map((el) => {
+        const r = el.getBoundingClientRect();
+        return r.left + r.width / 2;
+      });
+      const boardIndex = gapIndex(centres, e.clientX);
+      const pick = placed[0];
+      if (pick.type === 'PlayCard') dispatch({ ...pick, boardIndex });
     } else if (plain.length > 0) {
       dispatch(plain[0]);
     }
@@ -622,7 +627,7 @@ export const PlayBoard = () => {
             <span>
               Turn {state.turn}: {label(state.activePlayer)}
               {choiceOptions.length > 0 ? ' - choose one option' : ''}
-              {boardZone ? ' - click your board to play it (left half: far left, right half: far right)' : ''}
+              {boardZone ? ' - click your board to play it (it lands in the gap you click, between minions or at either end)' : ''}
               {areaZone ? ' - click the play area to cast it' : ''}
               {aimable.length > 0 ? ' - pick a target (Esc, right-click or clicking the selection again cancels)' : ''}
             </span>
