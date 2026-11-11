@@ -155,16 +155,26 @@ describe('this-turn boosts', () => {
     });
     expect(stats(endTurn(s), '0')).toEqual([[3, 2]]);
   });
-  it('127 equips a 4/1 weapon for this turn only, replacing any weapon', () => {
-    const s = withWeapon(setup('CORE_127'), '0');
-    const r = play(s).state;
-    expect(r.players['0'].weapon).toMatchObject({ attack: 4, durability: 1 });
+  it('127 with no weapon equips a 4/1 weapon for this turn only', () => {
+    const r = play(setup('CORE_127')).state;
+    expect(r.players['0'].weapon).toMatchObject({ attack: 4, durability: 1, temporary: true });
     expect(endTurn(r).players['0'].weapon).toBeNull();
     // used on the turn it is played: hits for 4 and is spent
     const hit = run(r, { type: 'WeaponAttack', target: hero('1') });
     if ('error' in hit) throw new Error(hit.error);
     expect(hit.state.players['1'].health).toBe(26);
     expect(hit.state.players['0'].weapon).toBeNull();
+  });
+  it('127 with a weapon already equipped adds +4 Attack to it, keeping it and its durability', () => {
+    const base = withWeapon(setup('CORE_127'), '0');
+    const before = base.players['0'].weapon!;
+    const r = play(base).state;
+    const w = r.players['0'].weapon!;
+    expect(w.cardId).toBe(before.cardId);
+    expect(w.attack).toBe(before.attack + 4);
+    expect(w.durability).toBe(before.durability);
+    expect(w.temporary).toBeUndefined();
+    expect(endTurn(r).players['0'].weapon).not.toBeNull();
   });
   it('an ordinary weapon is NOT removed at end of turn', () => {
     expect(endTurn(withWeapon(setup('GRUNT'), '0')).players['0'].weapon).not.toBeNull();
