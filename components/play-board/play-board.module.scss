@@ -222,3 +222,13 @@
   margin-bottom: 0.4rem;
   border-bottom: 1px solid #2a2e3b;
 }
+
+// Targeting line: a full-screen overlay that never intercepts clicks.
+.targetLine {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+}

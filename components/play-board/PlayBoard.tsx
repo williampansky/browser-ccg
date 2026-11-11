@@ -18,12 +18,15 @@ import {
   TargetRef,
 } from '../../engine';
 import { describeEvents } from './describe-events';
+import { targetLinePath, TargetLineStyle } from './target-line';
 import styles from './play-board.module.scss';
 
 type Mode = 'ai' | 'hotseat';
 type PlayAction = Extract<Action, { type: 'PlayCard' }>;
 const AI_PLAYER: PlayerId = '1';
 const AI_DELAY_MS = 800;
+/** 'curve' or 'straight'; both are supported by `targetLinePath`. */
+const TARGET_LINE_STYLE: TargetLineStyle = 'curve';
 
 type Selection = { kind: 'hand'; index: number; choice?: number } | { kind: 'minion'; id: number } | { kind: 'hero' };
 
@@ -31,6 +34,11 @@ const { cards, byId } = loadHsCards();
 const pool = playablePool(cards);
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
 const playerLabel = (p: PlayerId, mode: Mode) => `Player ${Number(p) + 1}${mode === 'ai' && p === AI_PLAYER ? ' (AI)' : ''}`;
+const targetKey = (t: TargetRef) => (t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`);
+const centerOf = (el: HTMLElement) => {
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+};
 const sameTarget = (a: TargetRef, b: TargetRef) =>
   a.kind === 'hero' ? b.kind === 'hero' && a.player === b.player : b.kind === 'minion' && a.instanceId === b.instanceId;
 
@@ -52,6 +60,14 @@ export const PlayBoard = () => {
   const [message, setMessage] = useState('');
   const [mode, setMode] = useState<Mode>('ai');
   const rngRef = useRef<Rng | null>(null);
+  // Targeting line: where the pointer is, which character it is over, and the DOM nodes to draw between.
+  const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
+  const [hover, setHover] = useState<TargetRef | null>(null);
+  const nodes = useRef(new Map<string, HTMLElement>());
+  const track = (key: string) => (el: HTMLElement | null) => {
+    if (el) nodes.current.set(key, el);
+    else nodes.current.delete(key);
+  };
   const label = (p: PlayerId) => playerLabel(p, mode);
 
   const start = useCallback(() => {
@@ -62,6 +78,32 @@ export const PlayBoard = () => {
     setSelection(null);
     setMessage('');
   }, []);
+
+  // While something is selected: follow the pointer (for the targeting line), and let Escape or a
+  // right-click cancel the selection.
+  const hasSelection = selection !== null;
+  useEffect(() => {
+    if (!hasSelection) {
+      setPointer(null);
+      return;
+    }
+    const move = (e: MouseEvent) => setPointer({ x: e.clientX, y: e.clientY });
+    const key = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelection(null);
+    };
+    const rightClick = (e: MouseEvent) => {
+      e.preventDefault(); // no browser context menu while cancelling
+      setSelection(null);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('keydown', key);
+    window.addEventListener('contextmenu', rightClick);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('keydown', key);
+      window.removeEventListener('contextmenu', rightClick);
+    };
+  }, [hasSelection]);
 
   // Start on the client only: the deck shuffle uses the clock, which would not match server rendering.
   useEffect(start, [start]);
@@ -201,6 +243,9 @@ export const PlayBoard = () => {
     return (
       <button
         key={m.instanceId}
+        ref={track(`m${m.instanceId}`)}
+        onMouseEnter={() => setHover({ kind: 'minion', instanceId: m.instanceId })}
+        onMouseLeave={() => setHover(null)}
         type="button"
         title={card?.text}
         className={[
@@ -228,6 +273,9 @@ export const PlayBoard = () => {
     const aim = isAimable({ kind: 'hero', player: owner });
     return (
       <button
+        ref={track(`h${owner}`)}
+        onMouseEnter={() => setHover({ kind: 'hero', player: owner })}
+        onMouseLeave={() => setHover(null)}
         type="button"
         className={[
           styles.hero,
@@ -261,6 +309,7 @@ export const PlayBoard = () => {
     return (
       <button
         key={index}
+        ref={track(`c${index}`)}
         type="button"
         disabled={over || !playable}
         title={playable ? card?.text : `Can't play now. ${card?.text ?? ''}`}
@@ -278,8 +327,35 @@ export const PlayBoard = () => {
     );
   };
 
+  // The targeting line: from the selected card, minion or hero to the character under the pointer
+  // (green when it is a legal target) or else to the pointer itself (grey).
+  const sourceKey =
+    selection?.kind === 'hand' ? `c${selection.index}` : selection?.kind === 'minion' ? `m${selection.id}` : selection ? `h${me}` : null;
+  const sourceEl = sourceKey ? nodes.current.get(sourceKey) : undefined;
+  const overTarget = hover && isAimable(hover) ? nodes.current.get(targetKey(hover)) : undefined;
+  const lineFrom = sourceEl && aimable.length > 0 ? centerOf(sourceEl) : null;
+  const lineTo = overTarget ? centerOf(overTarget) : pointer;
+
   return (
     <main className={styles.page}>
+      {lineFrom && lineTo && (
+        <svg className={styles.targetLine} aria-hidden="true">
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 z" fill={overTarget ? '#3ddc84' : '#bbb'} />
+            </marker>
+          </defs>
+          <path
+            d={targetLinePath(lineFrom, lineTo, TARGET_LINE_STYLE)}
+            fill="none"
+            stroke={overTarget ? '#3ddc84' : '#bbb'}
+            strokeWidth={4}
+            strokeLinecap="round"
+            strokeDasharray={overTarget ? undefined : '8 6'}
+            markerEnd="url(#arrowhead)"
+          />
+        </svg>
+      )}
       <div className={styles.table}>
         <section className={styles.side}>
           {renderHero(foe, false)}
@@ -295,7 +371,7 @@ export const PlayBoard = () => {
             <span>
               Turn {state.turn}: {label(state.activePlayer)}
               {choiceOptions.length > 0 ? ' - choose one option' : ''}
-              {aimable.length > 0 ? ' - pick a target (click the selection again to cancel)' : ''}
+              {aimable.length > 0 ? ' - pick a target (Esc, right-click or clicking the selection again cancels)' : ''}
             </span>
           )}
           {message && <span className={styles.error}>{message}</span>}
