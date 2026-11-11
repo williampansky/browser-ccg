@@ -1,5 +1,7 @@
 import { produce } from 'immer';
 import { ActionError, GameEvent, GameState, TargetRef } from '../state/types';
+import { getCardDef } from '../definitions';
+import type { EngineContext } from './apply-action';
 import { damageHero, damageMinion } from './damage';
 import { opponentOf } from './lookup';
 import { isLegalTarget, legalTargets } from './targeting';
@@ -13,7 +15,8 @@ import { isLegalTarget, legalTargets } from './targeting';
 export const weaponAttack = (
   state: GameState,
   { target }: { target: TargetRef },
-  events: GameEvent[]
+  events: GameEvent[],
+  ctx?: EngineContext
 ): GameState | ActionError => {
   const me = state.activePlayer;
   const foe = opponentOf(me);
@@ -27,6 +30,12 @@ export const weaponAttack = (
     const w = p.weapon!;
     p.weaponAttacksThisTurn += 1;
     events.push({ type: 'WeaponAttacked', target });
+    // "Before every attack" effects of the weapon itself (CORE_081 heals first)
+    const card = ctx?.catalog.get(w.cardId);
+    const def = card && ctx && (ctx.defs ?? getCardDef)(card);
+    for (const effect of def?.beforeAttack ?? []) {
+      effect({ g, caster: me, rng: ctx!.rng, catalog: ctx!.catalog, events, sourceCardId: w.cardId });
+    }
     if (target.kind === 'hero') {
       damageHero(g, foe, w.attack, events);
     } else {

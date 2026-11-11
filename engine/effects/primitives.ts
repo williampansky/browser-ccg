@@ -1,6 +1,7 @@
 import { damageTarget, healTarget } from '../rules/damage';
 import { drawCard } from '../rules/draw';
 import { findMinion, opponentOf } from '../rules/lookup';
+import { withSpellPower } from '../rules/spell-power';
 import { createMinion } from '../rules/minion';
 import { summonMinion } from '../rules/summon';
 import { MAX_ENERGY, MAX_HAND, type MinionKeywords } from '../state/types';
@@ -10,14 +11,16 @@ import type { Effect, Selector } from './types';
 export const damage =
   (select: Selector, amount: number): Effect =>
   (ctx) => {
-    for (const t of select(ctx)) damageTarget(ctx.g, t, amount, ctx.events);
+    const total = withSpellPower('damage', amount, ctx.spellDamage);
+    for (const t of select(ctx)) damageTarget(ctx.g, t, total, ctx.events);
   };
 
 /** Restores up to `amount` health (never above the maximum). */
 export const heal =
   (select: Selector, amount: number): Effect =>
   (ctx) => {
-    for (const t of select(ctx)) healTarget(ctx.g, t, amount, ctx.events);
+    const total = withSpellPower('heal', amount, ctx.spellDamage);
+    for (const t of select(ctx)) healTarget(ctx.g, t, total, ctx.events);
   };
 
 /** The caster draws `count` cards (full hand burns, empty deck is fatigue). */
@@ -130,11 +133,11 @@ export const destroy =
     for (const { minion } of minionsOf(ctx, select)) minion.health = 0;
   };
 
-/** Sets attack to an exact value (text wins over hsclone for 075). */
+/** Sets the base attack to an exact value (text wins over hsclone for 075); auras and this-turn boosts still apply on top. */
 export const setAttack =
   (select: Selector, value: number): Effect =>
   (ctx) => {
-    for (const { minion } of minionsOf(ctx, select)) minion.attack = value;
+    for (const { minion } of minionsOf(ctx, select)) minion.attack = value + minion.auraAttack + minion.tempAttack;
   };
 
 /** Sets current and maximum health to an exact value. */
@@ -277,3 +280,44 @@ export const keepFromTop =
     p.hand.push(kept);
     ctx.events.push({ type: 'Drew', player: ctx.caster, instanceId: kept.instanceId });
   };
+
+/** "+N Attack this turn": raises attack now and takes it back when the turn ends. */
+export const buffThisTurn =
+  (select: Selector, attack: number): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) {
+      minion.attack += attack;
+      minion.tempAttack += attack;
+    }
+  };
+
+/** Equips a weapon with the running card's attack and health (as durability), replacing any weapon. */
+export const equipWeapon =
+  (opts: { temporary?: boolean } = {}): Effect =>
+  (ctx) => {
+    const card = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+    if (!card) throw new Error('equipWeapon needs a running card');
+    ctx.g.players[ctx.caster].weapon = {
+      instanceId: ctx.g.nextInstanceId++,
+      cardId: card.id,
+      attack: card.attack ?? 0,
+      durability: card.health ?? 0,
+      ...(opts.temporary ? { temporary: true } : {}),
+    };
+    ctx.events.push({ type: 'WeaponEquipped', player: ctx.caster, cardId: card.id });
+  };
+
+/** Adds a copy of a random card the opponent has played to the caster's hand (burned if the hand is full). */
+export const obtainOpponentPlayedCard = (): Effect => (ctx) => {
+  const history = ctx.g.played[opponentOf(ctx.caster)];
+  if (history.length === 0) return;
+  const cardId = ctx.rng.shuffle([...history])[0];
+  const instanceId = ctx.g.nextInstanceId++;
+  const p = ctx.g.players[ctx.caster];
+  if (p.hand.length >= MAX_HAND) {
+    ctx.events.push({ type: 'Burned', player: ctx.caster, instanceId });
+    return;
+  }
+  p.hand.push({ instanceId, cardId });
+  ctx.events.push({ type: 'CardObtained', player: ctx.caster, instanceId });
+};

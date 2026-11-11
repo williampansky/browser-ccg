@@ -42,6 +42,7 @@ export const createGame = (setup: GameSetup, rng: Rng): GameState => {
     >,
     nextInstanceId,
     nextPlaySeq: 1,
+    played: { '0': [], '1': [] },
   };
 
   const dealt = produce(initial, (g) => {

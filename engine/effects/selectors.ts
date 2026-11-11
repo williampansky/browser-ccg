@@ -56,6 +56,18 @@ export const allFriendlies = (): Selector => (ctx) => [...ownHero()(ctx), ...fri
 /** The enemy hero and all enemy minions (hidden ones too: area effects still hit them, RULES Q19). */
 export const allEnemies = (): Selector => (ctx) => [...enemyHero()(ctx), ...allEnemyMinions()(ctx)];
 
+/** Every enemy character except the one the player chose. */
+export const otherEnemies = (): Selector => (ctx) =>
+  allEnemies()(ctx).filter(
+    (t) =>
+      !(
+        ctx.target &&
+        (t.kind === 'hero'
+          ? ctx.target.kind === 'hero' && ctx.target.player === t.player
+          : ctx.target.kind === 'minion' && ctx.target.instanceId === t.instanceId)
+      )
+  );
+
 /** Both heroes and every minion. */
 export const everyone = (): Selector => (ctx) => [
   { kind: 'hero', player: '0' },

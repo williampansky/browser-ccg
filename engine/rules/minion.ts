@@ -14,6 +14,9 @@ export const createMinion = (card: Card, instanceId: number, turn: number, playS
     playedOnTurn: turn,
     attacksThisTurn: 0,
     playSeq,
+    auraAttack: 0,
+    auraRush: false,
+    tempAttack: 0,
     keywords: {
       guard: has('BULWARK'),
       rush: has('RUSH'),

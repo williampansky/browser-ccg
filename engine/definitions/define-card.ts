@@ -1,6 +1,6 @@
 import type { Card, CardCatalog, CardNumbers } from '../cards/types';
 import type { Effect, TargetFilter } from '../effects/types';
-import type { GameEvent, GameEventType, GameState, PlayerId } from '../state/types';
+import type { GameEvent, GameEventType, GameState, MinionInstance, PlayerId } from '../state/types';
 
 /** What a trigger's `when` condition can look at. */
 export interface TriggerInfo {
@@ -41,7 +41,27 @@ export interface Choice {
  * `onDeath` runs after the minion has been removed (owner is the caster). `triggers` are live
  * only while the minion is on the board (this covers end-of-turn and "whenever ..." cards).
  */
+/** What an aura minion does to the minions it reaches while it is on the board. */
+export interface Aura {
+  /** Does this aura reach `target`? (`distance` is the board-slot gap on the same side, else Infinity.) */
+  affects: (c: {
+    source: MinionInstance;
+    target: MinionInstance;
+    sameSide: boolean;
+    distance: number;
+    targetRace?: string;
+  }) => boolean;
+  attack?: number;
+  rush?: boolean;
+}
+
 export interface CardDef {
+  /** "+N Spell Damage" while on the board: raises the damage of your spells (RULES Q16) */
+  spellDamage?: number;
+  /** Ongoing effects on other minions while this one is on the board (recomputed after every step) */
+  auras?: Aura[];
+  /** For weapons: runs before each hero attack with the weapon */
+  beforeAttack?: Effect[];
   /**
    * "Choose one" cards: the player picks an option when playing (`PlayCard.choice`), and that option's
    * own `target` and `onPlay` apply instead of the card's. Options have a short `label` for the UI.

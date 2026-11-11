@@ -3,6 +3,7 @@ import { getCardDef } from '../definitions';
 import type { DefLookup } from '../definitions/define-card';
 import type { EngineContext } from './apply-action';
 import { GameEvent, GameState, MinionInstance, PlayerId } from '../state/types';
+import { recomputeAuras } from './auras';
 import { checkWin } from './win';
 
 /** Thrown when effects keep triggering each other without end; `applyAction` turns it into an error. */
@@ -33,6 +34,7 @@ export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEven
   let cursor = from;
   for (let steps = 0; ; steps++) {
     if (steps > MAX_STEPS) throw new TriggerLoopError();
+    recomputeAuras(g, ctx.catalog, defs);
 
     const dead = boardsInPlayOrder(g).filter((x) => x.minion.health <= 0);
     if (dead.length > 0) {

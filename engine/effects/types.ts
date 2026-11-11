@@ -16,6 +16,8 @@ export interface EffectContext {
   sourceCardId?: string;
   /** The minion this effect belongs to: a warcry's minion, or the owner of a trigger or death effect */
   self?: number;
+  /** Spell damage the caster has right now; set only while a SPELL is being played (RULES Q16) */
+  spellDamage?: number;
   /** The event that fired this trigger, if it is one */
   event?: GameEvent;
 }

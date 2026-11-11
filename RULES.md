@@ -528,3 +528,49 @@ From the card-effects review [A]; to be resolved card by card in Milestone 4 (se
 | 108 Unearthed Crater | adjacent +2 | dead code, never runs |
 
 **Engine note (slice 6):** cards of type `item` (about 20 in CORE: potions, scrolls, buffs) are one-shot effects and play exactly like spells. CORE_081 ("restore 2 HP before every attack") needs a pre-attack hook and is left for Milestone 4.
+
+## Appendix B: card behaviour decisions made while porting all 132 CORE cards
+
+All 132 CORE cards are playable. Where the printed text, the data numbers and `hsclone` disagreed, the
+printed text won (Q20). These are the readings the author has not yet confirmed; change the definition
+in `engine/definitions/core/` (and its test) if any is wrong.
+
+**Appendix A discrepancies, resolved as the printed text says:** 019 +1 Health (not attack), 054 +1
+Health, 051 draws the card, 055 draws 3 and keeps 1, 060 and 125 hit two *different* targets, 063
+distinct picks, 075 sets Attack (not Health) to 1, 098 draws one card, 104 buffs *all* your minions (not
+just Demonic), 106 is for one turn, 127 is for one turn only, 096 is not a CORE card here.
+
+**Choices the text leaves open:**
+- **"All friendly minions" warcries (019, 041)** buff your *other* minions, not the warcry minion itself
+  (hsclone's 041 also excluded itself). 054/059/099 warcries *can* aim at the warcry minion itself
+  (hsclone could not); the same is true of the existing CORE_021.
+- **088** doubles *current* health and raises max health by the same amount, so it acts as a +X Health buff.
+- **056** sets current *and* max health to 1. **075** sets the *base* Attack to 1; auras and this-turn
+  boosts still apply on top.
+- **Destroy (089, 090, 101, 126, 113)** is not damage: it ignores Bubble. 089/090 are gated when choosing
+  the target. 126 may target either side (the text says "a damaged minion"); 093 may too.
+- **070/109 Transform** replaces the minion in the same slot with a fresh token (damage, buffs,
+  keywords, Disable and Expiration all gone; summoning sick).
+- **092 Steal** puts the minion on your board with summoning sickness; with a full board nothing happens.
+- **103** restores a friendly minion to full health and gives Guard.
+- **113** sacrifices a friendly *Demonic* minion (the data says Demonic; the text says Undead).
+- **119 Lifesteal** heals your hero for the damage actually dealt (a Bubble-absorbed hit heals nothing).
+- **045/051/055 "choose one"** are chosen when playing: `PlayCard.choice`. 055 offers "keep card 1/2/3"
+  and keeps the last card if the deck has fewer than three; an empty deck does nothing (no fatigue).
+- **049** adds an *empty* energy slot (capped at 10), unlike 043 which gives energy this turn only.
+- **057** summons one random token; summoned minions never run warcries, so TacMedic's warcry does not fire.
+- **020** summons one of its two 1/1 tokens at random (they are identical apart from the name).
+- **050** hits the chosen enemy for 4 and every *other* enemy (hero included) for 1.
+- **Spell damage (011, 015, 028, 037; Q16)** raises each damage hit of your *spells* by its amount and
+  stacks. It never affects warcries, heals, draws, armor or summons. `engine/rules/spell-power.ts` is
+  the one place that decides which effects it raises.
+- **Auras ("Boon" on a minion: 003, 062, 108, 130)** are recomputed after every step, so they vanish
+  when the minion dies and re-aim as the board changes. 003/130 reach your *other* minions; 108 reaches
+  the two neighbours; 062 gives your Creatures Rush.
+- **This-turn boosts (048, 106, 111, 127)** end when the turn ends. 127 equips a 4/1 weapon that is
+  removed at the end of the turn if unused. 048/111 affect minions only (a hero has no Attack of its own).
+- **081** heals 2 *before* the attack, so counter-damage cannot kill the hero first. The 2 is in the card
+  text only (no data field), so it is a constant in the definition.
+- **084** picks a random card from the cards your opponent has played from hand (tracked in
+  `GameState.played`); nothing if they have played none; a full hand burns it.
+- **007** destroys the opponent's weapon (hsclone also stopped their hero attacking; the text does not say so).

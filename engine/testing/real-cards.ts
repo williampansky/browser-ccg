@@ -89,3 +89,16 @@ export const withWeapon = (s: GameState, player: PlayerId): GameState =>
 
 /** Plays hand slot 0, then every legal option is not needed here: returns the legal targets for it. */
 export { legalTargets } from '../rules/targeting';
+
+/** Ends the active player's turn (and starts the other's). */
+export const endTurn = (s: GameState): GameState => {
+  const r = run(s, { type: 'EndTurn' });
+  if ('error' in r) throw new Error(`unexpected ${r.error}`);
+  return r.state;
+};
+/** Ends turns until it is `player`'s turn again. */
+export const backTo = (s: GameState, player: PlayerId): GameState => {
+  let x = s;
+  for (let i = 0; i < 4 && x.activePlayer !== player; i++) x = endTurn(x);
+  return x;
+};

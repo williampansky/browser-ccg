@@ -6,7 +6,7 @@ import { Action, ActionError, GameEvent, GameState, PlayerId } from '../state/ty
 import { attack } from './attack';
 import { playCard } from './play-card';
 import { settle, TriggerLoopError } from './settle';
-import { startTurn } from './turn';
+import { endTurnCleanup, startTurn } from './turn';
 import { weaponAttack } from './weapon-attack';
 
 export interface ActionResult {
@@ -47,7 +47,8 @@ export const applyAction = (state: GameState, action: Action, ctx: EngineContext
         const ended = settled(state, from);
         if (ended.status === 'over') return { state: ended, events };
         const next = events.length;
-        return { state: settled(startTurn(ended, opponent, events), next), events };
+        const cleaned = produce(ended, (g) => endTurnCleanup(g, me));
+        return { state: settled(startTurn(cleaned, opponent, events), next), events };
       }
       case 'Concede':
         return {
@@ -67,7 +68,7 @@ export const applyAction = (state: GameState, action: Action, ctx: EngineContext
             ? playCard(state, action, ctx, events)
             : action.type === 'Attack'
             ? attack(state, action, events)
-            : weaponAttack(state, action, events);
+            : weaponAttack(state, action, events, ctx);
         return isError(r) ? r : { state: settled(r, 0), events };
       }
     }

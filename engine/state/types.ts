@@ -34,6 +34,12 @@ export interface MinionInstance {
   keywords: MinionKeywords;
   /** Order of entering play (RULES Q15: dead minions are removed in this order) */
   playSeq: number;
+  /** Attack currently added by auras (already included in `attack`; the engine recomputes it) */
+  auraAttack: number;
+  /** True while Rush comes from an aura rather than the card or a spell */
+  auraRush: boolean;
+  /** Attack added "for this turn only" (already included in `attack`; removed when the turn ends) */
+  tempAttack: number;
   /** The turn number on which this minion may not attack (set by Disable) */
   disabledOnTurn?: number;
   /** The turn number at whose start this minion dies (set by Expiration) */
@@ -46,6 +52,8 @@ export interface WeaponInstance {
   cardId: string;
   attack: number;
   durability: number;
+  /** Removed when its owner's turn ends (CORE_127) */
+  temporary?: boolean;
 }
 
 export interface PlayerState {
@@ -73,6 +81,8 @@ export interface GameState {
   nextInstanceId: number;
   /** Source of `MinionInstance.playSeq` */
   nextPlaySeq: number;
+  /** Ids of the cards each player has played from hand so far (for CORE_084) */
+  played: Record<PlayerId, string[]>;
 }
 
 /** Something an attack or effect can aim at: a hero (either player's) or a minion on either board. */
@@ -119,6 +129,7 @@ export type GameEvent =
   | { type: 'MinionAttacked'; attackerId: number; target: TargetRef }
   | { type: 'CardPlayed'; player: PlayerId; instanceId: number; cardId: string }
   | { type: 'MinionDamaged'; instanceId: number; amount: number }
+  | { type: 'CardObtained'; player: PlayerId; instanceId: number }
   | { type: 'Discarded'; player: PlayerId; instanceId: number }
   | { type: 'Healed'; target: TargetRef; amount: number }
   | { type: 'EnergyGained'; player: PlayerId; amount: number }

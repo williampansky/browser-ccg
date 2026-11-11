@@ -21,13 +21,15 @@ earlier `hsclone` repo as the rules reference. Read these first:
 
 - **There is a playable hot-seat board at `/play`** (`components/play-board/`): one browser tab, both
   players, the active player at the bottom. It runs on the new engine with the real CORE cards the
-  engine fully supports (`playablePool` in `engine/decks.ts`; about 49 of 132, growing as definitions
-  are added). It defaults to playing against a random-move AI (`engine/bots/random-bot.ts`, Player 2); a button
-  switches to hot-seat. There is no art yet and no multiplayer. `game/game.ts` is still a stub (the
+  engine fully supports (`playablePool` in `engine/decks.ts`: now all 132). It defaults to playing against a random-move AI (`engine/bots/random-bot.ts`, Player 2); a button
+  switches to hot-seat. There is no art yet and no multiplayer. "Choose one" cards show option buttons before aiming (not yet
+  clicked through in a browser, only covered by engine tests). `game/game.ts` is still a stub (the
   boardgame.io adapter comes later). The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-6 of
   its build order are done and tested: card model and loader (`engine/cards/`), state and turn flow,
   minions and combat, spells and `legalTargets`, keywords, triggers/warcries/`legalActions`, and
-  weapons/armor/items. Still to build: the dedicated random-bot invariant suite (slice 7; a first
+  weapons/armor/items. After the slices, every CORE card got a definition (Batches A-C: simple effects,
+  small new effects, then spell damage, auras, this-turn boosts, a pre-attack hook and a played-cards
+  history); the rule readings I had to choose are in `RULES.md` Appendix B. Still to build: the dedicated random-bot invariant suite (slice 7; a first
   version already runs in `legal-actions.test.ts`).
 - The site shell works: home, `collection`, `deckbuilder`, `cards`, `store`, `profile`, `news`,
   `faq`, `changelog`, plus `pages/api/` for cards/users. The card renderers (`Card`, `Minion`) work.
@@ -41,11 +43,9 @@ earlier `hsclone` repo as the rules reference. Read these first:
 The author was about to **playtest `/play`** (vs the random AI) and give feedback before deciding the
 order below. Candidates, roughly in the order discussed:
 
-1. **Port the missing card behaviour from `hsclone`.** Of 132 CORE cards only about 49 are playable.
-   The other ~83 are refused by the engine (`needsBehaviour` in `engine/decks.ts`) rather than played
-   wrongly: warcries, auras ("Boon"), spell damage, and most spells/items. `hsclone` already has warcry
-   behaviour for them; port it as definitions in `engine/definitions/`, one card per file, tests first.
-   Known extra work: spell power (RULES Q16), auras, `CORE_081` needs a pre-attack hook.
+1. **Playtest the full pool** and confirm or change the readings in `RULES.md` Appendix B. The summoned
+   TacMedic token's warcry does not fire (summoned minions have no warcry); `CORE_007` does not stop the
+   enemy hero attacking.
 2. **Port the card art** from `hsclone`'s `public/` dir (this repo lacks it) and use it on the board.
    Check provenance/licences. The board is text-only until then.
 3. **Greedy bot** (Milestone 3), then bot-vs-bot win-rate tables.
