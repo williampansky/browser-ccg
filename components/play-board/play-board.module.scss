@@ -538,3 +538,13 @@
     font-size: 2.4rem;
   }
 }
+
+// Card art as the background, with a dark wash behind the text so it stays readable.
+.art {
+  background-color: #2b3042;
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: multiply;
+  text-shadow: 0 1px 3px #000, 0 0 2px #000;
+  background-color: #555b70;
+}

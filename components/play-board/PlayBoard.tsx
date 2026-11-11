@@ -39,6 +39,9 @@ const { cards, byId } = loadHsCards();
 const pool = playablePool(cards);
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
 const playerLabel = (p: PlayerId, mode: Mode) => `Player ${Number(p) + 1}${mode === 'ai' && p === AI_PLAYER ? ' (AI)' : ''}`;
+/** CORE_012 -> /images/sets/SET_CORE/012-CARD.jpg (all-ids are CORE here; other sets fall back to the plain card). */
+const artStyle = (id?: string): React.CSSProperties | undefined =>
+  id?.startsWith('CORE_') ? { backgroundImage: `url(/images/sets/SET_CORE/${id.slice(5)}-CARD.jpg)` } : undefined;
 const targetKey = (t: TargetRef) => (t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`);
 const centerOf = (el: HTMLElement) => {
   const r = el.getBoundingClientRect();
@@ -451,8 +454,10 @@ export const PlayBoard = () => {
         nodeRef={track(`m${m.instanceId}`)}
         onMouseEnter={() => setHover({ kind: 'minion', instanceId: m.instanceId })}
         onMouseLeave={() => setHover(null)}
+        style={artStyle(m.cardId)}
         className={[
           styles.minion,
+          styles.art,
           m.keywords.guard ? styles.guard : '',
           owner === me && canAttack(m) ? styles.ready : '',
           selected ? styles.selected : '',
@@ -522,7 +527,8 @@ export const PlayBoard = () => {
         type="button"
         disabled={over || !playable}
         title={playable ? card?.text : `Can't play now. ${card?.text ?? ''}`}
-        className={[styles.handCard, playable ? styles.ready : styles.dim, selected ? styles.selected : ''].join(' ')}
+        style={artStyle(card?.id)}
+        className={[styles.handCard, styles.art, playable ? styles.ready : styles.dim, selected ? styles.selected : ''].join(' ')}
         onClick={() => setSelection(selected ? null : { kind: 'hand', index })}
       >
         <span className={styles.cost}>{card?.cost}</span>
