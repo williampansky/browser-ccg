@@ -61,6 +61,9 @@ Done when: a scripted two-player game plays from start to a winner inside a test
       targets highlighted; attackers glow
 - [ ] Hot-seat/two-tab play via boardgame.io `Local`, with no hard-coded hosts or ports
 - [ ] Reuse the existing card art and `Card`/`Minion` renderers
+- [ ] Port the card art from `hsclone`'s `public/` dir into this repo (it has its own art that this repo
+      doesn't; deferred until the board is otherwise working, but it has to happen). Check provenance and
+      licences as it comes over (see the art provenance item in Milestone 4)
 
 Done when: you can play a full game against yourself in the browser, to a win.
 
