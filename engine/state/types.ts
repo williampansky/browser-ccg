@@ -118,6 +118,7 @@ export type GameEvent =
   | { type: 'MinionAttacked'; attackerId: number; target: TargetRef }
   | { type: 'CardPlayed'; player: PlayerId; instanceId: number; cardId: string }
   | { type: 'MinionDamaged'; instanceId: number; amount: number }
+  | { type: 'Discarded'; player: PlayerId; instanceId: number }
   | { type: 'Healed'; target: TargetRef; amount: number }
   | { type: 'EnergyGained'; player: PlayerId; amount: number }
   | { type: 'BubblePopped'; instanceId: number }

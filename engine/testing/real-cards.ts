@@ -18,7 +18,8 @@ export const realCard = (id: string): Card => {
 };
 
 /** [attack, health] of each minion to put on a board, left to right. */
-export type BoardSpec = [number, number][];
+/** An optional third entry names a real card to use instead of the plain test minion (for its race). */
+export type BoardSpec = ([number, number] | [number, number, string])[];
 
 export interface Scenario {
   mine?: BoardSpec;
@@ -39,8 +40,8 @@ export const setup = (cardId: string, sc: Scenario = {}): GameState => {
   for (const id of sc.hand ?? []) s = putInHand(s, '0', id);
   s = setEnergy(s, '0', 10);
   for (const [player, spec] of [['0', sc.mine], ['1', sc.theirs]] as const) {
-    for (const [attack, health] of spec ?? []) {
-      s = putOnBoard(s, player, grunt, { attack, health, maxHealth: health });
+    for (const [attack, health, cardId] of spec ?? []) {
+      s = putOnBoard(s, player, cardId ? realCard(cardId) : grunt, { attack, health, maxHealth: health });
     }
   }
   return produce(s, (g) => {
@@ -73,3 +74,18 @@ export const mref = (s: GameState, player: PlayerId, i: number): TargetRef => ({
 });
 export const hero = (player: PlayerId): TargetRef => ({ kind: 'hero', player });
 export const stats = (s: GameState, player: PlayerId) => s.players[player].board.map((m) => [m.attack, m.health]);
+
+/** Sets a minion's current health (below its max) to make it "damaged". */
+export const hurt = (s: GameState, player: PlayerId, i: number, health: number): GameState =>
+  produce(s, (g) => {
+    g.players[player].board[i].health = health;
+  });
+
+/** Gives a player a weapon. */
+export const withWeapon = (s: GameState, player: PlayerId): GameState =>
+  produce(s, (g) => {
+    g.players[player].weapon = { instanceId: 9999, cardId: 'GRUNT', attack: 2, durability: 2 };
+  });
+
+/** Plays hand slot 0, then every legal option is not needed here: returns the legal targets for it. */
+export { legalTargets } from '../rules/targeting';

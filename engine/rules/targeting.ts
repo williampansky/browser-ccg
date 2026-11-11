@@ -50,5 +50,5 @@ export const legalTargets = (
   const card = inHand && catalog?.get(inHand.cardId);
   const filter = card && defs(card)?.target;
   if (!filter) return [];
-  return visibleCharacters(state).filter((candidate) => filter({ state, caster: me, candidate }));
+  return visibleCharacters(state).filter((candidate) => filter({ state, caster: me, candidate, catalog }));
 };

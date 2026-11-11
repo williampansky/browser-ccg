@@ -1,6 +1,7 @@
 import { damageTarget, healTarget } from '../rules/damage';
 import { drawCard } from '../rules/draw';
-import { findMinion } from '../rules/lookup';
+import { findMinion, opponentOf } from '../rules/lookup';
+import { createMinion } from '../rules/minion';
 import { summonMinion } from '../rules/summon';
 import { MAX_ENERGY, type MinionKeywords } from '../state/types';
 import type { Effect, Selector } from './types';
@@ -121,3 +122,137 @@ export const summonRandomEntourage = (): Effect => (ctx) => {
   if (!token) throw new Error(`${ctx.sourceCardId} has no entourage tokens in the catalog`);
   summonMinion(ctx.g, ctx.caster, token, ctx.events, ctx.self);
 };
+
+/** Destroys minions outright. Ignores Bubble and health (RULES: destroy is not damage). */
+export const destroy =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) minion.health = 0;
+  };
+
+/** Sets attack to an exact value (text wins over hsclone for 075). */
+export const setAttack =
+  (select: Selector, value: number): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) minion.attack = value;
+  };
+
+/** Sets current and maximum health to an exact value. */
+export const setHealth =
+  (select: Selector, value: number): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) {
+      minion.health = value;
+      minion.maxHealth = value;
+    }
+  };
+
+/** Doubles current health. Maximum health rises by the same amount, so it acts as a +X health buff. */
+export const doubleHealth =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) {
+      minion.maxHealth += minion.health;
+      minion.health *= 2;
+    }
+  };
+
+/** Restores minions to full health. */
+export const healToFull =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) minion.health = minion.maxHealth;
+  };
+
+/**
+ * Replaces each minion, in the same slot, with a fresh copy of the running card's `index`-th entourage
+ * token. Damage, buffs, keywords and timers are all gone; the new minion has summoning sickness.
+ */
+export const transformInto =
+  (select: Selector, index = 0): Effect =>
+  (ctx) => {
+    const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+    const token = source && ctx.catalog.get(source.entourage[index]);
+    if (!token) throw new Error(`${ctx.sourceCardId} has no entourage token #${index} in the catalog`);
+    for (const { owner, minion } of minionsOf(ctx, select)) {
+      const board = ctx.g.players[owner].board;
+      const slot = board.findIndex((m) => m.instanceId === minion.instanceId);
+      board[slot] = createMinion(token, ctx.g.nextInstanceId++, ctx.g.turn, ctx.g.nextPlaySeq++);
+    }
+  };
+
+/** Takes control of enemy minions. With no room on the caster's board, the minion stays put. */
+export const steal =
+  (select: Selector): Effect =>
+  (ctx) => {
+    const foe = opponentOf(ctx.caster);
+    for (const { owner, minion } of minionsOf(ctx, select)) {
+      const mine = ctx.g.players[ctx.caster].board;
+      if (owner === ctx.caster || mine.length >= 7) continue;
+      const theirs = ctx.g.players[foe].board;
+      theirs.splice(theirs.findIndex((m) => m.instanceId === minion.instanceId), 1);
+      minion.playedOnTurn = ctx.g.turn; // summoning sickness under the new owner
+      minion.attacksThisTurn = 0;
+      delete minion.disabledOnTurn;
+      mine.push(minion);
+    }
+  };
+
+/** The caster discards `count` random cards from hand (fewer if the hand is smaller). */
+export const discardRandom =
+  (count = 1): Effect =>
+  (ctx) => {
+    const hand = ctx.g.players[ctx.caster].hand;
+    for (let i = 0; i < count && hand.length > 0; i++) {
+      const [gone] = hand.splice(ctx.rng.shuffle(hand.map((_, k) => k))[0], 1);
+      ctx.events.push({ type: 'Discarded', player: ctx.caster, instanceId: gone.instanceId });
+    }
+  };
+
+/** Destroys the opponent's weapon, if any. */
+export const destroyEnemyWeapon = (): Effect => (ctx) => {
+  const foe = ctx.g.players[opponentOf(ctx.caster)];
+  if (foe.weapon) {
+    foe.weapon = null;
+    ctx.events.push({ type: 'WeaponBroke', player: opponentOf(ctx.caster) });
+  }
+};
+
+/** Deals damage, then heals the caster's hero for the damage actually dealt (Bubble-absorbed hits heal nothing). */
+export const damageWithLifesteal =
+  (select: Selector, amount: number): Effect =>
+  (ctx) => {
+    const before = ctx.events.length;
+    damage(select, amount)(ctx);
+    const dealt = ctx.events
+      .slice(before)
+      .reduce((sum, e) => sum + (e.type === 'MinionDamaged' || e.type === 'HeroDamaged' ? e.amount : 0), 0);
+    if (dealt > 0) heal(ownHeroRef, dealt)(ctx);
+  };
+const ownHeroRef: Selector = (ctx) => [{ kind: 'hero', player: ctx.caster }];
+
+/** The caster draws a card if the selected minion is at 0 health (use right after damaging it). */
+export const drawIfDead =
+  (select: Selector): Effect =>
+  (ctx) => {
+    const dead = select(ctx).some((t) => t.kind === 'minion' && (findMinion(ctx.g, t.instanceId)?.minion.health ?? 0) <= 0);
+    if (dead) draw(1)(ctx);
+  };
+
+/** Gives the running minion +`attack`/+`health` for each OTHER minion its owner has. */
+export const buffPerOtherFriendly =
+  (attack: number, health: number): Effect =>
+  (ctx) => {
+    const others = ctx.g.players[ctx.caster].board.filter((m) => m.instanceId !== ctx.self).length;
+    buff((c) => (c.self === undefined ? [] : [{ kind: 'minion', instanceId: c.self }]), attack * others, health * others)(ctx);
+  };
+
+/** Sacrifices (destroys) the chosen friendly minion and heals the caster's hero. */
+export const sacrificeFor =
+  (select: Selector, healAmount: number): Effect =>
+  (ctx) => {
+    const victims = minionsOf(ctx, select).filter((x) => x.owner === ctx.caster);
+    if (victims.length === 0) return;
+    destroy(select)(ctx);
+    heal(ownHeroRef, healAmount)(ctx);
+  };

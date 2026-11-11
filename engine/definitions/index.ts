@@ -31,6 +31,39 @@ import core073 from "./core/core-073";
 import core078 from "./core/core-078";
 import core067 from "./core/core-067";
 import core049 from "./core/core-049";
+import core080 from "./core/core-080";
+import core097 from "./core/core-097";
+import core098 from "./core/core-098";
+import core115 from "./core/core-115";
+import core089 from "./core/core-089";
+import core090 from "./core/core-090";
+import core101 from "./core/core-101";
+import core126 from "./core/core-126";
+import core093 from "./core/core-093";
+import core070 from "./core/core-070";
+import core109 from "./core/core-109";
+import core056 from "./core/core-056";
+import core075 from "./core/core-075";
+import core088 from "./core/core-088";
+import core046 from "./core/core-046";
+import core059 from "./core/core-059";
+import core099 from "./core/core-099";
+import core110 from "./core/core-110";
+import core123 from "./core/core-123";
+import core103 from "./core/core-103";
+import core104 from "./core/core-104";
+import core086 from "./core/core-086";
+import core066 from "./core/core-066";
+import core105 from "./core/core-105";
+import core119 from "./core/core-119";
+import core116 from "./core/core-116";
+import core118 from "./core/core-118";
+import core057 from "./core/core-057";
+import core064 from "./core/core-064";
+import core033 from "./core/core-033";
+import core007 from "./core/core-007";
+import core092 from "./core/core-092";
+import core113 from "./core/core-113";
 import game001 from "./game/game-001";
 import core001 from "./core/core-001";
 import core012 from "./core/core-012";
@@ -56,6 +89,39 @@ import core129 from "./core/core-129";
 
 /** Every card with behaviour beyond its stats and keywords. Vanilla cards have no entry. */
 const all: Definition[] = [
+  core113,
+  core092,
+  core007,
+  core033,
+  core064,
+  core057,
+  core118,
+  core116,
+  core119,
+  core105,
+  core066,
+  core086,
+  core104,
+  core103,
+  core123,
+  core110,
+  core099,
+  core059,
+  core046,
+  core088,
+  core075,
+  core056,
+  core109,
+  core070,
+  core093,
+  core126,
+  core101,
+  core090,
+  core089,
+  core115,
+  core098,
+  core097,
+  core080,
   core049,
   core067,
   core078,

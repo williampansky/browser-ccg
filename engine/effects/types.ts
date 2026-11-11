@@ -27,4 +27,10 @@ export type Effect = (ctx: EffectContext) => void;
 export type Selector = (ctx: EffectContext) => TargetRef[];
 
 /** Decides which characters a targeted card may be aimed at (used by `legalTargets`). */
-export type TargetFilter = (c: { state: GameState; caster: PlayerId; candidate: TargetRef }) => boolean;
+export type TargetFilter = (c: {
+  state: GameState;
+  caster: PlayerId;
+  candidate: TargetRef;
+  /** Lets a filter look at a minion's card (race, ...) */
+  catalog?: CardCatalog;
+}) => boolean;
