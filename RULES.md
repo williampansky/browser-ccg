@@ -23,8 +23,8 @@ questions in section 12. Once approved, this is the contract for the new TypeScr
 5. **Legality is scattered.** Whether a target is legal is decided in UI-oriented flags set by
    `select*` moves and trusted by the `attack*` moves. The rewrite needs one `legalTargets`
    function the engine itself enforces.
-6. **About 25 cards have text that disagrees with their implemented behaviour.** Each needs an
-   explicit decision (section 11 and Appendix A).
+6. **About 19 CORE cards have text that disagrees with their implemented behaviour** (Appendix A
+   lists them). Each needs an explicit decision.
 
 ## 0.1 How to read the evidence tags
 
@@ -275,8 +275,8 @@ appear in `hsclone`'s `lib/` code. [V-data + V-code]
 | C. Keyword-only (generic keyword code) | 12 |
 | D. Has an effect, **no** `hsclone` code | **3**: CORE_071 Ice Primordial ("Disable anyone attacked by this minion"), CORE_085 Ifriit Ward ("draw a card whenever a minion is healed"), CORE_130 Sentry Post ("your minions have +1 AP") |
 
-"Bespoke code exists" is an upper bound on correctness: about 25 of those 109 disagree with their own
-text (Appendix A), and CORE_108 has dead code. **PRIME: 0 of 254 have code.** The 17+ ENTOURAGE
+"Bespoke code exists" is an upper bound on correctness: about 18 of those 109 disagree with their own
+text and CORE_108's code never runs (Appendix A). **PRIME: 0 of 254 have code.** The 17+ ENTOURAGE
 tokens are created by CORE cards; none has its own logic. [A]
 
 ---
@@ -383,8 +383,9 @@ Each has a **proposed default**. You can reply "accept all defaults" or override
 16. **Spell damage bonus.** *Default:* only increases damage numbers, not heals/draws/shields.
 17. **Disable.** hsclone: a disabled minion loses exactly one of its owner's attack opportunities
     [likely, not live-verified]. *Default:* "cannot attack during its owner's next turn".
-18. **Expiration.** *Default:* the minion dies at the start of its owner's... or the caster's... next
-    turn; **needs your intent** (hsclone's own loop is buggy).
+18. **Expiration** (CORE_114 "Cryptic Curse"). hsclone ticks the countdown on both boards every turn
+    start, and its own-board loop kills the wrong board. *Default:* the target dies at the start of the
+    caster's next turn. **Needs your intent.**
 19. **Hidden/concealed.** *Default:* cannot be targeted by anything until it attacks.
 
 **Cards and text**
