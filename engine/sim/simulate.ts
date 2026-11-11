@@ -91,7 +91,7 @@ export const runTournament = (contestants: Contestant[], gamesPerPair: number, c
   const cardStats = new Map<string, CardStat>();
   const tally = (r: GameResult) => {
     for (const p of ['0', '1'] as PlayerId[]) {
-      for (const id of new Set(r.played[p])) {
+      for (const id of Array.from(new Set(r.played[p]))) {
         const stat = cardStats.get(id) ?? { cardId: id, games: 0, wins: 0 };
         stat.games += 1;
         stat.wins += r.winner === 'draw' ? 0.5 : r.winner === p ? 1 : 0;
@@ -105,7 +105,7 @@ export const runTournament = (contestants: Contestant[], gamesPerPair: number, c
       matchups.push(playMatchup(contestants[i], contestants[j], gamesPerPair, catalog, seed, (r) => tally(r)));
     }
   }
-  return { matchups, cardStats: [...cardStats.values()] };
+  return { matchups, cardStats: Array.from(cardStats.values()) };
 };
 
 const pct = (x: number) => `${(x * 100).toFixed(0)}%`;
