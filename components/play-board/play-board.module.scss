@@ -500,24 +500,23 @@
 .backs {
   display: flex;
   justify-content: center;
-  height: 3.6rem;
-  overflow: hidden;
+  height: 5rem;
+  padding-top: 0.2rem;
 }
 
 .cardBack {
-  width: 2.6rem;
-  height: 3.6rem;
-  margin: 0 -0.35rem;
+  width: 3rem;
+  height: 4.2rem;
+  margin: 0 -0.3rem;
   flex: none;
   border-radius: 4px;
   border: 1px solid #0008;
   background: #2b3042 url('/images/backs/default.png') center / cover no-repeat;
-  transform: translateY(-1.2rem);
   transition: transform 0.15s;
 }
 
 .backPicked {
-  transform: translateY(0);
+  transform: translateY(0.7rem);
   box-shadow: 0 0 0 2px #ff6b6b;
   z-index: 1;
 }
