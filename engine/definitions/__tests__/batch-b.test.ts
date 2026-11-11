@@ -131,9 +131,9 @@ describe('keyword and buff items', () => {
     const m = play(s, mref(s, '1', 0)).state.players['1'].board[0];
     expect([m.attack, m.health, m.keywords.guard]).toEqual([4, 5, true]);
   });
-  it('059 buffs any friendly minion with Guard and +1/+2 (not an enemy one)', () => {
+  it('059 buffs a friendly Creature with Guard and +1/+2 (not a non-Creature, not an enemy one)', () => {
     const s = setup('CORE_059', { mine: [[2, 3], [3, 2, 'CORE_061']], theirs: [[3, 2, 'CORE_061']] });
-    expect(ids2(s, targets(s)).sort()).toEqual(['m0', 'm1']);
+    expect(ids2(s, targets(s))).toEqual(['m1']);
     const m = play(s, mref(s, '0', 1)).state.players['0'].board[1];
     expect([m.attack, m.health, m.keywords.guard]).toEqual([4, 4, true]);
   });

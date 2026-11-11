@@ -544,7 +544,6 @@ just Demonic), 106 is for one turn, 127 is for one turn only, 096 is not a CORE 
 - **"All friendly minions" warcries (019, 041)** buff your *other* minions, not the warcry minion itself
   (hsclone's 041 also excluded itself). 054/059/099 warcries *can* aim at the warcry minion itself
   (hsclone could not); the same is true of the existing CORE_021.
-- **059 Creature Tamer** may target any friendly minion, not only Creatures (author's decision after playtesting, 2026-11).
 - **088** doubles *current* health and raises max health by the same amount, so it acts as a +X Health buff.
 - **056** sets current *and* max health to 1. **075** sets the *base* Attack to 1; auras and this-turn
   boosts still apply on top.

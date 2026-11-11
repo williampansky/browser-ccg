@@ -236,6 +236,20 @@
   overflow-y: auto;
   font-family: ui-monospace, monospace;
   font-size: 12px;
+  // A slim scrollbar that always takes the same space, so it does not pop in and out as lines arrive.
+  scrollbar-width: thin;
+  scrollbar-color: #3f4660 transparent;
+  scrollbar-gutter: stable;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #3f4660;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
   white-space: pre-wrap;
   background: #1b1e27;
   padding: 0.5rem;
@@ -276,4 +290,132 @@
     background: rgba(95, 209, 106, 0.18);
     outline-style: solid;
   }
+}
+
+.deckView {
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
+  bottom: 1rem;
+  width: 16rem;
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    margin: 0 0 0.5rem;
+
+    small {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #aab;
+    }
+  }
+}
+
+.deckRows {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: #3f4660 transparent;
+}
+
+.deckRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 1.9rem;
+  padding: 0 0.5rem 0 0.25rem;
+  background: #232734;
+  border-left: 3px solid #3b6fd4;
+  border-radius: 4px;
+}
+
+.deckGone {
+  opacity: 0.35;
+}
+
+.deckCost {
+  width: 1.3rem;
+  height: 1.3rem;
+  flex: none;
+  border-radius: 50%;
+  background: #3b6fd4;
+  text-align: center;
+  font-weight: 700;
+  line-height: 1.3rem;
+  font-size: 0.75rem;
+}
+
+.deckName {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.deckCount {
+  font-weight: 700;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal {
+  padding: 1.25rem;
+  background: #1b1e27;
+  border: 2px solid #3f4660;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  h3 {
+    margin: 0;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+.modalCards {
+  display: flex;
+  gap: 1rem;
+}
+
+.modalCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 12rem;
+  min-height: 12rem;
+  padding: 0.6rem 0.6rem 0.6rem 2rem;
+  background: #2b3042;
+  border: 2px solid #5fd16a;
+  border-radius: 8px;
+  color: inherit;
+  text-align: left;
+
+  &:hover {
+    background: #36405a;
+    box-shadow: 0 0 0 3px #3ddc84;
+  }
+}
+
+.modalPick {
+  margin-top: auto;
+  font-size: 0.75rem;
+  color: #5fd16a;
 }

@@ -17,6 +17,7 @@ import {
   Rng,
   TargetRef,
 } from '../../engine';
+import { deckRows } from './deck-rows';
 import { describeEvents } from './describe-events';
 import { targetLinePath, TargetLineStyle } from './target-line';
 import styles from './play-board.module.scss';
@@ -62,13 +63,11 @@ const renderLogLine = (line: string) =>
 const targetOf = (a: Action): TargetRef | undefined =>
   a.type === 'PlayCard' || a.type === 'Attack' || a.type === 'WeaponAttack' ? a.target : undefined;
 
-const newGame = (): { state: GameState; rng: Rng } => {
+const newGame = (): { state: GameState; rng: Rng; decks: Record<PlayerId, string[]> } => {
   const rng = createSeededRng(Date.now() % 2147483647);
-  const state = createGame(
-    { decks: { '0': buildDeck(pool, rng), '1': buildDeck(pool, rng) }, firstPlayer: '0', secondPlayerBonusCard: 'GAME_001' },
-    rng
-  );
-  return { state, rng };
+  const decks = { '0': buildDeck(pool, rng), '1': buildDeck(pool, rng) };
+  const state = createGame({ decks, firstPlayer: '0', secondPlayerBonusCard: 'GAME_001' }, rng);
+  return { state, rng, decks };
 };
 
 /** Hot-seat board: the active player is always at the bottom, the other player's hand is hidden. */
@@ -76,6 +75,8 @@ export const PlayBoard = () => {
   const [state, setState] = useState<GameState | null>(null);
   /** One entry per action, oldest first. */
   const [log, setLog] = useState<string[][]>([]);
+  /** Each player's deck list at the start, for the deck tracker on the right. */
+  const [startDecks, setStartDecks] = useState<Record<PlayerId, string[]>>({ '0': [], '1': [] });
   const [selection, setSelection] = useState<Selection | null>(null);
   const [message, setMessage] = useState('');
   const [mode, setMode] = useState<Mode>('ai');
@@ -99,6 +100,7 @@ export const PlayBoard = () => {
     const g = newGame();
     rngRef.current = g.rng;
     setState(g.state);
+    setStartDecks(g.decks);
     setLog([['New game. **Player 1** goes first; **Player 2** starts with an extra card (__The Orb__).']]);
     setSelection(null);
     setMessage('');
@@ -180,6 +182,27 @@ export const PlayBoard = () => {
     }, AI_AIM_MS);
     return () => clearTimeout(timer);
   }, [foeAim, dispatch]);
+
+  // Space ends the turn (when you can), unless a choice dialog is open.
+  const modalOpenRef = useRef(false);
+  const canEndTurn = !!state && state.status === 'playing' && !aiToMove;
+  useEffect(() => {
+    if (!canEndTurn) return;
+    const down = (e: KeyboardEvent) => {
+      if (e.key !== ' ' || e.repeat || modalOpenRef.current) return;
+      e.preventDefault(); // no page scroll, and no click on a focused button
+      dispatch({ type: 'EndTurn' });
+    };
+    const up = (e: KeyboardEvent) => {
+      if (e.key === ' ') e.preventDefault();
+    };
+    window.addEventListener('keydown', down);
+    window.addEventListener('keyup', up);
+    return () => {
+      window.removeEventListener('keydown', down);
+      window.removeEventListener('keyup', up);
+    };
+  }, [canEndTurn, dispatch]);
 
   // `legalActions` is empty when it is not that player's turn, which also locks the board during the AI's turn.
   const actions = useMemo(() => (state ? legalActions(state, viewer, byId) : []), [state, viewer]);
@@ -289,6 +312,10 @@ export const PlayBoard = () => {
       dispatch(plain[0]);
     }
   };
+
+  // Surveying Drone: a dialog showing the cards you can keep, with their stats.
+  const droneModal = selectedCard?.id === 'CORE_055' && choiceOptions.length > 0;
+  modalOpenRef.current = droneModal;
 
   const renderMinion = (owner: PlayerId, m: MinionInstance) => {
     const card = byId.get(m.cardId);
@@ -448,6 +475,34 @@ export const PlayBoard = () => {
           />
         </svg>
       )}
+      {droneModal && (
+        <div className={styles.modalBackdrop} onClick={() => setSelection(null)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <h3>{selectedCard?.name}: pick a card to keep on top</h3>
+            <div className={styles.modalCards}>
+              {choiceOptions.map((c) => {
+                const top = byId.get(state.players[me].deck[c]?.cardId ?? '');
+                return (
+                  <button key={c} type="button" className={styles.modalCard} onClick={() => pickChoice(c)}>
+                    <span className={styles.cost}>{top?.cost}</span>
+                    <span className={styles.name}>{top?.name ?? 'Empty'}</span>
+                    <span className={styles.type}>
+                      {top?.type}
+                      {top?.type === 'minion' || top?.type === 'weapon' ? ` ${top?.attack}/${top?.health}` : ''}
+                      {top?.race && top.race !== 'NONE' ? ` · ${top.race.toLowerCase()}` : ''}
+                    </span>
+                    <span className={styles.text}>{top?.text}</span>
+                    <span className={styles.modalPick}>{choiceLabel(c).split(':')[0]}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <button type="button" onClick={() => setSelection(null)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
       <div className={[styles.table, areaZone ? styles.zone : ''].join(' ')} onClick={(e) => playFromArea(e, 'table')}>
         <section className={styles.side}>
           {renderHero(foe, false)}
@@ -480,7 +535,7 @@ export const PlayBoard = () => {
             {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i))}
           </div>
           <div className={styles.controls}>
-            {choiceOptions.map((c) => (
+            {(droneModal ? [] : choiceOptions).map((c) => (
               <button key={`choice-${c}`} type="button" className={styles.primary} onClick={() => pickChoice(c)}>
                 {choiceLabel(c)}
               </button>
@@ -521,6 +576,21 @@ export const PlayBoard = () => {
           </div>
         </section>
       </div>
+
+      <aside className={styles.deckView}>
+        <h2>
+          Deck <small>{state.players[me].deck.length} left</small>
+        </h2>
+        <div className={styles.deckRows}>
+          {deckRows(startDecks[me], state.players[me].deck.map((c) => c.cardId), byId).map((r) => (
+            <div key={r.id} className={[styles.deckRow, r.left === 0 ? styles.deckGone : ''].join(' ')} title={byId.get(r.id)?.text}>
+              <span className={styles.deckCost}>{r.cost}</span>
+              <span className={styles.deckName}>{r.name}</span>
+              <span className={styles.deckCount}>{r.total > 1 ? `${r.left}/${r.total}` : r.left}</span>
+            </div>
+          ))}
+        </div>
+      </aside>
 
       <aside className={styles.log}>
         <h2>Log</h2>

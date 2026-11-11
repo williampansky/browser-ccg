@@ -55,4 +55,23 @@ describe('random bot', () => {
       expect(s.winner).not.toBeNull();
     }
   });
+  it('never aims a damage card at its own minion or hero', () => {
+    const { byId } = loadHsCards();
+    const real = { ...grunt, id: 'GRUNT' };
+    const cat = new Map(byId);
+    cat.set('GRUNT', real);
+    let s = setEnergy(putInHand(start(), '0', 'CORE_016'), '0', 5); // CORE_016: deal 1 damage to any character
+    s = putOnBoard(s, '0', real);
+    const friendly = new Set(['h0', `m${s.players['0'].board[0].instanceId}`]);
+    const key = (t: any) => (t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`);
+    let sawEnemyAim = false;
+    for (let seed = 1; seed <= 200; seed++) {
+      const a: any = chooseRandomAction(s, cat, createSeededRng(seed));
+      if (a.type === 'PlayCard' && a.target) {
+        expect(friendly.has(key(a.target))).toBe(false);
+        sawEnemyAim = true;
+      }
+    }
+    expect(sawEnemyAim).toBe(true);
+  });
 });

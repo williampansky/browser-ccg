@@ -3,8 +3,11 @@ export type Point = { x: number; y: number };
 /** How the targeting line is drawn. Both are kept; change `TARGET_LINE_STYLE` in PlayBoard to switch. */
 export type TargetLineStyle = 'curve' | 'straight';
 
-/** How far the curve bows, as a fraction of the line's length. */
+/** How far the curve bows, as a fraction of the line's length, but never less than MIN_BOW pixels so short lines still arc. */
 const BOW = 0.25;
+const MIN_BOW = 70;
+/** A line this close to vertical (|dx| / length) always bows to the same side, so it does not flip left and right. */
+const STEEP = 0.2;
 
 /**
  * The SVG path from `from` to `to`. `straight` is a plain line. `curve` is a quadratic bezier whose
@@ -24,7 +27,12 @@ export const targetLinePath = (from: Point, to: Point, style: TargetLineStyle): 
     nx = -nx;
     ny = -ny;
   }
-  const cx = (from.x + to.x) / 2 + nx * len * BOW;
-  const cy = (from.y + to.y) / 2 + ny * len * BOW;
+  // Nearly vertical: pick one fixed side instead of letting the sign of a tiny dx decide.
+  if (Math.abs(dx) < len * STEEP) {
+    nx = -Math.sqrt(1 - ny * ny);
+  }
+  const bow = Math.max(len * BOW, MIN_BOW);
+  const cx = (from.x + to.x) / 2 + nx * bow;
+  const cy = (from.y + to.y) / 2 + ny * bow;
   return `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;
 };
