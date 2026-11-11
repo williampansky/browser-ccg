@@ -1,0 +1,330 @@
+[
+  {
+    "name": "%SUMMON% Spirit Animal",
+    "playContext": "%SUMMON%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_FORSAKEN_DRUID%",
+    "id": "1",
+    "cost": 2,
+    "active": true,
+    "cooldown": 1,
+    "mechanics": [
+      "%SUMMON%"
+    ],
+    "text": "%SUMMON% a %RANDOM% hero-specific %RACE_CREATURE% minion",
+    "refId": "recBqvVyaBlB9U7VN"
+  },
+  {
+    "name": "Lightning Strike",
+    "playContext": "%DAMAGE%",
+    "type": "%TYPE_SPELL%",
+    "playType": "TARGETED",
+    "hero": "%HERO_ZEUS%",
+    "numberPrimary": 1,
+    "id": "1",
+    "cost": 2,
+    "active": true,
+    "cooldown": 1,
+    "targetingArrowText": "Deal 1 damage",
+    "mechanics": [
+      "%TARGET%",
+      "%DAMAGE%"
+    ],
+    "text": "Deal 1 damage",
+    "refId": "recJKQ4IJytK2pk8I"
+  },
+  {
+    "name": "%ARMOR%",
+    "playContext": "%ARMOR%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_WARRIOR%",
+    "numberPrimary": 2,
+    "id": "1",
+    "cost": 2,
+    "active": true,
+    "cooldown": 1,
+    "mechanics": [
+      "%BUFF%",
+      "%ARMOR%"
+    ],
+    "text": "Gain 2 %ARMOR%",
+    "refId": "recVuG804tcxwykVu"
+  },
+  {
+    "name": "Vital Shot",
+    "playContext": "%DAMAGE%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_EXILE%",
+    "numberPrimary": 2,
+    "id": "1",
+    "cost": 2,
+    "active": true,
+    "cooldown": 1,
+    "mechanics": [
+      "%DAMAGE%"
+    ],
+    "text": "Attack opponent for 2 damage",
+    "refId": "recr01R74XTdCrvZU"
+  },
+  {
+    "name": "Revitalize",
+    "playContext": "%HEAL%",
+    "type": "%TYPE_SPELL%",
+    "playType": "TARGETED",
+    "hero": "%HERO_SAGE%",
+    "numberPrimary": 2,
+    "id": "1",
+    "cost": 2,
+    "active": true,
+    "cooldown": 1,
+    "targetingArrowText": "Heal 2 Health",
+    "mechanics": [
+      "%TARGET%",
+      "%HEAL%"
+    ],
+    "text": "Heal 2 Health",
+    "refId": "recrReQbFnLBrWyxf"
+  },
+  {
+    "entourage": "GAME_00X",
+    "name": "Equip Dagger",
+    "playContext": "%WEAPON%",
+    "type": "%TYPE_WEAPON%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_ASAR%",
+    "numberPrimary": 1,
+    "id": "1",
+    "cost": 2,
+    "numberSecondary": 2,
+    "cooldown": 1,
+    "mechanics": [
+      "%WEAPON%"
+    ],
+    "text": "Equip a 1/2 dagger",
+    "refId": "recrdVqfqBCqAvSEH"
+  },
+  {
+    "name": "%RESURRECT%",
+    "playContext": "%RESURRECT%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_SAGE%",
+    "numberPrimary": 6,
+    "id": "2",
+    "cost": 6,
+    "active": true,
+    "cooldown": 2,
+    "mechanics": [
+      "%RESURRECT%",
+      "%RANDOM%"
+    ],
+    "numberRNG": 1,
+    "text": "%RESURRECT% a %RANDOM% dead friendly minion",
+    "refId": "recAehLith9fBqIFN"
+  },
+  {
+    "name": "Violent Strike",
+    "playContext": "%DAMAGE%",
+    "type": "%TYPE_SPELL%",
+    "playType": "TARGETED",
+    "hero": "%HERO_WARRIOR%",
+    "numberPrimary": 4,
+    "id": "2",
+    "cost": 4,
+    "active": true,
+    "numberSecondary": 6,
+    "cooldown": 2,
+    "targetingArrowText": "Deal 4 or 6 damage",
+    "mechanics": [
+      "%TARGET%",
+      "%DAMAGE%"
+    ],
+    "text": "Deal 4 damage; if you have 12 or less Health, deal 6 instead",
+    "refId": "recQmE635g54jnwK7"
+  },
+  {
+    "name": "Savagery",
+    "playContext": "%BUFF%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_FORSAKEN_DRUID%",
+    "numberPrimary": 2,
+    "id": "2",
+    "cost": 4,
+    "active": true,
+    "numberSecondary": 2,
+    "cooldown": 2,
+    "mechanics": [
+      "%BUFF%",
+      "%AOE%"
+    ],
+    "text": "%BUFF% all friendly %RACE_CREATURE%s with +2/+2",
+    "refId": "recbLJDRy7XK3BvwB"
+  },
+  {
+    "name": "%SUMMON% %RACE_CREATURE%",
+    "playContext": "%SUMMON%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_EXILE%",
+    "numberPrimary": 4,
+    "id": "2",
+    "cost": 5,
+    "active": true,
+    "numberSecondary": 2,
+    "cooldown": 2,
+    "mechanics": [
+      "%SUMMON%"
+    ],
+    "text": "%SUMMON% a 4/2 eagle with %RUSH%",
+    "refId": "recbVFuPQiL7i0Wzj"
+  },
+  {
+    "name": "Fan Daggers",
+    "playContext": "%WEAPON%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_ASAR%",
+    "numberPrimary": 1,
+    "id": "2",
+    "cost": 5,
+    "cooldown": 2,
+    "mechanics": [
+      "%AOE%",
+      "%DAMAGE%",
+      "%DRAW_CARD%"
+    ],
+    "text": "Deal 1 damage to all enemy minions and draw a card",
+    "refId": "reclErgj3b05sF9Vs"
+  },
+  {
+    "name": "Rain Lightning",
+    "playContext": "%DAMAGE%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_ZEUS%",
+    "numberPrimary": 3,
+    "id": "2",
+    "cost": 6,
+    "active": true,
+    "cooldown": 2,
+    "targetingArrowText": "Deal 3 AOE damage",
+    "mechanics": [
+      "%AOE%",
+      "%DAMAGE%"
+    ],
+    "text": "Deal 3 damage to all enemy minions",
+    "refId": "reczfcVBLF96SDPVA"
+  },
+  {
+    "entourage": "GAME_00X",
+    "name": "Master's Blade",
+    "playContext": "%WEAPON%",
+    "type": "%TYPE_WEAPON%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_ASAR%",
+    "numberPrimary": 5,
+    "id": "3",
+    "cost": 6,
+    "numberSecondary": 2,
+    "text": "Equip a 5/2 dagger; take no damage when attacking with this weapon",
+    "ultimate": true,
+    "refId": "rec7BMHRcwaHZKKFl"
+  },
+  {
+    "name": "Smash!",
+    "playContext": "%DAMAGE%",
+    "type": "%TYPE_SPELL%",
+    "playType": "TARGETED",
+    "hero": "%HERO_WARRIOR%",
+    "id": "3",
+    "cost": 1,
+    "active": true,
+    "mechanics": [
+      "%TARGET%",
+      "%DAMAGE%"
+    ],
+    "text": "Deal 1 damage for each %ARMOR% you have",
+    "description": "Ability only works on minions.",
+    "ultimate": true,
+    "refId": "rec7kcHSt6Dj28RQu"
+  },
+  {
+    "name": "Mass %RESURRECT%",
+    "playContext": "%RESURRECT%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_SAGE%",
+    "numberPrimary": 3,
+    "id": "3",
+    "cost": 10,
+    "active": true,
+    "mechanics": [
+      "%RESURRECT%",
+      "%RANDOM%"
+    ],
+    "numberRNG": 3,
+    "text": "%RESURRECT% 3 %RANDOM% friendly minions that died this game",
+    "ultimate": true,
+    "refId": "rec961LDvv5v6evBz"
+  },
+  {
+    "name": "%SUMMON% The Beast",
+    "playContext": "%SUMMON%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_EXILE%",
+    "numberPrimary": 8,
+    "id": "3",
+    "cost": 9,
+    "active": true,
+    "numberSecondary": 8,
+    "mechanics": [
+      "%SUMMON%"
+    ],
+    "text": "Attack opponent for 2 damage",
+    "ultimate": true,
+    "refId": "recJa08qpNszxQaTs"
+  },
+  {
+    "name": "Lightning Blast",
+    "playContext": "%DAMAGE%",
+    "type": "%TYPE_SPELL%",
+    "playType": "TARGETED",
+    "hero": "%HERO_ZEUS%",
+    "numberPrimary": 10,
+    "id": "3",
+    "cost": 10,
+    "active": true,
+    "targetingArrowText": "Deal 10 damage",
+    "mechanics": [
+      "%TARGET%",
+      "%DAMAGE%"
+    ],
+    "text": "Deal 10 damage",
+    "ultimate": true,
+    "refId": "recjzg5skQbjU4Cfm"
+  },
+  {
+    "name": "True Form",
+    "playContext": "%TRANSFORM%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_FORSAKEN_DRUID%",
+    "numberPrimary": 15,
+    "id": "3",
+    "cost": 4,
+    "active": true,
+    "numberSecondary": 5,
+    "cooldown": 2,
+    "mechanics": [
+      "%TRANSFORM%"
+    ],
+    "text": "%TRANSFORM% your hero into its true self",
+    "ultimate": true,
+    "refId": "recvy62XQb4rOGY7I"
+  }
+]

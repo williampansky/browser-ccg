@@ -20,9 +20,10 @@ earlier `hsclone` repo as the rules reference. Read these first:
   placeholder page.
 - The site shell works: home, `collection`, `deckbuilder`, `cards`, `store`, `profile`, `news`,
   `faq`, `changelog`, plus `pages/api/` for cards/users. The card renderers (`Card`, `Minion`) work.
-- Card data still describes the old game (zone-style fields such as `zonePowerAdjustment`,
-  `mechanicsSide`). It will need new fields for the Hearthstone rules (attack/health on every
-  card, class, keywords like Guard). That is an Airtable schema change.
+- `data/*.json` (read by the site) still describes the old zone game (fields such as
+  `zonePowerAdjustment`, `mechanicsSide`). The Hearthstone-style data lives in a different Airtable
+  base and is pulled into `data/hs/` (see "Two Airtable bases" below). The site has not been
+  switched over to it yet (ROADMAP Milestone 4).
 
 ## Commands
 
@@ -31,20 +32,34 @@ earlier `hsclone` repo as the rules reference. Read these first:
 - `npm test` - jest (ts-jest, jsdom). Run one file: `npm test -- path/to/file.test.ts`.
 - `npx tsc --noEmit -p .` - type check.
 - `npm run build` / `npm run lint` - Next build and lint.
-- `npm run airtable` - re-pulls card/zone/mechanic data from Airtable into JSON. Needs
-  `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID` in a `.env*.local` file (none checked in).
-  You don't need it to run the site; the JSON is committed.
+- `npm run airtable:hs` - pulls the Hearthstone-style card pool (CORE 132, PRIME 254, ENTOURAGE 43,
+  9 heroes, abilities, mechanics, constants) into `data/hs/`. This is the data the rebuild uses.
+- `npm run airtable` - the old zone-game pull into `data/` and `game/data/`. Only works against
+  the `browser-ccg` base; on any other base it now reports the real Airtable error and writes nothing.
+- Both need `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID` in `./.env.local` (git-ignored, none checked in).
+  You don't need either to run the site; the JSON is committed.
 
 ## Layout
 
 - `pages/` - Next routes. `pages/api/` serves cards/users.
 - `game/` - boardgame.io game definition (currently a stub). `game/data/` is a copy of `data/`.
   **`data/` and `game/data/` are identical**, both written by `airtable.node.ts`. Edit via the
-  script or change both.
+  script or change both. `data/hs/` is separate: written only by `airtable.hs.node.ts`.
 - `components/game-components/` - `Card`, `Minion`, `Avatar` (the rest of the old board UI was
   removed). `components/site-components/` - non-game UI.
 - `features/` - Redux Toolkit slices (store in `store.ts`). `hooks/`, `utils/`, `enums/`, `types/`.
 - `app.config.ts` - site pages/nav config plus `gameConfig.numerics` (deck/hand sizes, energy).
+
+## Two Airtable bases
+
+The same token can read both. Which one `AIRTABLE_BASE_ID` points at decides which script works.
+
+- **`react-ccg`** (`REDACTED`) - the hsclone-era Hearthstone-style data. Used by
+  `npm run airtable:hs`. Tables: CONSTANTS, MECHANICS, HEROS, ABILITIES, GAME, CORE, PRIME,
+  ENTOURAGE. Card tables already have attack, health, cost, cardClass, mechanics, playType.
+- **`browser-ccg`** (`REDACTED`) - the zone-game data behind `npm run airtable`.
+- The `inspiration` column exists in the `react-ccg` base. `airtable:hs` drops it on purpose
+  (private design notes; this repo is public). Don't add it back.
 
 ## Things worth knowing
 

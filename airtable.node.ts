@@ -75,15 +75,35 @@ function createArtistHtmlLink(name?: string, url?: string): string | undefined {
   return html;
 }
 
+/**
+ * Airtable reports many failures (bad token, wrong base, missing table) as a
+ * 200-style response body of `{ error: { type, message } }` instead of throwing.
+ * Throw a readable error so the `.catch` below can report it.
+ */
+function assertRecords(resp: any) {
+  if (resp && Array.isArray(resp.records)) return;
+  const e = resp && resp.error;
+  const detail = e ? `${e.type || 'ERROR'}: ${e.message || ''}` : 'response had no records';
+  throw new Error(
+    `${detail} (check AIRTABLE_API_KEY, and that AIRTABLE_BASE_ID is the base these table ids belong to)`
+  );
+}
+
 function writeToFile(fileName: string, data: any) {
+  // never overwrite good data files with an error
+  if (data instanceof Error) {
+    console.error(`[${fileName}] fetch failed: ${data.message}`);
+    process.exitCode = 1;
+    return;
+  }
+
   try {
     fs.writeFileSync(`./data/${fileName}.json`, data);
     fs.writeFileSync(`./game/data/${fileName}.json`, data);
     console.log(`Writing ${fileName} to system ...`);
   } catch (error) {
-    const obj = { dataError: data, catchError: error };
-    fs.writeFileSync(`./data/${fileName}.error.txt`, obj);
-    fs.writeFileSync(`./game/data/${fileName}.error.txt`, obj);
+    console.error(`[${fileName}] could not write files: ${String(error)}`);
+    process.exitCode = 1;
   }
 }
 
@@ -93,6 +113,7 @@ const fetchConstantsData = async (tableId: string) => {
     .table(tableId)
     .list({ maxRecords: 200 })
     .then((resp: any) => {
+      assertRecords(resp);
       const map = resp.records.map((item: any) => {
         const { fields } = item;
         const { name, symbol, type, description, value } = fields;
@@ -122,6 +143,7 @@ const fetchMechanicsData = async (tableId: string) => {
     .table(tableId)
     .list({ maxRecords: 200 })
     .then((resp: any) => {
+      assertRecords(resp);
       const map = resp.records.map((item: any) => {
         const { fields } = item;
         const { name, symbol, value, description, shortDescription } = fields;
@@ -151,6 +173,7 @@ const fetchSetCoreData = async (tableId: string) => {
     .table(tableId)
     .list({ maxRecords: 200 })
     .then((resp: any) => {
+      assertRecords(resp);
       const map = resp.records.map((item: any) => {
         const { fields, id } = item;
         return {
@@ -207,6 +230,7 @@ const fetchSetEntourageData = async (tableId: string) => {
     .table(tableId)
     .list({ maxRecords: 200 })
     .then((resp: any) => {
+      assertRecords(resp);
       const map = resp.records.map((item: any) => {
         const { fields, id } = item;
         return {
@@ -257,6 +281,7 @@ const fetchZonesData = async (tableId: string) => {
     .table(tableId)
     .list({ maxRecords: 20 })
     .then((resp: any) => {
+      assertRecords(resp);
       const map = resp.records.map((item: any) => {
         const { fields, id } = item;
         return {

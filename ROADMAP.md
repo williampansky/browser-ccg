@@ -20,8 +20,10 @@ Order matters: each milestone makes the next one cheaper or safer.
 Why first: rules in plain tested TypeScript can be verified without any UI, and everything else
 sits on them.
 
-- [ ] Decide the new game-state shape (`G`) and card schema; list the new Airtable fields needed
-      (attack/health on every card, class, keywords like Guard, spell/minion/weapon types)
+- [x] Pull the Hearthstone-style card data into `data/hs/` (`npm run airtable:hs`); the `react-ccg`
+      base already has attack/health, class, mechanics and play type on every card table
+- [ ] Decide the new game-state shape (`G`) and a normalised in-engine card type, and note which
+      raw fields (`%CONSTANT%` symbols, HTML text, number fields) the loader must clean up
 - [ ] Port the core `hsclone` rules to TypeScript: turn order, energy (+1 per turn, cap 10), draw,
       play minion/spell/weapon, minion vs minion and minion vs hero attacks, damage and death,
       Guard (only Guards may be attacked), summoning sickness, win/loss at 0 hero health
@@ -58,7 +60,7 @@ simulator first.
 
 - [ ] Choose the first-release pool from the current 69 cards, the old CORE 132 and the old PRIME 254
       (see `PREVIOUS-VERSIONS.md`); Bulwark/Guard, Armor and similar cards are core again
-- [ ] Add the new fields to Airtable and re-pull; update `data/` and `game/data/`
+- [ ] Switch the site pages from the old `data/` JSON to the new pool (`data/hs/`), and retire `game/data/`
 - [ ] Naming and text pass (duplicate names, typos, "Attack" vs "Deal" wording; see `CARD-AUDIT.md`)
 - [ ] Art match pass (mismatched art listed in `CARD-AUDIT.md` section 5)
 - [ ] Art provenance table: card, artist, source, licence, status; replace temporary art

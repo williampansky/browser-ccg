@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "airtable": "ts-node -r ./airtable.node.ts",
+    "airtable:hs": "ts-node --compiler-options '{\"module\":\"commonjs\"}' ./airtable.hs.node.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
