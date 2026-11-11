@@ -24,8 +24,9 @@ draws, zone effects and warcries all behave). Last commit before this check was 
   `utils/__tests__/get-card-power.test.ts`). Application code type-checks cleanly.
 - **Console warnings:** three `next/image` warnings (`/images/zones/z*.jpg` need a
   `position: relative` parent) and a deprecated react-spring `start` call.
-- **Debug header** (`addressBarSize`, `g.turn`, `ctx.phase`, ...) is always rendered on
-  `/play`; hide it behind a flag.
+- **Debug header** (`addressBarSize`, `g.turn`, `ctx.phase`, ...) shows on `/play` because
+  `gameConfig.debugConfig.showDebugBar` is `true` in `app.config.ts`. Flip it to `false`
+  for anything user-facing.
 - **Unverified:** the hand's drag slot showed a stuck `grabbing` cursor after a few failed
   drags. May be an artifact of automated mouse events; check with a real mouse.
 
