@@ -398,6 +398,13 @@ export const PlayBoard = () => {
   const [handWidth, setHandWidth] = useState(0);
   // How far the cards sink below the row so only their tops show; shrinks on short windows so they never vanish offscreen.
   const [handSink, setHandSink] = useState(100);
+  // The cast-a-spell area is the board above the player bar: `bottomRef` is that bar's section, `tableRef` the board.
+  const tableRef = useRef<HTMLDivElement | null>(null);
+  const bottomRef = useRef<HTMLElement | null>(null);
+  const [areaHeight, setAreaHeight] = useState(0);
+  const [areaHot, setAreaHot] = useState(false);
+  /** True when a pointer at this height is over the cast area, i.e. on the board and above the player bar. */
+  const aboveBar = (clientY: number) => !!bottomRef.current && clientY < bottomRef.current.getBoundingClientRect().top;
   useEffect(() => {
     const el = handRef.current;
     if (!el) return;
@@ -405,10 +412,14 @@ export const PlayBoard = () => {
       setHandWidth(el.clientWidth);
       const zoom = handZoom(el.clientWidth, el.childElementCount, HAND_CARD_WIDTH);
       setHandSink(computeHandSink(window.innerHeight, el.getBoundingClientRect().bottom, zoom, HAND_PEEK));
+      if (tableRef.current && bottomRef.current) {
+        setAreaHeight(Math.max(0, Math.round(bottomRef.current.getBoundingClientRect().top - tableRef.current.getBoundingClientRect().top)));
+      }
     };
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     ro.observe(document.documentElement);
+    if (tableRef.current) ro.observe(tableRef.current);
     measure();
     return () => ro.disconnect();
   }, [state]);
@@ -427,13 +438,17 @@ export const PlayBoard = () => {
   const modalOpenRef = useRef(false);
   const menuOpenRef = useRef(false);
   menuOpenRef.current = menuOpen;
+  /** Set each render to `onNukeHero` while "Attack hero" is available (null otherwise): Shift+Space runs it. */
+  const nukeRef = useRef<(() => void) | null>(null);
   const canEndTurn = !!state && state.status === 'playing' && !aiToMove;
   useEffect(() => {
     if (!canEndTurn) return;
     const down = (e: KeyboardEvent) => {
       if (e.key !== ' ' || e.repeat || modalOpenRef.current || menuOpenRef.current) return;
       e.preventDefault(); // no page scroll, and no click on a focused button
-      dispatch({ type: 'EndTurn' });
+      // Shift+Space is "Attack hero": it does nothing when that is unavailable, so it can never end the turn by accident.
+      if (e.shiftKey) nukeRef.current?.();
+      else dispatch({ type: 'EndTurn' });
     };
     const up = (e: KeyboardEvent) => {
       if (e.key === ' ') e.preventDefault();
@@ -505,6 +520,7 @@ export const PlayBoard = () => {
     (a) => (a.type === 'Attack' || a.type === 'WeaponAttack') && a.target.kind === 'hero' && a.target.player === foe
   );
   const canNukeHero = !over && myTurn && state.players[foe].board.length === 0 && heroHits.length > 0;
+  nukeRef.current = canNukeHero ? () => onNukeHero() : null;
   const onNukeHero = () => {
     if (!canNukeHero || !rngRef.current) return;
     const result = nukeHero(state, me, rngRef.current, byId);
@@ -619,6 +635,7 @@ export const PlayBoard = () => {
   const playFromArea = (e: React.MouseEvent, zone: 'board' | 'table', dropped = false) => {
     // A click on a button (a minion, End turn...) means something else; a card dropped over a minion still lands in the gap.
     if (over || selection?.kind !== 'hand' || (!dropped && (e.target as HTMLElement).closest('button'))) return;
+    if (zone === 'table' && !aboveBar(e.clientY)) return; // the cast area ends at the player bar
     if (zone === 'board') e.stopPropagation();
     const plain = untargetedPlays.filter((a): a is PlayAction => a.type === 'PlayCard');
     const placed = plain.filter((a) => a.boardIndex !== undefined);
@@ -990,16 +1007,21 @@ export const PlayBoard = () => {
         </div>
       )}
       <div
-        className={[styles.table, areaZone ? styles.zone : ''].join(' ')}
+        ref={tableRef}
+        className={styles.table}
         onClick={(e) => playFromArea(e, 'table')}
-        onDragOver={(e) => areaZone && e.preventDefault()}
+        onMouseMove={(e) => areaZone && setAreaHot(aboveBar(e.clientY))}
+        onMouseLeave={() => setAreaHot(false)}
+        onDragOverCapture={(e) => areaZone && setAreaHot(aboveBar(e.clientY))} // capture: a target under the pointer may stop the event
+        onDragOver={(e) => areaZone && aboveBar(e.clientY) && e.preventDefault()}
         onDrop={(e) => {
-          if (!areaZone || e.defaultPrevented) return;
+          if (!areaZone || e.defaultPrevented || !aboveBar(e.clientY)) return;
           e.preventDefault();
           if (dragIndex !== null) dropChoiceCard({});
           else playFromArea(e, 'table', true);
         }}
       >
+        {areaZone && <div className={[styles.castArea, areaHot ? styles.castAreaHot : ''].join(' ')} style={{ height: areaHeight }} />}
         <section className={[styles.side, styles.top].join(' ')}>
           <div className={styles.backs}>
             {state.players[foe].hand.map((_, i) => (
@@ -1042,7 +1064,7 @@ export const PlayBoard = () => {
             <button
               type="button"
               className={styles.attackHero}
-              title="Attack the enemy hero with every ready minion, left to right, then end your turn"
+              title="Attack the enemy hero with every ready minion, left to right, then end your turn (Shift+Space)"
               onClick={onNukeHero}
             >
               Attack hero
@@ -1084,7 +1106,7 @@ export const PlayBoard = () => {
           </section>
         </div>
 
-        <section className={[styles.side, styles.bottom].join(' ')}>
+        <section ref={bottomRef} className={[styles.side, styles.bottom].join(' ')}>
           {renderHero(me, true)}
           <div
             className={[styles.row, styles.hand].join(' ')}

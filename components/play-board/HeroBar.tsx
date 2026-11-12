@@ -118,7 +118,9 @@ export const HeroBar = ({
         </span>
       </span>
 
-      <span className={[styles.weapon, weapon ? '' : styles.noWeapon].join(' ')} title={weapon ? weaponText : 'No weapon equipped'}>
+      <span
+        className={[styles.weapon, weapon ? '' : styles.noWeapon, weapon && canAct ? (selected ? styles.weaponSelected : styles.weaponReady) : ''].join(' ')}
+        title={weapon ? weaponText : 'No weapon equipped'}>
         {weapon ? (
           <>
             <span className={styles.weaponName}>{weapon.name}</span>

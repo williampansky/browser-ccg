@@ -260,6 +260,17 @@ $bonus: #ffd45e;
   background: #2d2a22;
 }
 
+// The weapon can attack now (green, like a playable card); gold while the hero is the selected attacker.
+.weaponReady {
+  border-color: #5fd16a;
+  box-shadow: 0 0 8px #5fd16a, inset 0 0 6px #5fd16a55;
+}
+
+.weaponSelected {
+  border-color: #ffd45e;
+  box-shadow: 0 0 10px #ffd45e, inset 0 0 6px #ffd45e55;
+}
+
 .noWeapon {
   border: 1px dashed #3a3f52;
   background: transparent;

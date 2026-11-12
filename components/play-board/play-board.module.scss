@@ -12,6 +12,8 @@
 }
 
 .table {
+  position: relative;
+  isolation: isolate; // so the cast-area overlay (z-index -1) sits behind the board's contents, not behind the page
   flex: 1;
   max-width: min(70rem, calc(100vw - 46rem));
   margin: 0 auto;
@@ -328,6 +330,26 @@
   font-size: 0.7rem;
   color: #8fd0ff;
   text-transform: capitalize;
+}
+
+// The cast area: the whole board above the player bar. An overlay, so the dashed outline stops at the bar.
+.castArea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-radius: 8px;
+  outline: 2px dashed #5fd16a;
+  outline-offset: -2px;
+  background: rgba(95, 209, 106, 0.06);
+  pointer-events: none;
+  z-index: -1;
+  transition: background 0.1s;
+}
+
+.castAreaHot {
+  background: rgba(95, 209, 106, 0.18);
+  outline-style: solid;
 }
 
 // Something is selected and a click on this area would play it.

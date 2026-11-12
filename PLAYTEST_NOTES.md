@@ -66,11 +66,11 @@
 - cards in hand:
   - [x] when dragging the card from hand, hide it from the hand and only show the drag/drop version [desktop/Screenshot 2026-11-12 at 7.41.56 AM.png]
   - [x] unplayable cards in hand cant have transparency (now dimmed with a filter instead; nothing see-through)
-    - warcry cards maybe should NOT disappear while the targeting arrow is active
+    - warcry cards and spells maybe should NOT disappear while the targeting arrow is active
   - [x] move the hand down further offscreen akin to hsclone for player and enemy [desktop/Screenshot 2026-11-12 at 7.43.05 AM.png]
   - [x] clickable hero area obstructed by hand overlay [desktop/Screenshot 2026-11-12 at 7.45.49 AM.png]
   - [x] dragging is off a bit [Screenshot 2026-11-12 at 7.47.39 AM.png] in this screenshot, i dragged the card up from hand. my cursor was over the hero bar at this point, and the card was far higher than my cursor
-- lets make shift+space bar run the nukeplayer option if available
-- bug: played steel gauntlet with crude weapon equipped. it enhanced the attack like it should, but the boon stayed past my turn like a buff - instead of a temp boon  
-- lets highlight the weapon when its useable for an attack
-- adjust the global drop area to be anywhere on the board higher than the player bar
+- [x] lets make shift+space bar run the nukeplayer option if available (does nothing when Attack hero isn't available, so it never ends the turn by accident)
+- [x] bug: played steel gauntlet with crude weapon equipped. it enhanced the attack like it should, but the boon stayed past my turn like a buff - instead of a temp boon  
+- [x] lets highlight the weapon when its useable for an attack (green when ready, gold while the hero is the selected attacker)
+- [x] adjust the global drop area to be anywhere on the board higher than the player bar (the whole board column down to the top of the player bar; drop or click)

@@ -56,7 +56,9 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 
 - **Drag and drop is the main way to act; click is the fallback.** Drag a hand card onto your board (it lands in the
   gap nearest the pointer), onto a legal target, or onto the play area (untargeted spells). Drag a ready minion or your
-  hero onto an enemy to attack. Dragging just selects, so the highlights and arrow match click-to-select, and a drop
+  hero onto an enemy to attack. Untargeted spells and items cast from anywhere on the board above the player bar (the dashed
+  `castArea` overlay; drop or click there). **Space** ends the turn; **Shift+Space** is "Attack hero" (only when that button is
+  available). The weapon glows green when it can attack. Dragging just selects, so the highlights and arrow match click-to-select, and a drop
   runs the same code as a click. "Choose one" cards (including Surveying Drone) are not selected while dragged (that
   would open their dialog mid-drag): the drop remembers where you dropped, opens the dialog, and picking an option
   plays it there. Hover popups are hidden during a drag (`body.dragging`), and drags that aim at a target (attackers, and
