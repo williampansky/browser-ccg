@@ -508,6 +508,24 @@
     "isEntourage": true
   },
   {
+    "id": "PRIME_157a",
+    "name": "Doorway Mouse",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_NONE%",
+    "race": "%RACE_CREATURE%",
+    "cost": 1,
+    "attack": 1,
+    "health": 1,
+    "mechanics": [
+      "%BULWARK%"
+    ],
+    "collectible": false,
+    "active": false,
+    "isEntourage": true
+  },
+  {
     "id": "CORE_057a",
     "name": "Sci-fi Soldier",
     "set": "%SET_002%",

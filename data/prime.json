@@ -286,10 +286,10 @@
     "rarity": "%RARITY_SUPERIOR%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "Remove all %HIDDEN%s<br>\n%DESTROY% enemy's %MYSTERY%",
+    "text": "Reveal all %HIDDEN%s (they lose it and take 1 damage). %DESTROY% enemy's %MYSTERY% and draw a card if you did",
     "mechanics": [
-      "%DESTROY%",
-      "%MYSTERY%"
+      "%MYSTERY%",
+      "%DESTROY%"
     ],
     "playType": "GLOBAL",
     "collectible": true,
@@ -802,11 +802,11 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "<strong>%MYSTERY%:</strong> The next minion to attack you is %RETURN%ed to your opponent's hand and costs 2 more",
+    "text": "<strong>%MYSTERY%</strong><br>\nThe next minion to attack<br>\nyou is %DISABLE%d and loses 2 Attack",
     "mechanics": [
       "%MYSTERY%",
-      "%RETURN%",
-      "%COST%"
+      "%DISABLE%",
+      "%DEBUFF%"
     ],
     "numberPrimary": 2,
     "playType": "GLOBAL",
@@ -978,10 +978,9 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 3,
-    "text": "<strong>%MYSTERY%</strong><br>\nWhen you're attacked,<br>\ngain 8 %ARMOR%",
+    "text": "<strong>%MYSTERY%</strong><br>\nWhen your hero is attacked,<br>\ngain %ARMOR% equal to twice<br>\nthe attacker's Attack (min 4)",
     "mechanics": [
       "%MYSTERY%",
-      "%SET_VALUE%",
       "%ARMOR%"
     ],
     "numberPrimary": 8,
@@ -1014,12 +1013,11 @@
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
     "cardClass": "0 %CLASS_NONE%",
-    "cost": 5,
-    "text": "<strong>%MYSTERY%:</strong> When an enemy casts a targeted spell, %SUMMON% a 2/4 minion as the new target",
+    "cost": 3,
+    "text": "<strong>%MYSTERY%</strong><br>\nWhen an enemy casts a<br>\ntargeted spell, it hits a random<br>\nminion its caster controls instead",
     "mechanics": [
       "%MYSTERY%",
-      "%EVENT%",
-      "%SUMMON%"
+      "%EVENT%"
     ],
     "playType": "GLOBAL",
     "collectible": true,
@@ -1183,11 +1181,10 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "<strong>%MYSTERY%:</strong> Deal 2 DMG to all enemies if you're attacked whilst you have a weapon equipped",
+    "text": "<strong>%MYSTERY%</strong><br>\nWhen an enemy minion attacks you,<br>\nyour weapon hits it first for<br>\nits Attack (needs a weapon)",
     "mechanics": [
       "%MYSTERY%",
-      "%EVENT%",
-      "%AOE%"
+      "%EVENT%"
     ],
     "numberPrimary": 2,
     "playType": "GLOBAL",
@@ -1456,10 +1453,11 @@
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
     "cardClass": "0 %CLASS_NONE%",
-    "cost": 3,
-    "text": "<strong>%MYSTERY%</strong><br>\nWhen your opponent<br>\ncasts a spell, nullify it",
+    "cost": 2,
+    "text": "<strong>%MYSTERY%</strong><br>\nWhen your opponent casts a<br>\nspell, add a copy to your hand",
     "mechanics": [
-      "%MYSTERY%"
+      "%MYSTERY%",
+      "%ADD_CARD%"
     ],
     "playType": "GLOBAL",
     "collectible": true,
@@ -2258,11 +2256,10 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "<strong>%MYSTERY%:</strong> Set the Health<br>\nof your opponent's next<br>\nplayed minion to 1",
+    "text": "<strong>%MYSTERY%</strong><br>\nWhen your opponent plays a minion,<br>\nhalve its Health (rounded up)<br>\nand %DISABLE% it",
     "mechanics": [
       "%MYSTERY%",
-      "%EVENT%",
-      "%SET_VALUE%"
+      "%DISABLE%"
     ],
     "numberPrimary": 1,
     "playType": "GLOBAL",
@@ -2315,10 +2312,9 @@
     "rarity": "%RARITY_MYTHIC%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 3,
-    "text": "<strong>%MYSTERY%:</strong> %DESTROY% the next enemy minion that attacks your hero",
+    "text": "<strong>%MYSTERY%</strong><br>\nWhen an enemy minion attacks your hero,<br>\nit takes damage equal to<br>\nyour hero's missing Health",
     "mechanics": [
-      "%MYSTERY%",
-      "%DESTROY%"
+      "%MYSTERY%"
     ],
     "playType": "GLOBAL",
     "playContext": "%MYSTERY%",
@@ -2372,7 +2368,7 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "<strong>%MYSTERY%:</strong> After your<br>\nopponent plays a minion,<br>\ndeal 4 damage to it",
+    "text": "<strong>%MYSTERY%</strong><br>\nAfter your opponent plays a minion,<br>\ndeal damage equal to its<br>\nCost to it",
     "mechanics": [
       "%MYSTERY%"
     ],
@@ -2457,10 +2453,10 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "<strong>%MYSTERY%:</strong> Return a minion to life with 1 Health when it dies",
+    "text": "<strong>%MYSTERY%</strong><br>\nWhen your minion dies,<br>\n%RETURN% it to your hand;<br>\nit costs 1 less",
     "mechanics": [
       "%MYSTERY%",
-      "%EVENT%"
+      "%RETURN%"
     ],
     "playType": "GLOBAL",
     "collectible": true,
@@ -3634,11 +3630,11 @@
     "cost": 4,
     "attack": 5,
     "health": 4,
-    "text": "%DESTROY% the<br />\nenemy's %MYSTERY%",
+    "text": "%ON_PLAY%: Take the<br>\nenemy's %MYSTERY%",
     "mechanics": [
       "%ON_PLAY%",
-      "%DESTROY%",
-      "%MYSTERY%"
+      "%MYSTERY%",
+      "%STEAL%"
     ],
     "collectible": true,
     "active": true,
@@ -3995,7 +3991,7 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "<strong>%MYSTERY%</strong><br>\nWhen an enemy attacks,<br>\n%SUMMON% a 2/1 minion",
+    "text": "<strong>%MYSTERY%</strong><br>\nWhen an enemy attacks,<br>\n%SUMMON% two 1/1 Mice with<br>\n%BULWARK%; the attack hits a Mouse",
     "mechanics": [
       "%MYSTERY%",
       "%EVENT%",
@@ -4874,9 +4870,11 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "<strong>%MYSTERY%:</strong> When your hero takes damage, deal that much damage to the enemy hero",
+    "text": "<strong>%MYSTERY%</strong><br>\nWhen your hero takes 5 or more<br>\ndamage in one hit, %HEAL% 5<br>\nand draw a card",
     "mechanics": [
-      "%MYSTERY%"
+      "%MYSTERY%",
+      "%HEAL%",
+      "%DRAW_CARD%"
     ],
     "playType": "GLOBAL",
     "playContext": "%MYSTERY%",
