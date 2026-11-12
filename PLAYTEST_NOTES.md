@@ -57,8 +57,8 @@
 - [x] attack hero button, apeshark had onslaught but only attacked once (could not reproduce; onslaught swings twice by hand and via the button, checked with `?b0=CORE_110,CORE_027&w0=CORE_076`)
   - [x] hero also did not use weapon. 
   - the attack hero button is a "nuke the enemy player" to not force a player to drag everything
-- [ ] (done, needs a look: only unit-tested) i had hypnotoad on the board, so the spells in my hand should have their text updated (with a dif color) to inform a player that the damage was +amount
-- [ ] (done, needs a look) we need to probably pin/fix the cards to top (opponent) and bottom(player) so the board doesnt shift when a hand is emptied
+- [x] i had hypnotoad on the board, so the spells in my hand should have their text updated (with a dif color) to inform a player that the damage was +amount
+- [x] we need to probably pin/fix the cards to top (opponent) and bottom(player) so the board doesnt shift when a hand is emptied
 - [x] core_007 i noticed a visual text error, then noticed the airtable's "br" line breaks are not honored on the card text
   - [x] same with small text elem
 - [x] i also want you to not use port 3000 when doing playrights; so it doesnt conflict if im useing it for playtesting at the same time

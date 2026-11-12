@@ -21,6 +21,14 @@ describe('card rich text', () => {
 
 import { withSpellDamageText } from '../card-face-model';
 describe('spell damage text', () => {
+  it('parses boosted numbers into their own part', () => {
+    expect(parseRichText('Deal <boost>3</boost> damage')).toEqual([
+      { kind: 'text', text: 'Deal ' },
+      { kind: 'boost', text: '3' },
+      { kind: 'text', text: ' damage' },
+    ]);
+  });
+
   it('raises each damage number and marks it', () => {
     expect(withSpellDamageText('Deal 2 damage<br>and 1 damage', 1)).toBe(
       'Deal <boost>3</boost> damage<br>and <boost>2</boost> damage'

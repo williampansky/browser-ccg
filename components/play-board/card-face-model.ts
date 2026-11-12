@@ -34,7 +34,7 @@ export type RichPart = { kind: 'text' | 'strong' | 'em' | 'small' | 'boost'; tex
 export const parseRichText = (html: string): RichPart[] => {
   const parts: RichPart[] = [];
   let style: 'text' | 'strong' | 'em' | 'small' | 'boost' = 'text';
-  for (const tok of html.split(/(<\/?(?:strong|em|small)>|<br>)/)) {
+  for (const tok of html.split(/(<\/?(?:strong|em|small|boost)>|<br>)/)) {
     if (!tok) continue;
     if (tok === '<br>') parts.push({ kind: 'br' });
     else if (/^<(strong|em|small|boost)>$/.test(tok)) style = tok.slice(1, -1) as typeof style;
