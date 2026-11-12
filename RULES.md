@@ -13,7 +13,7 @@ living document: when a rule changes, change it here, with the date.
    and some of it is wrong.
 2. **Its engine is hard-coded per card id; the live card data is richer.** `hsclone` reads an
    older JSON schema (`spellType`, `warcryNumber`, `spellContext`). The Airtable base we pulled into
-   `data/hs/` has since gained `playType`, `playContext`, `numberPrimary/Secondary/RNG`, and
+   `data/` has since gained `playType`, `playContext`, `numberPrimary/Secondary/RNG`, and
    `mechanics` lists. So `hsclone` tells us **what each card does**, not what the data model is.
 3. **The CORE set is a realistic first-release pool.** Of 132 CORE cards, `hsclone` has code for
    109, 8 are vanilla, 12 need only keywords, and just 3 have effects with no code. None of the
@@ -34,7 +34,7 @@ living document: when a rule changes, change it here, with the date.
 | --- | --- |
 | **[V-code]** | I read the cited source myself and confirmed it |
 | **[V-live]** | Observed in the running game (two browser tabs) |
-| **[V-data]** | Confirmed by computing over `data/hs/*.json` |
+| **[V-data]** | Confirmed by computing over `data/*.json` |
 | **[A]** | Reported by a research agent, not independently re-checked |
 | **[I]** | Inference |
 
@@ -256,7 +256,7 @@ AOE, RANDOM, SET_VALUE), plus standalone keywords. `%EVENT%` carries no event na
 - 9 skills at cost 2, once per turn (Enhance, Snipe, Lightning Strike, Disciple, Mend, Katar, Raise
   Dead, Power Within, Energy Shield). All have code, but **only the Sorcerer class is ever assigned**,
   so 8 of 9 are unreachable in play. [A] `class-skills/class-skills.js`, `initDecks.js:29-30`
-- `data/hs/` has 9 heroes with 3 abilities each (one an ultimate, cooldown 1 or 2, or -1 for a
+- `data/` has 9 heroes with 3 abilities each (one an ultimate, cooldown 1 or 2, or -1 for a
   one-use ultimate), but abilities exist for only 6 heroes and only 5 heroes are marked active. [V-data]
 
 ### 8.6 Boons, buffs, curses
@@ -270,7 +270,7 @@ AOE, RANDOM, SET_VALUE), plus standalone keywords. `%EVENT%` carries no event na
 
 ## 9. Card pool coverage
 
-Computed by cross-referencing every CORE card in `data/hs/core.json` with the `CORE_xxx` ids that
+Computed by cross-referencing every CORE card in `data/core.json` with the `CORE_xxx` ids that
 appear in `hsclone`'s `lib/` code. [V-data + V-code]
 
 | Class | CORE cards |
@@ -293,7 +293,7 @@ tokens are created by CORE cards; none has its own logic. [A]
 the live data has `playType`, `playContext`, `numberPrimary/Secondary/RNG/Random/Overcharge`, and
 richer `mechanics` (e.g. Fireballs: `[%RANDOM%, %DAMAGE%]`, `numberRNG: 3`).
 
-Facts about `data/hs/` [V-data unless tagged]:
+Facts about `data/` [V-data unless tagged]:
 - 429 card records: CORE 132, PRIME 254, ENTOURAGE 43. Ids are unique. Entourage ids are like
   `CORE_057a`; `isEntourage: true` marks them.
 - Booleans are encoded as present-or-absent (`active`, `elite`, `collectible`, `isEntourage`).

@@ -21,7 +21,7 @@ The card art and the card frames, badges and other UI art in `public/images/` ar
 They are not licensed for reuse**, and they are not covered by whatever licence the code in this repository may have.
 Please don't copy, redistribute or reuse the images.
 
-- Each card record in `data/hs/` credits its artist in `artistName` and `artistUrl`. Much of it is purchased marketplace
+- Each card record in `data/` credits its artist in `artistName` and `artistUrl`. Much of it is purchased marketplace
   art (for example [Rexard on GraphicRiver](https://graphicriver.net/user/rexard)); some is borrowed from independent
   artists on ArtStation and DeviantArt purely as a stand-in, and a few images are stock "FPO" (for placement only) comps.
   Some cards have no source recorded yet.
@@ -37,14 +37,13 @@ Please don't copy, redistribute or reuse the images.
 - `npm run dev` - dev server (see `CLAUDE.md` for the port note), then open `/play`
 - `npm test`, `npx tsc --noEmit -p .`, `npm run build`
 - `npm run sim -- [gamesPerPair] [greedy|random]` - bot-vs-bot win-rate report for the starter decks
-- `npm run airtable:hs` - re-pull the card data into `data/hs/` (needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID`)
+- `npm run airtable` - re-pull the card data into `data/` (needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID`)
 - `/play` also takes debug URL params, e.g. `/play?first=0&p0=CORE_045` (see `CLAUDE.md`)
 
 ## Known issues
 
 - No multiplayer, accounts or server yet (`game/game.ts` is a stub; see [ROADMAP.md](ROADMAP.md)).
-- `tsc` reports 11 errors: 8 are `as Card` casts on partial objects in `utils/__tests__/get-card-power.test.ts`
-  and 3 are variables declared twice in `airtable.node.ts`. `npm test` and `npm run build` pass.
+- `tsc` reports 8 errors: all are `as Card` casts on partial objects in `utils/__tests__/get-card-power.test.ts`. `npm test` and `npm run build` pass.
 - The card site pages and many `utils/` helpers still use the old zone-style card data and shape.
 - Card art is placeholder only (see the notice above); PRIME cards mostly have no art yet.
 - Stack is Next 12, React 17, boardgame.io 0.49 (all late 2022); an upgrade is planned as its own

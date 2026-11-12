@@ -32,10 +32,10 @@ earlier `hsclone` repo as the rules reference. Read these first:
   version already runs in `legal-actions.test.ts`).
 - The site shell works: home, `collection`, `deckbuilder`, `cards`, `store`, `profile`, `news`,
   `faq`, `changelog`, plus `pages/api/` for cards/users. The card renderers (`Card`, `Minion`) work.
-- `data/*.json` (read by the site) still describes the old zone game (fields such as
-  `zonePowerAdjustment`, `mechanicsSide`). The Hearthstone-style data lives in a different Airtable
-  base and is pulled into `data/hs/` (see "Two Airtable bases" below). The site has not been
-  switched over to it yet (ROADMAP Milestone 4).
+- `data/*.json` is the Hearthstone-style card data (the old zone-game JSON was deleted from `data/` on 2026-11-12; it is
+  at tag `snap-style-v0`). It is pulled from the new Airtable base (see "Airtable" below). The old site pages and
+  `pages/api/cards` still read the deleted zone files (`setsCore.json`, `setsEntourage.json`) and `utils/` reads
+  `constants.json`/`mechanics.json` in the old shape, so they are stale until ROADMAP Milestone 4 switches them over.
 
 ## Next up (as of the last session)
 
@@ -94,38 +94,34 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   (`engine/starter-decks.ts`) plus best/worst cards (`engine/sim/`). 100 games per pair takes about 15 seconds.
 - `npm run tune -- [gamesPerDeck]` - plays tweaked greedy-bot weights against the defaults (same deck both sides). A first run
   (60 games per deck) found no variant clearly better than the defaults (all within noise, 44-51%), so the weights are not the bottleneck.
-- `npm run airtable:hs` - pulls the Hearthstone-style card pool (CORE 132, PRIME 254, ENTOURAGE 43,
-  9 heroes, abilities, mechanics, constants) into `data/hs/`. This is the data the rebuild uses.
-- `npm run airtable` - the old zone-game pull into `data/` and `game/data/`. Only works against
-  the `browser-ccg` base; on any other base it now reports the real Airtable error and writes nothing.
-- Both need `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID` in `./.env.local` (git-ignored, none checked in).
+- `npm run airtable` - pulls the card database from Airtable into `data/*.json` (`airtable.node.js`): CORE 132, PRIME 254,
+  ENTOURAGE 43, GAME 1, 9 heroes, 18 abilities, mechanics, constants. This is the data the engine and `/play` use. It
+  fetches every table first and writes nothing if any fails or comes back empty.
+- The Airtable base was rebuilt on 2026-11-12: tables `CARDS` (all sets in one table; `set` column, `isEntourage` checkbox),
+  `HEROES`, `ABILITIES`, `MECHANICS`, `CONSTANTS`; symbols are stored bare (`BULWARK`, `MINION`) and the pull puts the
+  `%...%` back. `balance/airtable/` has the scripts that built and loaded it (`build.js`, `rebuild.js`; the Airtable API
+  cannot delete tables or columns, so removals are done by hand in the UI). Balance proposals and the bot-evaluation patch
+  are in `balance/` (see `balance/README.md`); `data/` already includes proposals 1-3 plus the trims in 4-5.
+- It needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID` in `./.env.local` (git-ignored, none checked in; read access is enough).
   You don't need either to run the site; the JSON is committed.
 
 ## Layout
 
 - `pages/` - Next routes. `pages/api/` serves cards/users.
 - `engine/` - the new Hearthstone-style rules engine (plain TypeScript, no React or boardgame.io
-  in the core). `engine/cards/` loads `data/hs/` into normalised cards. Tests in `__tests__/`.
-- `game/` - boardgame.io game definition (currently a stub). `game/data/` is a copy of `data/`.
-  **`data/` and `game/data/` are identical**, both written by `airtable.node.ts`. Edit via the
-  script or change both. `data/hs/` is separate: written only by `airtable.hs.node.ts`.
+  in the core). `engine/cards/` loads `data/` into normalised cards. Tests in `__tests__/`.
+- `game/` - boardgame.io game definition (currently a stub). `game/data/` is a stale copy of the old zone-game JSON;
+  it no longer mirrors `data/`.
 - `components/game-components/` - `Card`, `Minion`, `Avatar` (the rest of the old board UI was
   removed). `components/site-components/` - non-game UI.
 - `features/` - Redux Toolkit slices (store in `store.ts`). `hooks/`, `utils/`, `enums/`, `types/`.
 - `app.config.ts` - site pages/nav config plus `gameConfig.numerics` (deck/hand sizes, energy).
 
-## Two Airtable bases
+## Airtable and the `inspiration` column
 
-The same token can read both. Which one `AIRTABLE_BASE_ID` points at decides which script works.
-Find the base ids in Airtable (they are not recorded here; this repo is public).
-
-- **`react-ccg`** - the hsclone-era Hearthstone-style data. Used by
-  `npm run airtable:hs`. Tables: CONSTANTS, MECHANICS, HEROS, ABILITIES, GAME, CORE, PRIME,
-  ENTOURAGE. Card tables already have attack, health, cost, cardClass, mechanics, playType.
-- **`browser-ccg`** - the zone-game data behind `npm run airtable`.
-- The `inspiration` column exists in the `react-ccg` base. It names the specific Hearthstone
-  card(s) that inspired each entry. `airtable:hs` drops it on purpose because this repo is public.
-  Don't add it back, and don't copy it in from the old repos' JSON (see `PREVIOUS-VERSIONS.md`).
+- The current base has no `inspiration` column. The old `react-ccg` base (the hsclone-era data) has one naming the Hearthstone
+  card(s) that inspired each entry; it is deliberately not carried over because this repo is public. Don't add it back, and don't
+  copy it in from the old repos' JSON (see `PREVIOUS-VERSIONS.md`). Find base ids in Airtable (they are not recorded here).
 
 ## Things worth knowing
 
@@ -161,6 +157,6 @@ Find the base ids in Airtable (they are not recorded here; this repo is public).
 - Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
 - Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.
-- Current checks: `npm test` passes (engine tests plus the older `utils` ones), `npm run build` passes, and `tsc` has 11 errors
-  (8 `as Card` casts in `utils/__tests__/get-card-power.test.ts`, 3 redeclared variables in `airtable.node.ts`). Don't "fix"
+- Current checks: `npm test` passes (472 tests; the card-number tests were updated to the balance pass on 2026-11-12), `npm run build` passes, and `tsc` has 8 errors
+  (`as Card` casts in `utils/__tests__/get-card-power.test.ts`). Don't "fix"
   unrelated failures as a drive-by.

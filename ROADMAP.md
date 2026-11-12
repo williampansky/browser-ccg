@@ -23,7 +23,7 @@ accidents as rules. This milestone produces an authoritative `RULES.md` before a
 
 - [x] Read the `hsclone` rules code end to end: turn flow and draw, combat and targeting, card
       effects (spells, warcries, weapons, class skills, boons/buffs), keyword semantics
-- [x] Analyse the card data (`data/hs/`): field semantics, mechanics grammar, number fields,
+- [x] Analyse the card data (`data/`): field semantics, mechanics grammar, number fields,
       `%SYMBOL%` and text-token syntax, data-quality problems
 - [x] Mechanics coverage matrix: what the card pool uses vs. what `hsclone` actually implemented
 - [ ] Verify doubtful rules by driving `hsclone` live in two tabs (partly done; see `RULES.md` section 13)
@@ -38,11 +38,11 @@ author has approved it and answered the open design questions.
 Why: rules in plain tested TypeScript can be verified without any UI, and everything else sits on
 them. Starts only after 1a is approved.
 
-- [x] Pull the Hearthstone-style card data into `data/hs/` (`npm run airtable:hs`); the `react-ccg`
+- [x] Pull the Hearthstone-style card data into `data/` (`npm run airtable`); the `react-ccg`
       base already has attack/health, class, mechanics and play type on every card table
 - [x] Decide the new game-state shape (`G`) and a normalised in-engine card type, and note which
       raw fields (`%CONSTANT%` symbols, HTML text, number fields) the loader must clean up
-- [x] Card model and loader (`engine/cards/`): normalises `data/hs/` per RULES.md section 10, fails loudly
+- [x] Card model and loader (`engine/cards/`): normalises `data/` per RULES.md section 10, fails loudly
       on bad data, 31 tests (each verified by deliberately breaking the loader)
 - [~] Port the core `hsclone` rules to TypeScript (slices 1-6 done; slice 7 is the bot invariant suite): turn order, energy (+1 per turn, cap 10), draw,
       play minion/spell/weapon, minion vs minion and minion vs hero attacks, damage and death,
@@ -95,7 +95,7 @@ simulator first.
 
 - [ ] Choose the first-release pool from the current 69 cards, the old CORE 132 and the old PRIME 254
       (see `PREVIOUS-VERSIONS.md`); Bulwark/Guard, Armor and similar cards are core again
-- [ ] Switch the site pages from the old `data/` JSON to the new pool (`data/hs/`), and retire `game/data/`
+- [ ] Switch the site pages from the deleted zone-game JSON to the new pool (`data/`), and retire `game/data/`
 - [ ] Naming and text pass (duplicate names, typos, "Attack" vs "Deal" wording; see `CARD-AUDIT.md`)
 - [ ] Art match pass (mismatched art listed in `CARD-AUDIT.md` section 5)
 - [ ] Art provenance table: card, artist, source, licence, status; replace temporary art
