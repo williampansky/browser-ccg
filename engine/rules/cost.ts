@@ -2,6 +2,7 @@ import type { Card, CardCatalog } from '../cards/types';
 import { getCardDef } from '../definitions';
 import type { DefLookup } from '../definitions/define-card';
 import type { GameState, PlayerId } from '../state/types';
+import { minionDef } from './minion';
 
 /**
  * What `player` pays to play `card` right now: the printed cost, changed by the card's own rule (`ownCost`) and by
@@ -19,8 +20,7 @@ export const effectiveCost = (
   let delta = defs(card)?.ownCost?.({ state, owner: player }) ?? 0;
   let floor = 0;
   for (const m of state.players[player].board) {
-    const source = catalog.get(m.cardId);
-    for (const mod of (source && defs(source)?.costMods) ?? []) {
+    for (const mod of minionDef(m, catalog, defs)?.costMods ?? []) {
       if (!mod.affects(card)) continue;
       delta += mod.delta;
       if (mod.delta < 0) floor = Math.max(floor, mod.floor ?? 0);

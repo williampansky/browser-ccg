@@ -1,5 +1,18 @@
-import type { Card } from '../cards/types';
+import type { Card, CardCatalog } from '../cards/types';
+import { getCardDef } from '../definitions';
+import type { CardDef, DefLookup } from '../definitions/define-card';
 import type { MinionInstance } from '../state/types';
+
+/** The behaviour a minion on the board has right now: its card's, unless it has been Suppressed. */
+export const minionDef = (
+  minion: MinionInstance,
+  catalog: CardCatalog,
+  defs: DefLookup = getCardDef
+): CardDef | undefined => {
+  if (minion.silenced) return undefined;
+  const card = catalog.get(minion.cardId);
+  return card && defs(card);
+};
 
 /** Builds a fresh minion from its card. Keyword flags come from the card's mechanics. */
 export const createMinion = (card: Card, instanceId: number, turn: number, playSeq: number): MinionInstance => {

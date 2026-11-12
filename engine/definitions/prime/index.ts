@@ -34,6 +34,12 @@ import prime142 from './prime-142';
 import prime086 from './prime-086';
 import prime085 from './prime-085';
 import prime247 from './prime-247';
+import prime020 from './prime-020';
+import prime032 from './prime-032';
+import prime171 from './prime-171';
+import prime201 from './prime-201';
+import prime178 from './prime-178';
+import prime119 from './prime-119';
 import prime210 from './prime-210';
 import prime217 from './prime-217';
 import prime218 from './prime-218';
@@ -78,6 +84,12 @@ export const primeDefinitions: Definition[] = [
   prime086,
   prime085,
   prime247,
+  prime020,
+  prime032,
+  prime171,
+  prime201,
+  prime178,
+  prime119,
   prime210,
   prime217,
   prime218,

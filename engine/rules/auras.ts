@@ -3,6 +3,7 @@ import type { CardCatalog } from '../cards/types';
 import { getCardDef } from '../definitions';
 import type { DefLookup } from '../definitions/define-card';
 import type { GameState, PlayerId } from '../state/types';
+import { minionDef } from './minion';
 
 /**
  * Recomputes every aura. Each minion remembers how much Attack its auras currently give it
@@ -14,8 +15,7 @@ export const recomputeAuras = (g: Draft<GameState>, catalog: CardCatalog, defs: 
   const players: PlayerId[] = ['0', '1'];
   const sources = players.flatMap((owner) =>
     g.players[owner].board.flatMap((source, index) => {
-      const card = catalog.get(source.cardId);
-      const auras = card && defs(card)?.auras;
+      const auras = minionDef(source, catalog, defs)?.auras;
       return auras ? [{ owner, source, index, auras }] : [];
     })
   );

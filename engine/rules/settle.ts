@@ -4,6 +4,7 @@ import type { DefLookup } from '../definitions/define-card';
 import type { EngineContext } from './apply-action';
 import { GameEvent, GameState, MinionInstance, PlayerId } from '../state/types';
 import { recomputeAuras } from './auras';
+import { minionDef } from './minion';
 import { checkWin } from './win';
 
 /** Thrown when effects keep triggering each other without end; `applyAction` turns it into an error. */
@@ -45,8 +46,7 @@ export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEven
         events.push({ type: 'MinionDied', player: owner, instanceId: minion.instanceId, cardId: minion.cardId });
       }
       for (const { owner, minion } of dead) {
-        const card = ctx.catalog.get(minion.cardId);
-        const def = card && defs(card);
+        const def = minionDef(minion, ctx.catalog, defs);
         for (const effect of def?.onDeath ?? []) {
           effect({ g, caster: owner, self: minion.instanceId, rng: ctx.rng, catalog: ctx.catalog, events, sourceCardId: minion.cardId });
         }
@@ -57,8 +57,7 @@ export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEven
     if (cursor < events.length) {
       const event = events[cursor++];
       for (const { owner, minion } of boardsInPlayOrder(g)) {
-        const card = ctx.catalog.get(minion.cardId);
-        const def = card && defs(card);
+        const def = minionDef(minion, ctx.catalog, defs);
         for (const trigger of def?.triggers ?? []) {
           if (trigger.event !== event.type) continue;
           if (trigger.when && !trigger.when(event, { state: g, catalog: ctx.catalog, owner, selfId: minion.instanceId })) continue;

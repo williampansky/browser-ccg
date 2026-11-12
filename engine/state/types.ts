@@ -44,6 +44,8 @@ export interface MinionInstance {
   disabledOnTurn?: number;
   /** The turn number at whose start this minion dies (set by Expiration) */
   expiresOnTurn?: number;
+  /** Suppressed: the card's own behaviour (warcry already spent, triggers, auras, demise, ...) no longer applies */
+  silenced?: boolean;
 }
 
 /** A hero's equipped weapon. `durability` drops by 1 per attack; at 0 the weapon breaks. */

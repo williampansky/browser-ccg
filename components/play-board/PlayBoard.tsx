@@ -543,7 +543,7 @@ export const PlayBoard = () => {
 
   // Spell damage from the viewer's board, shown on the spells in their hand.
   const mySpellDamage = state.players[viewer].board.reduce(
-    (sum, m) => sum + (getCardDef(byId.get(m.cardId)!)?.spellDamage ?? 0),
+    (sum, m) => sum + (m.silenced ? 0 : getCardDef(byId.get(m.cardId)!)?.spellDamage ?? 0),
     0
   );
 

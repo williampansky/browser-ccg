@@ -49,10 +49,18 @@ export const legalActions = (
     } else if (card.type === 'minion') {
       if (me.board.length >= MAX_BOARD) return;
       const positions = me.board.length === 0 ? [0] : [0, me.board.length];
-      const targets = def?.target ? legalTargets(state, { kind: 'card', handIndex }, catalog, defs) : [];
-      for (const boardIndex of positions) {
-        if (targets.length === 0) actions.push({ type: 'PlayCard', handIndex, boardIndex });
-        for (const target of targets) actions.push({ type: 'PlayCard', handIndex, boardIndex, target });
+      // A "choose one" minion is offered once per option; an option whose target has no legal choice is played without one.
+      const options = def?.choices
+        ? def.choices.map((c, choice) => ({ choice, needsTarget: !!c.target }))
+        : [{ choice: undefined, needsTarget: !!def?.target }];
+      for (const { choice, needsTarget } of options) {
+        const targets = needsTarget ? legalTargets(state, { kind: 'card', handIndex, choice }, catalog, defs) : [];
+        for (const boardIndex of positions) {
+          const base: Action =
+            choice === undefined ? { type: 'PlayCard', handIndex, boardIndex } : { type: 'PlayCard', handIndex, boardIndex, choice };
+          if (targets.length === 0) actions.push(base);
+          for (const target of targets) actions.push({ ...base, target });
+        }
       }
     }
   });

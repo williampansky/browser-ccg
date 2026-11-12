@@ -332,3 +332,18 @@ export const obtainOpponentPlayedCard = (): Effect => (ctx) => {
   p.hand.push({ instanceId, cardId });
   ctx.events.push({ type: 'CardObtained', player: ctx.caster, instanceId });
 };
+
+/**
+ * Suppress: the minion loses its card's behaviour (triggers, auras, spell damage, cost changes, demise) and all its
+ * keywords, and any Disable. Its stats, damage and buffs stay as they are. Heroes are not affected.
+ */
+export const silence =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) {
+      minion.silenced = true;
+      minion.keywords = { guard: false, rush: false, bubble: false, doubleAttack: false, hidden: false, noAttack: false };
+      minion.auraRush = false;
+      delete minion.disabledOnTurn;
+    }
+  };

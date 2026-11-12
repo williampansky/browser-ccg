@@ -5,7 +5,7 @@ import type { CardDef } from '../definitions/define-card';
 import type { EngineContext } from './apply-action';
 import { ActionError, GameEvent, GameState, MAX_BOARD, TargetRef } from '../state/types';
 import { effectiveCost } from './cost';
-import { createMinion } from './minion';
+import { createMinion, minionDef } from './minion';
 import { isLegalTarget, legalTargets } from './targeting';
 
 export interface PlayCardArgs {
@@ -82,7 +82,7 @@ export const playCard = (
     g.played[me].push(card.id);
     // Spell damage only counts for spells, not warcries (RULES 8.3, Q16)
     const spellDamage =
-      card.type === 'spell' ? p.board.reduce((sum, m) => sum + (defs(catalog.get(m.cardId)!)?.spellDamage ?? 0), 0) : 0;
+      card.type === 'spell' ? p.board.reduce((sum, m) => sum + (minionDef(m, catalog, defs)?.spellDamage ?? 0), 0) : 0;
     let self: number | undefined;
     if (card.type === 'weapon') {
       p.weapon = { instanceId: inHand.instanceId, cardId: card.id, attack: card.attack ?? 0, durability: card.health ?? 0 };
