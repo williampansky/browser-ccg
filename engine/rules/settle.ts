@@ -4,7 +4,9 @@ import type { DefLookup } from '../definitions/define-card';
 import type { EngineContext } from './apply-action';
 import { GameEvent, GameState, MinionInstance, PlayerId } from '../state/types';
 import { recomputeAuras } from './auras';
+import { cardPool } from './card-pool';
 import { minionDef } from './minion';
+import { summonMinion } from './summon';
 import { mysteriesOnEvent } from './mystery';
 import { checkWin } from './win';
 
@@ -38,6 +40,11 @@ export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEven
     if (steps > MAX_STEPS) throw new TriggerLoopError();
     recomputeAuras(g, ctx.catalog, defs);
 
+    // Ring of the Lucii: this turn, a damaged minion of that player's cannot be reduced below 1 Health.
+    for (const owner of ['0', '1'] as PlayerId[]) {
+      if (g.players[owner].healthFloorOnTurn !== g.turn) continue;
+      for (const m of g.players[owner].board) if (m.health <= 0) m.health = 1;
+    }
     const dead = boardsInPlayOrder(g).filter((x) => x.minion.health <= 0);
     if (dead.length > 0) {
       g.deaths = (g.deaths ?? 0) + dead.length;
@@ -51,6 +58,11 @@ export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEven
         const def = minionDef(minion, ctx.catalog, defs);
         for (const effect of def?.onDeath ?? []) {
           effect({ g, caster: owner, self: minion.instanceId, rng: ctx.rng, catalog: ctx.catalog, events, sourceCardId: minion.cardId });
+        }
+        // Demises given by a spell (Haranna's Curse): a random minion of that race and cost, for the owner.
+        for (const ds of minion.deathSummons ?? []) {
+          const pool = cardPool(ctx.catalog, (c) => c.type === 'minion' && c.race === ds.race && c.cost === ds.cost, defs);
+          if (pool.length > 0) summonMinion(g, owner, pool[ctx.rng.int(pool.length)], events);
         }
       }
       continue;

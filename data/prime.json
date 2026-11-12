@@ -1217,7 +1217,7 @@
     "cost": 6,
     "attack": 4,
     "health": 5,
-    "text": "<strong>%ON_PLAY%:</strong> Take control of<br>\nan enemy minion that<br>\nhas 2 or less Attack",
+    "text": "<strong>%ON_PLAY%:</strong> Take control of an<br>\nenemy minion with 2 or less<br>\nAttack for 2 turns",
     "mechanics": [
       "%ON_PLAY%",
       "%STEAL%"
@@ -1262,10 +1262,10 @@
     "cost": 3,
     "attack": 3,
     "health": 3,
-    "text": "<strong>%BOON%:</strong> Your other %RACE_SPRITE%s have +2 Attack.",
+    "text": "Whenever you %SUMMON% a %RACE_SPRITE%,<br>\ngive it +2 Attack this turn<br>\nand <strong>%RUSH%</strong>",
     "mechanics": [
-      "%BOON%",
-      "%SET_VALUE%"
+      "%EVENT%",
+      "%SUMMON%"
     ],
     "playContext": "%SET_VALUE%",
     "collectible": true,
@@ -1761,7 +1761,7 @@
     "rarity": "%RARITY_REMARKABLE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "<strong>%BOON%</strong><br>\n+2 Attack and <strong>%IMMUNE%</strong>",
+    "text": "<strong>%BOON%</strong> a friendly minion:<br>\n+2 Attack and <strong>%IMMUNE%</strong><br>\nthis turn",
     "mechanics": [
       "%BOON%",
       "%IMMUNE%",
@@ -1786,15 +1786,13 @@
     "cost": 1,
     "attack": 1,
     "health": 2,
-    "text": "Gain +1 Attack every time you %SUMMON% a %RACE_SPRITE%.",
+    "text": "Gain +1/+1 whenever<br>\na %RACE_SPRITE% dies",
     "mechanics": [
-      "%SUMMON%",
-      "%SET_VALUE%"
+      "%EVENT%"
     ],
     "playContext": "%SET_VALUE%",
     "collectible": true,
     "active": true,
-    "entourage": "PRIME_044a",
     "artistName": "https://graphicriver.net/user/rexard",
     "artistUrl": "https://graphicriver.net/user/rexard"
   },
@@ -1845,9 +1843,9 @@
     "cardClass": "0 %CLASS_NONE%",
     "race": "%RACE_NONE%",
     "cost": 7,
-    "attack": 7,
+    "attack": 5,
     "health": 7,
-    "text": "<strong>%BOON%:</strong><br>\nDouble the output of<br>\nyour spells and abilities",
+    "text": "<strong>%BOON%:</strong> Your spells deal<br>\n+1 damage and heal for +1",
     "mechanics": [
       "%BOON%"
     ],
@@ -2052,9 +2050,9 @@
     "cost": 3,
     "attack": 2,
     "health": 3,
-    "text": "Give all your other active %RACE_SPRITE%s +2 Health.",
+    "text": "Give your other %RACE_SPRITE%s<br>\n+1/+1 and <strong>%BUBBLE%</strong>",
     "mechanics": [
-      "%SET_VALUE%"
+      "%BUFF%"
     ],
     "playContext": "%SET_VALUE%",
     "collectible": true,
@@ -2149,7 +2147,7 @@
     "cost": 1,
     "attack": 1,
     "health": 2,
-    "text": "%DESTROY% a %RACE_SPRITE% and<br />\ngain +2/+2 stats",
+    "text": "%DESTROY% a friendly %RACE_SPRITE%<br>\nand gain its stats",
     "mechanics": [
       "%ON_PLAY%",
       "%DESTROY%",
@@ -2430,7 +2428,7 @@
     "cost": 4,
     "attack": 3,
     "health": 3,
-    "text": "If your opponent has 4<br />\n(or more) minions, take<br />\ncontrol of one",
+    "text": "<strong>%ON_PLAY%:</strong> Take control of an enemy<br>\nminion with 2 or less Attack<br>\nuntil the end of this turn",
     "mechanics": [
       "%ON_PLAY%",
       "%STEAL%",
@@ -2503,7 +2501,7 @@
     "cost": 8,
     "attack": 6,
     "health": 6,
-    "text": "<strong>%BUBBLE%, </strong><strong>%BULWARK%, </strong><br>\n<strong>%ON_DEATH%:</strong> Equip a 5/3 Mace of the Shattered Mirror",
+    "text": "<strong>%BUBBLE%, %BULWARK%</strong><br>\n<strong>%ON_DEATH%:</strong> Gain 5 %ARMOR%<br>\nand equip a 3/2 Mace",
     "mechanics": [
       "%BUBBLE%",
       "%BULWARK%",
@@ -3952,7 +3950,7 @@
     "cost": 3,
     "attack": 2,
     "health": 2,
-    "text": "Gain +1/+1 for<br />\nevery card played",
+    "text": "Gain +1/+1 for every<br />\ncard your opponent plays",
     "mechanics": [
       "%EVENT%"
     ],
@@ -5016,8 +5014,8 @@
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_MYTHIC%",
     "cardClass": "0 %CLASS_NONE%",
-    "cost": 0,
-    "text": "The next spell card you<br>\nplay this turn costs 2 less",
+    "cost": 1,
+    "text": "The next spell you play this turn<br>\ncosts 2 less; draw a card",
     "numberPrimary": 2,
     "playType": "GLOBAL",
     "collectible": true,
@@ -5210,7 +5208,7 @@
     "rarity": "%RARITY_SUPERIOR%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 4,
-    "text": "Gain control of a minion with ≤ 3 Attack until the end of this turn",
+    "text": "Gain control of an enemy minion<br>\nwith 3 or less Attack until the<br>\nend of this turn; it can attack",
     "mechanics": [
       "%STEAL%",
       "%EVENT%"

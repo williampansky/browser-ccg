@@ -47,7 +47,7 @@ export const healTarget = (g: Draft<GameState>, target: TargetRef, amount: numbe
  * and pops. A hit of 0 does nothing. Call inside `produce`.
  */
 export const damageMinion = (m: Draft<MinionInstance>, amount: number, events: GameEvent[], owner: PlayerId): void => {
-  if (amount <= 0) return;
+  if (amount <= 0 || m.immune) return;
   if (m.keywords.bubble) {
     m.keywords.bubble = false;
     events.push({ type: 'BubblePopped', instanceId: m.instanceId });

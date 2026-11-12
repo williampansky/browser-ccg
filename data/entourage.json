@@ -526,6 +526,20 @@
     "isEntourage": true
   },
   {
+    "id": "PRIME_169a",
+    "name": "Mace of the Shattered Mirror",
+    "set": "%SET_003%",
+    "type": "%TYPE_WEAPON%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_NONE%",
+    "cost": 2,
+    "attack": 3,
+    "health": 2,
+    "collectible": false,
+    "active": false,
+    "isEntourage": true
+  },
+  {
     "id": "PRIME_157a",
     "name": "Doorway Mouse",
     "set": "%SET_003%",

@@ -21,7 +21,7 @@ export const damage =
 export const heal =
   (select: Selector, amount: number): Effect =>
   (ctx) => {
-    const total = withSpellPower('heal', amount, ctx.spellDamage);
+    const total = withSpellPower('heal', amount, ctx.spellDamage) + (amount > 0 ? ctx.spellHealing ?? 0 : 0);
     for (const t of select(ctx)) healTarget(ctx.g, t, total, ctx.events);
   };
 
@@ -686,3 +686,149 @@ export const ifDead =
     const dead = select(ctx).some((t) => t.kind === 'minion' && (findMinion(ctx.g, t.instanceId)?.minion.health ?? 0) <= 0);
     if (dead) then(ctx);
   };
+
+/** Adds Attack and Health "for this turn only" (the Health is taken back at the end of the turn, never leaving a minion below 1). */
+export const buffThisTurnBoth =
+  (select: Selector, attack: number, health: number): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) {
+      minion.attack += attack;
+      minion.tempAttack += attack;
+      minion.maxHealth += health;
+      minion.health += health;
+      minion.tempHealth = (minion.tempHealth ?? 0) + health;
+    }
+  };
+
+/**
+ * Borrows enemy minions for `turns` of the caster's turns (1 = until the end of this turn, 2 = until the end of their next turn). They go
+ * home when it ends (a full home board loses them). With `canAttack` they can attack at once. No room on the caster's board: nothing happens.
+ */
+export const loanMinion =
+  (select: Selector, turns: number, canAttack: boolean): Effect =>
+  (ctx) => {
+    for (const { owner, minion } of minionsOf(ctx, select)) {
+      const mine = ctx.g.players[ctx.caster].board;
+      if (owner === ctx.caster || mine.length >= 7) continue;
+      const theirs = ctx.g.players[owner].board;
+      theirs.splice(theirs.findIndex((m) => m.instanceId === minion.instanceId), 1);
+      minion.loan = { from: owner, returnOnTurn: ctx.g.turn + (turns - 1) * 2 };
+      minion.playedOnTurn = canAttack ? ctx.g.turn - 1 : ctx.g.turn;
+      minion.attacksThisTurn = 0;
+      delete minion.disabledOnTurn;
+      mine.push(minion);
+    }
+  };
+
+/** The running minion becomes a copy of the selected minion: its card, stats, keywords and effects (not its place or its summoning sickness). */
+export const becomeCopyOf =
+  (select: Selector): Effect =>
+  (ctx) => {
+    const me = ctx.self !== undefined ? findMinion(ctx.g, ctx.self)?.minion : undefined;
+    const [src] = minionsOf(ctx, select);
+    if (!me || !src) return;
+    const t = src.minion;
+    me.cardId = t.cardId;
+    me.attack = t.attack - t.auraAttack - t.tempAttack;
+    me.health = t.health;
+    me.maxHealth = t.maxHealth;
+    me.auraAttack = 0;
+    me.auraRush = false;
+    me.tempAttack = 0;
+    me.keywords = { ...t.keywords };
+    me.silenced = t.silenced;
+    me.deathSummons = t.deathSummons ? [...t.deathSummons] : undefined;
+    if (me.deathSummons === undefined) delete me.deathSummons;
+  };
+
+/** Every minion except the running one attacks a random character on the other side (a minion fights back; a hero does not), in play order. */
+export const forceAllAttack = (): Effect => (ctx) => {
+  const order = [...ctx.g.players['0'].board.map((m) => ({ owner: '0' as const, m })), ...ctx.g.players['1'].board.map((m) => ({ owner: '1' as const, m }))].sort(
+    (a, b) => a.m.playSeq - b.m.playSeq
+  );
+  for (const { owner, m } of order) {
+    if (m.instanceId === ctx.self || m.health <= 0) continue;
+    const foe = opponentOf(owner);
+    const targets: Parameters<typeof damageTarget>[1][] = [
+      { kind: 'hero', player: foe },
+      ...ctx.g.players[foe].board.filter((x) => x.health > 0).map((x) => ({ kind: 'minion' as const, instanceId: x.instanceId })),
+    ];
+    const t = targets[ctx.rng.int(targets.length)];
+    const counter = t.kind === 'minion' ? findMinion(ctx.g, t.instanceId)?.minion.attack ?? 0 : 0;
+    damageTarget(ctx.g, t, m.attack, ctx.events);
+    if (counter > 0) damageTarget(ctx.g, { kind: 'minion', instanceId: m.instanceId }, counter, ctx.events);
+  }
+};
+
+/** The selected friendly minions get "Demise: summon a random `race` minion costing `cost`". */
+export const grantDeathSummon =
+  (select: Selector, race: string, cost: number): Effect =>
+  (ctx) => {
+    for (const { owner, minion } of minionsOf(ctx, select)) {
+      if (owner !== ctx.caster) continue;
+      minion.deathSummons = [...(minion.deathSummons ?? []), { race, cost }];
+    }
+  };
+
+/** Immune (takes no damage) until the end of this turn. */
+export const grantImmune =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) minion.immune = true;
+  };
+
+/** The selected minions make their owner draw a card whenever they attack (for good). */
+export const grantDrawOnAttack =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) minion.drawsOnAttack = true;
+  };
+
+/** The caster's next spell this turn costs `amount` less. */
+export const setSpellDiscount =
+  (amount: number): Effect =>
+  (ctx) => {
+    ctx.g.players[ctx.caster].spellDiscount = { turn: ctx.g.turn, amount };
+  };
+
+/** The opponent's spells cost nothing during their next turn. */
+export const opponentSpellsFreeNextTurn = (): Effect => (ctx) => {
+  ctx.g.players[opponentOf(ctx.caster)].freeSpellsOnTurn = ctx.g.turn + 1;
+};
+
+/** This turn the caster's minions cannot be reduced below 1 Health. */
+export const healthFloorThisTurn = (): Effect => (ctx) => {
+  ctx.g.players[ctx.caster].healthFloorOnTurn = ctx.g.turn;
+};
+
+/** Equips the running card's `index`-th entourage weapon token (replacing any weapon). */
+export const equipTokenWeapon =
+  (index = 0): Effect =>
+  (ctx) => {
+    const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+    const token = source && ctx.catalog.get(source.entourage[index]);
+    if (!token) throw new Error(`${ctx.sourceCardId} has no entourage weapon #${index} in the catalog`);
+    ctx.g.players[ctx.caster].weapon = {
+      instanceId: ctx.g.nextInstanceId++,
+      cardId: token.id,
+      attack: token.attack ?? 0,
+      durability: token.health ?? 0,
+    };
+    ctx.events.push({ type: 'WeaponEquipped', player: ctx.caster, cardId: token.id });
+  };
+
+/** The running minion swaps places with a random minion card from its owner's hand (which goes onto the board in its slot; this card goes to the hand). */
+export const swapSelfWithHandMinion = (): Effect => (ctx) => {
+  const p = ctx.g.players[ctx.caster];
+  const slot = p.board.findIndex((m) => m.instanceId === ctx.self);
+  const options = p.hand.filter((c) => ctx.catalog.get(c.cardId)?.type === 'minion');
+  if (slot < 0 || options.length === 0) return;
+  const pick = ctx.rng.shuffle([...options])[0];
+  const card = ctx.catalog.get(pick.cardId)!;
+  const old = p.board[slot];
+  p.hand = p.hand.filter((c) => c.instanceId !== pick.instanceId);
+  p.hand.push({ instanceId: old.instanceId, cardId: old.cardId });
+  const fresh = createMinion(card, pick.instanceId, ctx.g.turn, ctx.g.nextPlaySeq++);
+  p.board[slot] = fresh;
+  ctx.events.push({ type: 'MinionSummoned', player: ctx.caster, instanceId: fresh.instanceId, cardId: card.id });
+};

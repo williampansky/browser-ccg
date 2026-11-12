@@ -18,6 +18,8 @@ export interface EffectContext {
   self?: number;
   /** Spell damage the caster has right now; set only while a SPELL is being played (RULES Q16) */
   spellDamage?: number;
+  /** Extra healing from the caster's board for the spell being played (The Sorceress); set with `spellDamage` */
+  spellHealing?: number;
   /** The event that fired this trigger, if it is one */
   event?: GameEvent;
   /** Set while a Mystery reacts to an attack that is about to happen; effects may change `target` to redirect it */

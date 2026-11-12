@@ -56,6 +56,16 @@ export interface MinionInstance {
   disabledOnTurn?: number;
   /** The turn number at whose start this minion dies (set by Expiration) */
   expiresOnTurn?: number;
+  /** Health added "for this turn only" (already in `health` and `maxHealth`; taken back when the turn ends, never leaving less than 1) */
+  tempHealth?: number;
+  /** Borrowed from `from` (Seadog Captain, Data-Mage, ...): goes back at the end of the turn numbered `returnOnTurn` */
+  loan?: { from: PlayerId; returnOnTurn: number };
+  /** Takes no damage until the end of the turn */
+  immune?: boolean;
+  /** Its owner draws a card whenever it attacks */
+  drawsOnAttack?: boolean;
+  /** Demise effects given by a spell: each summons a random minion of this race and exact cost for its owner */
+  deathSummons?: { race: string; cost: number }[];
   /** Suppressed: the card's own behaviour (warcry already spent, triggers, auras, demise, ...) no longer applies */
   silenced?: boolean;
 }
@@ -89,6 +99,12 @@ export interface PlayerState {
   heroDisabledOnTurn?: number;
   /** Overcharge: energy that stays locked at the start of this player's next turn (then cleared) */
   overcharge?: number;
+  /** On this turn number the player's NEXT spell costs `amount` less (Soul Lantern); used up when a spell is played */
+  spellDiscount?: { turn: number; amount: number };
+  /** On this turn number all of this player's spells cost 0 (Sir Jorio, on the opponent) */
+  freeSpellsOnTurn?: number;
+  /** On this turn number this player's minions cannot be reduced below 1 Health (Ring of the Lucii) */
+  healthFloorOnTurn?: number;
   /** The turn number on which this player's next Mystery costs 0 (Vibrant Mage) */
   mysteryFreeOnTurn?: number;
   /** Cards this player has played this turn (`now`) and on their previous turn (`prev`), for "cards you played this turn and last" */

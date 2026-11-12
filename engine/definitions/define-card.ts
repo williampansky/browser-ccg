@@ -122,6 +122,8 @@ export interface CardDef {
   ownCost?: (c: { state: GameState; owner: PlayerId }) => number;
   /** "+N Spell Damage" while on the board: raises the damage of your spells (RULES Q16) */
   spellDamage?: number;
+  /** "Your spells heal N more" while on the board */
+  spellHealing?: number;
   /** Ongoing effects on other minions while this one is on the board (recomputed after every step) */
   auras?: Aura[];
   /** For weapons: runs before each hero attack with the weapon */

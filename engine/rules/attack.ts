@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import { ActionError, GameEvent, GameState, MinionInstance, PlayerId, TargetRef } from '../state/types';
 import { damageHero, damageMinion } from './damage';
+import { drawCard } from './draw';
 import { getCardDef } from '../definitions';
 import type { EngineContext } from './apply-action';
 import { minionDef } from './minion';
@@ -41,6 +42,7 @@ export const attack = (
     const a = g.players[me].board.find((m) => m.instanceId === args.attackerId)!;
     a.attacksThisTurn += 1;
     a.keywords.hidden = false; // attacking reveals a hidden minion
+    if (a.drawsOnAttack) drawCard(g, me, events);
     // The defender's Mystery may react first, and may redirect the attack or even kill the attacker.
     const target = ctx ? mysteryBeforeAttack(g, ctx, events, { attackerPlayer: me, attackerId: a.instanceId, target: args.target }) : args.target;
     events.push({ type: 'MinionAttacked', attackerId: a.instanceId, target });

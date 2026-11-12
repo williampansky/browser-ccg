@@ -94,6 +94,9 @@ export const playCard = (
     // Spell damage only counts for spells, not warcries (RULES 8.3, Q16)
     const spellDamage =
       card.type === 'spell' ? p.board.reduce((sum, m) => sum + (minionDef(m, catalog, defs)?.spellDamage ?? 0), 0) : 0;
+    const spellHealing =
+      card.type === 'spell' ? p.board.reduce((sum, m) => sum + (minionDef(m, catalog, defs)?.spellHealing ?? 0), 0) : 0;
+    if (card.type === 'spell' && p.spellDiscount?.turn === g.turn) delete p.spellDiscount; // the discount is used up
     let self: number | undefined;
     if (card.type === 'weapon') {
       p.weapon = { instanceId: inHand.instanceId, cardId: card.id, attack: card.attack ?? 0, durability: card.health ?? 0 };
@@ -118,7 +121,7 @@ export const playCard = (
     let aim = target;
     if (card.type === 'spell') aim = mysteryBeforeSpell(g, ctx, events, { caster: me, cardId: card.id, target });
     for (const effect of play?.onPlay ?? []) {
-      effect({ g, caster: me, target: aim, self, rng, catalog, events, sourceCardId: card.id, spellDamage });
+      effect({ g, caster: me, target: aim, self, rng, catalog, events, sourceCardId: card.id, spellDamage, spellHealing });
     }
   });
 };

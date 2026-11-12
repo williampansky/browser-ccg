@@ -11,6 +11,13 @@ export const endTurnCleanup = (g: Draft<GameState>, player: PlayerId): void => {
     for (const m of g.players[p].board) {
       if (m.tempAttack !== 0) m.attack = Math.max(0, m.attack - m.tempAttack);
       m.tempAttack = 0;
+      if (m.tempHealth) {
+        // "+N Health this turn only": the maximum drops back, and current Health follows but never below 1
+        m.maxHealth = Math.max(1, m.maxHealth - m.tempHealth);
+        m.health = Math.max(1, Math.min(m.health, m.maxHealth));
+        m.tempHealth = 0;
+      }
+      delete m.immune;
     }
     const w = g.players[p].weapon;
     if (w?.tempAttack) {
@@ -19,6 +26,19 @@ export const endTurnCleanup = (g: Draft<GameState>, player: PlayerId): void => {
     }
   }
   if (g.players[player].weapon?.temporary) g.players[player].weapon = null;
+  // Borrowed minions go home when their loan ends (a full home board loses them).
+  for (const p of ['0', '1'] as const) {
+    for (const m of [...g.players[p].board]) {
+      if (!m.loan || m.loan.returnOnTurn > g.turn) continue;
+      const home = m.loan.from;
+      g.players[p].board = g.players[p].board.filter((x) => x.instanceId !== m.instanceId);
+      delete m.loan;
+      if (g.players[home].board.length < 7) {
+        m.attacksThisTurn = 0;
+        g.players[home].board.push(m);
+      }
+    }
+  }
 };
 
 /** Starts `player`'s turn: turn +1, energy total +1 (cap 10) and refill, minions ready, then draw one card. */

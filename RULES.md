@@ -694,3 +694,21 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
   091 Harry (a Mythic minion), 154 Amaad (a random card costing 4 less whenever you play a card from hand, not for itself). A full hand burns the card.
 - **Summon**: 084 Serene Valley (demise: a random Creature), 227 Zap (2 damage; if the minion dies, a random Demonic minion costing 4 to 6 for you).
 - **Known quirk (not changed)**: events are handled after deaths in `settle`, so a minion that arrives from a demise can react to a spell cast earlier in the same action.
+
+### The last batch: Sprites, loans, copies and lasting flags (2026-11-12; Airtable edits in `balance/airtable/prime-last.js`)
+
+- **Sprite tribe**: 080 gives a Sprite you summon +2 Attack this turn and Rush (not itself); 044 +1/+1 whenever any Sprite dies; 077 destroys a *friendly* Sprite and gains its current stats;
+  058 gives your other Sprites +1/+1 and Bubble. 064 grows for every card (spell, minion, weapon, Mystery) the OPPONENT plays.
+- **Loans** (`MinionInstance.loan`): 063 and 179 borrow an enemy minion (2 / 3 or less Attack) until the end of this turn and it can attack at once; 183 keeps one (2 or less Attack) until the end of YOUR
+  next turn but it cannot attack on the turn it is taken. At the end of that turn it goes back to its owner; if their board is full it is lost. A borrowed minion that dies stays dead.
+- **083 Void Egg** becomes a copy of the chosen minion: its card (so its effects), Attack, Health, damage, keywords, Suppressed state and granted demises; not its slot or summoning sickness. Its warcry does not run again.
+- **252 War and Ruin**: every other minion, both sides, in play order, attacks a random character on the other side (a hero takes it with no counter; a minion hits back); then it leaves Ruin on death.
+- **114 Haranna's Curse** gives your minions "Demise: summon a random 2-cost Creature for its owner" (`MinionInstance.deathSummons`, a random playable Creature from the pool).
+- **Temporary stats** (051a Chopped Desert Lizard, `tempHealth`): +1/+1 for one turn; at the end of the turn the Health goes back down but never leaves the minion below 1. 051 leaves one when it dies.
+- **169 Paladin**: on death gain 5 Armor and equip a 3/2 Mace (PRIME_169a).
+- **Immune** (137, `MinionInstance.immune`): a friendly minion gets +2 Attack and takes no damage until the end of the turn.
+- **238 Ring of the Lucii**: this turn your minions are brought back to 1 Health if they would die; this also stops a "destroy" effect (the engine cannot tell damage from destroy at that point).
+- **089 Sir Jorio**: all the OPPONENT's spells cost 0 during their next turn. **196 Soul Lantern** (cost 1): your next spell this turn costs 2 less, and you draw a card. **155 Crystal of Virtue**: you draw whenever that minion attacks.
+- **056 Portal**: at the start of your turn it swaps itself with a random minion card in your hand (that card takes its slot, summoning sick; Portal goes to your hand). Nothing happens without one.
+- **184 The Sorceress (5/7)**: your spells deal +1 damage and heal +1 (healing, `CardDef.spellHealing`).
+- **Not built**: 248 Ah-Xoc-Xin (a Discover of "ROCKING powers" that the data does not define) and 206 Revitalization ("Demise: Revitalization" is not explained anywhere).
