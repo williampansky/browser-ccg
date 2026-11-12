@@ -26,6 +26,7 @@ import { fanDrop, fanRotation, HAND_CARD_HEIGHT, handSink as computeHandSink, ha
 import { applyDebugSetup, DebugSetup } from './debug-setup';
 import { nukeHero } from './nuke-hero';
 import { CardFace } from './CardFace';
+import { withSpellDamageText } from './card-face-model';
 import { HeroBar } from './HeroBar';
 import { deckRows } from './deck-rows';
 import { describeEvents } from './describe-events';
@@ -438,6 +439,23 @@ export const PlayBoard = () => {
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   /** The hand card being dragged: hidden in the hand so only the drag image shows. */
   const [draggedHand, setDraggedHand] = useState<number | null>(null);
+  // A dragged card that gets played unmounts its own button (when it was the last one in the hand), so its dragend never
+  // reaches React and `draggedHand` would stay set: the next card drawn into that slot came up invisible (playtest 2026-11-12).
+  // Clear it on any window drop/dragend (the drop event still fires) and whenever the game state changes. `dragIndex` is only
+  // cleared on a state change, never on drop, because the drop handlers still need it.
+  useEffect(() => {
+    const clear = () => setDraggedHand(null);
+    window.addEventListener('drop', clear, true);
+    window.addEventListener('dragend', clear, true);
+    return () => {
+      window.removeEventListener('drop', clear, true);
+      window.removeEventListener('dragend', clear, true);
+    };
+  }, []);
+  useEffect(() => {
+    setDraggedHand(null);
+    setDragIndex(null);
+  }, [state]);
   /** Where a choose-one card was dropped; picking its option in the dialog then plays it there. */
   const [pendingDrop, setPendingDrop] = useState<{ boardIndex?: number; target?: TargetRef } | null>(null);
   useEffect(() => {
@@ -583,7 +601,9 @@ export const PlayBoard = () => {
   const choiceLabel = (choice: number): string => {
     const card = selectedCard;
     const def = card && getCardDef(card);
-    const base = def?.choices?.[choice]?.label ?? `Option ${choice + 1}`;
+    const raw = def?.choices?.[choice]?.label ?? `Option ${choice + 1}`;
+    // A spell's damage option shows what it will really deal with your Spell Damage (the in-hand text already does).
+    const base = card?.type === 'spell' ? plain(withSpellDamageText(raw, mySpellDamage)) : raw;
     // Surveying Drone: show which card each option keeps.
     const top = card?.id === 'CORE_055' ? byId.get(state.players[me].deck[choice]?.cardId ?? '') : undefined;
     return top ? `${base}: ${top.name}` : base;

@@ -77,3 +77,5 @@
 - [x] bug: played steel gauntlet with crude weapon equipped. it enhanced the attack like it should, but the boon stayed past my turn like a buff - instead of a temp boon  
 - [x] lets highlight the weapon when its useable for an attack (green when ready, gold while the hero is the selected attacker)
 - [x] adjust the global drop area to be anywhere on the board higher than the player bar (the whole board column down to the top of the player bar; drop or click)
+- [x] i notice an invisible card in the hand sometimes and stays invisible until i interact with a different card, then it is visible (cause: playing the far-right card unmounts its button, so its dragend never cleared the "dragged card" state and the next card drawn into that slot came up hidden; now cleared on any drop/dragend and on every state change)
+- [x] i had a spell damage increase card in play, and the in-hand infernal hanzo text updated, but not the choose modal version (the choose-one option now shows the boosted damage, e.g. "Deal 2 damage"; the armor option stays 1 because Spell Damage only raises damage)
