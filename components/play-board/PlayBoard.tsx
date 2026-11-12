@@ -1,3 +1,4 @@
+import { produce } from 'immer';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Action,
@@ -182,11 +183,36 @@ const renderLogLine = (line: string) =>
 const targetOf = (a: Action): TargetRef | undefined =>
   a.type === 'PlayCard' || a.type === 'Attack' || a.type === 'WeaponAttack' ? a.target : undefined;
 
+/**
+ * Debug URL params for /play (read on every new game): `?first=0|1` picks who goes first (Player 1 = 0),
+ * `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand (in hand order).
+ */
+const debugParams = (): { first?: PlayerId; hands: Record<PlayerId, string[]> } => {
+  const q = new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search);
+  const list = (k: string) => (q.get(k) ?? '').split(',').map((x) => x.trim()).filter((id) => byId.has(id));
+  const f = q.get('first');
+  return { first: f === '0' || f === '1' ? f : undefined, hands: { '0': list('p0'), '1': list('p1') } };
+};
+
 const newGame = (): { state: GameState; rng: Rng; decks: Record<PlayerId, string[]>; first: PlayerId } => {
   const rng = createSeededRng(Date.now() % 2147483647);
   const decks = { '0': buildDeck(pool, rng), '1': buildDeck(pool, rng) };
-  const first: PlayerId = rng.int(2) === 0 ? '0' : '1';
-  const state = createGame({ decks, firstPlayer: first, secondPlayerBonusCard: 'GAME_001' }, rng);
+  const dbg = debugParams();
+  const randomFirst: PlayerId = rng.int(2) === 0 ? '0' : '1';
+  const first: PlayerId = dbg.first ?? randomFirst;
+  let state = createGame({ decks, firstPlayer: first, secondPlayerBonusCard: 'GAME_001' }, rng);
+  state = produce(state, (g) => {
+    (['0', '1'] as PlayerId[]).forEach((p) => {
+      const me = g.players[p];
+      dbg.hands[p].forEach((cardId, i) => {
+        if (i >= me.hand.length) return;
+        // Swap with a copy still in the deck when there is one (keeps the deck tracker honest); else overwrite the slot.
+        const inDeck = me.deck.findIndex((c) => c.cardId === cardId);
+        if (inDeck >= 0) me.deck[inDeck].cardId = me.hand[i].cardId;
+        me.hand[i].cardId = cardId;
+      });
+    });
+  });
   return { state, rng, decks, first };
 };
 
