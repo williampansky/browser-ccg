@@ -1,5 +1,6 @@
 import { produce } from 'immer';
 import type { Rng } from '../rng';
+import { MAX_DECK_SIZE } from '../deck-rules';
 import { startTurn } from '../rules/turn';
 import { CardInstance, GameSetup, GameState, MAX_HEALTH, PlayerId, PlayerState } from './types';
 
@@ -23,6 +24,11 @@ const emptyPlayer = (deck: CardInstance[]): PlayerState => ({
  * The second player also gets `secondPlayerBonusCard` (The Orb) if given.
  */
 export const createGame = (setup: GameSetup, rng: Rng): GameState => {
+  (['0', '1'] as PlayerId[]).forEach((p) => {
+    if (setup.decks[p].length > MAX_DECK_SIZE) {
+      throw new Error(`Player ${Number(p) + 1}'s deck has ${setup.decks[p].length} cards; the most allowed is ${MAX_DECK_SIZE}.`);
+    }
+  });
   let nextInstanceId = 1;
   const build = (cardIds: string[]): CardInstance[] =>
     rng.shuffle(cardIds).map((cardId) => ({ instanceId: nextInstanceId++, cardId }));

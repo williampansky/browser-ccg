@@ -57,12 +57,12 @@ describe('simulation', () => {
     expect(playMatchup(smart, dumb, 12, byId).aWins).toBeGreaterThanOrEqual(9);
   });
   it('a tournament covers every pair once and tallies cards', () => {
-    const t = runTournament(decks.map(greedy), 4, byId);
-    expect(t.matchups).toHaveLength(3);
+    const t = runTournament(decks.map(greedy), 2, byId);
+    expect(t.matchups).toHaveLength((decks.length * (decks.length - 1)) / 2);
     expect(t.cardStats.length).toBeGreaterThan(0);
     for (const c of t.cardStats) expect(c.wins).toBeLessThanOrEqual(c.games);
     const table = formatWinTable(decks.map((d) => d.name), t.matchups);
-    expect(table.split('\n')).toHaveLength(4);
+    expect(table.split('\n')).toHaveLength(decks.length + 1);
     expect(table).toContain('Aggro');
   });
 });

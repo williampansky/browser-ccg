@@ -1,6 +1,8 @@
 import type { Card } from './cards/types';
 
-export const DECK_SIZE = 30;
+import { MAX_DECK_SIZE } from './deck-rules';
+
+export const DECK_SIZE = MAX_DECK_SIZE;
 
 export interface StarterDeck {
   name: string;
@@ -29,6 +31,21 @@ export const STARTER_DECKS: StarterDeck[] = [
     name: 'Control',
     plan: 'spells and expensive, high-stat minions',
     score: (c) => 100 - c.cost * 8 - (c.type === 'spell' ? 18 : 0) - stats(c) / 2,
+  },
+  {
+    name: 'Guard Wall',
+    plan: 'Guard minions to soak up damage, with cheap cards to fill the curve',
+    score: (c) => (c.mechanics.includes('BULWARK') ? 0 : 60) + c.cost * 3 - (c.health ?? 0) * 2,
+  },
+  {
+    name: 'Spellslinger',
+    plan: 'as many cheap spells as possible, with the best cheap minions to hold the board',
+    score: (c) => (c.type === 'spell' ? 0 : c.type === 'item' ? 20 : 45) + c.cost * 4 - stats(c) / 4,
+  },
+  {
+    name: 'Armed',
+    plan: 'weapons and items, plus hard-hitting minions',
+    score: (c) => (c.type === 'weapon' ? 0 : c.type === 'item' ? 15 : 40) + c.cost * 3 - (c.attack ?? 0) * 4,
   },
 ];
 

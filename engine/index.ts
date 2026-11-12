@@ -14,3 +14,5 @@ export { legalActions } from './rules/legal-actions';
 export { buildDeck, isPlayable, needsBehaviour, playablePool } from './decks';
 export { chooseRandomAction } from './bots/random-bot';
 export { chooseGreedyAction, evaluate } from './bots/greedy-bot';
+export { checkDeck, maxCopies, MAX_DECK_SIZE } from './deck-rules';
+export type { DeckCheck } from './deck-rules';
