@@ -53,6 +53,17 @@ order below. Candidates, roughly in the order discussed:
 
 **CI is deliberately the very last roadmap item** ("Way later: CI"). Do not suggest or build it early.
 
+## Playing `/play`: drag and drop, debug params
+
+- **Drag and drop is the main way to act; click is the fallback.** Drag a hand card onto your board (it lands in the
+  gap nearest the pointer), onto a legal target, or onto the play area (untargeted spells). Drag a ready minion or your
+  hero onto an enemy to attack. Dragging just selects, so the highlights and arrow match click-to-select, and a drop
+  runs the same code as a click. "Choose one" cards (including Surveying Drone) are click-only because they open a
+  dialog first. It uses native browser drag, so it does not work on touch screens.
+- **Debug URL params** (read on every "New game" while they are in the URL): `?first=0|1` picks who goes first
+  (0 = Player 1); `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand, in order.
+  Handy for testing a specific card, e.g. `/play?first=0&p0=CORE_045`.
+
 ## Commands
 
 - `npm run dev` - dev server (use npm; `yarn` isn't installed here, though `yarn.lock` exists).
