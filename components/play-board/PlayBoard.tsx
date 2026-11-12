@@ -646,7 +646,7 @@ export const PlayBoard = () => {
       e.dataTransfer.setData('text/plain', 'attack');
       e.dataTransfer.effectAllowed = 'move';
       setDragging(true);
-      if (sel.kind === 'hero' && blankDragImage) e.dataTransfer.setDragImage(blankDragImage, 0, 0);
+      if (blankDragImage) e.dataTransfer.setDragImage(blankDragImage, 0, 0); // no ghost over the target: the arrow shows the attack
       setTimeout(() => setSelection(sel), 0);
     },
     onDragEnd: () => {
