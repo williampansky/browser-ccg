@@ -153,8 +153,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   `SET_CORE/011-CARD.jpg`). For the Hearthstone-style cards it must match `hsclone`'s
   `public/assets/images/sets/CORE/CORE_011-CARD.jpg`. The files here that pre-dated the rebuild came from the old zone
   game, whose ids pointed at different art (Hypnotoad showed a cat in a boat); 63 `-CARD` files were replaced with
-  `hsclone`'s on 2026-11-11, so now every CORE/GAME card with art is byte-identical to `hsclone`'s. The `-DECK` and
-  `-MINION` images and the old site pages (`Sidebar`, `Card`) still use the old zone-game art and ids. `CORE_088` is
+  `hsclone`'s on 2026-11-11, so now every CORE/GAME card with art is byte-identical to `hsclone`'s. **`-DECK` strips (600 x 75, for the deck builder and the `/play` sidebar, not used by the UI yet)**: all 132 CORE cards have `hsclone`'s strip (copied 2026-11-12; CORE_019 and CORE_092 had none there, so theirs are cropped from the `-CARD` art). SET_CORE no longer has any `-MINION` images (the board draws minions from `-CARD`), nor old zone-game token art; `engine/cards/__tests__/art-files.test.ts` guards it. SET_PRIME's `-DECK` / `-MINION` images match its `-CARD` art. Only the old site pages (`Sidebar`, `Card`) still use the old zone-game ids. `CORE_088` is
   "FPO" placeholder art. PRIME has `-CARD` art for 253 of 254 cards (all but `PRIME_212`), copied from `react-ccg-deprecated`.
 - **Framed cards (`components/play-board/CardFace.tsx`)** port `hsclone`'s `CardV3`: the art sits behind a rarity frame PNG
   (`public/images/frames/`) and the cost gem, name ribbon, text, type, rarity gem and sword/shield badges are laid
@@ -179,6 +178,6 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
 - Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.
-- Current checks: `npm test` passes (956 tests; the card-number tests were updated to the balance pass on 2026-11-12), `npm run build` passes, and `tsc` has 8 errors
+- Current checks: `npm test` passes (974 tests; the card-number tests were updated to the balance pass on 2026-11-12), `npm run build` passes, and `tsc` has 8 errors
   (`as Card` casts in `utils/__tests__/get-card-power.test.ts`). Don't "fix"
   unrelated failures as a drive-by.
