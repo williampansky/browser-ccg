@@ -37,8 +37,8 @@ export const attack = (
       const d = g.players[foe].board.find((m) => m.instanceId === id)!;
       // Simultaneous damage (RULES Q15): read both attack values before applying either.
       const [dealt, taken] = [a.attack, d.attack];
-      damageMinion(d, dealt, events);
-      damageMinion(a, taken, events);
+      damageMinion(d, dealt, events, foe);
+      damageMinion(a, taken, events, me);
     }
   });
 };

@@ -64,7 +64,21 @@ export interface CostMod {
   floor?: number;
 }
 
+/** What a minion gives ITSELF while a condition holds ("+3 Attack if damaged", "Stampede if you have a weapon"). */
+export interface SelfAura {
+  attack?: number;
+  rush?: boolean;
+  doubleAttack?: boolean;
+}
+
 export interface CardDef {
+  /** Keywords the card's data lists but the minion only has under a condition (see `selfAura`): not given when it is created */
+  conditionalKeywords?: (keyof import('../state/types').MinionKeywords)[];
+  /**
+   * Conditions on the minion itself, rechecked after every step. `base` is its Attack without any aura or condition
+   * (so "Attack always equals Health" can be `health - base`).
+   */
+  selfAura?: (c: { minion: MinionInstance; state: GameState; owner: PlayerId; base: number }) => SelfAura;
   /** Cost changes this minion gives its owner's cards in hand while it is on the board */
   costMods?: CostMod[];
   /** A change to this card's own cost while it is in hand ("costs 1 less for each ..."). Negative is cheaper */

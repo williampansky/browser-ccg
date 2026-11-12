@@ -35,6 +35,22 @@ export const recomputeAuras = (g: Draft<GameState>, catalog: CardCatalog, defs: 
           rush = rush || !!aura.rush;
         }
       }
+      const own = minionDef(target, catalog, defs)?.selfAura?.({
+        minion: target,
+        state: g as GameState,
+        owner,
+        base: target.attack - target.auraAttack,
+      });
+      attack += own?.attack ?? 0;
+      rush = rush || !!own?.rush;
+      const double = !!own?.doubleAttack;
+      if (double && !target.keywords.doubleAttack) {
+        target.keywords.doubleAttack = true;
+        target.auraDouble = true;
+      } else if (!double && target.auraDouble) {
+        target.keywords.doubleAttack = false;
+        target.auraDouble = false;
+      }
       target.attack += attack - target.auraAttack;
       target.auraAttack = attack;
       if (rush && !target.keywords.rush) {

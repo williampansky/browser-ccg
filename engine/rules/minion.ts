@@ -1,7 +1,7 @@
 import type { Card, CardCatalog } from '../cards/types';
 import { getCardDef } from '../definitions';
 import type { CardDef, DefLookup } from '../definitions/define-card';
-import type { MinionInstance } from '../state/types';
+import type { MinionInstance, MinionKeywords } from '../state/types';
 
 /** The behaviour a minion on the board has right now: its card's, unless it has been Suppressed. */
 export const minionDef = (
@@ -18,6 +18,8 @@ export const minionDef = (
 export const createMinion = (card: Card, instanceId: number, turn: number, playSeq: number): MinionInstance => {
   const has = (symbol: string): boolean => card.mechanics.includes(symbol);
   const health = card.health ?? 0;
+  const conditional = getCardDef(card)?.conditionalKeywords ?? [];
+  const printed = (k: keyof MinionKeywords, symbol: string): boolean => has(symbol) && !conditional.includes(k);
   return {
     instanceId,
     cardId: card.id,
@@ -31,12 +33,12 @@ export const createMinion = (card: Card, instanceId: number, turn: number, playS
     auraRush: false,
     tempAttack: 0,
     keywords: {
-      guard: has('BULWARK'),
-      rush: has('RUSH'),
-      bubble: has('BUBBLE'),
-      doubleAttack: has('DOUBLE_ATTACK'),
-      hidden: has('HIDDEN'),
-      noAttack: has('NO_ATTACK'),
+      guard: printed('guard', 'BULWARK'),
+      rush: printed('rush', 'RUSH'),
+      bubble: printed('bubble', 'BUBBLE'),
+      doubleAttack: printed('doubleAttack', 'DOUBLE_ATTACK'),
+      hidden: printed('hidden', 'HIDDEN'),
+      noAttack: printed('noAttack', 'NO_ATTACK'),
     },
   };
 };

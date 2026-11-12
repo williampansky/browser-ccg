@@ -38,6 +38,8 @@ export interface MinionInstance {
   auraAttack: number;
   /** True while Rush comes from an aura rather than the card or a spell */
   auraRush: boolean;
+  /** True while Onslaught (double attack) comes from the card's own condition rather than the card or a spell */
+  auraDouble?: boolean;
   /** Attack added "for this turn only" (already included in `attack`; removed when the turn ends) */
   tempAttack: number;
   /** The turn number on which this minion may not attack (set by Disable) */
@@ -136,7 +138,7 @@ export type GameEvent =
   | { type: 'ArmorGained'; player: PlayerId; amount: number }
   | { type: 'MinionAttacked'; attackerId: number; target: TargetRef }
   | { type: 'CardPlayed'; player: PlayerId; instanceId: number; cardId: string; target?: TargetRef }
-  | { type: 'MinionDamaged'; instanceId: number; amount: number }
+  | { type: 'MinionDamaged'; player: PlayerId; instanceId: number; amount: number }
   | { type: 'CardObtained'; player: PlayerId; instanceId: number }
   | { type: 'Discarded'; player: PlayerId; instanceId: number }
   | { type: 'Healed'; target: TargetRef; amount: number }

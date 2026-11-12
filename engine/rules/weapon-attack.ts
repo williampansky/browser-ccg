@@ -42,7 +42,7 @@ export const weaponAttack = (
     } else {
       const victim = g.players[foe].board.find((m) => m.instanceId === target.instanceId)!;
       const counter = victim.attack;
-      damageMinion(victim, w.attack, events);
+      damageMinion(victim, w.attack, events, foe);
       if (counter > 0) damageHero(g, me, counter, events);
     }
     w.durability -= 1;

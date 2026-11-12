@@ -1,7 +1,7 @@
 import { soundsFor } from '../sounds';
 import type { GameEvent } from '../../../engine';
 
-const hit: GameEvent = { type: 'MinionDamaged', instanceId: 1, amount: 2 };
+const hit: GameEvent = { type: 'MinionDamaged', player: '0', instanceId: 1, amount: 2 };
 
 describe('soundsFor', () => {
   it('maps events to sounds in order', () => {
