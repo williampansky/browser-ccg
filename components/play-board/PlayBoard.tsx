@@ -21,6 +21,7 @@ import {
   TargetRef,
 } from '../../engine';
 import { gapIndex } from './board-position';
+import { HeroBar } from './HeroBar';
 import { deckRows } from './deck-rows';
 import { describeEvents } from './describe-events';
 import { isMuted, playSounds, setMuted, soundsFor } from './sounds';
@@ -727,41 +728,32 @@ export const PlayBoard = () => {
     const p = state.players[owner];
     const weapon = p.weapon && byId.get(p.weapon.cardId);
     const aim = isAimable({ kind: 'hero', player: owner });
+    const isAi = mode === 'ai' && owner === AI_PLAYER;
     return (
-      <button
-        ref={track(`h${owner}`)}
+      <HeroBar
+        name={label(owner)}
+        emblem={isAi ? 'AI' : owner === '0' ? '1' : '2'}
+        team={owner === '0' ? 'green' : 'red'}
+        turnTag={owner === state.activePlayer ? (isAi ? 'thinking...' : 'your turn') : ''}
+        active={owner === state.activePlayer && !over}
+        health={p.health}
+        armor={p.armor}
+        energy={p.energy}
+        deck={p.deck.length}
+        hand={p.hand.length}
+        weapon={weapon && p.weapon ? { name: weapon.name ?? 'Weapon', attack: p.weapon.attack, durability: p.weapon.durability } : null}
+        weaponDisabled={p.heroDisabledOnTurn !== undefined && p.heroDisabledOnTurn >= state.turn}
+        avatarRef={track(`h${owner}`)}
+        aim={aim}
+        aimHover={hover?.kind === 'hero' && hover.player === owner}
+        selected={selection?.kind === 'hero' && isMe}
+        canAct={isMe && heroCanSwing}
         onMouseEnter={() => setHover({ kind: 'hero', player: owner })}
         onMouseLeave={() => setHover(null)}
         {...dropOnTarget({ kind: 'hero', player: owner })}
         {...(!over && isMe && heroCanSwing ? dragFrom({ kind: 'hero' }) : {})}
-        type="button"
-        className={[
-          styles.hero,
-          aim ? styles.aim : '',
-          aim && hover?.kind === 'hero' && hover.player === owner ? styles.aimHover : '',
-          selection?.kind === 'hero' && isMe ? styles.selected : '',
-          isMe && heroCanSwing ? styles.ready : '',
-        ].join(' ')}
         onClick={() => clickHero(owner)}
-      >
-        <strong>
-          {label(owner)}
-          {owner === state.activePlayer ? (mode === 'ai' && owner === AI_PLAYER ? ' (thinking...)' : ' (your turn)') : ''}
-        </strong>
-        <span>
-          Health {p.health}/30{p.armor > 0 ? ` + ${p.armor} armor` : ''}
-        </span>
-        <span>
-          Energy {p.energy.current}/{p.energy.total}
-        </span>
-        <span>
-          Deck {p.deck.length} · Hand {p.hand.length}
-        </span>
-        {p.heroDisabledOnTurn !== undefined && p.heroDisabledOnTurn >= state.turn && (
-          <span className={styles.disabledTag}>Disabled: no weapon attack</span>
-        )}
-        <span>{weapon ? `Weapon: ${weapon.name} ${p.weapon?.attack}/${p.weapon?.durability}` : 'No weapon'}</span>
-      </button>
+      />
     );
   };
 

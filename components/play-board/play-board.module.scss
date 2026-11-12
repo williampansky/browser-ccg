@@ -69,19 +69,6 @@
   color: #ff7b7b;
 }
 
-.hero {
-  align-self: center;
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  padding: 0.5rem 0.75rem;
-  background: #232734;
-  border: 2px solid #343846;
-  border-radius: 8px;
-  color: inherit;
-  cursor: default;
-  text-align: left;
-}
 
 .minion {
   display: flex;
@@ -452,13 +439,6 @@
   }
 }
 
-.disabledTag {
-  padding: 0.1rem 0.4rem;
-  border-radius: 4px;
-  background: #5a2b2b;
-  color: #ff9b9b;
-  font-size: 0.75rem;
-}
 
 .logCard {
   cursor: help;

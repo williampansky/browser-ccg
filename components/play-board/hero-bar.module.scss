@@ -1,0 +1,303 @@
+// Hero status bar: ring-gauge avatar, name/turn, energy slots, deck and hand counts, weapon.
+$green: #5fd16a;
+$red: #ff6b6b;
+$energy: #4aa3ff;
+$bonus: #ffd45e;
+
+.bar {
+  --team: #{$green};
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 30rem;
+  padding: 0.55rem 1rem 0.55rem 0.7rem;
+  background: linear-gradient(180deg, #2a2f40, #202431);
+  border: 2px solid #343846;
+  border-radius: 999px 14px 14px 999px; // the avatar end is a full round, so the bar reads as one piece with it
+  color: inherit;
+  text-align: left;
+  cursor: default;
+  font: inherit;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.green {
+  --team: #{$green};
+}
+
+.red {
+  --team: #{$red};
+}
+
+// Whose turn it is: the bar takes the player's colour.
+.active {
+  border-color: var(--team);
+  box-shadow: 0 0 14px -2px var(--team);
+}
+
+.canAct {
+  cursor: pointer;
+}
+
+.aim {
+  border-color: $red;
+  box-shadow: 0 0 0 2px $red;
+  cursor: crosshair;
+}
+
+.aimHover {
+  border-color: #3ddc84;
+  box-shadow: 0 0 0 4px #3ddc84;
+  background: linear-gradient(180deg, #38303a, #2b2530);
+}
+
+.selected {
+  border-color: #ffd45e;
+  box-shadow: 0 0 0 2px #ffd45e;
+}
+
+// The avatar: a ring that fills clockwise with health, around an emblem, with the health number below and armor above.
+.avatar {
+  --ring: #3ddc84;
+  position: relative;
+  flex: none;
+  width: 4.6rem;
+  height: 4.6rem;
+  border-radius: 50%;
+  padding: 5px;
+  background: conic-gradient(var(--ring) var(--fill, 360deg), #11131a 0);
+  box-shadow: 0 2px 6px #0008;
+}
+
+.healthy {
+  --ring: #3ddc84;
+}
+
+.hurt {
+  --ring: #f0b429;
+}
+
+.critical {
+  --ring: #ff5d5d;
+}
+
+.face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--team) 55%, #fff) 0, var(--team) 38%, #11131a 130%);
+  color: #0b0d12;
+  font-size: 1.7rem;
+  font-weight: 800;
+  text-shadow: 0 1px 0 #fff6;
+}
+
+.hp {
+  position: absolute;
+  left: 50%;
+  bottom: -0.5rem;
+  transform: translateX(-50%);
+  min-width: 2rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: #11131a;
+  border: 2px solid var(--ring);
+  color: #fff;
+  font-weight: 800;
+  line-height: 1.5rem;
+  text-align: center;
+}
+
+.armor {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.4rem;
+  width: 1.6rem;
+  height: 1.8rem;
+  // a small shield
+  clip-path: polygon(0 0, 100% 0, 100% 62%, 50% 100%, 0 62%);
+  background: linear-gradient(180deg, #cfd6e6, #7f8aa3);
+  color: #11131a;
+  font-size: 0.85rem;
+  font-weight: 800;
+  line-height: 1.5rem;
+  text-align: center;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.nameRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+
+  strong {
+    color: var(--team);
+    letter-spacing: 0.02em;
+  }
+}
+
+.turn {
+  font-size: 0.75rem;
+  font-style: normal;
+  color: #aab;
+}
+
+// Energy: ten slots; bright blue = available, dim = spent this turn, gold = a bonus slot (The Orb), hollow = not unlocked.
+.energy {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pips {
+  display: flex;
+  gap: 3px;
+
+  i {
+    width: 0.8rem;
+    height: 1.1rem;
+    border-radius: 3px;
+    transform: skewX(-12deg);
+  }
+}
+
+.pips .ready {
+  background: $energy;
+  box-shadow: 0 0 6px $energy;
+}
+
+.spent {
+  background: #1f3a5c;
+  border: 1px solid #2f5a8a;
+}
+
+.bonus {
+  background: $bonus;
+  box-shadow: 0 0 6px $bonus;
+}
+
+.locked {
+  border: 1px dashed #3a3f52;
+}
+
+.energyText {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: $energy;
+}
+
+.counts {
+  display: flex;
+  gap: 0.9rem;
+  font-size: 0.85rem;
+  color: #aab;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+}
+
+// Deck icon: a little stack of cards. Hand icon: two fanned cards.
+.iconDeck {
+  width: 0.65rem;
+  height: 0.85rem;
+  border-radius: 2px;
+  background: #aab;
+  box-shadow: 2px -2px 0 -0px #7d8499, 4px -4px 0 0 #565c70;
+  margin-right: 0.25rem;
+}
+
+.iconHand {
+  position: relative;
+  width: 0.9rem;
+  height: 0.85rem;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 0.5rem;
+    height: 0.8rem;
+    border-radius: 2px;
+    background: #aab;
+  }
+
+  &::before {
+    left: 0;
+    transform: rotate(-14deg);
+    background: #7d8499;
+  }
+
+  &::after {
+    right: 0;
+    transform: rotate(14deg);
+  }
+}
+
+.weapon {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 6.5rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid #5a4a2e;
+  border-radius: 8px;
+  background: #2d2a22;
+}
+
+.noWeapon {
+  border: 1px dashed #3a3f52;
+  background: transparent;
+  color: #6c7289;
+}
+
+.weaponName {
+  font-size: 0.75rem;
+  max-width: 8rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.weaponStats {
+  display: flex;
+  gap: 0.35rem;
+
+  b {
+    min-width: 1.7rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    text-align: center;
+    color: #0b0d12;
+  }
+}
+
+.atk {
+  background: #ffb347;
+}
+
+.dur {
+  background: #9aa5c4;
+}
+
+.disabled {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #ff8a8a;
+}
