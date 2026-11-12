@@ -137,9 +137,14 @@ Find the base ids in Airtable (they are not recorded here; this repo is public).
 - **Framed cards (`components/play-board/CardFace.tsx`)** port `hsclone`'s `CardV3`: the art sits behind a rarity frame PNG
   (`public/images/hs/frames/`) and the cost gem, name ribbon, text, type, rarity gem and sword/shield badges are laid
   over it in the frame's 178 x 250 design units, scaled by the `--u` CSS variable (so use `u(n)` in its SCSS, never `em`:
-  an element's own font-size would change its offsets). Hand cards, the hover preview and the cast popup use it; board
-  minions and the choose-one dialogs do not yet. The hand's *feel* (fan, hover, easing) is still the plain row; porting
-  `hsclone`'s version is a separate deep dive (ROADMAP Milestone 2).
+  an element's own font-size would change its offsets). Hand cards and the cast popup use it; board
+  minions and the choose-one dialogs do not yet. **The hand's feel is ported from `hsclone`** (`components/play-board/hand-fan.ts`
+  plus the `.handSlot` rules in `play-board.module.scss`): hsclone does it with plain CSS transitions, not react-spring (which
+  it never used; `react-spring` in this repo's `package.json` is unused). Cards fan by index (`--fan-rot`, `--fan-drop`), overlap
+  by `HAND_OVERLAP`, sink below the window edge (`--hand-sink`, set inline from the window height) and lift to 1.5x on hover
+  (an in-place lift replaced the old hover popup). The `.hand` row has `pointer-events: none` so the lifted cards never block
+  the hero bar. Dragging hides the source card and uses a centred clone as the drag image (the browser's own snapshot is of
+  the hover-lifted card and lands far from the cursor).
 - **`utils/` is a one-function-per-file folder with a barrel** (`utils/index.ts`). Many helpers
   there still assume the old zone-style card shape.
 - **`hsclone` is the reference, not a dependency.** It is a two-tab game (page with `3002` in

@@ -21,6 +21,7 @@ import {
   TargetRef,
 } from '../../engine';
 import { gapIndex } from './board-position';
+import { fanDrop, fanRotation, handZoom } from './hand-fan';
 import { applyDebugSetup, DebugSetup } from './debug-setup';
 import { nukeHero } from './nuke-hero';
 import { CardFace } from './CardFace';
@@ -60,8 +61,6 @@ const blankDragImage = (() => {
 })();
 /** While a drag is active the body carries this class, which hides the hover popups (see play-board.module.scss). */
 const setDragging = (on: boolean) => document.body.classList.toggle('dragging', on);
-/** Zoom for the hand so `n` cards (9rem wide, 0.5rem apart) fit `width` px on one row. */
-const handScale = (width: number, n: number) => (width > 0 && n > 0 ? Math.min(1, (width + 8) / (n * (144 + 8))) : 1);
 /** Card type -> accent colour class (minion blue, spell purple, weapon orange, item teal). */
 const typeClass = (type?: string) => (type ? styles[`type_${type}`] ?? '' : '');
 const targetKey = (t: TargetRef) => (t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`);
@@ -103,32 +102,10 @@ const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right') => {
     ) : null;
   return { handlers, node };
 };
-/** Hovering a hand card shows an enlarged copy above it, readable at a glance. */
-/** Width of the enlarged card shown when hovering a card in hand. */
-const PREVIEW_WIDTH = 260;
 /** Width of a card in hand at full size (the hand shrinks them together when it gets crowded). */
 const HAND_CARD_WIDTH = 144;
-const HandPreview = ({ card, spellDamage, children }: { card?: Card; spellDamage?: number; children: (h: { onMouseEnter: (e: React.MouseEvent<HTMLElement>) => void; onMouseLeave: () => void; onDragStart: () => void }) => React.ReactNode }) => {
-  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
-  return (
-    <>
-      {children({
-        onMouseEnter: (e) => {
-          const r = e.currentTarget.getBoundingClientRect();
-          setPos({ x: r.left + r.width / 2, y: r.top });
-        },
-        onMouseLeave: () => setPos(null),
-        onDragStart: () => setPos(null), // a native drag never sends mouseleave, so the popup would stay behind
-      })}
-      {pos && card && (
-        // Keep the whole preview on screen: it grows upward from the hovered card.
-        <div className={styles.handPreview} style={{ left: pos.x, top: Math.max(pos.y, PREVIEW_WIDTH * 1.4 + 24) }}>
-          <CardFace card={card} width={PREVIEW_WIDTH} spellDamage={spellDamage} />
-        </div>
-      )}
-    </>
-  );
-};
+/** How many px of the tops of the cards in hand stay visible above the bottom edge of the window. */
+const HAND_PEEK = 110;
 const LogCard = ({ name }: { name: string }) => {
   const { handlers, node } = useTip(tipByName.get(name));
   return (
@@ -419,12 +396,19 @@ export const PlayBoard = () => {
   // Keep the hand on one row: past what fits, the cards shrink together.
   const handRef = useRef<HTMLDivElement | null>(null);
   const [handWidth, setHandWidth] = useState(0);
+  // How far the cards sink below the row so only their tops show; shrinks on short windows so they never vanish offscreen.
+  const [handSink, setHandSink] = useState(100);
   useEffect(() => {
     const el = handRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(() => setHandWidth(el.clientWidth));
+    const measure = () => {
+      setHandWidth(el.clientWidth);
+      setHandSink(Math.round(Math.min(100, Math.max(-120, window.innerHeight - HAND_PEEK - el.getBoundingClientRect().top))));
+    };
+    const ro = new ResizeObserver(measure);
     ro.observe(el);
-    setHandWidth(el.clientWidth);
+    ro.observe(document.documentElement);
+    measure();
     return () => ro.disconnect();
   }, [state === null]);
 
@@ -432,6 +416,8 @@ export const PlayBoard = () => {
   const [hoverGap, setHoverGap] = useState<number | null>(null);
   /** A "choose one" card being dragged (it is not selected until dropped, because selecting opens its dialog). */
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  /** The hand card being dragged: hidden in the hand so only the drag image shows. */
+  const [draggedHand, setDraggedHand] = useState<number | null>(null);
   /** Where a choose-one card was dropped; picking its option in the dialog then plays it there. */
   const [pendingDrop, setPendingDrop] = useState<{ boardIndex?: number; target?: TargetRef } | null>(null);
   useEffect(() => {
@@ -770,6 +756,7 @@ export const PlayBoard = () => {
     );
   };
 
+  const handCount = state.players[me].hand.length;
   const renderHandCard = (card: Card | undefined, index: number) => {
     const playable = actions.some((a) => a.type === 'PlayCard' && a.handIndex === index);
     const selected = selection?.kind === 'hand' && selection.index === index;
@@ -777,42 +764,53 @@ export const PlayBoard = () => {
     const isChoice = actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.choice !== undefined);
     const draggable = !over && playable;
     return (
-      <HandPreview key={index} card={card} spellDamage={mySpellDamage}>
-        {(hover) => (
       <button
-        {...hover}
+        key={index}
         ref={track(`c${index}`)}
+        style={{ ['--fan-rot' as string]: `${fanRotation(index, handCount)}deg`, ['--fan-drop' as string]: `${fanDrop(index, handCount)}px` }}
         type="button"
         aria-disabled={over || !playable}
         title={playable ? card?.text : `Can't play now. ${card?.text ?? ''}`}
-        className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? styles.slotSelected : ''].join(' ')}
+        className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? styles.slotSelected : '', draggedHand === index ? styles.slotDragged : ''].join(' ')}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
         draggable={draggable}
         onDragStart={(e) => {
           e.dataTransfer.setData('text/plain', String(index)); // Firefox needs data to start a drag
           e.dataTransfer.effectAllowed = 'move';
           setDragging(true);
-          hover.onDragStart();
           // A card that aims at a target gets the arrow instead of a ghost (the ghost would cover the target); one that is
           // dropped on the board or play area has no arrow, so its ghost stays as the only drag feedback.
           if (blankDragImage && actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.target)) {
             e.dataTransfer.setDragImage(blankDragImage, 0, 0);
+          } else {
+            // The ghost is a plain clone at rest size, held by its centre. The browser's own snapshot is of the card as hovered
+            // (lifted and scaled 1.5x) and keeps the grab offset from that bigger card, which put the ghost far above the cursor.
+            const clone = e.currentTarget.cloneNode(true) as HTMLElement;
+            clone.removeAttribute('id');
+            clone.style.cssText = 'position:fixed;left:-1000px;top:0;transform:none;transition:none;animation:none;filter:none;opacity:1;visibility:visible;';
+            document.body.appendChild(clone);
+            e.dataTransfer.setDragImage(clone, HAND_CARD_WIDTH / 2, (HAND_CARD_WIDTH * 1.4) / 2);
+            setTimeout(() => clone.remove(), 0);
           }
           // Select after the drag has begun: re-rendering the dragged card inside dragstart can cancel it.
-          setTimeout(() => (isChoice ? setDragIndex(index) : setSelection({ kind: 'hand', index })), 0);
+          // (Hiding it here too: the browser has already taken its drag image by then.)
+          setTimeout(() => {
+            setDraggedHand(index);
+            if (isChoice) setDragIndex(index);
+            else setSelection({ kind: 'hand', index });
+          }, 0);
         }}
         onDragEnd={() => {
           setDragging(false);
           if (!isChoice) setSelection(null); // a dropped choose-one card has just opened its dialog: keep that
           setDragIndex(null);
+          setDraggedHand(null);
           setHover(null);
           setHoverGap(null);
         }}
       >
         {card && <CardFace card={card} width={HAND_CARD_WIDTH} spellDamage={mySpellDamage} />}
       </button>
-        )}
-      </HandPreview>
     );
   };
 
@@ -1090,7 +1088,7 @@ export const PlayBoard = () => {
           <div
             className={[styles.row, styles.hand].join(' ')}
             ref={handRef}
-            style={{ ['--hand-zoom' as string]: handScale(handWidth, state.players[me].hand.length) }}
+            style={{ ['--hand-zoom' as string]: handZoom(handWidth, handCount, HAND_CARD_WIDTH), ['--hand-sink' as string]: `${handSink}px` }}
           >
             {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i))}
           </div>

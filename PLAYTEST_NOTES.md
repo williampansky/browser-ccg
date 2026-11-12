@@ -63,3 +63,11 @@
   - [x] same with small text elem
 - [x] i also want you to not use port 3000 when doing playrights; so it doesnt conflict if im useing it for playtesting at the same time
 - [x] i noticed on CORE_018, the minion text says its an element when it should read the constant value of "Primordial"
+- cards in hand:
+  - [x] when dragging the card from hand, hide it from the hand and only show the drag/drop version [desktop/Screenshot 2026-11-12 at 7.41.56 AM.png]
+  - [x] unplayable cards in hand cant have transparency (now dimmed with a filter instead; nothing see-through)
+    - warcry cards maybe should NOT disappear while the targeting arrow is active
+  - [x] move the hand down further offscreen akin to hsclone for player and enemy [desktop/Screenshot 2026-11-12 at 7.43.05 AM.png]
+  - [x] clickable hero area obstructed by hand overlay [desktop/Screenshot 2026-11-12 at 7.45.49 AM.png]
+  - [x] dragging is off a bit [Screenshot 2026-11-12 at 7.47.39 AM.png] in this screenshot, i dragged the card up from hand. my cursor was over the hero bar at this point, and the card was far higher than my cursor
+  

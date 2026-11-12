@@ -70,9 +70,9 @@ Done when: a scripted two-player game plays from start to a winner inside a test
 - [~] Card visuals from `hsclone`: the framed card (rarity frame PNG over the art, cost gem, name ribbon, stat badges)
       is done for cards in hand, the hover preview and the cast popup (`CardFace`). Still to do: the oval minions with
       sword/shield badges on the board, the choose-one/drone dialog cards, and the other `hsclone` visuals (board, hero art)
-- [ ] **Cards-in-hand feel, deep dive and port:** `hsclone`'s hand was tuned to feel like Hearthstone's (fan, hover lift,
-      how a card follows the pointer, easing). Read `hsclone`'s hand components and styles properly first, then port it;
-      not started
+- [x] **Cards-in-hand feel, deep dive and port:** `hsclone`'s hand was tuned to feel like Hearthstone's (fan, hover lift,
+      how a card follows the pointer, easing). Ported (fan, overlap, sink, hover lift, draw-in; it is plain CSS in hsclone,
+      no react-spring). Still different from hsclone: the draw-in is a short 600ms fly-in, not its 3s keyframes
 
 Done when: you can play a full game against yourself in the browser, to a win.
 
