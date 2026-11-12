@@ -25,7 +25,8 @@ const CardLab = () => {
     </div>
   );
   return (
-    <main style={{ padding: 24, color: '#e8eaf2', background: '#14161c', minHeight: '100vh' }}>
+    {/* The site's global CSS sets overflow: hidden on the page, so this page scrolls inside itself (and clears the fixed bottom nav). */}
+    <main style={{ padding: '24px 24px 96px', color: '#e8eaf2', background: '#14161c', height: '100vh', overflowY: 'auto', boxSizing: 'border-box' }}>
       <h1 style={{ margin: 0 }}>Card frame lab</h1>
       <p style={{ color: '#9aa3b8', maxWidth: 780 }}>
         Top: the current painted PNG frames (about 680 KB per rarity). Bottom: the same cards with the frame, rarity gem, type emblem and stat badges drawn
