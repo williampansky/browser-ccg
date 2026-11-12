@@ -41,4 +41,4 @@ This also makes the AI in `/play` set Mysteries. After the fix: Mysteries 30%, M
   fires on the opponent's turn, or a spell whose cost is next turn's energy, so these are probably still undervalued by the bot rather than bad cards. Treat as unproven.
 - **Giants (36%)** needs the Giants' discounts to come together; with a bot that plays the cheapest thing first, it often does not.
 
-Not done: a card-level win-rate table for PRIME (the `balance/inclusion.node.ts` script is CORE-only), and no card was changed on this evidence.
+The card-level table is in `PRIME-CARDS.md`: PRIME's card power is tight (no mechanic family outside 48.7% to 52.2%), so the lopsided deck results come from how the decks synergise, not from a few overpowered cards. No card was changed on this evidence.

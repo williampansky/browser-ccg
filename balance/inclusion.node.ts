@@ -1,4 +1,4 @@
-// usage: ts-node balance/inclusion.node.ts <patches|none> <games> <seedOffset> <out.json>
+// usage: ts-node balance/inclusion.node.ts <patches|none> <games> <seedOffset> <out.json> [core|prime|both]   (the pool the random decks are drawn from; default core)
 // Random 30-card decks, greedy vs greedy. Per card: games its deck was in, and wins (draw = half).
 import fs from 'fs';
 import core from '../data/core.json';
@@ -8,12 +8,12 @@ import game from '../data/game.json';
 import mechanics from '../data/mechanics.json';
 import constants from '../data/constants.json';
 import { loadCards } from '../engine/cards/load-cards';
-import { playablePool, buildDeck } from '../engine/decks';
+import { playablePool, primePool, buildDeck } from '../engine/decks';
 import { chooseGreedyAction } from '../engine/bots/greedy-bot';
 import { createSeededRng } from '../engine/rng';
 import { playGame } from '../engine/sim/simulate';
 
-const [patchArg, gamesArg, offArg, out] = process.argv.slice(2);
+const [patchArg, gamesArg, offArg, out, poolArg = 'core'] = process.argv.slice(2);
 const c: any[] = JSON.parse(JSON.stringify(core));
 if (patchArg !== 'none')
   for (const f of patchArg.split(',')) {
@@ -27,7 +27,7 @@ const { byId, cards } = loadCards(
   { core: c, prime, entourage, game, mechanics, constants } as any,
   undefined
 );
-const pool = playablePool(cards);
+const pool = poolArg === 'prime' ? primePool(cards) : poolArg === 'both' ? [...playablePool(cards), ...primePool(cards)] : playablePool(cards);
 const stats: Record<string, { n: number; w: number; firstN: number; played: number }> = {};
 let firstWins = 0, turns = 0;
 const games = Number(gamesArg), off = Number(offArg);
