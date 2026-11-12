@@ -72,6 +72,7 @@
   - [x] dragging is off a bit [Screenshot 2026-11-12 at 7.47.39 AM.png] in this screenshot, i dragged the card up from hand. my cursor was over the hero bar at this point, and the card was far higher than my cursor
   - [x] remove the title attribute from stuff unless accessibility mode is on ( we need to add a wcag compliant mode then) (one "Accessibility mode" menu option for now: titles, focus outline, Play buttons; saved. A full WCAG pass is still to do)
   - Screenshot 2026-11-12 at 8.10.11 AM.png - text sizing adjustment
+  - Screenshot 2026-11-12 at 8.15.50 AM.png - dragging a choose card needs to be a global play until dropped
 - [x] lets make shift+space bar run the nukeplayer option if available (does nothing when Attack hero isn't available, so it never ends the turn by accident)
 - [x] bug: played steel gauntlet with crude weapon equipped. it enhanced the attack like it should, but the boon stayed past my turn like a buff - instead of a temp boon  
 - [x] lets highlight the weapon when its useable for an attack (green when ready, gold while the hero is the selected attacker)

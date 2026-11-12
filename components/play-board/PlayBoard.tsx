@@ -611,7 +611,10 @@ export const PlayBoard = () => {
   const dragPlaced = dragPlays.some((a) => a.boardIndex !== undefined && !a.target);
   const dragLoose = dragPlays.some((a) => a.boardIndex === undefined && !a.target);
   const boardZone = (placedPlays.length > 0 || dragPlaced) && !over;
-  const areaZone = ((untargetedPlays.length > 0 && placedPlays.length === 0) || (dragLoose && !dragPlaced)) && !over;
+  // A dragged choose-one card is a global play until it is dropped: anywhere on the board opens its dialog (a targeted option
+  // is then aimed with the arrow), as well as straight onto a target. Unless its options are placed on the board (a gap).
+  const dragChoice = dragIndex !== null;
+  const areaZone = ((untargetedPlays.length > 0 && placedPlays.length === 0) || ((dragLoose || dragChoice) && !dragPlaced)) && !over;
   const dropChoiceCard = (ctx: { boardIndex?: number; target?: TargetRef }) => {
     if (dragIndex === null) return;
     setPendingDrop(ctx);
