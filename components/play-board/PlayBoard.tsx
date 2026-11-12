@@ -49,9 +49,14 @@ const pool = playablePool(cards);
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
 const playerLabel = (p: PlayerId, mode: Mode) => `Player ${Number(p) + 1}${mode === 'ai' && p === AI_PLAYER ? ' (AI)' : ''}`;
 /** CORE_012 -> /images/sets/SET_CORE/012-CARD.jpg, GAME_001 -> /images/sets/SET_GAME/001-CARD.jpg. */
-const artStyle = (id?: string): React.CSSProperties | undefined => {
+const artUrlOf = (id?: string): string | undefined => {
   const m = id?.match(/^(CORE|GAME)_(.+)$/);
-  return m ? { backgroundImage: `url(/images/sets/SET_${m[1]}/${m[2]}-CARD.jpg)` } : undefined;
+  return m ? `url(/images/sets/SET_${m[1]}/${m[2]}-CARD.jpg)` : undefined;
+};
+/** The art of a card. With `fallbackId`, that card's art is a second background layer: it shows when the first image is missing (404). */
+const artStyle = (id?: string, fallbackId?: string): React.CSSProperties | undefined => {
+  const layers = [artUrlOf(id), id !== fallbackId ? artUrlOf(fallbackId) : undefined].filter(Boolean);
+  return layers.length ? { backgroundImage: layers.join(', ') } : undefined;
 };
 /** An invisible 1px drag image: the aim arrow shows an attack, so no ghost of the attacker needs to cover the targets. */
 const blankDragImage = (() => {
@@ -998,7 +1003,7 @@ export const PlayBoard = () => {
                   <button
                     key={c}
                     type="button"
-                    style={artStyle(opt?.id) ?? artStyle(selectedCard?.id)}
+                    style={artStyle(opt?.id ?? selectedCard?.id, selectedCard?.id)}
                     className={[styles.modalCard, typeClass(opt?.type ?? selectedCard?.type), styles.art].join(' ')}
                     onClick={() => pickChoice(c)}
                   >
