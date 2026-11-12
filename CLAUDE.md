@@ -62,7 +62,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - **PRIME is opt-in** (`primePool` in `engine/decks.ts`: active, named, non-token PRIME cards the engine can already play; 20 of 254 so far,
   the rest need definitions). The deck builder has a Core / Prime / Both filter; the picker has "Random deck (Core + Prime)"; every other
   random or starter deck stays CORE-only, so CORE's balance numbers are unchanged. Unnamed PRIME cards (51 in the data) are left out until Airtable names them.
-  PRIME art exists for 2 of 254 cards. **A card with no art file shows `public/images/sets/PLACEHOLDER.jpg`**: `artBackground` (`card-face-model.ts`)
+  PRIME art was copied from `react-ccg-deprecated` (`SET_003`, renamed `PRIME_061-CARD.jpg` -> `SET_PRIME/061-CARD.jpg`, checked card by card against the old data) on 2026-11-12: all but `PRIME_212` have a `-CARD` image, but its provenance is unchecked, like the rest. **A card with no art file shows `public/images/sets/PLACEHOLDER.jpg`**: `artBackground` (`card-face-model.ts`)
   stacks the card's art over it as CSS background layers, so a missing file (a 404 in the console is expected) falls through; framed cards and board minions both use it.
 - **Starter decks** have an optional `minMinions`; Spellslinger (centred on 2.5 mana, 12 minions) and Armed (10) use it. After the 2026-11-12 tuning
   `npm run sim -- 30 greedy` shows every starter between about 35% and 65% overall.
@@ -154,7 +154,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   game, whose ids pointed at different art (Hypnotoad showed a cat in a boat); 63 `-CARD` files were replaced with
   `hsclone`'s on 2026-11-11, so now every CORE/GAME card with art is byte-identical to `hsclone`'s. The `-DECK` and
   `-MINION` images and the old site pages (`Sidebar`, `Card`) still use the old zone-game art and ids. `CORE_088` is
-  "FPO" placeholder art. PRIME has art for only 2 of 254 cards.
+  "FPO" placeholder art. PRIME has `-CARD` art for 253 of 254 cards (all but `PRIME_212`), copied from `react-ccg-deprecated`.
 - **Framed cards (`components/play-board/CardFace.tsx`)** port `hsclone`'s `CardV3`: the art sits behind a rarity frame PNG
   (`public/images/hs/frames/`) and the cost gem, name ribbon, text, type, rarity gem and sword/shield badges are laid
   over it in the frame's 178 x 250 design units, scaled by the `--u` CSS variable (so use `u(n)` in its SCSS, never `em`:
