@@ -11,6 +11,14 @@ export const MAX_BOARD = 7;
 export interface CardInstance {
   instanceId: number;
   cardId: string;
+  /** A cost change that travels with this copy of the card ("costs 1 less"); the engine never goes below 0 */
+  costDelta?: number;
+}
+
+/** A face-down Mystery. The owner sees it; the opponent sees only its category (`MysteryDef.category`). */
+export interface MysteryInstance {
+  instanceId: number;
+  cardId: string;
 }
 
 export interface MinionKeywords {
@@ -79,6 +87,8 @@ export interface PlayerState {
   heroDisabledOnTurn?: number;
   /** Overcharge: energy that stays locked at the start of this player's next turn (then cleared) */
   overcharge?: number;
+  /** The player's active Mystery (at most one), or none */
+  mystery?: MysteryInstance | null;
 }
 
 export interface GameState {
@@ -117,6 +127,7 @@ export type ActionErrorCode =
   | 'MINION_CANT_ATTACK'
   | 'ILLEGAL_TARGET'
   | 'BAD_CHOICE'
+  | 'MYSTERY_ACTIVE'
   | 'NO_WEAPON'
   | 'HERO_CANT_ATTACK'
   | 'TRIGGER_LOOP';
@@ -137,12 +148,14 @@ export type GameEvent =
   | { type: 'WeaponBroke'; player: PlayerId }
   | { type: 'ArmorGained'; player: PlayerId; amount: number }
   | { type: 'MinionAttacked'; attackerId: number; target: TargetRef }
-  | { type: 'CardPlayed'; player: PlayerId; instanceId: number; cardId: string; target?: TargetRef }
+  | { type: 'CardPlayed'; player: PlayerId; instanceId: number; cardId: string; target?: TargetRef; mystery?: boolean }
   | { type: 'MinionDamaged'; player: PlayerId; instanceId: number; amount: number }
   | { type: 'CardObtained'; player: PlayerId; instanceId: number }
   | { type: 'Discarded'; player: PlayerId; instanceId: number }
   | { type: 'Healed'; target: TargetRef; amount: number }
   | { type: 'EnergyGained'; player: PlayerId; amount: number }
+  | { type: 'MysteryPlaced'; player: PlayerId }
+  | { type: 'MysteryRevealed'; player: PlayerId; cardId: string }
   | { type: 'OverchargeGained'; player: PlayerId; amount: number; cardId: string }
   | { type: 'BubblePopped'; instanceId: number }
   | { type: 'MinionSummoned'; player: PlayerId; instanceId: number; cardId: string }

@@ -1,6 +1,6 @@
 import type { Card, CardCatalog, CardNumbers } from '../cards/types';
 import type { Effect, TargetFilter } from '../effects/types';
-import type { GameEvent, GameEventType, GameState, MinionInstance, PlayerId } from '../state/types';
+import type { GameEvent, GameEventType, GameState, MinionInstance, PlayerId, TargetRef } from '../state/types';
 
 /** What a trigger's `when` condition can look at. */
 export interface TriggerInfo {
@@ -71,7 +71,36 @@ export interface SelfAura {
   doubleAttack?: boolean;
 }
 
+/** What a face-down Mystery spell does. It only reacts on the opponent's turn, and then it is gone (RULES Appendix C). */
+export interface MysteryCheck {
+  state: GameState;
+  catalog: CardCatalog;
+  /** The Mystery's owner */
+  owner: PlayerId;
+  /** The event, for event-based Mysteries */
+  event?: GameEvent;
+  /** The attack about to happen, for `hook: 'attack'` */
+  attack?: { attackerPlayer: PlayerId; attackerId?: number; target: TargetRef };
+  /** The spell about to resolve, for `hook: 'spell'` */
+  cast?: { caster: PlayerId; cardId: string; target?: TargetRef };
+}
+
+export type MysteryCategory = 'attack' | 'spell' | 'minion' | 'damage' | 'death';
+
+export interface MysteryDef {
+  /** What the opponent is told about a face-down Mystery */
+  category: MysteryCategory;
+  /** Reacts BEFORE an enemy attack / enemy spell resolves (it may redirect it) ... */
+  hook?: 'attack' | 'spell';
+  /** ... or AFTER this event happens */
+  event?: GameEventType;
+  when: (c: MysteryCheck) => boolean;
+  do: Effect[];
+}
+
 export interface CardDef {
+  /** Present on a Mystery spell: it is placed face down instead of resolving */
+  mystery?: MysteryDef;
   /** Keywords the card's data lists but the minion only has under a condition (see `selfAura`): not given when it is created */
   conditionalKeywords?: (keyof import('../state/types').MinionKeywords)[];
   /**

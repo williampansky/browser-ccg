@@ -103,3 +103,13 @@ export const adjacentToSelf = (): Selector => (ctx) => {
   const i = board.findIndex((m) => m.instanceId === ctx.self);
   return i < 0 ? [] : board.filter((_, j) => Math.abs(j - i) === 1).map(minionRef);
 };
+
+/** The minion that is attacking, while a Mystery reacts to its attack. */
+export const attackerMinion = (): Selector => (ctx) =>
+  ctx.attack?.attackerId !== undefined ? [{ kind: 'minion', instanceId: ctx.attack.attackerId }] : [];
+
+/** The minion an event is about (a played minion, a damaged one), while a Mystery or trigger reacts to it. */
+export const eventMinion = (): Selector => (ctx) => {
+  const e = ctx.event;
+  return e && (e.type === 'MinionPlayed' || e.type === 'MinionDamaged' || e.type === 'MinionSummoned') ? [{ kind: 'minion', instanceId: e.instanceId }] : [];
+};

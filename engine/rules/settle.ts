@@ -5,6 +5,7 @@ import type { EngineContext } from './apply-action';
 import { GameEvent, GameState, MinionInstance, PlayerId } from '../state/types';
 import { recomputeAuras } from './auras';
 import { minionDef } from './minion';
+import { mysteriesOnEvent } from './mystery';
 import { checkWin } from './win';
 
 /** Thrown when effects keep triggering each other without end; `applyAction` turns it into an error. */
@@ -56,6 +57,7 @@ export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEven
 
     if (cursor < events.length) {
       const event = events[cursor++];
+      mysteriesOnEvent(g, ctx, events, event);
       for (const { owner, minion } of boardsInPlayOrder(g)) {
         const def = minionDef(minion, ctx.catalog, defs);
         for (const trigger of def?.triggers ?? []) {

@@ -67,7 +67,7 @@ export const applyAction = (state: GameState, action: Action, ctx: EngineContext
           action.type === 'PlayCard'
             ? playCard(state, action, ctx, events)
             : action.type === 'Attack'
-            ? attack(state, action, events)
+            ? attack(state, action, events, ctx)
             : weaponAttack(state, action, events, ctx);
         return isError(r) ? r : { state: settled(r, 0), events };
       }

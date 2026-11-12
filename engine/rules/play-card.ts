@@ -5,6 +5,7 @@ import type { CardDef } from '../definitions/define-card';
 import type { EngineContext } from './apply-action';
 import { ActionError, GameEvent, GameState, MAX_BOARD, TargetRef } from '../state/types';
 import { effectiveCost } from './cost';
+import { mysteryBeforeSpell } from './mystery';
 import { createMinion, minionDef } from './minion';
 import { isLegalTarget, legalTargets } from './targeting';
 
@@ -40,8 +41,11 @@ export const playCard = (
   const isSpellLike = card.type === 'spell' || card.type === 'item';
   // A card that needs behaviour but has none is refused, rather than silently played as vanilla.
   if (!def && (isSpellLike || needsBehaviour(card))) return { error: 'UNSUPPORTED_CARD' };
-  const cost = effectiveCost(state, me, card, catalog, defs);
+  const cost = effectiveCost(state, me, card, catalog, defs, inHand.costDelta ?? 0);
   if (cost > player.energy.current) return { error: 'CANT_AFFORD' };
+
+  // A Mystery goes face down; only one at a time.
+  if (def?.mystery && player.mystery) return { error: 'MYSTERY_ACTIVE' };
 
   // "Choose one" cards need a valid option; every other card refuses one. The chosen option's own
   // target and effects replace the card's.
@@ -84,7 +88,7 @@ export const playCard = (
       p.overcharge = (p.overcharge ?? 0) + overcharge;
       events.push({ type: 'OverchargeGained', player: me, amount: overcharge, cardId: card.id });
     }
-    g.played[me].push(card.id);
+    if (!def?.mystery) g.played[me].push(card.id);
     // Spell damage only counts for spells, not warcries (RULES 8.3, Q16)
     const spellDamage =
       card.type === 'spell' ? p.board.reduce((sum, m) => sum + (minionDef(m, catalog, defs)?.spellDamage ?? 0), 0) : 0;
@@ -98,11 +102,20 @@ export const playCard = (
       self = minion.instanceId;
       events.push({ type: 'MinionPlayed', player: me, instanceId: self, boardIndex: index, ...(target ? { target } : {}) });
       events.push({ type: 'MinionSummoned', player: me, instanceId: self, cardId: card.id });
+    } else if (def?.mystery) {
+      // Placed face down. It still counts as casting a spell (the `mystery` flag keeps other Mysteries from reacting to it).
+      p.mystery = { instanceId: inHand.instanceId, cardId: card.id };
+      events.push({ type: 'MysteryPlaced', player: me });
+      events.push({ type: 'CardPlayed', player: me, instanceId: inHand.instanceId, cardId: card.id, mystery: true });
+      return;
     } else {
       events.push({ type: 'CardPlayed', player: me, instanceId: inHand.instanceId, cardId: card.id, ...(target ? { target } : {}) });
     }
+    // The enemy's Mystery may react to a spell about to resolve, and may redirect it.
+    let aim = target;
+    if (card.type === 'spell') aim = mysteryBeforeSpell(g, ctx, events, { caster: me, cardId: card.id, target });
     for (const effect of play?.onPlay ?? []) {
-      effect({ g, caster: me, target, self, rng, catalog, events, sourceCardId: card.id, spellDamage });
+      effect({ g, caster: me, target: aim, self, rng, catalog, events, sourceCardId: card.id, spellDamage });
     }
   });
 };

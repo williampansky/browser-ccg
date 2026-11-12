@@ -25,11 +25,15 @@ export const legalActions = (
 
   me.hand.forEach((inHand, handIndex) => {
     const card = catalog.get(inHand.cardId);
-    if (!card || effectiveCost(state, player, card, catalog, defs) > me.energy.current) return;
+    if (!card || effectiveCost(state, player, card, catalog, defs, inHand.costDelta ?? 0) > me.energy.current) return;
     const def = defs(card);
     if (!def && needsBehaviour(card)) return;
     if (card.type === 'spell' || card.type === 'item') {
       if (!def) return;
+      if (def.mystery) {
+        if (!me.mystery) actions.push({ type: 'PlayCard', handIndex });
+        return;
+      }
       // A "choose one" card is offered once per option (and per target that option allows).
       const options = def.choices
         ? def.choices.map((c, choice) => ({ choice, needsTarget: !!c.target }))

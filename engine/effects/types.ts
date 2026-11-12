@@ -20,6 +20,10 @@ export interface EffectContext {
   spellDamage?: number;
   /** The event that fired this trigger, if it is one */
   event?: GameEvent;
+  /** Set while a Mystery reacts to an attack that is about to happen; effects may change `target` to redirect it */
+  attack?: { attackerPlayer: PlayerId; attackerId?: number; target: TargetRef };
+  /** Set while a Mystery reacts to a spell about to resolve; effects may change `target` to redirect it */
+  cast?: { caster: PlayerId; cardId: string; target?: TargetRef };
 }
 
 /** One step of a card's behaviour. Built from the primitives in `primitives.ts`. */

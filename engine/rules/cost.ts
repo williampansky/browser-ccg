@@ -15,9 +15,11 @@ export const effectiveCost = (
   player: PlayerId,
   card: Card,
   catalog: CardCatalog,
-  defs: DefLookup = getCardDef
+  defs: DefLookup = getCardDef,
+  /** A cost change carried by this particular copy of the card (`CardInstance.costDelta`) */
+  copyDelta = 0
 ): number => {
-  let delta = defs(card)?.ownCost?.({ state, owner: player }) ?? 0;
+  let delta = (defs(card)?.ownCost?.({ state, owner: player }) ?? 0) + copyDelta;
   let floor = 0;
   for (const m of state.players[player].board) {
     for (const mod of minionDef(m, catalog, defs)?.costMods ?? []) {

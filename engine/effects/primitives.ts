@@ -387,3 +387,87 @@ export const computed =
   (make: (ctx: Parameters<Effect>[0]) => Effect): Effect =>
   (ctx) =>
     make(ctx)(ctx);
+
+/** Lowers each minion's Attack by `amount` (never below 0). */
+export const reduceAttack =
+  (select: Selector, amount: number): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) minion.attack = Math.max(0, minion.attack - amount);
+  };
+
+/** Halves each minion's current and maximum Health, rounded up. */
+export const halveHealth =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) {
+      minion.health = Math.ceil(minion.health / 2);
+      minion.maxHealth = Math.max(minion.health, Math.ceil(minion.maxHealth / 2));
+    }
+  };
+
+/** Adds a card to the caster's hand (burned if full). `costDelta` follows that copy ("costs 1 less" is -1). */
+export const addCardToHand =
+  (cardId: string | ((ctx: Parameters<Effect>[0]) => string | undefined), costDelta = 0): Effect =>
+  (ctx) => {
+    const id = typeof cardId === 'function' ? cardId(ctx) : cardId;
+    if (!id) return;
+    const instanceId = ctx.g.nextInstanceId++;
+    const p = ctx.g.players[ctx.caster];
+    if (p.hand.length >= MAX_HAND) {
+      ctx.events.push({ type: 'Burned', player: ctx.caster, instanceId });
+      return;
+    }
+    p.hand.push({ instanceId, cardId: id, ...(costDelta ? { costDelta } : {}) });
+    ctx.events.push({ type: 'CardObtained', player: ctx.caster, instanceId });
+  };
+
+/** While a Mystery reacts to an attack: the attack goes to the minion most recently summoned for the caster (if any). */
+export const redirectAttackToSummoned = (): Effect => (ctx) => {
+  if (!ctx.attack) return;
+  for (let i = ctx.events.length - 1; i >= 0; i--) {
+    const e = ctx.events[i];
+    if (e.type === 'MinionSummoned' && e.player === ctx.caster) {
+      ctx.attack.target = { kind: 'minion', instanceId: e.instanceId };
+      return;
+    }
+  }
+};
+
+/** While a Mystery reacts to a spell: the spell goes to a random minion the spell's caster controls (unchanged if they have none). */
+export const redirectCastToCasterMinion = (): Effect => (ctx) => {
+  if (!ctx.cast?.target) return;
+  const mine = ctx.g.players[ctx.cast.caster].board;
+  if (mine.length === 0) return;
+  ctx.cast.target = { kind: 'minion', instanceId: ctx.rng.shuffle([...mine])[0].instanceId };
+};
+
+/** Every Concealed minion loses Concealed and takes 1 damage. */
+export const revealHidden = (): Effect => (ctx) => {
+  for (const owner of ['0', '1'] as const) {
+    for (const m of ctx.g.players[owner].board) {
+      if (!m.keywords.hidden) continue;
+      m.keywords.hidden = false;
+      damageTarget(ctx.g, { kind: 'minion', instanceId: m.instanceId }, 1, ctx.events);
+    }
+  }
+};
+
+/** Destroys the opponent's Mystery. Then, if there was one, runs `then`. */
+export const destroyEnemyMystery =
+  (...then: Effect[]): Effect =>
+  (ctx) => {
+    const foe = ctx.g.players[opponentOf(ctx.caster)];
+    if (!foe.mystery) return;
+    ctx.events.push({ type: 'MysteryRevealed', player: opponentOf(ctx.caster), cardId: foe.mystery.cardId });
+    foe.mystery = null;
+    for (const effect of then) effect(ctx);
+  };
+
+/** Takes the opponent's Mystery for the caster (it stays face down). If the caster already has one, it is just destroyed. */
+export const stealEnemyMystery = (): Effect => (ctx) => {
+  const me = ctx.g.players[ctx.caster];
+  const foe = ctx.g.players[opponentOf(ctx.caster)];
+  if (!foe.mystery) return;
+  if (!me.mystery) me.mystery = foe.mystery;
+  foe.mystery = null;
+};

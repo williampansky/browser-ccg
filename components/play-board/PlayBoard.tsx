@@ -872,7 +872,7 @@ export const PlayBoard = () => {
           setHoverGap(null);
         }}
       >
-        {card && <CardFace card={card} width={HAND_CARD_WIDTH} spellDamage={mySpellDamage} cost={effectiveCost(state, viewer, card, byId)} />}
+        {card && <CardFace card={card} width={HAND_CARD_WIDTH} spellDamage={mySpellDamage} cost={effectiveCost(state, viewer, card, byId, getCardDef, state.players[viewer].hand[index]?.costDelta ?? 0)} />}
       </button>
     );
   };
