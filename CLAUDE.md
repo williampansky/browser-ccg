@@ -122,6 +122,13 @@ Find the base ids in Airtable (they are not recorded here; this repo is public).
 
 - **Card ids** look like `SET_CORE_010`. Card ids were reassigned between the old repos and
   this one, so match cards across repos by name, not id.
+- **Card art lives in `public/images/sets/SET_<SET>/<num>-CARD.jpg`** and `/play` reads it by card id (`CORE_011` ->
+  `SET_CORE/011-CARD.jpg`). For the Hearthstone-style cards it must match `hsclone`'s
+  `public/assets/images/sets/CORE/CORE_011-CARD.jpg`. The files here that pre-dated the rebuild came from the old zone
+  game, whose ids pointed at different art (Hypnotoad showed a cat in a boat); 63 `-CARD` files were replaced with
+  `hsclone`'s on 2026-11-11, so now every CORE/GAME card with art is byte-identical to `hsclone`'s. The `-DECK` and
+  `-MINION` images and the old site pages (`Sidebar`, `Card`) still use the old zone-game art and ids. `CORE_088` is
+  "FPO" placeholder art. PRIME has art for only 2 of 254 cards.
 - **`utils/` is a one-function-per-file folder with a barrel** (`utils/index.ts`). Many helpers
   there still assume the old zone-style card shape.
 - **`hsclone` is the reference, not a dependency.** It is a two-tab game (page with `3002` in
