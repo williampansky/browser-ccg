@@ -2,6 +2,7 @@ import { produce } from 'immer';
 import { describeChanges, describeEvents, nameOfInstance } from '../describe-events';
 import { createGame, createSeededRng } from '../../../engine';
 import { catalogOf, minionCard, putOnBoard } from '../../../engine/testing/builders';
+import { catalog as realCatalog, setup as realSetup } from '../../../engine/testing/real-cards';
 
 const grunt = { ...minionCard('GRUNT'), name: 'Grunt' };
 const catalog = catalogOf(grunt);
@@ -37,6 +38,22 @@ describe('describeEvents', () => {
     const id = s.players['0'].board[0].instanceId;
     const lines = describeEvents([{ type: 'CardPlayed', player: '1', instanceId: 5, cardId: 'GRUNT', target: { kind: 'minion', instanceId: id } }], catalog, s, s);
     expect(lines).toEqual(['**Player 2** casts __Grunt__ on __Grunt__']);
+  });
+});
+
+describe('Spell Damage in the log', () => {
+  const cast = (s: ReturnType<typeof realSetup>, id: string) =>
+    describeEvents([{ type: 'CardPlayed', player: '0', instanceId: 5, cardId: id }], realCatalog, s, s);
+  it('notes the caster\'s Spell Damage on a damage spell, so the log matches what the target took', () => {
+    const boosted = realSetup('CORE_125', { mine: [[1, 1, 'CORE_011']] });
+    expect(cast(boosted, 'CORE_125')).toEqual(['**Player 1** casts __' + realCatalog.get('CORE_125')!.name + '__ (+1 Spell Damage)']);
+  });
+  it('adds nothing without Spell Damage, for a silenced minion, or for a spell that does no damage', () => {
+    expect(cast(realSetup('CORE_125'), 'CORE_125')[0]).not.toContain('Spell Damage');
+    const silenced = produce(realSetup('CORE_125', { mine: [[1, 1, 'CORE_011']] }), (g) => void (g.players['0'].board[0].silenced = true));
+    expect(cast(silenced, 'CORE_125')[0]).not.toContain('Spell Damage');
+    const boosted = realSetup('CORE_043', { mine: [[1, 1, 'CORE_011']] });
+    expect(cast(boosted, 'CORE_043')[0]).not.toContain('Spell Damage');
   });
 });
 

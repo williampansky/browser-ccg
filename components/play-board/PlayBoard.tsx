@@ -356,7 +356,10 @@ export const PlayBoard = () => {
       (document.activeElement as HTMLElement | null)?.blur?.(); // keep no button "focused" after an action
       if (action.type === 'PlayCard') {
         const played = byId.get(state.players[state.activePlayer].hand[action.handIndex]?.cardId ?? '');
-        if (played?.type === 'spell') setCastFx({ card: played, owner: state.activePlayer, n: Date.now() });
+        // Spells and items (potions, scrolls) get the cast popup; a Mystery goes face down, so it never does (that would show the card).
+        if ((played?.type === 'spell' || played?.type === 'item') && !getCardDef(played)?.mystery) {
+          setCastFx({ card: played, owner: state.activePlayer, n: Date.now() });
+        }
       }
       setState(result.state);
       playSounds(soundsFor(result.events));

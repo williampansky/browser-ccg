@@ -36,6 +36,16 @@ export const describeEvents = (
   const name = (id: number) => card(nameOfInstance(id, catalog, before, after));
   const cardName = (id: string) => card(catalog.get(id)?.name ?? id);
   const target = (t: TargetRef) => (t.kind === 'hero' ? `${who(t.player)}'s hero` : name(t.instanceId));
+  /** " (+1 Spell Damage)" when the caster had Spell Damage and the spell deals damage or heals (the card's own text shows the base numbers). */
+  const spellDamageNote = (player: '0' | '1', cardId: string): string => {
+    const c = catalog.get(cardId);
+    if (!c || c.type !== 'spell' || !/damage|heal|restore/i.test(c.text)) return '';
+    const bonus = before.players[player].board.reduce((sum, m) => {
+      const mc = catalog.get(m.cardId);
+      return sum + (m.silenced || !mc ? 0 : getCardDef(mc)?.spellDamage ?? 0);
+    }, 0);
+    return bonus > 0 ? ` (+${bonus} Spell Damage)` : '';
+  };
   const lines: string[] = [];
   for (const e of events) {
     switch (e.type) {
@@ -50,7 +60,9 @@ export const describeEvents = (
           lines.push(`${who(e.player)} sets a Mystery (${mysteryCategory(e.cardId, catalog)})`);
           break;
         }
-        lines.push(`${who(e.player)} casts ${cardName(e.cardId)}${e.target ? ` on ${target(e.target)}` : ''}`);
+        lines.push(
+          `${who(e.player)} casts ${cardName(e.cardId)}${e.target ? ` on ${target(e.target)}` : ''}${spellDamageNote(e.player, e.cardId)}`
+        );
         break;
       case 'MysteryRevealed':
         lines.push(`${who(e.player)}'s Mystery is revealed: ${cardName(e.cardId)}`);
