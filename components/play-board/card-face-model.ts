@@ -9,9 +9,16 @@ export const frameFor = (rarity?: string): FrameRarity =>
 /** Rarity gems only exist for the rarities that have a frame. */
 export const gemFor = frameFor;
 
-/** The banner under the top edge: a minion's race, else its type ("Minion", "Spell"...). */
-export const typeLabel = (card: { type: string; race?: string; raceName?: string }): string =>
-  card.type === 'minion' && card.race && card.race !== 'NONE' ? card.raceName ?? card.race : card.type;
+/**
+ * The banner under the top edge: always the card's TYPE ("minion", "spell", ...). hsclone showed a minion's race there instead
+ * when it had one, so some minions read "Creature" and others "Minion" (playtest, 2026-11-12); the race is shown on its own
+ * tag now (see `raceLabel`).
+ */
+export const typeLabel = (card: { type: string }): string => card.type;
+
+/** A minion's race ("Creature", "Sprite", ...) for its tag at the bottom of the art, or undefined when it has none (or is not a minion). */
+export const raceLabel = (card: { type: string; race?: string; raceName?: string }): string | undefined =>
+  card.type === 'minion' && card.race && card.race !== 'NONE' ? card.raceName ?? card.race : undefined;
 
 /** Minions and weapons show an attack and a health/durability badge; spells and items don't. */
 export const showsStats = (type: string): boolean => type === 'minion' || type === 'weapon';

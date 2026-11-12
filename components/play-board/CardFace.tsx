@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import type { Card } from '../../engine';
-import { artBackground, faceUnit, fitScale, parseRichText, withSpellDamageText, frameFor, gemFor, showsStats, typeLabel } from './card-face-model';
+import { artBackground, faceUnit, fitScale, parseRichText, withSpellDamageText, frameFor, gemFor, raceLabel, showsStats, typeLabel } from './card-face-model';
 import fontSizeBasedOnCharacterLength from '../../utils/font-size-based-on-length';
 import styles from './card-face.module.scss';
 import { VectorEmblem, VectorFrame, VectorGem, VectorStat } from './vector-frame';
@@ -31,6 +31,7 @@ interface CardFaceProps {
 export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, vector = false }: CardFaceProps) => {
   const stats = showsStats(card.type);
   const label = typeLabel(card);
+  const race = raceLabel(card);
   const html = withSpellDamageText(card.richText || card.text, card.type === 'spell' ? spellDamage : 0);
 
   // Shrink the description until it sits inside its box (long text wrapped to five lines and ran over the badges).
@@ -86,6 +87,7 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, v
         {cost ?? card.cost}
       </span>
       <span className={`${styles.type} ${styles.val}`}>{label}</span>
+      {race && <span className={styles.race}>{race}</span>}
 
       <span className={styles.emblem}>
         {vector ? (

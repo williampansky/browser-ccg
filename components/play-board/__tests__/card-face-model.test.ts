@@ -1,4 +1,4 @@
-import { artBackground, artUrl, PLACEHOLDER_ART, FACE_HEIGHT, FACE_WIDTH, faceUnit, fitScale, frameFor, gemFor, showsStats, typeLabel } from '../card-face-model';
+import { artBackground, artUrl, PLACEHOLDER_ART, FACE_HEIGHT, FACE_WIDTH, faceUnit, fitScale, frameFor, gemFor, raceLabel, showsStats, typeLabel } from '../card-face-model';
 
 describe('frameFor', () => {
   it('uses the frame of a known rarity', () => {
@@ -20,15 +20,21 @@ describe('frameFor', () => {
   });
 });
 
-describe('typeLabel', () => {
-  it('shows a minion\'s race', () => {
-    expect(typeLabel({ type: 'minion', race: 'SPRITE' })).toBe('SPRITE');
-  });
-  it('shows the type for a minion with no race, and for other cards', () => {
-    expect(typeLabel({ type: 'minion', race: 'ELEMENT', raceName: 'Primordial' })).toBe('Primordial');
-    expect(typeLabel({ type: 'minion', race: 'NONE' })).toBe('minion');
+describe('typeLabel and raceLabel', () => {
+  it('the banner is always the card type, whatever the race', () => {
     expect(typeLabel({ type: 'minion' })).toBe('minion');
-    expect(typeLabel({ type: 'spell', race: 'SPRITE' })).toBe('spell');
+    expect(typeLabel({ type: 'spell' })).toBe('spell');
+    expect(typeLabel({ type: 'weapon' })).toBe('weapon');
+    expect(typeLabel({ type: 'item' })).toBe('item');
+  });
+  it('a minion\'s race goes on its own tag, by its display name where there is one', () => {
+    expect(raceLabel({ type: 'minion', race: 'SPRITE' })).toBe('SPRITE');
+    expect(raceLabel({ type: 'minion', race: 'ELEMENT', raceName: 'Primordial' })).toBe('Primordial');
+  });
+  it('no tag for a race of NONE, a missing race, or a card that is not a minion', () => {
+    expect(raceLabel({ type: 'minion', race: 'NONE' })).toBeUndefined();
+    expect(raceLabel({ type: 'minion' })).toBeUndefined();
+    expect(raceLabel({ type: 'spell', race: 'SPRITE' })).toBeUndefined();
   });
 });
 
