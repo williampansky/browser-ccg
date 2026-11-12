@@ -133,14 +133,16 @@ describe('reacting to minions, damage and deaths', () => {
     return act(t, { type: 'PlayCard', handIndex: 0 });
   };
   it('PRIME_159 halves the Health (rounded up) and Disables the minion', () => {
-    const r = p1Plays(armed('PRIME_159'), 'PRIME_062'); // 5/8
+    const r = p1Plays(armed('PRIME_159'), 'PRIME_074'); // 4/5 Guard, no warcry
     const m = minion(r, '1', 0);
-    expect([m.attack, m.health]).toEqual([5, 4]);
+    expect([m.attack, m.health]).toEqual([4, 3]);
     expect(m.disabledOnTurn).toBeDefined();
   });
   it('PRIME_129 deals damage equal to the minion\'s Cost', () => {
-    const r = p1Plays(armed('PRIME_129'), 'PRIME_062'); // cost 3, 5/8
-    expect(minion(r, '1', 0).health).toBe(5);
+    const r = p1Plays(armed('PRIME_129'), 'PRIME_074'); // cost 6, 4/5
+    expect(r.players['1'].board).toHaveLength(0); // 6 damage kills a 5-Health minion
+    const small = p1Plays(armed('PRIME_129'), 'PRIME_033'); // cost 5, 3/6 Guard
+    expect(minion(small, '1', 0).health).toBe(1);
   });
   it('PRIME_156 heals 5 and draws when your hero takes 5 or more in one hit', () => {
     let s = armed('PRIME_156', { theirs: [[6, 6]], heroHp: { '0': 20 } });
