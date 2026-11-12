@@ -21,3 +21,6 @@ export type HealthTone = 'healthy' | 'hurt' | 'critical';
 
 /** Colour band of the ring and the number: green above half, amber above a quarter, red below. */
 export const healthTone = (fraction: number): HealthTone => (fraction > 0.5 ? 'healthy' : fraction > 0.25 ? 'hurt' : 'critical');
+
+/** Weapon cards are named for the action ("Equip Gladius"); the equipped weapon is just "Gladius". */
+export const weaponLabel = (cardName: string): string => cardName.replace(/^Equip\s+/i, '') || cardName;
