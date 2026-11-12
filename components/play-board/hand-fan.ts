@@ -32,11 +32,22 @@ export const HAND_OVERLAP = 20;
  */
 export const fanX = (index: number, count: number, cardWidth = 144): number => (index - (count - 1) / 2) * (cardWidth - HAND_OVERLAP);
 
-/** Zoom so `count` overlapping cards of `cardWidth` fit `width` px on one row (never above 1). */
+/** How far the hand row is wider than the board column it sits in (a 10px bleed on each side, see `.hand` in the SCSS). */
+export const HAND_BLEED = 20;
+
+/** The scale of a hovered card (CSS `.handSlot:hover`). */
+export const HAND_LIFT_SCALE = 1.5;
+
+/**
+ * Zoom so `count` overlapping cards of `cardWidth` fit the board column (the row's `width` less its bleed), never above 1.
+ * Room is kept at both ends for the hovered card: it grows to 1.5x, so an end card pokes out `cardWidth / 4` past its slot,
+ * and without that room it landed on top of the log panel (or the deck panel on the right) from 8 cards on (playtest, 2026-11-12).
+ */
 export const handZoom = (width: number, count: number, cardWidth: number): number => {
   if (width <= 0 || count <= 0) return 1;
-  const needed = count * cardWidth - (count - 1) * HAND_OVERLAP;
-  return Math.min(1, width / needed);
+  const lift = (cardWidth * (HAND_LIFT_SCALE - 1)) / 2;
+  const needed = count * cardWidth - (count - 1) * HAND_OVERLAP + 2 * lift;
+  return Math.min(1, Math.max(0, width - HAND_BLEED) / needed);
 };
 
 /** The height of a card in hand at full size (1 : 1.4 of the 144px width, rounded as in the CSS). */

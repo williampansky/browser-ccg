@@ -1,4 +1,4 @@
-import { fanDrop, fanRotation, fanX, HAND_CARD_HEIGHT, handSink, handZoom, HAND_OVERLAP } from '../hand-fan';
+import { fanDrop, fanRotation, fanX, HAND_BLEED, HAND_CARD_HEIGHT, handSink, handZoom, HAND_OVERLAP } from '../hand-fan';
 
 describe('hand fan', () => {
   it('tilts the left end left and the right end right, mirrored', () => {
@@ -26,12 +26,26 @@ describe('hand fan', () => {
     }
   });
 
-  it('zooms only when the overlapping row is wider than the room', () => {
+  it('zooms only when the overlapping row (plus room for a hovered end card) is wider than the room', () => {
     expect(handZoom(2000, 10, 144)).toBe(1);
     const n = 10;
-    const needed = n * 144 - (n - 1) * HAND_OVERLAP;
-    expect(handZoom(needed / 2, n, 144)).toBeCloseTo(0.5);
+    const needed = n * 144 - (n - 1) * HAND_OVERLAP + 72; // the hovered end card pokes out 36px at each end
+    expect(handZoom(needed / 2 + HAND_BLEED, n, 144)).toBeCloseTo(0.5);
     expect(handZoom(0, n, 144)).toBe(1);
+  });
+
+  it('keeps a hovered end card inside the board column at every hand size (the log panel was being covered at 8 cards)', () => {
+    const column = 992; // the board column in a 1728px window
+    for (let n = 1; n <= 10; n++) {
+      const z = handZoom(column + HAND_BLEED, n, 144);
+      const span = (n * 144 - (n - 1) * HAND_OVERLAP) * z;
+      const lifted = 36 * z; // how far a hovered end card pokes past its slot
+      expect(span + 2 * lifted).toBeLessThanOrEqual(column + 1e-6);
+    }
+  });
+  it('a few cards stay at full size', () => {
+    expect(handZoom(992 + HAND_BLEED, 5, 144)).toBe(1);
+    expect(handZoom(992 + HAND_BLEED, 8, 144)).toBeLessThan(1); // 8 no longer fits with room to lift
   });
 
   describe('handSink', () => {
