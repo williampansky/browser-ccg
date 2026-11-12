@@ -31,6 +31,9 @@ import { fanDrop, fanRotation, fanX, HAND_CARD_HEIGHT, handSink as computeHandSi
 import { applyDebugSetup, DebugSetup } from './debug-setup';
 import { nukeHero } from './nuke-hero';
 import { CardFace } from './CardFace';
+import { MinionFace } from './MinionFace';
+import { minionOvalHeight } from './minion-model';
+import minionStyles from './board-minion.module.scss';
 import { artBackground, withSpellDamageText } from './card-face-model';
 import { loadDecks } from '../deck-builder/deck-storage';
 import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
@@ -447,6 +450,8 @@ export const PlayBoard = () => {
   const [handSink, setHandSink] = useState(100);
   // The cast-a-spell area is the board above the player bar: `bottomRef` is that bar's section, `tableRef` the board.
   const tableRef = useRef<HTMLDivElement | null>(null);
+  /** The board's width, so a full row of seven minions fits (their size follows it). */
+  const [boardWidth, setBoardWidth] = useState(0);
   const bottomRef = useRef<HTMLElement | null>(null);
   const [areaHeight, setAreaHeight] = useState(0);
   const [areaHot, setAreaHot] = useState(false);
@@ -459,6 +464,7 @@ export const PlayBoard = () => {
       setHandWidth(el.clientWidth);
       const zoom = handZoom(el.clientWidth, el.childElementCount, HAND_CARD_WIDTH);
       setHandSink(computeHandSink(window.innerHeight, el.getBoundingClientRect().bottom, zoom, HAND_PEEK));
+      if (tableRef.current) setBoardWidth(tableRef.current.clientWidth);
       if (tableRef.current && bottomRef.current) {
         setAreaHeight(Math.max(0, Math.round(bottomRef.current.getBoundingClientRect().top - tableRef.current.getBoundingClientRect().top)));
       }
@@ -761,22 +767,13 @@ export const PlayBoard = () => {
     },
   });
 
+  // The oval height of every board minion, set on both rows (the CSS reads --m-h).
+  const minionRowStyle = { ['--m-h' as string]: `${minionOvalHeight(boardWidth)}px` } as React.CSSProperties;
   const renderMinion = (owner: PlayerId, m: MinionInstance) => {
     const card = byId.get(m.cardId);
     const selected = selection?.kind === 'minion' && selection.id === m.instanceId;
     const aim = isAimable({ kind: 'minion', instanceId: m.instanceId });
     const sick = m.playedOnTurn === state.turn && !m.keywords.rush && owner === me;
-    const tags = [
-      m.keywords.guard && 'Guard',
-      m.keywords.rush && 'Stampede',
-      m.keywords.bubble && 'Bubble',
-      m.keywords.hidden && 'Concealed',
-      m.keywords.doubleAttack && 'Onslaught',
-      m.keywords.noAttack && "Can't attack",
-      m.disabledOnTurn !== undefined && m.disabledOnTurn >= state.turn && 'Disabled',
-      m.expiresOnTurn !== undefined && 'Expiring',
-      sick && 'zzz',
-    ].filter(Boolean);
     return (
       <MinionTip
         key={m.instanceId}
@@ -787,25 +784,16 @@ export const PlayBoard = () => {
         onMouseLeave={() => setHover(null)}
         {...dropOnTarget({ kind: 'minion', instanceId: m.instanceId })}
         {...(!over && owner === me && canAttack(m) ? dragFrom({ kind: 'minion', id: m.instanceId }) : {})}
-        style={artStyle(m.cardId)}
         className={[
-          styles.minion,
-          styles.art,
-          m.keywords.guard ? styles.guard : '',
-          owner === me && canAttack(m) ? styles.ready : '',
-          selected ? styles.selected : '',
-          aim ? styles.aim : '',
-          aim && hover?.kind === 'minion' && hover.instanceId === m.instanceId ? styles.aimHover : '',
+          minionStyles.slot,
+          owner === me && canAttack(m) ? minionStyles.ready : '',
+          selected ? minionStyles.selected : '',
+          aim ? minionStyles.aim : '',
+          aim && hover?.kind === 'minion' && hover.instanceId === m.instanceId ? minionStyles.aimHover : '',
         ].join(' ')}
         onClick={() => clickMinion(owner, m)}
       >
-        <span className={styles.name}>{card?.name ?? m.cardId}</span>
-        {card?.race && card.race !== 'NONE' && <span className={styles.race}>{(card.raceName ?? card.race).toLowerCase()}</span>}
-        <span className={styles.stats}>
-          <span className={styles.atk}>{m.attack}</span>
-          <span className={m.health < m.maxHealth ? styles.hurt : styles.hp}>{m.health}</span>
-        </span>
-        <span className={styles.tags}>{tags.join(' · ')}</span>
+        <MinionFace card={card} m={m} turn={state.turn} sick={sick} />
       </MinionTip>
     );
   };
@@ -1183,7 +1171,9 @@ export const PlayBoard = () => {
         </section>
 
         <div className={styles.center}>
-          <div className={styles.row}>{state.players[foe].board.map((m) => renderMinion(foe, m))}</div>
+          <div className={styles.row} style={minionRowStyle}>
+            {state.players[foe].board.map((m) => renderMinion(foe, m))}
+          </div>
         <div className={styles.middle}>
           <button
             type="button"
@@ -1223,6 +1213,7 @@ export const PlayBoard = () => {
           <section className={styles.side}>
           <div
             className={[styles.row, boardZone ? styles.zone : ''].join(' ')}
+            style={minionRowStyle}
             onClick={(e) => playFromArea(e, 'board')}
             onMouseMove={(e) => boardZone && setHoverGap(gapAt(e.currentTarget, e.clientX))}
             onMouseLeave={() => setHoverGap(null)}

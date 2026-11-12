@@ -1,0 +1,207 @@
+// A minion on the board (see MinionFace.tsx). Sizes are in rem off --m-h, the height of the oval; everything else scales from it.
+.slot {
+  --m-w: calc(var(--m-h, 128px) / 1.25);
+  position: relative;
+  display: block;
+  width: calc(var(--m-w) + 1.6rem);
+  height: calc(var(--m-h, 128px) + 1.9rem);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: default;
+  font-family: 'Carter One', Arial, Helvetica, sans-serif;
+  transition: transform 150ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+// The picture itself: an oval of the card's art with a thin light edge and a soft shadow (hsclone's --minion-border-radius: 50%).
+.oval {
+  position: absolute;
+  left: 50%;
+  top: 0.45rem;
+  width: var(--m-w);
+  height: var(--m-h, 128px);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #191919 center top / cover no-repeat;
+  border: 2px solid rgba(220, 226, 240, 0.55);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.9), 0 3px 12px rgba(0, 0, 0, 0.55), inset 0 0 0 2px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 200ms, filter 200ms;
+  z-index: 1;
+}
+
+.veiled {
+  filter: grayscale(0.7) brightness(0.45) blur(1.2px);
+}
+
+.muted {
+  filter: grayscale(0.6);
+}
+
+.hiddenMark {
+  position: absolute;
+  left: 50%;
+  top: calc(0.45rem + var(--m-h, 128px) / 2 - 1.4rem);
+  width: 2.8rem;
+  transform: translateX(-50%);
+  opacity: 0.9;
+  z-index: 3;
+  pointer-events: none;
+}
+
+// Guard: a steel shield standing a little bigger than the oval, behind it.
+.guardShield {
+  position: absolute;
+  left: 50%;
+  top: -0.35rem;
+  width: calc(var(--m-w) + 1.7rem);
+  height: calc(var(--m-h, 128px) + 1.35rem);
+  transform: translateX(-50%);
+  z-index: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+}
+
+// Bubble: a ring and a sheen around the oval.
+.bubble {
+  position: absolute;
+  left: 50%;
+  top: 0.05rem;
+  width: calc(var(--m-w) + 0.8rem);
+  height: calc(var(--m-h, 128px) + 0.8rem);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 2px solid rgba(160, 235, 255, 0.85);
+  background: radial-gradient(ellipse at 30% 22%, rgba(255, 255, 255, 0.45), rgba(120, 220, 255, 0.12) 45%, rgba(120, 220, 255, 0.05) 70%);
+  box-shadow: 0 0 10px rgba(120, 220, 255, 0.55), inset 0 0 12px rgba(120, 220, 255, 0.35);
+  z-index: 2;
+  pointer-events: none;
+}
+
+// The other keywords: small round icons along the top edge.
+.badges {
+  position: absolute;
+  top: -0.55rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2px;
+  z-index: 4;
+}
+
+.badge {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #14171f;
+  border: 1.5px solid #8b93a8;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: #e8eaf2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.badge_rush { border-color: #ffd45e; color: #ffd45e; }
+.badge_onslaught { border-color: #ff9a5e; color: #ff9a5e; font-size: 0.72rem; font-weight: 700; }
+.badge_disabled { border-color: #ff6b6b; }
+.badge_expiring { border-color: #c79bff; }
+.badge_noAttack { border-color: #aab; color: #aab; }
+.badge_silenced { border-color: #a0e4ff; color: #a0e4ff; }
+.badge_asleep { border-color: #6f7ca8; color: #9db0ff; font-style: italic; }
+
+// Attack (sword) bottom left, Health (shield) bottom right, the PNG badges the framed cards use.
+.stat {
+  position: absolute;
+  bottom: 1.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  b {
+    position: relative;
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #fff;
+    -webkit-text-stroke: 0.2em #000;
+    paint-order: stroke fill;
+  }
+}
+
+.attack { left: 0; }
+.health { right: 0; }
+
+// Compared with the printed card: buffed green, a damaged or weakened stat orange-red.
+.tone_up b { color: #7dff8a; }
+.tone_down b { color: #ff6a2a; }
+
+.caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.1rem;
+  text-align: center;
+  font-size: 0.66rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #d7dbe8;
+  text-shadow: 0 1px 2px #000, 0 0 3px #000;
+  pointer-events: none;
+}
+
+// States of the button around it.
+.ready .oval {
+  border-color: #5fd16a;
+  box-shadow: 0 0 0 2px rgba(95, 209, 106, 0.5), 0 0 14px rgba(95, 209, 106, 0.55), 0 3px 12px rgba(0, 0, 0, 0.55);
+}
+.ready { cursor: pointer; }
+
+.selected {
+  transform: scale(1.08);
+}
+.selected .oval {
+  border-color: #ffd45e;
+  box-shadow: 0 0 0 3px #ffd45e, 0 0 18px rgba(255, 212, 94, 0.7);
+}
+
+.aim { cursor: crosshair; }
+.aim .oval {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 2px #ff6b6b, 0 0 16px rgba(255, 107, 107, 0.65);
+}
+.aimHover {
+  transform: scale(1.1);
+}
+.aimHover .oval {
+  border-color: #3ddc84;
+  box-shadow: 0 0 0 3px #3ddc84, 0 0 20px rgba(61, 220, 132, 0.8);
+}
+
+// hsclone's "was attacked": a short shake when Health drops.
+.shake {
+  animation: minionShake 500ms ease-out both;
+}
+
+@keyframes minionShake {
+  0%, 100% { transform: translateX(-50%); }
+  15% { transform: translateX(calc(-50% - 7px)) rotate(-2deg); }
+  35% { transform: translateX(calc(-50% + 6px)) rotate(1.5deg); }
+  55% { transform: translateX(calc(-50% - 4px)); }
+  75% { transform: translateX(calc(-50% + 2px)); }
+}

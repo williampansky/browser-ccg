@@ -46,8 +46,9 @@
 
 .row {
   display: flex;
-  gap: 0.5rem;
-  min-height: 7.5rem;
+  gap: 0.25rem;
+  // The height of a board minion (8rem oval + caption), so the board does not shift when a side empties.
+  min-height: calc(var(--m-h, 128px) + 1.9rem);
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -72,53 +73,8 @@
 }
 
 
-.minion {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 7.5rem;
-  height: 7.5rem;
-  padding: 0.4rem;
-  background: #2b3042;
-  border: 2px solid #3f4660;
-  border-radius: 8px;
-  color: inherit;
-  cursor: default;
-  text-align: left;
-}
-
-.guard {
-  border-style: double;
-  border-width: 4px;
-}
-
 .name {
   font-weight: 600;
-}
-
-.stats {
-  display: flex;
-  justify-content: space-between;
-  font-size: 1.3rem;
-  font-weight: 700;
-}
-
-.atk {
-  color: #ffb347;
-}
-
-.hp {
-  color: #7be07b;
-}
-
-.hurt {
-  color: #ff6b6b;
-}
-
-.tags {
-  font-size: 0.7rem;
-  color: #aab;
-  min-height: 1.6em;
 }
 
 // A card in hand: a bare button around the framed card. States are glows that follow the frame's own outline.
@@ -266,28 +222,6 @@
 .dim {
   opacity: 0.45;
   cursor: not-allowed;
-}
-
-.ready {
-  border-color: #5fd16a;
-  cursor: pointer;
-}
-
-.selected {
-  border-color: #ffd45e;
-  box-shadow: 0 0 0 2px #ffd45e;
-}
-
-.aim {
-  border-color: #ff6b6b;
-  box-shadow: 0 0 0 2px #ff6b6b;
-  cursor: crosshair;
-}
-
-.aimHover {
-  background: #4a2b33;
-  box-shadow: 0 0 0 3px #3ddc84;
-  border-color: #3ddc84;
 }
 
 .logMe {
