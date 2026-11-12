@@ -315,6 +315,24 @@ export const PlayBoard = () => {
   // Start on the client only: the deck shuffle uses the clock, which would not match server rendering.
   useEffect(start, [start]);
 
+  // `body.dragging` hides the hover popups during a drag. A dropped card that gets played unmounts its own button, so its
+  // dragend never reaches React; clear the class on any drop/dragend, on the first mouse move after a drag (browsers send
+  // none during a native drag), and whenever the game state changes, so the tooltips can never stay hidden.
+  useEffect(() => {
+    const off = () => setDragging(false);
+    window.addEventListener('mousemove', off);
+    window.addEventListener('drop', off, true);
+    window.addEventListener('dragend', off, true);
+    return () => {
+      window.removeEventListener('mousemove', off);
+      window.removeEventListener('drop', off, true);
+      window.removeEventListener('dragend', off, true);
+    };
+  }, []);
+  useEffect(() => {
+    setDragging(false);
+  }, [state]);
+
   const dispatch = useCallback(
     (action: Action) => {
       if (!state || !rngRef.current) return;
