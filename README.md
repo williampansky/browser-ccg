@@ -25,7 +25,7 @@ Please don't copy, redistribute or reuse the images.
   art (for example [Rexard on GraphicRiver](https://graphicriver.net/user/rexard)); some is borrowed from independent
   artists on ArtStation and DeviantArt purely as a stand-in, and a few images are stock "FPO" (for placement only) comps.
   Some cards have no source recorded yet.
-- The frames, stat badges and gems (`public/images/frames/`, `public/images/ui/`) come from third-party UI packs, also used here as stand-ins.
+- The frames, stat badges and gems (`public/images/frames/<COLOR>.png`, `public/images/ui/gem-<COLOR>.png`) come from third-party UI packs, also used here as stand-ins.
 - A credit is attribution, not a licence. Marketplace licences typically allow use inside a finished product but not
   republishing the raw files, so the art here is meant to be **replaced with properly licensed or commissioned art before
   any public release**. A card-by-card provenance table is on the [roadmap](ROADMAP.md) (Milestone 4).

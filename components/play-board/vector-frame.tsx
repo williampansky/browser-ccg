@@ -1,4 +1,5 @@
 import React from 'react';
+import type { FrameColor } from './card-face-model';
 
 /**
  * A card frame drawn in code (SVG + CSS gradients) instead of the painted PNGs: a few KB instead of ~700 KB per rarity.
@@ -6,7 +7,7 @@ import React from 'react';
  * same text, cost and stat positions. See `/card-lab` to compare the two side by side.
  */
 
-type Rarity = 'COMMON' | 'REMARKABLE' | 'SUPERIOR' | 'MYTHIC' | 'FREE';
+type Rarity = FrameColor;
 
 interface Palette {
   /** The glowing trim, the gem and the ribbon */
@@ -16,12 +17,12 @@ interface Palette {
 }
 
 const PALETTE: Record<Rarity, Palette> = {
-  // The same colours the painted frames use: free steel, common blue, remarkable purple, superior green, mythic red.
-  FREE: { trim: '#8aa0bd', light: '#d3deee', dark: '#2f3d52' },
-  COMMON: { trim: '#3c9bff', light: '#9fd0ff', dark: '#123e70' },
-  REMARKABLE: { trim: '#a86bf5', light: '#d9b8ff', dark: '#47207f' },
-  SUPERIOR: { trim: '#46c76f', light: '#a5f0bb', dark: '#145a2d' },
-  MYTHIC: { trim: '#f0483f', light: '#ffb3ad', dark: '#7c1210' },
+  // Keyed by the frame colour (`RARITY_STYLE` in card-face-model.ts says which rarity gets which).
+  STEEL: { trim: '#8aa0bd', light: '#d3deee', dark: '#2f3d52' },
+  GREEN: { trim: '#46c76f', light: '#a5f0bb', dark: '#145a2d' },
+  BLUE: { trim: '#3c9bff', light: '#9fd0ff', dark: '#123e70' },
+  PURPLE: { trim: '#a86bf5', light: '#d9b8ff', dark: '#47207f' },
+  RED: { trim: '#f0483f', light: '#ffb3ad', dark: '#7c1210' },
 };
 
 const id = (r: Rarity, name: string) => `vf-${r}-${name}`;
@@ -61,7 +62,7 @@ const Defs = ({ r }: { r: Rarity }) => {
 };
 
 /** The frame: a steel slab with a window for the art, rarity trim, a ribbon for the name and a parchment text area. */
-export const VectorFrame = ({ rarity, className }: { rarity: Rarity; className?: string }) => {
+export const VectorFrame = ({ color: rarity, className }: { color: Rarity; className?: string }) => {
   const p = PALETTE[rarity];
   const win = 'M12 27 H169 V162 H12 Z';
   return (
@@ -112,7 +113,7 @@ export const VectorFrame = ({ rarity, className }: { rarity: Rarity; className?:
 };
 
 /** The rarity gem set into the top edge. */
-export const VectorGem = ({ rarity, className }: { rarity: Rarity; className?: string }) => {
+export const VectorGem = ({ color: rarity, className }: { color: Rarity; className?: string }) => {
   const p = PALETTE[rarity];
   return (
     <svg className={className} viewBox="0 0 22 30" aria-hidden="true" focusable="false">
@@ -133,7 +134,7 @@ const GLYPH: Record<string, string> = {
 };
 
 /** The round type emblem beside the ribbon (the type icon on a dark disc). */
-export const VectorEmblem = ({ rarity, type, className }: { rarity: Rarity; type: string; className?: string }) => {
+export const VectorEmblem = ({ color: rarity, type, className }: { color: Rarity; type: string; className?: string }) => {
   const p = PALETTE[rarity];
   return (
     <svg className={className} viewBox="0 0 50 50" aria-hidden="true" focusable="false">

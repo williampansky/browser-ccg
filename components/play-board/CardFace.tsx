@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import type { Card } from '../../engine';
-import { artBackground, faceUnit, fitScale, parseRichText, withSpellDamageText, frameFor, gemFor, raceLabel, showsStats, typeLabel } from './card-face-model';
+import { artBackground, faceUnit, fitScale, parseRichText, withSpellDamageText, rarityStyle, raceLabel, showsStats, typeLabel } from './card-face-model';
 import fontSizeBasedOnCharacterLength from '../../utils/font-size-based-on-length';
 import styles from './card-face.module.scss';
 import { VectorEmblem, VectorFrame, VectorGem, VectorStat } from './vector-frame';
@@ -32,6 +32,7 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, v
   const stats = showsStats(card.type);
   const label = typeLabel(card);
   const race = raceLabel(card);
+  const look = rarityStyle(card.rarity);
   const html = withSpellDamageText(card.richText || card.text, card.type === 'spell' ? spellDamage : 0);
 
   // Shrink the description until it sits inside its box (long text wrapped to five lines and ran over the badges).
@@ -71,13 +72,13 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, v
       <div className={styles.art} style={{ backgroundImage: artBackground(card.id) }} />
       {vector ? (
         <>
-          <VectorFrame className={styles.frame} rarity={frameFor(card.rarity)} />
-          <VectorGem className={styles.gem} rarity={gemFor(card.rarity)} />
+          <VectorFrame className={styles.frame} color={look.color} />
+          {look.gem && <VectorGem className={styles.gem} color={look.color} />}
         </>
       ) : (
         <>
-          <img className={styles.frame} src={`/images/frames/${frameFor(card.rarity)}.png`} alt="" draggable={false} />
-          <img className={styles.gem} src={`/images/ui/gem-${gemFor(card.rarity)}.png`} alt="" draggable={false} />
+          <img className={styles.frame} src={`/images/frames/${look.color}.png`} alt="" draggable={false} />
+          {look.gem && <img className={styles.gem} src={`/images/ui/gem-${look.color}.png`} alt="" draggable={false} />}
         </>
       )}
 
@@ -91,7 +92,7 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, v
 
       <span className={styles.emblem}>
         {vector ? (
-          <VectorEmblem className={styles.emblemBoard} rarity={frameFor(card.rarity)} type={card.type} />
+          <VectorEmblem className={styles.emblemBoard} color={look.color} type={card.type} />
         ) : (
           <>
             <img className={styles.emblemIcon} src={`/images/ui/type-${card.type.toUpperCase()}.png`} alt="" draggable={false} />

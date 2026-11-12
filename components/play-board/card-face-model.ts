@@ -1,13 +1,33 @@
-/** Frame images that exist in `public/images/frames/` (the `hsclone` card frames). */
-export const FRAME_RARITIES = ['COMMON', 'REMARKABLE', 'SUPERIOR', 'MYTHIC', 'FREE'] as const;
-export type FrameRarity = typeof FRAME_RARITIES[number];
+/**
+ * How each rarity looks on a card: the colour of its frame and rarity gem. The art files are named by colour
+ * (`public/images/frames/<COLOR>.png`, `public/images/ui/gem-<COLOR>.png`), so this table is the one place that says which
+ * rarity gets which colour (they were keyed by hsclone's rarity names before, which did not match: a Common card had a blue gem).
+ *
+ *   FREE       steel frame, no gem
+ *   COMMON     green
+ *   SUPERIOR   blue
+ *   REMARKABLE purple
+ *   MYTHIC     red
+ */
+export const FRAME_COLORS = ['STEEL', 'GREEN', 'BLUE', 'PURPLE', 'RED'] as const;
+export type FrameColor = typeof FRAME_COLORS[number];
 
-/** The frame for a rarity; `NONE`, missing and unknown rarities use the plain `FREE` frame. */
-export const frameFor = (rarity?: string): FrameRarity =>
-  (FRAME_RARITIES as readonly string[]).includes(rarity ?? '') ? (rarity as FrameRarity) : 'FREE';
+export interface RarityStyle {
+  color: FrameColor;
+  /** Whether the card shows a rarity gem on its top edge (Free cards show none) */
+  gem: boolean;
+}
 
-/** Rarity gems only exist for the rarities that have a frame. */
-export const gemFor = frameFor;
+export const RARITY_STYLE: Record<string, RarityStyle> = {
+  FREE: { color: 'STEEL', gem: false },
+  COMMON: { color: 'GREEN', gem: true },
+  SUPERIOR: { color: 'BLUE', gem: true },
+  REMARKABLE: { color: 'PURPLE', gem: true },
+  MYTHIC: { color: 'RED', gem: true },
+};
+
+/** The look of a rarity; `NONE`, missing and unknown rarities look like a Free card (steel frame, no gem). */
+export const rarityStyle = (rarity?: string): RarityStyle => RARITY_STYLE[rarity ?? ''] ?? RARITY_STYLE.FREE;
 
 /**
  * The banner under the top edge: always the card's TYPE ("minion", "spell", ...). hsclone showed a minion's race there instead

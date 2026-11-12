@@ -1,22 +1,32 @@
-import { artBackground, artUrl, PLACEHOLDER_ART, FACE_HEIGHT, FACE_WIDTH, faceUnit, fitScale, frameFor, gemFor, raceLabel, showsStats, typeLabel } from '../card-face-model';
+import { artBackground, artUrl, PLACEHOLDER_ART, FACE_HEIGHT, FACE_WIDTH, faceUnit, fitScale, RARITY_STYLE, rarityStyle, raceLabel, showsStats, typeLabel } from '../card-face-model';
 
-describe('frameFor', () => {
-  it('uses the frame of a known rarity', () => {
-    expect(frameFor('COMMON')).toBe('COMMON');
-    expect(frameFor('REMARKABLE')).toBe('REMARKABLE');
-    expect(frameFor('SUPERIOR')).toBe('SUPERIOR');
-    expect(frameFor('MYTHIC')).toBe('MYTHIC');
-    expect(frameFor('FREE')).toBe('FREE');
+describe('rarityStyle', () => {
+  it('Free is a steel frame with no gem; Common green, Superior blue, Remarkable purple, Mythic red', () => {
+    expect(rarityStyle('FREE')).toEqual({ color: 'STEEL', gem: false });
+    expect(rarityStyle('COMMON')).toEqual({ color: 'GREEN', gem: true });
+    expect(rarityStyle('SUPERIOR')).toEqual({ color: 'BLUE', gem: true });
+    expect(rarityStyle('REMARKABLE')).toEqual({ color: 'PURPLE', gem: true });
+    expect(rarityStyle('MYTHIC')).toEqual({ color: 'RED', gem: true });
   });
-  it('falls back to the plain frame for NONE, unknown and missing rarities', () => {
-    expect(frameFor('NONE')).toBe('FREE');
-    expect(frameFor('LEGENDARY')).toBe('FREE');
-    expect(frameFor(undefined)).toBe('FREE');
-    expect(frameFor('')).toBe('FREE');
+  it('falls back to the Free look for NONE, unknown and missing rarities', () => {
+    for (const r of ['NONE', 'LEGENDARY', '', undefined]) expect(rarityStyle(r)).toEqual({ color: 'STEEL', gem: false });
   });
-  it('gives the gem the same fallback', () => {
-    expect(gemFor('NONE')).toBe('FREE');
-    expect(gemFor('MYTHIC')).toBe('MYTHIC');
+  it('every colour has a frame image and every gem has an image, and no two rarities share a colour', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const root = path.join(__dirname, '../../../public/images');
+    const styles = Object.values(RARITY_STYLE);
+    expect(new Set(styles.map((s) => s.color)).size).toBe(styles.length);
+    for (const s of styles) {
+      expect(fs.existsSync(path.join(root, 'frames', `${s.color}.png`))).toBe(true);
+      if (s.gem) expect(fs.existsSync(path.join(root, 'ui', `gem-${s.color}.png`))).toBe(true);
+    }
+  });
+  it('every rarity in the card data has a style of its own (not the fallback by accident)', () => {
+    const rarities = new Set(
+      [...require('../../../data/core.json'), ...require('../../../data/prime.json')].map((c: { rarity?: string }) => (c.rarity ?? '').replace(/%|RARITY_/g, ''))
+    );
+    for (const r of Array.from(rarities)) expect(Object.keys(RARITY_STYLE)).toContain(r);
   });
 });
 
