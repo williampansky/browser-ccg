@@ -128,7 +128,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: u(12);
+  // --text-scale is set by CardFace's fit (1 unless the description is too long for its box).
+  font-size: calc(#{u(12)} * var(--text-scale, 1));
   line-height: 1.15;
   text-align: center;
   word-spacing: 0.125em;

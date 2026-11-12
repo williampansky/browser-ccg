@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import type { Card } from '../../engine';
-import { artUrl, faceUnit, parseRichText, withSpellDamageText, frameFor, gemFor, showsStats, typeLabel } from './card-face-model';
+import { artUrl, faceUnit, fitScale, parseRichText, withSpellDamageText, frameFor, gemFor, showsStats, typeLabel } from './card-face-model';
 import fontSizeBasedOnCharacterLength from '../../utils/font-size-based-on-length';
 import styles from './card-face.module.scss';
+
+// useLayoutEffect warns during server rendering; the fit only matters in the browser.
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 interface CardFaceProps {
   card: Card;
@@ -24,6 +27,40 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0 }: CardF
   const art = artUrl(card.id);
   const stats = showsStats(card.type);
   const label = typeLabel(card);
+  const html = withSpellDamageText(card.richText || card.text, card.type === 'spell' ? spellDamage : 0);
+
+  // Shrink the description until it sits inside its box (long text wrapped to five lines and ran over the badges).
+  const textRef = useRef<HTMLSpanElement | null>(null);
+  useIsoLayoutEffect(() => {
+    const box = textRef.current;
+    const inner = box?.firstElementChild as HTMLElement | null;
+    if (!box || !inner) return;
+    const fit = () => {
+      const cs = getComputedStyle(box);
+      const availH = box.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      const availW = box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      if (!(availH > 0)) return; // not laid out (hidden, or no layout engine): leave the text at full size
+      const inBox = (s: number) => {
+        box.style.setProperty('--text-scale', String(s));
+        return inner.offsetHeight <= availH + 0.5 && inner.scrollWidth <= availW + 0.5;
+      };
+      // Text with its own line breaks was written to read as those lines: first try to keep each on one row (down to 0.8),
+      // and only if that cannot be done, just make it fit the box.
+      const lines = inner.querySelectorAll('br').length + 1;
+      const rowH = parseFloat(getComputedStyle(inner).lineHeight);
+      const keepsLines = (s: number) => inBox(s) && (!(rowH > 0) || inner.offsetHeight <= lines * rowH + 1);
+      const strict = lines > 1 ? fitScale(keepsLines, 0.8) : 1;
+      const scale = lines > 1 && keepsLines(strict) ? strict : fitScale(inBox);
+      box.style.setProperty('--text-scale', String(scale));
+    };
+    fit();
+    // The card font may still be loading on the first draw; measure again once it is in.
+    let cancelled = false;
+    document.fonts?.ready.then(() => !cancelled && fit());
+    return () => {
+      cancelled = true;
+    };
+  }, [html, width]);
   return (
     <div className={styles.face} style={{ ['--u' as string]: `${faceUnit(width)}px` }}>
       <div className={styles.art} style={art ? { backgroundImage: `url(${art})` } : undefined} />
@@ -41,9 +78,9 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0 }: CardF
       <span className={`${styles.name} ${styles.val}`}>
         <span style={{ fontSize: `${fontSizeBasedOnCharacterLength(card.name ?? '')}em` }}>{card.name}</span>
       </span>
-      <span className={`${styles.text} ${styles.val}`}>
+      <span ref={textRef} className={`${styles.text} ${styles.val}`}>
         <span>
-          {parseRichText(withSpellDamageText(card.richText || card.text, card.type === 'spell' ? spellDamage : 0)).map((part, i) =>
+          {parseRichText(html).map((part, i) =>
             part.kind === 'br' ? (
               <br key={i} />
             ) : part.kind === 'text' ? (

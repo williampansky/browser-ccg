@@ -50,3 +50,14 @@ export const parseRichText = (html: string): RichPart[] => {
  */
 export const withSpellDamageText = (html: string, bonus: number): string =>
   bonus > 0 ? html.replace(/(\d+)(?= damage)/g, (_m, n: string) => `<boost>${Number(n) + bonus}</boost>`) : html;
+
+/**
+ * The largest text scale (1, then down in `step`s to `min`) at which `fits` is true; `min` if none fits. Used to shrink a
+ * card's description until it sits inside its box (hsclone only scaled the name; its text was written with line breaks to fit).
+ */
+export const fitScale = (fits: (scale: number) => boolean, min = 0.55, step = 0.05): number => {
+  for (let scale = 1; scale > min + 1e-9; scale = Math.round((scale - step) * 1000) / 1000) {
+    if (fits(scale)) return scale;
+  }
+  return min;
+};

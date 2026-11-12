@@ -1,4 +1,4 @@
-import { artUrl, FACE_HEIGHT, FACE_WIDTH, faceUnit, frameFor, gemFor, showsStats, typeLabel } from '../card-face-model';
+import { artUrl, FACE_HEIGHT, FACE_WIDTH, faceUnit, fitScale, frameFor, gemFor, showsStats, typeLabel } from '../card-face-model';
 
 describe('frameFor', () => {
   it('uses the frame of a known rarity', () => {
@@ -55,5 +55,24 @@ describe('artUrl', () => {
   it('gives nothing for a missing or malformed id', () => {
     expect(artUrl(undefined)).toBeUndefined();
     expect(artUrl('nonsense')).toBeUndefined();
+  });
+});
+
+describe('fitScale', () => {
+  it('keeps full size when the text already fits', () => {
+    expect(fitScale(() => true)).toBe(1);
+  });
+  it('steps down to the largest scale that fits', () => {
+    expect(fitScale((s) => s <= 0.8)).toBeCloseTo(0.8);
+    expect(fitScale((s) => s <= 0.77)).toBeCloseTo(0.75);
+  });
+  it('stops at the minimum when nothing fits', () => {
+    expect(fitScale(() => false)).toBe(0.55);
+    expect(fitScale(() => false, 0.7)).toBe(0.7);
+  });
+  it('never asks about a scale below the minimum', () => {
+    const asked: number[] = [];
+    fitScale((s) => (asked.push(s), false), 0.7);
+    expect(Math.min(...asked)).toBeGreaterThan(0.7);
   });
 });
