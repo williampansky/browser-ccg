@@ -60,8 +60,9 @@ order below. Candidates, roughly in the order discussed:
   hero onto an enemy to attack. Dragging just selects, so the highlights and arrow match click-to-select, and a drop
   runs the same code as a click. "Choose one" cards (including Surveying Drone) are not selected while dragged (that
   would open their dialog mid-drag): the drop remembers where you dropped, opens the dialog, and picking an option
-  plays it there. Hover popups are hidden during a drag (`body.dragging`), and attacker drags (minion or hero) use an
-  invisible drag image (the aim arrow shows the attack; a ghost would cover the target). It uses native browser drag, so it does not work on touch screens.
+  plays it there. Hover popups are hidden during a drag (`body.dragging`), and drags that aim at a target (attackers, and
+  cards with a target) use an invisible drag image (the arrow shows the aim; a ghost would cover the target). Cards
+  dropped on the board or play area keep their ghost. It uses native browser drag, so it does not work on touch screens.
 - **Debug URL params** (read on every "New game" while they are in the URL): `?first=0|1` picks who goes first
   (0 = Player 1); `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand, in order.
   Handy for testing a specific card, e.g. `/play?first=0&p0=CORE_045`.

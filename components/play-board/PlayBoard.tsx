@@ -789,6 +789,11 @@ export const PlayBoard = () => {
           e.dataTransfer.effectAllowed = 'move';
           setDragging(true);
           hover.onDragStart();
+          // A card that aims at a target gets the arrow instead of a ghost (the ghost would cover the target); one that is
+          // dropped on the board or play area has no arrow, so its ghost stays as the only drag feedback.
+          if (blankDragImage && actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.target)) {
+            e.dataTransfer.setDragImage(blankDragImage, 0, 0);
+          }
           // Select after the drag has begun: re-rendering the dragged card inside dragstart can cancel it.
           setTimeout(() => (isChoice ? setDragIndex(index) : setSelection({ kind: 'hand', index })), 0);
         }}
