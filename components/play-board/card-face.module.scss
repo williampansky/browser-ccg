@@ -50,6 +50,7 @@
   top: u(-11);
   left: 43%;
   height: u(30);
+  width: auto;
   z-index: 2;
 }
 
@@ -166,9 +167,11 @@
   justify-content: center;
   z-index: 4;
 
-  img {
+  img,
+  svg {
     position: absolute;
     height: 100%;
+    width: 100%;
   }
 
   b {
