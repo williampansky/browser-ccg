@@ -21,6 +21,7 @@ import {
   TargetRef,
 } from '../../engine';
 import { gapIndex } from './board-position';
+import { CardFace } from './CardFace';
 import { HeroBar } from './HeroBar';
 import { deckRows } from './deck-rows';
 import { describeEvents } from './describe-events';
@@ -101,6 +102,10 @@ const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right') => {
   return { handlers, node };
 };
 /** Hovering a hand card shows an enlarged copy above it, readable at a glance. */
+/** Width of the enlarged card shown when hovering a card in hand. */
+const PREVIEW_WIDTH = 260;
+/** Width of a card in hand at full size (the hand shrinks them together when it gets crowded). */
+const HAND_CARD_WIDTH = 144;
 const HandPreview = ({ card, children }: { card?: Card; children: (h: { onMouseEnter: (e: React.MouseEvent<HTMLElement>) => void; onMouseLeave: () => void; onDragStart: () => void }) => React.ReactNode }) => {
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   return (
@@ -114,15 +119,9 @@ const HandPreview = ({ card, children }: { card?: Card; children: (h: { onMouseE
         onDragStart: () => setPos(null), // a native drag never sends mouseleave, so the popup would stay behind
       })}
       {pos && card && (
-        <div className={[styles.handPreview, typeClass(card.type), styles.art].join(' ')} style={{ left: pos.x, top: pos.y, ...artStyle(card.id) }}>
-          <span className={styles.cost}>{card.cost}</span>
-          <strong>{card.name}</strong>
-          <span className={styles.type}>
-            {card.type}
-            {card.type === 'minion' || card.type === 'weapon' ? ` ${card.attack}/${card.health}` : ''}
-            {card.race && card.race !== 'NONE' ? ` · ${card.race.toLowerCase()}` : ''}
-          </span>
-          <span className={styles.previewText}>{plain(card.text)}</span>
+        // Keep the whole preview on screen: it grows upward from the hovered card.
+        <div className={styles.handPreview} style={{ left: pos.x, top: Math.max(pos.y, PREVIEW_WIDTH * 1.4 + 24) }}>
+          <CardFace card={card} width={PREVIEW_WIDTH} />
         </div>
       )}
     </>
@@ -772,8 +771,7 @@ export const PlayBoard = () => {
         type="button"
         aria-disabled={over || !playable}
         title={playable ? card?.text : `Can't play now. ${card?.text ?? ''}`}
-        style={artStyle(card?.id)}
-        className={[styles.handCard, typeClass(card?.type), styles.art, playable ? styles.ready : styles.dim, selected ? styles.selected : ''].join(' ')}
+        className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? styles.slotSelected : ''].join(' ')}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
         draggable={draggable}
         onDragStart={(e) => {
@@ -797,14 +795,7 @@ export const PlayBoard = () => {
           setHoverGap(null);
         }}
       >
-        <span className={styles.cost}>{card?.cost}</span>
-        <span className={styles.name}>{card?.name}</span>
-        <span className={styles.type}>
-          {card?.type}
-          {card?.type === 'minion' || card?.type === 'weapon' ? ` ${card?.attack}/${card?.health}` : ''}
-          {card?.race && card.race !== 'NONE' ? ` · ${card.race.toLowerCase()}` : ''}
-        </span>
-        <span className={styles.text}>{card?.text}</span>
+        {card && <CardFace card={card} width={HAND_CARD_WIDTH} />}
       </button>
         )}
       </HandPreview>
@@ -863,9 +854,8 @@ export const PlayBoard = () => {
         </svg>
       )}
       {castFx && (
-        <div key={castFx.n} className={[styles.castFx, typeClass(castFx.card.type), styles.art, castFx.owner === me ? styles.castMine : styles.castFoe].join(' ')} style={artStyle(castFx.card.id)}>
-          <strong>{castFx.card.name}</strong>
-          <span>{plain(castFx.card.text)}</span>
+        <div key={castFx.n} className={[styles.castFx, castFx.owner === me ? styles.castMine : styles.castFoe].join(' ')}>
+          <CardFace card={castFx.card} width={190} />
         </div>
       )}
       {over && !menuOpen && (

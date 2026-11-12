@@ -119,20 +119,31 @@
   min-height: 1.6em;
 }
 
-.handCard {
+// A card in hand: a bare button around the framed card. States are glows that follow the frame's own outline.
+.handSlot {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  width: 9rem;
-  min-height: 9.5rem;
-  padding: 0.4rem 0.4rem 0.4rem 1.7rem;
-  background: #2b3042;
-  border: 2px solid #3f4660;
-  border-radius: 8px;
+  flex: none;
+  width: 144px;
+  height: 202px;
+  padding: 0;
+  border: 0;
+  background: none;
   color: inherit;
-  text-align: left;
   cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.slotReady {
+  filter: drop-shadow(0 0 5px #5fd16a);
+}
+
+.slotDim {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.slotSelected {
+  filter: drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e);
 }
 
 .cost {
@@ -558,26 +569,9 @@
 .handPreview {
   position: fixed;
   z-index: 40;
-  width: 17rem;
-  min-height: 19rem;
-  padding: 0.8rem 0.8rem 0.8rem 2.6rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
   transform: translate(-50%, calc(-100% - 0.5rem));
-  border: 2px solid #ffd45e;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px #000a;
+  filter: drop-shadow(0 8px 18px #000c);
   pointer-events: none;
-  font-size: 1rem;
-
-  .cost {
-    width: 1.8rem;
-    height: 1.8rem;
-    line-height: 1.8rem;
-    top: 0.6rem;
-    left: 0.6rem;
-  }
 }
 
 .previewText {
@@ -607,20 +601,13 @@
   left: 22rem; // between the log (ends at 21rem) and the board
   top: 45%;
   z-index: 35;
-  width: 11rem;
-  min-height: 13rem;
-  padding: 0.8rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  border: 3px solid #5fd16a;
-  border-radius: 10px;
   pointer-events: none;
+  filter: drop-shadow(0 0 10px #5fd16a);
   animation: castFlash 1.6s ease-out forwards;
 }
 
 .castFoe {
-  border-color: #ff6b6b;
+  filter: drop-shadow(0 0 10px #ff6b6b);
 }
 
 @keyframes castFlash {
@@ -649,9 +636,8 @@
 .hand {
   flex-wrap: nowrap;
 
-  .handCard {
+  .handSlot {
     zoom: var(--hand-zoom, 1);
-    flex: none;
   }
 }
 

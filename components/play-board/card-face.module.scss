@@ -1,0 +1,182 @@
+// The framed card. u(n) = n units of the frame's 178 x 250 design; the component sets --u (pixels per unit).
+@function u($n) {
+  @return calc(#{$n} * var(--u, 1px));
+}
+
+// Positions are ported from hsclone's `_card-v3.scss`.
+.face {
+  position: relative;
+  width: u(178);
+  height: u(250);
+  font-family: 'Carter One', Arial, Helvetica, sans-serif;
+  user-select: none;
+  pointer-events: none; // the wrapper (button) takes the clicks and drags, never the pieces
+
+  img {
+    pointer-events: none;
+  }
+}
+
+// White text with a black outline, so it reads on art, ribbon and parchment alike.
+.val {
+  color: #fff;
+  line-height: 1;
+  -webkit-text-stroke: 0.16em #000;
+  paint-order: stroke fill;
+  text-shadow: 0 0.06em 0.08em #0009;
+}
+
+// The art sits behind the frame; the frame's window shows it and its borders hide the overflow.
+.art {
+  position: absolute;
+  left: u(12);
+  top: u(25);
+  width: u(157);
+  height: u(137);
+  background: #191919 center top / cover no-repeat;
+  z-index: 0;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.gem {
+  position: absolute;
+  top: u(-11);
+  left: 43%;
+  height: u(30);
+  z-index: 2;
+}
+
+.cost {
+  position: absolute;
+  top: u(8);
+  left: u(8);
+  width: u(22);
+  height: u(22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: u(16);
+  z-index: 3;
+}
+
+.type {
+  position: absolute;
+  top: u(16);
+  left: u(38);
+  width: 58%;
+  height: u(10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: u(6);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  z-index: 3;
+}
+
+// The round emblem (a type icon on a dark board) left of the name ribbon.
+.emblem {
+  position: absolute;
+  bottom: u(55);
+  left: u(-14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.emblemIcon {
+  position: absolute;
+  height: 56%;
+  z-index: 1;
+}
+
+.emblemBoard {
+  position: relative;
+  width: u(50);
+}
+
+.name {
+  position: absolute;
+  bottom: u(72);
+  left: u(36);
+  width: u(106);
+  height: u(14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: u(10);
+  text-align: center;
+  z-index: 3;
+}
+
+.text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: u(72);
+  padding: u(4) u(24) u(22);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: u(12);
+  line-height: 1.15;
+  text-align: center;
+  word-spacing: 0.125em;
+  z-index: 3;
+
+  span {
+    line-height: 1.15;
+  }
+}
+
+.attack,
+.health {
+  position: absolute;
+  bottom: u(-5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+
+  img {
+    position: absolute;
+    height: 100%;
+  }
+
+  b {
+    position: relative;
+    font-size: u(24);
+  }
+}
+
+.attack {
+  left: u(-15);
+  width: u(50);
+  height: u(50);
+
+  b {
+    top: u(4.5);
+    left: u(2);
+  }
+}
+
+.health {
+  right: u(-8);
+  width: u(42);
+  height: u(42);
+
+  b {
+    top: u(0.5);
+    left: u(-0.5);
+  }
+}

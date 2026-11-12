@@ -67,8 +67,9 @@ Done when: a scripted two-player game plays from start to a winner inside a test
       art are ported, plus the GAME cards. PRIME has art for only 2 of 254 cards anywhere. Still open: the
       provenance and licence check (Milestone 4), and `CORE_088` is "FPO" placeholder art
 
-- [ ] Card visuals from `hsclone`: the framed card (rarity frame PNG over the art, cost gem, name ribbon, stat badges)
-      and the oval minions with sword/shield badges. The `/play` board uses plain boxes for these until this is done
+- [~] Card visuals from `hsclone`: the framed card (rarity frame PNG over the art, cost gem, name ribbon, stat badges)
+      is done for cards in hand, the hover preview and the cast popup (`CardFace`). Still to do: the oval minions with
+      sword/shield badges on the board, the choose-one/drone dialog cards, and the other `hsclone` visuals (board, hero art)
 - [ ] **Cards-in-hand feel, deep dive and port:** `hsclone`'s hand was tuned to feel like Hearthstone's (fan, hover lift,
       how a card follows the pointer, easing). Read `hsclone`'s hand components and styles properly first, then port it;
       not started

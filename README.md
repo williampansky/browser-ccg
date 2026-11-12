@@ -17,14 +17,15 @@ data is on the roadmap. The rules reference is the author's earlier `hsclone` re
 
 ## Card art and licensing notice
 
-The card art in `public/images/` is **placeholder art used for prototyping. It is not licensed for reuse**, and it is
-not covered by whatever licence the code in this repository may have. Please don't copy, redistribute or reuse the
-images.
+The card art and the card frames, badges and other UI art in `public/images/` are **placeholders used for prototyping.
+They are not licensed for reuse**, and they are not covered by whatever licence the code in this repository may have.
+Please don't copy, redistribute or reuse the images.
 
 - Each card record in `data/hs/` credits its artist in `artistName` and `artistUrl`. Much of it is purchased marketplace
   art (for example [Rexard on GraphicRiver](https://graphicriver.net/user/rexard)); some is borrowed from independent
   artists on ArtStation and DeviantArt purely as a stand-in, and a few images are stock "FPO" (for placement only) comps.
   Some cards have no source recorded yet.
+- The frames, stat badges and gems (`public/images/hs/`) come from third-party UI packs, also used here as stand-ins.
 - A credit is attribution, not a licence. Marketplace licences typically allow use inside a finished product but not
   republishing the raw files, so the art here is meant to be **replaced with properly licensed or commissioned art before
   any public release**. A card-by-card provenance table is on the [roadmap](ROADMAP.md) (Milestone 4).

@@ -129,6 +129,12 @@ Find the base ids in Airtable (they are not recorded here; this repo is public).
   `hsclone`'s on 2026-11-11, so now every CORE/GAME card with art is byte-identical to `hsclone`'s. The `-DECK` and
   `-MINION` images and the old site pages (`Sidebar`, `Card`) still use the old zone-game art and ids. `CORE_088` is
   "FPO" placeholder art. PRIME has art for only 2 of 254 cards.
+- **Framed cards (`components/play-board/CardFace.tsx`)** port `hsclone`'s `CardV3`: the art sits behind a rarity frame PNG
+  (`public/images/hs/frames/`) and the cost gem, name ribbon, text, type, rarity gem and sword/shield badges are laid
+  over it in the frame's 178 x 250 design units, scaled by the `--u` CSS variable (so use `u(n)` in its SCSS, never `em`:
+  an element's own font-size would change its offsets). Hand cards, the hover preview and the cast popup use it; board
+  minions and the choose-one dialogs do not yet. The hand's *feel* (fan, hover, easing) is still the plain row; porting
+  `hsclone`'s version is a separate deep dive (ROADMAP Milestone 2).
 - **`utils/` is a one-function-per-file folder with a barrel** (`utils/index.ts`). Many helpers
   there still assume the old zone-style card shape.
 - **`hsclone` is the reference, not a dependency.** It is a two-tab game (page with `3002` in
