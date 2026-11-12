@@ -197,6 +197,7 @@ $bonus: #ffd45e;
 }
 
 .mystery {
+  position: relative;
   align-self: center;
   padding: 1px 7px;
   border-radius: 999px;
@@ -323,4 +324,33 @@ $bonus: #ffd45e;
   font-size: 0.7rem;
   font-weight: 700;
   color: #ff8a8a;
+}
+
+// The Mystery badge's tooltip: instant (not a slow native title), opens above the bar, or below it on the opponent's bar.
+.mysteryTip {
+  display: none;
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 6px);
+  width: max-content;
+  max-width: 240px;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: #0d0f14;
+  border: 1px solid #9b7bd4;
+  color: #e8eaf2;
+  font-size: 0.78rem;
+  font-weight: 400;
+  white-space: normal;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.mysteryTipBelow {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+
+.mystery:hover .mysteryTip {
+  display: block;
 }

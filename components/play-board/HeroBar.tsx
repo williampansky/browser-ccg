@@ -24,6 +24,10 @@ interface HeroBarProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement
   overcharge?: number;
   /** The player's face-down Mystery: its card name (the viewer's own) or just its category (the opponent's) */
   mystery?: string;
+  /** What hovering the Mystery badge explains: the card's text for its owner, only what it reacts to for the opponent */
+  mysteryTip?: string;
+  /** Open the tooltip below the badge (the opponent's bar is at the top of the screen) */
+  mysteryTipBelow?: boolean;
   deck: number;
   hand: number;
   weapon: HeroBarWeapon | null;
@@ -54,6 +58,8 @@ export const HeroBar = ({
   energy,
   overcharge = 0,
   mystery,
+  mysteryTip,
+  mysteryTipBelow = false,
   deck,
   hand,
   weapon,
@@ -120,6 +126,7 @@ export const HeroBar = ({
         {mystery && (
           <span className={styles.mystery} title={tt('A face-down Mystery: it reacts on the opponent\'s turn')}>
             ? {mystery}
+            {mysteryTip && <span className={[styles.mysteryTip, mysteryTipBelow ? styles.mysteryTipBelow : ''].join(' ')}>{mysteryTip}</span>}
           </span>
         )}
         <span className={styles.counts}>

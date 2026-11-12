@@ -57,6 +57,19 @@ describe('Spell Damage in the log', () => {
   });
 });
 
+describe('Mystery lines in the log', () => {
+  const set = (player: '0' | '1', reveal: '0' | '1' | null) => {
+    const s = realSetup('CORE_043');
+    return describeEvents([{ type: 'CardPlayed', player, instanceId: 5, cardId: 'PRIME_143', mystery: true }], realCatalog, s, s, reveal);
+  };
+  const name = realCatalog.get('PRIME_143')!.name;
+  it('names the Mystery to the player it belongs to, and to nobody else', () => {
+    expect(set('0', '0')).toEqual([`**Player 1** sets a Mystery: __${name}__ (Attack)`]);
+    expect(set('1', '0')).toEqual(['**Player 2** sets a Mystery (Attack)']); // the human cannot see the AI's
+    expect(set('0', null)).toEqual(['**Player 1** sets a Mystery (Attack)']); // hot-seat: both players read the same log
+  });
+});
+
 describe('describeChanges', () => {
   const base = putOnBoard(state(), '0', grunt);
   const change = (f: (m: ReturnType<typeof base.players['0']['board']['at']> & object) => void) =>

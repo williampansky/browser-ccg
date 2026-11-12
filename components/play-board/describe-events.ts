@@ -4,6 +4,15 @@ import type { CardCatalog, GameEvent, GameState, MinionInstance, TargetRef } fro
 export const MYSTERY_CATEGORY_LABEL = { attack: 'Attack', spell: 'Spell', minion: 'Minion', damage: 'Damage', death: 'Death' } as const;
 
 /** What the opponent is told about a face-down Mystery: its category only. */
+/** What a face-down Mystery of this category will react to, as told to the player it is set against. */
+export const MYSTERY_HINT = {
+  attack: 'Reacts when you attack.',
+  spell: 'Reacts when you cast a spell.',
+  minion: 'Reacts when you play a minion.',
+  damage: 'Reacts when its hero takes damage.',
+  death: 'Reacts when one of its minions dies.',
+} as const;
+
 export const mysteryCategory = (cardId: string, catalog: CardCatalog): string => {
   const c = catalog.get(cardId);
   const cat = c && getCardDef(c)?.mystery?.category;
@@ -31,7 +40,9 @@ export const describeEvents = (
   events: GameEvent[],
   catalog: CardCatalog,
   before: GameState,
-  after: GameState
+  after: GameState,
+  /** Whose face-down Mystery cards may be named in the log (the human player's, against the AI); null names nobody's, as in hot-seat */
+  reveal: '0' | '1' | null = null
 ): string[] => {
   const name = (id: number) => card(nameOfInstance(id, catalog, before, after));
   const cardName = (id: string) => card(catalog.get(id)?.name ?? id);
@@ -57,7 +68,11 @@ export const describeEvents = (
         break;
       case 'CardPlayed':
         if (e.mystery) {
-          lines.push(`${who(e.player)} sets a Mystery (${mysteryCategory(e.cardId, catalog)})`);
+          lines.push(
+            e.player === reveal
+              ? `${who(e.player)} sets a Mystery: ${cardName(e.cardId)} (${mysteryCategory(e.cardId, catalog)})`
+              : `${who(e.player)} sets a Mystery (${mysteryCategory(e.cardId, catalog)})`
+          );
           break;
         }
         lines.push(

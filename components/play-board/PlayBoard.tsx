@@ -36,7 +36,7 @@ import { loadDecks } from '../deck-builder/deck-storage';
 import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
 import { HeroBar } from './HeroBar';
 import { deckRows } from './deck-rows';
-import { describeEvents, mysteryCategory } from './describe-events';
+import { describeEvents, MYSTERY_HINT, mysteryCategory } from './describe-events';
 import { isMuted, playSounds, setMuted, soundsFor } from './sounds';
 import { targetLinePath, TargetLineStyle } from './target-line';
 import styles from './play-board.module.scss';
@@ -373,7 +373,7 @@ export const PlayBoard = () => {
       }
       setState(result.state);
       playSounds(soundsFor(result.events));
-      setLog((old) => [...old, describeEvents(result.events, byId, state, result.state)].slice(-100));
+      setLog((old) => [...old, describeEvents(result.events, byId, state, result.state, modeRef.current === 'ai' ? '0' : null)].slice(-100));
     },
     [state]
   );
@@ -590,12 +590,12 @@ export const PlayBoard = () => {
     const result = nukeHero(state, me, rngRef.current, byId);
     if (result.steps.length === 0) return;
     let cur = result.state;
-    const lines = result.steps.map((s) => describeEvents(s.events, byId, s.before, cur));
+    const lines = result.steps.map((s) => describeEvents(s.events, byId, s.before, cur, modeRef.current === 'ai' ? '0' : null));
     const heard = result.steps.flatMap((s) => s.events);
     if (cur.status === 'playing') {
       const r = applyAction(cur, { type: 'EndTurn' }, { rng: rngRef.current, catalog: byId });
       if (!('error' in r)) {
-        lines.push(describeEvents(r.events, byId, cur, r.state));
+        lines.push(describeEvents(r.events, byId, cur, r.state, modeRef.current === 'ai' ? '0' : null));
         heard.push(...r.events);
         cur = r.state;
       }
@@ -833,6 +833,14 @@ export const PlayBoard = () => {
               : `Mystery (${mysteryCategory(p.mystery.cardId, byId)})`
             : undefined
         }
+        mysteryTip={
+          p.mystery
+            ? owner === viewer
+              ? plain(byId.get(p.mystery.cardId)?.text)
+              : MYSTERY_HINT[getCardDef(byId.get(p.mystery.cardId)!)?.mystery?.category ?? 'attack']
+            : undefined
+        }
+        mysteryTipBelow={owner !== viewer}
         deck={p.deck.length}
         hand={p.hand.length}
         weapon={weapon && p.weapon ? { name: weapon.name ?? 'Weapon', attack: p.weapon.attack, durability: p.weapon.durability } : null}
