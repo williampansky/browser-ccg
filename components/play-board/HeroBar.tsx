@@ -24,6 +24,8 @@ interface HeroBarProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement
   hand: number;
   weapon: HeroBarWeapon | null;
   weaponDisabled: boolean;
+  /** Hover `title` tooltips (accessibility mode only). */
+  showTitles?: boolean;
   /** The avatar is what aim arrows point at, so the board tracks that node. */
   avatarRef?: (el: HTMLElement | null) => void;
   /** Interaction states (a legal target, hovered as one, selected as an attacker, able to attack: `canAct`). */
@@ -50,6 +52,7 @@ export const HeroBar = ({
   hand,
   weapon,
   weaponDisabled,
+  showTitles,
   avatarRef,
   aim,
   aimHover,
@@ -59,6 +62,7 @@ export const HeroBar = ({
 }: HeroBarProps) => {
   const fraction = healthFraction(health);
   const tone = healthTone(fraction);
+  const tt = (text: string) => (showTitles ? text : undefined);
   const weaponText = weapon ? `${weapon.name} ${weapon.attack}/${weapon.durability}` : 'no weapon';
   return (
     <button
@@ -81,11 +85,11 @@ export const HeroBar = ({
         style={{ ['--fill' as string]: `${Math.round(fraction * 360)}deg` }}
       >
         <span className={styles.face}>{emblem}</span>
-        <span className={styles.hp} title={`${health} health`}>
+        <span className={styles.hp} title={tt(`${health} health`)}>
           {health}
         </span>
         {armor > 0 && (
-          <span className={styles.armor} title={`${armor} armor (absorbs attack damage)`}>
+          <span className={styles.armor} title={tt(`${armor} armor (absorbs attack damage)`)}>
             {armor}
           </span>
         )}
@@ -96,7 +100,7 @@ export const HeroBar = ({
           <strong>{name}</strong>
           {turnTag && <em className={styles.turn}>{turnTag}</em>}
         </span>
-        <span className={styles.energy} title={`Energy: ${energy.current} available of ${energy.total}`}>
+        <span className={styles.energy} title={tt(`Energy: ${energy.current} available of ${energy.total}`)}>
           <span className={styles.pips}>
             {energyPips(energy.current, energy.total).map((p, i) => (
               <i key={i} className={styles[p]} />
@@ -107,11 +111,11 @@ export const HeroBar = ({
           </span>
         </span>
         <span className={styles.counts}>
-          <span title="Cards left in your deck">
+          <span title={tt('Cards left in your deck')}>
             <i className={styles.iconDeck} />
             {deck}
           </span>
-          <span title="Cards in hand">
+          <span title={tt('Cards in hand')}>
             <i className={styles.iconHand} />
             {hand}
           </span>
@@ -120,7 +124,7 @@ export const HeroBar = ({
 
       <span
         className={[styles.weapon, weapon ? '' : styles.noWeapon, weapon && canAct ? (selected ? styles.weaponSelected : styles.weaponReady) : ''].join(' ')}
-        title={weapon ? weaponText : 'No weapon equipped'}>
+        title={tt(weapon ? weaponText : 'No weapon equipped')}>
         {weapon ? (
           <>
             <span className={styles.weaponName}>{weapon.name}</span>

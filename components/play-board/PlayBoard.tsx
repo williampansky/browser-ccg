@@ -21,6 +21,7 @@ import {
   TargetRef,
 } from '../../engine';
 import { gapIndex } from './board-position';
+import { isAccessible, setAccessible, titleIf } from './accessibility';
 import { fanDrop, fanRotation, HAND_CARD_HEIGHT, handSink as computeHandSink, handZoom } from './hand-fan';
 import { applyDebugSetup, DebugSetup } from './debug-setup';
 import { nukeHero } from './nuke-hero';
@@ -233,12 +234,14 @@ export const PlayBoard = () => {
   const [mode, setMode] = useState<Mode>('ai');
   const [smartAi, setSmartAi] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  /** Accessibility: explicit "Play" buttons after selecting a card (off by default; clicking the board plays it). */
   /** The spell just cast, shown briefly in the middle of the board. */
   const [castFx, setCastFx] = useState<{ card: Card; owner: PlayerId; n: number } | null>(null);
   const [soundOn, setSoundOn] = useState(true);
   useEffect(() => setSoundOn(!isMuted()), []);
-  const [playButtons, setPlayButtons] = useState(false);
+  /** Accessibility mode (one menu option for now): hover titles, a visible focus outline and explicit "Play" buttons after
+   *  selecting a card. Off by default; saved. More settings will be split out of it later. */
+  const [a11y, setA11y] = useState(false);
+  useEffect(() => setA11y(isAccessible()), []);
   const rngRef = useRef<Rng | null>(null);
   // The log shows the newest line at the bottom and stays pinned there unless you scroll up to read older events.
   const logRef = useRef<HTMLDivElement | null>(null);
@@ -759,6 +762,7 @@ export const PlayBoard = () => {
         deck={p.deck.length}
         hand={p.hand.length}
         weapon={weapon && p.weapon ? { name: weapon.name ?? 'Weapon', attack: p.weapon.attack, durability: p.weapon.durability } : null}
+        showTitles={a11y}
         weaponDisabled={p.heroDisabledOnTurn !== undefined && p.heroDisabledOnTurn >= state.turn}
         avatarRef={track(`h${owner}`)}
         aim={aim}
@@ -788,7 +792,7 @@ export const PlayBoard = () => {
         style={{ ['--fan-rot' as string]: `${fanRotation(index, handCount)}deg`, ['--fan-drop' as string]: `${fanDrop(index, handCount)}px` }}
         type="button"
         aria-disabled={over || !playable}
-        title={playable ? card?.text : `Can't play now. ${card?.text ?? ''}`}
+        title={titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`)}
         className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? styles.slotSelected : '', draggedHand === index ? styles.slotDragged : ''].join(' ')}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
         draggable={draggable}
@@ -798,8 +802,10 @@ export const PlayBoard = () => {
           setDragging(true);
           // A card that aims at a target gets the arrow instead of a ghost (the ghost would cover the target); one that is
           // dropped on the board or play area has no arrow, so its ghost stays as the only drag feedback.
-          if (blankDragImage && actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.target)) {
-            e.dataTransfer.setDragImage(blankDragImage, 0, 0);
+          // (A choose-one card has no arrow while it is dragged, since it is not selected, so it gets the ghost like any other card.)
+          const aimsAtTarget = !!blankDragImage && !isChoice && actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.target);
+          if (aimsAtTarget) {
+            e.dataTransfer.setDragImage(blankDragImage!, 0, 0);
           } else {
             // The ghost is a plain clone at rest size, held by its centre. The browser's own snapshot is of the card as hovered
             // (lifted and scaled 1.5x) and keeps the grab offset from that bigger card, which put the ghost far above the cursor.
@@ -811,9 +817,10 @@ export const PlayBoard = () => {
             setTimeout(() => clone.remove(), 0);
           }
           // Select after the drag has begun: re-rendering the dragged card inside dragstart can cancel it.
-          // (Hiding it here too: the browser has already taken its drag image by then.)
+          // The card is hidden in the hand only when a ghost replaces it; one that aims with the arrow stays put, selected,
+          // so it does not vanish while the arrow is active (playtest 2026-11-12).
           setTimeout(() => {
-            setDraggedHand(index);
+            if (!aimsAtTarget) setDraggedHand(index);
             if (isChoice) setDragIndex(index);
             else setSelection({ kind: 'hand', index });
           }, 0);
@@ -847,7 +854,7 @@ export const PlayBoard = () => {
   const foeTo = foeToEl ? centerOf(foeToEl) : null;
 
   return (
-    <main className={styles.page}>
+    <main className={[styles.page, a11y ? styles.a11y : ''].join(' ')}>
       {lineFrom && lineTo && (
         <svg className={styles.targetLine} aria-hidden="true">
           <defs>
@@ -914,8 +921,14 @@ export const PlayBoard = () => {
             <button type="button" onClick={() => { setMenuOpen(false); start(); }}>
               New game
             </button>
-            <button type="button" onClick={() => setPlayButtons(!playButtons)}>
-              Accessibility: "Play" buttons after selecting a card: {playButtons ? 'on' : 'off'}
+            <button
+              type="button"
+              onClick={() => {
+                setAccessible(!a11y);
+                setA11y(!a11y);
+              }}
+            >
+              Accessibility mode: {a11y ? 'on' : 'off'}
             </button>
             <button
               type="button"
@@ -1041,7 +1054,7 @@ export const PlayBoard = () => {
             type="button"
             disabled={over || !myTurn}
             className={styles.endTurn}
-            title="Space"
+            title={titleIf(a11y, 'Space')}
             onClick={() => dispatch({ type: 'EndTurn' })}
           >
             End turn
@@ -1064,7 +1077,7 @@ export const PlayBoard = () => {
             <button
               type="button"
               className={styles.attackHero}
-              title="Attack the enemy hero with every ready minion, left to right, then end your turn (Shift+Space)"
+              title={titleIf(a11y, 'Attack the enemy hero with every ready minion, left to right, then end your turn (Shift+Space)')}
               onClick={onNukeHero}
             >
               Attack hero
@@ -1115,7 +1128,7 @@ export const PlayBoard = () => {
           >
             {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i))}
           </div>
-          {playButtons && (
+          {a11y && (
           <div className={styles.controls}>
             {untargetedPlays.map((a, i) => (
               <button key={i} type="button" className={styles.primary} onClick={() => dispatch(a)}>

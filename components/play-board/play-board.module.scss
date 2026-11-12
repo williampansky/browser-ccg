@@ -720,3 +720,11 @@
 .type_spell { @include accent(#a35de0); }
 .type_weapon { @include accent(#e8903a); }
 .type_item { @include accent(#2fb8a6); }
+
+// Accessibility mode: a clear keyboard focus outline on every control (the default outline is easy to lose on this dark board).
+.a11y {
+  button:focus-visible {
+    outline: 3px solid #ffd45e;
+    outline-offset: 2px;
+  }
+}

@@ -66,10 +66,12 @@
 - cards in hand:
   - [x] when dragging the card from hand, hide it from the hand and only show the drag/drop version [desktop/Screenshot 2026-11-12 at 7.41.56 AM.png]
   - [x] unplayable cards in hand cant have transparency (now dimmed with a filter instead; nothing see-through)
-    - warcry cards and spells maybe should NOT disappear while the targeting arrow is active
+    - [x] warcry cards and spells maybe should NOT disappear (a card that aims with the arrow now stays in hand, selected, while dragged; choose-one cards get a ghost) while the targeting arrow is active
   - [x] move the hand down further offscreen akin to hsclone for player and enemy [desktop/Screenshot 2026-11-12 at 7.43.05 AM.png]
   - [x] clickable hero area obstructed by hand overlay [desktop/Screenshot 2026-11-12 at 7.45.49 AM.png]
   - [x] dragging is off a bit [Screenshot 2026-11-12 at 7.47.39 AM.png] in this screenshot, i dragged the card up from hand. my cursor was over the hero bar at this point, and the card was far higher than my cursor
+  - [x] remove the title attribute from stuff unless accessibility mode is on ( we need to add a wcag compliant mode then) (one "Accessibility mode" menu option for now: titles, focus outline, Play buttons; saved. A full WCAG pass is still to do)
+  - Screenshot 2026-11-12 at 8.10.11 AM.png - text sizing adjustment
 - [x] lets make shift+space bar run the nukeplayer option if available (does nothing when Attack hero isn't available, so it never ends the turn by accident)
 - [x] bug: played steel gauntlet with crude weapon equipped. it enhanced the attack like it should, but the boon stayed past my turn like a buff - instead of a temp boon  
 - [x] lets highlight the weapon when its useable for an attack (green when ready, gold while the hero is the selected attacker)

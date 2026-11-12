@@ -74,6 +74,9 @@ Done when: a scripted two-player game plays from start to a winner inside a test
       how a card follows the pointer, easing). Ported (fan, overlap, sink, hover lift, draw-in; it is plain CSS in hsclone,
       no react-spring). Still different from hsclone: the draw-in is a short 600ms fly-in, not its 3s keyframes
 
+- [ ] **WCAG-friendly mode:** `/play` has one "Accessibility mode" toggle (hover tooltips, focus outline, Play buttons). Grow it into a
+      real WCAG pass (contrast, keyboard play for every action, screen-reader labels) and split it into separate settings
+
 Done when: you can play a full game against yourself in the browser, to a win.
 
 ## Milestone 3: Bot and balance tooling
