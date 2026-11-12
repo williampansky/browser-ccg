@@ -83,6 +83,7 @@ import core081 from './core/core-081';
 import core084 from './core/core-084';
 import core050 from './core/core-050';
 import core091 from './core/core-091';
+import { primeDefinitions } from "./prime";
 import game001 from "./game/game-001";
 import core001 from "./core/core-001";
 import core012 from "./core/core-012";
@@ -108,6 +109,7 @@ import core129 from "./core/core-129";
 
 /** Every card with behaviour beyond its stats and keywords. Vanilla cards have no entry. */
 const all: Definition[] = [
+  ...primeDefinitions,
   core091,
   core050,
   core084,

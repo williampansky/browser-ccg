@@ -188,10 +188,10 @@ describe('loadHsCards: the committed card data', () => {
   const bySource = (source: string) => cards.filter((c) => c.source === source);
 
   test('loads without errors, with the expected record counts', () => {
-    expect(cards).toHaveLength(430);
+    expect(cards).toHaveLength(431);
     expect(bySource('core')).toHaveLength(132);
     expect(bySource('prime')).toHaveLength(254);
-    expect(bySource('entourage')).toHaveLength(43);
+    expect(bySource('entourage')).toHaveLength(44);
     expect(bySource('game')).toHaveLength(1);
     expect(issues.filter((i) => i.level === 'error')).toEqual([]);
   });
@@ -259,9 +259,9 @@ describe('loadHsCards: the committed card data', () => {
     expect(issues.filter((i) => i.code === 'unknown-text-token')).toEqual([]);
   });
 
-  test('the PRIME112a typo is fixed; 17 other entourage references are still dangling', () => {
+  test('the PRIME112a typo is fixed; 16 other entourage references are still dangling', () => {
     expect(byId.get('PRIME_112')!.entourage).toContain('PRIME_112a');
-    expect(issues.filter((i) => i.code === 'unresolved-entourage')).toHaveLength(17);
+    expect(issues.filter((i) => i.code === 'unresolved-entourage')).toHaveLength(16);
   });
 
   test('57 cards have no name and 35 cards disagree about targeting (reported, not hidden)', () => {

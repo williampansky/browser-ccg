@@ -703,6 +703,23 @@
     "isEntourage": true
   },
   {
+    "id": "PRIME_136a",
+    "name": "Primal Beast",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_NONE%",
+    "race": "%RACE_CREATURE%",
+    "cost": 1,
+    "attack": 2,
+    "health": 2,
+    "collectible": false,
+    "active": false,
+    "artistName": "https://www.artstation.com/angelicadonarini",
+    "artistUrl": "https://www.artstation.com/angelicadonarini",
+    "isEntourage": true
+  },
+  {
     "id": "PRIME_254a",
     "name": "Despair",
     "set": "%SET_003%",
