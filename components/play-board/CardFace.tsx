@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import type { Card } from '../../engine';
-import { artUrl, faceUnit, fitScale, parseRichText, withSpellDamageText, frameFor, gemFor, showsStats, typeLabel } from './card-face-model';
+import { artBackground, faceUnit, fitScale, parseRichText, withSpellDamageText, frameFor, gemFor, showsStats, typeLabel } from './card-face-model';
 import fontSizeBasedOnCharacterLength from '../../utils/font-size-based-on-length';
 import styles from './card-face.module.scss';
 
@@ -24,7 +24,6 @@ interface CardFaceProps {
  * frame's own 178 x 250 design units, scaled by the `--u` custom property (pixels per unit).
  */
 export const CardFace = ({ card, width, attack, health, spellDamage = 0 }: CardFaceProps) => {
-  const art = artUrl(card.id);
   const stats = showsStats(card.type);
   const label = typeLabel(card);
   const html = withSpellDamageText(card.richText || card.text, card.type === 'spell' ? spellDamage : 0);
@@ -63,7 +62,7 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0 }: CardF
   }, [html, width]);
   return (
     <div className={styles.face} style={{ ['--u' as string]: `${faceUnit(width)}px` }}>
-      <div className={styles.art} style={art ? { backgroundImage: `url(${art})` } : undefined} />
+      <div className={styles.art} style={{ backgroundImage: artBackground(card.id) }} />
       <img className={styles.frame} src={`/images/hs/frames/${frameFor(card.rarity)}.png`} alt="" draggable={false} />
       <img className={styles.gem} src={`/images/hs/ui/gem-${gemFor(card.rarity)}.png`} alt="" draggable={false} />
 

@@ -27,7 +27,7 @@ import { fanDrop, fanRotation, fanX, HAND_CARD_HEIGHT, handSink as computeHandSi
 import { applyDebugSetup, DebugSetup } from './debug-setup';
 import { nukeHero } from './nuke-hero';
 import { CardFace } from './CardFace';
-import { withSpellDamageText } from './card-face-model';
+import { artBackground, withSpellDamageText } from './card-face-model';
 import { loadDecks } from '../deck-builder/deck-storage';
 import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
 import { HeroBar } from './HeroBar';
@@ -53,16 +53,8 @@ const pool = playablePool(cards);
 const prime = primePool(cards);
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
 const playerLabel = (p: PlayerId, mode: Mode) => `Player ${Number(p) + 1}${mode === 'ai' && p === AI_PLAYER ? ' (AI)' : ''}`;
-/** CORE_012 -> /images/sets/SET_CORE/012-CARD.jpg, GAME_001 -> /images/sets/SET_GAME/001-CARD.jpg. */
-const artUrlOf = (id?: string): string | undefined => {
-  const m = id?.match(/^(CORE|GAME)_(.+)$/);
-  return m ? `url(/images/sets/SET_${m[1]}/${m[2]}-CARD.jpg)` : undefined;
-};
-/** The art of a card. With `fallbackId`, that card's art is a second background layer: it shows when the first image is missing (404). */
-const artStyle = (id?: string, fallbackId?: string): React.CSSProperties | undefined => {
-  const layers = [artUrlOf(id), id !== fallbackId ? artUrlOf(fallbackId) : undefined].filter(Boolean);
-  return layers.length ? { backgroundImage: layers.join(', ') } : undefined;
-};
+/** The art of a card (`artBackground`: art, then `fallbackId`'s art, then PLACEHOLDER.jpg when a file is missing). */
+const artStyle = (id?: string, fallbackId?: string): React.CSSProperties => ({ backgroundImage: artBackground(id, fallbackId) });
 /** An invisible 1px drag image: the aim arrow shows an attack, so no ghost of the attacker needs to cover the targets. */
 const blankDragImage = (() => {
   if (typeof Image === 'undefined') return null;

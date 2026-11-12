@@ -1,4 +1,4 @@
-import { artUrl, FACE_HEIGHT, FACE_WIDTH, faceUnit, fitScale, frameFor, gemFor, showsStats, typeLabel } from '../card-face-model';
+import { artBackground, artUrl, PLACEHOLDER_ART, FACE_HEIGHT, FACE_WIDTH, faceUnit, fitScale, frameFor, gemFor, showsStats, typeLabel } from '../card-face-model';
 
 describe('frameFor', () => {
   it('uses the frame of a known rarity', () => {
@@ -74,5 +74,20 @@ describe('fitScale', () => {
     const asked: number[] = [];
     fitScale((s) => (asked.push(s), false), 0.7);
     expect(Math.min(...asked)).toBeGreaterThan(0.7);
+  });
+});
+
+describe('artBackground', () => {
+  it('puts the card art over the placeholder, so a missing file shows the placeholder', () => {
+    expect(artBackground('CORE_012')).toBe(`url(/images/sets/SET_CORE/012-CARD.jpg), url(${PLACEHOLDER_ART})`);
+    expect(artBackground('PRIME_010')).toBe(`url(/images/sets/SET_PRIME/010-CARD.jpg), url(${PLACEHOLDER_ART})`);
+  });
+  it('is just the placeholder for a missing or malformed id', () => {
+    expect(artBackground(undefined)).toBe(`url(${PLACEHOLDER_ART})`);
+    expect(artBackground('nonsense')).toBe(`url(${PLACEHOLDER_ART})`);
+  });
+  it('layers fallback cards between the card and the placeholder, without repeats', () => {
+    expect(artBackground('CORE_001', 'CORE_002')).toBe(`url(/images/sets/SET_CORE/001-CARD.jpg), url(/images/sets/SET_CORE/002-CARD.jpg), url(${PLACEHOLDER_ART})`);
+    expect(artBackground('CORE_001', 'CORE_001', undefined)).toBe(`url(/images/sets/SET_CORE/001-CARD.jpg), url(${PLACEHOLDER_ART})`);
   });
 });

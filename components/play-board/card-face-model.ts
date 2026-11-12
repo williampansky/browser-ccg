@@ -28,6 +28,22 @@ export const artUrl = (id?: string): string | undefined => {
   return m ? `/images/sets/SET_${m[1]}/${m[2]}-CARD.jpg` : undefined;
 };
 
+/** Shown for any card whose own art file is missing. */
+export const PLACEHOLDER_ART = '/images/sets/PLACEHOLDER.jpg';
+
+/**
+ * A CSS `background-image` for a card: its art, then any `fallbackIds`' art, then the placeholder as the last layer. Layers
+ * stack, so a layer whose file is missing (404) shows the next one down; no check for the file is needed.
+ */
+export const artBackground = (id?: string, ...fallbackIds: (string | undefined)[]): string =>
+  [id, ...fallbackIds]
+    .filter((x, i, all) => x !== undefined && all.indexOf(x) === i)
+    .map(artUrl)
+    .filter((u): u is string => !!u)
+    .concat(PLACEHOLDER_ART)
+    .map((u) => `url(${u})`)
+    .join(', ');
+
 export type RichPart = { kind: 'text' | 'strong' | 'em' | 'small' | 'boost'; text: string } | { kind: 'br' };
 
 /** Splits card text (`<br>`, `<strong>`, `<em>`, `<small>` only; see `sanitizeRichText`) into parts to render. */

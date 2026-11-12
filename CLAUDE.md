@@ -62,7 +62,8 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - **PRIME is opt-in** (`primePool` in `engine/decks.ts`: active, named, non-token PRIME cards the engine can already play; 20 of 254 so far,
   the rest need definitions). The deck builder has a Core / Prime / Both filter; the picker has "Random deck (Core + Prime)"; every other
   random or starter deck stays CORE-only, so CORE's balance numbers are unchanged. Unnamed PRIME cards (51 in the data) are left out until Airtable names them.
-  PRIME art exists for 2 of 254 cards, so most show a plain frame (404s for the missing images in the console are expected).
+  PRIME art exists for 2 of 254 cards. **A card with no art file shows `public/images/sets/PLACEHOLDER.jpg`**: `artBackground` (`card-face-model.ts`)
+  stacks the card's art over it as CSS background layers, so a missing file (a 404 in the console is expected) falls through; framed cards and board minions both use it.
 - **Starter decks** have an optional `minMinions`; Spellslinger (centred on 2.5 mana, 12 minions) and Armed (10) use it. After the 2026-11-12 tuning
   `npm run sim -- 30 greedy` shows every starter between about 35% and 65% overall.
 - **Choosing decks for a game** (`components/play-board/deck-choice.ts`): Menu > "New game (choose decks)" opens a picker for each
