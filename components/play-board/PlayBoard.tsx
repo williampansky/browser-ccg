@@ -590,6 +590,20 @@ export const PlayBoard = () => {
     },
   });
 
+  // Drag an attacker (your minion or hero) onto an enemy: it is selected for the drag, exactly like a click.
+  const dragFrom = (sel: Selection) => ({
+    draggable: true,
+    onDragStart: (e: React.DragEvent) => {
+      e.dataTransfer.setData('text/plain', 'attack');
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => setSelection(sel), 0);
+    },
+    onDragEnd: () => {
+      setSelection(null);
+      setHover(null);
+    },
+  });
+
   const renderMinion = (owner: PlayerId, m: MinionInstance) => {
     const card = byId.get(m.cardId);
     const selected = selection?.kind === 'minion' && selection.id === m.instanceId;
@@ -615,6 +629,7 @@ export const PlayBoard = () => {
         onMouseEnter={() => setHover({ kind: 'minion', instanceId: m.instanceId })}
         onMouseLeave={() => setHover(null)}
         {...dropOnTarget({ kind: 'minion', instanceId: m.instanceId })}
+        {...(!over && owner === me && canAttack(m) ? dragFrom({ kind: 'minion', id: m.instanceId }) : {})}
         style={artStyle(m.cardId)}
         className={[
           styles.minion,
@@ -648,6 +663,7 @@ export const PlayBoard = () => {
         onMouseEnter={() => setHover({ kind: 'hero', player: owner })}
         onMouseLeave={() => setHover(null)}
         {...dropOnTarget({ kind: 'hero', player: owner })}
+        {...(!over && isMe && heroCanSwing ? dragFrom({ kind: 'hero' }) : {})}
         type="button"
         className={[
           styles.hero,
