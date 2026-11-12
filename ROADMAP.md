@@ -67,6 +67,12 @@ Done when: a scripted two-player game plays from start to a winner inside a test
       art are ported, plus the GAME cards. PRIME has art for only 2 of 254 cards anywhere. Still open: the
       provenance and licence check (Milestone 4), and `CORE_088` is "FPO" placeholder art
 
+- [ ] Card visuals from `hsclone`: the framed card (rarity frame PNG over the art, cost gem, name ribbon, stat badges)
+      and the oval minions with sword/shield badges. The `/play` board uses plain boxes for these until this is done
+- [ ] **Cards-in-hand feel, deep dive and port:** `hsclone`'s hand was tuned to feel like Hearthstone's (fan, hover lift,
+      how a card follows the pointer, easing). Read `hsclone`'s hand components and styles properly first, then port it;
+      not started
+
 Done when: you can play a full game against yourself in the browser, to a win.
 
 ## Milestone 3: Bot and balance tooling
