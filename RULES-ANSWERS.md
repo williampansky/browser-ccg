@@ -290,3 +290,7 @@ say so here.
 Any specific cards you want changed, cut or redesigned (you can list ids or names).
 
 > 
+
+### Decided during playtesting
+- **2026-11-11, CORE_007 (Cataclysm):** follow the printed text. It only destroys the opponent's weapon; it does not also
+  stop their hero attacking.

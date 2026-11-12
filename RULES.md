@@ -573,4 +573,5 @@ just Demonic), 106 is for one turn, 127 is for one turn only, 096 is not a CORE 
   text only (no data field), so it is a constant in the definition.
 - **084** picks a random card from the cards your opponent has played from hand (tracked in
   `GameState.played`); nothing if they have played none; a full hand burns it.
-- **007** destroys the opponent's weapon (hsclone also stopped their hero attacking; the text does not say so).
+- **007** destroys the opponent's weapon and nothing else (hsclone also stopped their hero attacking; the text does not say
+  so). **Confirmed by the author, 2026-11-11: follow the text, it only destroys the weapon.**
