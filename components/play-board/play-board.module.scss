@@ -566,6 +566,14 @@
   background-color: #555b70;
 }
 
+// While a card or attacker is being dragged, hover popups stay out of the way (a native drag never sends mouseleave).
+:global(body.dragging) {
+  .handPreview,
+  .logTip {
+    display: none;
+  }
+}
+
 // Enlarged hand card, shown above the hovered one.
 .handPreview {
   position: fixed;

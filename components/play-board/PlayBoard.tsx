@@ -47,6 +47,15 @@ const artStyle = (id?: string): React.CSSProperties | undefined => {
   const m = id?.match(/^(CORE|GAME)_(.+)$/);
   return m ? { backgroundImage: `url(/images/sets/SET_${m[1]}/${m[2]}-CARD.jpg)` } : undefined;
 };
+/** An invisible 1px drag image: the aim arrow shows an attack, so no ghost of the attacker needs to cover the targets. */
+const blankDragImage = (() => {
+  if (typeof Image === 'undefined') return null;
+  const img = new Image();
+  img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  return img;
+})();
+/** While a drag is active the body carries this class, which hides the hover popups (see play-board.module.scss). */
+const setDragging = (on: boolean) => document.body.classList.toggle('dragging', on);
 /** Zoom for the hand so `n` cards (9rem wide, 0.5rem apart) fit `width` px on one row. */
 const handScale = (width: number, n: number) => (width > 0 && n > 0 ? Math.min(1, (width + 8) / (n * (144 + 8))) : 1);
 /** Card type -> accent colour class (minion blue, spell purple, weapon orange, item teal). */
@@ -91,7 +100,7 @@ const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right') => {
   return { handlers, node };
 };
 /** Hovering a hand card shows an enlarged copy above it, readable at a glance. */
-const HandPreview = ({ card, children }: { card?: Card; children: (h: { onMouseEnter: (e: React.MouseEvent<HTMLElement>) => void; onMouseLeave: () => void }) => React.ReactNode }) => {
+const HandPreview = ({ card, children }: { card?: Card; children: (h: { onMouseEnter: (e: React.MouseEvent<HTMLElement>) => void; onMouseLeave: () => void; onDragStart: () => void }) => React.ReactNode }) => {
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   return (
     <>
@@ -101,6 +110,7 @@ const HandPreview = ({ card, children }: { card?: Card; children: (h: { onMouseE
           setPos({ x: r.left + r.width / 2, y: r.top });
         },
         onMouseLeave: () => setPos(null),
+        onDragStart: () => setPos(null), // a native drag never sends mouseleave, so the popup would stay behind
       })}
       {pos && card && (
         <div className={[styles.handPreview, typeClass(card.type), styles.art].join(' ')} style={{ left: pos.x, top: pos.y, ...artStyle(card.id) }}>
@@ -384,6 +394,13 @@ export const PlayBoard = () => {
 
   // Space ends the turn (when you can), unless a choice dialog is open.
   const [hoverGap, setHoverGap] = useState<number | null>(null);
+  /** A "choose one" card being dragged (it is not selected until dropped, because selecting opens its dialog). */
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  /** Where a choose-one card was dropped; picking its option in the dialog then plays it there. */
+  const [pendingDrop, setPendingDrop] = useState<{ boardIndex?: number; target?: TargetRef } | null>(null);
+  useEffect(() => {
+    if (!selection) setPendingDrop(null);
+  }, [selection]);
   const modalOpenRef = useRef(false);
   const menuOpenRef = useRef(false);
   menuOpenRef.current = menuOpen;
@@ -430,7 +447,15 @@ export const PlayBoard = () => {
   };
   const options = optionsFor(selection);
   const aimable = options.map(targetOf).filter((t): t is TargetRef => !!t);
-  const isAimable = (t: TargetRef) => aimable.some((x) => sameTarget(x, t));
+  // A dragged choose-one card has no selection yet, so its legal targets and zones come straight from its plays.
+  const dragPlays =
+    dragIndex === null ? [] : actions.filter((a): a is PlayAction => a.type === 'PlayCard' && a.handIndex === dragIndex);
+  const isAimable = (t: TargetRef) =>
+    aimable.some((x) => sameTarget(x, t)) ||
+    dragPlays.some((a) => {
+      const at = targetOf(a);
+      return !!at && sameTarget(at, t);
+    });
 
   const clickTarget = (t: TargetRef) => {
     if (!isAimable(t)) return false;
@@ -525,14 +550,36 @@ export const PlayBoard = () => {
     const plays = actions.filter(
       (a): a is PlayAction => a.type === 'PlayCard' && a.handIndex === selection.index && a.choice === choice
     );
+    if (pendingDrop) {
+      const ctx = pendingDrop;
+      setPendingDrop(null);
+      const match = plays.find((a) => {
+        const at = targetOf(a);
+        if (ctx.target) return !!at && sameTarget(at, ctx.target);
+        return !at && (ctx.boardIndex === undefined ? a.boardIndex === undefined : a.boardIndex !== undefined);
+      });
+      if (match) {
+        dispatch(ctx.boardIndex !== undefined ? { ...match, boardIndex: ctx.boardIndex } : match);
+        return;
+      }
+      // The option does not fit where it was dropped: fall through to the click flow.
+    }
     if (plays.length > 0 && plays.every((a) => !a.target)) dispatch(plays[0]);
     else setSelection({ ...selection, choice });
   };
 
   // Drop zones: what a click would play right now (shown as a glow that brightens on hover).
   const placedPlays = untargetedPlays.filter((a) => a.type === 'PlayCard' && a.boardIndex !== undefined);
-  const boardZone = placedPlays.length > 0 && !over;
-  const areaZone = untargetedPlays.length > 0 && placedPlays.length === 0 && !over;
+  const dragPlaced = dragPlays.some((a) => a.boardIndex !== undefined && !a.target);
+  const dragLoose = dragPlays.some((a) => a.boardIndex === undefined && !a.target);
+  const boardZone = (placedPlays.length > 0 || dragPlaced) && !over;
+  const areaZone = ((untargetedPlays.length > 0 && placedPlays.length === 0) || (dragLoose && !dragPlaced)) && !over;
+  const dropChoiceCard = (ctx: { boardIndex?: number; target?: TargetRef }) => {
+    if (dragIndex === null) return;
+    setPendingDrop(ctx);
+    setSelection({ kind: 'hand', index: dragIndex });
+    setDragIndex(null);
+  };
 
   // The gap under the pointer, ignoring the spacer that marks it (so it does not move its own target).
   const gapAt = (row: Element, clickX: number) =>
@@ -585,7 +632,9 @@ export const PlayBoard = () => {
     onDrop: (e: React.DragEvent) => {
       if (!isAimable(t)) return;
       e.preventDefault();
-      clickTarget(t);
+      e.stopPropagation(); // the play area behind it must not treat this drop as its own
+      if (dragIndex !== null) dropChoiceCard({ target: t });
+      else clickTarget(t);
       setHover(null);
     },
   });
@@ -596,9 +645,12 @@ export const PlayBoard = () => {
     onDragStart: (e: React.DragEvent) => {
       e.dataTransfer.setData('text/plain', 'attack');
       e.dataTransfer.effectAllowed = 'move';
+      setDragging(true);
+      if (sel.kind === 'hero' && blankDragImage) e.dataTransfer.setDragImage(blankDragImage, 0, 0);
       setTimeout(() => setSelection(sel), 0);
     },
     onDragEnd: () => {
+      setDragging(false);
       setSelection(null);
       setHover(null);
     },
@@ -698,8 +750,9 @@ export const PlayBoard = () => {
   const renderHandCard = (card: Card | undefined, index: number) => {
     const playable = actions.some((a) => a.type === 'PlayCard' && a.handIndex === index);
     const selected = selection?.kind === 'hand' && selection.index === index;
-    // "Choose one" cards ask in a dialog first, so they are click-only.
-    const draggable = !over && playable && !actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.choice !== undefined);
+    // "Choose one" cards are dragged without selecting (selecting opens the dialog); the drop opens it, then the pick plays it there.
+    const isChoice = actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.choice !== undefined);
+    const draggable = !over && playable;
     return (
       <HandPreview key={index} card={card}>
         {(hover) => (
@@ -716,11 +769,15 @@ export const PlayBoard = () => {
         onDragStart={(e) => {
           e.dataTransfer.setData('text/plain', String(index)); // Firefox needs data to start a drag
           e.dataTransfer.effectAllowed = 'move';
+          setDragging(true);
+          hover.onDragStart();
           // Select after the drag has begun: re-rendering the dragged card inside dragstart can cancel it.
-          setTimeout(() => setSelection({ kind: 'hand', index }), 0);
+          setTimeout(() => (isChoice ? setDragIndex(index) : setSelection({ kind: 'hand', index })), 0);
         }}
         onDragEnd={() => {
-          setSelection(null);
+          setDragging(false);
+          if (!isChoice) setSelection(null); // a dropped choose-one card has just opened its dialog: keep that
+          setDragIndex(null);
           setHover(null);
           setHoverGap(null);
         }}
@@ -919,9 +976,10 @@ export const PlayBoard = () => {
         onClick={(e) => playFromArea(e, 'table')}
         onDragOver={(e) => areaZone && e.preventDefault()}
         onDrop={(e) => {
-          if (!areaZone) return;
+          if (!areaZone || e.defaultPrevented) return;
           e.preventDefault();
-          playFromArea(e, 'table', true);
+          if (dragIndex !== null) dropChoiceCard({});
+          else playFromArea(e, 'table', true);
         }}
       >
         <section className={[styles.side, styles.top].join(' ')}>
@@ -990,7 +1048,10 @@ export const PlayBoard = () => {
             onDrop={(e) => {
               if (!boardZone) return;
               e.preventDefault();
-              playFromArea(e, 'board', true);
+              if (dragIndex !== null) {
+                e.stopPropagation();
+                dropChoiceCard({ boardIndex: gapAt(e.currentTarget, e.clientX) });
+              } else playFromArea(e, 'board', true);
               setHoverGap(null);
             }}
           >

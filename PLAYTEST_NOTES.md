@@ -51,3 +51,7 @@
 - [x] need some small distinction in card style for the different types (minion/spell/weapon/etc). doesnt have to be crazy for now, but some small visual distinction
 - [x] need to consider sound as well. doesnt have to be crazy. but a foundation for sound fx while playing.
 - [x] lets leave the "last played card overlay" that appears on the left (what do we call that anyway?) linger a tad longer, like maybe 1.5s
+- [x] dragging should not bring the card hover along with it (or at least not be visible i mean) [desktop/Screenshot 2026-11-11 at 7.35.03 PM.png and Screenshot 2026-11-11 at 7.36.41 PM.png (player bar)]
+- [x] dragging should hide the "in hand" popup too [desktop/Screenshot 2026-11-11 at 7.37.11 PM.png]
+- [x] i still want to drag+drop a choose card to cast it, but then click to select inside the modal is fine
+- 
