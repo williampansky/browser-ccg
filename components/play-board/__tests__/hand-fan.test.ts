@@ -1,4 +1,4 @@
-import { fanDrop, fanRotation, HAND_CARD_HEIGHT, handSink, handZoom, HAND_OVERLAP } from '../hand-fan';
+import { fanDrop, fanRotation, fanX, HAND_CARD_HEIGHT, handSink, handZoom, HAND_OVERLAP } from '../hand-fan';
 
 describe('hand fan', () => {
   it('tilts the left end left and the right end right, mirrored', () => {
@@ -60,6 +60,14 @@ describe('hand fan', () => {
       // A 10-card hand at zoom 0.26 in a 800px window whose row bottom is at 840: the old row-top maths put the cards offscreen.
       const sink = handSink(800, 840, 0.26, 110);
       expect(topOnScreen(840, 0.26, sink)).toBeLessThan(800);
+    });
+  });
+
+  describe('fanX', () => {
+    it('spaces cards by card width minus the overlap, centred on the middle of the hand', () => {
+      expect(fanX(0, 1)).toBe(0);
+      expect(fanX(1, 3) - fanX(0, 3)).toBe(144 - HAND_OVERLAP);
+      for (const n of [2, 5, 10]) expect(fanX(0, n) + fanX(n - 1, n)).toBeCloseTo(0);
     });
   });
 });

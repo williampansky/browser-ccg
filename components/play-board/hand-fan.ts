@@ -19,8 +19,18 @@ export const fanDrop = (index: number, count: number): number => {
   return clamp(raw, 10, 60);
 };
 
-/** How much neighbouring cards overlap, in px at full card size (hsclone overlapped about 38% of a card). */
-export const HAND_OVERLAP = 48;
+/**
+ * How much neighbouring cards overlap, in px at full card size. hsclone's cards sit nearly side by side: a 178px box pulled
+ * left by 102.6px puts neighbours 76px apart, and the scaled card is about 85px wide, so about a tenth overlaps (the earlier
+ * 38% / 48px here was a misreading and made the hand feel cramped). 20px of 144 is about 14%.
+ */
+export const HAND_OVERLAP = 20;
+
+/**
+ * Horizontal position of the card at `index`, px at full size, measured from the middle of the hand. Cards are placed with
+ * transforms (not flex layout) so that adding or removing a card slides the others to their new places instead of jumping.
+ */
+export const fanX = (index: number, count: number, cardWidth = 144): number => (index - (count - 1) / 2) * (cardWidth - HAND_OVERLAP);
 
 /** Zoom so `count` overlapping cards of `cardWidth` fit `width` px on one row (never above 1). */
 export const handZoom = (width: number, count: number, cardWidth: number): number => {

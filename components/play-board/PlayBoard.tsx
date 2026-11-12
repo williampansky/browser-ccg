@@ -22,7 +22,7 @@ import {
 } from '../../engine';
 import { gapIndex } from './board-position';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
-import { fanDrop, fanRotation, HAND_CARD_HEIGHT, handSink as computeHandSink, handZoom } from './hand-fan';
+import { fanDrop, fanRotation, fanX, HAND_CARD_HEIGHT, handSink as computeHandSink, handZoom } from './hand-fan';
 import { applyDebugSetup, DebugSetup } from './debug-setup';
 import { nukeHero } from './nuke-hero';
 import { CardFace } from './CardFace';
@@ -807,7 +807,8 @@ export const PlayBoard = () => {
   };
 
   const handCount = state.players[me].hand.length;
-  const renderHandCard = (card: Card | undefined, index: number) => {
+  const zoomNow = handZoom(handWidth, handCount, HAND_CARD_WIDTH);
+  const renderHandCard = (card: Card | undefined, index: number, instanceId: number) => {
     const playable = actions.some((a) => a.type === 'PlayCard' && a.handIndex === index);
     const selected = selection?.kind === 'hand' && selection.index === index;
     // "Choose one" cards are dragged without selecting (selecting opens the dialog); the drop opens it, then the pick plays it there.
@@ -815,11 +816,13 @@ export const PlayBoard = () => {
     const draggable = !over && playable;
     return (
       <button
-        key={index}
+        key={instanceId}
         ref={track(`c${index}`)}
-        style={{ ['--fan-rot' as string]: `${fanRotation(index, handCount)}deg`, ['--fan-drop' as string]: `${fanDrop(index, handCount)}px` }}
-        type="button"
-        aria-disabled={over || !playable}
+        style={{
+          ['--fan-rot' as string]: `${fanRotation(index, handCount)}deg`,
+          ['--fan-drop' as string]: `${fanDrop(index, handCount)}px`,
+          ['--fan-x' as string]: `${fanX(index, handCount, HAND_CARD_WIDTH)}px`,
+        }}
         title={titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`)}
         className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? styles.slotSelected : '', draggedHand === index ? styles.slotDragged : ''].join(' ')}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
@@ -1152,9 +1155,9 @@ export const PlayBoard = () => {
           <div
             className={[styles.row, styles.hand].join(' ')}
             ref={handRef}
-            style={{ ['--hand-zoom' as string]: handZoom(handWidth, handCount, HAND_CARD_WIDTH), ['--hand-sink' as string]: `${handSink}px` }}
+            style={{ ['--hand-zoom' as string]: zoomNow, ['--hand-sink' as string]: `${handSink}px` }}
           >
-            {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i))}
+            {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i, c.instanceId))}
           </div>
           {a11y && (
           <div className={styles.controls}>

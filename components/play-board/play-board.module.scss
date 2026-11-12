@@ -123,8 +123,14 @@
 
 // A card in hand: a bare button around the framed card. States are glows that follow the frame's own outline.
 .handSlot {
-  position: relative;
-  flex: none;
+  // Cards are placed with transforms, not flex layout, so adding, removing or hovering a card slides the others to their new
+  // places over 800ms (ease-out-expo, hsclone's settle) instead of jumping. --fan-x is the card's offset from the middle of the
+  // hand (hand-fan.ts), full-size px scaled by --hand-zoom here.
+  // --y-comp keeps the bottom edge where the unscaled card's would be when the hand zooms out.
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  margin-left: -72px; // half the card width (144px)
   width: 144px;
   height: 202px;
   padding: 0;
@@ -132,8 +138,11 @@
   background: none;
   color: inherit;
   cursor: pointer;
-  // hsclone's hand: cards fan out, settle slowly (ease-out-expo), and lift fast when hovered.
-  transform: translateY(calc(var(--fan-drop, 0px) + var(--hand-sink))) rotate(var(--fan-rot, 0deg));
+  --zoom: var(--hand-zoom, 1);
+  --x: calc(var(--fan-x, 0px) * var(--zoom));
+  --y-comp: calc(101px * (1 - var(--zoom)));
+  transform: translate(var(--x), calc(var(--y-comp) + (var(--fan-drop, 0px) + var(--hand-sink)) * var(--zoom)))
+    rotate(var(--fan-rot, 0deg)) scale(var(--zoom));
   transition: transform 800ms cubic-bezier(0.19, 1, 0.22, 1), filter 0.15s;
   animation: drawCard 600ms cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -146,12 +155,56 @@
     top: 100%;
     height: 60px;
   }
+}
 
-  &:hover {
-    z-index: 10;
-    // -70px on a tall window; the sink shrinks on a short one, so the lift grows by the same amount and the card stays on screen.
-    transform: translateY(calc(-170px + var(--hand-sink))) rotate(0deg) scale(1.5);
-    transition: transform 100ms cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.15s;
+// The card under the pointer lifts fast, no tilt. The others stay where they are (no parting around it).
+// -70px on a tall window; the sink shrinks on a short one, so the lift grows by the same amount and the card stays on screen.
+.handSlot:hover {
+  z-index: 10;
+  transform: translate(var(--x), calc(var(--y-comp) + (-170px + var(--hand-sink)) * var(--zoom))) rotate(0deg)
+    scale(calc(1.5 * var(--zoom)));
+  transition: transform 100ms cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.15s;
+}
+
+// The sheen on each hover, from hsclone (`fade`, 250ms ease-out): a white flash that fades while a halo behind the card
+// swells to 1.15x. The halo is a white rounded rectangle under the card (z-index -1 inside the button's own stacking
+// context), so only its swelling edge shows around the frame; the flash is a brightness pulse on the card face itself.
+.handSlot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: #fff;
+  opacity: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.handSlot:hover::before {
+  animation: handHalo 250ms ease-out forwards;
+}
+
+.handSlot:hover > * {
+  animation: handFlash 250ms ease-out;
+}
+
+@keyframes handHalo {
+  from {
+    opacity: 0.625;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes handFlash {
+  from {
+    filter: brightness(1.8) saturate(0.75);
+  }
+  to {
+    filter: none;
   }
 }
 
@@ -183,7 +236,8 @@
 .slotSelected {
   filter: drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e);
   z-index: 20;
-  transform: translateY(calc(-150px + var(--hand-sink))) rotate(0deg) scale(1.3);
+  transform: translate(var(--x), calc(var(--y-comp) + (-150px + var(--hand-sink)) * var(--zoom))) rotate(0deg)
+    scale(calc(1.3 * var(--zoom)));
 }
 
 .cost {
@@ -683,25 +737,24 @@
   }
 }
 
-// The hand never wraps: the cards shrink together instead.
+// The hand never wraps: the cards shrink together instead (--hand-zoom scales their spacing and size).
 .hand {
-  flex-wrap: nowrap;
-  // Keep the room of a full-size card (144px wide, 1 : 1.4) so the board does not shift when the hand empties.
+  position: relative;
+  // Cards are absolutely placed around the middle, so the row keeps the room of a full-size card (144px wide, 1 : 1.4)
+  // itself, which also stops the board shifting when the hand empties.
+  height: 202px;
   min-height: 202px;
-  align-items: flex-end;
-
-  gap: 0;
+  // A little wider than the board column (hsclone's hand had the room of the whole screen between its side panels). Not more:
+  // the tilted end cards reach ~30px past the row, and the log panel on the left would clip them.
+  margin-left: -10px;
+  margin-right: -10px;
   // Cards sink this far below their fan position, so only their tops show (hsclone's hand); hover lifts one into view.
   // (--hand-sink is set inline by PlayBoard: 100px, less on short windows.)
   // The row itself must not catch clicks: the lifted cards reach up over the hero bar, which has to stay clickable.
   pointer-events: none;
 
   .handSlot {
-    zoom: var(--hand-zoom, 1);
     pointer-events: auto;
-  }
-  .handSlot + .handSlot {
-    margin-left: -48px; // keep equal to HAND_OVERLAP in hand-fan.ts
   }
 }
 
