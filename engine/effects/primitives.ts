@@ -4,6 +4,8 @@ import { findMinion, opponentOf } from '../rules/lookup';
 import { withSpellPower } from '../rules/spell-power';
 import { createMinion } from '../rules/minion';
 import { summonMinion } from '../rules/summon';
+import { cardPool } from '../rules/card-pool';
+import type { Card } from '../cards/types';
 import { MAX_ENERGY, MAX_HAND, type MinionKeywords } from '../state/types';
 import type { Effect, Selector } from './types';
 
@@ -652,3 +654,35 @@ export const copyPlayedSpellToOtherHand = (): Effect => (ctx) => {
   if (e?.type !== 'CardPlayed') return;
   addCardToHand(e.cardId, 0, e.player === ctx.caster)(ctx);
 };
+
+/**
+ * Adds `count` random playable cards that pass `where` to the caster's hand (a full hand burns them). Each can cost `costDelta` more
+ * (negative is less). With no card to pick, nothing happens.
+ */
+export const addRandomCardToHand =
+  (where: (c: Card) => boolean = () => true, count = 1, costDelta = 0): Effect =>
+  (ctx) => {
+    for (let i = 0; i < count; i++) {
+      const pool = cardPool(ctx.catalog, where);
+      if (pool.length === 0) return;
+      const card = pool[ctx.rng.int(pool.length)];
+      addCardToHand(card.id, costDelta)(ctx);
+    }
+  };
+
+/** Summons a random playable minion card that passes `where` for the caster (a full board: nothing). */
+export const summonRandomCard =
+  (where: (c: Card) => boolean): Effect =>
+  (ctx) => {
+    const pool = cardPool(ctx.catalog, (c) => c.type === 'minion' && where(c));
+    if (pool.length === 0) return;
+    summonMinion(ctx.g, ctx.caster, pool[ctx.rng.int(pool.length)], ctx.events, ctx.self);
+  };
+
+/** Runs `then` if the selected minion is at 0 health (use right after damaging it). */
+export const ifDead =
+  (select: Selector, then: Effect): Effect =>
+  (ctx) => {
+    const dead = select(ctx).some((t) => t.kind === 'minion' && (findMinion(ctx.g, t.instanceId)?.minion.health ?? 0) <= 0);
+    if (dead) then(ctx);
+  };

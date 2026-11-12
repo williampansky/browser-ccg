@@ -91,3 +91,4 @@
 - [x] need some UI on the player bar (or enemy) to show a mystery is active (a purple badge on the hero bar: the card name and category for you, only "Mystery (category)" for the opponent; the log says "sets a Mystery (Attack)" and names the card when it fires)
   - the log needs to show the player which mystery it played. so logs probably need to be per-play based?
   - a tooltip on the player's applied mystery to see its effect
+- in hand bug: Screenshot 2026-11-12 at 3.38.38 PM.png

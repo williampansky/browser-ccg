@@ -542,12 +542,12 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "Add a %RANDOM% spell<br>\ncard to your hand",
+    "text": "Add a %RANDOM% spell that<br>\ncosts 3 or less to your hand",
     "mechanics": [
       "%ADD_CARD%",
       "%RANDOM%"
     ],
-    "numberPrimary": 1,
+    "numberPrimary": 3,
     "numberRandom": 1,
     "playType": "GLOBAL",
     "playContext": "%ADD_CARD%",

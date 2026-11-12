@@ -685,3 +685,12 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
   friendly minion at the end of your turn; 245 deals 8 to a random enemy at the end of your turn; 249 destroys a random enemy minion whenever you play a card (a Mystery or weapon too, not itself);
   098 summons a Guard 2/2 at the end of your turn; 253/254 affect every OTHER minion (they are 10/10s) and leave Fear / Despair on death; 251 steals 2 random enemy minions and leaves Glory.
 - **037 Skelly (reading to confirm)**: a standing effect, while it is on the board your own minions cost 3 more. The data tags it as a warcry, so it may have meant something else.
+
+### Random cards from a pool (2026-11-12)
+
+- **The pool** (`engine/rules/card-pool.ts`): every real CORE or PRIME card (named, active, not a token) the engine can play faithfully, sorted by id so the same seed picks the same
+  card. It grows by itself as cards get definitions. "A random X" picks from the pool cards that match X.
+- **Add to hand**: 140 Tome of Spells (a spell costing 3 or less; the audit's twist), 186 Gift Box (2 any cards), 216 The Ritual (a Demonic minion; the cards call that race Undead),
+  091 Harry (a Mythic minion), 154 Amaad (a random card costing 4 less whenever you play a card from hand, not for itself). A full hand burns the card.
+- **Summon**: 084 Serene Valley (demise: a random Creature), 227 Zap (2 damage; if the minion dies, a random Demonic minion costing 4 to 6 for you).
+- **Known quirk (not changed)**: events are handled after deaths in `settle`, so a minion that arrives from a demise can react to a spell cast earlier in the same action.
