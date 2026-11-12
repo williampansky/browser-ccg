@@ -64,7 +64,8 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   random or starter deck stays CORE-only, so CORE's balance numbers are unchanged. Unnamed PRIME cards (51 in the data) are left out until Airtable names them.
   PRIME art was copied from `react-ccg-deprecated` (`SET_003`, renamed `PRIME_061-CARD.jpg` -> `SET_PRIME/061-CARD.jpg`, checked card by card against the old data) on 2026-11-12: all but `PRIME_212` have a `-CARD` image, but its provenance is unchecked, like the rest. **A card with no art file shows `public/images/sets/PLACEHOLDER.jpg`**: `artBackground` (`card-face-model.ts`)
   stacks the card's art over it as CSS background layers, so a missing file (a 404 in the console is expected) falls through; framed cards and board minions both use it.
-- **Starter decks** have an optional `minMinions`; Spellslinger (centred on 2.5 mana, 12 minions) and Armed (10) use it. After the 2026-11-12 tuning
+- **Starter decks** (`engine/starter-decks.ts`): 12 CORE (`STARTER_DECKS`), 10 PRIME (`PRIME_STARTER_DECKS`) and 8 Core + Prime (`MIXED_STARTER_DECKS`), each a score over its pool; the picker lists all of them, and
+  "Surprise" / "Random starter deck" stay CORE-only. `npm run sim -- 40 greedy core|prime|mixed|all` runs a set against itself; results and caveats in `balance/DECK-SIMS.md`. They have an optional `minMinions`; Spellslinger (centred on 2.5 mana, 12 minions) and Armed (10) use it. After the 2026-11-12 tuning
   `npm run sim -- 30 greedy` shows every starter between about 35% and 65% overall.
 - **Choosing decks for a game** (`components/play-board/deck-choice.ts`): Menu > "New game (choose decks)" opens a picker for each
   player: Surprise, Random starter deck, Random deck, one of the six starter decks (`engine/starter-decks.ts`), or a saved deck.
@@ -178,6 +179,6 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
 - Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.
-- Current checks: `npm test` passes (948 tests; the card-number tests were updated to the balance pass on 2026-11-12), `npm run build` passes, and `tsc` has 8 errors
+- Current checks: `npm test` passes (956 tests; the card-number tests were updated to the balance pass on 2026-11-12), `npm run build` passes, and `tsc` has 8 errors
   (`as Card` casts in `utils/__tests__/get-card-power.test.ts`). Don't "fix"
   unrelated failures as a drive-by.

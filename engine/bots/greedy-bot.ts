@@ -19,9 +19,13 @@ export interface GreedyWeights {
   bubble: number;
   /** Per unit of weapon attack times durability */
   weapon: number;
+  /** A face-down Mystery waiting to fire (more than the card in hand it came from, which is worth `card`) */
+  mystery: number;
+  /** Each energy locked by Overcharge next turn */
+  overcharge: number;
 }
 
-export const DEFAULT_WEIGHTS: GreedyWeights = { card: 1.5, lifeLow: 2, lifeMid: 1, lifeHigh: 0.5, guard: 1.5, bubble: 1.5, weapon: 0.8 };
+export const DEFAULT_WEIGHTS: GreedyWeights = { card: 1.5, lifeLow: 2, lifeMid: 1, lifeHigh: 0.5, guard: 1.5, bubble: 1.5, weapon: 0.8, mystery: 3, overcharge: 1.5 };
 
 /** An action must beat standing still by this much, or the bot ends its turn instead. */
 const MIN_GAIN = 0.01;
@@ -49,7 +53,9 @@ const sideValue = (p: PlayerState, w: GreedyWeights): number => {
     lifeValue(p.health + p.armor, w) +
     p.board.reduce((sum, m) => sum + minionValue(m, w), 0) +
     p.hand.length * w.card +
-    weapon
+    weapon +
+    (p.mystery ? w.mystery : 0) -
+    (p.overcharge ?? 0) * w.overcharge
   );
 };
 

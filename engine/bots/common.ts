@@ -49,7 +49,8 @@ const snapshot = (s: GameState, handDelta: { player: PlayerId; by: number }) =>
     (['0', '1'] as PlayerId[]).map((p) => {
       const pl = s.players[p];
       const hand = pl.hand.length + (handDelta.player === p ? handDelta.by : 0);
-      return [pl.board, pl.health, pl.armor, pl.weapon, pl.deck.length, hand, pl.energy.total, pl.heroDisabledOnTurn];
+      // Includes the lasting flags a card can set (a face-down Mystery, a spell discount, a Health floor, free spells), so those plays are not "nothing".
+      return [pl.board, pl.health, pl.armor, pl.weapon, pl.deck.length, hand, pl.energy.total, pl.heroDisabledOnTurn, pl.mystery, pl.spellDiscount, pl.mysteryFreeOnTurn, pl.healthFloorOnTurn, pl.freeSpellsOnTurn];
     })
   );
 
