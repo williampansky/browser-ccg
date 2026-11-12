@@ -75,6 +75,8 @@ export interface PlayerState {
   fatigue: number;
   /** The turn number on which this hero may not attack with its weapon (set by Disable, e.g. Ice Primordial) */
   heroDisabledOnTurn?: number;
+  /** Overcharge: energy that stays locked at the start of this player's next turn (then cleared) */
+  overcharge?: number;
 }
 
 export interface GameState {
@@ -139,6 +141,7 @@ export type GameEvent =
   | { type: 'Discarded'; player: PlayerId; instanceId: number }
   | { type: 'Healed'; target: TargetRef; amount: number }
   | { type: 'EnergyGained'; player: PlayerId; amount: number }
+  | { type: 'OverchargeGained'; player: PlayerId; amount: number; cardId: string }
   | { type: 'BubblePopped'; instanceId: number }
   | { type: 'MinionSummoned'; player: PlayerId; instanceId: number; cardId: string }
   | { type: 'MinionDied'; player: PlayerId; instanceId: number; cardId: string }

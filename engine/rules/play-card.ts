@@ -79,6 +79,11 @@ export const playCard = (
     const p = g.players[me];
     p.hand.splice(handIndex, 1);
     p.energy.current -= cost;
+    const overcharge = card.mechanics.includes('OVERLOAD') ? card.numbers.overcharge ?? 0 : 0;
+    if (overcharge > 0) {
+      p.overcharge = (p.overcharge ?? 0) + overcharge;
+      events.push({ type: 'OverchargeGained', player: me, amount: overcharge, cardId: card.id });
+    }
     g.played[me].push(card.id);
     // Spell damage only counts for spells, not warcries (RULES 8.3, Q16)
     const spellDamage =

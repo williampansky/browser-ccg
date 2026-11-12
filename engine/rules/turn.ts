@@ -28,7 +28,9 @@ export const startTurn = (state: GameState, player: PlayerId, events: GameEvent[
     g.activePlayer = player;
     const energy = g.players[player].energy;
     energy.total = Math.min(MAX_ENERGY, energy.total + 1);
-    energy.current = energy.total;
+    // Overcharge from last turn keeps that much of the refill locked.
+    energy.current = Math.max(0, energy.total - (g.players[player].overcharge ?? 0));
+    delete g.players[player].overcharge;
     for (const m of g.players[player].board) m.attacksThisTurn = 0;
     g.players[player].weaponAttacksThisTurn = 0;
     events.push({ type: 'TurnStarted', player, turn: g.turn });

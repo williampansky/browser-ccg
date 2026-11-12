@@ -20,6 +20,8 @@ interface HeroBarProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement
   health: number;
   armor: number;
   energy: { current: number; total: number };
+  /** Energy locked at the start of this player's next turn (Overcharge) */
+  overcharge?: number;
   deck: number;
   hand: number;
   weapon: HeroBarWeapon | null;
@@ -48,6 +50,7 @@ export const HeroBar = ({
   health,
   armor,
   energy,
+  overcharge = 0,
   deck,
   hand,
   weapon,
@@ -108,6 +111,7 @@ export const HeroBar = ({
           </span>
           <span className={styles.energyText}>
             {energy.current}/{energy.total}
+            {overcharge > 0 && <em title={tt(`Overcharge: ${overcharge} energy locked next turn`)}> 🔒{overcharge}</em>}
           </span>
         </span>
         <span className={styles.counts}>

@@ -793,6 +793,7 @@ export const PlayBoard = () => {
         health={p.health}
         armor={p.armor}
         energy={p.energy}
+        overcharge={p.overcharge}
         deck={p.deck.length}
         hand={p.hand.length}
         weapon={weapon && p.weapon ? { name: weapon.name ?? 'Weapon', attack: p.weapon.attack, durability: p.weapon.durability } : null}
