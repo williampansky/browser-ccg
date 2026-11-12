@@ -55,21 +55,23 @@ Done when: a scripted two-player game plays from start to a winner inside a test
 
 ## Milestone 2: Playable board
 
-- [~] (first version done: hot-seat, text only, no art) A `/play` board for the new engine: hero portraits and health, boards, hand, energy, deck
-      counts, match log, End Turn
-- [ ] Interaction as in `hsclone`: click a card to select, click a slot or target to play it; valid
-      targets highlighted; attackers glow
+- [x] A `/play` board for the new engine: hero portraits and health, boards, hand, energy, deck
+      counts, match log, End Turn (plus deck tracker, tooltips, spell-cast flash, card-type colours, sounds, menu)
+- [x] Interaction as in `hsclone`: click a card to select, click a slot or target to play it; valid
+      targets highlighted; attackers glow. Drag and drop is now the main way (hand to board/target/play area,
+      minion or hero onto an enemy), with click kept as the fallback; arrows for both players
 - [ ] Hot-seat/two-tab play via boardgame.io `Local`, with no hard-coded hosts or ports
-- [ ] Reuse the existing card art and `Card`/`Minion` renderers
-- [ ] Port the card art from `hsclone`'s `public/` dir into this repo (it has its own art that this repo
-      doesn't; deferred until the board is otherwise working, but it has to happen). Check provenance and
-      licences as it comes over (see the art provenance item in Milestone 4)
+- [x] Card art on the board (hand, board, previews, overlays) via CSS backgrounds; the old `Card`/`Minion`
+      renderers are not used by `/play`
+- [x] Port the card art from `hsclone`'s `public/` dir: all 132 CORE cards and the entourage cards that have
+      art are ported, plus the GAME cards. PRIME has art for only 2 of 254 cards anywhere. Still open: the
+      provenance and licence check (Milestone 4), and `CORE_088` is "FPO" placeholder art
 
 Done when: you can play a full game against yourself in the browser, to a win.
 
 ## Milestone 3: Bot and balance tooling
 
-- [~] A bot that only makes legal moves, so solo play works (start simple: random, then greedy).
+- [x] A bot that only makes legal moves, so solo play works (start simple: random, then greedy).
       Random bot and greedy bot (`engine/bots/greedy-bot.ts`, one-move lookahead) done and wired into `/play`; the menu switches between them
 - [x] Bot-vs-bot simulation: run N games per deck matchup and print win rates and per-card stats (`npm run sim`)
 - [x] A few starter decks for the bot (Aggro, Midrange, Control; `engine/starter-decks.ts`)
