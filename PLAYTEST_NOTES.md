@@ -80,3 +80,10 @@
 - [x] i notice an invisible card in the hand sometimes and stays invisible until i interact with a different card, then it is visible (cause: playing the far-right card unmounts its button, so its dragend never cleared the "dragged card" state and the next card drawn into that slot came up hidden; now cleared on any drop/dragend and on every state change)
 - [x] i had a spell damage increase card in play, and the in-hand infernal hanzo text updated, but not the choose modal version (the choose-one option now shows the boosted damage, e.g. "Deal 2 damage"; the armor option stays 1 because Spell Damage only raises damage)
 - the bot played tidal primeordial and that showed in the left-side popup effect, but then it cast healing potion on itself and that card didnt show.
+- [x] ancient portal (PRIME_220) needs to reduce the cost of the minions (cost modification is in the engine: your minions in hand cost 2 less, not below 1, and the hand shows the lowered cost in green; same machinery covers Demon Sorcerer, Spider Mech, Bark Creature, Volcanic Giant)
+- the bot had johnny crow on the board, and killed my krakken (since his focus shot did 5 dmg now instead of 4, which is good) but the log didnt reflect that his focus shot was booned +1. so it reads the shot did 4 damage, the krakken took 5 damage and died
+- cronus affects the game's turn timer (which we dont have implemented, not sure how that works with boardgame or the frontend in a way a user can't manipulate it. normally turns should be 60s)
+- deckbuilder: clicking a card enlarges it (like a modal with backdrop) and shows its flavor text if it has any, plus a button to cancel or add it to the deck. you can view cards even if you cant add them
+  - the modal should also show the entourage connected to the parent if applicable
+- i think the card wrapper graphic is incorrect. its images/hs/*. we need to drop the /hs/ and migrate those
+  - on that note. is having these image assets too "heavy"? is it possible to build something similar to our current card frame using just html/css/svg?
