@@ -24,6 +24,7 @@ const baseCard = (id: string, type: Card['type'], cost: number, mechanics: strin
   numbers: {},
   textTemplate: '',
   text: '',
+  richText: '',
   entourage: [],
   isToken: false,
   elite: false,

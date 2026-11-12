@@ -25,6 +25,7 @@ describe('typeLabel', () => {
     expect(typeLabel({ type: 'minion', race: 'SPRITE' })).toBe('SPRITE');
   });
   it('shows the type for a minion with no race, and for other cards', () => {
+    expect(typeLabel({ type: 'minion', race: 'ELEMENT', raceName: 'Primordial' })).toBe('Primordial');
     expect(typeLabel({ type: 'minion', race: 'NONE' })).toBe('minion');
     expect(typeLabel({ type: 'minion' })).toBe('minion');
     expect(typeLabel({ type: 'spell', race: 'SPRITE' })).toBe('spell');

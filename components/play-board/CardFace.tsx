@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Card } from '../../engine';
-import { artUrl, faceUnit, frameFor, gemFor, showsStats, typeLabel } from './card-face-model';
+import { artUrl, faceUnit, parseRichText, withSpellDamageText, frameFor, gemFor, showsStats, typeLabel } from './card-face-model';
 import fontSizeBasedOnCharacterLength from '../../utils/font-size-based-on-length';
 import styles from './card-face.module.scss';
 
@@ -11,6 +11,8 @@ interface CardFaceProps {
   /** Override the printed attack / health (for a card whose stats are not the printed ones). */
   attack?: number;
   health?: number;
+  /** Spell damage on the viewer's board: a spell's damage numbers show raised (in a different colour). */
+  spellDamage?: number;
 }
 
 /**
@@ -18,7 +20,7 @@ interface CardFaceProps {
  * gem, name ribbon, text, type, rarity gem and attack/health badges are laid over it. Everything is positioned in the
  * frame's own 178 x 250 design units, scaled by the `--u` custom property (pixels per unit).
  */
-export const CardFace = ({ card, width, attack, health }: CardFaceProps) => {
+export const CardFace = ({ card, width, attack, health, spellDamage = 0 }: CardFaceProps) => {
   const art = artUrl(card.id);
   const stats = showsStats(card.type);
   const label = typeLabel(card);
@@ -40,7 +42,25 @@ export const CardFace = ({ card, width, attack, health }: CardFaceProps) => {
         <span style={{ fontSize: `${fontSizeBasedOnCharacterLength(card.name ?? '')}em` }}>{card.name}</span>
       </span>
       <span className={`${styles.text} ${styles.val}`}>
-        <span>{card.text}</span>
+        <span>
+          {parseRichText(withSpellDamageText(card.richText || card.text, card.type === 'spell' ? spellDamage : 0)).map((part, i) =>
+            part.kind === 'br' ? (
+              <br key={i} />
+            ) : part.kind === 'text' ? (
+              <React.Fragment key={i}>{part.text}</React.Fragment>
+            ) : part.kind === 'boost' ? (
+              <span key={i} className={styles.boost}>
+                {part.text}
+              </span>
+            ) : part.kind === 'small' ? (
+              <small key={i} className={styles.small}>
+                {part.text}
+              </small>
+            ) : (
+              React.createElement(part.kind, { key: i }, part.text)
+            )
+          )}
+        </span>
       </span>
 
       {stats && (

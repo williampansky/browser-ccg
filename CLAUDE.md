@@ -64,13 +64,18 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   dropped on the board or play area keep their ghost. It uses native browser drag, so it does not work on touch screens.
 - **Debug URL params** (read on every "New game" while they are in the URL): `?first=0|1` picks who goes first
   (0 = Player 1); `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand, in order.
-  Handy for testing a specific card, e.g. `/play?first=0&p0=CORE_045`.
+  `?b0=CORE_027,CORE_061` and `?b1=...` put ready-to-attack minions on that player's board (no warcry or aura runs),
+  `?w0=CORE_076` and `?w1=...` equip a weapon, `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10). Handy for testing a specific card, e.g. `/play?first=0&p0=CORE_045`.
 
 ## Working style: browser checks
 
 - **Always close Playwright when you are done with it** (`browser_close`), then say so in the reply, so the author is
   not left looking at an open browser window thinking work is still going on. Prefer the headless server
   (`playwright-headless`) for routine checks; use the headed one (`playwright`) only to show something live.
+
+- **Never use port 3000 for Playwright checks.** The author playtests on 3000 at the same time. Start your own dev
+  server on another port (`npm run dev -- -p 3100`), point Playwright at that, and **when you are done close the
+  browser and stop that dev server** (kill the process on the port), so nothing is left running.
 
 ## Commands
 

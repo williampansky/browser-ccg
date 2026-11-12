@@ -54,4 +54,12 @@
 - [x] dragging should not bring the card hover along with it (or at least not be visible i mean) [desktop/Screenshot 2026-11-11 at 7.35.03 PM.png and Screenshot 2026-11-11 at 7.36.41 PM.png (player bar)]
 - [x] dragging should hide the "in hand" popup too [desktop/Screenshot 2026-11-11 at 7.37.11 PM.png]
 - [x] i still want to drag+drop a choose card to cast it, but then click to select inside the modal is fine
-- 
+- [x] attack hero button, apeshark had onslaught but only attacked once (could not reproduce; onslaught swings twice by hand and via the button, checked with `?b0=CORE_110,CORE_027&w0=CORE_076`)
+  - [x] hero also did not use weapon. 
+  - the attack hero button is a "nuke the enemy player" to not force a player to drag everything
+- [ ] (done, needs a look: only unit-tested) i had hypnotoad on the board, so the spells in my hand should have their text updated (with a dif color) to inform a player that the damage was +amount
+- [ ] (done, needs a look) we need to probably pin/fix the cards to top (opponent) and bottom(player) so the board doesnt shift when a hand is emptied
+- [x] core_007 i noticed a visual text error, then noticed the airtable's "br" line breaks are not honored on the card text
+  - [x] same with small text elem
+- [x] i also want you to not use port 3000 when doing playrights; so it doesnt conflict if im useing it for playtesting at the same time
+- [x] i noticed on CORE_018, the minion text says its an element when it should read the constant value of "Primordial"

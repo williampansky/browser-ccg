@@ -10,8 +10,8 @@ export const frameFor = (rarity?: string): FrameRarity =>
 export const gemFor = frameFor;
 
 /** The banner under the top edge: a minion's race, else its type ("Minion", "Spell"...). */
-export const typeLabel = (card: { type: string; race?: string }): string =>
-  card.type === 'minion' && card.race && card.race !== 'NONE' ? card.race : card.type;
+export const typeLabel = (card: { type: string; race?: string; raceName?: string }): string =>
+  card.type === 'minion' && card.race && card.race !== 'NONE' ? card.raceName ?? card.race : card.type;
 
 /** Minions and weapons show an attack and a health/durability badge; spells and items don't. */
 export const showsStats = (type: string): boolean => type === 'minion' || type === 'weapon';
@@ -27,3 +27,26 @@ export const artUrl = (id?: string): string | undefined => {
   const m = /^([A-Z]+)_(\w+)$/.exec(id ?? '');
   return m ? `/images/sets/SET_${m[1]}/${m[2]}-CARD.jpg` : undefined;
 };
+
+export type RichPart = { kind: 'text' | 'strong' | 'em' | 'small' | 'boost'; text: string } | { kind: 'br' };
+
+/** Splits card text (`<br>`, `<strong>`, `<em>`, `<small>` only; see `sanitizeRichText`) into parts to render. */
+export const parseRichText = (html: string): RichPart[] => {
+  const parts: RichPart[] = [];
+  let style: 'text' | 'strong' | 'em' | 'small' | 'boost' = 'text';
+  for (const tok of html.split(/(<\/?(?:strong|em|small)>|<br>)/)) {
+    if (!tok) continue;
+    if (tok === '<br>') parts.push({ kind: 'br' });
+    else if (/^<(strong|em|small|boost)>$/.test(tok)) style = tok.slice(1, -1) as typeof style;
+    else if (/^<\/(strong|em|small|boost)>$/.test(tok)) style = 'text';
+    else parts.push({ kind: style, text: tok });
+  }
+  return parts;
+};
+
+/**
+ * Shows what a spell will really deal with `bonus` spell damage: each "N damage" in the text becomes "N+bonus damage",
+ * the new number wrapped in `<boost>` so the face can colour it. No bonus, no change.
+ */
+export const withSpellDamageText = (html: string, bonus: number): string =>
+  bonus > 0 ? html.replace(/(\d+)(?= damage)/g, (_m, n: string) => `<boost>${Number(n) + bonus}</boost>`) : html;

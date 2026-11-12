@@ -21,6 +21,8 @@ import {
   TargetRef,
 } from '../../engine';
 import { gapIndex } from './board-position';
+import { applyDebugSetup, DebugSetup } from './debug-setup';
+import { nukeHero } from './nuke-hero';
 import { CardFace } from './CardFace';
 import { HeroBar } from './HeroBar';
 import { deckRows } from './deck-rows';
@@ -76,7 +78,7 @@ const tipByName = new Map(
   cards.map((c) => [
     c.name,
     `${c.name} (${c.cost})${c.type === 'minion' || c.type === 'weapon' ? ` ${c.attack}/${c.health}` : ''}${
-      c.race && c.race !== 'NONE' ? ` ${c.race.toLowerCase()}` : ''
+      c.race && c.race !== 'NONE' ? ` ${(c.raceName ?? c.race).toLowerCase()}` : ''
     }: ${plain(c.text)}`,
   ])
 );
@@ -106,7 +108,7 @@ const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right') => {
 const PREVIEW_WIDTH = 260;
 /** Width of a card in hand at full size (the hand shrinks them together when it gets crowded). */
 const HAND_CARD_WIDTH = 144;
-const HandPreview = ({ card, children }: { card?: Card; children: (h: { onMouseEnter: (e: React.MouseEvent<HTMLElement>) => void; onMouseLeave: () => void; onDragStart: () => void }) => React.ReactNode }) => {
+const HandPreview = ({ card, spellDamage, children }: { card?: Card; spellDamage?: number; children: (h: { onMouseEnter: (e: React.MouseEvent<HTMLElement>) => void; onMouseLeave: () => void; onDragStart: () => void }) => React.ReactNode }) => {
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   return (
     <>
@@ -121,7 +123,7 @@ const HandPreview = ({ card, children }: { card?: Card; children: (h: { onMouseE
       {pos && card && (
         // Keep the whole preview on screen: it grows upward from the hovered card.
         <div className={styles.handPreview} style={{ left: pos.x, top: Math.max(pos.y, PREVIEW_WIDTH * 1.4 + 24) }}>
-          <CardFace card={card} width={PREVIEW_WIDTH} />
+          <CardFace card={card} width={PREVIEW_WIDTH} spellDamage={spellDamage} />
         </div>
       )}
     </>
@@ -195,13 +197,28 @@ const targetOf = (a: Action): TargetRef | undefined =>
 
 /**
  * Debug URL params for /play (read on every new game): `?first=0|1` picks who goes first (Player 1 = 0),
- * `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand (in hand order).
+ * `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand (in hand order),
+ * `?b0=CORE_027,...` and `?b1=...` put ready minions on that player's board, `?w0=CORE_076` and `?w1=...` equip a weapon,
+ * `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10).
  */
-const debugParams = (): { first?: PlayerId; hands: Record<PlayerId, string[]> } => {
+const debugParams = (): { first?: PlayerId; hands: Record<PlayerId, string[]>; setup: DebugSetup } => {
   const q = new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search);
   const list = (k: string) => (q.get(k) ?? '').split(',').map((x) => x.trim()).filter((id) => byId.has(id));
   const f = q.get('first');
-  return { first: f === '0' || f === '1' ? f : undefined, hands: { '0': list('p0'), '1': list('p1') } };
+  const weapon = (k: string) => list(k)[0];
+  const energy = (k: string) => {
+    const n = parseInt(q.get(k) ?? '', 10);
+    return Number.isNaN(n) ? undefined : Math.min(10, Math.max(0, n));
+  };
+  return {
+    first: f === '0' || f === '1' ? f : undefined,
+    hands: { '0': list('p0'), '1': list('p1') },
+    setup: {
+      boards: { '0': list('b0'), '1': list('b1') },
+      weapons: { '0': weapon('w0'), '1': weapon('w1') },
+      energy: { '0': energy('e0'), '1': energy('e1') },
+    },
+  };
 };
 
 const newGame = (): { state: GameState; rng: Rng; decks: Record<PlayerId, string[]>; first: PlayerId } => {
@@ -223,6 +240,7 @@ const newGame = (): { state: GameState; rng: Rng; decks: Record<PlayerId, string
       });
     });
   });
+  state = applyDebugSetup(state, dbg.setup, byId);
   return { state, rng, decks, first };
 };
 
@@ -489,36 +507,32 @@ export const PlayBoard = () => {
     return true;
   };
 
-  // "Attack hero": with no enemy minions in the way, every ready minion hits the enemy hero, left to right.
-  const heroHits = actions.filter(
-    (a): a is Extract<Action, { type: 'Attack' }> => a.type === 'Attack' && a.target.kind === 'hero' && a.target.player === foe
+  // Spell damage from the viewer's board, shown on the spells in their hand.
+  const mySpellDamage = state.players[viewer].board.reduce(
+    (sum, m) => sum + (getCardDef(byId.get(m.cardId)!)?.spellDamage ?? 0),
+    0
   );
-  const canAttackHero = !over && myTurn && state.players[foe].board.length === 0 && heroHits.length > 0;
-  const attackHero = () => {
-    if (!canAttackHero || !rngRef.current) return;
-    const ctx = { rng: rngRef.current, catalog: byId };
-    let cur = state;
-    const lines: string[][] = [];
-    const heard: GameEvent[] = [];
-    const run = (action: Action) => {
-      const r = applyAction(cur, action, ctx);
-      if ('error' in r) return false;
-      lines.push(describeEvents(r.events, byId, cur, r.state));
-      heard.push(...r.events);
-      cur = r.state;
-      return true;
-    };
-    // Left to right; a minion keeps swinging while it can (Onslaught attacks twice).
-    for (const m of state.players[me].board) {
-      for (let swings = 0; swings < 4 && cur.status === 'playing'; swings++) {
-        const hit = legalActions(cur, me, byId).find(
-          (a) => a.type === 'Attack' && a.attackerId === m.instanceId && a.target.kind === 'hero' && a.target.player === foe
-        );
-        if (!hit || !run(hit)) break;
+
+  // "Attack hero" button: with no enemy minions in the way, every ready minion and the hero's weapon hit the enemy hero.
+  const heroHits = actions.filter(
+    (a) => (a.type === 'Attack' || a.type === 'WeaponAttack') && a.target.kind === 'hero' && a.target.player === foe
+  );
+  const canNukeHero = !over && myTurn && state.players[foe].board.length === 0 && heroHits.length > 0;
+  const onNukeHero = () => {
+    if (!canNukeHero || !rngRef.current) return;
+    const result = nukeHero(state, me, rngRef.current, byId);
+    if (result.steps.length === 0) return;
+    let cur = result.state;
+    const lines = result.steps.map((s) => describeEvents(s.events, byId, s.before, cur));
+    const heard = result.steps.flatMap((s) => s.events);
+    if (cur.status === 'playing') {
+      const r = applyAction(cur, { type: 'EndTurn' }, { rng: rngRef.current, catalog: byId });
+      if (!('error' in r)) {
+        lines.push(describeEvents(r.events, byId, cur, r.state));
+        heard.push(...r.events);
+        cur = r.state;
       }
     }
-    if (cur === state) return;
-    if (cur.status === 'playing') run({ type: 'EndTurn' });
     setSelection(null);
     (document.activeElement as HTMLElement | null)?.blur?.();
     setState(cur);
@@ -713,7 +727,7 @@ export const PlayBoard = () => {
         onClick={() => clickMinion(owner, m)}
       >
         <span className={styles.name}>{card?.name ?? m.cardId}</span>
-        {card?.race && card.race !== 'NONE' && <span className={styles.race}>{card.race.toLowerCase()}</span>}
+        {card?.race && card.race !== 'NONE' && <span className={styles.race}>{(card.raceName ?? card.race).toLowerCase()}</span>}
         <span className={styles.stats}>
           <span className={styles.atk}>{m.attack}</span>
           <span className={m.health < m.maxHealth ? styles.hurt : styles.hp}>{m.health}</span>
@@ -763,7 +777,7 @@ export const PlayBoard = () => {
     const isChoice = actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.choice !== undefined);
     const draggable = !over && playable;
     return (
-      <HandPreview key={index} card={card}>
+      <HandPreview key={index} card={card} spellDamage={mySpellDamage}>
         {(hover) => (
       <button
         {...hover}
@@ -795,7 +809,7 @@ export const PlayBoard = () => {
           setHoverGap(null);
         }}
       >
-        {card && <CardFace card={card} width={HAND_CARD_WIDTH} />}
+        {card && <CardFace card={card} width={HAND_CARD_WIDTH} spellDamage={mySpellDamage} />}
       </button>
         )}
       </HandPreview>
@@ -926,7 +940,7 @@ export const PlayBoard = () => {
                     <span className={styles.type}>
                       {top?.type}
                       {top?.type === 'minion' || top?.type === 'weapon' ? ` ${top?.attack}/${top?.health}` : ''}
-                      {top?.race && top.race !== 'NONE' ? ` · ${top.race.toLowerCase()}` : ''}
+                      {top?.race && top.race !== 'NONE' ? ` · ${(top.raceName ?? top.race).toLowerCase()}` : ''}
                     </span>
                     <span className={styles.text}>{top?.text}</span>
                     <span className={styles.modalPick}>{choiceLabel(c).split(':')[0]}</span>
@@ -1025,12 +1039,12 @@ export const PlayBoard = () => {
             </span>
           )}
           {message && <span className={styles.error}>{message}</span>}
-          {canAttackHero && (
+          {canNukeHero && (
             <button
               type="button"
               className={styles.attackHero}
               title="Attack the enemy hero with every ready minion, left to right, then end your turn"
-              onClick={attackHero}
+              onClick={onNukeHero}
             >
               Attack hero
             </button>

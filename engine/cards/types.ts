@@ -42,6 +42,8 @@ export interface Card {
   health?: number;
   /** e.g. `SPRITE`, `NONE`. Minions only. */
   race?: string;
+  /** The race as the glossary names it (`ELEMENT` -> `Primordial`); show this, but compare on `race`. */
+  raceName?: string;
   /** e.g. `FREE`, `COMMON`, `MYTHIC` */
   rarity: string;
   /** e.g. `SET_002` */
@@ -56,6 +58,8 @@ export interface Card {
   textTemplate: string;
   /** Plain text with number tokens substituted and glossary tokens replaced by display names */
   text: string;
+  /** Like `text`, but keeps `<br>`, `<strong>`, `<em>` and `<small>` for the card face. */
+  richText: string;
   /** Resolved ids of the entourage (token) cards this card can create */
   entourage: string[];
   /** `true` for tokens created by other cards (not collectible, not in decks) */

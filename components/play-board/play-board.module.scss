@@ -635,6 +635,9 @@
 // The hand never wraps: the cards shrink together instead.
 .hand {
   flex-wrap: nowrap;
+  // Keep the room of a full-size card (144px wide, 1 : 1.4) so the board does not shift when the hand empties.
+  min-height: 202px;
+  align-items: flex-end;
 
   .handSlot {
     zoom: var(--hand-zoom, 1);

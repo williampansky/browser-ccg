@@ -71,6 +71,20 @@ export function sanitizeText(html: string): string {
     .trim();
 }
 
+/**
+ * Like `sanitizeText`, but keeps the formatting a card face needs: line breaks become `<br>` and only `<strong>`,
+ * `<em>` and `<small>` tags survive. Other whitespace is collapsed.
+ */
+export function sanitizeRichText(html: string): string {
+  return html
+    .replace(/<br\s*\/?\s*>/gi, '\u0000')
+    .replace(/<(\/?)(strong|em|small)\s*>/gi, (_m, close: string, tag: string) => `<${close}${tag.toLowerCase()}>`)
+    .replace(/<(?!\/?(?:strong|em|small)>)[^>]*>/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/ ?\u0000 ?/g, '<br>')
+    .trim();
+}
+
 export function loadCards(
   input: LoadCardsInput,
   options: LoadCardsOptions = {}
@@ -229,6 +243,8 @@ function normaliseCard(
     report('warning', code, id, message)
   );
 
+  const richText = renderText(typeof raw.text === 'string' ? sanitizeRichText(raw.text) : '', numbers, glossary, () => {});
+
   // entourage: a comma-separated string of ids; resolved later
   const entourage =
     typeof raw.entourage === 'string'
@@ -252,6 +268,7 @@ function normaliseCard(
     numbers,
     textTemplate,
     text,
+    richText,
     entourage,
     isToken,
     elite: raw.elite === true,
@@ -269,7 +286,10 @@ function normaliseCard(
     report('warning', 'missing-field', id, 'minion is missing attack or health');
   }
   const race = stripPrefix(raw.race, 'RACE_');
-  if (race) card.race = race;
+  if (race) {
+    card.race = race;
+    card.raceName = glossary.get(`%RACE_${race}%`) ?? race;
+  }
   if (playType) card.playType = playType;
   const playContext = stripSymbol(raw.playContext);
   if (playContext) card.playContext = playContext;
