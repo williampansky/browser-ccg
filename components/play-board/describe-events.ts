@@ -1,4 +1,14 @@
+import { getCardDef } from '../../engine';
 import type { CardCatalog, GameEvent, GameState, MinionInstance, TargetRef } from '../../engine';
+
+export const MYSTERY_CATEGORY_LABEL = { attack: 'Attack', spell: 'Spell', minion: 'Minion', damage: 'Damage', death: 'Death' } as const;
+
+/** What the opponent is told about a face-down Mystery: its category only. */
+export const mysteryCategory = (cardId: string, catalog: CardCatalog): string => {
+  const c = catalog.get(cardId);
+  const cat = c && getCardDef(c)?.mystery?.category;
+  return cat ? MYSTERY_CATEGORY_LABEL[cat] : '?';
+};
 
 /** Finds a card name for an instance id, looking in every state given (an instance may have died). */
 export const nameOfInstance = (id: number, catalog: CardCatalog, ...states: GameState[]): string => {
@@ -36,7 +46,14 @@ export const describeEvents = (
         lines.push(`${who(e.player)} plays ${name(e.instanceId)}${e.target ? ` (warcry on ${target(e.target)})` : ''}`);
         break;
       case 'CardPlayed':
+        if (e.mystery) {
+          lines.push(`${who(e.player)} sets a Mystery (${mysteryCategory(e.cardId, catalog)})`);
+          break;
+        }
         lines.push(`${who(e.player)} casts ${cardName(e.cardId)}${e.target ? ` on ${target(e.target)}` : ''}`);
+        break;
+      case 'MysteryRevealed':
+        lines.push(`${who(e.player)}'s Mystery is revealed: ${cardName(e.cardId)}`);
         break;
       case 'WeaponEquipped':
         lines.push(`${who(e.player)} equips ${cardName(e.cardId)}`);

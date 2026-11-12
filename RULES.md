@@ -607,3 +607,21 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
   see every minion on either board die; 128 only your own Creatures.
 - **Misc**: 062/217 hurt your own hero; 061's "take 1 damage" is the Hut itself; 082 can aim at either side's 7+ Attack minion; 150 disables the
   survivors; 232 lowers Health by 1 (not damage); 241 does not spend the armor; 231 counts your hero too; 123's heal goes to your own hero.
+
+### Mysteries (2026-11-12; the Mystery cards were rewritten per `balance/PRIME-DISTANCE.md`)
+
+- **Placing**: a Mystery spell goes face down in your single Mystery slot instead of resolving (`PlayerState.mystery`). You can hold only one: a second
+  cannot be played (`MYSTERY_ACTIVE`, and `legalActions` does not offer it). It counts as casting a spell for triggers (marked `mystery: true` on the
+  `CardPlayed` event, so other Mysteries do not react to it) but is not added to the "cards played" history.
+- **Reacting**: only during the OPPONENT's turn, once, then it is spent (`MysteryRevealed`). Each Mystery has a **category** the opponent is told
+  (Attack, Spell, Minion, Damage, Death); the owner sees the card. The log says "sets a Mystery (Attack)" and reveals the card when it fires.
+- **Before the action**: Attack-category Mysteries and the spell-redirect one run BEFORE damage, so they can change the target or kill the attacker (in which
+  case the attack does not happen). Others run after their event (a minion played, the hero damaged, a minion died).
+- **Rewritten cards**: 143 Armor = max(4, 2 x attacker's Attack), after which the hit lands; 127 the attacker is Disabled and loses 2 Attack *before* it hits
+  (the attack still happens, weaker); 148 damage = your hero's missing Health (30 - health, armor ignored); 126 your weapon hits the attacker first for its
+  Attack without losing durability, needs a weapon; 157 two Guard Mice, the attack goes to one (works on a hero weapon attack too); 152 a targeted
+  enemy spell hits a random minion its caster controls (unchanged if they have none); 146 copies the spell to your hand (spells only, never items or a placed
+  Mystery); 159 halves Health (rounded up) and Disables; 129 damage = the minion's Cost; 158 returns your dying minion (never a token) to your hand, 1 cheaper
+  (`CardInstance.costDelta`); 156 on 5 or more damage in one hit: heal 5 and draw.
+- **Other Mystery cards**: 132 is a plain spell (reveals Concealed minions, destroys the enemy Mystery, draws only if it did); 067 takes the enemy's Mystery (destroyed
+  if you already hold one); 250/149 buff at the end of your turn while you hold one; 045 grows whenever any Mystery is played. 147 (next Mystery costs 0) is not built yet.

@@ -33,7 +33,7 @@ import { loadDecks } from '../deck-builder/deck-storage';
 import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
 import { HeroBar } from './HeroBar';
 import { deckRows } from './deck-rows';
-import { describeEvents } from './describe-events';
+import { describeEvents, mysteryCategory } from './describe-events';
 import { isMuted, playSounds, setMuted, soundsFor } from './sounds';
 import { targetLinePath, TargetLineStyle } from './target-line';
 import styles from './play-board.module.scss';
@@ -794,6 +794,13 @@ export const PlayBoard = () => {
         armor={p.armor}
         energy={p.energy}
         overcharge={p.overcharge}
+        mystery={
+          p.mystery
+            ? owner === viewer
+              ? `${byId.get(p.mystery.cardId)?.name} (${mysteryCategory(p.mystery.cardId, byId)})`
+              : `Mystery (${mysteryCategory(p.mystery.cardId, byId)})`
+            : undefined
+        }
         deck={p.deck.length}
         hand={p.hand.length}
         weapon={weapon && p.weapon ? { name: weapon.name ?? 'Weapon', attack: p.weapon.attack, durability: p.weapon.durability } : null}

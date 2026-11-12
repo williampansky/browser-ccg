@@ -22,6 +22,8 @@ interface HeroBarProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement
   energy: { current: number; total: number };
   /** Energy locked at the start of this player's next turn (Overcharge) */
   overcharge?: number;
+  /** The player's face-down Mystery: its card name (the viewer's own) or just its category (the opponent's) */
+  mystery?: string;
   deck: number;
   hand: number;
   weapon: HeroBarWeapon | null;
@@ -51,6 +53,7 @@ export const HeroBar = ({
   armor,
   energy,
   overcharge = 0,
+  mystery,
   deck,
   hand,
   weapon,
@@ -114,6 +117,11 @@ export const HeroBar = ({
             {overcharge > 0 && <em title={tt(`Overcharge: ${overcharge} energy locked next turn`)}> 🔒{overcharge}</em>}
           </span>
         </span>
+        {mystery && (
+          <span className={styles.mystery} title={tt('A face-down Mystery: it reacts on the opponent\'s turn')}>
+            ? {mystery}
+          </span>
+        )}
         <span className={styles.counts}>
           <span title={tt('Cards left in your deck')}>
             <i className={styles.iconDeck} />

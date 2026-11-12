@@ -196,6 +196,18 @@ $bonus: #ffd45e;
   color: $energy;
 }
 
+.mystery {
+  align-self: center;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid #9b7bd4;
+  background: rgba(155, 123, 212, 0.18);
+  color: #d8c8f5;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .counts {
   display: flex;
   gap: 0.9rem;
