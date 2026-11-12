@@ -215,6 +215,16 @@ describe('summons and the rest', () => {
     }
     expect(seen.size).toBeGreaterThan(1);
   });
+  it('057b (a backup minion) is a plain Guard minion, the other two are not', () => {
+    const guardOf = new Map<string, boolean>();
+    for (let seed = 1; seed <= 40; seed++) {
+      const m = play(setup('CORE_057'), undefined, seed).state.players['0'].board[0];
+      guardOf.set(m.cardId, !!m.keywords.guard);
+    }
+    expect(guardOf.get('CORE_057b')).toBe(true);
+    expect(guardOf.get('CORE_057a')).toBe(false);
+    expect(guardOf.get('CORE_057c')).toBe(false);
+  });
   it('064 summons a pair of 0/2 Guard minions', () => {
     const b = play(setup('CORE_064')).state.players['0'].board;
     expect(b.map((m) => [m.attack, m.health, m.keywords.guard])).toEqual([[0, 2, true], [0, 2, true]]);

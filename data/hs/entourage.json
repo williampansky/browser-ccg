@@ -146,10 +146,10 @@
     "set": "%SET_002%",
     "attack": 2,
     "mechanics": [
-      "%ON_PLAY%"
+      "%BULWARK%"
     ],
     "rarity": "%RARITY_COMMON%",
-    "text": "Restore 2 Health to you and all your minions",
+    "text": "<strong>%BULWARK%</strong>",
     "isEntourage": true,
     "type": "%TYPE_MINION%",
     "cardClass": "0 %CLASS_NONE%",

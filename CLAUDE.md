@@ -42,10 +42,10 @@ earlier `hsclone` repo as the rules reference. Read these first:
 The author was about to **playtest `/play`** (vs the random AI) and give feedback before deciding the
 order below. Candidates, roughly in the order discussed:
 
-1. **Playtest the full pool** and confirm or change the readings in `RULES.md` Appendix B. Still open: the summoned
-   TacMedic token's warcry does not fire (summoned minions have no warcry), so TacMedic needs different card text
-   (the author was asked; options were an end-of-turn heal or a demise heal). Decided: `CORE_007` only destroys the
-   weapon (follow the text).
+1. **Playtest the full pool** and confirm or change the readings in `RULES.md` Appendix B. Decided: `CORE_007` only destroys the
+   weapon (follow the text), and TacMedic (`CORE_057b`, a summoned token whose warcry could never fire) is now a plain
+   2/4 Guard. **That TacMedic edit was made by hand in `data/hs/entourage.json`; the author must make the same change
+   (mechanic Guard instead of Warcry, text) in Airtable, or the next `npm run airtable:hs` pull reverts it.**
 2. **Port the card art** from `hsclone`'s `public/` dir (this repo lacks it) and use it on the board.
    Check provenance/licences. The board is text-only until then.
 3. **Bot-vs-bot win-rate tables** (Milestone 3; the greedy bot is done). Tune `evaluate` in `greedy-bot.ts` against them.
