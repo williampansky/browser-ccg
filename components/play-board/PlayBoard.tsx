@@ -21,7 +21,7 @@ import {
   TargetRef,
 } from '../../engine';
 import { gapIndex } from './board-position';
-import { fanDrop, fanRotation, handZoom } from './hand-fan';
+import { fanDrop, fanRotation, HAND_CARD_HEIGHT, handSink as computeHandSink, handZoom } from './hand-fan';
 import { applyDebugSetup, DebugSetup } from './debug-setup';
 import { nukeHero } from './nuke-hero';
 import { CardFace } from './CardFace';
@@ -403,14 +403,15 @@ export const PlayBoard = () => {
     if (!el) return;
     const measure = () => {
       setHandWidth(el.clientWidth);
-      setHandSink(Math.round(Math.min(100, Math.max(-120, window.innerHeight - HAND_PEEK - el.getBoundingClientRect().top))));
+      const zoom = handZoom(el.clientWidth, el.childElementCount, HAND_CARD_WIDTH);
+      setHandSink(computeHandSink(window.innerHeight, el.getBoundingClientRect().bottom, zoom, HAND_PEEK));
     };
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     ro.observe(document.documentElement);
     measure();
     return () => ro.disconnect();
-  }, [state === null]);
+  }, [state]);
 
   // Space ends the turn (when you can), unless a choice dialog is open.
   const [hoverGap, setHoverGap] = useState<number | null>(null);

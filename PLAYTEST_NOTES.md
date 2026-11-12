@@ -70,4 +70,7 @@
   - [x] move the hand down further offscreen akin to hsclone for player and enemy [desktop/Screenshot 2026-11-12 at 7.43.05 AM.png]
   - [x] clickable hero area obstructed by hand overlay [desktop/Screenshot 2026-11-12 at 7.45.49 AM.png]
   - [x] dragging is off a bit [Screenshot 2026-11-12 at 7.47.39 AM.png] in this screenshot, i dragged the card up from hand. my cursor was over the hero bar at this point, and the card was far higher than my cursor
-  
+- lets make shift+space bar run the nukeplayer option if available
+- bug: played steel gauntlet with crude weapon equipped. it enhanced the attack like it should, but the boon stayed past my turn like a buff - instead of a temp boon  
+- lets highlight the weapon when its useable for an attack
+- adjust the global drop area to be anywhere on the board higher than the player bar

@@ -28,3 +28,21 @@ export const handZoom = (width: number, count: number, cardWidth: number): numbe
   const needed = count * cardWidth - (count - 1) * HAND_OVERLAP;
   return Math.min(1, width / needed);
 };
+
+/** The height of a card in hand at full size (1 : 1.4 of the 144px width, rounded as in the CSS). */
+export const HAND_CARD_HEIGHT = 202;
+
+/** The most the cards sink below their fan position, in px as seen on screen (hsclone's hand shows only their tops). */
+const MAX_VISIBLE_SINK = 100;
+
+/**
+ * How far (CSS px, unzoomed: the hand's `zoom` scales translate lengths too) to sink the cards so `peek` px of their tops
+ * show above the bottom edge of the window. The cards sit at the bottom of the row and shrink with the zoom, so their top
+ * is `rowBottom - cardHeight * zoom`, not the row's top. Capped at 100px on screen; negative on a short window, where the
+ * cards must rise instead so they never vanish offscreen.
+ */
+export const handSink = (windowHeight: number, rowBottom: number, zoom: number, peek: number): number => {
+  const cardsTop = rowBottom - HAND_CARD_HEIGHT * zoom;
+  const wanted = (windowHeight - peek - cardsTop) / zoom;
+  return Math.round(Math.min(MAX_VISIBLE_SINK / zoom, Math.max(-120, wanted)));
+};

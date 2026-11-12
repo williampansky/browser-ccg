@@ -147,7 +147,8 @@
 
   &:hover {
     z-index: 10;
-    transform: translateY(-70px) rotate(0deg) scale(1.5);
+    // -70px on a tall window; the sink shrinks on a short one, so the lift grows by the same amount and the card stays on screen.
+    transform: translateY(calc(-170px + var(--hand-sink))) rotate(0deg) scale(1.5);
     transition: transform 100ms cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.15s;
   }
 }
@@ -180,7 +181,7 @@
 .slotSelected {
   filter: drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e);
   z-index: 20;
-  transform: translateY(-50px) rotate(0deg) scale(1.3);
+  transform: translateY(calc(-150px + var(--hand-sink))) rotate(0deg) scale(1.3);
 }
 
 .cost {
