@@ -1,12 +1,12 @@
 import { defineCard } from '../define-card';
-import { damage, silence } from '../../effects/primitives';
+import { damage, reduceAttack, silence } from '../../effects/primitives';
 import { chosenTarget } from '../../effects/selectors';
-import { anyCharacter, anyMinion } from '../../effects/filters';
+import { anyMinion, minionWhere } from '../../effects/filters';
 
-// PRIME_119 Maven of Lost Souls, warcry: "Select One: Deal 2 damage; or Suppress a minion"
+// PRIME_119 Maven of Lost Souls, Select One: "2 damage to a damaged minion; or Suppress a minion and give it -1 Attack"
 export default defineCard('PRIME_119', () => ({
   choices: [
-    { label: 'Deal 2 damage', target: anyCharacter(), onPlay: [damage(chosenTarget(), 2)] },
-    { label: 'Suppress a minion', target: anyMinion(), onPlay: [silence(chosenTarget())] },
+    { label: '2 damage to a damaged minion', target: minionWhere('any', (m) => m.health < m.maxHealth), onPlay: [damage(chosenTarget(), 2)] },
+    { label: 'Suppress a minion and give it -1 Attack', target: anyMinion(), onPlay: [silence(chosenTarget()), reduceAttack(chosenTarget(), 1)] },
   ],
 }));

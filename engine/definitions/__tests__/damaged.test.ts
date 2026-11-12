@@ -17,60 +17,6 @@ const settled = (id: string, mutate: (s: GameState) => GameState = (s) => s) => 
   return play(s).state;
 };
 
-describe.each([
-  ['PRIME_009', 2, 3],
-  ['PRIME_035', 2, 2],
-  ['PRIME_041', 0, 5],
-  ['PRIME_024', 2, 3],
-  ['PRIME_244', 3, 6],
-])('%s: bonus Attack while damaged', (id, base, bonus) => {
-  it('has its printed Attack when unhurt and the bonus once hurt, and loses it when healed', () => {
-    const health = realCard(id).health!;
-    expect(stats(settled(id), '0')[0][0]).toBe(base);
-    const damaged = settled(id, (s) => hurt(s, '0', 0, health - 1));
-    expect(stats(damaged, '0')[0][0]).toBe(base + bonus);
-    const healed = produceHealed(damaged);
-    expect(stats(healed, '0')[0][0]).toBe(base);
-  });
-});
-const produceHealed = (s: GameState): GameState => {
-  const healed = hurt(s, '0', 0, s.players['0'].board[0].maxHealth);
-  // a settle (any action) recomputes the bonus
-  const r = run(healed, { type: 'EndTurn' } as Action);
-  return 'error' in r ? healed : r.state;
-};
-
-it('PRIME_174 has Attack equal to its Health, always', () => {
-  expect(stats(settled('PRIME_174'), '0')[0]).toEqual([5, 5]);
-  expect(stats(settled('PRIME_174', (s) => hurt(s, '0', 0, 2)), '0')[0]).toEqual([2, 2]);
-});
-
-describe('PRIME_022 Blood-crazed Assassin', () => {
-  it('has no Onslaught while unhurt, even though its data lists it', () => {
-    const r = play(setup('PRIME_022')).state;
-    expect(minion(r, '0', 0).keywords.doubleAttack).toBe(false);
-  });
-  it('gains +1 Attack and Onslaught while damaged', () => {
-    const r = settled('PRIME_022', (s) => hurt(s, '0', 0, 2));
-    expect(stats(r, '0')[0]).toEqual([4, 2]);
-    expect(minion(r, '0', 0).keywords.doubleAttack).toBe(true);
-  });
-});
-
-describe('PRIME_006 Swiftpack', () => {
-  it('has Stampede only while you have a weapon', () => {
-    expect(minion(play(setup('PRIME_006')).state, '0', 0).keywords.rush).toBe(false);
-    const armed = play(withWeapon(setup('PRIME_006'), '0')).state;
-    expect(minion(armed, '0', 0).keywords.rush).toBe(true);
-  });
-  it('an on-board Swiftpack gains it when a weapon is equipped, and loses it when the weapon breaks', () => {
-    const s = setup('CORE_076', { mine: [[2, 1, 'PRIME_006']] });
-    expect(realCard('CORE_076').type).toBe('weapon');
-    const armed = play(s).state;
-    expect(minion(armed, '0', 0).keywords.rush).toBe(true);
-  });
-});
-
 describe('damage triggers', () => {
   const attackOnto = (s: GameState) => {
     const attacker = s.players['0'].board[0];

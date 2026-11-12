@@ -39,6 +39,9 @@ The big structural finds, in order of how much they matter:
 > **Update 2026-11-12:** the Mystery rewrites below are applied in Airtable and built (see `RULES.md`, "Mysteries"). Decision: the opponent sees each
 > face-down Mystery's *category*. 126 was changed to fire when an enemy minion attacks you (Mysteries only react on the opponent's turn).
 
+> **Update 2026-11-12:** the choose-one, overload and enrage families are applied in Airtable and rebuilt too (see `RULES.md`, "Choose-one, overload and enrage
+> rewrites"). A few numbers differ from the rows below (208, 120, 121, 024 were adjusted while building).
+
 ## Mysteries (132, 143, 127, 152, 126, 146, 159, 148, 129, 158, 157, 156, 067; payoffs 250, 149, 045, 147)
 
 Today each Mystery copies a hidden-trap card's trigger *and* payload. Two ways to get distance, and I suggest doing both:

@@ -471,3 +471,26 @@ export const stealEnemyMystery = (): Effect => (ctx) => {
   if (!me.mystery) me.mystery = foe.mystery;
   foe.mystery = null;
 };
+
+/** Draws `count` cards; each card drawn this way has its cost changed by `delta` (negative is cheaper) for the rest of the game. */
+export const drawDiscounted =
+  (count: number, delta: number): Effect =>
+  (ctx) => {
+    const before = ctx.events.length;
+    draw(count)(ctx);
+    for (const e of ctx.events.slice(before)) {
+      if (e.type !== 'Drew') continue;
+      const card = ctx.g.players[ctx.caster].hand.find((c) => c.instanceId === e.instanceId);
+      if (card) card.costDelta = (card.costDelta ?? 0) + delta;
+    }
+  };
+
+/** Disables only the selected minions that pass `test`. */
+export const disableWhere =
+  (select: Selector, test: (m: { health: number; attack: number }) => boolean): Effect =>
+  (ctx) => {
+    const passing = minionsOf(ctx, select)
+      .filter(({ minion }) => test(minion))
+      .map(({ minion }) => ({ kind: 'minion' as const, instanceId: minion.instanceId }));
+    disable(() => passing)(ctx);
+  };

@@ -1,10 +1,7 @@
 import { defineCard } from '../define-card';
 
-// PRIME_022 Blood-crazed Assassin: "If damaged; gain +1 AP and Onslaught"
-export default defineCard('PRIME_022', (n) => ({
+// PRIME_022 Blood-crazed Assassin: "Onslaught on turns your hero took damage" (not printed: the data lists it, the card only has it then)
+export default defineCard('PRIME_022', () => ({
   conditionalKeywords: ['doubleAttack'],
-  selfAura: ({ minion }) => {
-    const hurt = minion.health < minion.maxHealth;
-    return { attack: hurt ? n.primary : 0, doubleAttack: hurt };
-  },
+  selfAura: ({ state, owner }) => ({ doubleAttack: state.players[owner].heroHurtOnTurn === state.turn }),
 }));

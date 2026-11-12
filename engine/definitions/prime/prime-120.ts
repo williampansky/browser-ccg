@@ -1,12 +1,16 @@
 import { defineCard } from '../define-card';
-import { damage } from '../../effects/primitives';
-import { allEnemyMinions, chosenTarget } from '../../effects/selectors';
-import { anyCharacter } from '../../effects/filters';
+import { damage, disable } from '../../effects/primitives';
+import { allEnemyMinions, chosenTarget, neighboursOfTarget } from '../../effects/selectors';
+import { anyMinion } from '../../effects/filters';
 
-// PRIME_120 Shamanic Rage: "Select One: Deal 5 damage, or 2 to all enemy minions"
+// PRIME_120 Shamanic Rage, Select One: "4 damage to a minion and 1 to its neighbours; or 1 to all enemy minions and Disable them"
 export default defineCard('PRIME_120', () => ({
   choices: [
-    { label: 'Deal 5 damage', target: anyCharacter(), onPlay: [damage(chosenTarget(), 5)] },
-    { label: 'Deal 2 damage to all enemy minions', onPlay: [damage(allEnemyMinions(), 2)] },
+    {
+      label: '4 damage to a minion, 1 to its neighbours',
+      target: anyMinion(),
+      onPlay: [damage(neighboursOfTarget(), 1), damage(chosenTarget(), 4)],
+    },
+    { label: '1 damage to all enemy minions and Disable them', onPlay: [damage(allEnemyMinions(), 1), disable(allEnemyMinions())] },
   ],
 }));

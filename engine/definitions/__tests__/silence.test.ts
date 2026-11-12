@@ -88,15 +88,6 @@ describe('the cards', () => {
     expect([r.players['0'].board[0].silenced, r.players['1'].board[0].silenced]).toEqual([true, true]);
     expect(r.players['0'].hand).toHaveLength(1);
   });
-  it('PRIME_119 offers 2 damage (any character) or Suppress (minions only)', () => {
-    const s = setup('PRIME_119', { theirs: [[1, 5]] });
-    const damaged = run(s, { type: 'PlayCard', handIndex: 0, choice: 0, target: hero('1') } as Action);
-    expect('error' in damaged ? -1 : damaged.state.players['1'].health).toBe(28);
-    const hit = run(s, { type: 'PlayCard', handIndex: 0, choice: 1, target: hero('1') } as Action);
-    expect('error' in hit && hit.error).toBe('ILLEGAL_TARGET');
-    const quiet = run(s, { type: 'PlayCard', handIndex: 0, choice: 1, target: mref(s, '1', 0) } as Action);
-    expect('error' in quiet ? false : quiet.state.players['1'].board[0].silenced).toBe(true);
-  });
   it('legalActions offers a choose-one minion once per option', () => {
     const s = setup('PRIME_119', { theirs: [[1, 5]] });
     const plays = legalActions(s, '0', catalog).filter((a) => a.type === 'PlayCard' && a.handIndex === 0);

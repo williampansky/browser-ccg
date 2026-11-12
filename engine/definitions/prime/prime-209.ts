@@ -1,6 +1,8 @@
 import { defineCard } from '../define-card';
-import { damage } from '../../effects/primitives';
-import { allEnemies } from '../../effects/selectors';
+import { damage, disableWhere } from '../../effects/primitives';
+import { allEnemyMinions } from '../../effects/selectors';
 
-// PRIME_209 Blaze Storm: "Deal 2 damage to all enemies; Overcharge (3)" (enemies = their minions and their hero)
-export default defineCard('PRIME_209', (n) => ({ onPlay: [damage(allEnemies(), n.primary)] }));
+// PRIME_209 Blaze Storm: "Deal 2 damage to all enemy minions, then Disable any left with 1 Health. Overcharge (2)"
+export default defineCard('PRIME_209', (n) => ({
+  onPlay: [damage(allEnemyMinions(), n.primary), disableWhere(allEnemyMinions(), (m) => m.health === 1)],
+}));

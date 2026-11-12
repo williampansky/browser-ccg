@@ -1,7 +1,10 @@
 import { defineCard } from '../define-card';
-import { damage } from '../../effects/primitives';
+import { damage, drawIfDead } from '../../effects/primitives';
 import { chosenTarget } from '../../effects/selectors';
-import { anyCharacter } from '../../effects/filters';
+import { anyMinion } from '../../effects/filters';
 
-// PRIME_203: "Deal N damage to a character; Overcharge" (the lock is applied in play-card.ts)
-export default defineCard('PRIME_203', (n) => ({ target: anyCharacter(), onPlay: [damage(chosenTarget(), n.primary)] }));
+// PRIME_203 Flash Strike: "Deal 3 damage to a minion; draw a card if it dies. Overcharge (1)" (the lock is applied in play-card.ts)
+export default defineCard('PRIME_203', (n) => ({
+  target: anyMinion(),
+  onPlay: [damage(chosenTarget(), n.primary), drawIfDead(chosenTarget())],
+}));

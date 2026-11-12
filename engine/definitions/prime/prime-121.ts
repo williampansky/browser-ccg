@@ -1,10 +1,10 @@
 import { defineCard } from '../define-card';
-import { draw, gainEnergySlot } from '../../effects/primitives';
+import { draw, drawDiscounted, gainEnergySlot } from '../../effects/primitives';
 
-// PRIME_121 Sanctity: "Select One: Gain 2 Action Point Slots; or draw 3 cards"
+// PRIME_121 Sanctity, Select One: "+1 energy slot and draw a card; or draw 2 cards that cost 1 less"
 export default defineCard('PRIME_121', () => ({
   choices: [
-    { label: 'Gain 2 energy slots', onPlay: [gainEnergySlot(2)] },
-    { label: 'Draw 3 cards', onPlay: [draw(3)] },
+    { label: '+1 energy slot and draw a card', onPlay: [gainEnergySlot(1), draw(1)] },
+    { label: 'Draw 2 cards that cost 1 less', onPlay: [drawDiscounted(2, -1)] },
   ],
 }));

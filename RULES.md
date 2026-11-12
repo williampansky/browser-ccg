@@ -625,3 +625,18 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
   (`CardInstance.costDelta`); 156 on 5 or more damage in one hit: heal 5 and draw.
 - **Other Mystery cards**: 132 is a plain spell (reveals Concealed minions, destroys the enemy Mystery, draws only if it did); 067 takes the enemy's Mystery (destroyed
   if you already hold one); 250/149 buff at the end of your turn while you hold one; 045 grows whenever any Mystery is played. 147 (next Mystery costs 0) is not built yet.
+
+### Choose-one, overload and enrage rewrites (2026-11-12; `balance/PRIME-DISTANCE.md`, applied in Airtable by `balance/airtable/prime-families.js`)
+
+- **Choose-one**: 111 (cost 3) +1/+1 to your Creatures, or a 3/2 Wild Cub (PRIME_111c) with Rush; 112 2 damage and 2 Armor, or 1 damage and a card;
+  113 +3 Attack and Rush, or +3 Health, Guard and heal your hero 3 (a friendly minion); 120 (cost 6) 4 damage to a minion and 1 to its neighbours, or 1 to every
+  enemy minion and Disable them; 121 (cost 5) +1 energy slot and a card, or 2 cards that cost 1 less (`CardInstance.costDelta`, kept for the game);
+  123 draw 2 and take 2, or heal your hero 5 and give a friendly minion Bubble; 115 (5/3) Rush and +1 Attack, or +3 Health and Guard; 124 (4/6) +3 Attack and
+  Rush, or +3 Health, Guard and heal your hero 3; 119 (2/3) 2 damage to a *damaged* minion, or Suppress a minion and give it -1 Attack.
+- **Overload**: 203 (cost 2) 3 damage to a minion, draw if it dies (a minion only now); 208 4 damage to a minion and 2 to its neighbours; 209 2 damage to all
+  enemy minions (not the hero), then Disable survivors left at 1 Health, Overcharge 2; 202 3 damage to ONE random enemy, Overcharge 1; 204 (2/2 weapon)
+  Disables what it hits (a minion, or the hero); 200 (2/1 Onslaught, Overcharge 1) dies at the end of your turn if it attacked twice; 213 (6/7 Guard) heals your
+  hero 1 when attacked; 205 grows whenever ANY player plays an Overcharge card.
+- **Enrage**: 009 (1/4) +2 Attack and Rush while damaged; 035 (3/6) +1 Attack per damage taken, max +4; 041 (1/2) gains a permanent +1 Attack each time it is damaged;
+  024 (2/4 Guard) heals 1 each time it is damaged; 244 (4/8 Rush) Onslaught while damaged; 022 (3/3) Onslaught only on turns your hero took damage (`heroHurtOnTurn`,
+  any damage, armor included); 006 (1/2) +1 Attack and Rush while you have a weapon.

@@ -87,6 +87,8 @@ export interface PlayerState {
   heroDisabledOnTurn?: number;
   /** Overcharge: energy that stays locked at the start of this player's next turn (then cleared) */
   overcharge?: number;
+  /** The turn number on which this player's hero last took damage (for "on turns your hero took damage") */
+  heroHurtOnTurn?: number;
   /** The player's active Mystery (at most one), or none */
   mystery?: MysteryInstance | null;
 }

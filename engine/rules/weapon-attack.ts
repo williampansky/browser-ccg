@@ -38,7 +38,7 @@ export const weaponAttack = (
     const card = ctx?.catalog.get(w.cardId);
     const def = card && ctx && (ctx.defs ?? getCardDef)(card);
     for (const effect of def?.beforeAttack ?? []) {
-      effect({ g, caster: me, rng: ctx!.rng, catalog: ctx!.catalog, events, sourceCardId: w.cardId });
+      effect({ g, caster: me, target, rng: ctx!.rng, catalog: ctx!.catalog, events, sourceCardId: w.cardId });
     }
     if (target.kind === 'hero') {
       damageHero(g, foe, w.attack, events);

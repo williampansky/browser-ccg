@@ -113,3 +113,30 @@ export const eventMinion = (): Selector => (ctx) => {
   const e = ctx.event;
   return e && (e.type === 'MinionPlayed' || e.type === 'MinionDamaged' || e.type === 'MinionSummoned') ? [{ kind: 'minion', instanceId: e.instanceId }] : [];
 };
+
+/** The minions standing next to the chosen target, on the target's own side. */
+export const neighboursOfTarget = (): Selector => (ctx) => {
+  if (ctx.target?.kind !== 'minion') return [];
+  const id = ctx.target.instanceId;
+  for (const p of ['0', '1'] as const) {
+    const board = ctx.g.players[p].board;
+    const i = board.findIndex((m) => m.instanceId === id);
+    if (i >= 0) return board.filter((_, j) => Math.abs(j - i) === 1).map(minionRef);
+  }
+  return [];
+};
+
+/** The caster's minions whose card has this race. */
+export const friendlyOfRace =
+  (race: string): Selector =>
+  (ctx) =>
+    ctx.g.players[ctx.caster].board.filter((m) => ctx.catalog.get(m.cardId)?.race === race).map(minionRef);
+
+/** The minion most recently summoned for the caster (use right after a summon). */
+export const lastSummoned = (): Selector => (ctx) => {
+  for (let i = ctx.events.length - 1; i >= 0; i--) {
+    const e = ctx.events[i];
+    if (e.type === 'MinionSummoned' && e.player === ctx.caster) return [{ kind: 'minion', instanceId: e.instanceId }];
+  }
+  return [];
+};
