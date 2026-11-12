@@ -76,10 +76,6 @@ describe('targeted warcries and spells', () => {
 });
 
 describe('board spells', () => {
-  it('PRIME_228 destroys every minion on both sides', () => {
-    const r = play(setup('PRIME_228', { mine: [[1, 1]], theirs: [[1, 1], [1, 1]] })).state;
-    expect([r.players['0'].board.length, r.players['1'].board.length]).toEqual([0, 0]);
-  });
   it('PRIME_162 sets every minion\'s health to 1', () => {
     const r = play(setup('PRIME_162', { mine: [[2, 5]], theirs: [[3, 7]] })).state;
     expect([stats(r, '0')[0][1], stats(r, '1')[0][1]]).toEqual([1, 1]);

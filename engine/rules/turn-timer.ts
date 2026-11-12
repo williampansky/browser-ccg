@@ -7,7 +7,7 @@ import type { GameState } from '../state/types';
 export const DEFAULT_TURN_SECONDS = 60;
 
 /**
- * The time limit for the current turn: 60 seconds, or less while a minion on either board shortens it (Cronus: 15). The shortest
+ * The time limit for the current turn: 60 seconds, or less while a minion shortens it (Cronus: the owner's opponent gets 30). The shortest
  * limit wins. A Suppressed minion no longer counts.
  *
  * The engine has no clock: it only says how long a turn may last. Whoever runs the game enforces it by ending the turn when the
@@ -19,8 +19,9 @@ export const turnSeconds = (state: GameState, catalog: CardCatalog, defs: DefLoo
   for (const p of ['0', '1'] as const) {
     for (const m of state.players[p].board) {
       const card = m.silenced ? undefined : catalog.get(m.cardId);
-      const limit = card && defs(card)?.turnSeconds;
-      if (limit !== undefined) seconds = Math.min(seconds, limit);
+      const def = card && defs(card);
+      if (def?.turnSeconds !== undefined) seconds = Math.min(seconds, def.turnSeconds);
+      if (def?.opponentTurnSeconds !== undefined && state.activePlayer !== p) seconds = Math.min(seconds, def.opponentTurnSeconds);
     }
   }
   return seconds;

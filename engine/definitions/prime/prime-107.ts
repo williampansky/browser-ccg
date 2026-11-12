@@ -1,4 +1,4 @@
 import { defineCard } from '../define-card';
 
-// PRIME_107 Cronus: "Players only have 15s to take their turns" (a turn lasts 15 seconds, not 60, while it is on a board; see `turnSeconds`)
-export default defineCard('PRIME_107', () => ({ turnSeconds: 15 }));
+// PRIME_107 Cronus: "While this is on a board, your opponent's turns last only 30 seconds" (see `turnSeconds`; the owner's own turns stay 60)
+export default defineCard('PRIME_107', () => ({ opponentTurnSeconds: 30 }));

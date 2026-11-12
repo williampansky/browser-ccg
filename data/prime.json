@@ -1525,7 +1525,7 @@
     "cost": 12,
     "attack": 8,
     "health": 8,
-    "text": "Costs 1 less to play<br />\nfor each other card<br />\nyou're holding",
+    "text": "Costs 1 less for each card you<br>\nplayed this turn and last (max 6)",
     "mechanics": [
       "%EVENT%"
     ],
@@ -1671,14 +1671,12 @@
     "cardClass": "0 %CLASS_NONE%",
     "race": "%RACE_DEMONIC%",
     "cost": 8,
-    "attack": 3,
+    "attack": 5,
     "health": 5,
-    "text": "<strong>%DOUBLE_ATTACK%</strong>, <strong>%RUSH%</strong>, <strong>%BUBBLE%</strong>, <strong>%BULWARK%</strong>",
+    "text": "<strong>%BULWARK%, %BUBBLE%</strong><br>\nYour other minions have<br>\n<strong>%RUSH%</strong>",
     "mechanics": [
-      "%DOUBLE_ATTACK%",
-      "%RUSH%",
-      "%BUBBLE%",
-      "%BULWARK%"
+      "%BULWARK%",
+      "%BUBBLE%"
     ],
     "collectible": true,
     "active": true,
@@ -2011,7 +2009,7 @@
     "cost": 2,
     "attack": 0,
     "health": 7,
-    "text": "<strong>%DESTROY%</strong> the<br>\nentire board at the<br>\nstart of your next turn",
+    "text": "At the start of your next<br>\nturn, deal 4 damage to ALL<br>\nminions, then this dies",
     "mechanics": [
       "%NO_ATTACK%",
       "%AOE%"
@@ -2032,12 +2030,12 @@
     "cost": 9,
     "attack": 10,
     "health": 5,
-    "text": "<strong>%ON_PLAY%:</strong><br>\nSet a hero's Health to 15",
+    "text": "<strong>%ON_PLAY%:</strong> Set both<br>\nheroes' Health to 18",
     "mechanics": [
       "%ON_PLAY%",
       "%SET_VALUE%"
     ],
-    "numberPrimary": 15,
+    "numberPrimary": 18,
     "collectible": true,
     "active": true,
     "elite": true,
@@ -2642,7 +2640,7 @@
     "cost": 10,
     "attack": 8,
     "health": 8,
-    "text": "Costs 1 less to play<br />\nfor each other<br />\nactive minion",
+    "text": "Costs 1 less for each minion<br>\nthat has died this game (max 6)",
     "mechanics": [
       "%EVENT%"
     ],
@@ -2876,10 +2874,10 @@
     "rarity": "%RARITY_REMARKABLE%",
     "cardClass": "0 %CLASS_NONE%",
     "race": "%RACE_ELEMENT%",
-    "cost": 20,
+    "cost": 12,
     "attack": 8,
     "health": 8,
-    "text": "Costs 1 less to play for<br />\neach point of damage<br />\nyour hero has taken",
+    "text": "Costs 1 less for each point<br>\nof %ARMOR% you have lost",
     "mechanics": [
       "%COST%"
     ],
@@ -3067,8 +3065,8 @@
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_MYTHIC%",
     "cardClass": "0 %CLASS_NONE%",
-    "cost": 8,
-    "text": "<strong>%DESTROY%</strong> all minions",
+    "cost": 6,
+    "text": "%DESTROY% all minions with 4 or<br>\nmore Attack, then both<br>\nplayers draw a card",
     "mechanics": [
       "%DESTROY%",
       "%AOE%"
@@ -3528,7 +3526,7 @@
     "cost": 9,
     "attack": 8,
     "health": 8,
-    "text": "Players only have 15s to take their turns",
+    "text": "While this is on a board,<br>\nyour opponent's turns last<br>\nonly 30 seconds",
     "collectible": true,
     "active": true,
     "elite": true,

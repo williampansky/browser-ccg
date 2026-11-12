@@ -38,12 +38,6 @@ describe('targeted warcries and spells', () => {
     s = setup('PRIME_163', { theirs: [[3, 7]] });
     expect(stats(play(s, mref(s, '1', 0)).state, '1')).toEqual([[6, 7]]);
   });
-  it('PRIME_105 sets either hero to 15', () => {
-    const s = setup('PRIME_105', { mine: [[1, 1]] });
-    expect(play(s, hero('1')).state.players['1'].health).toBe(15);
-    expect(play(s, hero('0')).state.players['0'].health).toBe(15);
-    expect(failCode(s, mref(s, '0', 0))).toBe('ILLEGAL_TARGET');
-  });
   it('PRIME_241 deals damage equal to your Armor to a minion', () => {
     const s = setup('PRIME_241', { theirs: [[1, 9]] });
     const armored = { ...s, players: { ...s.players, '0': { ...s.players['0'], armor: 4 } } };

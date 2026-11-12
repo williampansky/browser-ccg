@@ -89,6 +89,7 @@ export const playCard = (
       events.push({ type: 'OverchargeGained', player: me, amount: overcharge, cardId: card.id });
     }
     if (!def?.mystery) g.played[me].push(card.id);
+    p.plays = { now: (p.plays?.now ?? 0) + 1, prev: p.plays?.prev ?? 0 };
     // Spell damage only counts for spells, not warcries (RULES 8.3, Q16)
     const spellDamage =
       card.type === 'spell' ? p.board.reduce((sum, m) => sum + (minionDef(m, catalog, defs)?.spellDamage ?? 0), 0) : 0;

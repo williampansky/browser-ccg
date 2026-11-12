@@ -32,6 +32,7 @@ export const startTurn = (state: GameState, player: PlayerId, events: GameEvent[
     energy.current = Math.max(0, energy.total - (g.players[player].overcharge ?? 0));
     delete g.players[player].overcharge;
     for (const m of g.players[player].board) m.attacksThisTurn = 0;
+    g.players[player].plays = { now: 0, prev: g.players[player].plays?.now ?? 0 };
     g.players[player].weaponAttacksThisTurn = 0;
     events.push({ type: 'TurnStarted', player, turn: g.turn });
     // Expiration: marked minions on either board are brought to 0 health now; `settle` removes them.

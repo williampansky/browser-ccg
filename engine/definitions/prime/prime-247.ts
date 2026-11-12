@@ -1,7 +1,4 @@
 import { defineCard } from '../define-card';
-import { MAX_HEALTH } from '../../state/types';
 
-// PRIME_247 Volcanic Giant: "Costs 1 less to play for each point of damage your hero has taken" (armor does not count)
-export default defineCard('PRIME_247', () => ({
-  ownCost: ({ state, owner }) => -Math.max(0, MAX_HEALTH - state.players[owner].health),
-}));
+// PRIME_247 Volcanic Giant (12): "Costs 1 less for each point of Armor you have lost" (Armor soaked up by damage, over the whole game)
+export default defineCard('PRIME_247', () => ({ ownCost: ({ state, owner }) => -(state.players[owner].armorSpent ?? 0) }));

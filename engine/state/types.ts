@@ -87,6 +87,10 @@ export interface PlayerState {
   heroDisabledOnTurn?: number;
   /** Overcharge: energy that stays locked at the start of this player's next turn (then cleared) */
   overcharge?: number;
+  /** Cards this player has played this turn (`now`) and on their previous turn (`prev`), for "cards you played this turn and last" */
+  plays?: { now: number; prev: number };
+  /** Armor this player's hero has lost to damage over the whole game */
+  armorSpent?: number;
   /** The turn number on which this player's hero last took damage (for "on turns your hero took damage") */
   heroHurtOnTurn?: number;
   /** The player's active Mystery (at most one), or none */
@@ -105,6 +109,8 @@ export interface GameState {
   nextPlaySeq: number;
   /** Ids of the cards each player has played from hand so far (for CORE_084) */
   played: Record<PlayerId, string[]>;
+  /** How many minions have died so far this game, either side */
+  deaths?: number;
 }
 
 /** Something an attack or effect can aim at: a hero (either player's) or a minion on either board. */

@@ -40,6 +40,7 @@ export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEven
 
     const dead = boardsInPlayOrder(g).filter((x) => x.minion.health <= 0);
     if (dead.length > 0) {
+      g.deaths = (g.deaths ?? 0) + dead.length;
       for (const { owner } of dead) {
         g.players[owner].board = g.players[owner].board.filter((m) => m.health > 0);
       }

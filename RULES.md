@@ -640,3 +640,14 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **Enrage**: 009 (1/4) +2 Attack and Rush while damaged; 035 (3/6) +1 Attack per damage taken, max +4; 041 (1/2) gains a permanent +1 Attack each time it is damaged;
   024 (2/4 Guard) heals 1 each time it is damaged; 244 (4/8 Rush) Onslaught while damaged; 022 (3/3) Onslaught only on turns your hero took damage (`heroHurtOnTurn`,
   any damage, armor included); 006 (1/2) +1 Attack and Rush while you have a weapon.
+
+### The Giants, the keyword pile and friends (2026-11-12; applied in Airtable by `balance/airtable/prime-giants.js`)
+
+- **085 Bark Creature (10)**: 1 less per minion that has died this game, either side, max 6 (`GameState.deaths`).
+- **086 Spider Mech (12)**: 1 less per card you played this turn and your previous turn, max 6 (`PlayerState.plays`; rotates at the start of your turn).
+- **247 Volcanic Giant (12)**: 1 less per point of Armor your hero has lost to damage, whole game (`PlayerState.armorSpent`); Armor gained does not count.
+- **214 Spirit of the Night (5/5)**: Guard and Bubble; your OTHER minions have Rush (aura).
+- **107 Cronus**: while it is on a board, the owner's OPPONENT's turns last 30 seconds (`opponentTurnSeconds`); the owner's stay 60.
+- **228 The Sorcerer's Stone (6)**: destroys minions with 4 or more Attack (either side), then both players draw a card.
+- **078 Infernal Nest (0/7)**: at the start of its owner's next turn it deals 4 to ALL minions, itself included, then is destroyed.
+- **105 Nightmare**: sets BOTH heroes' Health to 18.

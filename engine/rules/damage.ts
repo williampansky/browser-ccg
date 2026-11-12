@@ -6,6 +6,7 @@ export const damageHero = (g: Draft<GameState>, player: PlayerId, amount: number
   const p = g.players[player];
   const absorbed = Math.min(p.armor, amount);
   p.armor -= absorbed;
+  if (absorbed > 0) p.armorSpent = (p.armorSpent ?? 0) + absorbed;
   p.health = Math.max(0, p.health - (amount - absorbed));
   if (amount > 0) p.heroHurtOnTurn = g.turn;
   events.push({ type: 'HeroDamaged', player, amount });

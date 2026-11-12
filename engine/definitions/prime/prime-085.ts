@@ -1,6 +1,4 @@
 import { defineCard } from '../define-card';
 
-// PRIME_085 Bark Creature: "Costs 1 less to play for each other active minion" (minions on BOTH sides count)
-export default defineCard('PRIME_085', () => ({
-  ownCost: ({ state }) => -(state.players['0'].board.length + state.players['1'].board.length),
-}));
+// PRIME_085 Bark Creature: "Costs 1 less for each minion that has died this game (max 6)" (either side, counted from the start)
+export default defineCard('PRIME_085', () => ({ ownCost: ({ state }) => -Math.min(6, state.deaths ?? 0) }));

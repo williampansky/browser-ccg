@@ -54,25 +54,3 @@ describe('PRIME_142 Demon Sorcerer: spells cost 1 less', () => {
     expect(effectiveCost(s, '0', spell, catalog)).toBe(2);
   });
 });
-
-describe('cards that change their own cost in hand', () => {
-  it('PRIME_086 costs 1 less per OTHER card in hand', () => {
-    const lone = setup('PRIME_086');
-    expect(cost(lone, 'PRIME_086')).toBe(12);
-    const full = setup('PRIME_086', { hand: ['CORE_043', 'CORE_043', 'CORE_043'] });
-    expect(cost(full, 'PRIME_086')).toBe(9);
-    const r = run(withEnergy(full, 9), { type: 'PlayCard', handIndex: 0 });
-    expect('error' in r).toBe(false);
-  });
-  it('PRIME_085 costs 1 less per minion on either board', () => {
-    const s = setup('PRIME_085', { mine: [[1, 1], [1, 1]], theirs: [[1, 1]] });
-    expect(cost(s, 'PRIME_085')).toBe(7);
-  });
-  it('PRIME_247 costs 1 less per point of damage your hero has taken, never below 0', () => {
-    expect(cost(setup('PRIME_247'), 'PRIME_247')).toBe(20);
-    expect(cost(setup('PRIME_247', { heroHp: { '0': 12 } }), 'PRIME_247')).toBe(2);
-    expect(cost(setup('PRIME_247', { heroHp: { '0': 1 } }), 'PRIME_247')).toBe(0);
-    const armored = produce(setup('PRIME_247'), (g) => void (g.players['0'].armor = 9));
-    expect(cost(armored, 'PRIME_247')).toBe(20);
-  });
-});

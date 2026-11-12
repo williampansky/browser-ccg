@@ -101,6 +101,8 @@ export interface MysteryDef {
 export interface CardDef {
   /** While this minion is on either board, turns last at most this many seconds (see `turnSeconds`) */
   turnSeconds?: number;
+  /** While this minion is on its owner's board, the OPPONENT's turns last at most this many seconds */
+  opponentTurnSeconds?: number;
   /** Present on a Mystery spell: it is placed face down instead of resolving */
   mystery?: MysteryDef;
   /** Keywords the card's data lists but the minion only has under a condition (see `selfAura`): not given when it is created */
