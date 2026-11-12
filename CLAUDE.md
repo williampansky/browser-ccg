@@ -66,6 +66,12 @@ order below. Candidates, roughly in the order discussed:
   (0 = Player 1); `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand, in order.
   Handy for testing a specific card, e.g. `/play?first=0&p0=CORE_045`.
 
+## Working style: browser checks
+
+- **Always close Playwright when you are done with it** (`browser_close`), then say so in the reply, so the author is
+  not left looking at an open browser window thinking work is still going on. Prefer the headless server
+  (`playwright-headless`) for routine checks; use the headed one (`playwright`) only to show something live.
+
 ## Commands
 
 - `npm run dev` - dev server (use npm; `yarn` isn't installed here, though `yarn.lock` exists).
