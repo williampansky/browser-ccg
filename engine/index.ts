@@ -11,7 +11,7 @@ export { legalTargets } from './rules/targeting';
 export type { TargetSource } from './rules/targeting';
 export { getCardDef } from './definitions';
 export { legalActions } from './rules/legal-actions';
-export { buildDeck, isPlayable, needsBehaviour, playablePool } from './decks';
+export { buildDeck, isPlayable, needsBehaviour, playablePool, primePool } from './decks';
 export { chooseRandomAction } from './bots/random-bot';
 export { chooseGreedyAction, evaluate } from './bots/greedy-bot';
 export { checkDeck, maxCopies, MAX_DECK_SIZE } from './deck-rules';

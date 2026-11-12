@@ -16,6 +16,7 @@ import {
   loadHsCards,
   MinionInstance,
   playablePool,
+  primePool,
   PlayerId,
   Rng,
   TargetRef,
@@ -49,6 +50,7 @@ type Selection = { kind: 'hand'; index: number; choice?: number } | { kind: 'min
 
 const { cards, byId } = loadHsCards();
 const pool = playablePool(cards);
+const prime = primePool(cards);
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
 const playerLabel = (p: PlayerId, mode: Mode) => `Player ${Number(p) + 1}${mode === 'ai' && p === AI_PLAYER ? ' (AI)' : ''}`;
 /** CORE_012 -> /images/sets/SET_CORE/012-CARD.jpg, GAME_001 -> /images/sets/SET_GAME/001-CARD.jpg. */
@@ -211,9 +213,9 @@ const newGame = (vsAi: boolean): { state: GameState; rng: Rng; decks: Record<Pla
   const rng = createSeededRng(Date.now() % 2147483647);
   const choices = loadChoices();
   const saved = loadDecks(byId);
-  const p0 = resolveDeck(choices['0'], pool, saved, rng);
+  const p0 = resolveDeck(choices['0'], pool, saved, rng, prime);
   // The AI never plays a saved deck: it gets a starter deck (or a random one if there is none to pick).
-  const p1 = resolveDeck(vsAi ? aiDeckChoice(choices['1']) : choices['1'], pool, saved, rng);
+  const p1 = resolveDeck(vsAi ? aiDeckChoice(choices['1']) : choices['1'], pool, saved, rng, prime);
   const decks = { '0': p0.cards, '1': p1.cards };
   const dbg = debugParams();
   const randomFirst: PlayerId = rng.int(2) === 0 ? '0' : '1';

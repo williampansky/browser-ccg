@@ -25,6 +25,17 @@ describe('starter decks', () => {
     expect(aggro).toBeLessThan(mid);
     expect(mid).toBeLessThan(control);
   });
+  it('every deck holds at least its minimum number of minions, and Spellslinger and Armed are not minion-free', () => {
+    const minions = (ids: string[]) => ids.filter((id) => byId.get(id)?.type === 'minion').length;
+    STARTER_DECKS.forEach((d, i) => expect(minions(decks[i].deck)).toBeGreaterThanOrEqual(d.minMinions ?? 0));
+    const spell = decks.findIndex((d) => d.name === 'Spellslinger');
+    expect(STARTER_DECKS[spell].minMinions).toBeGreaterThanOrEqual(10);
+    expect(minions(decks[spell].deck)).toBeGreaterThanOrEqual(12);
+    // still mostly spells
+    expect(decks[spell].deck.filter((id) => byId.get(id)?.type === 'spell').length).toBeGreaterThanOrEqual(15);
+    const armed = decks.findIndex((d) => d.name === 'Armed');
+    expect(minions(decks[armed].deck)).toBeGreaterThanOrEqual(10);
+  });
   it('are deterministic', () => {
     expect(buildStarterDeck(STARTER_DECKS[0], pool)).toEqual(buildStarterDeck(STARTER_DECKS[0], pool));
   });

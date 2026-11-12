@@ -23,6 +23,13 @@ export const isPlayable = (card: Card, defs: DefLookup = getCardDef): boolean =>
 export const playablePool = (cards: Card[], defs: DefLookup = getCardDef): Card[] =>
   cards.filter((c) => c.source === 'core' && !c.isToken && c.active && isPlayable(c, defs));
 
+/**
+ * PRIME cards the engine can play right now. Kept apart from `playablePool` (CORE): PRIME is opt-in, so CORE's balance and
+ * the starter decks do not change. A card with no name is a placeholder in the data and is left out until it has one.
+ */
+export const primePool = (cards: Card[], defs: DefLookup = getCardDef): Card[] =>
+  cards.filter((c) => c.source === 'prime' && !c.isToken && c.active && !!c.name && isPlayable(c, defs));
+
 /** A random deck of `size` distinct cards from the pool (cycles if the pool is smaller). Never more than `MAX_DECK_SIZE`. */
 export const buildDeck = (pool: Card[], rng: Rng, size = MAX_DECK_SIZE): string[] => {
   size = Math.min(size, MAX_DECK_SIZE);

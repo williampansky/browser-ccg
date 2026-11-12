@@ -1,5 +1,5 @@
 import { loadHsCards } from '../cards/load-hs-cards';
-import { buildDeck, isPlayable, needsBehaviour, playablePool } from '../decks';
+import { buildDeck, isPlayable, needsBehaviour, playablePool, primePool } from '../decks';
 import { getCardDef } from '../definitions';
 import { createGame } from '../state/create-game';
 import { applyAction } from '../rules/apply-action';
@@ -111,6 +111,46 @@ describe('the real CORE pool', () => {
         if ('error' in r) throw new Error(`seed ${seed}: ${JSON.stringify(pick)} -> ${r.error}`);
         s = r.state;
         invariants(s);
+      }
+      expect(s.winner).not.toBeNull();
+    }
+  });
+});
+
+describe('the PRIME pool (opt-in, kept apart from CORE)', () => {
+  const prime = primePool(cards);
+  it('is only real, named, active, non-token PRIME cards the engine can play, and none of it is in the CORE pool', () => {
+    expect(prime.length).toBeGreaterThanOrEqual(20);
+    for (const c of prime) {
+      expect(c.source).toBe('prime');
+      expect(c.isToken).toBe(false);
+      expect(c.active).toBe(true);
+      expect(c.name).toBeTruthy();
+      expect(isPlayable(c, getCardDef)).toBe(true);
+      expect(pool.some((x) => x.id === c.id)).toBe(false);
+    }
+  });
+  it('leaves out an unnamed card and an inactive card even if its stats need no code', () => {
+    const plain = cards.find((c) => c.source === 'prime' && !needsBehaviour(c) && c.active && c.name)!;
+    expect(primePool([plain])).toHaveLength(1);
+    expect(primePool([{ ...plain, name: undefined }])).toHaveLength(0);
+    expect(primePool([{ ...plain, active: false }])).toHaveLength(0);
+    expect(primePool([{ ...plain, source: 'core' }])).toHaveLength(0);
+  });
+  it('two random bots finish 60 seeded games with PRIME-heavy decks, keeping the rules', () => {
+    const mixed = [...prime, ...pool.slice(0, 10)];
+    for (let seed = 1; seed <= 60; seed++) {
+      const rng = createSeededRng(seed);
+      let s = createGame({ decks: { '0': buildDeck(mixed, rng), '1': buildDeck(prime, rng) }, firstPlayer: '0' }, rng);
+      let steps = 0;
+      while (s.status === 'playing') {
+        if (++steps > 4000) throw new Error(`seed ${seed} did not finish`);
+        const actions = legalActions(s, s.activePlayer, byId);
+        const active = actions.filter((a) => a.type !== 'EndTurn');
+        const pick = active.length > 0 && rng.int(4) > 0 ? active[rng.int(active.length)] : actions[rng.int(actions.length)];
+        const r = applyAction(s, pick, { rng, catalog: byId });
+        if ('error' in r) throw new Error(`seed ${seed}: ${JSON.stringify(pick)} -> ${r.error}`);
+        s = r.state;
       }
       expect(s.winner).not.toBeNull();
     }

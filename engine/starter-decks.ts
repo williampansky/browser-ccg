@@ -8,6 +8,8 @@ export interface StarterDeck {
   name: string;
   /** What the deck is trying to do, for the win-rate table */
   plan: string;
+  /** The deck always holds at least this many minions, even if its score would prefer other cards (default 0) */
+  minMinions?: number;
   /** Lower is picked first; cards are taken by ascending score, ties by id (so decks are deterministic) */
   score: (c: Card) => number;
 }
@@ -39,18 +41,26 @@ export const STARTER_DECKS: StarterDeck[] = [
   },
   {
     name: 'Spellslinger',
-    plan: 'as many cheap spells as possible, with the best cheap minions to hold the board',
-    score: (c) => (c.type === 'spell' ? 0 : c.type === 'item' ? 20 : 45) + c.cost * 4 - stats(c) / 4,
+    minMinions: 12,
+    plan: 'mostly spells, with 12 mid-cost minions to hold the board',
+    // Centred on 2.5 mana: centred at 1 or 2 the deck lost almost every game against the others (bot-vs-bot tuning, 2026-11-12).
+    score: (c) => (c.type === 'spell' ? 0 : c.type === 'item' ? 25 : 30) + Math.abs(c.cost - 2.5) * 4 - stats(c) / 2,
   },
   {
     name: 'Armed',
+    minMinions: 10,
     plan: 'weapons and items, plus hard-hitting minions',
     score: (c) => (c.type === 'weapon' ? 0 : c.type === 'item' ? 15 : 40) + c.cost * 3 - (c.attack ?? 0) * 4,
   },
 ];
 
-/** The 30 cards of a starter deck, chosen from `pool` (distinct cards, best score first). */
+/**
+ * The 30 cards of a starter deck, chosen from `pool` (distinct cards, best score first). If the deck has `minMinions`, its
+ * best-scoring minions are taken first and the rest of the deck is filled by score from everything else.
+ */
 export const buildStarterDeck = (deck: StarterDeck, pool: Card[]): string[] => {
-  const picked = [...pool].sort((a, b) => deck.score(a) - deck.score(b) || a.id.localeCompare(b.id)).slice(0, DECK_SIZE);
+  const ranked = [...pool].sort((a, b) => deck.score(a) - deck.score(b) || a.id.localeCompare(b.id));
+  const minions = ranked.filter(isCreature).slice(0, deck.minMinions ?? 0);
+  const picked = [...minions, ...ranked.filter((c) => !minions.includes(c))].slice(0, DECK_SIZE);
   return picked.map((c) => c.id);
 };

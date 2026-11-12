@@ -5,6 +5,8 @@ import type { SavedDeck } from '../deck-builder/deck-model';
 /** `'random'`, `'starter:<name>'` or `'saved:<id>'`. */
 export type DeckChoice = string;
 export const RANDOM_DECK: DeckChoice = 'random';
+/** A random deck from CORE and PRIME together (PRIME is opt-in; every other choice here uses CORE only). */
+export const RANDOM_ALL: DeckChoice = 'random-all';
 /** A starter deck picked at random each game. */
 export const RANDOM_STARTER: DeckChoice = 'starter-random';
 
@@ -15,7 +17,7 @@ export const SURPRISE_RANDOM_ODDS = 10;
 
 /** The choice the AI seat actually uses: a starter deck or random choice as picked, anything else (a saved deck) becomes `SURPRISE`. */
 export const aiDeckChoice = (choice: DeckChoice): DeckChoice =>
-  choice === RANDOM_DECK || choice === RANDOM_STARTER || choice === SURPRISE || STARTER_DECKS.some((d) => `starter:${d.name}` === choice)
+  choice === RANDOM_DECK || choice === RANDOM_ALL || choice === RANDOM_STARTER || choice === SURPRISE || STARTER_DECKS.some((d) => `starter:${d.name}` === choice)
     ? choice
     : SURPRISE;
 
@@ -30,7 +32,8 @@ export interface DeckOption {
 export const deckOptions = (saved: SavedDeck[]): DeckOption[] => [
   { value: SURPRISE, label: 'Surprise', plan: 'usually a starter deck, about 1 time in 10 a random deck' },
   { value: RANDOM_STARTER, label: 'Random starter deck', plan: 'one of the starter decks, picked at random' },
-  { value: RANDOM_DECK, label: 'Random deck', plan: `${MAX_DECK_SIZE} random cards` },
+  { value: RANDOM_DECK, label: 'Random deck', plan: `${MAX_DECK_SIZE} random CORE cards` },
+  { value: RANDOM_ALL, label: 'Random deck (Core + Prime)', plan: `${MAX_DECK_SIZE} random cards, PRIME included` },
   ...STARTER_DECKS.map((d) => ({ value: `starter:${d.name}`, label: d.name, plan: d.plan })),
   ...saved
     .filter((d) => d.cards.length > 0)
@@ -38,7 +41,15 @@ export const deckOptions = (saved: SavedDeck[]): DeckOption[] => [
 ];
 
 /** The card ids for a choice. A choice that no longer exists (a deleted saved deck) falls back to a random deck. */
-export const resolveDeck = (choice: DeckChoice, pool: Card[], saved: SavedDeck[], rng: Rng): { name: string; cards: string[] } => {
+export const resolveDeck = (
+  choice: DeckChoice,
+  pool: Card[],
+  saved: SavedDeck[],
+  rng: Rng,
+  /** The opt-in PRIME cards, for `RANDOM_ALL` */
+  prime: Card[] = [],
+): { name: string; cards: string[] } => {
+  if (choice === RANDOM_ALL) return { name: 'a random Core + Prime deck', cards: buildDeck([...pool, ...prime], rng) };
   if (choice === SURPRISE && rng.int(SURPRISE_RANDOM_ODDS) === 0) return { name: 'a random deck', cards: buildDeck(pool, rng) };
   if ((choice === RANDOM_STARTER || choice === SURPRISE) && STARTER_DECKS.length > 0) {
     const starter = STARTER_DECKS[rng.int(STARTER_DECKS.length)];

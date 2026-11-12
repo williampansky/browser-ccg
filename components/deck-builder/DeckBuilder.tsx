@@ -1,14 +1,17 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { loadHsCards, MAX_DECK_SIZE, playablePool } from '../../engine';
+import { loadHsCards, MAX_DECK_SIZE, playablePool, primePool } from '../../engine';
 import { CardFace } from '../play-board/CardFace';
 import { addCard, blankDeck, countOf, curve, removeCard, SavedDeck, whyNotAdd } from './deck-model';
 import { loadDecks, saveDecks } from './deck-storage';
 import styles from './deck-builder.module.scss';
 
 const { cards, byId } = loadHsCards();
-const pool = playablePool(cards).sort((a, b) => a.cost - b.cost || (a.name ?? '').localeCompare(b.name ?? ''));
+const corePool = playablePool(cards);
+const prime = primePool(cards);
+const pool = [...corePool, ...prime].sort((a, b) => a.cost - b.cost || (a.name ?? '').localeCompare(b.name ?? ''));
 const TYPES = ['all', 'minion', 'spell', 'weapon', 'item'] as const;
+const SETS = ['core', 'prime', 'both'] as const;
 const COSTS = ['all', '0', '1', '2', '3', '4', '5', '6', '7+'] as const;
 
 export const DeckBuilder = () => {
@@ -16,6 +19,7 @@ export const DeckBuilder = () => {
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [type, setType] = useState<typeof TYPES[number]>('all');
+  const [set, setSet] = useState<typeof SETS[number]>('core');
   const [cost, setCost] = useState<typeof COSTS[number]>('all');
   const [search, setSearch] = useState('');
   const [note, setNote] = useState('');
@@ -38,12 +42,13 @@ export const DeckBuilder = () => {
   const shown = useMemo(
     () =>
       pool.filter((c) => {
+        if (set !== 'both' && c.source !== set) return false;
         if (type !== 'all' && c.type !== type) return false;
         if (cost !== 'all' && (cost === '7+' ? c.cost < 7 : c.cost !== Number(cost))) return false;
         const q = search.trim().toLowerCase();
         return !q || (c.name ?? '').toLowerCase().includes(q) || c.text.toLowerCase().includes(q);
       }),
-    [type, cost, search],
+    [set, type, cost, search],
   );
 
   if (!deck) return null;
@@ -78,6 +83,11 @@ export const DeckBuilder = () => {
       <section className={styles.pool}>
         <div className={styles.filters}>
           <input type="search" placeholder="Search name or text" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <select value={set} onChange={(e) => setSet(e.target.value as typeof set)} aria-label="Card set">
+            <option value="core">Core ({corePool.length})</option>
+            <option value="prime">Prime ({prime.length}, more coming)</option>
+            <option value="both">Core + Prime</option>
+          </select>
           <select value={type} onChange={(e) => setType(e.target.value as typeof type)} aria-label="Card type">
             {TYPES.map((t) => (
               <option key={t} value={t}>

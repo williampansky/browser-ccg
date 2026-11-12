@@ -59,6 +59,12 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   (`maxCopies`): 2 of any card, 1 if its rarity is `MYTHIC`; the deck builder enforces it, `createGame` does not.
 - **`/deckbuilder`** (`components/deck-builder/`) is the new builder on the engine's card model (the old page read the zone-game shape).
   Saved decks live in localStorage (`deck-storage.ts`).
+- **PRIME is opt-in** (`primePool` in `engine/decks.ts`: active, named, non-token PRIME cards the engine can already play; 20 of 254 so far,
+  the rest need definitions). The deck builder has a Core / Prime / Both filter; the picker has "Random deck (Core + Prime)"; every other
+  random or starter deck stays CORE-only, so CORE's balance numbers are unchanged. Unnamed PRIME cards (51 in the data) are left out until Airtable names them.
+  PRIME art exists for 2 of 254 cards, so most show a plain frame (404s for the missing images in the console are expected).
+- **Starter decks** have an optional `minMinions`; Spellslinger (centred on 2.5 mana, 12 minions) and Armed (10) use it. After the 2026-11-12 tuning
+  `npm run sim -- 30 greedy` shows every starter between about 35% and 65% overall.
 - **Choosing decks for a game** (`components/play-board/deck-choice.ts`): Menu > "New game (choose decks)" opens a picker for each
   player: Surprise, Random starter deck, Random deck, one of the six starter decks (`engine/starter-decks.ts`), or a saved deck.
   The last picks are remembered (`ccg.newGame.v1`). **The AI seat never plays a saved deck**: it defaults to Surprise (a random
@@ -89,7 +95,9 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   not left looking at an open browser window thinking work is still going on. Prefer the headless server
   (`playwright-headless`) for routine checks; use the headed one (`playwright`) only to show something live.
 
-- **Never use port 3000 for Playwright checks.** The author playtests on 3000 at the same time. Start your own dev
+- **Never use port 3000 for Playwright checks.** Start your server with its own build folder, `NEXT_DIST_DIR=.next-test npm run dev -- -p 3100`:
+  two dev servers sharing `.next` make each other reload endlessly (git-ignored; delete `.next-test` afterwards).
+  Also: The author playtests on 3000 at the same time. Start your own dev
   server on another port (`npm run dev -- -p 3100`), point Playwright at that, and **when you are done close the
   browser and stop that dev server** (kill the process on the port), so nothing is left running.
 
