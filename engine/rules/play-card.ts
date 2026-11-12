@@ -83,6 +83,7 @@ export const playCard = (
     const p = g.players[me];
     p.hand.splice(handIndex, 1);
     p.energy.current -= cost;
+    if (def?.mystery && p.mysteryFreeOnTurn === g.turn) delete p.mysteryFreeOnTurn; // the free Mystery is used up
     const overcharge = card.mechanics.includes('OVERLOAD') ? card.numbers.overcharge ?? 0 : 0;
     if (overcharge > 0) {
       p.overcharge = (p.overcharge ?? 0) + overcharge;

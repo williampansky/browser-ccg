@@ -667,3 +667,21 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
   Husk for you; 241 damage = your Armor, then lose half of it (rounded up); 233 +2/+4 to a damaged minion.
 - **Return to hand** (`returnToHand`): 026 and 015 return a friendly minion (not the enemy's, not themselves); 185 returns one costing 1 less (`CardInstance.costDelta`) and with Rush
   when played (`CardInstance.rushOnPlay`). A full hand destroys the minion.
+
+### Batch F: Poison, untargetable, the opponent as a target, and assorted cards (2026-11-12)
+
+- **Poison / Touch of Death** (`CardDef.poison`): in combat, a poisonous minion destroys whatever minion it actually DAMAGED; a popped Bubble means no damage, so no poison. Works
+  both ways (attacking or being attacked). 229 only on Creatures. A Suppressed minion loses it. Hero weapon hits are not minions, so they do not poison. 060 (1/3) and 197 are Concealed.
+- **Untargetable** (`CardDef.untargetable`): 012 (2/3) cannot be aimed at by a spell or an item; a warcry or an attack can. Suppressed, it can be targeted.
+- **For the opponent**: 100 summons a 3/3 Cursed Spawn (demise), 096 two 1/1 Toucans (warcry), 092 gives two Sushi (+1/+1 items on a friendly minion), 057 gives them an energy slot.
+  088 copies a spell to the OTHER hand than the caster's (a face-down Mystery is not copied). 221 destroys one of YOUR energy slots (total -1 for the rest of the game).
+- **Random**: 071 destroys one random enemy minion with 2 or less Attack; 242 destroys a random number (0 to all) of all minions, both sides; 187 makes two random enemy minions each
+  deal their Attack to the other; 014 does 4 separate points of damage to random characters on either side (heroes included, and itself); 190 deals 2 to 4 to the target you choose;
+  090 draws an extra card at the start of your turn half the time.
+- **Fresh spells and items**: 223 destroys a friendly minion and deals its Attack to all enemy minions; 116 +2/+2 and Guard to yours; 194 destroys your weapon and deals its Attack to all enemies;
+  234 draws only if the enemy minion survives; 151 draws if it was already Disabled (checked before the damage); 211 draws a card costing 3 less; 219 takes the first two minions from your deck;
+  147 makes your next Mystery this turn cost 0 (once).
+- **Minions**: 079 pops every other Bubble and gains +3/+3 each; 087 Spell Damage +1, draws on death; 093 heals a random friendly minion 2 when you summon another; 215 +1 Health to a random
+  friendly minion at the end of your turn; 245 deals 8 to a random enemy at the end of your turn; 249 destroys a random enemy minion whenever you play a card (a Mystery or weapon too, not itself);
+  098 summons a Guard 2/2 at the end of your turn; 253/254 affect every OTHER minion (they are 10/10s) and leave Fear / Despair on death; 251 steals 2 random enemy minions and leaves Glory.
+- **037 Skelly (reading to confirm)**: a standing effect, while it is on the board your own minions cost 3 more. The data tags it as a warcry, so it may have meant something else.

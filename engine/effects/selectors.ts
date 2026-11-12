@@ -148,3 +148,14 @@ export const mostDamagedFriendly = (): Selector => (ctx) => {
   const worst = hurt.reduce((a, b) => (b.maxHealth - b.health > a.maxHealth - a.health ? b : a));
   return [minionRef(worst)];
 };
+
+/** Up to `count` distinct visible enemy minions that pass `test`, at random. */
+export const randomEnemyMinionsWhere =
+  (count: number, test: (m: MinionInstance) => boolean): Selector =>
+  (ctx) =>
+    ctx.rng
+      .shuffle(
+        ctx.g.players[opponentOf(ctx.caster)].board.filter((m) => !m.keywords.hidden && test(m as MinionInstance))
+      )
+      .slice(0, count)
+      .map(minionRef);

@@ -792,6 +792,21 @@
     "isEntourage": true
   },
   {
+    "id": "PRIME_100a",
+    "name": "Cursed Spawn",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_NONE%",
+    "race": "%RACE_CREATURE%",
+    "cost": 3,
+    "attack": 3,
+    "health": 3,
+    "collectible": false,
+    "active": false,
+    "isEntourage": true
+  },
+  {
     "id": "CORE_057c",
     "name": "Hidden Sniper",
     "set": "%SET_002%",

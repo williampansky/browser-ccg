@@ -89,6 +89,8 @@ export interface PlayerState {
   heroDisabledOnTurn?: number;
   /** Overcharge: energy that stays locked at the start of this player's next turn (then cleared) */
   overcharge?: number;
+  /** The turn number on which this player's next Mystery costs 0 (Vibrant Mage) */
+  mysteryFreeOnTurn?: number;
   /** Cards this player has played this turn (`now`) and on their previous turn (`prev`), for "cards you played this turn and last" */
   plays?: { now: number; prev: number };
   /** Armor this player's hero has lost to damage over the whole game */

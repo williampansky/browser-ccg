@@ -2550,11 +2550,12 @@
     "cardClass": "0 %CLASS_NONE%",
     "race": "%RACE_NONE%",
     "cost": 3,
-    "attack": 2,
+    "attack": 1,
     "health": 3,
-    "text": "<strong>%POISON%</strong>",
+    "text": "<strong>%HIDDEN%</strong><br>\nTouch of Death",
     "mechanics": [
-      "%POISON%"
+      "%POISON%",
+      "%HIDDEN%"
     ],
     "collectible": true,
     "active": true,
@@ -4184,8 +4185,8 @@
     "cardClass": "0 %CLASS_NONE%",
     "race": "%RACE_NONE%",
     "cost": 2,
-    "attack": 3,
-    "health": 2,
+    "attack": 2,
+    "health": 3,
     "text": "Can't be targeted by<br />\nSpells, Items, or Skills",
     "mechanics": [
       "%CANT_TARGET%"

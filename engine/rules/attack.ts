@@ -1,7 +1,9 @@
 import { produce } from 'immer';
 import { ActionError, GameEvent, GameState, MinionInstance, PlayerId, TargetRef } from '../state/types';
 import { damageHero, damageMinion } from './damage';
+import { getCardDef } from '../definitions';
 import type { EngineContext } from './apply-action';
+import { minionDef } from './minion';
 import { mysteryBeforeAttack } from './mystery';
 import { isLegalTarget, legalTargets } from './targeting';
 
@@ -11,6 +13,13 @@ export const cantAttack = (m: MinionInstance, turn: number): boolean => {
   if (m.disabledOnTurn === turn) return true;
   if (m.attacksThisTurn >= (m.keywords.doubleAttack ? 2 : 1)) return true;
   return !m.keywords.rush && m.playedOnTurn === turn; // summoning sickness
+};
+
+/** Does `source` carry Touch of Death that works on `victim`? (Suppressed minions lose it.) */
+const touchOfDeath = (source: MinionInstance, victim: MinionInstance, ctx: EngineContext): boolean => {
+  const def = minionDef(source, ctx.catalog, ctx.defs ?? getCardDef);
+  if (!def?.poison) return false;
+  return def.poison.vs === undefined || ctx.catalog.get(victim.cardId)?.race === def.poison.vs;
 };
 
 export const attack = (
@@ -44,8 +53,14 @@ export const attack = (
       if (!d) return;
       // Simultaneous damage (RULES Q15): read both attack values before applying either.
       const [dealt, taken] = [a.attack, d.attack];
+      const [dBefore, aBefore] = [d.health, a.health];
       damageMinion(d, dealt, events, foe);
       damageMinion(a, taken, events, me);
+      // Touch of Death: a poisonous minion destroys whatever it actually damaged (a popped Bubble absorbs it).
+      if (ctx) {
+        if (d.health < dBefore && touchOfDeath(a, d, ctx)) d.health = 0;
+        if (a.health < aBefore && touchOfDeath(d, a, ctx)) a.health = 0;
+      }
     }
   });
 };

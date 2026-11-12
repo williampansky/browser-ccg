@@ -99,6 +99,10 @@ export interface MysteryDef {
 }
 
 export interface CardDef {
+  /** Touch of Death: a minion this one damages in combat is destroyed. `vs` limits it to minions of that race. */
+  poison?: { vs?: string };
+  /** Spells and items cannot target this minion (warcries and attacks still can) */
+  untargetable?: boolean;
   /** While this minion is on either board, turns last at most this many seconds (see `turnSeconds`) */
   turnSeconds?: number;
   /** While this minion is on its owner's board, the OPPONENT's turns last at most this many seconds */

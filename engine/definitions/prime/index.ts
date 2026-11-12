@@ -117,6 +117,42 @@ import prime026 from './prime-026';
 import prime043 from './prime-043';
 import prime185 from './prime-185';
 import prime049 from './prime-049';
+import prime229 from './prime-229';
+import prime219 from './prime-219';
+import prime088 from './prime-088';
+import prime098 from './prime-098';
+import prime249 from './prime-249';
+import prime087 from './prime-087';
+import prime151 from './prime-151';
+import prime100 from './prime-100';
+import prime223 from './prime-223';
+import prime060 from './prime-060';
+import prime093 from './prime-093';
+import prime242 from './prime-242';
+import prime014 from './prime-014';
+import prime253 from './prime-253';
+import prime071 from './prime-071';
+import prime092 from './prime-092';
+import prime197 from './prime-197';
+import prime096 from './prime-096';
+import prime187 from './prime-187';
+import prime190 from './prime-190';
+import prime211 from './prime-211';
+import prime116 from './prime-116';
+import prime147 from './prime-147';
+import prime254 from './prime-254';
+import prime194 from './prime-194';
+import prime221 from './prime-221';
+import prime215 from './prime-215';
+import prime037 from './prime-037';
+import prime012 from './prime-012';
+import prime245 from './prime-245';
+import prime234 from './prime-234';
+import prime251 from './prime-251';
+import prime090 from './prime-090';
+import prime057 from './prime-057';
+import prime092a from './prime-092a';
+import prime079 from './prime-079';
 import prime210 from './prime-210';
 import prime217 from './prime-217';
 import prime218 from './prime-218';
@@ -244,6 +280,42 @@ export const primeDefinitions: Definition[] = [
   prime043,
   prime185,
   prime049,
+  prime229,
+  prime219,
+  prime088,
+  prime098,
+  prime249,
+  prime087,
+  prime151,
+  prime100,
+  prime223,
+  prime060,
+  prime093,
+  prime242,
+  prime014,
+  prime253,
+  prime071,
+  prime092,
+  prime197,
+  prime096,
+  prime187,
+  prime190,
+  prime211,
+  prime116,
+  prime147,
+  prime254,
+  prime194,
+  prime221,
+  prime215,
+  prime037,
+  prime012,
+  prime245,
+  prime234,
+  prime251,
+  prime090,
+  prime057,
+  prime092a,
+  prime079,
   prime210,
   prime217,
   prime218,

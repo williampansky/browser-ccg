@@ -19,6 +19,7 @@ export const effectiveCost = (
   /** A cost change carried by this particular copy of the card (`CardInstance.costDelta`) */
   copyDelta = 0
 ): number => {
+  if (defs(card)?.mystery && state.players[player].mysteryFreeOnTurn === state.turn) return 0;
   let delta = (defs(card)?.ownCost?.({ state, owner: player }) ?? 0) + copyDelta;
   let floor = 0;
   for (const m of state.players[player].board) {

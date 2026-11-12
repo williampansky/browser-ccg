@@ -407,18 +407,19 @@ export const halveHealth =
 
 /** Adds a card to the caster's hand (burned if full). `costDelta` follows that copy ("costs 1 less" is -1). */
 export const addCardToHand =
-  (cardId: string | ((ctx: Parameters<Effect>[0]) => string | undefined), costDelta = 0): Effect =>
+  (cardId: string | ((ctx: Parameters<Effect>[0]) => string | undefined), costDelta = 0, forOpponent = false): Effect =>
   (ctx) => {
     const id = typeof cardId === 'function' ? cardId(ctx) : cardId;
     if (!id) return;
+    const who = forOpponent ? opponentOf(ctx.caster) : ctx.caster;
     const instanceId = ctx.g.nextInstanceId++;
-    const p = ctx.g.players[ctx.caster];
+    const p = ctx.g.players[who];
     if (p.hand.length >= MAX_HAND) {
-      ctx.events.push({ type: 'Burned', player: ctx.caster, instanceId });
+      ctx.events.push({ type: 'Burned', player: who, instanceId });
       return;
     }
     p.hand.push({ instanceId, cardId: id, ...(costDelta ? { costDelta } : {}) });
-    ctx.events.push({ type: 'CardObtained', player: ctx.caster, instanceId });
+    ctx.events.push({ type: 'CardObtained', player: who, instanceId });
   };
 
 /** While a Mystery reacts to an attack: the attack goes to the minion most recently summoned for the caster (if any). */
@@ -547,4 +548,107 @@ export const tradeWeakestForStrongest = (): Effect => (ctx) => {
     m.attacksThisTurn = 0;
     delete m.disabledOnTurn;
   }
+};
+
+/** Summons the running card's `index`-th entourage token for the OPPONENT, `count` times (a full board: nothing). */
+export const summonEntourageForOpponent =
+  (index = 0, count = 1): Effect =>
+  (ctx) => {
+    const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+    const token = source && ctx.catalog.get(source.entourage[index]);
+    if (!token) throw new Error(`${ctx.sourceCardId} has no entourage token #${index} in the catalog`);
+    for (let i = 0; i < count; i++) summonMinion(ctx.g, opponentOf(ctx.caster), token, ctx.events);
+  };
+
+/** The opponent gains `amount` empty energy slots (capped at 10). */
+export const giveOpponentEnergySlot =
+  (amount = 1): Effect =>
+  (ctx) => {
+    const e = ctx.g.players[opponentOf(ctx.caster)].energy;
+    e.total = Math.min(MAX_ENERGY, e.total + amount);
+  };
+
+/** The caster loses `amount` energy slots (never below 0; current energy follows). */
+export const loseEnergySlot =
+  (amount = 1): Effect =>
+  (ctx) => {
+    const e = ctx.g.players[ctx.caster].energy;
+    e.total = Math.max(0, e.total - amount);
+    e.current = Math.min(e.current, e.total);
+  };
+
+/** The caster draws `count` minion cards from their deck (the first ones found; they leave the deck, a full hand burns them). */
+export const drawMinionsFromDeck =
+  (count: number): Effect =>
+  (ctx) => {
+    const p = ctx.g.players[ctx.caster];
+    for (let n = 0; n < count; n++) {
+      const i = p.deck.findIndex((c) => ctx.catalog.get(c.cardId)?.type === 'minion');
+      if (i < 0) return;
+      const [card] = p.deck.splice(i, 1);
+      if (p.hand.length >= MAX_HAND) ctx.events.push({ type: 'Burned', player: ctx.caster, instanceId: card.instanceId });
+      else {
+        p.hand.push(card);
+        ctx.events.push({ type: 'Drew', player: ctx.caster, instanceId: card.instanceId });
+      }
+    }
+  };
+
+/** Destroys a random number (0 to all) of the minions on both boards, picked at random. */
+export const destroyRandomNumberOfAll = (): Effect => (ctx) => {
+  const all = [...ctx.g.players['0'].board, ...ctx.g.players['1'].board];
+  const k = ctx.rng.int(all.length + 1);
+  for (const m of ctx.rng.shuffle([...all]).slice(0, k)) m.health = 0;
+};
+
+/** Two random enemy minions fight: each deals its Attack to the other (no Guard, no triggers beyond the damage). */
+export const forceFight = (): Effect => (ctx) => {
+  const picks = ctx.rng.shuffle(ctx.g.players[opponentOf(ctx.caster)].board.filter((m) => !m.keywords.hidden)).slice(0, 2);
+  if (picks.length < 2) return;
+  const [a, b] = picks;
+  const [aAtk, bAtk] = [a.attack, b.attack];
+  damageTarget(ctx.g, { kind: 'minion', instanceId: b.instanceId }, aAtk, ctx.events);
+  damageTarget(ctx.g, { kind: 'minion', instanceId: a.instanceId }, bAtk, ctx.events);
+};
+
+/** `count` times: 1 damage to a random character (hero or minion, either side). */
+export const scatterDamage =
+  (count: number): Effect =>
+  (ctx) => {
+    for (let i = 0; i < count; i++) {
+      const all: Parameters<typeof damageTarget>[1][] = [
+        { kind: 'hero', player: '0' },
+        { kind: 'hero', player: '1' },
+        ...[...ctx.g.players['0'].board, ...ctx.g.players['1'].board].filter((m) => m.health > 0).map((m) => ({ kind: 'minion' as const, instanceId: m.instanceId })),
+      ];
+      const pick = all[ctx.rng.int(all.length)];
+      damageTarget(ctx.g, pick, withSpellPower('damage', 1, ctx.spellDamage), ctx.events);
+    }
+  };
+
+/** Damage between `min` and `max` (inclusive), rolled once. */
+export const randomDamage =
+  (select: Selector, min: number, max: number): Effect =>
+  (ctx) => {
+    const amount = min + ctx.rng.int(max - min + 1);
+    damage(select, amount)(ctx);
+  };
+
+/** With the given chance (0..1) runs `then`. */
+export const withChance =
+  (chance: number, then: Effect): Effect =>
+  (ctx) => {
+    if (ctx.rng.int(1000) < chance * 1000) then(ctx);
+  };
+
+/** The caster's next Mystery this turn costs 0. */
+export const freeMysteryThisTurn = (): Effect => (ctx) => {
+  ctx.g.players[ctx.caster].mysteryFreeOnTurn = ctx.g.turn;
+};
+
+/** Gives the OTHER player (not the one who just played the spell) a copy of the spell that was played. */
+export const copyPlayedSpellToOtherHand = (): Effect => (ctx) => {
+  const e = ctx.event;
+  if (e?.type !== 'CardPlayed') return;
+  addCardToHand(e.cardId, 0, e.player === ctx.caster)(ctx);
 };

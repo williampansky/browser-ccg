@@ -59,7 +59,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   (`maxCopies`): 2 of any card, 1 if its rarity is `MYTHIC`; the deck builder enforces it, `createGame` does not.
 - **`/deckbuilder`** (`components/deck-builder/`) is the new builder on the engine's card model (the old page read the zone-game shape).
   Saved decks live in localStorage (`deck-storage.ts`).
-- **PRIME is opt-in** (`primePool` in `engine/decks.ts`: active, named, non-token PRIME cards the engine can already play; 139 of 254 so far, definitions in `engine/definitions/prime/`, readings in `RULES.md` Appendix C,
+- **PRIME is opt-in** (`primePool` in `engine/decks.ts`: active, named, non-token PRIME cards the engine can already play; 174 of 254 so far, definitions in `engine/definitions/prime/`, readings in `RULES.md` Appendix C,
   the rest need definitions). The deck builder has a Core / Prime / Both filter; the picker has "Random deck (Core + Prime)"; every other
   random or starter deck stays CORE-only, so CORE's balance numbers are unchanged. Unnamed PRIME cards (51 in the data) are left out until Airtable names them.
   PRIME art was copied from `react-ccg-deprecated` (`SET_003`, renamed `PRIME_061-CARD.jpg` -> `SET_PRIME/061-CARD.jpg`, checked card by card against the old data) on 2026-11-12: all but `PRIME_212` have a `-CARD` image, but its provenance is unchecked, like the rest. **A card with no art file shows `public/images/sets/PLACEHOLDER.jpg`**: `artBackground` (`card-face-model.ts`)
@@ -178,6 +178,6 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
 - Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.
-- Current checks: `npm test` passes (824 tests; the card-number tests were updated to the balance pass on 2026-11-12), `npm run build` passes, and `tsc` has 8 errors
+- Current checks: `npm test` passes (895 tests; the card-number tests were updated to the balance pass on 2026-11-12), `npm run build` passes, and `tsc` has 8 errors
   (`as Card` casts in `utils/__tests__/get-card-power.test.ts`). Don't "fix"
   unrelated failures as a drive-by.
