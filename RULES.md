@@ -605,7 +605,7 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
   be the card itself (046, 052).
 - **Spell-cast triggers** (073, 055, 141, 076, 069, 050) fire for spells only (not items) and only for your own casts. **Death triggers** (027, 018)
   see every minion on either board die; 128 only your own Creatures.
-- **Misc**: 062/217 hurt your own hero; 061's "take 1 damage" is the Hut itself; 082 can aim at either side's 7+ Attack minion; 150 disables the
+- **Misc**: 062 hurts itself (author, playtest 2026-11-12: it enters as a 5/4); 217 hurts your own hero; 061's "take 1 damage" is the Hut itself; 082 can aim at either side's 7+ Attack minion; 150 disables the
   survivors; 232 lowers Health by 1 (not damage); 241 does not spend the armor; 231 counts your hero too; 123's heal goes to your own hero.
 
 ### Mysteries (2026-11-12; the Mystery cards were rewritten per `balance/PRIME-DISTANCE.md`)

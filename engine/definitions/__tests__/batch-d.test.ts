@@ -17,9 +17,13 @@ describe('Batch D cards are all defined and playable', () => {
   });
 });
 
-describe('warcries on your own hero', () => {
+describe('warcries on your own hero or itself', () => {
   it('PRIME_217 costs you 3 life', () => expect(play(setup('PRIME_217')).state.players['0'].health).toBe(27));
-  it('PRIME_062 costs you 4 life', () => expect(play(setup('PRIME_062')).state.players['0'].health).toBe(26));
+  it('PRIME_062 damages ITSELF for 4 (a 5/4), not your hero', () => {
+    const r = play(setup('PRIME_062')).state;
+    expect(stats(r, '0')).toEqual([[5, 4]]);
+    expect(r.players['0'].health).toBe(30);
+  });
   it('PRIME_039 heals you 5 (capped at 30)', () => {
     expect(play(setup('PRIME_039', { heroHp: { '0': 10 } })).state.players['0'].health).toBe(15);
     expect(play(setup('PRIME_039', { heroHp: { '0': 28 } })).state.players['0'].health).toBe(30);

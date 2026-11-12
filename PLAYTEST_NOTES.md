@@ -87,5 +87,5 @@
   - the modal should also show the entourage connected to the parent if applicable
 - i think the card wrapper graphic is incorrect. its images/hs/*. we need to drop the /hs/ and migrate those
   - on that note. is having these image assets too "heavy"? is it possible to build something similar to our current card frame using just html/css/svg?
-- crumbling golem should deal damage to itself, not the hero, so when played it is a 5/4 (with 4 hp lost from self dmg)
-- need some UI on the player bar (or enemy) to show a mystery is active
+- [x] crumbling golem should deal damage to itself, not the hero, so when played it is a 5/4 (with 4 hp lost from self dmg)
+- [x] need some UI on the player bar (or enemy) to show a mystery is active (a purple badge on the hero bar: the card name and category for you, only "Mystery (category)" for the opponent; the log says "sets a Mystery (Attack)" and names the card when it fires)
