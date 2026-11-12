@@ -165,7 +165,7 @@ describe('this-turn boosts', () => {
     expect(hit.state.players['1'].health).toBe(26);
     expect(hit.state.players['0'].weapon).toBeNull();
   });
-  it('127 with a weapon already equipped adds +4 Attack to it, keeping it and its durability', () => {
+  it('127 with a weapon already equipped adds +4 Attack to it this turn, keeping the weapon and its durability', () => {
     const base = withWeapon(setup('CORE_127'), '0');
     const before = base.players['0'].weapon!;
     const r = play(base).state;
@@ -174,7 +174,37 @@ describe('this-turn boosts', () => {
     expect(w.attack).toBe(before.attack + 4);
     expect(w.durability).toBe(before.durability);
     expect(w.temporary).toBeUndefined();
-    expect(endTurn(r).players['0'].weapon).not.toBeNull();
+    expect(endTurn(r).players['0'].weapon).not.toBeNull(); // the weapon stays...
+  });
+  it('127 on an equipped weapon: the +4 is gone when the turn ends (a boon, not a permanent buff)', () => {
+    const base = withWeapon(setup('CORE_127'), '0');
+    const before = base.players['0'].weapon!;
+    const r = play(base).state;
+    const after = endTurn(r).players['0'].weapon!;
+    expect(after.attack).toBe(before.attack);
+    expect(after.durability).toBe(before.durability);
+    expect(after.tempAttack ?? 0).toBe(0);
+    // still gone on the owner's next turn
+    expect(backTo(endTurn(r), '0').players['0'].weapon!.attack).toBe(before.attack);
+  });
+  it('127 twice on one weapon in a turn adds +8, and all of it is taken back at the end of the turn', () => {
+    const base = produce(withWeapon(setup('CORE_127'), '0'), (g) => {
+      g.players['0'].hand.push({ ...g.players['0'].hand[0] });
+      g.players['0'].energy = { current: 10, total: 10 };
+    });
+    const before = base.players['0'].weapon!.attack;
+    const once = play(base).state;
+    const twice = play(once).state;
+    expect(twice.players['0'].weapon!.attack).toBe(before + 8);
+    expect(endTurn(twice).players['0'].weapon!.attack).toBe(before);
+  });
+  it('127 +4 is used by the swing on the turn it is played', () => {
+    const base = withWeapon(setup('CORE_127'), '0');
+    const before = base.players['0'].weapon!;
+    const r = play(base).state;
+    const hit = run(r, { type: 'WeaponAttack', target: hero('1') });
+    if ('error' in hit) throw new Error(hit.error);
+    expect(hit.state.players['1'].health).toBe(30 - (before.attack + 4));
   });
   it('an ordinary weapon is NOT removed at end of turn', () => {
     expect(endTurn(withWeapon(setup('GRUNT'), '0')).players['0'].weapon).not.toBeNull();

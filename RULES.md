@@ -570,7 +570,9 @@ just Demonic), 106 is for one turn, 127 is for one turn only, 096 is not a CORE 
   when the minion dies and re-aim as the board changes. 003/130 reach your *other* minions; 108 reaches
   the two neighbours; 062 gives your Creatures Rush.
 - **This-turn boosts (048, 106, 111, 127)** end when the turn ends. 127 equips a 4/1 weapon that is
-  removed at the end of the turn if unused. 048/111 affect minions only (a hero has no Attack of its own).
+  removed at the end of the turn if unused; with a weapon already equipped it adds +4 Attack to that weapon for this turn only
+  (the weapon keeps its durability and the +4 is taken back at end of turn, via `tempAttack` on the weapon). Author, playtest
+  2026-11-12: a boon, not a permanent buff (this replaced an earlier reading where the +4 lasted the weapon's durability). 048/111 affect minions only (a hero has no Attack of its own).
 - **081** heals 2 *before* the attack, so counter-damage cannot kill the hero first. The 2 is in the card
   text only (no data field), so it is a constant in the definition.
 - **084** picks a random card from the cards your opponent has played from hand (tracked in

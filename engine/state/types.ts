@@ -54,6 +54,8 @@ export interface WeaponInstance {
   durability: number;
   /** Removed when its owner's turn ends (CORE_127) */
   temporary?: boolean;
+  /** Attack added "for this turn only" (already included in `attack`; removed when the turn ends; CORE_127 on a weapon) */
+  tempAttack?: number;
 }
 
 export interface PlayerState {

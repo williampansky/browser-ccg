@@ -110,6 +110,16 @@ export const buffWeapon =
     if (weapon) weapon.attack += attack;
   };
 
+/** Like `buffWeapon`, but only until the end of the turn (the attack is taken back by `endTurnCleanup`). */
+export const buffWeaponThisTurn =
+  (attack: number): Effect =>
+  (ctx) => {
+    const weapon = ctx.g.players[ctx.caster].weapon;
+    if (!weapon) return;
+    weapon.attack += attack;
+    weapon.tempAttack = (weapon.tempAttack ?? 0) + attack;
+  };
+
 /** Adds an empty energy slot (capped at 10). The new slot is not filled until next turn's refill. */
 export const gainEnergySlot =
   (amount = 1): Effect =>

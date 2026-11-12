@@ -3,14 +3,19 @@ import { GameEvent, GameState, MAX_ENERGY, PlayerId } from '../state/types';
 import { drawCard } from './draw';
 
 /**
- * Ends "this turn only" effects when `player`'s turn ends: temporary Attack is taken back (never below 0)
- * and a temporary weapon is removed. Call inside `produce`.
+ * Ends "this turn only" effects when `player`'s turn ends: temporary Attack (on minions and weapons) is taken back
+ * (never below 0) and a temporary weapon is removed. Call inside `produce`.
  */
 export const endTurnCleanup = (g: Draft<GameState>, player: PlayerId): void => {
   for (const p of ['0', '1'] as const) {
     for (const m of g.players[p].board) {
       if (m.tempAttack !== 0) m.attack = Math.max(0, m.attack - m.tempAttack);
       m.tempAttack = 0;
+    }
+    const w = g.players[p].weapon;
+    if (w?.tempAttack) {
+      w.attack = Math.max(0, w.attack - w.tempAttack);
+      w.tempAttack = 0;
     }
   }
   if (g.players[player].weapon?.temporary) g.players[player].weapon = null;
