@@ -122,20 +122,16 @@ export const DeckBuilder = () => {
                   type="button"
                   className={[styles.cardButton, blocked ? styles.blocked : ''].join(' ')}
                   onClick={() => setViewing(c.id)}
-                  aria-label={`View ${c.name} (${n} in deck)`}
+                  onContextMenu={(e) => {
+                    // Right-click adds a copy without opening the card (and no browser menu).
+                    e.preventDefault();
+                    add(c.id);
+                  }}
+                  title={whyNotAdd(deck, c) ?? 'Click to view, right-click to add to the deck'}
+                  aria-label={`View ${c.name} (${n} in deck). Right-click to add it to the deck`}
                 >
                   <CardFace card={c} width={150} />
                   {n > 0 && <span className={styles.copies}>×{n}</span>}
-                </button>
-                <button
-                  type="button"
-                  className={styles.quickAdd}
-                  onClick={() => add(c.id)}
-                  disabled={blocked}
-                  title={whyNotAdd(deck, c) ?? 'Add to deck'}
-                  aria-label={`Add ${c.name} to the deck`}
-                >
-                  +
                 </button>
               </div>
             );
@@ -230,7 +226,7 @@ export const DeckBuilder = () => {
               </li>
             );
           })}
-          {rows.length === 0 && <li className={styles.empty}>Click a card to add it. Click a row here to remove one.</li>}
+          {rows.length === 0 && <li className={styles.empty}>Right-click a card to add it (click it to look closer). Click a row here to remove one.</li>}
         </ul>
         <Link href="/play">
           <a className={styles.playLink}>Play (choose this deck under New game)</a>

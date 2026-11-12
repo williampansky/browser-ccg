@@ -241,27 +241,6 @@
   position: relative;
 }
 
-.quickAdd {
-  position: absolute;
-  right: 6px;
-  bottom: 6px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1px solid #5d8a5d;
-  background: rgba(30, 60, 30, 0.92);
-  color: #b9f5b9;
-  font-size: 18px;
-  line-height: 1;
-  cursor: pointer;
-  z-index: 5;
-
-  &:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-  }
-}
-
 .backdrop {
   position: fixed;
   inset: 0;

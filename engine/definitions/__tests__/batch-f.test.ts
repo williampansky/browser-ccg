@@ -223,9 +223,19 @@ describe('minions on the board', () => {
     const r = play(s).state;
     expect(stats(r, '0')[0][1]).toBe(3);
   });
-  it('215 buffs a random friendly minion +1 Health at the end of your turn only', () => {
-    expect(stats(endTurn(play(setup('CORE_043', { mine: [[0, 1, 'PRIME_215']] })).state), '0')[0][1]).toBe(2);
-    expect(stats(endTurn(play(setup('CORE_043', { theirs: [[0, 1, 'PRIME_215']] })).state), '1')[0][1]).toBe(1);
+  it('215 buffs ANOTHER random friendly minion +1 Health at the end of your turn, never itself, and only on your turn', () => {
+    const r = endTurn(play(setup('CORE_043', { mine: [[0, 1, 'PRIME_215'], [1, 4]] })).state);
+    expect(stats(r, '0')).toEqual([[0, 1], [1, 5]]);
+    for (let seed = 1; seed <= 12; seed++) {
+      const s = play(setup('CORE_043', { mine: [[0, 1, 'PRIME_215'], [1, 4], [1, 4]] })).state;
+      const e = run(s, { type: 'EndTurn' } as Action, seed);
+      if ('error' in e) throw new Error(e.error);
+      expect(stats(e.state, '0')[0]).toEqual([0, 1]); // the Mushroomer itself never grows
+      expect(stats(e.state, '0').filter((x) => x[1] === 5)).toHaveLength(1); // exactly one of the others did
+    }
+    // alone, it has nobody to buff
+    expect(stats(endTurn(play(setup('CORE_043', { mine: [[0, 1, 'PRIME_215']] })).state), '0')[0][1]).toBe(1);
+    expect(stats(endTurn(play(setup('CORE_043', { theirs: [[0, 1, 'PRIME_215'], [1, 4]] })).state), '1')[1][1]).toBe(4);
   });
   it('245 hits a random enemy for 8 at the end of your turn', () => {
     const r = endTurn(play(setup('CORE_043', { mine: [[8, 8, 'PRIME_245']], theirs: [[1, 30]] })).state);

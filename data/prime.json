@@ -1180,7 +1180,7 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "<strong>%MYSTERY%</strong><br>\nWhen an enemy minion attacks you,<br>\nyour weapon hits it first for<br>\nits Attack (needs a weapon)",
+    "text": "<strong>%MYSTERY%</strong><br>\nWhen an enemy minion attacks you,<br>\nyour weapon hits it first for its Attack (needs a weapon)",
     "mechanics": [
       "%MYSTERY%",
       "%EVENT%"
@@ -1579,7 +1579,7 @@
     "cost": 1,
     "attack": 0,
     "health": 1,
-    "text": "<strong>%HIDDEN%.</strong> At the end of your turn, give a random friendly minion +1 HP",
+    "text": "<strong>%HIDDEN%.</strong> At the end of your turn, give another random friendly minion +1 HP",
     "mechanics": [
       "%HIDDEN%",
       "%EVENT%",
@@ -5079,7 +5079,7 @@
     "cost": 1,
     "attack": 1,
     "health": 1,
-    "text": "<strong>%ON_DEATH%:</strong> Deal 2 damage to a<br>\n%RANDOM% enemy minion, or the<br>\nenemy hero if there is none",
+    "text": "<strong>%ON_DEATH%:</strong> Deal 2 damage to a<br>\n%RANDOM% enemy minion, or the enemy hero if there is none",
     "mechanics": [
       "%ON_DEATH%"
     ],
