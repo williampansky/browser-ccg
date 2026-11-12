@@ -579,3 +579,31 @@ just Demonic), 106 is for one turn, 127 is for one turn only, 096 is not a CORE 
   `GameState.played`); nothing if they have played none; a full hand burns it.
 - **007** destroys the opponent's weapon and nothing else (hsclone also stopped their hero attacking; the text does not say
   so). **Confirmed by the author, 2026-11-11: follow the text, it only destroys the weapon.**
+
+## Appendix C: PRIME card behaviour decisions (2026-11-12)
+
+Readings I chose while giving PRIME cards definitions (`engine/definitions/prime/`). None of these is approved yet; change any you disagree with.
+
+- **Cost changes** (`engine/rules/cost.ts`, `effectiveCost`): a card's own rule (`ownCost`) and your minions' `costMods` all add up. A net reduction
+  stops at the floor ("not less than 1") but never raises a card above its printed cost; never below 0. Only the owner's cards are affected.
+  220 minions -2 (floor 1); 142 spells only, not items; 086 -1 per *other* card in hand; 085 -1 per minion on *either* board; 247 -1 per
+  point of damage your hero has taken (armor does not count). 037 (Skelly, "your minions cost 3 more") is not built: it is tagged as a warcry.
+- **Suppress (SILENCE)**: the minion loses its card's behaviour (triggers, auras, Spell Damage, cost changes, demise, conditional effects),
+  all keywords (including Can't Attack) and any Disable. Its Attack, Health, damage and buffs stay. It is a one-way flag (`silenced`).
+  Heroes cannot be Suppressed. 201 Suppresses first, then deals its 1 damage (so a demise does not fire).
+- **Overcharge (N)**: playing the card locks N of your energy at the start of your *next* turn only (stacks if you play several, never below 0).
+  Applies to every card with the OVERLOAD mechanic, whatever its type. `OverchargeGained` is an event, so 205 can react to it.
+- **"While damaged" and other self conditions** (009, 035, 041, 024, 244, 022, 006, 174) are rechecked after every step and vanish when the
+  condition stops (healed, weapon gone). 022's Onslaught and 006's Stampede are *not* given at creation even though the data lists them.
+  174's Attack always equals its Health (other auras still add on top).
+- **Keywords the data tags but the card only grants** (066, 054, 115, 124 Guard; 115 Stampede; 160 Bubble): the minion itself does not start with them.
+- **Damage triggers**: 239 reacts to any minion taking damage (either side, itself included); 237 to a *friendly* minion (also when it dies of it);
+  016 only to its own damage. `MinionDamaged` now carries the damaged minion's owner.
+- **End/start-of-turn triggers**: "at the end of your turn" fires only on your own turn (210, 102, 061, 046, 052, 176); 104 Perses grows at the end of *every*
+  turn. 059 hits a random enemy (hero included) at the start of your turn.
+- **Random picks** never repeat a target within one effect, and enemy picks include the hero ("enemies"): 167, 202, 059. Random *friendly* picks may
+  be the card itself (046, 052).
+- **Spell-cast triggers** (073, 055, 141, 076, 069, 050) fire for spells only (not items) and only for your own casts. **Death triggers** (027, 018)
+  see every minion on either board die; 128 only your own Creatures.
+- **Misc**: 062/217 hurt your own hero; 061's "take 1 damage" is the Hut itself; 082 can aim at either side's 7+ Attack minion; 150 disables the
+  survivors; 232 lowers Health by 1 (not damage); 241 does not spend the armor; 231 counts your hero too; 123's heal goes to your own hero.
