@@ -1,0 +1,7 @@
+import { defineCard } from '../define-card';
+import { buffThisTurn } from '../../effects/primitives';
+import { chosenTarget } from '../../effects/selectors';
+import { anyMinion } from '../../effects/filters';
+
+// PRIME_002, warcry: "Give a minion +2 Attack this turn" (any minion, either side)
+export default defineCard('PRIME_002', (n) => ({ target: anyMinion(), onPlay: [buffThisTurn(chosenTarget(), n.primary)] }));

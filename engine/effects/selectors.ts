@@ -1,5 +1,5 @@
 import { opponentOf } from '../rules/lookup';
-import type { TargetRef } from '../state/types';
+import type { MinionInstance, TargetRef } from '../state/types';
 import type { Selector } from './types';
 
 /** The target the player picked when casting. */
@@ -87,3 +87,19 @@ export const randomEnemyMinions =
 
 const isHidden = (ctx: Parameters<Selector>[0], id: number): boolean =>
   !!ctx.g.players[opponentOf(ctx.caster)].board.find((m) => m.instanceId === id)?.keywords.hidden;
+
+/** Up to `count` distinct minions of the caster's, at random. `where` narrows who can be picked (the minion this effect belongs to is allowed). */
+export const randomFriendlyMinions =
+  (count: number, where: (m: MinionInstance) => boolean = () => true): Selector =>
+  (ctx) =>
+    ctx.rng
+      .shuffle(ctx.g.players[ctx.caster].board.filter((m) => where(m as MinionInstance)))
+      .slice(0, count)
+      .map(minionRef);
+
+/** The minions standing next to the one this effect belongs to, on its own side. */
+export const adjacentToSelf = (): Selector => (ctx) => {
+  const board = ctx.g.players[ctx.caster].board;
+  const i = board.findIndex((m) => m.instanceId === ctx.self);
+  return i < 0 ? [] : board.filter((_, j) => Math.abs(j - i) === 1).map(minionRef);
+};

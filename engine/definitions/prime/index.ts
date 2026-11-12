@@ -60,6 +60,33 @@ import prime239 from './prime-239';
 import prime237 from './prime-237';
 import prime016 from './prime-016';
 import prime050 from './prime-050';
+import prime104 from './prime-104';
+import prime059 from './prime-059';
+import prime028 from './prime-028';
+import prime002 from './prime-002';
+import prime232 from './prime-232';
+import prime048 from './prime-048';
+import prime172 from './prime-172';
+import prime163 from './prime-163';
+import prime010 from './prime-010';
+import prime068 from './prime-068';
+import prime105 from './prime-105';
+import prime241 from './prime-241';
+import prime233 from './prime-233';
+import prime160 from './prime-160';
+import prime066 from './prime-066';
+import prime054 from './prime-054';
+import prime046 from './prime-046';
+import prime052 from './prime-052';
+import prime176 from './prime-176';
+import prime231 from './prime-231';
+import prime115 from './prime-115';
+import prime124 from './prime-124';
+import prime113 from './prime-113';
+import prime120 from './prime-120';
+import prime112 from './prime-112';
+import prime121 from './prime-121';
+import prime123 from './prime-123';
 import prime210 from './prime-210';
 import prime217 from './prime-217';
 import prime218 from './prime-218';
@@ -130,6 +157,33 @@ export const primeDefinitions: Definition[] = [
   prime237,
   prime016,
   prime050,
+  prime104,
+  prime059,
+  prime028,
+  prime002,
+  prime232,
+  prime048,
+  prime172,
+  prime163,
+  prime010,
+  prime068,
+  prime105,
+  prime241,
+  prime233,
+  prime160,
+  prime066,
+  prime054,
+  prime046,
+  prime052,
+  prime176,
+  prime231,
+  prime115,
+  prime124,
+  prime113,
+  prime120,
+  prime112,
+  prime121,
+  prime123,
   prime210,
   prime217,
   prime218,

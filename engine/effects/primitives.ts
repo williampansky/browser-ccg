@@ -347,3 +347,43 @@ export const silence =
       delete minion.disabledOnTurn;
     }
   };
+
+/** Swaps each minion's Attack and Health (maximum health follows). A minion with 0 Attack ends at 0 health and dies. */
+export const swapAttackAndHealth =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) {
+      const base = minion.attack - minion.auraAttack - minion.tempAttack;
+      const attack = minion.health;
+      minion.health = base;
+      minion.maxHealth = base;
+      minion.attack = attack + minion.auraAttack + minion.tempAttack;
+    }
+  };
+
+/** Sets each minion's base Attack to its current Health. */
+export const setAttackToHealth =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) minion.attack = minion.health + minion.auraAttack + minion.tempAttack;
+  };
+
+/** Doubles each minion's current Attack (the extra stays after the turn, like a buff). */
+export const doubleAttackStat =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) minion.attack += minion.attack;
+  };
+
+/** Sets a hero's health to an exact value (it may go up or down; armor is untouched). */
+export const setHeroHealth =
+  (select: Selector, value: number): Effect =>
+  (ctx) => {
+    for (const t of select(ctx)) if (t.kind === 'hero') ctx.g.players[t.player].health = value;
+  };
+
+/** Runs `make(ctx)` to build the effect from the live game state (for amounts that depend on it, like armor or hand size). */
+export const computed =
+  (make: (ctx: Parameters<Effect>[0]) => Effect): Effect =>
+  (ctx) =>
+    make(ctx)(ctx);
