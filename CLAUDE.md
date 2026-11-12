@@ -33,8 +33,8 @@ earlier `hsclone` repo as the rules reference. Read these first:
 - The site shell works: home, `collection`, `deckbuilder`, `cards`, `store`, `profile`, `news`,
   `faq`, `changelog`, plus `pages/api/` for cards/users. The card renderers (`Card`, `Minion`) work.
 - `data/*.json` is the Hearthstone-style card data (the old zone-game JSON was deleted from `data/` on 2026-11-12; it is
-  at tag `snap-style-v0`). It is pulled from the new Airtable base (see "Airtable" below). The old site pages and
-  `pages/api/cards` still read the deleted zone files (`setsCore.json`, `setsEntourage.json`) and `utils/` reads
+  at tag `snap-style-v0`). It is pulled from the new Airtable base (see "Airtable" below). `pages/api/cards` now serves the engine's cards from `data/` (it used to 500 on the deleted zone files), but the old site pages
+  still expect the zone-game shape, and `utils/` reads
   `constants.json`/`mechanics.json` in the old shape, so they are stale until ROADMAP Milestone 4 switches them over.
 
 ## Next up (as of the last session)
@@ -51,6 +51,18 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
    `engine/__tests__/real-pool.test.ts` and `engine/bots/__tests__/`.
 
 **CI is deliberately the very last roadmap item** ("Way later: CI"). Do not suggest or build it early.
+
+## Deck rules and the deck builder
+
+- **Deck rules** (`engine/deck-rules.ts`): at most `MAX_DECK_SIZE` = 30 cards, for every deck (hand-built, starter or random).
+  `createGame` throws on a bigger deck and `buildDeck` clamps. Fewer than 30 is allowed (fatigue covers it). Copy limit
+  (`maxCopies`): 2 of any card, 1 if its rarity is `MYTHIC`; the deck builder enforces it, `createGame` does not.
+- **`/deckbuilder`** (`components/deck-builder/`) is the new builder on the engine's card model (the old page read the zone-game shape).
+  Saved decks live in localStorage (`deck-storage.ts`).
+- **Choosing decks for a game** (`components/play-board/deck-choice.ts`): Menu > "New game (choose decks)" opens a picker for each
+  player: Surprise, Random starter deck, Random deck, one of the six starter decks (`engine/starter-decks.ts`), or a saved deck.
+  The last picks are remembered (`ccg.newGame.v1`). **The AI seat never plays a saved deck**: it defaults to Surprise (a random
+  starter deck, with a 1-in-10 chance of a fully random deck instead; `SURPRISE_RANDOM_ODDS`) and any saved pick becomes Surprise.
 
 ## Playing `/play`: drag and drop, debug params
 

@@ -517,6 +517,31 @@
   }
 }
 
+.deckPick {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 22rem;
+  max-width: 85vw;
+
+  select {
+    padding: 0.35rem;
+    background: #0f1118;
+    color: inherit;
+    border: 1px solid #3f4660;
+    border-radius: 6px;
+  }
+  small {
+    min-height: 1.2em;
+    opacity: 0.75;
+  }
+}
+
+.deckPickButtons {
+  display: flex;
+  gap: 0.75rem;
+}
+
 .modalCards {
   display: flex;
   gap: 1rem;

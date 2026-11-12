@@ -27,6 +27,8 @@ import { applyDebugSetup, DebugSetup } from './debug-setup';
 import { nukeHero } from './nuke-hero';
 import { CardFace } from './CardFace';
 import { withSpellDamageText } from './card-face-model';
+import { loadDecks } from '../deck-builder/deck-storage';
+import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
 import { HeroBar } from './HeroBar';
 import { deckRows } from './deck-rows';
 import { describeEvents } from './describe-events';
@@ -205,9 +207,14 @@ const debugParams = (): { first?: PlayerId; hands: Record<PlayerId, string[]>; s
   };
 };
 
-const newGame = (): { state: GameState; rng: Rng; decks: Record<PlayerId, string[]>; first: PlayerId } => {
+const newGame = (vsAi: boolean): { state: GameState; rng: Rng; decks: Record<PlayerId, string[]>; first: PlayerId; deckNames: Record<PlayerId, string> } => {
   const rng = createSeededRng(Date.now() % 2147483647);
-  const decks = { '0': buildDeck(pool, rng), '1': buildDeck(pool, rng) };
+  const choices = loadChoices();
+  const saved = loadDecks(byId);
+  const p0 = resolveDeck(choices['0'], pool, saved, rng);
+  // The AI never plays a saved deck: it gets a starter deck (or a random one if there is none to pick).
+  const p1 = resolveDeck(vsAi ? aiDeckChoice(choices['1']) : choices['1'], pool, saved, rng);
+  const decks = { '0': p0.cards, '1': p1.cards };
   const dbg = debugParams();
   const randomFirst: PlayerId = rng.int(2) === 0 ? '0' : '1';
   const first: PlayerId = dbg.first ?? randomFirst;
@@ -225,7 +232,7 @@ const newGame = (): { state: GameState; rng: Rng; decks: Record<PlayerId, string
     });
   });
   state = applyDebugSetup(state, dbg.setup, byId);
-  return { state, rng, decks, first };
+  return { state, rng, decks, first, deckNames: { '0': p0.name, '1': p1.name } };
 };
 
 /** Hot-seat board: the active player is always at the bottom, the other player's hand is hidden. */
@@ -239,7 +246,11 @@ export const PlayBoard = () => {
   const [message, setMessage] = useState('');
   const [mode, setMode] = useState<Mode>('ai');
   const [smartAi, setSmartAi] = useState(true);
+  const modeRef = useRef<Mode>('ai');
+  modeRef.current = mode;
   const [menuOpen, setMenuOpen] = useState(false);
+  /** The "New game" deck picker: null when closed, else the choices being edited. */
+  const [picker, setPicker] = useState<Record<PlayerId, DeckChoice> | null>(null);
   /** The spell just cast, shown briefly in the middle of the board. */
   const [castFx, setCastFx] = useState<{ card: Card; owner: PlayerId; n: number } | null>(null);
   const [soundOn, setSoundOn] = useState(true);
@@ -265,12 +276,12 @@ export const PlayBoard = () => {
   const label = (p: PlayerId) => playerLabel(p, mode);
 
   const start = useCallback(() => {
-    const g = newGame();
+    const g = newGame(modeRef.current === 'ai');
     rngRef.current = g.rng;
     setState(g.state);
     setStartDecks(g.decks);
     const [a, b] = g.first === '0' ? ['Player 1', 'Player 2'] : ['Player 2', 'Player 1'];
-    setLog([[`New game. **${a}** goes first; **${b}** starts with an extra card (__The Orb__).`]]);
+    setLog([[`New game. **${a}** goes first; **${b}** starts with an extra card (__The Orb__).`, `Player 1 plays **${g.deckNames['0']}**; Player 2 plays **${g.deckNames['1']}**.`]]);
     setSelection(null);
     setMessage('');
     setFoeAim(null);
@@ -949,8 +960,8 @@ export const PlayBoard = () => {
             <button type="button" disabled={over || !myTurn} onClick={() => { setMenuOpen(false); dispatch({ type: 'Concede' }); }}>
               Concede
             </button>
-            <button type="button" onClick={() => { setMenuOpen(false); start(); }}>
-              New game
+            <button type="button" onClick={() => { setMenuOpen(false); setPicker(loadChoices()); }}>
+              New game (choose decks)
             </button>
             <button
               type="button"
@@ -983,6 +994,47 @@ export const PlayBoard = () => {
             >
               Mode: {mode === 'ai' ? 'vs AI' : 'hot-seat'} (click to switch, starts a new game)
             </button>
+          </div>
+        </div>
+      )}
+      {picker && (
+        <div className={styles.modalBackdrop} onClick={() => setPicker(null)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <h3>New game: choose decks</h3>
+            {(['0', '1'] as PlayerId[]).map((p) => {
+              const options = deckOptions(mode === 'ai' && p === AI_PLAYER ? [] : loadDecks(byId));
+              const picked = options.find((o) => o.value === picker[p]) ?? options[0];
+              return (
+                <label key={p} className={styles.deckPick}>
+                  <span>{label(p)}</span>
+                  <select value={picked.value} onChange={(e) => setPicker({ ...picker, [p]: e.target.value })}>
+                    {options.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                  <small>{picked.plan ?? ' '}</small>
+                </label>
+              );
+            })}
+            <div className={styles.deckPickButtons}>
+              <button type="button" onClick={() => setPicker(null)}>
+                Cancel
+              </button>
+              <button
+                type="button"
+                autoFocus
+                onClick={() => {
+                  saveChoices(picker);
+                  setPicker(null);
+                  start();
+                }}
+              >
+                Start
+              </button>
+            </div>
+            <a href="/deckbuilder">Build your own deck</a>
           </div>
         </div>
       )}
