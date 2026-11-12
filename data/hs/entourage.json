@@ -142,7 +142,7 @@
   },
   {
     "health": 4,
-    "name": "TacMedic",
+    "name": "Frontline Guardsman",
     "set": "%SET_002%",
     "attack": 2,
     "mechanics": [
@@ -160,7 +160,7 @@
   },
   {
     "health": 4,
-    "name": "Hidden Officer",
+    "name": "Hidden Sniper",
     "set": "%SET_002%",
     "attack": 4,
     "mechanics": [

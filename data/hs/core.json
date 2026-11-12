@@ -1731,7 +1731,7 @@
   {
     "entourage": "CORE_076a",
     "collectible": true,
-    "name": "Equip Basic Mace",
+    "name": "Basic Mace",
     "set": "%SET_002%",
     "artistName": "Rexard",
     "attack": 1,
@@ -1844,7 +1844,7 @@
   {
     "text": "Restore 2 HP prior<br />\nto every attack",
     "collectible": true,
-    "name": "Equip Reckoning",
+    "name": "Reckoning",
     "set": "%SET_002%",
     "artistName": "Cristian Chihaia",
     "attack": 4,
@@ -2281,7 +2281,7 @@
   {
     "entourage": "CORE_100a",
     "collectible": true,
-    "name": "Equip Gladius",
+    "name": "Gladius",
     "set": "%SET_002%",
     "artistName": "lun jie",
     "attack": 3,
@@ -2973,7 +2973,7 @@
   {
     "entourage": "CORE_128a, CORE_128b",
     "collectible": true,
-    "name": "Equip Crude Weapon",
+    "name": "Crude Weapon",
     "set": "%SET_002%",
     "artistName": "Rexard",
     "attack": 3,
@@ -3061,7 +3061,7 @@
   {
     "entourage": "CORE_132a",
     "collectible": true,
-    "name": "Equip Fisherman's Axe",
+    "name": "Fisherman's Axe",
     "set": "%SET_002%",
     "artistName": "Elodie Mondoloni",
     "attack": 5,

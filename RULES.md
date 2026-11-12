@@ -558,9 +558,9 @@ just Demonic), 106 is for one turn, 127 is for one turn only, 096 is not a CORE 
 - **045/051/055 "choose one"** are chosen when playing: `PlayCard.choice`. 055 offers "keep card 1/2/3"
   and keeps the last card if the deck has fewer than three; an empty deck does nothing (no fatigue).
 - **049** adds an *empty* energy slot (capped at 10), unlike 043 which gives energy this turn only.
-- **057** summons one random token; summoned minions never run warcries. TacMedic (057b) used to have a warcry that
-  could therefore never fire, so on 2026-11-11 the author turned it into a plain 2/4 Guard minion (`data/hs/entourage.json`
-  edited by hand; the same change has to be made in Airtable or the next `npm run airtable:hs` pull reverts it).
+- **057** summons one random token; summoned minions never run warcries. 057b (formerly TacMedic) had a warcry that
+  could therefore never fire, so on 2026-11-11 the author turned it into a plain 2/4 Guard minion, now named Frontline
+  Guardsman (changed in Airtable and pulled).
 - **020** summons one of its two 1/1 tokens at random (they are identical apart from the name).
 - **050** hits the chosen enemy for 4 and every *other* enemy (hero included) for 1.
 - **Spell damage (011, 015, 028, 037; Q16)** raises each damage hit of your *spells* by its amount and

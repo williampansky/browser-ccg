@@ -39,15 +39,13 @@ earlier `hsclone` repo as the rules reference. Read these first:
 
 ## Next up (as of the last session)
 
-The author was about to **playtest `/play`** (vs the random AI) and give feedback before deciding the
-order below. Candidates, roughly in the order discussed:
+The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`; the order below is not settled. Candidates, roughly in the order discussed:
 
 1. **Playtest the full pool** and confirm or change the readings in `RULES.md` Appendix B. Decided: `CORE_007` only destroys the
-   weapon (follow the text), and TacMedic (`CORE_057b`, a summoned token whose warcry could never fire) is now a plain
-   2/4 Guard. **That TacMedic edit was made by hand in `data/hs/entourage.json`; the author must make the same change
-   (mechanic Guard instead of Warcry, text) in Airtable, or the next `npm run airtable:hs` pull reverts it.**
-2. **Port the card art** from `hsclone`'s `public/` dir (this repo lacks it) and use it on the board.
-   Check provenance/licences. The board is text-only until then.
+   weapon (follow the text), and `CORE_057b` (a summoned token whose warcry could never fire, formerly TacMedic) is now a plain
+   2/4 Guard called Frontline Guardsman; the same change is in Airtable and pulled (2026-11-11).
+2. **Card art provenance/licences** (the art itself is ported and on the board; the README carries a "not licensed
+   for reuse" notice). Still to do: a card-by-card provenance table and replacing placeholder art (Milestone 4).
 3. **Bot-vs-bot win-rate tables** (Milestone 3; the greedy bot is done). Tune `evaluate` in `greedy-bot.ts` against them.
 4. Slice 7 of the engine plan (a dedicated random-bot invariant suite) is mostly covered already by
    `engine/__tests__/real-pool.test.ts` and `engine/bots/__tests__/`.

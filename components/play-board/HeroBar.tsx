@@ -1,5 +1,5 @@
 import React from 'react';
-import { energyPips, healthFraction, healthTone, weaponLabel } from './hero-bar-model';
+import { energyPips, healthFraction, healthTone } from './hero-bar-model';
 import styles from './hero-bar.module.scss';
 
 export interface HeroBarWeapon {
@@ -59,7 +59,7 @@ export const HeroBar = ({
 }: HeroBarProps) => {
   const fraction = healthFraction(health);
   const tone = healthTone(fraction);
-  const weaponText = weapon ? `${weaponLabel(weapon.name)} ${weapon.attack}/${weapon.durability}` : 'no weapon';
+  const weaponText = weapon ? `${weapon.name} ${weapon.attack}/${weapon.durability}` : 'no weapon';
   return (
     <button
       type="button"
@@ -121,7 +121,7 @@ export const HeroBar = ({
       <span className={[styles.weapon, weapon ? '' : styles.noWeapon].join(' ')} title={weapon ? weaponText : 'No weapon equipped'}>
         {weapon ? (
           <>
-            <span className={styles.weaponName}>{weaponLabel(weapon.name)}</span>
+            <span className={styles.weaponName}>{weapon.name}</span>
             <span className={styles.weaponStats}>
               <b className={styles.atk}>{weapon.attack}</b>
               <b className={styles.dur}>{weapon.durability}</b>

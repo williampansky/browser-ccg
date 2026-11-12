@@ -1,4 +1,4 @@
-import { energyPips, healthFraction, healthTone, weaponLabel } from '../hero-bar-model';
+import { energyPips, healthFraction, healthTone } from '../hero-bar-model';
 
 describe('energyPips', () => {
   it('always shows ten slots', () => {
@@ -39,17 +39,5 @@ describe('healthFraction and healthTone', () => {
     expect(healthTone(0.26)).toBe('hurt');
     expect(healthTone(0.25)).toBe('critical');
     expect(healthTone(0)).toBe('critical');
-  });
-});
-
-describe('weaponLabel', () => {
-  it('drops the leading "Equip " from a weapon card name', () => {
-    expect(weaponLabel('Equip Basic Mace')).toBe('Basic Mace');
-    expect(weaponLabel("Equip Fisherman's Axe")).toBe("Fisherman's Axe");
-  });
-  it('leaves other names alone', () => {
-    expect(weaponLabel('Gladius')).toBe('Gladius');
-    expect(weaponLabel('Equipment Guard')).toBe('Equipment Guard');
-    expect(weaponLabel('Equip')).toBe('Equip');
   });
 });
