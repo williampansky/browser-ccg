@@ -142,6 +142,6 @@ Find the base ids in Airtable (they are not recorded here; this repo is public).
 - Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
 - Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.
-- Current checks: `npm test` passes (engine tests plus the older `utils` ones), `npm run build` passes, and `tsc` has 8 errors,
-  all `as Card` casts in `utils/__tests__/get-card-power.test.ts`. Don't "fix" unrelated
-  failures as a drive-by.
+- Current checks: `npm test` passes (engine tests plus the older `utils` ones), `npm run build` passes, and `tsc` has 11 errors
+  (8 `as Card` casts in `utils/__tests__/get-card-power.test.ts`, 3 redeclared variables in `airtable.node.ts`). Don't "fix"
+  unrelated failures as a drive-by.
