@@ -20,6 +20,7 @@ import {
   PlayerId,
   Rng,
   TargetRef,
+  effectiveCost,
 } from '../../engine';
 import { gapIndex } from './board-position';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
@@ -870,7 +871,7 @@ export const PlayBoard = () => {
           setHoverGap(null);
         }}
       >
-        {card && <CardFace card={card} width={HAND_CARD_WIDTH} spellDamage={mySpellDamage} />}
+        {card && <CardFace card={card} width={HAND_CARD_WIDTH} spellDamage={mySpellDamage} cost={effectiveCost(state, viewer, card, byId)} />}
       </button>
     );
   };

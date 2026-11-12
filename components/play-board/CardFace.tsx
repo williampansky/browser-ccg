@@ -16,6 +16,8 @@ interface CardFaceProps {
   health?: number;
   /** Spell damage on the viewer's board: a spell's damage numbers show raised (in a different colour). */
   spellDamage?: number;
+  /** What the card costs the viewer right now, if a card on the board changes it (shown green when lower, red when higher). */
+  cost?: number;
 }
 
 /**
@@ -23,7 +25,7 @@ interface CardFaceProps {
  * gem, name ribbon, text, type, rarity gem and attack/health badges are laid over it. Everything is positioned in the
  * frame's own 178 x 250 design units, scaled by the `--u` custom property (pixels per unit).
  */
-export const CardFace = ({ card, width, attack, health, spellDamage = 0 }: CardFaceProps) => {
+export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost }: CardFaceProps) => {
   const stats = showsStats(card.type);
   const label = typeLabel(card);
   const html = withSpellDamageText(card.richText || card.text, card.type === 'spell' ? spellDamage : 0);
@@ -66,7 +68,11 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0 }: CardF
       <img className={styles.frame} src={`/images/hs/frames/${frameFor(card.rarity)}.png`} alt="" draggable={false} />
       <img className={styles.gem} src={`/images/hs/ui/gem-${gemFor(card.rarity)}.png`} alt="" draggable={false} />
 
-      <span className={`${styles.cost} ${styles.val}`}>{card.cost}</span>
+      <span
+        className={`${styles.cost} ${styles.val} ${cost !== undefined && cost < card.cost ? styles.costLower : ''} ${cost !== undefined && cost > card.cost ? styles.costHigher : ''}`}
+      >
+        {cost ?? card.cost}
+      </span>
       <span className={`${styles.type} ${styles.val}`}>{label}</span>
 
       <span className={styles.emblem}>

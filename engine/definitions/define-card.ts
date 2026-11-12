@@ -55,7 +55,20 @@ export interface Aura {
   rush?: boolean;
 }
 
+/** "Your <cards> cost N less/more" while this minion is on the board (the owner's cards only). */
+export interface CostMod {
+  affects: (card: Card) => boolean;
+  /** Negative makes cards cheaper, positive dearer */
+  delta: number;
+  /** A reduction never takes a card below this (or below its own printed cost, if that is already lower). Default 0 */
+  floor?: number;
+}
+
 export interface CardDef {
+  /** Cost changes this minion gives its owner's cards in hand while it is on the board */
+  costMods?: CostMod[];
+  /** A change to this card's own cost while it is in hand ("costs 1 less for each ..."). Negative is cheaper */
+  ownCost?: (c: { state: GameState; owner: PlayerId }) => number;
   /** "+N Spell Damage" while on the board: raises the damage of your spells (RULES Q16) */
   spellDamage?: number;
   /** Ongoing effects on other minions while this one is on the board (recomputed after every step) */

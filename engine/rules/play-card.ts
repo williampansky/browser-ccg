@@ -4,6 +4,7 @@ import { getCardDef } from '../definitions';
 import type { CardDef } from '../definitions/define-card';
 import type { EngineContext } from './apply-action';
 import { ActionError, GameEvent, GameState, MAX_BOARD, TargetRef } from '../state/types';
+import { effectiveCost } from './cost';
 import { createMinion } from './minion';
 import { isLegalTarget, legalTargets } from './targeting';
 
@@ -39,7 +40,8 @@ export const playCard = (
   const isSpellLike = card.type === 'spell' || card.type === 'item';
   // A card that needs behaviour but has none is refused, rather than silently played as vanilla.
   if (!def && (isSpellLike || needsBehaviour(card))) return { error: 'UNSUPPORTED_CARD' };
-  if (card.cost > player.energy.current) return { error: 'CANT_AFFORD' };
+  const cost = effectiveCost(state, me, card, catalog, defs);
+  if (cost > player.energy.current) return { error: 'CANT_AFFORD' };
 
   // "Choose one" cards need a valid option; every other card refuses one. The chosen option's own
   // target and effects replace the card's.
@@ -76,7 +78,7 @@ export const playCard = (
   return produce(state, (g) => {
     const p = g.players[me];
     p.hand.splice(handIndex, 1);
-    p.energy.current -= card.cost;
+    p.energy.current -= cost;
     g.played[me].push(card.id);
     // Spell damage only counts for spells, not warcries (RULES 8.3, Q16)
     const spellDamage =

@@ -3,6 +3,7 @@ import { needsBehaviour } from '../decks';
 import { getCardDef } from '../definitions';
 import type { DefLookup } from '../definitions/define-card';
 import { Action, GameState, MAX_BOARD, PlayerId } from '../state/types';
+import { effectiveCost } from './cost';
 import { cantAttack } from './attack';
 import { legalTargets } from './targeting';
 
@@ -24,7 +25,7 @@ export const legalActions = (
 
   me.hand.forEach((inHand, handIndex) => {
     const card = catalog.get(inHand.cardId);
-    if (!card || card.cost > me.energy.current) return;
+    if (!card || effectiveCost(state, player, card, catalog, defs) > me.energy.current) return;
     const def = defs(card);
     if (!def && needsBehaviour(card)) return;
     if (card.type === 'spell' || card.type === 'item') {

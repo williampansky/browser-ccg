@@ -16,3 +16,4 @@ export { chooseRandomAction } from './bots/random-bot';
 export { chooseGreedyAction, evaluate } from './bots/greedy-bot';
 export { checkDeck, maxCopies, MAX_DECK_SIZE } from './deck-rules';
 export type { DeckCheck } from './deck-rules';
+export { effectiveCost } from './rules/cost';
