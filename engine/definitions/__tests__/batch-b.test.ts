@@ -24,7 +24,7 @@ const ids2 = (s: GameState, t: TargetRef[]) =>
 
 describe('damage plus draw', () => {
   it.each([
-    ['CORE_080', 3],
+    ['CORE_080', 2],
     ['CORE_097', 1],
   ])('%s deals %i damage and draws a card', (id, dmg) => {
     const s = setup(id, { theirs: [[1, 9]] });
@@ -70,11 +70,11 @@ describe('destroy', () => {
     expect(ids2(s, targets(s))).toEqual(['m1']);
     expect(stats(play(s, mref(s, '1', 1)).state, '1')).toEqual([[1, 5]]);
   });
-  it('093 costs 0 and deals 2 to an unhurt minion only', () => {
+  it('093 costs 0 and deals 3 to an unhurt minion only', () => {
     const s = hurt(setup('CORE_093', { theirs: [[1, 5], [1, 5]] }), '1', 0, 4);
     expect(realCard('CORE_093').cost).toBe(0);
     expect(ids2(s, targets(s))).toEqual(['m1']);
-    expect(stats(play(s, mref(s, '1', 1)).state, '1')[1][1]).toBe(3);
+    expect(stats(play(s, mref(s, '1', 1)).state, '1')[1][1]).toBe(2);
   });
   it('113 sacrifices one of your Demonic minions for 5 HP', () => {
     const s = setup('CORE_113', { mine: [[1, 1], [4, 4, 'CORE_028']], heroHp: { '0': 10 } });
@@ -168,13 +168,13 @@ describe('keyword and buff items', () => {
 });
 
 describe('damage plus an effect', () => {
-  it('066 deals 3 to an enemy and Disables it', () => {
+  it('066 deals 2 to an enemy and Disables it', () => {
     const s = setup('CORE_066', { mine: [[1, 5]], theirs: [[2, 5]] });
     const r = play(s, mref(s, '1', 0)).state;
-    expect(stats(r, '1')).toEqual([[2, 2]]);
+    expect(stats(r, '1')).toEqual([[2, 3]]);
     expect(r.players['1'].board[0].disabledOnTurn).toBeDefined();
     expect(failCode(s, mref(s, '0', 0))).toBe('ILLEGAL_TARGET');
-    expect(play(s, hero('1')).state.players['1'].health).toBe(27); // hero hit, nothing to disable
+    expect(play(s, hero('1')).state.players['1'].health).toBe(28); // hero hit, nothing to disable
   });
   it('105 deals 1 to a target and Disables it', () => {
     const s = setup('CORE_105', { theirs: [[2, 5]] });
@@ -182,10 +182,10 @@ describe('damage plus an effect', () => {
     expect(stats(r, '1')).toEqual([[2, 4]]);
     expect(r.players['1'].board[0].disabledOnTurn).toBeDefined();
   });
-  it('119 deals 2 damage and heals your hero for the damage dealt', () => {
+  it('119 deals 3 damage and heals your hero for the damage dealt', () => {
     const s = setup('CORE_119', { theirs: [[1, 5]], heroHp: { '0': 10 } });
     const r = play(s, mref(s, '1', 0)).state;
-    expect([r.players['1'].board[0].health, r.players['0'].health]).toEqual([3, 12]);
+    expect([r.players['1'].board[0].health, r.players['0'].health]).toEqual([2, 13]);
   });
   it('116 deals 4 damage and discards a random card from your hand', () => {
     const s = setup('CORE_116', { theirs: [[1, 9]], hand: ['GRUNT', 'GRUNT'] });

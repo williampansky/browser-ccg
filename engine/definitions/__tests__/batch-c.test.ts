@@ -54,23 +54,23 @@ describe('spell damage (RULES Q16: raises damage dealt by your spells, nothing e
   });
   it('applies to area and random damage, once per hit', () => {
     const s = setup('CORE_072', { mine: [[1, 5, 'CORE_011']], theirs: [[1, 9], [1, 9]] });
-    expect(stats(play(s).state, '1').map((x) => x[1])).toEqual([9 - 5, 9 - 5]); // 4 + 1 each
+    expect(stats(play(s).state, '1').map((x) => x[1])).toEqual([9 - 4, 9 - 4]); // 3 + 1 each
     const r = setup('CORE_060', { mine: [[1, 5, 'CORE_011']], theirs: [[1, 9], [1, 9]] });
     const out = play(r).state;
-    expect(30 - out.players['1'].health + (18 - out.players['1'].board.reduce((a, m) => a + m.health, 0))).toBe(6); // two hits of 3
+    expect(30 - out.players['1'].health + (18 - out.players['1'].board.reduce((a, m) => a + m.health, 0))).toBe(8); // two hits of 4 (3 + 1)
   });
   it('does NOT raise warcry damage, heals, or draws', () => {
     const w = setup('CORE_016', { mine: [[1, 5, 'CORE_011']], theirs: [[1, 9]] });
     expect(stats(play(w, mref(w, '1', 0)).state, '1')[0][1]).toBe(8); // warcry: still 1
     const h = setup('CORE_047', { mine: [[1, 5, 'CORE_011']], heroHp: { '1': 5 } });
-    expect(play(h, hero('1')).state.players['1'].health).toBe(13);
+    expect(play(h, hero('1')).state.players['1'].health).toBe(15); // 5 + 10, not 11 (no spell damage bonus on heals)
     const d = setup('CORE_067', { mine: [[1, 5, 'CORE_011']] });
     expect(play(d).state.players['0'].hand).toHaveLength(2);
   });
   it('raises each damage part of a spell, including lifesteal', () => {
     const s = setup('CORE_119', { mine: [[1, 5, 'CORE_011']], theirs: [[1, 9]], heroHp: { '0': 10 } });
     const r = play(s, mref(s, '1', 0)).state;
-    expect([r.players['1'].board[0].health, r.players['0'].health]).toEqual([6, 13]);
+    expect([r.players['1'].board[0].health, r.players['0'].health]).toEqual([5, 14]);
   });
 });
 
@@ -229,7 +229,7 @@ describe('081 Reckoning: restore 2 HP before every attack', () => {
     expect(r.state.players['0'].health).toBe(30);
     const again = run(backTo(endTurn(r.state), '0'), { type: 'WeaponAttack', target: hero('1') });
     if ('error' in again) throw new Error(again.error);
-    expect(again.state.players['1'].health).toBe(30 - 4 - 4);
+    expect(again.state.players['1'].health).toBe(30 - 3 - 3);
   });
 });
 
@@ -262,25 +262,25 @@ describe('084: obtain a random card your opponent has already played', () => {
 });
 
 describe('050 and 091', () => {
-  it('050 deals 4 to the chosen enemy and 1 to every other enemy (hero included)', () => {
+  it('050 deals 3 to the chosen enemy and 1 to every other enemy (hero included)', () => {
     const s = setup('CORE_050', { mine: [[1, 5]], theirs: [[1, 9], [1, 9]] });
     const r = play(s, mref(s, '1', 0)).state;
-    expect(stats(r, '1')).toEqual([[1, 5], [1, 8]]);
+    expect(stats(r, '1')).toEqual([[1, 6], [1, 8]]);
     expect(r.players['1'].health).toBe(29);
     expect(stats(r, '0')).toEqual([[1, 5]]);
     expect(r.players['0'].health).toBe(30);
     const hh = play(s, hero('1')).state;
-    expect(hh.players['1'].health).toBe(26);
+    expect(hh.players['1'].health).toBe(27);
     expect(stats(hh, '1')).toEqual([[1, 8], [1, 8]]);
     expect(failCode(s, mref(s, '0', 0))).toBe('ILLEGAL_TARGET');
   });
-  it('091 deals 2 to all enemies and heals 2 to all friendlies', () => {
+  it('091 deals 2 to all enemies and heals 1 to all friendlies', () => {
     let s = setup('CORE_091', { mine: [[1, 5]], theirs: [[1, 9]], heroHp: { '0': 20 } });
     s = hurt(s, '0', 0, 2);
     const r = play(s).state;
     expect(r.players['1'].health).toBe(28);
     expect(stats(r, '1')).toEqual([[1, 7]]);
-    expect(r.players['0'].health).toBe(22);
-    expect(stats(r, '0')).toEqual([[1, 4]]);
+    expect(r.players['0'].health).toBe(21);
+    expect(stats(r, '0')).toEqual([[1, 3]]);
   });
 });
