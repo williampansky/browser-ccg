@@ -193,8 +193,8 @@
     "cost": 1,
     "attack": 1,
     "health": 2,
-    "text": "Whenever a character is<br>\nhealed, gain +2 Attack",
-    "numberPrimary": 2,
+    "text": "Whenever your characters<br>\nare healed, gain +1/+1",
+    "numberPrimary": 1,
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/xistenceimaginations",
@@ -246,7 +246,7 @@
     "cost": 2,
     "attack": 3,
     "health": 2,
-    "text": "Your spell cards cost<br>\n1 less to play",
+    "text": "Your spell cards cost 1 less.<br>\nYour hero takes 1 damage<br>\nwhen you cast one",
     "mechanics": [
       "%COST%"
     ],
@@ -267,7 +267,7 @@
     "cost": 3,
     "attack": 2,
     "health": 4,
-    "text": "Whenever a minion takes<br>\ndamage, gain +1 Attack",
+    "text": "Whenever an enemy minion<br>\ntakes damage, gain<br>\n+1 Attack this turn",
     "mechanics": [
       "%EVENT%",
       "%SET_VALUE%"
@@ -400,7 +400,7 @@
     "cost": 1,
     "attack": 1,
     "health": 1,
-    "text": "Give a minion<br />\n+2 Attack this turn",
+    "text": "Give a friendly minion<br />\n+2 Attack this turn;<br />\nit takes 1 damage",
     "mechanics": [
       "%ON_PLAY%",
       "%BOON%"
@@ -611,9 +611,8 @@
     "cost": 2,
     "attack": 0,
     "health": 5,
-    "text": "%HEAL% a %RANDOM% friendly<br>\ndamaged minion for<br>\n3 Health at the<br>\nend of your turn",
+    "text": "At the end of your turn, heal<br>\nyour most damaged minion 3<br>\nand your hero 1",
     "mechanics": [
-      "%RANDOM%",
       "%HEAL%",
       "%ON_END%"
     ],
@@ -782,12 +781,12 @@
     "cost": 2,
     "attack": 1,
     "health": 4,
-    "text": "Gain 1 %ARMOR%<br>\nwhenever a friendly<br>\nminion takes damage",
+    "text": "Gain 2 %ARMOR% whenever<br>\na friendly minion dies",
     "mechanics": [
       "%EVENT%",
       "%ARMOR%"
     ],
-    "numberPrimary": 1,
+    "numberPrimary": 2,
     "collectible": true,
     "active": true,
     "flavor": "He works hard for the money.",
@@ -1357,8 +1356,8 @@
     "cardClass": "0 %CLASS_NONE%",
     "race": "%RACE_CREATURE%",
     "cost": 1,
-    "attack": 2,
-    "health": 1,
+    "attack": 1,
+    "health": 3,
     "text": "<strong>%HIDDEN%</strong>",
     "mechanics": [
       "%HIDDEN%"
@@ -1377,8 +1376,8 @@
     "cardClass": "0 %CLASS_NONE%",
     "race": "%RACE_CREATURE%",
     "cost": 2,
-    "attack": 2,
-    "health": 1,
+    "attack": 1,
+    "health": 3,
     "text": "<strong>%ON_DEATH%:</strong> Draw a card",
     "mechanics": [
       "%ON_DEATH%",
@@ -1543,7 +1542,7 @@
     "cost": 3,
     "attack": 2,
     "health": 1,
-    "text": "%SILENCE% a minion",
+    "text": "%SILENCE% a minion with<br>\nCost 3 or less",
     "mechanics": [
       "%ON_PLAY%",
       "%SILENCE%"
@@ -1623,9 +1622,9 @@
     "cardClass": "0 %CLASS_NONE%",
     "race": "%RACE_NONE%",
     "cost": 3,
-    "attack": 3,
+    "attack": 2,
     "health": 3,
-    "text": "<strong>%DEBUFF%</strong> a minion's<br>\nAttack to 1",
+    "text": "A minion's Attack is<br>\nhalved (rounded down)",
     "mechanics": [
       "%ON_PLAY%",
       "%SET_VALUE%",
@@ -1649,9 +1648,9 @@
     "cardClass": "0 %CLASS_NONE%",
     "race": "%RACE_NONE%",
     "cost": 2,
-    "attack": 3,
-    "health": 2,
-    "text": "After you cast a spell,<br />\ndeal 1 damage<br />\nto ALL minions",
+    "attack": 2,
+    "health": 3,
+    "text": "After you cast a spell,<br />\ndeal 1 damage to all<br />\nenemy minions",
     "mechanics": [
       "%EVENT%",
       "%AOE%"
@@ -1720,13 +1719,12 @@
     "cardClass": "0 %CLASS_NONE%",
     "race": "%RACE_DEMONIC%",
     "cost": 2,
-    "attack": 1,
-    "health": 1,
-    "text": "After you %SUMMON% a<br>\nminion, deal 1 damage to<br>\na %RANDOM% enemy",
+    "attack": 2,
+    "health": 2,
+    "text": "After you %SUMMON% a minion,<br>\ndeal 1 damage to a random<br>\nenemy minion",
     "mechanics": [
       "%EVENT%",
-      "%SUMMON%",
-      "%RANDOM%"
+      "%SUMMON%"
     ],
     "numberPrimary": 1,
     "numberRandom": 1,
@@ -1747,7 +1745,7 @@
     "cost": 5,
     "attack": 0,
     "health": 4,
-    "text": "Your minions cost 2 less,<br>\nbut not less than 1",
+    "text": "Your minions that cost 4<br>\nor more cost 2 less<br>\n(never below 3)",
     "numberPrimary": 2,
     "collectible": true,
     "active": true,
@@ -2731,11 +2729,12 @@
     "cost": 5,
     "attack": 4,
     "health": 4,
-    "text": "<strong>%BULWARK%</strong><br />\n<strong>%ON_DEATH%:</strong> Deal 2<br />\ndamage to everyone",
+    "text": "<strong>%BULWARK%</strong><br />\n<strong>%ON_DEATH%:</strong> Deal 2 damage<br />\nto all enemies; your minions<br />\nget <strong>%BUBBLE%</strong>",
     "mechanics": [
       "%BULWARK%",
       "%ON_DEATH%",
-      "%AOE%"
+      "%AOE%",
+      "%BUBBLE%"
     ],
     "numberPrimary": 2,
     "collectible": true,
@@ -2932,13 +2931,13 @@
     "cost": 4,
     "attack": 4,
     "health": 4,
-    "text": "<strong>%BOON%</strong> a minion with<br />\n+2 Attack this turn",
+    "text": "<strong>%BOON%</strong> a minion with<br />\n+3 Attack this turn",
     "mechanics": [
       "%ON_PLAY%",
       "%BOON%",
       "%SET_VALUE%"
     ],
-    "numberPrimary": 2,
+    "numberPrimary": 3,
     "playType": "TARGETED",
     "collectible": true,
     "active": true,
@@ -3427,9 +3426,11 @@
     "cost": 3,
     "attack": 3,
     "health": 3,
-    "text": "Heal 3 Health",
+    "text": "<strong>%CHOOSE_ONE%:</strong><br>\nHeal a character 3;<br>\nor deal 1 damage to a character",
     "mechanics": [
-      "%ON_PLAY%"
+      "%ON_PLAY%",
+      "%CHOOSE_ONE%",
+      "%HEAL%"
     ],
     "playType": "TARGETED",
     "playContext": "%HEAL%",
@@ -3449,10 +3450,10 @@
     "cost": 2,
     "attack": 1,
     "health": 3,
-    "text": "Whenever you cast a<br>\nspell, gain +1 Attack",
+    "text": "Whenever you cast a spell,<br>\ngain +1 Attack this turn;<br>\ndraw a card at 4 Attack",
     "mechanics": [
       "%EVENT%",
-      "%SET_VALUE%"
+      "%DRAW_CARD%"
     ],
     "numberPrimary": 1,
     "collectible": true,
@@ -3481,8 +3482,8 @@
     "race": "%RACE_NONE%",
     "cost": 5,
     "attack": 4,
-    "health": 2,
-    "text": "%DESTROY% a minion that<br>\nhas an AP of 7+",
+    "health": 3,
+    "text": "%DESTROY% a minion with 6+<br>\nAttack that is damaged or<br>\nhas attacked this turn",
     "mechanics": [
       "%ON_PLAY%",
       "%DESTROY%"
@@ -3647,12 +3648,12 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "%RETURN% a friendly minion<br>\nto your hand and<br>\nsubtract 2 from its cost",
+    "text": "%RETURN% a friendly minion to your hand;<br>\nit costs 1 less and has<br>\n<strong>%RUSH%</strong> when played",
     "mechanics": [
       "%RETURN%",
       "%COST%"
     ],
-    "numberPrimary": 2,
+    "numberPrimary": 1,
     "playType": "TARGETED",
     "playContext": "%RETURN%",
     "collectible": true,
@@ -3823,7 +3824,7 @@
     "cost": 3,
     "attack": 2,
     "health": 3,
-    "text": "<strong>%ON_DEATH%:</strong> %SUMMON% a 2/1 Warrior Bot",
+    "text": "<strong>%ON_DEATH%:</strong> %SUMMON% a 2/1<br>\nWarrior Bot with <strong>%RUSH%</strong>",
     "mechanics": [
       "%ON_DEATH%",
       "%SUMMON%"
@@ -4122,7 +4123,7 @@
     "cost": 2,
     "attack": 2,
     "health": 2,
-    "text": "Swap the values<br>\nof a minion's<br>\nAttack and Health",
+    "text": "Swap a minion's Attack and<br>\nHealth; it is %DISABLE%d",
     "mechanics": [
       "%ON_PLAY%",
       "%SET_VALUE%"
@@ -4360,14 +4361,13 @@
     "cardClass": "0 %CLASS_NONE%",
     "race": "%RACE_NONE%",
     "cost": 5,
-    "attack": 5,
-    "health": 4,
-    "text": "Destroy the enemy's weapon; draw cards equal to its %DURABILITY%",
+    "attack": 4,
+    "health": 5,
+    "text": "Destroy the enemy's weapon<br>\nand gain its Attack as %ARMOR%",
     "mechanics": [
       "%ON_PLAY%",
       "%DESTROY%",
-      "%ADD_CARD%",
-      "%DURABILITY%"
+      "%ARMOR%"
     ],
     "collectible": true,
     "active": true,
@@ -4466,7 +4466,7 @@
     "cost": 4,
     "attack": 4,
     "health": 3,
-    "text": "%SILENCE% a minion",
+    "text": "%SILENCE% an enemy minion;<br>\ndraw a card if it had a<br>\nwarcry or a demise",
     "mechanics": [
       "%ON_PLAY%",
       "%SILENCE%"
@@ -4587,7 +4587,7 @@
     "rarity": "%RARITY_REMARKABLE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 3,
-    "text": "Deal damage to a minion<br>\nequal to that of your %ARMOR%",
+    "text": "Deal damage to a minion equal to<br>\nyour %ARMOR%, then lose half<br>\nof it (rounded up)",
     "mechanics": [
       "%TARGET%",
       "%ARMOR%"
@@ -4724,7 +4724,7 @@
     "cost": 5,
     "attack": 5,
     "health": 5,
-    "text": "<strong>%BUFF%s</strong> himself with +1/+1<br >\nat the end of each turn ",
+    "text": "At the end of each of your<br>\nturns, gain +1/+1 if it<br>\nattacked, else -1/-1",
     "mechanics": [
       "%BUFF%",
       "%SET_VALUE%",
@@ -4805,8 +4805,8 @@
     "race": "%RACE_NONE%",
     "cost": 6,
     "attack": 4,
-    "health": 5,
-    "text": "<strong>%DOUBLE_ATTACK%</strong>",
+    "health": 4,
+    "text": "<strong>%DOUBLE_ATTACK%</strong><br>\nLoses it when damaged",
     "mechanics": [
       "%DOUBLE_ATTACK%"
     ],
@@ -4823,7 +4823,7 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "%BUFF% a damaged<br>\nminion with +3/+3",
+    "text": "%BUFF% a damaged minion<br>\nwith +2/+4",
     "mechanics": [
       "%BUFF%",
       "%SET_VALUE%"
@@ -5033,15 +5033,17 @@
     "rarity": "%RARITY_SUPERIOR%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 6,
-    "text": "<strong>%DESTROY%</strong> a minion;<br>\nReturn 3 HP to yourself",
+    "text": "<strong>%DESTROY%</strong> a minion and<br>\nsummon a 2/2 Husk for you",
     "mechanics": [
-      "%DESTROY%"
+      "%DESTROY%",
+      "%SUMMON%"
     ],
     "numberPrimary": 3,
     "playType": "TARGETED",
     "playContext": "%DESTROY%",
     "collectible": true,
     "active": true,
+    "entourage": "PRIME_224a",
     "artistName": "https://www.artstation.com/rodreidizon",
     "artistUrl": "https://www.artstation.com/rodreidizon"
   },
@@ -5078,7 +5080,7 @@
     "cost": 1,
     "attack": 1,
     "health": 1,
-    "text": "<strong>%ON_DEATH%:</strong> Deal 2 damage<br />to the enemy player",
+    "text": "<strong>%ON_DEATH%:</strong> Deal 2 damage to a<br>\n%RANDOM% enemy minion, or the<br>\nenemy hero if there is none",
     "mechanics": [
       "%ON_DEATH%"
     ],
@@ -5120,11 +5122,10 @@
     "cost": 7,
     "attack": 4,
     "health": 5,
-    "text": "<strong>%ON_DEATH%:</strong> %STEAL% a<br>\n%RANDOM% enemy minion",
+    "text": "<strong>%ON_DEATH%:</strong> Swap your<br>\nweakest minion for the<br>\nenemy's strongest",
     "mechanics": [
       "%ON_DEATH%",
-      "%STEAL%",
-      "%RANDOM%"
+      "%STEAL%"
     ],
     "numberRandom": 1,
     "playContext": "%STEAL%",

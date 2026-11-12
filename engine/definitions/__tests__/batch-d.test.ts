@@ -40,18 +40,6 @@ describe('targeted warcries and spells', () => {
     expect(legalTargets(guarded, { kind: 'card', handIndex: 0 }, catalog).map((t) => (t.kind === 'minion' ? t.instanceId : -1))).toEqual([guarded.players['1'].board[1].instanceId]);
     expect(play(guarded, mref(guarded, '1', 1)).state.players['1'].board).toHaveLength(1);
   });
-  it('PRIME_082 aims at any minion with 7+ Attack', () => {
-    const s = setup('PRIME_082', { theirs: [[7, 1], [6, 1]], mine: [[8, 8]] });
-    expect(failCode(s, mref(s, '1', 1))).toBe('ILLEGAL_TARGET');
-    expect(play(s, mref(s, '1', 0)).state.players['1'].board).toHaveLength(1);
-    expect(play(s, mref(s, '0', 0)).state.players['0'].board).toHaveLength(1);
-  });
-  it('PRIME_224 destroys a minion and heals you 3', () => {
-    const s = setup('PRIME_224', { theirs: [[1, 50]], heroHp: { '0': 10 } });
-    const r = play(s, mref(s, '1', 0)).state;
-    expect(r.players['1'].board).toHaveLength(0);
-    expect(r.players['0'].health).toBe(13);
-  });
   it('PRIME_180 deals 5 to the target and heals you 5', () => {
     const s = setup('PRIME_180', { heroHp: { '0': 10 } });
     const r = play(s, hero('1')).state;
@@ -62,10 +50,6 @@ describe('targeted warcries and spells', () => {
     const s = setup('PRIME_218', { mine: [[2, 3]], theirs: [[2, 3]] });
     expect(stats(play(s, mref(s, '0', 0)).state, '0')).toEqual([[4, 5]]);
     expect(failCode(s, mref(s, '1', 0))).toBe('ILLEGAL_TARGET');
-  });
-  it('PRIME_161 sets a minion\'s Attack to 1', () => {
-    const s = setup('PRIME_161', { theirs: [[6, 6]] });
-    expect(stats(play(s, mref(s, '1', 0)).state, '1')).toEqual([[1, 6]]);
   });
   it('PRIME_150 damages every enemy minion and disables the survivors', () => {
     const s = setup('PRIME_150', { theirs: [[1, 2], [1, 5]] });
@@ -120,10 +104,6 @@ describe('whenever you cast a spell', () => {
   it('PRIME_073 draws', () => expect(cast('PRIME_073').players['0'].hand.length).toBe(1));
   it('PRIME_141 gains +1 Attack', () => expect(stats(cast('PRIME_141'), '0')[0][0]).toBe(2));
   it('PRIME_076 gains +2/+2', () => expect(stats(cast('PRIME_076'), '0')[0]).toEqual([3, 3]));
-  it('PRIME_055 hurts every minion 1', () => {
-    const r = play(setup('CORE_043', { mine: [[1, 4, 'PRIME_055']], theirs: [[1, 3]] })).state;
-    expect([stats(r, '0')[0][1], stats(r, '1')[0][1]]).toEqual([3, 2]);
-  });
   it('PRIME_069 summons a Spider', () => expect(stats(cast('PRIME_069'), '0')).toHaveLength(2));
   it('does not fire for another player\'s spell', () => {
     const s = setup('CORE_043', { theirs: [[1, 1, 'PRIME_141']] });

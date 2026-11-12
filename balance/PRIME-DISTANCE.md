@@ -41,6 +41,7 @@ The big structural finds, in order of how much they matter:
 
 > **Update 2026-11-12:** the choose-one, overload and enrage families are applied in Airtable and rebuilt too (see `RULES.md`, "Choose-one, overload and enrage
 > rewrites"). A few numbers differ from the rows below (208, 120, 121, 024 were adjusted while building).
+> The "exact bodies and warcries" table is applied and built too for everything not listed under "still to do" below (`RULES.md`, "Exact bodies and warcries").
 > The Giants, 214, 107, 228, 078 and 105 are applied and built too (`RULES.md`, "The Giants, the keyword pile and friends").
 
 ## Mysteries (132, 143, 127, 152, 126, 146, 159, 148, 129, 158, 157, 156, 067; payoffs 250, 149, 045, 147)

@@ -1,7 +1,10 @@
 import { defineCard } from '../define-card';
-import { buffThisTurn } from '../../effects/primitives';
+import { buffThisTurn, damage } from '../../effects/primitives';
 import { chosenTarget } from '../../effects/selectors';
-import { anyMinion } from '../../effects/filters';
+import { friendlyMinion } from '../../effects/filters';
 
-// PRIME_002, warcry: "Give a minion +2 Attack this turn" (any minion, either side)
-export default defineCard('PRIME_002', (n) => ({ target: anyMinion(), onPlay: [buffThisTurn(chosenTarget(), n.primary)] }));
+// PRIME_002 Minilock, warcry: "Give a friendly minion +2 Attack this turn; it takes 1 damage"
+export default defineCard('PRIME_002', (n) => ({
+  target: friendlyMinion(),
+  onPlay: [buffThisTurn(chosenTarget(), n.primary), damage(chosenTarget(), 1)],
+}));

@@ -1,8 +1,19 @@
 import { defineCard, on } from '../define-card';
-import { buff } from '../../effects/primitives';
+import { buff, computed } from '../../effects/primitives';
 import { self } from '../../effects/selectors';
+import { findMinion } from '../../rules/lookup';
 
-// PRIME_104 Perses: "Buffs himself with +1/+1 at the end of each turn" (EACH turn: yours and the opponent's)
+// PRIME_104 Perses: "At the end of each of your turns, gain +1/+1 if it attacked, else -1/-1" (it can die of it)
 export default defineCard('PRIME_104', (n) => ({
-  triggers: [on('TurnEnded', { do: [buff(self(), n.primary, n.primary)] })],
+  triggers: [
+    on('TurnEnded', {
+      when: (e, c) => e.player === c.owner,
+      do: [
+        computed((ctx) => {
+          const attacked = ctx.self !== undefined && (findMinion(ctx.g, ctx.self)?.minion.attacksThisTurn ?? 0) > 0;
+          return buff(self(), attacked ? n.primary : -n.primary, attacked ? n.primary : -n.primary);
+        }),
+      ],
+    }),
+  ],
 }));

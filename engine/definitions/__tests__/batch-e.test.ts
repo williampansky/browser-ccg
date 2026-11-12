@@ -18,14 +18,6 @@ const choose = (id: string, choice: number, opts: Parameters<typeof setup>[1], t
 };
 
 describe('targeted warcries and spells', () => {
-  it('PRIME_028 / 002 give a minion +2 Attack for this turn only', () => {
-    for (const id of ['PRIME_028', 'PRIME_002']) {
-      const s = setup(id, { theirs: [[1, 3]] });
-      const r = play(s, mref(s, '1', 0)).state;
-      expect(stats(r, '1')[0][0]).toBe(3);
-      expect(stats(endTurn(r), '1')[0][0]).toBe(1);
-    }
-  });
   it('PRIME_232 trades 1 Health for +2 Attack', () => {
     const s = setup('PRIME_232', { theirs: [[1, 4]] });
     expect(stats(play(s, mref(s, '1', 0)).state, '1')).toEqual([[3, 3]]);
@@ -37,18 +29,6 @@ describe('targeted warcries and spells', () => {
     expect(stats(play(s, mref(s, '1', 0)).state, '1')).toEqual([[7, 7]]);
     s = setup('PRIME_163', { theirs: [[3, 7]] });
     expect(stats(play(s, mref(s, '1', 0)).state, '1')).toEqual([[6, 7]]);
-  });
-  it('PRIME_241 deals damage equal to your Armor to a minion', () => {
-    const s = setup('PRIME_241', { theirs: [[1, 9]] });
-    const armored = { ...s, players: { ...s.players, '0': { ...s.players['0'], armor: 4 } } };
-    const r = play(armored, mref(armored, '1', 0)).state;
-    expect(stats(r, '1')[0][1]).toBe(5);
-    expect(r.players['0'].armor).toBe(4);
-  });
-  it('PRIME_233 aims only at a damaged minion and gives +3/+3', () => {
-    const s = hurt(setup('PRIME_233', { theirs: [[1, 5], [1, 5]] }), '1', 1, 2);
-    expect(failCode(s, mref(s, '1', 0))).toBe('ILLEGAL_TARGET');
-    expect(stats(play(s, mref(s, '1', 1)).state, '1')[1]).toEqual([4, 5]);
   });
   it('PRIME_160 gives a friendly minion Bubble (and has none itself)', () => {
     const s = setup('PRIME_160', { mine: [[1, 1]], theirs: [[1, 1]] });
@@ -93,12 +73,6 @@ describe('adjacent warcries', () => {
 });
 
 describe('turn triggers', () => {
-  it('PRIME_104 grows +1/+1 at the end of EVERY turn', () => {
-    const s = setup('CORE_043', { mine: [[5, 5, 'PRIME_104']] });
-    const r = endTurn(play(s).state);
-    expect(stats(r, '0')[0]).toEqual([6, 6]);
-    expect(stats(endTurn(r), '0')[0]).toEqual([7, 7]);
-  });
   it('PRIME_059 hits a random enemy for 2 at the start of YOUR turn', () => {
     const s = setup('CORE_043', { mine: [[0, 5, 'PRIME_059']] });
     const mid = endTurn(play(s).state);

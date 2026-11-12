@@ -494,3 +494,57 @@ export const disableWhere =
       .map(({ minion }) => ({ kind: 'minion' as const, instanceId: minion.instanceId }));
     disable(() => passing)(ctx);
   };
+
+/**
+ * Returns the caster's selected minions to their hand (a full hand destroys them). The copy costs `costDelta` more (negative is less),
+ * and with `rush` it has Rush when played again. Enemy minions are ignored.
+ */
+export const returnToHand =
+  (select: Selector, costDelta = 0, rush = false): Effect =>
+  (ctx) => {
+    for (const { owner, minion } of minionsOf(ctx, select)) {
+      if (owner !== ctx.caster) continue;
+      const p = ctx.g.players[owner];
+      p.board = p.board.filter((m) => m.instanceId !== minion.instanceId);
+      if (p.hand.length >= MAX_HAND) {
+        ctx.events.push({ type: 'Burned', player: owner, instanceId: minion.instanceId });
+        continue;
+      }
+      p.hand.push({
+        instanceId: minion.instanceId,
+        cardId: minion.cardId,
+        ...(costDelta ? { costDelta } : {}),
+        ...(rush ? { rushOnPlay: true } : {}),
+      });
+      ctx.events.push({ type: 'CardObtained', player: owner, instanceId: minion.instanceId });
+    }
+  };
+
+/** Halves each minion's Attack (rounded down). Auras and this-turn boosts stay as they are. */
+export const halveAttack =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) {
+      const base = minion.attack - minion.auraAttack - minion.tempAttack;
+      minion.attack = Math.floor(base / 2) + minion.auraAttack + minion.tempAttack;
+    }
+  };
+
+/** Swaps the caster's weakest minion (least Attack + Health) with the opponent's strongest. Does nothing if either side has none. */
+export const tradeWeakestForStrongest = (): Effect => (ctx) => {
+  const mine = ctx.g.players[ctx.caster].board;
+  const theirs = ctx.g.players[opponentOf(ctx.caster)].board;
+  if (mine.length === 0 || theirs.length === 0) return;
+  const power = (m: { attack: number; health: number }) => m.attack + m.health;
+  const weakest = [...mine].sort((a, b) => power(a) - power(b))[0];
+  const strongest = [...theirs].sort((a, b) => power(b) - power(a))[0];
+  const iw = mine.findIndex((m) => m.instanceId === weakest.instanceId);
+  const is = theirs.findIndex((m) => m.instanceId === strongest.instanceId);
+  mine.splice(iw, 1, strongest);
+  theirs.splice(is, 1, weakest);
+  for (const m of [strongest, weakest]) {
+    m.playedOnTurn = ctx.g.turn; // summoning sickness under the new owner
+    m.attacksThisTurn = 0;
+    delete m.disabledOnTurn;
+  }
+};

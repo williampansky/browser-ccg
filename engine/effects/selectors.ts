@@ -140,3 +140,11 @@ export const lastSummoned = (): Selector => (ctx) => {
   }
   return [];
 };
+
+/** The caster's most damaged minion (the most missing Health; none if nothing is damaged). */
+export const mostDamagedFriendly = (): Selector => (ctx) => {
+  const hurt = ctx.g.players[ctx.caster].board.filter((m) => m.health < m.maxHealth);
+  if (hurt.length === 0) return [];
+  const worst = hurt.reduce((a, b) => (b.maxHealth - b.health > a.maxHealth - a.health ? b : a));
+  return [minionRef(worst)];
+};

@@ -651,3 +651,19 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **228 The Sorcerer's Stone (6)**: destroys minions with 4 or more Attack (either side), then both players draw a card.
 - **078 Infernal Nest (0/7)**: at the start of its owner's next turn it deals 4 to ALL minions, itself included, then is destroyed.
 - **105 Nightmare**: sets BOTH heroes' Health to 18.
+
+### Exact bodies and warcries (2026-11-12; applied in Airtable by `balance/airtable/prime-bodies.js`)
+
+- **Demise**: 013 (1/3) draws; 019's Warrior Bot has Rush; 004 hits a random enemy minion for 2, else the hero; 246 swaps your weakest minion (least Attack + Health)
+  for the enemy's strongest; 070 hits all enemies (minions and hero) for 2 and gives your minions Bubble.
+- **Stats**: 007 1/3, 040 4/4, 082 4/3, 095 4/5, 161 2/3, 049 2/2, 055 2/3. **040** has Onslaught only while undamaged.
+- **While on the board**: 043 +1/+1 when YOUR characters are healed; 176 heals your most damaged minion 3 and your hero 1 (end of your turn); 237 gains 2 Armor when a
+  friendly minion dies; 239 +1 Attack this turn when an ENEMY minion takes damage; 049 pings a random enemy minion when you summon another minion; 055 hits only enemy
+  minions; 141 +1 Attack this turn per spell and draws at 4 Attack; 104 +1/+1 at the end of your turn if it attacked, else -1/-1; 142 spells cost 1 less but your hero takes 1
+  per spell; 220 only minions costing 4+ get 2 less (never below 3).
+- **Warcries and spells**: 017 choose heal a character 3 or deal it 1; 020 Suppress a minion with Cost 3 or less; 032 Suppress an enemy minion, draw if its card had a warcry or
+  demise; 048 swap Attack and Health and Disable it; 082 destroy a 6+ Attack minion that is damaged or has attacked this turn; 095 destroy the enemy weapon and gain its Attack as
+  Armor; 161 halve a minion's Attack (rounded down); 028 +3 Attack this turn; 002 friendly minion +2 Attack this turn and 1 damage to it; 224 destroy a minion and summon a 2/2
+  Husk for you; 241 damage = your Armor, then lose half of it (rounded up); 233 +2/+4 to a damaged minion.
+- **Return to hand** (`returnToHand`): 026 and 015 return a friendly minion (not the enemy's, not themselves); 185 returns one costing 1 less (`CardInstance.costDelta`) and with Rush
+  when played (`CardInstance.rushOnPlay`). A full hand destroys the minion.

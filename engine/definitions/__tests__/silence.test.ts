@@ -67,22 +67,6 @@ describe('what Suppress removes', () => {
 });
 
 describe('the cards', () => {
-  it('PRIME_020 / 032 / 171 aim at minions only, either side', () => {
-    for (const id of ['PRIME_020', 'PRIME_032', 'PRIME_171']) {
-      const s = setup(id, { mine: [[1, 1]], theirs: [[1, 1]] });
-      expect(failCode(s, hero('1'))).toBe('ILLEGAL_TARGET');
-      expect(play(s, mref(s, '0', 0)).state.players['0'].board[0].silenced).toBe(true);
-      expect(play(s, mref(s, '1', 0)).state.players['1'].board[0].silenced).toBe(true);
-    }
-  });
-  it('PRIME_201 silences first, so a 1-health demise minion dies without its demise', () => {
-    const s = setup('PRIME_201', { theirs: [[1, 1, 'PRIME_004']] }); // Soul Miner: demise 2 damage to the enemy hero (me)
-    const r = play(s, mref(s, '1', 0)).state;
-    expect(r.players['1'].board).toHaveLength(0);
-    expect(r.players['0'].health).toBe(30);
-    const control = setup('CORE_001', { theirs: [[1, 1, 'PRIME_004']] });
-    expect(play(control, mref(control, '1', 0)).state.players['0'].health).toBe(28);
-  });
   it('PRIME_178 silences every minion, then draws', () => {
     const r = play(setup('PRIME_178', { mine: [[1, 1]], theirs: [[1, 1]] })).state;
     expect([r.players['0'].board[0].silenced, r.players['1'].board[0].silenced]).toEqual([true, true]);

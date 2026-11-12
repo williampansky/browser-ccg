@@ -24,21 +24,6 @@ describe('damage triggers', () => {
     if ('error' in r) throw new Error(r.error);
     return r.state;
   };
-  it('PRIME_239 gains +1 Attack for every minion that takes damage, either side', () => {
-    const s = setup('CORE_043', { mine: [[2, 4, 'PRIME_239'], [1, 9]], theirs: [[1, 9]] });
-    const r = attackOnto({ ...s, players: { ...s.players, '0': { ...s.players['0'], board: [s.players['0'].board[1], s.players['0'].board[0]] } } });
-    expect(stats(r, '0').find((x) => x[1] === 4)![0]).toBe(4); // two damage events: the attacker and the defender
-  });
-  it('PRIME_237 gives 1 Armor when a FRIENDLY minion is hurt, not an enemy one', () => {
-    const s = setup('CORE_043', { mine: [[1, 9], [1, 4, 'PRIME_237']], theirs: [[1, 9]] });
-    expect(attackOnto(s).players['0'].armor).toBe(1);
-    const enemy = setup('CORE_043', { mine: [[1, 9]], theirs: [[1, 9, 'PRIME_237']] });
-    expect(attackOnto(enemy).players['0'].armor).toBe(0);
-  });
-  it('PRIME_237 still pays out when the hurt friendly minion dies', () => {
-    const s = setup('CORE_043', { mine: [[1, 1], [1, 4, 'PRIME_237']], theirs: [[5, 9]] });
-    expect(attackOnto(s).players['0'].armor).toBe(1);
-  });
   it('PRIME_016 draws only when it itself is damaged', () => {
     const s = setup('CORE_043', { mine: [[1, 9]], theirs: [[1, 9, 'PRIME_016']] });
     expect(attackOnto(s).players['1'].hand.length).toBe(s.players['1'].hand.length + 1);

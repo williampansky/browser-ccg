@@ -18,6 +18,21 @@
     "isEntourage": true
   },
   {
+    "id": "PRIME_224a",
+    "name": "Husk",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_NONE%",
+    "race": "%RACE_NONE%",
+    "cost": 2,
+    "attack": 2,
+    "health": 2,
+    "collectible": false,
+    "active": false,
+    "isEntourage": true
+  },
+  {
     "id": "PRIME_092a",
     "name": "Sushi",
     "set": "%SET_003%",
@@ -381,6 +396,9 @@
     "cost": 1,
     "attack": 2,
     "health": 1,
+    "mechanics": [
+      "%RUSH%"
+    ],
     "collectible": false,
     "active": false,
     "artistName": "https://graphicriver.net/user/rexard",

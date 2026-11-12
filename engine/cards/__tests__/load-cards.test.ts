@@ -188,10 +188,10 @@ describe('loadHsCards: the committed card data', () => {
   const bySource = (source: string) => cards.filter((c) => c.source === source);
 
   test('loads without errors, with the expected record counts', () => {
-    expect(cards).toHaveLength(432);
+    expect(cards).toHaveLength(433);
     expect(bySource('core')).toHaveLength(132);
     expect(bySource('prime')).toHaveLength(254);
-    expect(bySource('entourage')).toHaveLength(45);
+    expect(bySource('entourage')).toHaveLength(46);
     expect(bySource('game')).toHaveLength(1);
     expect(issues.filter((i) => i.level === 'error')).toEqual([]);
   });

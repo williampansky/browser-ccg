@@ -12,12 +12,6 @@ const withEnergy = (s: GameState, n: number) => setEnergy(s, '0', n);
 
 describe('PRIME_220 Ancient Portal: minions cost 2 less, not below 1', () => {
   const s = setup('CORE_001', { mine: [[0, 4, 'PRIME_220']] });
-  it('reduces minions by 2 but never below 1', () => {
-    const minionOf = (c: number) => Array.from(catalog.values()).find((x) => x.type === 'minion' && x.cost === c && x.source === 'core')!;
-    expect(effectiveCost(s, '0', minionOf(5), catalog)).toBe(3);
-    expect(effectiveCost(s, '0', minionOf(2), catalog)).toBe(1);
-    expect(effectiveCost(s, '0', minionOf(1), catalog)).toBe(1);
-  });
   it('leaves a 0-cost minion at 0 and does not touch spells', () => {
     const zero = { ...realCard('CORE_001'), cost: 0 };
     expect(effectiveCost(s, '0', zero, catalog)).toBe(0);

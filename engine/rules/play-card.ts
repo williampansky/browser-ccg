@@ -99,6 +99,7 @@ export const playCard = (
       events.push({ type: 'WeaponEquipped', player: me, cardId: card.id });
     } else if (card.type === 'minion') {
       const minion = createMinion(card, inHand.instanceId, g.turn, g.nextPlaySeq++);
+      if (inHand.rushOnPlay) minion.keywords.rush = true;
       p.board.splice(index, 0, minion);
       self = minion.instanceId;
       events.push({ type: 'MinionPlayed', player: me, instanceId: self, boardIndex: index, ...(target ? { target } : {}) });

@@ -1,10 +1,7 @@
 import { defineCard } from '../define-card';
-import { setAttack } from '../../effects/primitives';
+import { halveAttack } from '../../effects/primitives';
 import { chosenTarget } from '../../effects/selectors';
 import { anyMinion } from '../../effects/filters';
 
-// PRIME_161 Enigmatic Courier, warcry: "Debuff a minion's Attack to 1"
-export default defineCard('PRIME_161', (n) => ({
-  target: anyMinion(),
-  onPlay: [setAttack(chosenTarget(), n.primary)],
-}));
+// PRIME_161 Enigmatic Courier (2/3), warcry: "A minion's Attack is halved (rounded down)"
+export default defineCard('PRIME_161', () => ({ target: anyMinion(), onPlay: [halveAttack(chosenTarget())] }));

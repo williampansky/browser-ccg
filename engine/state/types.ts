@@ -13,6 +13,8 @@ export interface CardInstance {
   cardId: string;
   /** A cost change that travels with this copy of the card ("costs 1 less"); the engine never goes below 0 */
   costDelta?: number;
+  /** If this card is a minion, it enters play with Rush ("has Rush when played") */
+  rushOnPlay?: boolean;
 }
 
 /** A face-down Mystery. The owner sees it; the opponent sees only its category (`MysteryDef.category`). */
