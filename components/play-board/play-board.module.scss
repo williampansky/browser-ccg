@@ -425,7 +425,8 @@
   text-align: left;
 
   &:hover {
-    background: #36405a;
+    // background-color, not the `background` shorthand: the shorthand resets size/position and blows the art up to natural size.
+    background-color: #6b7694;
     box-shadow: 0 0 0 3px #3ddc84;
   }
 }
