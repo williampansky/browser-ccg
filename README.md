@@ -5,11 +5,15 @@ See [VISION.md](VISION.md) for goals and priorities and [ROADMAP.md](ROADMAP.md)
 
 ## Status (2026-11-11)
 
-The game is being **rebuilt**. An earlier zone/SNAP-style version is preserved at tag
-`snap-style-v0` and branch `archive/snap-style`. On this branch the old rules engine and board UI
-are removed, `/play` is a placeholder, and the card site (collection, deck builder, cards, store)
-still works. The new Hearthstone-style engine is next, using the author's earlier `hsclone` repo
-as the rules reference ([PREVIOUS-VERSIONS.md](PREVIOUS-VERSIONS.md)).
+A Hearthstone-style game is playable at **`/play`** (run `npm run dev`): minions that attack, hero health, alternating
+turns, Guard, spells, weapons and armor, on a rules engine written from scratch in `engine/` (plain TypeScript, with
+tests). You play against a bot (a greedy one-move-lookahead bot, or a random one) or hot-seat in one tab. Cards are
+played by drag and drop, with click as a fallback. All 132 CORE cards are implemented. There is no multiplayer yet.
+
+An earlier zone/SNAP-style version is preserved at tag `snap-style-v0` and branch `archive/snap-style`. The card site
+(collection, deck builder, cards, store) still works but still describes that old game; switching it to the new card
+data is on the roadmap. The rules reference is the author's earlier `hsclone` repo
+([PREVIOUS-VERSIONS.md](PREVIOUS-VERSIONS.md), [RULES.md](RULES.md)).
 
 ## Card art and licensing notice
 
@@ -29,15 +33,18 @@ images.
 
 ## Running
 
-- `npm run dev` - dev server (see `CLAUDE.md` for the port note)
+- `npm run dev` - dev server (see `CLAUDE.md` for the port note), then open `/play`
 - `npm test`, `npx tsc --noEmit -p .`, `npm run build`
-- `npm run airtable` - re-pull card data (needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID`)
+- `npm run sim -- [gamesPerPair] [greedy|random]` - bot-vs-bot win-rate report for the starter decks
+- `npm run airtable:hs` - re-pull the card data into `data/hs/` (needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID`)
+- `/play` also takes debug URL params, e.g. `/play?first=0&p0=CORE_045` (see `CLAUDE.md`)
 
 ## Known issues
 
-- No playable game yet (see Status).
-- `tsc` reports 8 errors, all `as Card` casts on partial objects in
-  `utils/__tests__/get-card-power.test.ts`.
-- Card data and many `utils/` helpers still use the old zone-style card shape.
+- No multiplayer, accounts or server yet (`game/game.ts` is a stub; see [ROADMAP.md](ROADMAP.md)).
+- `tsc` reports 11 errors: 8 are `as Card` casts on partial objects in `utils/__tests__/get-card-power.test.ts`
+  and 3 are variables declared twice in `airtable.node.ts`. `npm test` and `npm run build` pass.
+- The card site pages and many `utils/` helpers still use the old zone-style card data and shape.
+- Card art is placeholder only (see the notice above); PRIME cards mostly have no art yet.
 - Stack is Next 12, React 17, boardgame.io 0.49 (all late 2022); an upgrade is planned as its own
   milestone.
