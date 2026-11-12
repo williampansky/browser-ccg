@@ -279,10 +279,12 @@ export const PlayBoard = () => {
       setSelection(null);
     };
     window.addEventListener('mousemove', move);
+    window.addEventListener('dragover', move); // a native drag suppresses mousemove
     window.addEventListener('keydown', key);
     window.addEventListener('contextmenu', rightClick);
     return () => {
       window.removeEventListener('mousemove', move);
+      window.removeEventListener('dragover', move);
       window.removeEventListener('keydown', key);
       window.removeEventListener('contextmenu', rightClick);
     };
@@ -548,8 +550,9 @@ export const PlayBoard = () => {
 
   // Click-to-play: with a minion selected, click your board where you want it to land (between two minions, or at either end);
   // with a spell or other card that needs no aim, click anywhere in the play area.
-  const playFromArea = (e: React.MouseEvent, zone: 'board' | 'table') => {
-    if (over || selection?.kind !== 'hand' || (e.target as HTMLElement).closest('button')) return;
+  const playFromArea = (e: React.MouseEvent, zone: 'board' | 'table', dropped = false) => {
+    // A click on a button (a minion, End turn...) means something else; a card dropped over a minion still lands in the gap.
+    if (over || selection?.kind !== 'hand' || (!dropped && (e.target as HTMLElement).closest('button'))) return;
     if (zone === 'board') e.stopPropagation();
     const plain = untargetedPlays.filter((a): a is PlayAction => a.type === 'PlayCard');
     const placed = plain.filter((a) => a.boardIndex !== undefined);
@@ -569,6 +572,23 @@ export const PlayBoard = () => {
   // Every "choose one" card asks in a dialog first, however small the options are.
   const choiceModal = choiceOptions.length > 0 && !droneModal;
   modalOpenRef.current = droneModal || choiceModal;
+
+  // Drag and drop (the main way to play a card; clicking still works). Dragging selects the card, so the same drop zones,
+  // targets and arrow show as for a click; dropping plays it exactly as a click would.
+  const dropOnTarget = (t: TargetRef) => ({
+    onDragOver: (e: React.DragEvent) => {
+      if (!isAimable(t)) return;
+      e.preventDefault();
+      setHover(t);
+    },
+    onDragLeave: () => setHover(null),
+    onDrop: (e: React.DragEvent) => {
+      if (!isAimable(t)) return;
+      e.preventDefault();
+      clickTarget(t);
+      setHover(null);
+    },
+  });
 
   const renderMinion = (owner: PlayerId, m: MinionInstance) => {
     const card = byId.get(m.cardId);
@@ -594,6 +614,7 @@ export const PlayBoard = () => {
         nodeRef={track(`m${m.instanceId}`)}
         onMouseEnter={() => setHover({ kind: 'minion', instanceId: m.instanceId })}
         onMouseLeave={() => setHover(null)}
+        {...dropOnTarget({ kind: 'minion', instanceId: m.instanceId })}
         style={artStyle(m.cardId)}
         className={[
           styles.minion,
@@ -626,6 +647,7 @@ export const PlayBoard = () => {
         ref={track(`h${owner}`)}
         onMouseEnter={() => setHover({ kind: 'hero', player: owner })}
         onMouseLeave={() => setHover(null)}
+        {...dropOnTarget({ kind: 'hero', player: owner })}
         type="button"
         className={[
           styles.hero,
@@ -660,6 +682,8 @@ export const PlayBoard = () => {
   const renderHandCard = (card: Card | undefined, index: number) => {
     const playable = actions.some((a) => a.type === 'PlayCard' && a.handIndex === index);
     const selected = selection?.kind === 'hand' && selection.index === index;
+    // "Choose one" cards ask in a dialog first, so they are click-only.
+    const draggable = !over && playable && !actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.choice !== undefined);
     return (
       <HandPreview key={index} card={card}>
         {(hover) => (
@@ -672,6 +696,18 @@ export const PlayBoard = () => {
         style={artStyle(card?.id)}
         className={[styles.handCard, typeClass(card?.type), styles.art, playable ? styles.ready : styles.dim, selected ? styles.selected : ''].join(' ')}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
+        draggable={draggable}
+        onDragStart={(e) => {
+          e.dataTransfer.setData('text/plain', String(index)); // Firefox needs data to start a drag
+          e.dataTransfer.effectAllowed = 'move';
+          // Select after the drag has begun: re-rendering the dragged card inside dragstart can cancel it.
+          setTimeout(() => setSelection({ kind: 'hand', index }), 0);
+        }}
+        onDragEnd={() => {
+          setSelection(null);
+          setHover(null);
+          setHoverGap(null);
+        }}
       >
         <span className={styles.cost}>{card?.cost}</span>
         <span className={styles.name}>{card?.name}</span>
@@ -862,7 +898,16 @@ export const PlayBoard = () => {
           </div>
         </div>
       )}
-      <div className={[styles.table, areaZone ? styles.zone : ''].join(' ')} onClick={(e) => playFromArea(e, 'table')}>
+      <div
+        className={[styles.table, areaZone ? styles.zone : ''].join(' ')}
+        onClick={(e) => playFromArea(e, 'table')}
+        onDragOver={(e) => areaZone && e.preventDefault()}
+        onDrop={(e) => {
+          if (!areaZone) return;
+          e.preventDefault();
+          playFromArea(e, 'table', true);
+        }}
+      >
         <section className={[styles.side, styles.top].join(' ')}>
           <div className={styles.backs}>
             {state.players[foe].hand.map((_, i) => (
@@ -895,9 +940,9 @@ export const PlayBoard = () => {
             <span>
               Turn {state.turn}: {label(state.activePlayer)}
               {choiceOptions.length > 0 ? ' - choose one option' : ''}
-              {boardZone ? ' - click your board to play it (it lands in the gap you click, between minions or at either end)' : ''}
-              {areaZone ? ' - click the play area to cast it' : ''}
-              {aimable.length > 0 ? ' - pick a target (Esc, right-click or clicking the selection again cancels)' : ''}
+              {boardZone ? ' - drag it (or click) onto your board; it lands in the gap you pick, between minions or at either end' : ''}
+              {areaZone ? ' - drag it (or click) onto the play area to cast it' : ''}
+              {aimable.length > 0 ? ' - drop it on a target, or click one (Esc, right-click or clicking the selection again cancels)' : ''}
             </span>
           )}
           {message && <span className={styles.error}>{message}</span>}
@@ -918,6 +963,20 @@ export const PlayBoard = () => {
             onClick={(e) => playFromArea(e, 'board')}
             onMouseMove={(e) => boardZone && setHoverGap(gapAt(e.currentTarget, e.clientX))}
             onMouseLeave={() => setHoverGap(null)}
+            onDragOver={(e) => {
+              if (!boardZone) return;
+              e.preventDefault();
+              setHoverGap(gapAt(e.currentTarget, e.clientX));
+            }}
+            onDragLeave={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setHoverGap(null);
+            }}
+            onDrop={(e) => {
+              if (!boardZone) return;
+              e.preventDefault();
+              playFromArea(e, 'board', true);
+              setHoverGap(null);
+            }}
           >
             {myBoard.map((m, i) => (
               <Fragment key={m.instanceId}>
