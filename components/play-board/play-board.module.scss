@@ -806,3 +806,13 @@
     outline-offset: 2px;
   }
 }
+
+.clock {
+  margin-left: 0.5em;
+  font-variant-numeric: tabular-nums;
+  color: #cfd6e6;
+}
+
+.clockLow {
+  color: #ff7d7d;
+}

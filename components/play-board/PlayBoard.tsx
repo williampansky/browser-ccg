@@ -6,6 +6,7 @@ import {
   buildDeck,
   chooseGreedyAction,
   chooseRandomAction,
+  DEFAULT_TURN_SECONDS,
   getCardDef,
   Card,
   createGame,
@@ -17,6 +18,7 @@ import {
   MinionInstance,
   playablePool,
   primePool,
+  turnSeconds,
   PlayerId,
   Rng,
   TargetRef,
@@ -24,6 +26,7 @@ import {
 } from '../../engine';
 import { gapIndex } from './board-position';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
+import { formatClock, isTimerOn, secondsLeft, setTimerOn } from './turn-timer';
 import { fanDrop, fanRotation, fanX, HAND_CARD_HEIGHT, handSink as computeHandSink, handZoom } from './hand-fan';
 import { applyDebugSetup, DebugSetup } from './debug-setup';
 import { nukeHero } from './nuke-hero';
@@ -254,6 +257,12 @@ export const PlayBoard = () => {
    *  selecting a card. Off by default; saved. More settings will be split out of it later. */
   const [a11y, setA11y] = useState(false);
   useEffect(() => setA11y(isAccessible()), []);
+  /** Turn timer: 60 s per turn (15 s with Cronus on a board), on by default; running out ends the turn. Local stand-in for a server clock. */
+  const [timerOn, setTimerOnState] = useState(true);
+  useEffect(() => setTimerOnState(isTimerOn()), []);
+  const [gameKey, setGameKey] = useState(0);
+  const turnStartedAt = useRef(Date.now());
+  const [now, setNow] = useState(() => Date.now());
   const rngRef = useRef<Rng | null>(null);
   // The log shows the newest line at the bottom and stays pinned there unless you scroll up to read older events.
   const logRef = useRef<HTMLDivElement | null>(null);
@@ -280,6 +289,7 @@ export const PlayBoard = () => {
     setSelection(null);
     setMessage('');
     setFoeAim(null);
+    setGameKey((k) => k + 1);
   }, []);
 
   // While something is selected: follow the pointer (for the targeting line), and let Escape or a
@@ -371,6 +381,25 @@ export const PlayBoard = () => {
   // The viewer is who sits at the bottom: always Player 1 against the AI, the active player in hot-seat.
   const viewer: PlayerId = !state ? '0' : mode === 'ai' ? '0' : state.activePlayer;
   const aiToMove = !!state && mode === 'ai' && state.status === 'playing' && state.activePlayer === AI_PLAYER;
+
+  // The clock restarts whenever a turn begins (or a new game). It counts only on a human's turn.
+  const timerApplies = timerOn && !!state && state.status === 'playing' && !aiToMove;
+  useEffect(() => {
+    turnStartedAt.current = Date.now();
+    setNow(Date.now());
+  }, [state?.turn, state?.activePlayer, gameKey]);
+  useEffect(() => {
+    if (!timerApplies) return;
+    const id = setInterval(() => setNow(Date.now()), 250);
+    return () => clearInterval(id);
+  }, [timerApplies]);
+  const turnLimit = state ? turnSeconds(state, byId) : DEFAULT_TURN_SECONDS;
+  const clockLeft = secondsLeft(turnStartedAt.current, now, turnLimit);
+  const timedOut = timerApplies && clockLeft <= 0;
+  useEffect(() => {
+    if (timedOut) dispatch({ type: 'EndTurn' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timedOut]);
 
   // The AI takes one action per tick, so you can follow what it does. A targeted action first shows an aiming arrow.
   useEffect(() => {
@@ -987,6 +1016,15 @@ export const PlayBoard = () => {
             >
               Sound: {soundOn ? 'on' : 'off'}
             </button>
+            <button
+              type="button"
+              onClick={() => {
+                setTimerOn(!timerOn);
+                setTimerOnState(!timerOn);
+              }}
+            >
+              Turn timer ({turnLimit}s): {timerOn ? 'on' : 'off'}
+            </button>
             <button type="button" onClick={() => setSmartAi(!smartAi)}>
               AI: {smartAi ? 'greedy (looks one move ahead)' : 'random'} (click to switch)
             </button>
@@ -1155,6 +1193,7 @@ export const PlayBoard = () => {
           ) : (
             <span>
               Turn {state.turn}: {label(state.activePlayer)}
+              {timerApplies && <b className={[styles.clock, clockLeft <= 10 ? styles.clockLow : ''].join(' ')}> {formatClock(clockLeft)}</b>}
               {choiceOptions.length > 0 ? ' - choose one option' : ''}
               {boardZone ? ' - drag it (or click) onto your board; it lands in the gap you pick, between minions or at either end' : ''}
               {areaZone ? ' - drag it (or click) onto the play area to cast it' : ''}

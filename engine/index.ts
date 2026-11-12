@@ -17,3 +17,4 @@ export { chooseGreedyAction, evaluate } from './bots/greedy-bot';
 export { checkDeck, maxCopies, MAX_DECK_SIZE } from './deck-rules';
 export type { DeckCheck } from './deck-rules';
 export { effectiveCost } from './rules/cost';
+export { DEFAULT_TURN_SECONDS, turnSeconds } from './rules/turn-timer';
