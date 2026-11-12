@@ -156,7 +156,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   `-MINION` images and the old site pages (`Sidebar`, `Card`) still use the old zone-game art and ids. `CORE_088` is
   "FPO" placeholder art. PRIME has `-CARD` art for 253 of 254 cards (all but `PRIME_212`), copied from `react-ccg-deprecated`.
 - **Framed cards (`components/play-board/CardFace.tsx`)** port `hsclone`'s `CardV3`: the art sits behind a rarity frame PNG
-  (`public/images/hs/frames/`) and the cost gem, name ribbon, text, type, rarity gem and sword/shield badges are laid
+  (`public/images/frames/`) and the cost gem, name ribbon, text, type, rarity gem and sword/shield badges are laid
   over it in the frame's 178 x 250 design units, scaled by the `--u` CSS variable (so use `u(n)` in its SCSS, never `em`:
   an element's own font-size would change its offsets). Hand cards and the cast popup use it; board
   minions and the choose-one dialogs do not yet. **The hand's feel is ported from `hsclone`** (`components/play-board/hand-fan.ts`
@@ -178,6 +178,6 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
 - Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.
-- Current checks: `npm test` passes (727 tests; the card-number tests were updated to the balance pass on 2026-11-12), `npm run build` passes, and `tsc` has 8 errors
+- Current checks: `npm test` passes (735 tests; the card-number tests were updated to the balance pass on 2026-11-12), `npm run build` passes, and `tsc` has 8 errors
   (`as Card` casts in `utils/__tests__/get-card-power.test.ts`). Don't "fix"
   unrelated failures as a drive-by.

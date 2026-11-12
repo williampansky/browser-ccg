@@ -1,4 +1,4 @@
-/** Frame images that exist in `public/images/hs/frames/` (the `hsclone` card frames). */
+/** Frame images that exist in `public/images/frames/` (the `hsclone` card frames). */
 export const FRAME_RARITIES = ['COMMON', 'REMARKABLE', 'SUPERIOR', 'MYTHIC', 'FREE'] as const;
 export type FrameRarity = typeof FRAME_RARITIES[number];
 

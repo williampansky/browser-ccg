@@ -65,8 +65,8 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost }:
   return (
     <div className={styles.face} style={{ ['--u' as string]: `${faceUnit(width)}px` }}>
       <div className={styles.art} style={{ backgroundImage: artBackground(card.id) }} />
-      <img className={styles.frame} src={`/images/hs/frames/${frameFor(card.rarity)}.png`} alt="" draggable={false} />
-      <img className={styles.gem} src={`/images/hs/ui/gem-${gemFor(card.rarity)}.png`} alt="" draggable={false} />
+      <img className={styles.frame} src={`/images/frames/${frameFor(card.rarity)}.png`} alt="" draggable={false} />
+      <img className={styles.gem} src={`/images/ui/gem-${gemFor(card.rarity)}.png`} alt="" draggable={false} />
 
       <span
         className={`${styles.cost} ${styles.val} ${cost !== undefined && cost < card.cost ? styles.costLower : ''} ${cost !== undefined && cost > card.cost ? styles.costHigher : ''}`}
@@ -76,8 +76,8 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost }:
       <span className={`${styles.type} ${styles.val}`}>{label}</span>
 
       <span className={styles.emblem}>
-        <img className={styles.emblemIcon} src={`/images/hs/ui/type-${card.type.toUpperCase()}.png`} alt="" draggable={false} />
-        <img className={styles.emblemBoard} src="/images/hs/ui/type-board.png" alt="" draggable={false} />
+        <img className={styles.emblemIcon} src={`/images/ui/type-${card.type.toUpperCase()}.png`} alt="" draggable={false} />
+        <img className={styles.emblemBoard} src="/images/ui/type-board.png" alt="" draggable={false} />
       </span>
 
       <span className={`${styles.name} ${styles.val}`}>
@@ -108,11 +108,11 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost }:
       {stats && (
         <>
           <span className={styles.attack}>
-            <img src="/images/hs/ui/stat-attack.png" alt="" draggable={false} />
+            <img src="/images/ui/stat-attack.png" alt="" draggable={false} />
             <b className={styles.val}>{attack ?? card.attack}</b>
           </span>
           <span className={styles.health}>
-            <img src="/images/hs/ui/stat-health.png" alt="" draggable={false} />
+            <img src="/images/ui/stat-health.png" alt="" draggable={false} />
             <b className={styles.val}>{health ?? card.health}</b>
           </span>
         </>

@@ -23,6 +23,8 @@ export const DeckBuilder = () => {
   const [cost, setCost] = useState<typeof COSTS[number]>('all');
   const [search, setSearch] = useState('');
   const [note, setNote] = useState('');
+  /** The card shown enlarged in the detail window (flavor text, the tokens it makes, add / close), or null. */
+  const [viewing, setViewing] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = loadDecks(byId);
@@ -31,6 +33,12 @@ export const DeckBuilder = () => {
     setCurrentId(list[0].id);
     setLoaded(true);
   }, []);
+  useEffect(() => {
+    if (!viewing) return;
+    const key = (e: KeyboardEvent) => e.key === 'Escape' && setViewing(null);
+    window.addEventListener('keydown', key);
+    return () => window.removeEventListener('keydown', key);
+  }, [viewing]);
   // Every change is saved as it happens (but not before the first load, which would wipe the saved decks).
   useEffect(() => {
     if (loaded) saveDecks(decks);
@@ -109,21 +117,80 @@ export const DeckBuilder = () => {
             const n = countOf(deck, c.id);
             const blocked = !!whyNotAdd(deck, c);
             return (
-              <button
-                key={c.id}
-                type="button"
-                className={[styles.cardButton, blocked ? styles.blocked : ''].join(' ')}
-                onClick={() => add(c.id)}
-                aria-label={`Add ${c.name} (${n} in deck)`}
-              >
-                <CardFace card={c} width={150} />
-                {n > 0 && <span className={styles.copies}>×{n}</span>}
-              </button>
+              <div key={c.id} className={styles.cardWrap}>
+                <button
+                  type="button"
+                  className={[styles.cardButton, blocked ? styles.blocked : ''].join(' ')}
+                  onClick={() => setViewing(c.id)}
+                  aria-label={`View ${c.name} (${n} in deck)`}
+                >
+                  <CardFace card={c} width={150} />
+                  {n > 0 && <span className={styles.copies}>×{n}</span>}
+                </button>
+                <button
+                  type="button"
+                  className={styles.quickAdd}
+                  onClick={() => add(c.id)}
+                  disabled={blocked}
+                  title={whyNotAdd(deck, c) ?? 'Add to deck'}
+                  aria-label={`Add ${c.name} to the deck`}
+                >
+                  +
+                </button>
+              </div>
             );
           })}
           {shown.length === 0 && <p>No card matches.</p>}
         </div>
       </section>
+
+      {viewing && byId.get(viewing) && (
+        <div className={styles.backdrop} onClick={() => setViewing(null)}>
+          <div className={styles.detail} role="dialog" aria-label={byId.get(viewing)!.name} onClick={(e) => e.stopPropagation()}>
+            {(() => {
+              const c = byId.get(viewing)!;
+              const why = whyNotAdd(deck, c);
+              const tokens = c.entourage.map((id) => byId.get(id)).filter((t): t is NonNullable<typeof t> => !!t);
+              return (
+                <>
+                  <div className={styles.detailMain}>
+                    <CardFace card={c} width={320} />
+                    <div className={styles.detailText}>
+                      <h2>{c.name}</h2>
+                      <p className={styles.detailMeta}>
+                        {c.source === 'prime' ? 'Prime' : 'Core'} · <span className={styles.cap}>{c.type}</span> · {countOf(deck, c.id)} in {deck.name || 'this deck'}
+                      </p>
+                      {c.flavor ? <blockquote className={styles.flavor}>{c.flavor}</blockquote> : <p className={styles.noFlavor}>No flavor text.</p>}
+                      {why && <p className={styles.note}>{why}</p>}
+                      <div className={styles.detailButtons}>
+                        <button type="button" disabled={!!why} onClick={() => add(c.id)}>
+                          Add to deck
+                        </button>
+                        <button type="button" onClick={() => setViewing(null)}>
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {tokens.length > 0 && (
+                    <div className={styles.tokens}>
+                      <h3>Makes or offers</h3>
+                      <div className={styles.tokenRow}>
+                        {tokens.map((t) => (
+                          <div key={t.id} className={styles.token}>
+                            <CardFace card={t} width={150} />
+                            <span>{t.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+          </div>
+        </div>
+      )}
 
       <aside className={styles.deck}>
         <div className={styles.deckHead}>

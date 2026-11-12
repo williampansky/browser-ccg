@@ -236,3 +236,119 @@
   font-size: 0.8rem;
   opacity: 0.7;
 }
+
+.cardWrap {
+  position: relative;
+}
+
+.quickAdd {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #5d8a5d;
+  background: rgba(30, 60, 30, 0.92);
+  color: #b9f5b9;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 5;
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 16px;
+}
+
+.detail {
+  max-height: 100%;
+  overflow: auto;
+  background: #181c26;
+  border: 1px solid #3a4258;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 760px;
+}
+
+.detailMain {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.detailText {
+  flex: 1;
+  min-width: 220px;
+
+  h2 {
+    margin: 0 0 4px;
+  }
+}
+
+.detailMeta {
+  margin: 0 0 12px;
+  color: #9aa3b8;
+}
+
+.cap {
+  text-transform: capitalize;
+}
+
+.flavor {
+  margin: 0 0 14px;
+  padding-left: 12px;
+  border-left: 3px solid #4a5578;
+  font-style: italic;
+  color: #cdd3e3;
+}
+
+.noFlavor {
+  color: #6f7890;
+  font-style: italic;
+}
+
+.detailButtons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tokens {
+  margin-top: 18px;
+  border-top: 1px solid #2c3347;
+  padding-top: 12px;
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+    color: #9aa3b8;
+  }
+}
+
+.tokenRow {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.token {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+}
