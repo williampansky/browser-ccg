@@ -1,0 +1,12 @@
+{
+  "CORE_112": { "health": 4, "why": "54.9% unmoved by 3->2 warcry; take a point of health: 6/4" },
+  "CORE_031": { "health": 4, "why": "53.6%: 4/4 Bulwark at 5" },
+  "CORE_024": { "attack": 4, "why": "53.3%: 5c 4/5" },
+  "CORE_081": { "attack": 3, "why": "53.2%: weapon that heals 2 per swing at 4/2 -> 3/2" },
+  "CORE_067": { "cost": 4, "why": "53.4%: draw 2 for 3 is the best cheap card advantage" },
+  "CORE_122": { "health": 5, "why": "52.8%: 6/5 + ping" },
+  "CORE_068": { "cost": 0, "why": "PROBE: cost 0 to see whether cost is even the issue" },
+  "CORE_096": { "cost": 0, "why": "PROBE" },
+  "CORE_049": { "cost": 0, "why": "PROBE" },
+  "CORE_113": { "numberPrimary": 12, "why": "PROBE" }
+}

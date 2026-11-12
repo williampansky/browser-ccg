@@ -2,9 +2,11 @@
   "name": "browser-ccg",
   "version": "0.0.1",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "airtable": "ts-node -r ./airtable.node.ts",
-    "airtable:hs": "ts-node --compiler-options '{\"module\":\"commonjs\"}' ./airtable.hs.node.ts",
+    "airtable": "node ./airtable.node.js",
     "sim": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\"}' ./engine/sim/run.node.ts",
     "tune": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\"}' ./engine/sim/tune.node.ts",
     "dev": "next dev",
@@ -17,8 +19,6 @@
     "@reduxjs/toolkit": "^1.8.6",
     "@use-gesture/react": "^10.2.20",
     "@visx/visx": "^2.16.0",
-    "airtable": "^0.11.5",
-    "airtable-node": "^0.1.20",
     "bgio-effects": "^0.7.1",
     "boardgame.io": "^0.49.12",
     "chalk": "^4.1.2",

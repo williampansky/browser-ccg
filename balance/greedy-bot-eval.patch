@@ -1,0 +1,53 @@
+diff --git a/engine/bots/greedy-bot.ts b/engine/bots/greedy-bot.ts
+index abcafc4..e1da4f3 100644
+--- a/engine/bots/greedy-bot.ts
++++ b/engine/bots/greedy-bot.ts
+@@ -21,7 +21,7 @@ export interface GreedyWeights {
+   weapon: number;
+ }
+ 
+-export const DEFAULT_WEIGHTS: GreedyWeights = { card: 1.5, lifeLow: 2, lifeMid: 1, lifeHigh: 0.5, guard: 1.5, bubble: 1.5, weapon: 0.8 };
++export const DEFAULT_WEIGHTS: GreedyWeights = { card: 1.5, lifeLow: 2, lifeMid: 1, lifeHigh: 0.5, guard: 1.5, bubble: 3, weapon: 0.8 };
+ 
+ /** An action must beat standing still by this much, or the bot ends its turn instead. */
+ const MIN_GAIN = 0.01;
+@@ -33,21 +33,25 @@ const lifeValue = (hp: number, w: GreedyWeights): number => {
+   return low * w.lifeLow + mid * w.lifeMid + high * w.lifeHigh;
+ };
+ 
+-const minionValue = (m: MinionInstance, w: GreedyWeights): number => {
++const minionValue = (m: MinionInstance, w: GreedyWeights, turn = 0): number => {
+   const k = m.keywords;
+-  let v = (k.noAttack ? 0 : m.attack) + m.health;
++  // a minion about to die is worth nothing; a disabled one can not attack on its blocked turn
++  if (m.expiresOnTurn !== undefined) return 0;
++  const disabled = m.disabledOnTurn !== undefined && m.disabledOnTurn >= turn;
++  let v = (k.noAttack || disabled ? 0 : m.attack) + m.health;
+   if (k.guard) v += w.guard;
+   if (k.bubble) v += w.bubble;
+   if (k.doubleAttack) v += m.attack * 0.7;
+-  if (k.rush) v += 0.5;
++  if (k.rush) v += 0.5 + m.attack * 0.4;
+   return v;
+ };
+ 
+-const sideValue = (p: PlayerState, w: GreedyWeights): number => {
++const sideValue = (p: PlayerState, w: GreedyWeights, turn = 0): number => {
+   const weapon = p.weapon ? p.weapon.attack * p.weapon.durability * w.weapon : 0;
+   return (
+     lifeValue(p.health + p.armor, w) +
+-    p.board.reduce((sum, m) => sum + minionValue(m, w), 0) +
++    p.board.reduce((sum, m) => sum + minionValue(m, w, turn), 0) +
++    p.energy.total * 2 +
+     p.hand.length * w.card +
+     weapon
+   );
+@@ -59,7 +63,7 @@ const WIN = 1e6;
+ export const evaluate = (state: GameState, me: PlayerId, w: GreedyWeights = DEFAULT_WEIGHTS): number => {
+   if (state.status === 'over') return state.winner === me ? WIN : state.winner === 'draw' ? 0 : -WIN;
+   const foe: PlayerId = me === '0' ? '1' : '0';
+-  return sideValue(state.players[me], w) - sideValue(state.players[foe], w);
++  return sideValue(state.players[me], w, state.turn) - sideValue(state.players[foe], w, state.turn);
+ };
+ 
+ /**

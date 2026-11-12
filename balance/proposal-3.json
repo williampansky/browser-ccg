@@ -1,0 +1,13 @@
+{
+  "CORE_052": { "attack": 6, "health": 8, "why": "still 93% win rate after proposal-1; 6/8 Bulwark" },
+  "CORE_039": { "attack": 4, "health": 6, "why": "still 84%; 4/6 Bulwark at 6" },
+  "CORE_041": { "attack": 4, "health": 5, "why": "still 77%; the team buff is the value, body is smaller" },
+  "CORE_072": { "numberPrimary": 2, "why": "still 70% at 6c/3 dmg; 2 to every enemy minion" },
+  "CORE_031": { "attack": 4, "health": 5, "why": "66% over 218 games, the most-played strong card; 4/5 Bulwark" },
+  "CORE_130": { "cost": 4, "why": "65% win rate; the aura is worth a 4-cost" },
+  "CORE_002": { "health": 3, "why": "1c 1/3 Bulwark (Forgotten Guardian moved to 2c in proposal-2)" },
+  "CORE_015": { "attack": 2, "why": "3c 1/4 Spell Damage was the worst Spell Damage body; 2/4" },
+  "CORE_001": { "health": 2, "why": "1c 1/1 ping was below par" },
+  "CORE_003": { "health": 2, "why": "1c 1/1 needs other Sprites; 1/2 survives long enough to matter" },
+  "CORE_070": { "cost": 3, "why": "44% win rate for a 4-cost removal-ish spell" }
+}

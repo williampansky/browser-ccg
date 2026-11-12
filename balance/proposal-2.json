@@ -1,0 +1,21 @@
+{
+  "CORE_083": { "cost": 6, "numberPrimary": 8, "why": "Was an exact duplicate of Knife Attack (1c, 2). Now a 6-cost 8-damage finisher: fills the thin top of the curve" },
+  "CORE_095": { "cost": 2, "numberPrimary": 4, "why": "1c 3 face damage was the cheapest reach; 2c 4 keeps Aggro's finisher but costs a turn" },
+  "CORE_092": { "cost": 8, "why": "10-cost is uncastable in 8-turn games; 8 makes it a real late play" },
+  "CORE_082": { "cost": 6, "why": "(with proposal-1 heal 4) a 6-cost 5/6 heal-4 fills the 6 slot" },
+  "CORE_110": { "cost": 5, "attack": 4, "health": 4, "why": "Duplicate effect of Shifty Slayer; the 5-cost version is the bigger, slower one" },
+  "CORE_024": { "cost": 5, "attack": 5, "health": 6, "why": "Vanilla 4/5 at 4 was par; the 5-slot has only 13 cards" },
+  "CORE_117": { "cost": 2, "attack": 1, "health": 4, "why": "1c 1/3 Bulwark beat Rookie Lancer; now a 2-cost wall, different from Earthen Warrior" },
+  "CORE_010": { "health": 3, "why": "2c 2/2 Bulwark was the worst of its group; 2/3" },
+  "CORE_022": { "attack": 2, "why": "3c 1/4 Bulwark was dominated by Disgruntled Miner; 2/4" },
+  "CORE_007": { "health": 3, "mechanics": ["%ON_PLAY%", "%DESTROY%"], "text": "<strong>%ON_PLAY%</strong><br>\n%DESTROY% your<br>\nopponent's weapon", "why": "OPTIONAL (author decided to keep NO_ATTACK): without it the body can attack, which is why health drops to 3" },
+  "CORE_085": { "health": 3, "why": "unchanged; listed because 33% win rate looks like bot noise (needs heal triggers)" },
+  "CORE_130": { "health": 3, "why": "3c 1/4 NO_ATTACK aura +1 AP was too sturdy for a support piece" },
+  "CORE_108": { "cost": 2, "why": "0/3 NO_ATTACK adjacency +2 attack at 3; 2 lets it come down with a body" },
+  "CORE_049": { "cost": 2, "why": "3c for a permanent +1 energy was a net -2 tempo; 2 is closer to fair" },
+  "CORE_118": { "attack": 3, "why": "2c 4/3 with a discard drawback was the best 2-drop; 3/3" },
+  "CORE_038": { "attack": 5, "why": "6c 6/7 vanilla was too close to a 7c 7/7; 5/7" },
+  "CORE_131": { "cost": 5, "why": "4c 4/3 Rush was the best Rush body; 5 makes room for Rush at 4 only as Overeager 2/5" },
+  "CORE_073": { "cost": 2, "why": "1c +3 attack to any minion is cheap burst; 2" },
+  "CORE_078": { "cost": 5, "why": "4c +4/+4 is the best buff by far; 5" }
+}
