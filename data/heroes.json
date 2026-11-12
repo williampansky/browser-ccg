@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Atlas",
+    "symbol": "%HERO_ATLAS%",
+    "slug": "atlas",
+    "archetype": "RANGED",
+    "shortDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "lore": "<p>Born from foreign parents migrated from very far in the land of the emperor, he experienced the dark times of war waging with near populations who wished to overturn the kingdom. Once grown enough he decided to join the emperor's cause and the army, getting recognized as a valid soldier, and given the opportunity to be in the emperor's guard.</p>\n\n<p>In an extreme contented attack by allied forces he fought with all he had ending in him losing a limb to the poisoned blade of an enemy elite assassin , but managing to save the very life of the emperor.</p>\n\n<p>For his endeavors he was then granted a magical stone gifted by the god of the depths to the emperor: the stone was imbued with the energy coming from the center of the earth, where the god dwells. But the hero of the kingdom still wished to fight: so he was built an artificial limb powered by the magic stone.</p>\n\n<p>He then became Atlas, grand commander of the emperor's army.</p>",
+    "artistName": "Davide Scalia",
+    "artistUrl": "https://www.artstation.com/davidescalia",
+    "ability1": "cost(1)\ncooldown(1)\ntype(Weapon)\nname(Poisoned Blade)\ndescription(Deal 1 damage now, and 1 damage at the start of your next turn)",
+    "ability2": "cost(4)\ncooldown(2)\ntype(Spell)\nname(Sulfuric Cloud)\ndescription(Deal 1 damage to all enemy minions now, and another at the start of your next turn)",
+    "ability3": "cost(6)\ncooldown(-1)\ntype(%SUMMON%)\nname(Command Army)\ndescription(%SUMMON% seven 1/1 minions with %POISON%)"
+  },
+  {
+    "name": "Zeus",
+    "symbol": "%HERO_ZEUS%",
+    "slug": "zeus",
+    "archetype": "RANGED",
+    "shortDescription": "Olympian god of the sky and the thunder, the king of all other gods and men.",
+    "lore": "<p class=\"text-lead\">Olympian god of the sky and the thunder, the king of all other gods and men.</p>\n<p>Zeus is king of Mount Olympus, the home of Greek gods, where he rules the world and imposes his will onto gods and mortals alike. As the king of the gods and sitting atop the golden throne on Olympus, Zeus is revered by all.</p>",
+    "active": true,
+    "artistName": "Dzhovanna Sallama",
+    "artistUrl": "https://www.artstation.com/jovannasallama"
+  },
+  {
+    "name": "Forsaken Druid",
+    "symbol": "%HERO_FORSAKEN_DRUID%",
+    "slug": "forsaken-druid",
+    "archetype": "HYBRID",
+    "shortDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "lore": "<p>A long time ago, new caste of magic users were born in the Land of Light. Greatly gifted and often wise beyond their years, through decades of study in nature they were able to combine light and earth magic into what they called life magic.</p>\n\n<p>These scholars of Audinburgh were finally accepted into the circle as the first druids. They were also the first to consistently combine two elements successfully without side effects, and paved a way for new theories and discoveries in magic and its behavior.</p>",
+    "active": true,
+    "artistName": "Huussii",
+    "artistUrl": "https://www.deviantart.com/huussii"
+  },
+  {
+    "name": "Exile",
+    "symbol": "%HERO_EXILE%",
+    "slug": "exile",
+    "archetype": "RANGED",
+    "shortDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "lore": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque aliquet sagittis urna eu dictum. Sed leo nisi, pellentesque a quam id, vehicula mollis nibh. Curabitur varius sodales posuere. Morbi sit amet commodo enim. Proin at viverra libero. Donec a venenatis mi.",
+    "active": true,
+    "artistName": "Platinum YB",
+    "artistUrl": "https://www.artstation.com/lightandshadow"
+  },
+  {
+    "name": "Warrior",
+    "symbol": "%HERO_WARRIOR%",
+    "slug": "warrior",
+    "archetype": "MELEE",
+    "shortDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "lore": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque aliquet sagittis urna eu dictum. Sed leo nisi, pellentesque a quam id, vehicula mollis nibh. Curabitur varius sodales posuere. Morbi sit amet commodo enim. Proin at viverra libero. Donec a venenatis mi.",
+    "active": true
+  },
+  {
+    "name": "Mystic",
+    "symbol": "%HERO_MYSTIC%",
+    "slug": "mystic",
+    "archetype": "HYBRID",
+    "shortDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+  },
+  {
+    "name": "Asar",
+    "symbol": "%HERO_ASAR%",
+    "slug": "asar",
+    "archetype": "MELEE",
+    "shortDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "lore": "He's from race \"Grey\". Humans call them Grey because they look like human from far away. But their skin is grey, their eyes are yellow and with pointy ears like wolves. Also they're much physically much stronger than average human.",
+    "artistName": "Naranbaatar Ganbold",
+    "artistUrl": "https://www.artstation.com/naranbaatars"
+  },
+  {
+    "name": "Summoner",
+    "symbol": "%HERO_SUMMONER%",
+    "slug": "summoner",
+    "archetype": "RANGED",
+    "shortDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+  },
+  {
+    "name": "Cleric",
+    "symbol": "%HERO_SAGE%",
+    "slug": "cleric",
+    "archetype": "RANGED",
+    "shortDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "lore": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque aliquet sagittis urna eu dictum. Sed leo nisi, pellentesque a quam id, vehicula mollis nibh. Curabitur varius sodales posuere. Morbi sit amet commodo enim. Proin at viverra libero. Donec a venenatis mi.",
+    "active": true
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "GAME_001",
+    "name": "The Orb",
+    "set": "%SET_001%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_NONE%",
+    "cost": 0,
+    "text": "Gain 1 %ENERGY% for this turn only",
+    "mechanics": [
+      "%ENERGY%"
+    ],
+    "numberPrimary": 1,
+    "playType": "GLOBAL",
+    "playContext": "%ENERGY%",
+    "collectible": false,
+    "active": true,
+    "howToEarn": "Start a match as the second player.",
+    "howToEarnGolden": "Start match with a deck filled only with golden cards.",
+    "artistName": "kaleidoscope girl",
+    "artistUrl": "https://www.deviantart.com/kalos-eidos-skopein"
+  }
+]

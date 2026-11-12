@@ -1,1 +1,130 @@
-{"%CARD_SET%":{"name":"Card Set","symbol":"%CARD_SET%","value":"SET","type":"GAME"},"%TYPE_ITEM%":{"name":"Item","symbol":"%TYPE_ITEM%","value":"ITEM","type":"CARD TYPE","description":"Similar in nature to %TYPE_SPELL%; this card type, however, does not benefit from %SPELL_DAMAGE%."},"%ZONE%":{"name":"Zone","symbol":"%ZONE%","value":"ZONE","type":"GAME","description":"A location where cards are played on each player's side."},"%RARITY_COMMON%":{"name":"Common","symbol":"%RARITY_COMMON%","value":"COMMON","type":"CARD RARITY"},"%RARITY_SUPERIOR%":{"name":"Superior","symbol":"%RARITY_SUPERIOR%","value":"SUPERIOR","type":"CARD RARITY"},"%RACE_NONE%":{"name":"None","symbol":"%RACE_NONE%","value":"NONE","type":"CARD RACE"},"%RACE_LOCATION%":{"name":"Location","symbol":"%RACE_LOCATION%","value":"LOCATION","type":"CARD RACE"},"%CARD_RACE%":{"name":"Card Race","symbol":"%CARD_RACE%","value":"RACE","type":"GAME"},"%RACE_DEMONIC%":{"name":"Undead","symbol":"%RACE_DEMONIC%","value":"UNDEAD","type":"CARD RACE"},"%RACE_DRAGON%":{"name":"Eternal","symbol":"%RACE_DRAGON%","value":"ETERNAL","type":"CARD RACE"},"%RARITY_FREE%":{"name":"Free","symbol":"%RARITY_FREE%","value":"FREE","type":"CARD RARITY","description":"A player's collection always starts with two copies of every Free card."},"%TYPE_MINION%":{"name":"Minion","symbol":"%TYPE_MINION%","value":"MINION","type":"CARD TYPE","description":"A card that, when played, %SUMMON%s a minion to your board."},"%TYPE_WEAPON%":{"name":"Weapon","symbol":"%TYPE_WEAPON%","value":"WEAPON","type":"CARD TYPE","description":"A card that, when played, becomes a %BOON% to your Hero's attack power. All cards of this type come with an alternative form of Health, called %DURABILITY%, which is similar to %TYPE_MINION%s—though its pool is reduced by one on every use."},"%RARITY_REMARKABLE%":{"name":"Remarkable","symbol":"%RARITY_REMARKABLE%","value":"REMARKABLE","type":"CARD RARITY"},"%RACE_ELEMENT%":{"name":"Primordial","symbol":"%RACE_ELEMENT%","value":"PRIMORDIAL","type":"CARD RACE"},"%RARITY_MYTHIC%":{"name":"Mythic","symbol":"%RARITY_MYTHIC%","value":"MYTHIC","type":"CARD RARITY"},"%NONE%":{"name":"None","symbol":"%NONE%","value":"NONE","type":"GAME","description":"A non-value value."},"%SET_PRIME%":{"name":"Prime","symbol":"%SET_PRIME%","value":"SET_PRIME","type":"CARD SET","description":"Expanded, collectible, cards."},"%RACE_PIRATE%":{"name":"Pirate","symbol":"%RACE_PIRATE%","value":"PIRATE","type":"CARD RACE"},"%RARITY_NONE%":{"name":"None","symbol":"%RARITY_NONE%","value":"NONE","type":"CARD RARITY"},"%CARD_TYPE%":{"name":"Card Type","symbol":"%CARD_TYPE%","value":"TYPE","type":"GAME"},"%TYPE_SPELL%":{"name":"Spell","symbol":"%TYPE_SPELL%","value":"SPELL","type":"CARD TYPE","description":"Can receive a temporary boost of power from %SPELL_DAMAGE% %BOON%s."},"%RACE_CREATURE%":{"name":"Creature","symbol":"%RACE_CREATURE%","value":"CREATURE","type":"CARD RACE"},"%RACE_SPRITE%":{"name":"Sprite","symbol":"%RACE_SPRITE%","value":"SPRITE","type":"CARD RACE"},"%CARD_RARITY%":{"name":"Card Rarity","symbol":"%CARD_RARITY%","value":"RARITY","type":"GAME"},"%RACE_IDOL%":{"name":"Idol","symbol":"%RACE_IDOL%","value":"IDOL","type":"CARD RACE"},"%RACE_ANDROID%":{"name":"Driod","symbol":"%RACE_ANDROID%","value":"DROID","type":"CARD RACE"},"%SET_CORE%":{"name":"Core","symbol":"%SET_CORE%","value":"SET_CORE","type":"CARD SET","description":"Required cards."},"%RARITY_GOLDEN%":{"name":"Golden","symbol":"%RARITY_GOLDEN%","value":"GOLDEN","type":"CARD RARITY"}}
+[
+  {
+    "name": "Spell",
+    "type": "CARD TYPE",
+    "symbol": "%TYPE_SPELL%",
+    "description": "Can receive a temporary boost of power from %SPELL_DAMAGE% %BOON%s."
+  },
+  {
+    "name": "Core",
+    "type": "CARD SET",
+    "symbol": "%SET_002%",
+    "description": "Starter cards."
+  },
+  {
+    "name": "None",
+    "type": "CARD RACE",
+    "symbol": "%RACE_NONE%"
+  },
+  {
+    "name": "Prime",
+    "type": "CARD SET",
+    "symbol": "%SET_003%",
+    "description": "Expanded, collectible, cards."
+  },
+  {
+    "name": "Sprite",
+    "type": "CARD RACE",
+    "symbol": "%RACE_SPRITE%"
+  },
+  {
+    "name": "Primordial",
+    "type": "CARD RACE",
+    "symbol": "%RACE_ELEMENT%"
+  },
+  {
+    "name": "Common",
+    "type": "CARD RARITY",
+    "symbol": "%RARITY_COMMON%"
+  },
+  {
+    "name": "Minion",
+    "type": "CARD TYPE",
+    "symbol": "%TYPE_MINION%",
+    "description": "A card that, when played, %SUMMON%s a minion to your board."
+  },
+  {
+    "name": "Golden",
+    "type": "CARD RARITY",
+    "symbol": "%RARITY_GOLDEN%"
+  },
+  {
+    "name": "Location",
+    "type": "CARD RACE",
+    "symbol": "%RACE_LOCATION%"
+  },
+  {
+    "name": "Mythic",
+    "type": "CARD RARITY",
+    "symbol": "%RARITY_MYTHIC%"
+  },
+  {
+    "name": "Pirate",
+    "type": "CARD RACE",
+    "symbol": "%RACE_PIRATE%"
+  },
+  {
+    "name": "None",
+    "type": "CARD RARITY",
+    "symbol": "%RARITY_NONE%"
+  },
+  {
+    "name": "Driod",
+    "type": "CARD RACE",
+    "symbol": "%RACE_ANDROID%"
+  },
+  {
+    "name": "Idol",
+    "type": "CARD RACE",
+    "symbol": "%RACE_IDOL%"
+  },
+  {
+    "name": "Undead",
+    "type": "CARD RACE",
+    "symbol": "%RACE_DEMONIC%"
+  },
+  {
+    "name": "Eternal",
+    "type": "CARD RACE",
+    "symbol": "%RACE_DRAGON%"
+  },
+  {
+    "name": "Creature",
+    "type": "CARD RACE",
+    "symbol": "%RACE_CREATURE%"
+  },
+  {
+    "name": "Game",
+    "type": "CARD SET",
+    "symbol": "%SET_001%",
+    "description": "Required cards."
+  },
+  {
+    "name": "Superior",
+    "type": "CARD RARITY",
+    "symbol": "%RARITY_SUPERIOR%"
+  },
+  {
+    "name": "Item",
+    "type": "CARD TYPE",
+    "symbol": "%TYPE_ITEM%",
+    "description": "Similar in nature to %TYPE_SPELL%; this card type, however, does not benefit from %SPELL_DAMAGE%."
+  },
+  {
+    "name": "Weapon",
+    "type": "CARD TYPE",
+    "symbol": "%TYPE_WEAPON%",
+    "description": "A card that, when played, becomes a %BOON% to your Hero's attack power. All cards of this type come with an alternative form of Health, called %DURABILITY%, which is similar to %TYPE_MINION%s—though its pool is reduced by one on every use."
+  },
+  {
+    "name": "Remarkable",
+    "type": "CARD RARITY",
+    "symbol": "%RARITY_REMARKABLE%"
+  },
+  {
+    "name": "Free",
+    "type": "CARD RARITY",
+    "symbol": "%RARITY_FREE%",
+    "description": "A player's collection always starts with two copies of every Free card."
+  }
+]

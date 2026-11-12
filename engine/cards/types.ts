@@ -1,7 +1,7 @@
 /**
  * Normalised card model for the Hearthstone-style engine.
  *
- * Raw Airtable records (`data/hs/*.json`) are turned into this shape by `loadCards`.
+ * Raw Airtable records (`data/*.json`) are turned into this shape by `loadCards`.
  * See RULES.md section 10 for the loader rules these types encode.
  */
 
@@ -98,7 +98,7 @@ export interface CardIssue {
   message: string;
 }
 
-/** A raw Airtable record from `data/hs/*.json`. */
+/** A raw Airtable record from `data/*.json`. */
 export type RawCard = Record<string, unknown>;
 
 /** A raw glossary record from `mechanics.json` or `constants.json`. */

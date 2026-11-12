@@ -179,7 +179,7 @@ describe('loadCards: fails loudly', () => {
 });
 
 /**
- * Tests against the committed data (`data/hs/`, pulled with `npm run airtable:hs`).
+ * Tests against the committed data (`data/`, pulled with `npm run airtable`).
  * Expected numbers were computed independently from the raw JSON. If you re-pull the data and a
  * count here changes, check that the change is real before updating the number.
  */

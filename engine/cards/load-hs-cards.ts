@@ -1,9 +1,9 @@
-import core from '../../data/hs/core.json';
-import prime from '../../data/hs/prime.json';
-import entourage from '../../data/hs/entourage.json';
-import game from '../../data/hs/game.json';
-import mechanics from '../../data/hs/mechanics.json';
-import constants from '../../data/hs/constants.json';
+import core from '../../data/core.json';
+import prime from '../../data/prime.json';
+import entourage from '../../data/entourage.json';
+import game from '../../data/game.json';
+import mechanics from '../../data/mechanics.json';
+import constants from '../../data/constants.json';
 import { loadCards } from './load-cards';
 import type {
   LoadCardsOptions,
@@ -13,8 +13,8 @@ import type {
 } from './types';
 
 /**
- * Loads the committed Hearthstone-style card data (`data/hs/*.json`, pulled by
- * `npm run airtable:hs`) into normalised cards.
+ * Loads the committed Hearthstone-style card data (`data/*.json`, pulled by
+ * `npm run airtable`) into normalised cards.
  */
 export function loadHsCards(options?: LoadCardsOptions): LoadCardsResult {
   return loadCards(
