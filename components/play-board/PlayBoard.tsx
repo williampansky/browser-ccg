@@ -9,6 +9,7 @@ import {
   Card,
   createGame,
   createSeededRng,
+  GameEvent,
   GameState,
   legalActions,
   loadHsCards,
@@ -21,6 +22,7 @@ import {
 import { gapIndex } from './board-position';
 import { deckRows } from './deck-rows';
 import { describeEvents } from './describe-events';
+import { isMuted, playSounds, setMuted, soundsFor } from './sounds';
 import { targetLinePath, TargetLineStyle } from './target-line';
 import styles from './play-board.module.scss';
 
@@ -46,6 +48,8 @@ const artStyle = (id?: string): React.CSSProperties | undefined => {
 };
 /** Zoom for the hand so `n` cards (9rem wide, 0.5rem apart) fit `width` px on one row. */
 const handScale = (width: number, n: number) => (width > 0 && n > 0 ? Math.min(1, (width + 8) / (n * (144 + 8))) : 1);
+/** Card type -> accent colour class (minion blue, spell purple, weapon orange, item teal). */
+const typeClass = (type?: string) => (type ? styles[`type_${type}`] ?? '' : '');
 const targetKey = (t: TargetRef) => (t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`);
 const centerOf = (el: HTMLElement) => {
   const r = el.getBoundingClientRect();
@@ -98,7 +102,7 @@ const HandPreview = ({ card, children }: { card?: Card; children: (h: { onMouseE
         onMouseLeave: () => setPos(null),
       })}
       {pos && card && (
-        <div className={[styles.handPreview, styles.art].join(' ')} style={{ left: pos.x, top: pos.y, ...artStyle(card.id) }}>
+        <div className={[styles.handPreview, typeClass(card.type), styles.art].join(' ')} style={{ left: pos.x, top: pos.y, ...artStyle(card.id) }}>
           <span className={styles.cost}>{card.cost}</span>
           <strong>{card.name}</strong>
           <span className={styles.type}>
@@ -201,6 +205,8 @@ export const PlayBoard = () => {
   /** Accessibility: explicit "Play" buttons after selecting a card (off by default; clicking the board plays it). */
   /** The spell just cast, shown briefly in the middle of the board. */
   const [castFx, setCastFx] = useState<{ card: Card; owner: PlayerId; n: number } | null>(null);
+  const [soundOn, setSoundOn] = useState(true);
+  useEffect(() => setSoundOn(!isMuted()), []);
   const [playButtons, setPlayButtons] = useState(false);
   const rngRef = useRef<Rng | null>(null);
   // The log shows the newest line at the bottom and stays pinned there unless you scroll up to read older events.
@@ -287,6 +293,7 @@ export const PlayBoard = () => {
         if (played?.type === 'spell') setCastFx({ card: played, owner: state.activePlayer, n: Date.now() });
       }
       setState(result.state);
+      playSounds(soundsFor(result.events));
       setLog((old) => [...old, describeEvents(result.events, byId, state, result.state)].slice(-100));
     },
     [state]
@@ -331,7 +338,7 @@ export const PlayBoard = () => {
 
   useEffect(() => {
     if (!castFx) return;
-    const timer = setTimeout(() => setCastFx(null), 1100);
+    const timer = setTimeout(() => setCastFx(null), 1600);
     return () => clearTimeout(timer);
   }, [castFx]);
 
@@ -421,10 +428,12 @@ export const PlayBoard = () => {
     const ctx = { rng: rngRef.current, catalog: byId };
     let cur = state;
     const lines: string[][] = [];
+    const heard: GameEvent[] = [];
     const run = (action: Action) => {
       const r = applyAction(cur, action, ctx);
       if ('error' in r) return false;
       lines.push(describeEvents(r.events, byId, cur, r.state));
+      heard.push(...r.events);
       cur = r.state;
       return true;
     };
@@ -442,6 +451,7 @@ export const PlayBoard = () => {
     setSelection(null);
     (document.activeElement as HTMLElement | null)?.blur?.();
     setState(cur);
+    playSounds(soundsFor(heard));
     setLog((old) => [...old, ...lines].slice(-100));
   };
 
@@ -634,7 +644,7 @@ export const PlayBoard = () => {
         aria-disabled={over || !playable}
         title={playable ? card?.text : `Can't play now. ${card?.text ?? ''}`}
         style={artStyle(card?.id)}
-        className={[styles.handCard, styles.art, playable ? styles.ready : styles.dim, selected ? styles.selected : ''].join(' ')}
+        className={[styles.handCard, typeClass(card?.type), styles.art, playable ? styles.ready : styles.dim, selected ? styles.selected : ''].join(' ')}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
       >
         <span className={styles.cost}>{card?.cost}</span>
@@ -703,7 +713,7 @@ export const PlayBoard = () => {
         </svg>
       )}
       {castFx && (
-        <div key={castFx.n} className={[styles.castFx, styles.art, castFx.owner === me ? styles.castMine : styles.castFoe].join(' ')} style={artStyle(castFx.card.id)}>
+        <div key={castFx.n} className={[styles.castFx, typeClass(castFx.card.type), styles.art, castFx.owner === me ? styles.castMine : styles.castFoe].join(' ')} style={artStyle(castFx.card.id)}>
           <strong>{castFx.card.name}</strong>
           <span>{plain(castFx.card.text)}</span>
         </div>
@@ -736,6 +746,15 @@ export const PlayBoard = () => {
             </button>
             <button type="button" onClick={() => setPlayButtons(!playButtons)}>
               Accessibility: "Play" buttons after selecting a card: {playButtons ? 'on' : 'off'}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMuted(soundOn);
+                setSoundOn(!soundOn);
+              }}
+            >
+              Sound: {soundOn ? 'on' : 'off'}
             </button>
             <button type="button" onClick={() => setSmartAi(!smartAi)}>
               AI: {smartAi ? 'greedy (looks one move ahead)' : 'random'} (click to switch)
@@ -794,7 +813,7 @@ export const PlayBoard = () => {
                     key={c}
                     type="button"
                     style={artStyle(opt?.id) ?? artStyle(selectedCard?.id)}
-                    className={[styles.modalCard, styles.art].join(' ')}
+                    className={[styles.modalCard, typeClass(opt?.type ?? selectedCard?.type), styles.art].join(' ')}
                     onClick={() => pickChoice(c)}
                   >
                     {opt && <span className={styles.cost}>{opt.cost}</span>}

@@ -627,7 +627,7 @@
   border: 3px solid #5fd16a;
   border-radius: 10px;
   pointer-events: none;
-  animation: castFlash 1.1s ease-out forwards;
+  animation: castFlash 1.6s ease-out forwards;
 }
 
 .castFoe {
@@ -665,3 +665,19 @@
     flex: none;
   }
 }
+
+// Card types: a coloured top bar and type label so minions, spells, weapons and items read apart at a glance.
+@mixin accent($c) {
+  --accent: #{$c};
+  border-top: 5px solid $c;
+
+  .type {
+    color: $c;
+    font-weight: 700;
+    filter: brightness(1.35);
+  }
+}
+.type_minion { @include accent(#4a90e2); }
+.type_spell { @include accent(#a35de0); }
+.type_weapon { @include accent(#e8903a); }
+.type_item { @include accent(#2fb8a6); }

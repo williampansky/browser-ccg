@@ -48,3 +48,6 @@
 - [x] lets make the spell effect popup showup on the lefthand side (between the gameboard and the log)
 - [x] instead of dropping the player's cards to two rows when over X amount. size them down proportionally to fit 1 row
 - [x] make the attack hero button only visible when its available, after the player minions attack, auto-end turn (make sure onslaughts attack twice if available)
+- [x] need some small distinction in card style for the different types (minion/spell/weapon/etc). doesnt have to be crazy for now, but some small visual distinction
+- [x] need to consider sound as well. doesnt have to be crazy. but a foundation for sound fx while playing.
+- [x] lets leave the "last played card overlay" that appears on the left (what do we call that anyway?) linger a tad longer, like maybe 1.5s
