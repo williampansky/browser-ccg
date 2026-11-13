@@ -1,5 +1,6 @@
 import { produce } from 'immer';
 import { createPortal } from 'react-dom';
+import { AimArrow } from './AimArrow';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Action,
@@ -337,7 +338,6 @@ export const PlayBoard = () => {
   const logRef = useRef<HTMLDivElement | null>(null);
   const logPinned = useRef(true);
   // Targeting line: where the pointer is, which character it is over, and the DOM nodes to draw between.
-  const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
   /** The AI's pending targeted action: shown as an arrow first (a card from hand starts at the hero, so it stays hidden). */
   // Minions that just died stay on the board as ghosts while their death plays, then the row closes up.
   const [ghosts, setGhosts] = useState<Ghost[]>([]);
@@ -371,11 +371,7 @@ export const PlayBoard = () => {
   // right-click cancel the selection.
   const hasSelection = selection !== null;
   useEffect(() => {
-    if (!hasSelection) {
-      setPointer(null);
-      return;
-    }
-    const move = (e: MouseEvent) => setPointer({ x: e.clientX, y: e.clientY });
+    if (!hasSelection) return;
     const key = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setSelection(null);
     };
@@ -383,13 +379,9 @@ export const PlayBoard = () => {
       e.preventDefault(); // no browser context menu while cancelling
       setSelection(null);
     };
-    window.addEventListener('mousemove', move);
-    window.addEventListener('dragover', move); // a native drag suppresses mousemove
     window.addEventListener('keydown', key);
     window.addEventListener('contextmenu', rightClick);
     return () => {
-      window.removeEventListener('mousemove', move);
-      window.removeEventListener('dragover', move);
       window.removeEventListener('keydown', key);
       window.removeEventListener('contextmenu', rightClick);
     };
@@ -890,7 +882,7 @@ export const PlayBoard = () => {
     onDragOver: (e: React.DragEvent) => {
       if (!isAimable(t)) return;
       e.preventDefault();
-      setHover(t);
+      setHover((h) => (h && targetKey(h) === targetKey(t) ? h : t)); // same target: no re-render per dragover event
     },
     onDragLeave: () => setHover(null),
     onDrop: (e: React.DragEvent) => {
@@ -1135,7 +1127,6 @@ export const PlayBoard = () => {
   // The arrow always follows the pointer; a legal target under it is shown by highlighting that target.
   const overTarget = hover && isAimable(hover) ? nodes.current.get(targetKey(hover)) : undefined;
   const lineFrom = sourceEl && aimable.length > 0 ? centerOf(sourceEl) : null;
-  const lineTo = pointer;
 
   const foeFromEl = foeAim ? nodes.current.get(foeAim.from) : undefined;
   const foeToEl = foeAim ? nodes.current.get(targetKey(foeAim.to)) : undefined;
@@ -1144,24 +1135,7 @@ export const PlayBoard = () => {
 
   return (
     <main className={[styles.page, a11y ? styles.a11y : ''].join(' ')}>
-      {lineFrom && lineTo && (
-        <svg className={styles.targetLine} aria-hidden="true">
-          <defs>
-            <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-              <path d="M0,0 L8,4 L0,8 z" fill={overTarget ? '#3ddc84' : '#bbb'} />
-            </marker>
-          </defs>
-          <path
-            d={targetLinePath(lineFrom, lineTo, TARGET_LINE_STYLE)}
-            fill="none"
-            stroke={overTarget ? '#3ddc84' : '#bbb'}
-            strokeWidth={4}
-            strokeLinecap="round"
-            strokeDasharray={overTarget ? undefined : '8 6'}
-            markerEnd="url(#arrowhead)"
-          />
-        </svg>
-      )}
+      {hasSelection && lineFrom && <AimArrow from={lineFrom} hit={!!overTarget} />}
       {foeFrom && foeTo && (
         <svg className={styles.targetLine} aria-hidden="true">
           <defs>
