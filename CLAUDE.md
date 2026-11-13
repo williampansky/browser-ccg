@@ -72,6 +72,15 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   The last picks are remembered (`ccg.newGame.v1`). **The AI seat never plays a saved deck**: it defaults to Surprise (a random
   starter deck, with a 1-in-10 chance of a fully random deck instead; `SURPRISE_RANDOM_ODDS`) and any saved pick becomes Surprise.
 
+## Player profile (name + colour theme)
+
+- `components/player-profile/` (`profile.ts`, `ProfileEditor.tsx`): a display name (up to 20 characters, cleaned by `cleanName`) and a colour theme
+  (`THEMES`), edited at the top of the `/play` menu and saved in this browser's localStorage (`ccg.profile.v1`). Everything reads it through
+  `normalizeProfile`; `loadProfile` / `saveProfile` are the only storage calls, so accounts later replace those two and nothing else.
+- Player 1 shows the profile name on the hero bar, the turn banner and the log (the stored log keeps `**Player 1**` and the name is applied when it is drawn,
+  so a rename also changes old lines). The theme colours your side (hero bar, log name); the other seat is red, or blue if you chose red.
+  In hot-seat the second player is still "Player 2". The theme is a side colour, not a site-wide skin.
+
 ## Playing `/play`: drag and drop, debug params
 
 - **Drag and drop is the main way to act; click is the fallback.** Drag a hand card onto your board (it lands in the

@@ -14,6 +14,8 @@ interface HeroBarProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement
   emblem: string;
   /** Colour identity, matching the log: Player 1 green, Player 2 red. */
   team: 'green' | 'red';
+  /** A colour (the player's theme) that replaces the team colour */
+  accent?: string;
   /** "your turn", "thinking...", or empty. */
   turnTag: string;
   active: boolean;
@@ -51,6 +53,7 @@ export const HeroBar = ({
   name,
   emblem,
   team,
+  accent,
   turnTag,
   active,
   health,
@@ -81,6 +84,7 @@ export const HeroBar = ({
       type="button"
       aria-label={`${name}: ${health} health, ${armor} armor, energy ${energy.current} of ${energy.total}, ${deck} cards in deck, ${hand} in hand, ${weaponText}`}
       {...rest}
+      style={accent ? ({ ['--team' as string]: accent } as React.CSSProperties) : undefined}
       className={[
         styles.bar,
         styles[team],

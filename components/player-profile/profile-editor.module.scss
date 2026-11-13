@@ -1,0 +1,47 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #343846;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: #aab3c8;
+
+  input {
+    padding: 0.4rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #454c63;
+    background: #12141b;
+    color: #e8eaf2;
+    font-size: 0.95rem;
+  }
+}
+
+.swatches {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 1.7rem;
+  height: 1.7rem;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: var(--swatch);
+  cursor: pointer;
+
+  &.on {
+    border-color: #fff;
+    box-shadow: 0 0 0 2px #12141b, 0 0 0 4px var(--swatch);
+  }
+}

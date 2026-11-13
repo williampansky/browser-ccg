@@ -31,6 +31,8 @@ import { fanDrop, fanRotation, fanX, HAND_CARD_HEIGHT, handSink as computeHandSi
 import { applyDebugSetup, DebugSetup } from './debug-setup';
 import { nukeHero } from './nuke-hero';
 import { CardFace } from './CardFace';
+import { ProfileEditor } from '../player-profile/ProfileEditor';
+import { DEFAULT_PROFILE, foeTheme, loadProfile, logName, normalizeProfile, PlayerProfile, saveProfile, themeOf } from '../player-profile/profile';
 import { MinionFace } from './MinionFace';
 import { minionOvalHeight } from './minion-model';
 import minionStyles from './board-minion.module.scss';
@@ -59,7 +61,9 @@ const { cards, byId } = loadHsCards();
 const pool = playablePool(cards);
 const prime = primePool(cards);
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
-const playerLabel = (p: PlayerId, mode: Mode) => `Player ${Number(p) + 1}${mode === 'ai' && p === AI_PLAYER ? ' (AI)' : ''}`;
+/** What a player is called on the board: your own name for Player 1, "Player 2" (and "(AI)" against the bot) for the other seat. */
+const playerLabel = (p: PlayerId, mode: Mode, myName: string) =>
+  p === '0' ? myName : `Player 2${mode === 'ai' && p === AI_PLAYER ? ' (AI)' : ''}`;
 /** The art of a card (`artBackground`: art, then `fallbackId`'s art, then PLACEHOLDER.jpg when a file is missing). */
 const artStyle = (id?: string, fallbackId?: string): React.CSSProperties => ({ backgroundImage: artBackground(id, fallbackId) });
 /** An invisible 1px drag image: the aim arrow shows an attack, so no ghost of the attacker needs to cover the targets. */
@@ -160,13 +164,13 @@ const MinionTip = ({ card, m, className, onClick, children, nodeRef, ...rest }: 
     </button>
   );
 };
-const renderLogLine = (line: string) =>
+const renderLogLine = (line: string, myName: string, colors: Record<'0' | '1', string>) =>
   line.split(/(\*\*.+?\*\*|__.+?__)/g).map((part, i) => {
     if (part.startsWith('**')) {
       const text = part.slice(2, -2);
       return (
-        <strong key={i} className={text === 'Player 1' ? styles.logMe : styles.logFoe}>
-          {text}
+        <strong key={i} className={text === 'Player 1' ? styles.logMe : styles.logFoe} style={{ color: text === 'Player 1' ? colors['0'] : colors['1'] }}>
+          {logName(text, myName)}
         </strong>
       );
     }
@@ -250,6 +254,16 @@ export const PlayBoard = () => {
   const modeRef = useRef<Mode>('ai');
   modeRef.current = mode;
   const [menuOpen, setMenuOpen] = useState(false);
+  /** The player's name and colour theme (this browser only for now; see player-profile/profile.ts). */
+  const [profile, setProfileState] = useState<PlayerProfile>(DEFAULT_PROFILE);
+  useEffect(() => setProfileState(loadProfile()), []);
+  const updateProfile = (next: PlayerProfile) => {
+    const clean = normalizeProfile(next);
+    setProfileState(clean);
+    saveProfile(clean);
+  };
+  /** Each side's colour: yours is your theme; the other seat is red (blue if you chose red). */
+  const sideColors = { '0': themeOf(profile.theme).color, '1': foeTheme(profile.theme).color } as Record<'0' | '1', string>;
   /** The "New game" deck picker: null when closed, else the choices being edited. */
   const [picker, setPicker] = useState<Record<PlayerId, DeckChoice> | null>(null);
   /** The spell just cast, shown briefly in the middle of the board. */
@@ -280,7 +294,7 @@ export const PlayBoard = () => {
     if (el) nodes.current.set(key, el);
     else nodes.current.delete(key);
   };
-  const label = (p: PlayerId) => playerLabel(p, mode);
+  const label = (p: PlayerId) => playerLabel(p, mode, profile.name);
 
   const start = useCallback(() => {
     const g = newGame(modeRef.current === 'ai');
@@ -288,7 +302,7 @@ export const PlayBoard = () => {
     setState(g.state);
     setStartDecks(g.decks);
     const [a, b] = g.first === '0' ? ['Player 1', 'Player 2'] : ['Player 2', 'Player 1'];
-    setLog([[`New game. **${a}** goes first; **${b}** starts with an extra card (__The Orb__).`, `Player 1 plays **${g.deckNames['0']}**; Player 2 plays **${g.deckNames['1']}**.`]]);
+    setLog([[`New game. **${a}** goes first; **${b}** starts with an extra card (__The Orb__).`, `**Player 1** plays **${g.deckNames['0']}**; **Player 2** plays **${g.deckNames['1']}**.`]]);
     setSelection(null);
     setMessage('');
     setFoeAim(null);
@@ -808,6 +822,7 @@ export const PlayBoard = () => {
         name={label(owner)}
         emblem={isAi ? 'AI' : owner === '0' ? '1' : '2'}
         team={owner === '0' ? 'green' : 'red'}
+        accent={sideColors[owner]}
         turnTag={owner === state.activePlayer ? (isAi ? 'thinking...' : 'your turn') : ''}
         active={owner === state.activePlayer && !over}
         health={p.health}
@@ -985,6 +1000,7 @@ export const PlayBoard = () => {
         <div className={styles.modalBackdrop} onClick={() => setMenuOpen(false)}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <h3>Menu</h3>
+            <ProfileEditor profile={profile} onChange={updateProfile} />
             <button type="button" onClick={() => setMenuOpen(false)}>
               Resume
             </button>
@@ -1300,7 +1316,7 @@ export const PlayBoard = () => {
           {log.map((lines, i) => (
             <div key={i} className={styles.logBatch}>
               {lines.map((l, j) => (
-                <div key={j}>{renderLogLine(l)}</div>
+                <div key={j}>{renderLogLine(l, profile.name, sideColors)}</div>
               ))}
             </div>
           ))}
