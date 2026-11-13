@@ -37,12 +37,33 @@
   transform: translateX(-50%) scale(0.3);
   opacity: 0;
   pointer-events: none;
-  animation: dustRing 600ms 190ms ease-out both;
+  animation: dustRing 600ms calc(190ms + var(--land-delay, 0ms)) ease-out both;
 }
 
 @keyframes dustRing {
   0% { transform: translateX(-50%) scale(0.3); opacity: 0.9; }
   100% { transform: translateX(-50%) scale(1.5, 1.2); opacity: 0; }
+}
+
+// A minion that has died: a flash and a swell as it takes the hit, then it drops, spins and greys out as it fades, and the
+// slot closes up. Plays on a copy that stays in the row for DEATH_MS (PlayBoard.tsx).
+.dying {
+  pointer-events: none;
+  z-index: 0;
+  animation: minionDie 750ms ease-in both;
+  transform-origin: 50% 70%;
+
+  .dust {
+    display: none;
+  }
+}
+
+@keyframes minionDie {
+  0% { transform: scale(1); filter: none; opacity: 1; width: calc(var(--m-w) + 1.6rem); animation-timing-function: ease-out; }
+  12% { transform: scale(1.14); filter: brightness(2.2) saturate(0.3); }
+  30% { transform: translateY(2px) scale(1.04) rotate(-3deg); filter: brightness(1.2) grayscale(0.6); animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5); }
+  75% { transform: translateY(46px) scale(0.55) rotate(14deg); filter: grayscale(1) brightness(0.5); opacity: 0; width: calc(var(--m-w) + 1.6rem); }
+  100% { transform: translateY(46px) scale(0.55) rotate(14deg); opacity: 0; width: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

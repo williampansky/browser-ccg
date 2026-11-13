@@ -67,3 +67,18 @@ export const nudge = (el: HTMLElement, strength: number): void => {
     { duration: 260, delay: IMPACT_MS, easing: 'ease-out' }
   );
 };
+
+/** How long a played minion's card flies from the hand to its slot; the landing waits for it. */
+export const FLIGHT_MS = 380;
+
+/** The keyframes of a card flying from `from` to `to` (screen rects): it rises a little, then swoops in and shrinks to the minion. */
+export const flightFrames = (from: DOMRect, to: DOMRect): Keyframe[] => {
+  const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+  const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+  const s = Math.max(0.25, to.width / from.width);
+  return [
+    { transform: 'translate(0px, 0px) scale(1) rotate(0deg)', opacity: 1, offset: 0, easing: 'ease-out' },
+    { transform: `translate(${dx * 0.15}px, ${dy * 0.15 - 36}px) scale(1.08) rotate(-3deg)`, opacity: 1, offset: 0.3, easing: 'cubic-bezier(0.5, 0, 0.9, 0.6)' },
+    { transform: `translate(${dx}px, ${dy}px) scale(${s}) rotate(0deg)`, opacity: 0.85, offset: 1 },
+  ];
+};

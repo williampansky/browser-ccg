@@ -1,4 +1,5 @@
 import { produce } from 'immer';
+import { createPortal } from 'react-dom';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Action,
@@ -42,7 +43,8 @@ import { loadDecks } from '../deck-builder/deck-storage';
 import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
 import { HeroBar } from './HeroBar';
 import { heroImage } from './hero-images';
-import { lunge, nudge } from './motion';
+import { CardFlight } from './CardFlight';
+import { FLIGHT_MS, IMPACT_MS, lunge, nudge, reducedMotion } from './motion';
 import { EnergyBar } from './EnergyBar';
 import { HeroSkills } from './HeroSkills';
 import { heroOptions, loadHeroChoices, resolveHero, saveHeroChoices, HeroChoice } from './hero-choice';
@@ -113,7 +115,7 @@ const tipByName = new Map(
   ])
 );
 /** Instant tooltip (fixed-position, so scrolling panels can't clip it). `side` is which way it opens from the element. */
-const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right') => {
+const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right', quiet = false) => {
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   const handlers = {
     onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
@@ -122,15 +124,20 @@ const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right') => {
     },
     onMouseLeave: () => setPos(null),
   };
+  // Rendered into <body>: inside a minion (which is scaled while selected and thrown while attacking) a fixed element
+  // is positioned against that transform, not the window, and the tip landed far away (playtest 2026-11-13).
   const node =
-    pos && tip ? (
-      <span
-        className={styles.logTip}
-        style={{ left: pos.x, top: pos.y, transform: side === 'left' ? 'translateX(-100%)' : undefined }}
-      >
-        {tip}
-      </span>
-    ) : null;
+    pos && tip && !quiet && typeof document !== 'undefined'
+      ? createPortal(
+          <span
+            className={styles.logTip}
+            style={{ left: pos.x, top: pos.y, transform: side === 'left' ? 'translateX(-100%)' : undefined }}
+          >
+            {tip}
+          </span>,
+          document.body
+        )
+      : null;
   return { handlers, node };
 };
 /** Width of a card in hand at full size (the hand shrinks them together when it gets crowded). */
@@ -156,10 +163,29 @@ const DeckRow = ({ name, children, className }: { name: string; children: React.
     </div>
   );
 };
+interface Ghost {
+  key: number;
+  owner: PlayerId;
+  index: number;
+  m: MinionInstance;
+  /** ms to wait before dying: an attack's killing blow has to land first */
+  delay: number;
+}
+/** How long a death plays before the slot is gone (see `minionDie` in board-minion.module.scss). */
+const DEATH_MS = 750;
+/** The row of minions with this owner's ghosts put back at the places their minions died. */
+const withGhosts = (nodes: React.ReactNode[], ghosts: Ghost[], owner: PlayerId, renderGhost: (g: Ghost) => React.ReactNode) => {
+  const out = [...nodes];
+  [...ghosts]
+    .filter((g) => g.owner === owner)
+    .sort((a, b) => a.index - b.index)
+    .forEach((g) => out.splice(Math.min(g.index, out.length), 0, renderGhost(g)));
+  return out;
+};
 /** A board minion: hovering shows its printed card next to its current stats. */
-const MinionTip = ({ card, m, className, onClick, children, nodeRef, ...rest }: any) => {
+const MinionTip = ({ card, m, className, onClick, children, nodeRef, quiet, ...rest }: any) => {
   const printed = card ? tipByName.get(card.name) ?? [card.name, card.text].filter(Boolean).join('\n') : undefined;
-  const { handlers, node } = useTip(printed && `${printed}\nNow: ${m.attack}/${m.health} (max ${m.maxHealth})`);
+  const { handlers, node } = useTip(printed && `${printed}\nNow: ${m.attack}/${m.health} (max ${m.maxHealth})`, 'right', quiet);
   return (
     <button
       {...rest}
@@ -278,6 +304,7 @@ export const PlayBoard = () => {
   const [mode, setMode] = useState<Mode>('ai');
   const [smartAi, setSmartAi] = useState(true);
   const modeRef = useRef<Mode>('ai');
+  const viewerRef = useRef<PlayerId>('0');
   modeRef.current = mode;
   const [menuOpen, setMenuOpen] = useState(false);
   /** The player's name and colour theme, edited on the /profile page (this browser only for now; see player-profile/profile.ts). */
@@ -309,6 +336,12 @@ export const PlayBoard = () => {
   // Targeting line: where the pointer is, which character it is over, and the DOM nodes to draw between.
   const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
   /** The AI's pending targeted action: shown as an arrow first (a card from hand starts at the hero, so it stays hidden). */
+  // Minions that just died stay on the board as ghosts while their death plays, then the row closes up.
+  const [ghosts, setGhosts] = useState<Ghost[]>([]);
+  // A minion played from your hand: its card flies from the hand to the slot, and the minion's landing waits for it.
+  const [flight, setFlight] = useState<{ card: Card; instanceId: number; from: DOMRect } | null>(null);
+  const [flightTo, setFlightTo] = useState<DOMRect | null>(null);
+  const landDelay = useRef(new Map<number, number>());
   const [foeAim, setFoeAim] = useState<{ action: Action; from: string; to: TargetRef } | null>(null);
   const [hover, setHover] = useState<TargetRef | null>(null);
   const nodes = useRef(new Map<string, HTMLElement>());
@@ -410,6 +443,20 @@ export const PlayBoard = () => {
           setCastFx({ card: played, owner: state.activePlayer, n: Date.now() });
         }
       }
+      if (action.type === 'PlayCard' && state.activePlayer === viewerRef.current) {
+        const card = byId.get(state.players[state.activePlayer].hand[action.handIndex]?.cardId ?? '');
+        const played = result.events.find((e) => e.type === 'MinionPlayed');
+        const handEl = nodes.current.get(`c${action.handIndex}`);
+        if (card?.type === 'minion' && played && played.type === 'MinionPlayed' && handEl && !reducedMotion()) {
+          landDelay.current.set(played.instanceId, FLIGHT_MS);
+          setFlight({ card, instanceId: played.instanceId, from: handEl.getBoundingClientRect() });
+          setTimeout(() => {
+            setFlight(null);
+            setFlightTo(null);
+            landDelay.current.delete(played.instanceId);
+          }, FLIGHT_MS + 60);
+        }
+      }
       // Attacks are thrown at the target; a big hit jolts the table when it lands.
       if (action.type === 'Attack' || action.type === 'WeaponAttack') {
         const from = nodes.current.get(action.type === 'Attack' ? `m${action.attackerId}` : `h${state.activePlayer}`);
@@ -418,8 +465,28 @@ export const PlayBoard = () => {
         const dealt = result.events.reduce((n, e) => n + (e.type === 'MinionDamaged' || e.type === 'HeroDamaged' ? e.amount : 0), 0);
         if (dealt >= 4 && tableRef.current) nudge(tableRef.current, dealt);
       }
+      const died = result.events.filter((e): e is Extract<GameEvent, { type: 'MinionDied' }> => e.type === 'MinionDied');
+      if (died.length > 0 && !reducedMotion()) {
+        const fresh: Ghost[] = [];
+        for (const e of died) {
+          const index = state.players[e.player].board.findIndex((m) => m.instanceId === e.instanceId);
+          if (index >= 0)
+            fresh.push({
+              key: e.instanceId,
+              owner: e.player,
+              index,
+              m: state.players[e.player].board[index],
+              delay: action.type === 'Attack' || action.type === 'WeaponAttack' ? IMPACT_MS : 0,
+            });
+        }
+        setGhosts((old) => [...old, ...fresh]);
+        setTimeout(() => setGhosts((old) => old.filter((g) => !fresh.includes(g))), DEATH_MS + IMPACT_MS + 50);
+      }
       setState(result.state);
-      playSounds(soundsFor(result.events));
+      // Sounds wait for the picture's impact: the strike of an attack, or the landing of a minion that flew in from the hand.
+      const isAttack = action.type === 'Attack' || action.type === 'WeaponAttack';
+      const flew = action.type === 'PlayCard' && landDelay.current.size > 0;
+      playSounds(soundsFor(result.events), reducedMotion() ? 0 : isAttack ? IMPACT_MS / 1000 : flew ? (FLIGHT_MS + 200) / 1000 : 0);
       setLog((old) => [...old, describeEvents(result.events, byId, state, result.state, modeRef.current === 'ai' ? '0' : null)].slice(-100));
     },
     [state]
@@ -427,7 +494,15 @@ export const PlayBoard = () => {
 
   // The viewer is who sits at the bottom: always Player 1 against the AI, the active player in hot-seat.
   const viewer: PlayerId = !state ? '0' : mode === 'ai' ? '0' : state.activePlayer;
+  viewerRef.current = viewer;
   const aiToMove = !!state && mode === 'ai' && state.status === 'playing' && state.activePlayer === AI_PLAYER;
+
+  // Once the new minion is on the board, measure where it is so the card knows where to land.
+  useEffect(() => {
+    if (!flight) return;
+    const el = nodes.current.get(`m${flight.instanceId}`);
+    if (el) setFlightTo(el.getBoundingClientRect());
+  }, [flight]);
 
   // The clock restarts whenever a turn begins (or a new game). It counts only on a human's turn.
   const timerApplies = timerOn && !!state && state.status === 'playing' && !aiToMove;
@@ -658,6 +733,17 @@ export const PlayBoard = () => {
     }
     setSelection(null);
     (document.activeElement as HTMLElement | null)?.blur?.();
+    // "Attack hero" swings every attacker in turn: each is thrown at the hero, one after another, then the turn passes.
+    if (!reducedMotion()) {
+      const swings = heard.filter((e) => e.type === 'MinionAttacked' || e.type === 'WeaponAttacked');
+      swings.forEach((e, i) => {
+        setTimeout(() => {
+          const from = nodes.current.get(e.type === 'MinionAttacked' ? `m${e.attackerId}` : `h${me}`);
+          const to = nodes.current.get(targetKey((e as { target: TargetRef }).target));
+          if (from && to) lunge(from, to);
+        }, i * 320);
+      });
+    }
     setState(cur);
     playSounds(soundsFor(heard));
     setLog((old) => [...old, ...lines].slice(-100));
@@ -838,6 +924,12 @@ export const PlayBoard = () => {
         card={card}
         m={m}
         nodeRef={track(`m${m.instanceId}`)}
+        style={
+          landDelay.current.has(m.instanceId)
+            ? ({ animationDelay: `${landDelay.current.get(m.instanceId)}ms`, ['--land-delay' as string]: `${landDelay.current.get(m.instanceId)}ms` } as React.CSSProperties)
+            : undefined
+        }
+        quiet={!!selection && selection.kind !== 'hand'} // no tooltips while an attack or skill is being aimed
         onMouseEnter={() => setHover({ kind: 'minion', instanceId: m.instanceId })}
         onMouseLeave={() => setHover(null)}
         {...dropOnTarget({ kind: 'minion', instanceId: m.instanceId })}
@@ -855,6 +947,18 @@ export const PlayBoard = () => {
       </MinionTip>
     );
   };
+
+  const renderGhost = (g: Ghost) => (
+    <div
+      key={`dead${g.key}`}
+      data-gap
+      aria-hidden="true"
+      className={[minionStyles.slot, minionStyles.dying].join(' ')}
+      style={{ animationDelay: `${g.delay}ms` }}
+    >
+      <MinionFace card={byId.get(g.m.cardId)} m={g.m} turn={state.turn} sick={false} />
+    </div>
+  );
 
   const renderHero = (owner: PlayerId, isMe: boolean) => {
     const p = state.players[owner];
@@ -1312,6 +1416,7 @@ export const PlayBoard = () => {
           else playFromArea(e, 'table', true);
         }}
       >
+        {flight && flightTo && <CardFlight card={flight.card} from={flight.from} to={flightTo} width={HAND_CARD_WIDTH} />}
         <EnergyBar current={state.players[me].energy.current} total={state.players[me].energy.total} cost={pendingCost} />
         {areaZone && <div className={[styles.castArea, areaHot ? styles.castAreaHot : ''].join(' ')} style={{ height: areaHeight }} />}
         <section className={[styles.side, styles.top].join(' ')}>
@@ -1328,7 +1433,7 @@ export const PlayBoard = () => {
 
         <div className={styles.center}>
           <div className={styles.row} style={minionRowStyle}>
-            {state.players[foe].board.map((m) => renderMinion(foe, m))}
+            {withGhosts(state.players[foe].board.map((m) => renderMinion(foe, m)), ghosts, foe, renderGhost)}
           </div>
         <div className={styles.middle}>
           <button
@@ -1391,12 +1496,17 @@ export const PlayBoard = () => {
               setHoverGap(null);
             }}
           >
-            {myBoard.map((m, i) => (
-              <Fragment key={m.instanceId}>
-                {gapMarker === i && <div data-gap className={styles.gapSpacer} />}
-                {renderMinion(me, m)}
-              </Fragment>
-            ))}
+            {withGhosts(
+              myBoard.map((m, i) => (
+                <Fragment key={m.instanceId}>
+                  {gapMarker === i && <div data-gap className={styles.gapSpacer} />}
+                  {renderMinion(me, m)}
+                </Fragment>
+              )),
+              ghosts,
+              me,
+              renderGhost
+            )}
             {gapMarker === myBoard.length && <div data-gap className={styles.gapSpacer} />}
           </div>
           </section>

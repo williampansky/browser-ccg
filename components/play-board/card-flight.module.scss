@@ -1,0 +1,7 @@
+// The flying card (CardFlight.tsx): fixed to the window so nothing clips it, and never catches the pointer.
+.flight {
+  position: fixed;
+  z-index: 900;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.6));
+}
