@@ -14,6 +14,7 @@ earlier `hsclone` repo as the rules reference. Read these first:
 - `RULES.md` - the approved rules spec for the new engine (the contract for tests); `RULES-ANSWERS.md`
   holds the author's decisions
 - `ENGINE-DESIGN.md` - how the new engine is structured (proposal)
+- `DESIGN-IDEAS.md` - running log of card, hero and mechanic ideas (public repo: never name the game an idea came from)
 - `PREVIOUS-VERSIONS.md` - the four earlier repos, how `hsclone` plays, and what to reuse
 - `CARD-AUDIT.md` - card/art/balance review (written against the old zone rules; see its note)
 
