@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { Card, MinionInstance } from '../../engine';
-import { artBackground } from './card-face-model';
+import { minionArtBackground } from './card-face-model';
 import { isDamaged, statTone, statusBadges, StatusBadge } from './minion-model';
 import { FloatDelta } from './FloatDelta';
 import styles from './board-minion.module.scss';
@@ -71,7 +71,7 @@ export const MinionFace = ({ card, m, turn, sick }: Props) => {
       {m.keywords.guard && <GuardShield />}
       <span
         className={[styles.oval, hurt ? styles.shake : '', m.keywords.hidden ? styles.veiled : '', m.silenced ? styles.muted : ''].join(' ')}
-        style={{ backgroundImage: artBackground(m.cardId) }}
+        style={{ backgroundImage: minionArtBackground(m.cardId) }}
       />
       {m.keywords.hidden && <img className={styles.hiddenMark} src="/images/mechanics/HIDDEN.png" alt="" draggable={false} />}
       {m.keywords.bubble && <span className={styles.bubble} />}

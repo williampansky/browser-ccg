@@ -6,9 +6,10 @@ import entourage from '../../../data/entourage.json';
 
 // The card art folders must match the CURRENT card data. The Hearthstone-style rebuild reassigned card ids, and for a while
 // SET_CORE kept `-DECK` / `-MINION` images (and some token art) from the old zone game, which showed a different card than the `-CARD` art.
+// The `-MINION` images there now are new ones, named without the set prefix like PRIME's. The board still draws minions from `-CARD`.
 
 const dir = (set: string) => path.join(__dirname, '../../../public/images/sets', set);
-const files = (set: string) => fs.readdirSync(dir(set));
+const files = (set: string) => fs.readdirSync(dir(set)).filter((f) => !f.startsWith('.')); // Finder's .DS_Store is not art
 const ids = (rows: { id: string }[], prefix: string) => rows.map((r) => r.id).filter((id) => id.startsWith(prefix));
 
 describe('SET_CORE art', () => {
@@ -27,8 +28,8 @@ describe('SET_CORE art', () => {
     const strays = Array.from(have).filter((f) => !known.has(`CORE_${f.split('-')[0]}`));
     expect(strays).toEqual([]);
   });
-  it('has no -MINION images: the board draws minions from the -CARD art, and the old ones showed the wrong card', () => {
-    expect(Array.from(have).filter((f) => f.endsWith('-MINION.jpg'))).toEqual([]);
+  it('names -MINION images like the other art (`012a-MINION.jpg`, no CORE_ prefix)', () => {
+    expect(Array.from(have).filter((f) => f.endsWith('-MINION.jpg') && f.startsWith('CORE_'))).toEqual([]);
   });
 });
 

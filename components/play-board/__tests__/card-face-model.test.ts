@@ -1,4 +1,4 @@
-import { artBackground, artUrl, PLACEHOLDER_ART, FACE_HEIGHT, FACE_WIDTH, faceUnit, fitScale, RARITY_STYLE, rarityStyle, raceLabel, showsStats, typeLabel } from '../card-face-model';
+import { artBackground, artUrl, minionArtBackground, PLACEHOLDER_ART, FACE_HEIGHT, FACE_WIDTH, faceUnit, fitScale, RARITY_STYLE, rarityStyle, raceLabel, showsStats, typeLabel } from '../card-face-model';
 
 describe('rarityStyle', () => {
   it('Free is a steel frame with no gem; Common green, Superior blue, Remarkable purple, Mythic red', () => {
@@ -105,5 +105,12 @@ describe('artBackground', () => {
   it('layers fallback cards between the card and the placeholder, without repeats', () => {
     expect(artBackground('CORE_001', 'CORE_002')).toBe(`url(/images/sets/SET_CORE/001-CARD.jpg), url(/images/sets/SET_CORE/002-CARD.jpg), url(${PLACEHOLDER_ART})`);
     expect(artBackground('CORE_001', 'CORE_001', undefined)).toBe(`url(/images/sets/SET_CORE/001-CARD.jpg), url(${PLACEHOLDER_ART})`);
+  });
+});
+
+describe('minionArtBackground', () => {
+  it('layers the -MINION image, then the -CARD art, then the placeholder', () => {
+    expect(minionArtBackground('CORE_012a')).toBe(`url(/images/sets/SET_CORE/012a-MINION.jpg), url(/images/sets/SET_CORE/012a-CARD.jpg), url(${PLACEHOLDER_ART})`);
+    expect(minionArtBackground(undefined)).toBe(`url(${PLACEHOLDER_ART})`);
   });
 });

@@ -50,9 +50,9 @@ export const FACE_HEIGHT = 250;
 export const faceUnit = (width: number): number => width / FACE_WIDTH;
 
 /** `CORE_012` -> `/images/sets/SET_CORE/012-CARD.jpg`, `GAME_001` -> `/images/sets/SET_GAME/001-CARD.jpg`. */
-export const artUrl = (id?: string): string | undefined => {
+export const artUrl = (id?: string, kind: 'CARD' | 'MINION' = 'CARD'): string | undefined => {
   const m = /^([A-Z]+)_(\w+)$/.exec(id ?? '');
-  return m ? `/images/sets/SET_${m[1]}/${m[2]}-CARD.jpg` : undefined;
+  return m ? `/images/sets/SET_${m[1]}/${m[2]}-${kind}.jpg` : undefined;
 };
 
 /** Shown for any card whose own art file is missing. */
@@ -65,7 +65,7 @@ export const PLACEHOLDER_ART = '/images/sets/PLACEHOLDER.jpg';
 export const artBackground = (id?: string, ...fallbackIds: (string | undefined)[]): string =>
   [id, ...fallbackIds]
     .filter((x, i, all) => x !== undefined && all.indexOf(x) === i)
-    .map(artUrl)
+    .map((x) => artUrl(x))
     .filter((u): u is string => !!u)
     .concat(PLACEHOLDER_ART)
     .map((u) => `url(${u})`)
@@ -130,3 +130,13 @@ export const fitScale = (fits: (scale: number) => boolean, min = 0.55, step = 0.
   }
   return min;
 };
+
+/**
+ * The same layered background for a minion on the board: its `-MINION` image first, then its `-CARD` art, then the placeholder.
+ * A layer whose file is missing (404) falls through to the next one, so no check for the file is needed.
+ */
+export const minionArtBackground = (id?: string): string =>
+  [artUrl(id, 'MINION'), artUrl(id, 'CARD'), PLACEHOLDER_ART]
+    .filter((u): u is string => !!u)
+    .map((u) => `url(${u})`)
+    .join(', ');
