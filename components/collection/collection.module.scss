@@ -1,0 +1,93 @@
+// The collection grid: its cards react to the pointer. A springy lift, a 3D tilt that follows the mouse (--rx / --ry,
+// set by CollectionCard), and a light sheen under the cursor (--mx / --my).
+
+// Room around the cards so a lifted, tilted card is not clipped by the scrolling grid.
+.grid {
+  flex: 1;
+  overflow-y: auto;
+  display: grid;
+  // grid-template-columns is set inline from the chosen card size.
+  gap: 1.1rem 0.9rem;
+  justify-content: center;
+  align-content: start;
+  // A hovered card lifts, scales and tilts, and its gem sticks out past it, so the first row needs room above it that grows
+  // with the card size (--card-w is set inline). The big bottom padding lets the last row scroll up clear of the fade below it.
+  padding: calc(var(--card-w, 150px) * 0.2 + 2.75rem) 1.5rem 7rem; // + the 1.75rem the mask fades, so a lifted first-row card sits in the solid part
+  // The edges fade out instead of ending in a hard cut under the filters and above the bottom nav.
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 1.75rem, #000 calc(100% - 5.5rem), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 1.75rem, #000 calc(100% - 5.5rem), transparent 100%);
+}
+
+.card {
+  --rx: 0deg;
+  --ry: 0deg;
+  --mx: 50%;
+  --my: 40%;
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 9px;
+  transform: perspective(700px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s, box-shadow 0.3s;
+  will-change: transform;
+
+  &:hover {
+    z-index: 5;
+    transform: perspective(700px) translateY(-14px) scale(1.14) rotateX(var(--rx)) rotateY(var(--ry));
+    filter: brightness(1.08) saturate(1.15);
+    box-shadow: 0 18px 28px -10px rgba(0, 0, 0, 0.85), 0 0 26px -4px rgba(150, 175, 255, 0.55);
+    // While the pointer is moving the tilt must follow it closely; the springy easing is for entering and leaving.
+    transition: transform 0.12s ease-out, filter 0.3s, box-shadow 0.3s;
+  }
+  &:active {
+    transform: perspective(700px) translateY(-6px) scale(1.05) rotateX(var(--rx)) rotateY(var(--ry));
+  }
+  &:focus-visible {
+    outline: 3px solid #8aa4ff;
+    outline-offset: 3px;
+    z-index: 5;
+    transform: translateY(-8px) scale(1.08);
+  }
+
+  // The sheen: a soft highlight that sits where the pointer is.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 55%);
+    mix-blend-mode: soft-light;
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+  }
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover {
+    transition: none;
+    transform: none;
+  }
+  .card:hover {
+    filter: brightness(1.1);
+  }
+}
+
+.reset {
+  padding: 0.3rem 0.7rem;
+  color: inherit;
+  background: #1b1e27;
+  border: 1px solid #3f4660;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background: #262a38;
+  }
+}
