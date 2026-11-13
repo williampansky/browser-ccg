@@ -5,6 +5,8 @@ export interface SavedDeck {
   id: string;
   name: string;
   cards: string[];
+  /** A hero key such as `ZEUS`. Unset means the deck does not choose: the New game picker's hero is used. */
+  hero?: string;
 }
 
 export const countOf = (deck: SavedDeck, id: string): number => deck.cards.filter((c) => c === id).length;

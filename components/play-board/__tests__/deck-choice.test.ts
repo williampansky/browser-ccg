@@ -131,3 +131,11 @@ describe('deck choice', () => {
     expect(aiDeckChoice(RANDOM_ALL)).toBe(RANDOM_ALL);
   });
 });
+
+describe('a saved deck with a hero', () => {
+  it('hands its hero back, and a deck with none gives undefined', () => {
+    const decks = [{ ...saved[0], hero: 'ZEUS' }, { id: 'c', name: 'Plain', cards: ['CORE_001'] }];
+    expect(resolveDeck('saved:a', pool, decks, createSeededRng(1)).hero).toBe('ZEUS');
+    expect(resolveDeck('saved:c', pool, decks, createSeededRng(1)).hero).toBeUndefined();
+  });
+});

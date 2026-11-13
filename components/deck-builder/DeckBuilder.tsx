@@ -4,6 +4,7 @@ import { loadHsCards, MAX_DECK_SIZE, playablePool, primePool } from '../../engin
 import { CardFace } from '../play-board/CardFace';
 import { useDetailCardWidth } from '../card-detail/detail-card-width';
 import { CardEffects } from '../card-detail/CardEffects';
+import { heroes } from '../../engine/heroes';
 import { addCard, blankDeck, countOf, curve, removeCard, SavedDeck, whyNotAdd } from './deck-model';
 import { loadDecks, saveDecks } from './deck-storage';
 import styles from './deck-builder.module.scss';
@@ -205,6 +206,19 @@ export const DeckBuilder = () => {
           <button type="button" onClick={deleteDeck}>Delete</button>
         </div>
         <input className={styles.name} value={deck.name} maxLength={30} onChange={(e) => update({ ...deck, name: e.target.value })} aria-label="Deck name" />
+        <select
+          className={styles.name}
+          value={deck.hero ?? ''}
+          onChange={(e) => update({ ...deck, hero: e.target.value || undefined })}
+          aria-label="Deck hero"
+        >
+          <option value="">Hero: any (pick at start)</option>
+          {heroes().map((h) => (
+            <option key={h.id} value={h.id}>
+              Hero: {h.name}
+            </option>
+          ))}
+        </select>
         <div className={[styles.size, full ? styles.full : ''].join(' ')}>
           {deck.cards.length} / {MAX_DECK_SIZE} cards
         </div>

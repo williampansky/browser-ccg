@@ -62,7 +62,7 @@ export const resolveDeck = (
   rng: Rng,
   /** The opt-in PRIME cards, for `RANDOM_ALL` */
   prime: Card[] = [],
-): { name: string; cards: string[] } => {
+): { name: string; cards: string[]; hero?: string } => {
   if (choice === RANDOM_ALL) return { name: 'a random Core + Prime deck', cards: buildDeck([...pool, ...prime], rng) };
   if (choice === SURPRISE && rng.int(SURPRISE_RANDOM_ODDS) === 0) return { name: 'a random deck', cards: buildDeck(pool, rng) };
   if ((choice === RANDOM_STARTER || choice === SURPRISE) && STARTER_DECKS.length > 0) {
@@ -80,7 +80,7 @@ export const resolveDeck = (
   }
   if (choice.startsWith('saved:')) {
     const deck = saved.find((d) => `saved:${d.id}` === choice);
-    if (deck && deck.cards.length > 0) return { name: deck.name, cards: deck.cards };
+    if (deck && deck.cards.length > 0) return { name: deck.name, cards: deck.cards, hero: deck.hero };
   }
   return { name: 'a random deck', cards: buildDeck(pool, rng) };
 };

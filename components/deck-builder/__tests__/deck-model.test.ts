@@ -45,3 +45,10 @@ describe('deck model', () => {
     expect(curve(d, byId)).toEqual([1, 0, 0, 0, 0, 0, 0, 2]);
   });
 });
+
+describe('deck hero', () => {
+  it('cleanDeck keeps the deck hero', () => {
+    const deck = { id: 'd', name: 'D', cards: [], hero: 'ZEUS' };
+    expect(cleanDeck(deck, new Map()).hero).toBe('ZEUS');
+  });
+});

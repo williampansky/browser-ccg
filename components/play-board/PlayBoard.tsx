@@ -271,8 +271,9 @@ const newGame = (vsAi: boolean): { state: GameState; rng: Rng; decks: Record<Pla
   const dbg = debugParams();
   const heroChoices = loadHeroChoices();
   const heroKeys = {
-    '0': resolveHero(dbg.heroes['0'] ?? heroChoices['0'], rng),
-    '1': resolveHero(dbg.heroes['1'] ?? heroChoices['1'], rng),
+    // A saved deck with its own hero brings it along; otherwise the picker's hero is used.
+    '0': resolveHero(dbg.heroes['0'] ?? p0.hero ?? heroChoices['0'], rng),
+    '1': resolveHero(dbg.heroes['1'] ?? p1.hero ?? heroChoices['1'], rng),
   };
   const randomFirst: PlayerId = rng.int(2) === 0 ? '0' : '1';
   const first: PlayerId = dbg.first ?? randomFirst;
@@ -1271,7 +1272,10 @@ export const PlayBoard = () => {
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <h3>New game: choose decks</h3>
             {(['0', '1'] as PlayerId[]).map((p) => {
-              const options = deckOptions(mode === 'ai' && p === AI_PLAYER ? [] : loadDecks(byId));
+              const savedDecks = mode === 'ai' && p === AI_PLAYER ? [] : loadDecks(byId);
+              const options = deckOptions(savedDecks);
+              /** The hero a picked saved deck brings with it, if it has one. */
+              const deckHero = (value: string) => savedDecks.find((d) => `saved:${d.id}` === value)?.hero;
               const picked = options.find((o) => o.value === picker[p]) ?? options[0];
               return (
                 <label key={p} className={styles.deckPick}>
@@ -1286,7 +1290,9 @@ export const PlayBoard = () => {
                   <small>{picked.plan ?? ' '}</small>
                   <select
                     aria-label={`${label(p)} hero`}
-                    value={heroPicker[p]}
+                    disabled={!!deckHero(picked.value)}
+                    title={deckHero(picked.value) ? 'This deck chooses its own hero (set in the deck builder)' : undefined}
+                    value={deckHero(picked.value) ?? heroPicker[p]}
                     onChange={(e) => setHeroPicker({ ...heroPicker, [p]: e.target.value })}
                   >
                     {heroOptions().map((o) => (
@@ -1295,7 +1301,7 @@ export const PlayBoard = () => {
                       </option>
                     ))}
                   </select>
-                  <small>{heroOptions().find((o) => o.value === heroPicker[p])?.plan ?? ' '}</small>
+                  <small>{heroOptions().find((o) => o.value === (deckHero(picked.value) ?? heroPicker[p]))?.plan ?? ' '}</small>
                 </label>
               );
             })}

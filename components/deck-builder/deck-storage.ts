@@ -1,3 +1,4 @@
+import { getHero } from '../../engine/heroes';
 import type { Card } from '../../engine';
 import { cleanDeck, SavedDeck } from './deck-model';
 
@@ -27,7 +28,7 @@ export const loadDecks = (byId: ReadonlyMap<string, Card>): SavedDeck[] => {
     if (!Array.isArray(raw)) return [];
     return raw
       .filter((d) => d && typeof d.id === 'string' && Array.isArray(d.cards))
-      .map((d) => cleanDeck({ id: d.id, name: String(d.name ?? 'Deck'), cards: d.cards.filter((c: unknown) => typeof c === 'string') }, byId));
+      .map((d) => cleanDeck({ id: d.id, name: String(d.name ?? 'Deck'), cards: d.cards.filter((c: unknown) => typeof c === 'string'), ...(getHero(d.hero) ? { hero: d.hero } : {}) }, byId));
   } catch {
     return [];
   }
