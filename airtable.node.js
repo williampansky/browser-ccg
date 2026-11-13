@@ -66,7 +66,7 @@ const card = (f, isEntourage) =>
     game: cards.filter((c) => !c.isEntourage && c.set === 'GAME').map((c) => card(c)),
     heroes: t.HEROES.map((h) => drop({
       name: h.name, symbol: P(h.symbol), slug: h.slug, archetype: h.archetype, shortDescription: h.shortDescription, lore: h.lore,
-      active: h.active, artistName: h.artistName, artistUrl: h.artistUrl, ability1: h.ability1, ability2: h.ability2, ability3: h.ability3,
+      active: h.active, artistName: h.artistName, artistUrl: h.artistUrl,
     })),
     abilities: t.ABILITIES.map((a) => drop({
       name: a.name, playContext: P(a.playContext), type: P('TYPE_' + a.type), playType: a.playType, hero: P(a.heroSymbol),
