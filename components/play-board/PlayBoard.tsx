@@ -1066,7 +1066,7 @@ export const PlayBoard = () => {
           ['--fan-x' as string]: `${fanX(index, handCount, HAND_CARD_WIDTH)}px`,
         }}
         title={titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`)}
-        className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : ''].join(' ')}
+        className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index || aimable.length > 0 ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : ''].join(' ')}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
         draggable={draggable}
         onDragStart={(e) => {

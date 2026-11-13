@@ -219,7 +219,7 @@
   visibility: hidden;
 }
 
-// A card being dragged to aim: it keeps its place and size in the hand, with the selection glow only (no click enlargement, no hover lift).
+// A card being dragged or clicked to aim at a target: it keeps its place and size in the hand, with the selection glow only (no click enlargement, no hover lift).
 .handSlot.slotHeld,
 .handSlot.slotHeld:hover {
   filter: drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e);
