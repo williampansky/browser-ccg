@@ -1,0 +1,40 @@
+// The detail window's card: a gentler tilt than the grid's (no lift, the card is already big), same sheen.
+.tilt {
+  --rx: 0deg;
+  --ry: 0deg;
+  --mx: 50%;
+  --my: 40%;
+  position: relative;
+  flex: none;
+  border-radius: 14px;
+  transform: perspective(1100px) rotateX(var(--rx)) rotateY(var(--ry));
+  // The pointer moves the tilt closely (short transition); the spring is for settling back when it leaves.
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &:hover {
+    transition: transform 0.12s ease-out;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 55%);
+    mix-blend-mode: soft-light;
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+  }
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tilt,
+  .tilt:hover {
+    transform: none;
+    transition: none;
+  }
+}

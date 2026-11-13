@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { loadHsCards, MAX_DECK_SIZE, playablePool, primePool } from '../../engine';
 import { CardFace } from '../play-board/CardFace';
+import { useDetailCardWidth } from '../card-detail/detail-card-width';
+import { CardEffects } from '../card-detail/CardEffects';
 import { addCard, blankDeck, countOf, curve, removeCard, SavedDeck, whyNotAdd } from './deck-model';
 import { loadDecks, saveDecks } from './deck-storage';
 import styles from './deck-builder.module.scss';
@@ -25,6 +27,7 @@ export const DeckBuilder = () => {
   const [note, setNote] = useState('');
   /** The card shown enlarged in the detail window (flavor text, the tokens it makes, add / close), or null. */
   const [viewing, setViewing] = useState<string | null>(null);
+  const bigWidth = useDetailCardWidth();
 
   useEffect(() => {
     const saved = loadDecks(byId);
@@ -150,7 +153,7 @@ export const DeckBuilder = () => {
               return (
                 <>
                   <div className={styles.detailMain}>
-                    <CardFace card={c} width={320} />
+                    <CardFace card={c} width={bigWidth} />
                     <div className={styles.detailText}>
                       <h2>{c.name}</h2>
                       <p className={styles.detailMeta}>
@@ -158,6 +161,7 @@ export const DeckBuilder = () => {
                       </p>
                       {c.flavor ? <blockquote className={styles.flavor}>{c.flavor}</blockquote> : <p className={styles.noFlavor}>No flavor text.</p>}
                       {why && <p className={styles.note}>{why}</p>}
+                      <CardEffects card={c} />
                       <div className={styles.detailButtons}>
                         <button type="button" disabled={!!why} onClick={() => add(c.id)}>
                           Add to deck
@@ -166,21 +170,21 @@ export const DeckBuilder = () => {
                           Close
                         </button>
                       </div>
+                      {tokens.length > 0 && (
+                        <div className={styles.tokens}>
+                          <h3>Makes or offers</h3>
+                          <div className={styles.tokenRow}>
+                            {tokens.map((t) => (
+                              <div key={t.id} className={styles.token}>
+                                <CardFace card={t} width={110} />
+                                <span>{t.name}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  {tokens.length > 0 && (
-                    <div className={styles.tokens}>
-                      <h3>Makes or offers</h3>
-                      <div className={styles.tokenRow}>
-                        {tokens.map((t) => (
-                          <div key={t.id} className={styles.token}>
-                            <CardFace card={t} width={150} />
-                            <span>{t.name}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </>
               );
             })()}

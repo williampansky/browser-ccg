@@ -1,6 +1,8 @@
 export * from './cards/types';
 export { CardDataError, loadCards, sanitizeRichText, sanitizeText, stripSymbol } from './cards/load-cards';
 export { loadHsCards } from './cards/load-hs-cards';
+export { effectsOf } from './cards/card-effects';
+export type { CardEffect } from './cards/card-effects';
 export * from './state/types';
 export { createGame } from './state/create-game';
 export { applyAction } from './rules/apply-action';

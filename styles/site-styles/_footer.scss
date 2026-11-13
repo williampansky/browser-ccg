@@ -1,3 +1,8 @@
+:root {
+  // The bottom nav's height. Pages that scroll inside the window use it as their bottom padding so they end exactly at the nav.
+  --nav-height: 54px;
+}
+
 .site__footer {
   @include position-absolute(auto, 0, 0, 0, 100);
 }
@@ -10,6 +15,8 @@
     border-top: 2px solid #3f4660;
     list-style-type: none;
     width: 100%;
+    height: var(--nav-height);
+    box-sizing: border-box;
     padding: 0;
     margin: 0;
   }

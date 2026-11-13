@@ -3,7 +3,7 @@
   gap: 1rem;
   height: 100%;
   min-height: 0;
-  padding: 0.75rem 1rem 5rem; // clears the fixed bottom nav
+  padding: 0.75rem 1rem var(--nav-height); // ends exactly at the fixed bottom nav
   box-sizing: border-box;
   color: #e8eaf2;
 }
@@ -244,22 +244,19 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.92);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-  padding: 16px;
+  overflow: auto;
+  z-index: 200; // above the site's bottom nav (z-index 100)
+  padding: 32px;
 }
 
+// No panel: the enlarged card sits straight on the dark overlay. Nothing here may clip (no overflow, no border box),
+// because the rarity gem and the attack / health badges stick out past the card's edge.
 .detail {
-  max-height: 100%;
-  overflow: auto;
-  background: #181c26;
-  border: 1px solid #3a4258;
-  border-radius: 12px;
-  padding: 20px;
-  max-width: 760px;
+  margin: auto;
+  padding: 8px 20px;
+  max-width: min(1000px, 100%);
 }
 
 .detailMain {
@@ -272,9 +269,11 @@
 .detailText {
   flex: 1;
   min-width: 220px;
+  max-width: 340px;
 
   h2 {
     margin: 0 0 4px;
+    font-size: 1.6rem;
   }
 }
 
@@ -304,6 +303,45 @@
   display: flex;
   gap: 8px;
   margin-top: 12px;
+}
+
+.effects {
+  margin-top: 16px;
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+    color: #9aa3b8;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-left: 10px;
+    border-left: 3px solid #4a5578;
+  }
+  strong {
+    color: #e8eaf2;
+  }
+  span {
+    font-size: 0.88rem;
+    line-height: 1.35;
+    color: #b4bcd0;
+  }
+}
+
+.closeHint {
+  margin: 14px 0 0;
+  font-size: 0.8rem;
+  color: #6f7890;
 }
 
 .tokens {
