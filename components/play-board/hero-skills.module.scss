@@ -29,12 +29,10 @@
   color: inherit;
   font: inherit;
   font-size: 0.85rem;
-  opacity: 0.55;
   cursor: default;
   transition: box-shadow 0.15s, border-color 0.15s, opacity 0.15s;
 
   &.ready {
-    opacity: 1;
     border-color: #4aa3ff;
     cursor: pointer;
     box-shadow: 0 0 10px -3px #4aa3ff;
@@ -49,10 +47,6 @@
     box-shadow: 0 0 14px -1px #3ddc84;
   }
 
-  &.spent {
-    opacity: 0.35;
-  }
-
   &:hover .tip,
   &:focus-visible .tip {
     visibility: visible;
@@ -65,6 +59,15 @@
   border-radius: 50%;
   object-fit: cover;
   pointer-events: none;
+  opacity: 0.55;
+}
+
+.spent .icon {
+  opacity: 0.35;
+}
+
+.ready .icon {
+  opacity: 1;
 }
 
 .cost {
@@ -80,6 +83,7 @@
   border: 2px solid #10131d;
   color: #10131d;
   font-size: 0.75rem;
+  z-index: 1;
 }
 
 .target {

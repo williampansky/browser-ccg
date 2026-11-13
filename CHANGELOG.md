@@ -4,6 +4,7 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-13
 
+- A card dragged to aim at a target no longer grows to the click's 2x; `.prettierrc` added (the hero skills component is reformatted to it).
 - **Weight (second pass):** dead minions fall, spin and fade before the row closes; a minion played from your hand is flown to its slot before it lands; hits, landings and deaths have a heavier thud, played at the moment of impact; the spell popup slams in with a shockwave; "Attack hero" lunges each attacker in turn; tooltips no longer fly off to the far side when you aim an attack (they render into the page body and hide while aiming).
 - **Weight (first pass):** new minions drop in, land with a squash and a dust ring; attackers wind up and lunge into their target (minions and weapon swings); the target shakes on contact, not before; damage and heal numbers float up from minions and heroes; a hit of 4+ jolts the table. All of it is skipped under reduced-motion. `components/play-board/motion.ts`.
 - **Energy bar:** a tall column of energy orbs beside the board (right edge), with the count above. Dragging or selecting a card pulses the orbs it would spend (red when you cannot afford it).

@@ -603,12 +603,17 @@ export const PlayBoard = () => {
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   /** The hand card being dragged: hidden in the hand so only the drag image shows. */
   const [draggedHand, setDraggedHand] = useState<number | null>(null);
+  // A card dragged to aim at a target stays in the hand (selected, with the arrow); it must not take a click's enlargement.
+  const [heldHand, setHeldHand] = useState<number | null>(null);
   // A dragged card that gets played unmounts its own button (when it was the last one in the hand), so its dragend never
   // reaches React and `draggedHand` would stay set: the next card drawn into that slot came up invisible (playtest 2026-11-12).
   // Clear it on any window drop/dragend (the drop event still fires) and whenever the game state changes. `dragIndex` is only
   // cleared on a state change, never on drop, because the drop handlers still need it.
   useEffect(() => {
-    const clear = () => setDraggedHand(null);
+    const clear = () => {
+      setDraggedHand(null);
+      setHeldHand(null);
+    };
     window.addEventListener('drop', clear, true);
     window.addEventListener('dragend', clear, true);
     return () => {
@@ -618,6 +623,7 @@ export const PlayBoard = () => {
   }, []);
   useEffect(() => {
     setDraggedHand(null);
+    setHeldHand(null);
     setDragIndex(null);
   }, [state]);
   /** Where a choose-one card was dropped; picking its option in the dialog then plays it there. */
@@ -1065,7 +1071,7 @@ export const PlayBoard = () => {
           ['--fan-x' as string]: `${fanX(index, handCount, HAND_CARD_WIDTH)}px`,
         }}
         title={titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`)}
-        className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? styles.slotSelected : '', draggedHand === index ? styles.slotDragged : ''].join(' ')}
+        className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : ''].join(' ')}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
         draggable={draggable}
         onDragStart={(e) => {
@@ -1093,6 +1099,7 @@ export const PlayBoard = () => {
           // so it does not vanish while the arrow is active (playtest 2026-11-12).
           setTimeout(() => {
             if (!aimsAtTarget) setDraggedHand(index);
+            else setHeldHand(index);
             if (isChoice) setDragIndex(index);
             else setSelection({ kind: 'hand', index });
           }, 0);
@@ -1102,6 +1109,7 @@ export const PlayBoard = () => {
           if (!isChoice) setSelection(null); // a dropped choose-one card has just opened its dialog: keep that
           setDragIndex(null);
           setDraggedHand(null);
+          setHeldHand(null);
           setHover(null);
           setHoverGap(null);
         }}
