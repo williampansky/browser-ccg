@@ -31,8 +31,7 @@ import { fanDrop, fanRotation, fanX, HAND_CARD_HEIGHT, handSink as computeHandSi
 import { applyDebugSetup, DebugSetup } from './debug-setup';
 import { nukeHero } from './nuke-hero';
 import { CardFace } from './CardFace';
-import { ProfileEditor } from '../player-profile/ProfileEditor';
-import { DEFAULT_PROFILE, foeTheme, loadProfile, logName, normalizeProfile, PlayerProfile, saveProfile, themeOf } from '../player-profile/profile';
+import { DEFAULT_PROFILE, foeTheme, loadProfile, logName, PlayerProfile, themeOf } from '../player-profile/profile';
 import { MinionFace } from './MinionFace';
 import { minionOvalHeight } from './minion-model';
 import minionStyles from './board-minion.module.scss';
@@ -254,14 +253,9 @@ export const PlayBoard = () => {
   const modeRef = useRef<Mode>('ai');
   modeRef.current = mode;
   const [menuOpen, setMenuOpen] = useState(false);
-  /** The player's name and colour theme (this browser only for now; see player-profile/profile.ts). */
+  /** The player's name and colour theme, edited on the /profile page (this browser only for now; see player-profile/profile.ts). */
   const [profile, setProfileState] = useState<PlayerProfile>(DEFAULT_PROFILE);
   useEffect(() => setProfileState(loadProfile()), []);
-  const updateProfile = (next: PlayerProfile) => {
-    const clean = normalizeProfile(next);
-    setProfileState(clean);
-    saveProfile(clean);
-  };
   /** Each side's colour: yours is your theme; the other seat is red (blue if you chose red). */
   const sideColors = { '0': themeOf(profile.theme).color, '1': foeTheme(profile.theme).color } as Record<'0' | '1', string>;
   /** The "New game" deck picker: null when closed, else the choices being edited. */
@@ -554,6 +548,10 @@ export const PlayBoard = () => {
   const foe = otherPlayer(me);
   const over = state.status === 'over';
   const myTurn = state.activePlayer === me;
+  /** Links out of the game ask first while a game is still going. */
+  const leaveGame = (e: { preventDefault: () => void }) => {
+    if (!over && !window.confirm('Leave this game? It is not saved.')) e.preventDefault();
+  };
 
   // What the current selection can aim at.
   const optionsFor = (sel: Selection | null): Action[] => {
@@ -998,58 +996,96 @@ export const PlayBoard = () => {
       </button>
       {menuOpen && (
         <div className={styles.modalBackdrop} onClick={() => setMenuOpen(false)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <h3>Menu</h3>
-            <ProfileEditor profile={profile} onChange={updateProfile} />
-            <button type="button" onClick={() => setMenuOpen(false)}>
+          <div className={styles.menu} role="dialog" aria-label="Menu" onClick={(e) => e.stopPropagation()}>
+            <header className={styles.menuHead}>
+              <h3>Menu</h3>
+              <span className={styles.menuWho}>
+                Playing as <b style={{ color: sideColors['0'] }}>{profile.name}</b> ·{' '}
+                <a href="/profile" onClick={leaveGame}>
+                  Profile
+                </a>
+              </span>
+            </header>
+
+            <button type="button" className={styles.menuPrimary} autoFocus onClick={() => setMenuOpen(false)}>
               Resume
             </button>
-            <button type="button" disabled={over || !myTurn} onClick={() => { setMenuOpen(false); dispatch({ type: 'Concede' }); }}>
-              Concede
-            </button>
-            <button type="button" onClick={() => { setMenuOpen(false); setPicker(loadChoices()); }}>
-              New game (choose decks)
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setAccessible(!a11y);
-                setA11y(!a11y);
-              }}
-            >
-              Accessibility mode: {a11y ? 'on' : 'off'}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMuted(soundOn);
-                setSoundOn(!soundOn);
-              }}
-            >
-              Sound: {soundOn ? 'on' : 'off'}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setTimerOn(!timerOn);
-                setTimerOnState(!timerOn);
-              }}
-            >
-              Turn timer ({turnLimit}s): {timerOn ? 'on' : 'off'}
-            </button>
-            <button type="button" onClick={() => setSmartAi(!smartAi)}>
-              AI: {smartAi ? 'greedy (looks one move ahead)' : 'random'} (click to switch)
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMode(mode === 'ai' ? 'hotseat' : 'ai');
-                setMenuOpen(false);
-                setTimeout(start, 0);
-              }}
-            >
-              Mode: {mode === 'ai' ? 'vs AI' : 'hot-seat'} (click to switch, starts a new game)
-            </button>
+            <div className={styles.menuPair}>
+              <button type="button" onClick={() => { setMenuOpen(false); setPicker(loadChoices()); }}>
+                New game
+                <small>choose decks</small>
+              </button>
+              <button
+                type="button"
+                className={styles.menuDanger}
+                disabled={over || !myTurn}
+                onClick={() => { setMenuOpen(false); dispatch({ type: 'Concede' }); }}
+              >
+                Concede
+                <small>{over ? 'game is over' : myTurn ? 'give up this game' : 'on your turn'}</small>
+              </button>
+            </div>
+
+            <section className={styles.menuGroup} aria-label="Settings">
+              <h4>Settings</h4>
+              {[
+                { label: 'Sound', on: soundOn, flip: () => { setMuted(soundOn); setSoundOn(!soundOn); } },
+                { label: `Turn timer (${turnLimit}s)`, on: timerOn, flip: () => { setTimerOn(!timerOn); setTimerOnState(!timerOn); } },
+                { label: 'Accessibility mode', on: a11y, flip: () => { setAccessible(!a11y); setA11y(!a11y); } },
+              ].map((t) => (
+                <button key={t.label} type="button" role="switch" aria-checked={t.on} className={styles.menuToggle} onClick={t.flip}>
+                  <span>{t.label}</span>
+                  <i className={t.on ? styles.on : ''} aria-hidden="true" />
+                </button>
+              ))}
+              <div className={styles.menuSeg} role="radiogroup" aria-label="Opponent">
+                <span>Opponent</span>
+                {[
+                  { name: 'Greedy', hint: 'looks one move ahead', value: true },
+                  { name: 'Random', hint: 'plays any legal move', value: false },
+                ].map((o) => (
+                  <button
+                    key={o.name}
+                    type="button"
+                    role="radio"
+                    aria-checked={smartAi === o.value}
+                    className={smartAi === o.value ? styles.on : ''}
+                    disabled={mode !== 'ai'}
+                    title={o.hint}
+                    onClick={() => setSmartAi(o.value)}
+                  >
+                    {o.name}
+                  </button>
+                ))}
+              </div>
+              <div className={styles.menuSeg} role="radiogroup" aria-label="Mode">
+                <span>Mode</span>
+                {([['ai', 'vs AI'], ['hotseat', 'Hot-seat']] as const).map(([m, name]) => (
+                  <button
+                    key={m}
+                    type="button"
+                    role="radio"
+                    aria-checked={mode === m}
+                    className={mode === m ? styles.on : ''}
+                    title="Switching starts a new game"
+                    onClick={() => {
+                      if (mode === m) return;
+                      setMode(m);
+                      setMenuOpen(false);
+                      setTimeout(start, 0);
+                    }}
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            <footer className={styles.menuLinks}>
+              <a href="/" onClick={leaveGame}>Home</a>
+              <a href="/deckbuilder" onClick={leaveGame}>Deck builder</a>
+              <a href="/collection" onClick={leaveGame}>Cards</a>
+            </footer>
           </div>
         </div>
       )}

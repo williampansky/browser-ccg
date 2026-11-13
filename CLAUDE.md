@@ -30,6 +30,7 @@ earlier `hsclone` repo as the rules reference. Read these first:
   small new effects, then spell damage, auras, this-turn boosts, a pre-attack hook and a played-cards
   history); the rule readings I had to choose are in `RULES.md` Appendix B. Still to build: the dedicated random-bot invariant suite (slice 7; a first
   version already runs in `legal-actions.test.ts`).
+- **Markdown pages:** Home renders `README.md`, News renders `ROADMAP.md` and Changelog renders `CHANGELOG.md` (`utils/render-markdown.ts` with `marked` in `getStaticProps`, shown by `MarkdownPage`; relative `.md` links point to GitHub). `/collection` is a browser of every playable card; `/deckbuilder` is separate. The bottom nav (`Footer`) has Home and highlights the current page. Keep `CHANGELOG.md` updated. The repo uses yarn: never leave a `package-lock.json`.
 - The site shell works: home, `collection`, `deckbuilder`, `cards`, `store`, `profile`, `news`,
   `faq`, `changelog`, plus `pages/api/` for cards/users. The card renderers (`Card`, `Minion`) work.
 - `data/*.json` is the Hearthstone-style card data (the old zone-game JSON was deleted from `data/` on 2026-11-12; it is
@@ -75,7 +76,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 ## Player profile (name + colour theme)
 
 - `components/player-profile/` (`profile.ts`, `ProfileEditor.tsx`): a display name (up to 20 characters, cleaned by `cleanName`) and a colour theme
-  (`THEMES`), edited at the top of the `/play` menu and saved in this browser's localStorage (`ccg.profile.v1`). Everything reads it through
+  (`THEMES`), edited on the `/profile` page (`ProfilePage.tsx`; the `/play` menu only shows it and links there) and saved in this browser's localStorage (`ccg.profile.v1`). Everything reads it through
   `normalizeProfile`; `loadProfile` / `saveProfile` are the only storage calls, so accounts later replace those two and nothing else.
 - Player 1 shows the profile name on the hero bar, the turn banner and the log (the stored log keeps `**Player 1**` and the name is applied when it is drawn,
   so a rename also changes old lines). The theme colours your side (hero bar, log name); the other seat is red, or blue if you chose red.
@@ -114,7 +115,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 
 ## Commands
 
-- `npm run dev` - dev server (use npm; `yarn` isn't installed here, though `yarn.lock` exists).
+- `npm run dev` - dev server (`yarn` 1.x is installed globally; use `yarn add` / `yarn install` for dependencies, never npm, so `yarn.lock` stays the only lockfile).
   If port 3000 is taken, Next silently uses 3001, so read the startup log for the URL.
 - `npm test` - jest (ts-jest, jsdom). Run one file: `npm test -- path/to/file.test.ts`.
 - `npx tsc --noEmit -p .` - type check.

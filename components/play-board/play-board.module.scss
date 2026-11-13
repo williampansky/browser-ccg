@@ -750,3 +750,197 @@
 .clockLow {
   color: #ff7d7d;
 }
+
+// The /play menu: a titled card with a big Resume, a New game / Concede pair, switch rows and links out.
+.menu {
+  width: 22rem;
+  max-width: 90vw;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: linear-gradient(180deg, #232738, #171a24);
+  border: 2px solid #3f4660;
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  color: #e8eaf2;
+
+  button {
+    font: inherit;
+    cursor: pointer;
+  }
+  a {
+    color: #8aa4ff;
+  }
+}
+
+.menuHead {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+}
+
+.menuWho {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.menuPrimary {
+  padding: 0.7rem;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.05rem;
+  background: linear-gradient(180deg, #4a58c8, #3441a0);
+  border: 1px solid #7080e8;
+  border-radius: 10px;
+
+  &:hover,
+  &:focus-visible {
+    background: linear-gradient(180deg, #5766dc, #3d4bb4);
+  }
+}
+
+.menuPair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+
+  button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    padding: 0.55rem 0.4rem;
+    color: inherit;
+    font-weight: 600;
+    background: #2b3042;
+    border: 1px solid #555b70;
+    border-radius: 10px;
+
+    small {
+      font-weight: 400;
+      opacity: 0.65;
+    }
+    &:hover:not(:disabled),
+    &:focus-visible {
+      background: #353b52;
+    }
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+  .menuDanger:not(:disabled) {
+    color: #ff9a9a;
+    border-color: #7a3b3b;
+  }
+}
+
+.menuGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.6rem 0.7rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #343846;
+  border-radius: 10px;
+
+  h4 {
+    margin: 0 0 0.2rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+}
+
+.menuToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  text-align: left;
+
+  i {
+    position: relative;
+    flex: none;
+    width: 2.4rem;
+    height: 1.35rem;
+    background: #3a3f52;
+    border-radius: 999px;
+    transition: background 0.15s;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0.15rem;
+      left: 0.15rem;
+      width: 1.05rem;
+      height: 1.05rem;
+      background: #cfd4e6;
+      border-radius: 50%;
+      transition: transform 0.15s;
+    }
+    &.on {
+      background: #3f9f58;
+    }
+    &.on::after {
+      transform: translateX(1.05rem);
+      background: #fff;
+    }
+  }
+  &:focus-visible {
+    outline: 2px solid #8aa4ff;
+    outline-offset: 2px;
+  }
+}
+
+.menuSeg {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding-top: 0.2rem;
+
+  span {
+    flex: 1;
+  }
+  button {
+    padding: 0.3rem 0.7rem;
+    color: inherit;
+    background: #1b1e27;
+    border: 1px solid #454c63;
+
+    &:first-of-type {
+      border-radius: 8px 0 0 8px;
+    }
+    &:last-of-type {
+      border-radius: 0 8px 8px 0;
+      border-left: 0;
+    }
+    &.on {
+      background: #3f4aa8;
+      border-color: #5b68d0;
+    }
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.menuLinks {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 0.25rem;
+  font-size: 0.9rem;
+}
