@@ -222,3 +222,19 @@ describe('bots', () => {
     }
   });
 });
+
+describe('once per game', () => {
+  it('Mass Resurrect (Cleric) can be cast only once, however many turns pass', () => {
+    let s = produce(game('SAGE'), (g) => void (g.players['0'].graveyard = ['GRUNT', 'GRUNT', 'GRUNT', 'GRUNT']));
+    s = skill(s, 2).state;
+    expect(s.players['0'].hero!.spent[2]).toBe(true);
+    for (let i = 0; i < 5; i++) {
+      s = endTurns(s, 2);
+      expect(err(s, { type: 'HeroSkill', skill: 2 })).toBe('SKILL_UNAVAILABLE');
+      expect(legalActions(s, '0', catalog).some((a) => a.type === 'HeroSkill' && a.skill === 2)).toBe(false);
+    }
+  });
+  it('every hero\'s ultimate is once per game, even if the data also gives it a cooldown', () => {
+    for (const h of heroes()) expect(h.skills[2].cooldown).toBeUndefined();
+  });
+});
