@@ -1,1 +1,1 @@
-export { default } from './TheChangelogPage';
+export { default, getStaticProps } from './TheChangelogPage';

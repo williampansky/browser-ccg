@@ -1,15 +1,13 @@
-import { Container, Layout } from '../../components/site-components';
+import { MarkdownPage } from '../../components/site-components';
 import { siteConfig } from '../../app.config';
+import { renderMarkdown } from '../../utils/render-markdown';
 
-export default function TheChangelogPage() {
-  const page = siteConfig.pages.changelog;
-  return (
-    <Layout title={page.name} description={page.description}>
-      <div className={`${page.name.toLocaleLowerCase()}__page`}>
-        <Container>
-          <h1>{page.name}</h1>
-        </Container>
-      </div>
-    </Layout>
-  );
+const page = siteConfig.pages.changelog;
+
+export async function getStaticProps() {
+  return { props: { html: renderMarkdown('CHANGELOG.md') } };
+}
+
+export default function TheChangelogPage({ html }: { html: string }) {
+  return <MarkdownPage title={page.name} description={page.description} html={html} />;
 }

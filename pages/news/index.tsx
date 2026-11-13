@@ -1,1 +1,1 @@
-export { default } from './TheNewsPage';
+export { default, getStaticProps } from './TheNewsPage';
