@@ -87,6 +87,32 @@ export const parseRichText = (html: string): RichPart[] => {
   return parts;
 };
 
+/** Groups parsed parts into lines, splitting at each break (a line is drawn as its own block so its wrapping is balanced alone). */
+export const textLines = (parts: RichPart[]): Exclude<RichPart, { kind: 'br' }>[][] =>
+  parts.reduce<Exclude<RichPart, { kind: 'br' }>[][]>(
+    (lines, part) => {
+      if (part.kind === 'br') lines.push([]);
+      else lines[lines.length - 1].push(part);
+      return lines;
+    },
+    [[]]
+  );
+
+/**
+ * Card text from Airtable has `<br>`s in two roles: real structure (after a keyword, around a small explanatory line, after a
+ * finished sentence or clause) and hand-wrapping in the middle of a sentence (hsclone had to wrap by hand). The face now wraps
+ * and balances lines itself, so a break in the middle of a sentence is just a space; the structural ones are kept.
+ * (Input is `sanitizeRichText` output, so breaks are exactly `<br>`.)
+ */
+export const softenBreaks = (html: string): string =>
+  html.split('<br>').reduce((out, next, i) => {
+    if (i === 0) return next;
+    const before = out.trimEnd();
+    const visibleEnd = before.replace(/<[^>]+>\s*$/, '').trimEnd();
+    const hard = /<\/(strong|small)>$/.test(before) || /[.:;!?]$/.test(visibleEnd) || /^\s*<(strong|small)>/.test(next);
+    return before + (hard ? '<br>' : ' ') + next.trimStart();
+  }, '');
+
 /**
  * Shows what a spell will really deal with `bonus` spell damage: each "N damage" in the text becomes "N+bonus damage",
  * the new number wrapped in `<boost>` so the face can colour it. No bonus, no change.

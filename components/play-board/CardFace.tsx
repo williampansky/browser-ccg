@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import type { Card } from '../../engine';
-import { artBackground, faceUnit, fitScale, parseRichText, withSpellDamageText, rarityStyle, raceLabel, showsStats, typeLabel } from './card-face-model';
+import { artBackground, faceUnit, fitScale, parseRichText, softenBreaks, textLines, withSpellDamageText, rarityStyle, raceLabel, showsStats, typeLabel } from './card-face-model';
 import fontSizeBasedOnCharacterLength from '../../utils/font-size-based-on-length';
 import styles from './card-face.module.scss';
 import { VectorEmblem, VectorFrame, VectorGem, VectorStat } from './vector-frame';
@@ -33,7 +33,7 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, v
   const label = typeLabel(card);
   const race = raceLabel(card);
   const look = rarityStyle(card.rarity);
-  const html = withSpellDamageText(card.richText || card.text, card.type === 'spell' ? spellDamage : 0);
+  const html = softenBreaks(withSpellDamageText(card.richText || card.text, card.type === 'spell' ? spellDamage : 0));
 
   // Shrink the description until it sits inside its box (long text wrapped to five lines and ran over the badges).
   const textRef = useRef<HTMLSpanElement | null>(null);
@@ -50,13 +50,7 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, v
         box.style.setProperty('--text-scale', String(s));
         return inner.offsetHeight <= availH + 0.5 && inner.scrollWidth <= availW + 0.5;
       };
-      // Text with its own line breaks was written to read as those lines: first try to keep each on one row (down to 0.8),
-      // and only if that cannot be done, just make it fit the box.
-      const lines = inner.querySelectorAll('br').length + 1;
-      const rowH = parseFloat(getComputedStyle(inner).lineHeight);
-      const keepsLines = (s: number) => inBox(s) && (!(rowH > 0) || inner.offsetHeight <= lines * rowH + 1);
-      const strict = lines > 1 ? fitScale(keepsLines, 0.8) : 1;
-      const scale = lines > 1 && keepsLines(strict) ? strict : fitScale(inBox);
+      const scale = fitScale(inBox);
       box.style.setProperty('--text-scale', String(scale));
     };
     fit();
@@ -104,25 +98,27 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, v
       <span className={`${styles.name} ${styles.val}`}>
         <span style={{ fontSize: `${fontSizeBasedOnCharacterLength(card.name ?? '')}em` }}>{card.name}</span>
       </span>
-      <span ref={textRef} className={`${styles.text} ${styles.val}`}>
+      <span ref={textRef} className={`${styles.text} ${styles.val} ${stats ? styles.textStats : ''}`}>
         <span>
-          {parseRichText(html).map((part, i) =>
-            part.kind === 'br' ? (
-              <br key={i} />
-            ) : part.kind === 'text' ? (
-              <React.Fragment key={i}>{part.text}</React.Fragment>
-            ) : part.kind === 'boost' ? (
-              <span key={i} className={styles.boost}>
-                {part.text}
-              </span>
-            ) : part.kind === 'small' ? (
-              <small key={i} className={styles.small}>
-                {part.text}
-              </small>
-            ) : (
-              React.createElement(part.kind, { key: i }, part.text)
-            )
-          )}
+          {textLines(parseRichText(html)).map((line, li) => (
+            <span key={li} className={styles.line}>
+              {line.map((part, i) =>
+                part.kind === 'text' ? (
+                  <React.Fragment key={i}>{part.text}</React.Fragment>
+                ) : part.kind === 'boost' ? (
+                  <span key={i} className={styles.boost}>
+                    {part.text}
+                  </span>
+                ) : part.kind === 'small' ? (
+                  <small key={i} className={styles.small}>
+                    {part.text}
+                  </small>
+                ) : (
+                  React.createElement(part.kind, { key: i }, part.text)
+                )
+              )}
+            </span>
+          ))}
         </span>
       </span>
 

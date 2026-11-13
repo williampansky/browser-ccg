@@ -168,7 +168,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - **Framed cards (`components/play-board/CardFace.tsx`)** port `hsclone`'s `CardV3`: the art sits behind a rarity frame PNG
   (`public/images/frames/<COLOR>.png`; **which rarity gets which colour is the `RARITY_STYLE` table in `card-face-model.ts`**: Free steel with no gem, Common green, Superior blue, Remarkable purple, Mythic red; the files are named by colour, and the frame and gem for a colour were measured to match) and the cost gem, name ribbon, text, type, rarity gem and sword/shield badges are laid
   over it in the frame's 178 x 250 design units, scaled by the `--u` CSS variable (so use `u(n)` in its SCSS, never `em`:
-  an element's own font-size would change its offsets). Hand cards and the cast popup use it; board
+  an element's own font-size would change its offsets). **Card text wraps itself** (`softenBreaks`, `textLines` in `card-face-model.ts`; `text-wrap: balance` per line): write Airtable descriptions without `<br>` except for real structure (after a keyword, around a `<small>` line, after a finished sentence or clause, before a keyword line); a break in the middle of a sentence is turned into a space. Hand cards and the cast popup use it; board
   minions and the choose-one dialogs do not yet. **The hand's feel is ported from `hsclone`** (`components/play-board/hand-fan.ts`
   plus the `.handSlot` rules in `play-board.module.scss`): hsclone does it with plain CSS transitions, not react-spring (which
   it never used; `react-spring` in this repo's `package.json` is unused). Cards fan by index (`--fan-rot`, `--fan-drop`), overlap

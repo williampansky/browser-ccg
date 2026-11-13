@@ -147,6 +147,13 @@
   z-index: 3;
 }
 
+// One line of card text (the text between hard breaks): its own block, wrapped evenly so no word is left alone on the last row.
+// Browsers without text-wrap support just wrap normally.
+.line {
+  display: block;
+  text-wrap: balance;
+}
+
 .text {
   position: absolute;
   bottom: 0;
@@ -164,6 +171,13 @@
   text-align: center;
   word-spacing: 0.125em;
   z-index: 3;
+
+  // Minions and weapons have attack / health badges rising into the bottom corners (to about 35u from each side);
+  // keep the text clear of them instead of letting a long last line run underneath.
+  &.textStats {
+    padding-left: u(38);
+    padding-right: u(38);
+  }
 
   span {
     line-height: 1.15;
