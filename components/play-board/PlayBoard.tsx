@@ -52,7 +52,10 @@ import { deckRows } from './deck-rows';
 import { describeEvents, MYSTERY_HINT, mysteryCategory } from './describe-events';
 import { isMuted, playSounds, setMuted, soundsFor } from './sounds';
 import { targetLinePath, TargetLineStyle } from './target-line';
+import { startDragGhost, DragGhost } from './drag-ghost';
 import styles from './play-board.module.scss';
+
+let activeGhost: DragGhost | null = null; // the opaque card that follows the pointer during a hand drag
 
 type Mode = 'ai' | 'hotseat';
 type PlayAction = Extract<Action, { type: 'PlayCard' }>;
@@ -1085,14 +1088,10 @@ export const PlayBoard = () => {
           if (aimsAtTarget) {
             e.dataTransfer.setDragImage(blankDragImage!, 0, 0);
           } else {
-            // The ghost is a plain clone at rest size, held by its centre. The browser's own snapshot is of the card as hovered
-            // (lifted and scaled 1.5x) and keeps the grab offset from that bigger card, which put the ghost far above the cursor.
-            const clone = e.currentTarget.cloneNode(true) as HTMLElement;
-            clone.removeAttribute('id');
-            clone.style.cssText = 'position:fixed;left:-1000px;top:0;transform:none;transition:none;animation:none;filter:none;opacity:1;visibility:visible;';
-            document.body.appendChild(clone);
-            e.dataTransfer.setDragImage(clone, HAND_CARD_WIDTH / 2, (HAND_CARD_WIDTH * 1.4) / 2);
-            setTimeout(() => clone.remove(), 0);
+            // The browser's own drag image is always semi-transparent, so hide it and draw an opaque ghost that follows the pointer.
+            if (blankDragImage) e.dataTransfer.setDragImage(blankDragImage, 0, 0);
+            activeGhost?.stop();
+            activeGhost = startDragGhost(e.currentTarget, HAND_CARD_WIDTH, HAND_CARD_WIDTH * 1.4, e.clientX, e.clientY);
           }
           // Select after the drag has begun: re-rendering the dragged card inside dragstart can cancel it.
           // The card is hidden in the hand only when a ghost replaces it; one that aims with the arrow stays put, selected,
@@ -1106,6 +1105,8 @@ export const PlayBoard = () => {
         }}
         onDragEnd={() => {
           setDragging(false);
+          activeGhost?.stop();
+          activeGhost = null;
           if (!isChoice) setSelection(null); // a dropped choose-one card has just opened its dialog: keep that
           setDragIndex(null);
           setDraggedHand(null);
