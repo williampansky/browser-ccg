@@ -53,6 +53,24 @@
     "ultimate": true
   },
   {
+    "name": "Command Army",
+    "playContext": "%SUMMON%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_ATLAS%",
+    "id": 3,
+    "cost": 6,
+    "mechanics": [
+      "%SUMMON%",
+      "%POISON%"
+    ],
+    "text": "Summon seven 1/1 minions with Poison",
+    "numberPrimary": 1,
+    "numberSecondary": 1,
+    "numberRandom": 7,
+    "ultimate": true
+  },
+  {
     "name": "%SUMMON% %RACE_CREATURE%",
     "playContext": "%SUMMON%",
     "type": "%TYPE_SPELL%",
@@ -103,6 +121,23 @@
     "text": "%BUFF% all friendly %RACE_CREATURE%s with +2/+2",
     "numberPrimary": 2,
     "numberSecondary": 2
+  },
+  {
+    "name": "Poisoned Blade",
+    "playContext": "%DAMAGE%",
+    "type": "%TYPE_WEAPON%",
+    "playType": "TARGETED",
+    "hero": "%HERO_ATLAS%",
+    "id": 1,
+    "cost": 1,
+    "cooldown": 1,
+    "mechanics": [
+      "%TARGET%",
+      "%DAMAGE%",
+      "%POISON%"
+    ],
+    "text": "Deal 1 damage now, and 1 damage at the start of your next turn",
+    "numberPrimary": 1
   },
   {
     "name": "Master's Blade",
@@ -222,6 +257,23 @@
     "text": "Deal 1 damage",
     "numberPrimary": 1,
     "targetingArrowText": "Deal 1 damage"
+  },
+  {
+    "name": "Sulfuric Cloud",
+    "playContext": "%DAMAGE%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "hero": "%HERO_ATLAS%",
+    "id": 2,
+    "cost": 4,
+    "cooldown": 2,
+    "mechanics": [
+      "%AOE%",
+      "%DAMAGE%",
+      "%POISON%"
+    ],
+    "text": "Deal 1 damage to all enemy minions now, and another at the start of your next turn",
+    "numberPrimary": 1
   },
   {
     "name": "Rain Lightning",

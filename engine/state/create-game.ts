@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import type { Rng } from '../rng';
 import { MAX_DECK_SIZE } from '../deck-rules';
+import { getHero } from '../heroes';
 import { startTurn } from '../rules/turn';
 import { CardInstance, GameSetup, GameState, MAX_HEALTH, PlayerId, PlayerState } from './types';
 
@@ -25,6 +26,8 @@ const emptyPlayer = (deck: CardInstance[]): PlayerState => ({
  */
 export const createGame = (setup: GameSetup, rng: Rng): GameState => {
   (['0', '1'] as PlayerId[]).forEach((p) => {
+    const hero = setup.heroes?.[p];
+    if (hero && !getHero(hero)) throw new Error(`Unknown hero ${hero}`);
     if (setup.decks[p].length > MAX_DECK_SIZE) {
       throw new Error(`Player ${Number(p) + 1}'s deck has ${setup.decks[p].length} cards; the most allowed is ${MAX_DECK_SIZE}.`);
     }
@@ -52,6 +55,12 @@ export const createGame = (setup: GameSetup, rng: Rng): GameState => {
   };
 
   const dealt = produce(initial, (g) => {
+    for (const p of ['0', '1'] as PlayerId[]) {
+      const id = setup.heroes?.[p];
+      if (!id) continue;
+      const skills = getHero(id)!.skills.length;
+      g.players[p].hero = { id, cooldowns: Array(skills).fill(0), spent: Array(skills).fill(false) };
+    }
     g.players[first].hand = g.players[first].deck.splice(0, FIRST_PLAYER_HAND);
     g.players[second].hand = g.players[second].deck.splice(0, SECOND_PLAYER_HAND);
     if (setup.secondPlayerBonusCard) {

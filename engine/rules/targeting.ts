@@ -2,11 +2,13 @@ import type { CardCatalog } from '../cards/types';
 import { getCardDef } from '../definitions';
 import type { DefLookup } from '../definitions/define-card';
 import { GameState, PlayerId, TargetRef } from '../state/types';
+import { heroSkill } from '../heroes';
 import { opponentOf } from './lookup';
 
 export type TargetSource =
   | { kind: 'attack'; attackerId: number }
   | { kind: 'weapon' }
+  | { kind: 'skill'; skill: number }
   | { kind: 'card'; handIndex: number; choice?: number };
 
 export const sameTarget = (a: TargetRef, b: TargetRef): boolean =>
@@ -45,6 +47,10 @@ export const legalTargets = (
     const guards = minions.filter((m) => m.keywords.guard);
     if (guards.length > 0) return guards.map((m) => ({ kind: 'minion', instanceId: m.instanceId }));
     return [...minions.map((m): TargetRef => ({ kind: 'minion', instanceId: m.instanceId })), { kind: 'hero', player: foe }];
+  }
+  if (source.kind === 'skill') {
+    const filter = heroSkill(state.players[me].hero?.id, source.skill)?.target;
+    return filter ? visibleCharacters(state).filter((candidate) => filter({ state, caster: me, candidate, catalog })) : [];
   }
   const inHand = state.players[me].hand[source.handIndex];
   const card = inHand && catalog?.get(inHand.cardId);

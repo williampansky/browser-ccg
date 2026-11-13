@@ -1,0 +1,101 @@
+// The row of hero skill buttons under a hero bar.
+.skills {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+}
+
+.hero {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-right: 0.2rem;
+}
+
+.skill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.7rem 0.3rem 0.35rem;
+  background: #232736;
+  border: 2px solid #343846;
+  border-radius: 999px;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  opacity: 0.55;
+  cursor: default;
+  transition: box-shadow 0.15s, border-color 0.15s, opacity 0.15s;
+
+  &.ready {
+    opacity: 1;
+    border-color: #4aa3ff;
+    cursor: pointer;
+    box-shadow: 0 0 10px -3px #4aa3ff;
+
+    &:hover {
+      box-shadow: 0 0 14px -1px #4aa3ff;
+    }
+  }
+
+  &.selected {
+    border-color: #3ddc84;
+    box-shadow: 0 0 14px -1px #3ddc84;
+  }
+
+  &.spent {
+    text-decoration: line-through;
+    opacity: 0.35;
+  }
+
+  &:hover .tip,
+  &:focus-visible .tip {
+    visibility: visible;
+  }
+}
+
+.cost {
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: #4aa3ff;
+  color: #10131d;
+  font-size: 0.8rem;
+}
+
+.name {
+  white-space: nowrap;
+}
+
+.status {
+  white-space: nowrap;
+  font-size: 0.7rem;
+  opacity: 0.8;
+  font-style: normal;
+}
+
+// Pops out below the button on hover (the bottom hero's row sits near the screen edge, so it opens upward there).
+.tip {
+  visibility: hidden;
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 16rem;
+  padding: 0.4rem 0.6rem;
+  background: #10131d;
+  border: 1px solid #343846;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  white-space: normal;
+  text-align: left;
+  pointer-events: none;
+}

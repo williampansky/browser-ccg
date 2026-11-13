@@ -52,6 +52,7 @@ export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEven
         g.players[owner].board = g.players[owner].board.filter((m) => m.health > 0);
       }
       for (const { owner, minion } of dead) {
+        if (!ctx.catalog.get(minion.cardId)?.isToken) (g.players[owner].graveyard ??= []).push(minion.cardId);
         events.push({ type: 'MinionDied', player: owner, instanceId: minion.instanceId, cardId: minion.cardId });
       }
       for (const { owner, minion } of dead) {

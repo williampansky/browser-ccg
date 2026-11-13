@@ -4,6 +4,9 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-13
 
+- **Heroes:** five heroes (Zeus, Forsaken Druid, Exile, Warrior, Cleric) with three skills each, usable on `/play`: skill buttons above
+  your hero bar (click; targeted skills then aim), cooldowns and one-use ultimates, picked in New game (or `?h0=ZEUS&h1=WARRIOR`).
+  The AI uses skills too. Readings I chose are in `RULES.md` Appendix D.
 - `/collection` is a browser of every playable card (Core + Prime) with search and filters and a card detail window.
 - `/profile` is the page for your name and colour (moved out of the `/play` menu).
 - The `/play` menu is redesigned: Resume, New game and Concede cards, switch rows for sound, timer and accessibility,

@@ -38,6 +38,10 @@ earlier `hsclone` repo as the rules reference. Read these first:
   still expect the zone-game shape, and `utils/` reads
   `constants.json`/`mechanics.json` in the old shape, so they are stale until ROADMAP Milestone 4 switches them over.
 
+- **Hero skills** (`engine/heroes/`): 5 active heroes, 3 skills each; numbers from `data/abilities.json`, behaviour in `skill-effects.ts`,
+  tokens in `tokens.ts` (use `withHeroTokens(catalog)` for a game with heroes). `PlayerState.hero`, action `HeroSkill`, `/play` skill bar
+  (`HeroSkills.tsx`), hero picker in New game (`hero-choice.ts`, `ccg.heroes.v1`), debug `?h0=ZEUS&h1=none`. Readings: `RULES.md` Appendix D.
+
 ## Next up (as of the last session)
 
 The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`; the order below is not settled. Candidates, roughly in the order discussed:

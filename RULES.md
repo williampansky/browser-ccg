@@ -712,3 +712,26 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **056 Portal**: at the start of your turn it swaps itself with a random minion card in your hand (that card takes its slot, summoning sick; Portal goes to your hand). Nothing happens without one.
 - **184 The Sorceress (5/7)**: your spells deal +1 damage and heal +1 (healing, `CardDef.spellHealing`).
 - **Not built**: 248 Ah-Xoc-Xin (a Discover of "ROCKING powers" that the data does not define) and 206 Revitalization ("Demise: Revitalization" is not explained anywhere).
+
+### Appendix D: Hero skills (2026-11-13; engine in `engine/heroes/`, ability numbers in the ABILITIES table)
+
+Five heroes are playable (the ones marked `active`): Zeus, Forsaken Druid, Exile, Warrior and the Cleric (`SAGE`). Each has
+three skills. Name, cost, cooldown and text come from `data/abilities.json`; what a skill does is code in `engine/heroes/skill-effects.ts`.
+
+- **Using a skill** is the action `HeroSkill { skill, target? }`. It costs energy from the same pool as cards. It is not a spell:
+  Spell Damage does not apply and "when you cast a spell" effects do not fire. It does not use up an attack. Any number of skills
+  may be used in a turn if they are ready and affordable. [A]
+- **Cooldown N** means the skill is ready again at the start of the owner's Nth turn after using it (1 = every turn, 2 = every
+  other turn). A skill with no cooldown in the data is an **ultimate**: once per game. [A]
+- **Readings I had to choose (author to confirm):**
+  - Exile's ultimate "The Beast" summons an 8/8 (the data's text is a copy of Vital Shot; its numbers are 8 and 8).
+  - Druid's True Form raises Health to 15 (never lowers it) and equips 5/2 claws (the data's numbers are 15 and 5).
+  - Druid's Spirit Animal is a random Spirit Wolf 3/2, Spirit Bear 2/5 Guard or Spirit Hawk 2/1 Rush; Eagle is 4/2 Rush.
+  - Warrior's Smash! may aim at any minion, not heroes, and deals damage equal to current armor (armor is not spent).
+  - Violent Strike deals 6 at 12 or less Health, else 4. Lightning Strike, Revitalize and Violent Strike may aim at any character.
+  - Resurrect brings back random non-token minions that died on your side (each once; they return fresh, with no warcry).
+  - Vital Shot hits the enemy hero directly (Guard does not block it).
+- Token minions and weapons are in `engine/heroes/tokens.ts` (no art yet; the placeholder shows). A game with heroes needs a
+  catalog from `withHeroTokens(...)`.
+- Not playable yet: Atlas, Asar, Mystic, Summoner (inactive or missing skills; Atlas's skills are now in ABILITIES, but need
+  delayed damage).

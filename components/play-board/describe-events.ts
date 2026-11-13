@@ -1,4 +1,4 @@
-import { getCardDef } from '../../engine';
+import { getCardDef, heroSkill } from '../../engine';
 import type { CardCatalog, GameEvent, GameState, MinionInstance, TargetRef } from '../../engine';
 
 export const MYSTERY_CATEGORY_LABEL = { attack: 'Attack', spell: 'Spell', minion: 'Minion', damage: 'Damage', death: 'Death' } as const;
@@ -79,6 +79,11 @@ export const describeEvents = (
           `${who(e.player)} casts ${cardName(e.cardId)}${e.target ? ` on ${target(e.target)}` : ''}${spellDamageNote(e.player, e.cardId)}`
         );
         break;
+      case 'HeroSkillUsed': {
+        const skill = heroSkill(after.players[e.player].hero?.id, e.skill);
+        lines.push(`${who(e.player)} uses ${card(skill?.name ?? 'a hero skill')}${e.target ? ` on ${target(e.target)}` : ''}`);
+        break;
+      }
       case 'MysteryRevealed':
         lines.push(`${who(e.player)}'s Mystery is revealed: ${cardName(e.cardId)}`);
         break;

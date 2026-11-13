@@ -82,6 +82,16 @@ export interface WeaponInstance {
   tempAttack?: number;
 }
 
+/** A player's hero and the state of its skills (RULES Appendix D). Absent when a game is set up without heroes. */
+export interface HeroState {
+  /** Hero key, e.g. `ZEUS` (see `engine/heroes`) */
+  id: string;
+  /** Own turns still to wait before each skill can be used again (0 = ready); ticks down as this player's turn starts */
+  cooldowns: number[];
+  /** One-use skills (no cooldown in the data) that have been used */
+  spent: boolean[];
+}
+
 export interface PlayerState {
   health: number;
   armor: number;
@@ -113,6 +123,10 @@ export interface PlayerState {
   armorSpent?: number;
   /** The turn number on which this player's hero last took damage (for "on turns your hero took damage") */
   heroHurtOnTurn?: number;
+  /** The hero and its skills, if the game was set up with heroes */
+  hero?: HeroState;
+  /** Card ids of this player's non-token minions that have died, oldest first (for Resurrect) */
+  graveyard?: string[];
   /** The player's active Mystery (at most one), or none */
   mystery?: MysteryInstance | null;
 }
@@ -141,7 +155,9 @@ export type Action =
   | { type: 'Concede' }
   | { type: 'PlayCard'; handIndex: number; boardIndex?: number; target?: TargetRef; choice?: number }
   | { type: 'Attack'; attackerId: number; target: TargetRef }
-  | { type: 'WeaponAttack'; target: TargetRef };
+  | { type: 'WeaponAttack'; target: TargetRef }
+  /** Uses one of the hero's skills (`skill` is 0, 1 or 2); `target` only for a targeted skill */
+  | { type: 'HeroSkill'; skill: number; target?: TargetRef };
 
 export type ActionErrorCode =
   | 'GAME_OVER'
@@ -155,6 +171,8 @@ export type ActionErrorCode =
   | 'MINION_CANT_ATTACK'
   | 'ILLEGAL_TARGET'
   | 'BAD_CHOICE'
+  | 'BAD_SKILL'
+  | 'SKILL_UNAVAILABLE'
   | 'MYSTERY_ACTIVE'
   | 'NO_WEAPON'
   | 'HERO_CANT_ATTACK'
@@ -171,6 +189,7 @@ export type GameEvent =
   | { type: 'Fatigue'; player: PlayerId; damage: number }
   | { type: 'HeroDamaged'; player: PlayerId; amount: number }
   | { type: 'MinionPlayed'; player: PlayerId; instanceId: number; boardIndex: number; target?: TargetRef }
+  | { type: 'HeroSkillUsed'; player: PlayerId; skill: number; target?: TargetRef }
   | { type: 'WeaponEquipped'; player: PlayerId; cardId: string }
   | { type: 'WeaponAttacked'; target: TargetRef }
   | { type: 'WeaponBroke'; player: PlayerId }
@@ -196,6 +215,8 @@ export interface GameSetup {
   firstPlayer: PlayerId;
   /** A card added to the second player's opening hand (The Orb, `GAME_001`) */
   secondPlayerBonusCard?: string;
+  /** Each player's hero key (`ZEUS`, ...). Omit for a game without hero skills. */
+  heroes?: Partial<Record<PlayerId, string>>;
 }
 
 export type GameEventType = GameEvent['type'];

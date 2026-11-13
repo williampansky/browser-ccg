@@ -5,6 +5,8 @@ import type { DefLookup } from '../definitions/define-card';
 import { Action, GameState, MAX_BOARD, PlayerId } from '../state/types';
 import { effectiveCost } from './cost';
 import { cantAttack } from './attack';
+import { heroSkill } from '../heroes';
+import { skillReady } from './hero-skill';
 import { legalTargets } from './targeting';
 
 /**
@@ -72,6 +74,16 @@ export const legalActions = (
   if (me.weapon && me.weapon.attack >= 1 && me.weaponAttacksThisTurn < 1 && me.heroDisabledOnTurn !== state.turn) {
     for (const target of legalTargets(state, { kind: 'weapon' })) actions.push({ type: 'WeaponAttack', target });
   }
+
+  me.hero?.cooldowns.forEach((_, skill) => {
+    const def = heroSkill(me.hero?.id, skill);
+    if (!def || def.cost > me.energy.current || !skillReady(state, player, skill)) return;
+    if (!def.target) {
+      actions.push({ type: 'HeroSkill', skill });
+      return;
+    }
+    for (const target of legalTargets(state, { kind: 'skill', skill }, catalog, defs)) actions.push({ type: 'HeroSkill', skill, target });
+  });
 
   for (const m of me.board) {
     if (cantAttack(m, state.turn)) continue;

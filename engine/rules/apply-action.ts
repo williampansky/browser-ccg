@@ -6,6 +6,7 @@ import { Action, ActionError, GameEvent, GameState, PlayerId } from '../state/ty
 import { attack } from './attack';
 import { playCard } from './play-card';
 import { settle, TriggerLoopError } from './settle';
+import { useHeroSkill } from './hero-skill';
 import { endTurnCleanup, startTurn } from './turn';
 import { weaponAttack } from './weapon-attack';
 
@@ -62,12 +63,15 @@ export const applyAction = (state: GameState, action: Action, ctx: EngineContext
         };
       case 'PlayCard':
       case 'Attack':
-      case 'WeaponAttack': {
+      case 'WeaponAttack':
+      case 'HeroSkill': {
         const r =
           action.type === 'PlayCard'
             ? playCard(state, action, ctx, events)
             : action.type === 'Attack'
             ? attack(state, action, events, ctx)
+            : action.type === 'HeroSkill'
+            ? useHeroSkill(state, action, ctx, events)
             : weaponAttack(state, action, events, ctx);
         return isError(r) ? r : { state: settled(r, 0), events };
       }

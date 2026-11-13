@@ -11,6 +11,7 @@ const SOUND_OF: Partial<Record<GameEvent['type'], SoundName>> = {
   MinionPlayed: 'minion',
   MinionSummoned: 'minion',
   CardPlayed: 'spell',
+  HeroSkillUsed: 'spell',
   WeaponEquipped: 'weapon',
   MinionDamaged: 'hit',
   HeroDamaged: 'hit',

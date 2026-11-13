@@ -8,6 +8,8 @@ import {
   chooseRandomAction,
   DEFAULT_TURN_SECONDS,
   getCardDef,
+  getHero,
+  withHeroTokens,
   Card,
   createGame,
   createSeededRng,
@@ -39,6 +41,8 @@ import { artBackground, withSpellDamageText } from './card-face-model';
 import { loadDecks } from '../deck-builder/deck-storage';
 import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
 import { HeroBar } from './HeroBar';
+import { HeroSkills } from './HeroSkills';
+import { heroOptions, loadHeroChoices, resolveHero, saveHeroChoices, HeroChoice } from './hero-choice';
 import { deckRows } from './deck-rows';
 import { describeEvents, MYSTERY_HINT, mysteryCategory } from './describe-events';
 import { isMuted, playSounds, setMuted, soundsFor } from './sounds';
@@ -54,11 +58,22 @@ const AI_AIM_MS = 1100;
 /** 'curve' or 'straight'; both are supported by `targetLinePath`. */
 const TARGET_LINE_STYLE: TargetLineStyle = 'curve';
 
-type Selection = { kind: 'hand'; index: number; choice?: number } | { kind: 'minion'; id: number } | { kind: 'hero' };
+type Selection =
+  | { kind: 'hand'; index: number; choice?: number }
+  | { kind: 'minion'; id: number }
+  | { kind: 'hero' }
+  | { kind: 'skill'; index: number };
 
-const { cards, byId } = loadHsCards();
+const { cards, byId: baseById } = loadHsCards();
+/** The cards plus the minions and weapons hero skills create. */
+const byId = withHeroTokens(baseById);
 const pool = playablePool(cards);
 const prime = primePool(cards);
+/** " as Zeus" for the start-of-game log line; empty without a hero. */
+const heroText = (s: GameState, p: PlayerId) => {
+  const hero = getHero(s.players[p].hero?.id);
+  return hero ? ` as ${hero.name}` : '';
+};
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
 /** What a player is called on the board: your own name for Player 1, "Player 2" (and "(AI)" against the bot) for the other seat. */
 const playerLabel = (p: PlayerId, mode: Mode, myName: string) =>
@@ -183,15 +198,15 @@ const renderLogLine = (line: string, myName: string, colors: Record<'0' | '1', s
   });
 
 const targetOf = (a: Action): TargetRef | undefined =>
-  a.type === 'PlayCard' || a.type === 'Attack' || a.type === 'WeaponAttack' ? a.target : undefined;
+  a.type === 'PlayCard' || a.type === 'Attack' || a.type === 'WeaponAttack' || a.type === 'HeroSkill' ? a.target : undefined;
 
 /**
  * Debug URL params for /play (read on every new game): `?first=0|1` picks who goes first (Player 1 = 0),
  * `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand (in hand order),
  * `?b0=CORE_027,...` and `?b1=...` put ready minions on that player's board, `?w0=CORE_076` and `?w1=...` equip a weapon,
- * `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10).
+ * `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10), `?h0=ZEUS` and `?h1=...` pick a hero (or `none`).
  */
-const debugParams = (): { first?: PlayerId; hands: Record<PlayerId, string[]>; setup: DebugSetup } => {
+const debugParams = (): { first?: PlayerId; hands: Record<PlayerId, string[]>; setup: DebugSetup; heroes: Record<PlayerId, string | null> } => {
   const q = new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search);
   const list = (k: string) => (q.get(k) ?? '').split(',').map((x) => x.trim()).filter((id) => byId.has(id));
   const f = q.get('first');
@@ -203,6 +218,7 @@ const debugParams = (): { first?: PlayerId; hands: Record<PlayerId, string[]>; s
   return {
     first: f === '0' || f === '1' ? f : undefined,
     hands: { '0': list('p0'), '1': list('p1') },
+    heroes: { '0': q.get('h0'), '1': q.get('h1') },
     setup: {
       boards: { '0': list('b0'), '1': list('b1') },
       weapons: { '0': weapon('w0'), '1': weapon('w1') },
@@ -220,9 +236,17 @@ const newGame = (vsAi: boolean): { state: GameState; rng: Rng; decks: Record<Pla
   const p1 = resolveDeck(vsAi ? aiDeckChoice(choices['1']) : choices['1'], pool, saved, rng, prime);
   const decks = { '0': p0.cards, '1': p1.cards };
   const dbg = debugParams();
+  const heroChoices = loadHeroChoices();
+  const heroKeys = {
+    '0': resolveHero(dbg.heroes['0'] ?? heroChoices['0'], rng),
+    '1': resolveHero(dbg.heroes['1'] ?? heroChoices['1'], rng),
+  };
   const randomFirst: PlayerId = rng.int(2) === 0 ? '0' : '1';
   const first: PlayerId = dbg.first ?? randomFirst;
-  let state = createGame({ decks, firstPlayer: first, secondPlayerBonusCard: 'GAME_001' }, rng);
+  let state = createGame(
+    { decks, firstPlayer: first, secondPlayerBonusCard: 'GAME_001', heroes: { '0': heroKeys['0'], '1': heroKeys['1'] } },
+    rng
+  );
   state = produce(state, (g) => {
     (['0', '1'] as PlayerId[]).forEach((p) => {
       const me = g.players[p];
@@ -260,6 +284,7 @@ export const PlayBoard = () => {
   const sideColors = { '0': themeOf(profile.theme).color, '1': foeTheme(profile.theme).color } as Record<'0' | '1', string>;
   /** The "New game" deck picker: null when closed, else the choices being edited. */
   const [picker, setPicker] = useState<Record<PlayerId, DeckChoice> | null>(null);
+  const [heroPicker, setHeroPicker] = useState<Record<PlayerId, HeroChoice>>({ '0': 'random', '1': 'random' });
   /** The spell just cast, shown briefly in the middle of the board. */
   const [castFx, setCastFx] = useState<{ card: Card; owner: PlayerId; n: number } | null>(null);
   const [soundOn, setSoundOn] = useState(true);
@@ -296,7 +321,7 @@ export const PlayBoard = () => {
     setState(g.state);
     setStartDecks(g.decks);
     const [a, b] = g.first === '0' ? ['Player 1', 'Player 2'] : ['Player 2', 'Player 1'];
-    setLog([[`New game. **${a}** goes first; **${b}** starts with an extra card (__The Orb__).`, `**Player 1** plays **${g.deckNames['0']}**; **Player 2** plays **${g.deckNames['1']}**.`]]);
+    setLog([[`New game. **${a}** goes first; **${b}** starts with an extra card (__The Orb__).`, `**Player 1** plays **${g.deckNames['0']}**${heroText(g.state, '0')}; **Player 2** plays **${g.deckNames['1']}**${heroText(g.state, '1')}.`]]);
     setSelection(null);
     setMessage('');
     setFoeAim(null);
@@ -420,7 +445,8 @@ export const PlayBoard = () => {
       const action = (smartAi ? chooseGreedyAction : chooseRandomAction)(state, byId, rng);
       const to = targetOf(action);
       if (!to) return dispatch(action);
-      const from = action.type === 'Attack' ? `m${action.attackerId}` : `h${AI_PLAYER}`;
+      const from =
+        action.type === 'Attack' ? `m${action.attackerId}` : action.type === 'HeroSkill' ? `s${AI_PLAYER}-${action.skill}` : `h${AI_PLAYER}`;
       setFoeAim({ action, from, to });
     }, AI_DELAY_MS);
     return () => clearTimeout(timer);
@@ -563,6 +589,7 @@ export const PlayBoard = () => {
       return plays;
     }
     if (sel.kind === 'minion') return actions.filter((a) => a.type === 'Attack' && a.attackerId === sel.id);
+    if (sel.kind === 'skill') return actions.filter((a) => a.type === 'HeroSkill' && a.skill === sel.index);
     return actions.filter((a) => a.type === 'WeaponAttack');
   };
   const options = optionsFor(selection);
@@ -634,6 +661,14 @@ export const PlayBoard = () => {
     if (owner === me && canAttack(m)) {
       setSelection(selection?.kind === 'minion' && selection.id === m.instanceId ? null : { kind: 'minion', id: m.instanceId });
     }
+  };
+  /** Click a skill button: an untargeted skill is used at once; a targeted one is selected and then aimed. */
+  const pickSkill = (index: number) => {
+    if (over) return;
+    const uses = actions.filter((a): a is Extract<Action, { type: 'HeroSkill' }> => a.type === 'HeroSkill' && a.skill === index);
+    if (uses.length === 0) return;
+    if (uses.every((a) => !a.target)) dispatch(uses[0]);
+    else setSelection(selection?.kind === 'skill' && selection.index === index ? null : { kind: 'skill', index });
   };
   const clickHero = (owner: PlayerId) => {
     if (over) return;
@@ -815,7 +850,27 @@ export const PlayBoard = () => {
     const weapon = p.weapon && byId.get(p.weapon.cardId);
     const aim = isAimable({ kind: 'hero', player: owner });
     const isAi = mode === 'ai' && owner === AI_PLAYER;
-    return (
+    const hero = p.hero && getHero(p.hero.id);
+    const skillRow = hero && p.hero && (
+      <HeroSkills
+        heroName={hero.name}
+        selected={selection?.kind === 'skill' && isMe ? selection.index : null}
+        interactive={isMe && !over && myTurn}
+        nodeRef={(i) => track(`s${owner}-${i}`)}
+        onPick={pickSkill}
+        skills={hero.skills.map((s) => ({
+          index: s.index,
+          name: s.name,
+          cost: s.cost,
+          text: s.text,
+          usable: isMe && actions.some((a) => a.type === 'HeroSkill' && a.skill === s.index),
+          cooldownLeft: p.hero!.cooldowns[s.index] ?? 0,
+          spent: !!p.hero!.spent[s.index],
+          targeted: !!s.target,
+        }))}
+      />
+    );
+    const bar = (
       <HeroBar
         name={label(owner)}
         emblem={isAi ? 'AI' : owner === '0' ? '1' : '2'}
@@ -858,6 +913,13 @@ export const PlayBoard = () => {
         {...(!over && isMe && heroCanSwing ? dragFrom({ kind: 'hero' }) : {})}
         onClick={() => clickHero(owner)}
       />
+    );
+    return (
+      <>
+        {owner === viewer ? skillRow : null}
+        {bar}
+        {owner === viewer ? null : skillRow}
+      </>
     );
   };
 
@@ -927,7 +989,15 @@ export const PlayBoard = () => {
 
   // The targeting line: from the selected card, minion or hero to the pointer (green over a legal target, else grey).
   const sourceKey =
-    selection?.kind === 'hand' ? `c${selection.index}` : selection?.kind === 'minion' ? `m${selection.id}` : selection ? `h${me}` : null;
+    selection?.kind === 'hand'
+      ? `c${selection.index}`
+      : selection?.kind === 'minion'
+      ? `m${selection.id}`
+      : selection?.kind === 'skill'
+      ? `s${me}-${selection.index}`
+      : selection
+      ? `h${me}`
+      : null;
   const sourceEl = sourceKey ? nodes.current.get(sourceKey) : undefined;
   // The arrow always follows the pointer; a legal target under it is shown by highlighting that target.
   const overTarget = hover && isAimable(hover) ? nodes.current.get(targetKey(hover)) : undefined;
@@ -1011,7 +1081,7 @@ export const PlayBoard = () => {
               Resume
             </button>
             <div className={styles.menuPair}>
-              <button type="button" onClick={() => { setMenuOpen(false); setPicker(loadChoices()); }}>
+              <button type="button" onClick={() => { setMenuOpen(false); setPicker(loadChoices()); setHeroPicker(loadHeroChoices()); }}>
                 New game
                 <small>choose decks</small>
               </button>
@@ -1107,6 +1177,18 @@ export const PlayBoard = () => {
                     ))}
                   </select>
                   <small>{picked.plan ?? ' '}</small>
+                  <select
+                    aria-label={`${label(p)} hero`}
+                    value={heroPicker[p]}
+                    onChange={(e) => setHeroPicker({ ...heroPicker, [p]: e.target.value })}
+                  >
+                    {heroOptions().map((o) => (
+                      <option key={o.value} value={o.value}>
+                        Hero: {o.label}
+                      </option>
+                    ))}
+                  </select>
+                  <small>{heroOptions().find((o) => o.value === heroPicker[p])?.plan ?? ' '}</small>
                 </label>
               );
             })}
@@ -1119,6 +1201,7 @@ export const PlayBoard = () => {
                 autoFocus
                 onClick={() => {
                   saveChoices(picker);
+                  saveHeroChoices(heroPicker);
                   setPicker(null);
                   start();
                 }}
