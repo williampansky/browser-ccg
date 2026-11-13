@@ -4,42 +4,52 @@
 
 .footer__nav {
   ul {
-    @include display-flex(row nowrap, flex-end, space-between);
-    background-color: rgb(143 18 18);
+    display: flex;
+    flex-flow: row nowrap;
+    background-color: #1b1e27;
+    border-top: 2px solid #3f4660;
     list-style-type: none;
-    width: 100vw;
-    overflow-x: hidden;
+    width: 100%;
     padding: 0;
     margin: 0;
   }
 
+  li {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   a {
-    @include display-flex(column nowrap, center, flex-end);
-    color: white;
-    background-color: var(--color-rarity-MYTHIC);
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    height: 100%;
+    box-sizing: border-box;
+    color: #aab0c8;
     white-space: nowrap;
     line-height: 1;
     font-family: var(--font-family-card);
     font-size: 0.625em;
     text-transform: uppercase;
     text-decoration: none;
-    padding: 1em 2em;
+    padding: 0.9em 0.25em;
+    border-top: 3px solid transparent;
+    margin-top: -2px;
+    transition: color 0.12s, background-color 0.12s;
+
+    &:hover,
+    &:focus-visible {
+      color: #fff;
+      background-color: #262a38;
+    }
   }
 
-  a[href="/play"] {
-    padding-left: 3.5em;
-    padding-right: 3.5em;
-  }
-
-  a span {
-    display: block;
-    width: 100%;
-    text-align: center;
-  }
-
-  a .item__text {
-    margin-top: 0.5em;
-    white-space: nowrap;
+  a.item--active {
+    color: #fff;
+    background-color: #262a38;
+    border-top-color: var(--color-rarity-MYTHIC);
   }
 
   a svg {

@@ -83,6 +83,11 @@ export const sitePages: Pages = {
 };
 
 export const footerButtons: Pages = {
+  home: {
+    icon: 'icon-uikit-home',
+    name: sitePages.home.name,
+    route: sitePages.home.route,
+  },
   store: {
     icon: 'icon-uikit-refresh',
     name: sitePages.store.name,
