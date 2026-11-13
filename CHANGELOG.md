@@ -4,6 +4,8 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-13
 
+- **Bot fix:** the greedy bot no longer sees through your face-down Mystery. It used to simulate its moves on the real state, so it avoided
+  any attack the Mystery would punish (it could stop attacking for turns); now it plans without the Mystery and just attacks into it.
 - **Heroes:** five heroes (Zeus, Forsaken Druid, Exile, Warrior, Cleric) with three skills each, usable on `/play`: skill buttons above
   your hero bar (click; targeted skills then aim), cooldowns and one-use ultimates, picked in New game (or `?h0=ZEUS&h1=WARRIOR`).
   The AI uses skills too. Readings I chose are in `RULES.md` Appendix D.

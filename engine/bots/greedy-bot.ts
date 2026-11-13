@@ -84,8 +84,14 @@ export const chooseGreedyActionWith = (
 ): Action => {
   const me = state.activePlayer;
   const actions = legalActions(state, me, catalog, defs);
+  // The bot knows the opponent has a Mystery but not which one, so it plans on a copy without it. Simulating on the real
+  // state would let it see what the Mystery does and avoid exactly the attacks that would trigger it.
+  const foe: PlayerId = me === '0' ? '1' : '0';
+  const seen: GameState = state.players[foe].mystery
+    ? { ...state, players: { ...state.players, [foe]: { ...state.players[foe], mystery: null } } }
+    : state;
   const score = (a: Action): number => {
-    const r = applyAction(state, a, { rng: createSeededRng(1), catalog, defs });
+    const r = applyAction(seen, a, { rng: createSeededRng(1), catalog, defs });
     return 'error' in r ? -Infinity : evaluate(r.state, me, w);
   };
   const best = (list: Action[], floor: number): Action | undefined => {
@@ -104,7 +110,7 @@ export const chooseGreedyActionWith = (
     if (swing) return swing;
   }
   const moves = actions.filter((a) => a.type !== 'EndTurn' && !isBadPlay(state, a, catalog, defs));
-  return best(moves, evaluate(state, me, w) + MIN_GAIN) ?? { type: 'EndTurn' };
+  return best(moves, evaluate(seen, me, w) + MIN_GAIN) ?? { type: 'EndTurn' };
 };
 
 /** The bot with the default weights. */
