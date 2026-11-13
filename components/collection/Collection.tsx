@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { loadHsCards, playablePool, primePool } from '../../engine';
 import { CardFace } from '../play-board/CardFace';
@@ -7,11 +8,16 @@ import { CardEffects } from '../card-detail/CardEffects';
 import { TiltFace } from '../card-detail/TiltFace';
 import { CollectionCard } from './CollectionCard';
 import {
+  ART_FILTERS,
+  ArtFilter,
   COSTS,
   DEFAULT_FILTERS,
   effectOptions,
   filterCards,
+  fromQuery,
+  toQuery,
   isFiltered,
+  matchesArt,
   loadSize,
   raceOptions,
   RARITIES,
@@ -33,17 +39,44 @@ const { cards, byId } = loadHsCards();
 const corePool = playablePool(cards);
 const prime = primePool(cards);
 const pool = [...corePool, ...prime];
+/** Entourage cards (summoned and offered tokens). Shown only when the box is ticked; they ignore the Core/Prime set filter. */
+const tokenPool = Array.from(byId.values()).filter((c) => c.isToken && c.name);
 const effects = effectOptions(pool);
 const races = raceOptions(pool);
 
 /** Every card the engine can play, browsable. There is no ownership yet, so the collection is the whole pool. */
-export const Collection = () => {
+export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
+  // Dev-only art tools: hidden in a production build. `missingArt` (ids with no art file) comes from getStaticProps.
+  const debug = process.env.NODE_ENV !== 'production';
+  const missing = useMemo(() => new Set(missingArt), [missingArt]);
+  const [art, setArt] = useState<ArtFilter>('all');
+  const [showTokens, setShowTokens] = useState(false);
   const [filters, setFilters] = useState<CollectionFilters>(DEFAULT_FILTERS);
   const [sort, setSort] = useState<SortKey>('cost');
   const [size, setSize] = useState<SizeId>('medium');
   const [viewing, setViewing] = useState<string | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
   const bigWidth = useDetailCardWidth();
   const set = <K extends keyof CollectionFilters>(key: K, value: CollectionFilters[K]) => setFilters((f) => ({ ...f, [key]: value }));
+
+  // The filters live in the URL (?q=...&type=spell) so a refresh or a shared link keeps them. Read once the router knows
+  // the query (a static page has none on the first render), then written back on every change.
+  const router = useRouter();
+  const [urlRead, setUrlRead] = useState(false);
+  useEffect(() => {
+    if (!router.isReady || urlRead) return;
+    const q = fromQuery(router.query);
+    setFilters(q.filters);
+    setSort(q.sort);
+    setArt(q.art);
+    setShowTokens(q.tokens);
+    setUrlRead(true);
+  }, [router.isReady, router.query, urlRead]);
+  useEffect(() => {
+    if (!urlRead) return;
+    const next = new URLSearchParams(toQuery(filters, sort, art, showTokens)).toString();
+    if (next !== window.location.search.replace(/^\?/, '')) router.replace({ pathname: router.pathname, query: toQuery(filters, sort, art, showTokens) }, undefined, { shallow: true, scroll: false });
+  }, [filters, sort, art, showTokens, urlRead]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // The saved size is read after the first render (it lives in localStorage, which the server does not have).
   useEffect(() => setSize(loadSize()), []);
@@ -59,7 +92,7 @@ export const Collection = () => {
     return () => window.removeEventListener('keydown', key);
   }, [viewing]);
 
-  const shown = useMemo(() => sortCards(filterCards(pool, filters), sort), [filters, sort]);
+  const shown = useMemo(() => sortCards([...filterCards(pool, filters), ...(showTokens ? filterCards(tokenPool, { ...filters, set: 'both' }) : [])], sort).filter((c) => !debug || matchesArt(c, art, missing)), [filters, sort, art, showTokens, debug, missing]);
   const cardWidth = sizeOf(size).width;
   const open = viewing ? byId.get(viewing) : undefined;
   const tokens = open ? open.entourage.map((id) => byId.get(id)).filter((t): t is NonNullable<typeof t> => !!t) : [];
@@ -123,8 +156,24 @@ export const Collection = () => {
               </option>
             ))}
           </select>
-          {isFiltered(filters) && (
-            <button type="button" className={gridStyles.reset} onClick={() => setFilters(DEFAULT_FILTERS)}>
+          <label className={gridStyles.check} title="Also show the summoned and offered entourage cards">
+            <input type="checkbox" checked={showTokens} onChange={(e) => setShowTokens(e.target.checked)} /> Entourage
+          </label>
+          {debug && (
+            <select value={art} onChange={(e) => setArt(e.target.value as ArtFilter)} aria-label="Art status (dev only)" title="Dev only">
+              {ART_FILTERS.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.id === 'all' ? 'Art: any' : a.label}
+                </option>
+              ))}
+            </select>
+          )}
+          {(isFiltered(filters) || art !== 'all' || showTokens) && (
+            <button type="button" className={gridStyles.reset} onClick={() => {
+                setFilters(DEFAULT_FILTERS);
+                setArt('all');
+                setShowTokens(false);
+              }}>
               Clear filters
             </button>
           )}
@@ -160,6 +209,20 @@ export const Collection = () => {
                 <p className={styles.detailMeta}>
                   {open.source === 'prime' ? 'Prime' : 'Core'} · <span className={styles.cap}>{open.type}</span>
                 </p>
+                <button
+                  type="button"
+                  className={styles.cardId}
+                  title="Click to copy"
+                  onClick={(e) => {
+                    e.stopPropagation(); // a click anywhere else closes the dialog; this one only copies
+                    navigator.clipboard?.writeText(open.id).then(() => {
+                      setCopied(open.id);
+                      window.setTimeout(() => setCopied((id) => (id === open.id ? null : id)), 1200);
+                    });
+                  }}
+                >
+                  {copied === open.id ? 'Copied!' : open.id}
+                </button>
                 {open.flavor ? <blockquote className={styles.flavor}>{open.flavor}</blockquote> : <p className={styles.noFlavor}>No flavor text.</p>}
                 <CardEffects card={open} />
 

@@ -1,6 +1,6 @@
 import { loadHsCards } from '../../../engine';
 import { effectsOf } from '../../../engine';
-import { DEFAULT_FILTERS, effectOptions, filterCards, isFiltered, loadSize, raceOptions, RARITIES, saveSize, sizeOf, SIZES, sortCards } from '../collection-model';
+import { DEFAULT_FILTERS, fromQuery, toQuery, effectOptions, filterCards, isFiltered, loadSize, raceOptions, RARITIES, saveSize, sizeOf, SIZES, sortCards } from '../collection-model';
 
 const cards = Array.from(loadHsCards().byId.values()).filter((c) => c.name && !c.isToken);
 const f = (over: Partial<typeof DEFAULT_FILTERS>) => ({ ...DEFAULT_FILTERS, ...over });
@@ -105,5 +105,24 @@ describe('grid sizes', () => {
     expect(loadSize()).toBe('medium');
     window.localStorage.setItem('ccg.collection.v1', JSON.stringify({ size: 'gigantic' }));
     expect(loadSize()).toBe('medium');
+  });
+});
+
+describe('URL params', () => {
+  it('writes only non-default filters and reads them back', () => {
+    expect(toQuery(DEFAULT_FILTERS, 'cost', 'all')).toEqual({});
+    const f = { ...DEFAULT_FILTERS, search: 'orc', type: 'spell' as const, cost: '3' as const };
+    const q = toQuery(f, 'name', 'fpo');
+    expect(q).toEqual({ q: 'orc', type: 'spell', cost: '3', sort: 'name', art: 'fpo' });
+    expect(fromQuery(q)).toEqual({ filters: f, sort: 'name', art: 'fpo', tokens: false });
+  });
+  it('ignores invalid values', () => {
+    expect(fromQuery({ type: 'bogus', cost: ['2', '3'], sort: 'x', art: 'y' })).toEqual({
+      filters: { ...DEFAULT_FILTERS, cost: '2' },
+      sort: 'cost',
+      art: 'all',
+      tokens: false,
+    });
+    expect(fromQuery(toQuery(DEFAULT_FILTERS, 'cost', 'all', true))).toMatchObject({ tokens: true });
   });
 });

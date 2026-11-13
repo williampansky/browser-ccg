@@ -18,6 +18,14 @@
   mask-image: linear-gradient(to bottom, transparent 0, #000 1.75rem, #000 calc(100% - 5.5rem), transparent 100%);
 }
 
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  user-select: none;
+}
+
 .card {
   --rx: 0deg;
   --ry: 0deg;

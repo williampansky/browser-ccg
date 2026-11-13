@@ -1,1 +1,1 @@
-export { default } from './TheCollectionPage';
+export { default, getStaticProps } from './TheCollectionPage';

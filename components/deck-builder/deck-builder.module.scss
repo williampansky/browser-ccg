@@ -30,6 +30,17 @@
     border: 1px solid #3f4660;
     border-radius: 6px;
   }
+
+  // A drawn arrow instead of the native one, so it can sit away from the edge.
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 1.9rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23aab' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.65rem center;
+    cursor: pointer;
+  }
 }
 
 .costs {
@@ -280,6 +291,22 @@
 .detailMeta {
   margin: 0 0 12px;
   color: #9aa3b8;
+}
+
+.cardId {
+  display: block;
+  margin: -8px 0 12px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #6f7890;
+  font: 10px/1.2 monospace;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+
+  &:hover {
+    color: #aab4cc;
+  }
 }
 
 .cap {

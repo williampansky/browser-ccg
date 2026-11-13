@@ -44,6 +44,56 @@ export const filterCards = (cards: readonly Card[], f: CollectionFilters): Card[
   });
 };
 
+/** Dev-only art checks: `missing` = no `-CARD` file on disk, `fpo` / `final` = the Airtable `artStatus`, `untracked` = no status yet. */
+export const ART_FILTERS = [
+  { id: 'all', label: 'Any art' },
+  { id: 'missing', label: 'No art file' },
+  { id: 'fpo', label: 'FPO art' },
+  { id: 'untracked', label: 'No art status' },
+  { id: 'final', label: 'Final art' },
+] as const;
+export type ArtFilter = typeof ART_FILTERS[number]['id'];
+
+export const matchesArt = (c: Card, mode: ArtFilter, missing: ReadonlySet<string>): boolean => {
+  if (mode === 'all') return true;
+  if (mode === 'missing') return missing.has(c.id);
+  if (mode === 'untracked') return !c.artStatus;
+  return c.artStatus === mode.toUpperCase();
+};
+
+const PARAM = { search: 'q', set: 'set', type: 'type', cost: 'cost', rarity: 'rarity', race: 'race', effect: 'effect' } as const;
+const one = (v: string | string[] | undefined): string | undefined => (Array.isArray(v) ? v[0] : v);
+
+/** The filters as URL params: only those that differ from the default, so an unfiltered page has a clean URL. */
+export const toQuery = (f: CollectionFilters, sort: SortKey, art: ArtFilter, tokens = false): Record<string, string> => {
+  const q: Record<string, string> = {};
+  for (const k of Object.keys(PARAM) as (keyof typeof PARAM)[]) if (f[k] !== DEFAULT_FILTERS[k]) q[PARAM[k]] = f[k];
+  if (sort !== 'cost') q.sort = sort;
+  if (art !== 'all') q.art = art;
+  if (tokens) q.tokens = '1';
+  return q;
+};
+
+/** The reverse; a value that is not valid for its filter (a hand-edited URL) falls back to the default. */
+export const fromQuery = (query: Record<string, string | string[] | undefined>): { filters: CollectionFilters; sort: SortKey; art: ArtFilter; tokens: boolean } => {
+  const pick = <T extends string>(v: string | undefined, allowed: readonly T[], fallback: T): T => (allowed as readonly string[]).includes(v ?? '') ? (v as T) : fallback;
+  const text = (k: keyof typeof PARAM) => one(query[PARAM[k]]) ?? DEFAULT_FILTERS[k];
+  return {
+    filters: {
+      search: text('search'),
+      set: pick(text('set'), SETS, DEFAULT_FILTERS.set),
+      type: pick(text('type'), TYPES, DEFAULT_FILTERS.type),
+      cost: pick(text('cost'), COSTS, DEFAULT_FILTERS.cost),
+      rarity: text('rarity'),
+      race: text('race'),
+      effect: text('effect'),
+    },
+    sort: pick(one(query.sort), SORTS.map((s) => s.id), 'cost'),
+    art: pick(one(query.art), ART_FILTERS.map((a) => a.id), 'all'),
+    tokens: one(query.tokens) === '1',
+  };
+};
+
 export interface Option {
   value: string;
   label: string;
