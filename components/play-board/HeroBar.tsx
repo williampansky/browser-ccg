@@ -10,8 +10,10 @@ export interface HeroBarWeapon {
 
 interface HeroBarProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className'> {
   name: string;
-  /** What the avatar shows until heroes have portraits: "1", "2" or "AI". */
+  /** What the avatar shows when the player has no hero portrait: "1", "2" or "AI". */
   emblem: string;
+  /** Hero portrait image; replaces the emblem. */
+  portrait?: string;
   /** Colour identity, matching the log: Player 1 green, Player 2 red. */
   team: 'green' | 'red';
   /** A colour (the player's theme) that replaces the team colour */
@@ -52,6 +54,7 @@ interface HeroBarProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement
 export const HeroBar = ({
   name,
   emblem,
+  portrait,
   team,
   accent,
   turnTag,
@@ -100,7 +103,9 @@ export const HeroBar = ({
         className={[styles.avatar, styles[tone]].join(' ')}
         style={{ ['--fill' as string]: `${Math.round(fraction * 360)}deg` }}
       >
-        <span className={styles.face}>{emblem}</span>
+        <span className={styles.face}>
+          {portrait ? <img className={styles.portrait} src={portrait} alt="" draggable={false} /> : emblem}
+        </span>
         <span className={styles.hp} title={tt(`${health} health`)}>
           {health}
         </span>

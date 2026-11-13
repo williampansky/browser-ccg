@@ -144,6 +144,9 @@
 
 .attack { left: 0; }
 .health { right: 0; }
+// The numerals sit on the art's visual centre, not the box's: the sword badge's disc is lower than its box centre.
+.attack b { top: 0.2rem; }
+.health b { top: 0.05rem; }
 
 // Compared with the printed card: buffed green, a damaged or weakened stat orange-red.
 .tone_up b { color: #7dff8a; }

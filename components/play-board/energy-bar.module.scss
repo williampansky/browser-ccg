@@ -1,0 +1,96 @@
+// The tall energy column just outside the board's right edge (the left has the log, and End turn sits inside it).
+$energy: #4aa3ff;
+$bonus: #ffd45e;
+
+.bar {
+  position: absolute;
+  z-index: 3;
+  left: calc(100% + 1.4rem);
+  bottom: 9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  pointer-events: none;
+}
+
+.count {
+  font-size: 1.5rem;
+  line-height: 1;
+  color: $energy;
+  text-shadow: 0 0 8px $energy;
+  font-variant-numeric: tabular-nums;
+
+  small {
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+}
+
+.orbs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  padding: 0.4rem;
+  border-radius: 999px;
+  background: rgba(8, 14, 20, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+}
+
+.orb {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.ready {
+  background: radial-gradient(circle at 35% 30%, #bfe1ff 0, $energy 45%, #1d5fa8 100%);
+  box-shadow: 0 0 8px $energy;
+}
+
+.bonus {
+  background: radial-gradient(circle at 35% 30%, #fff1b8 0, $bonus 45%, #a8791d 100%);
+  box-shadow: 0 0 8px $bonus;
+}
+
+.spent {
+  background: #1b3354;
+  border: 2px solid #2f5a8a;
+}
+
+.locked {
+  background: #0b0f16;
+  border: 2px solid #1d2433;
+}
+
+// The orbs a picked card would use pulse with a soft highlight (no shrinking or going dark); red when it costs more than you have.
+.blink {
+  animation: orbGlow 1.2s ease-in-out infinite;
+}
+
+.blinkRed {
+  animation: orbGlowRed 1.2s ease-in-out infinite;
+}
+
+@keyframes orbGlow {
+  50% {
+    filter: brightness(1.5) saturate(0.8);
+    box-shadow: 0 0 14px 2px #fff;
+  }
+}
+
+@keyframes orbGlowRed {
+  50% {
+    filter: brightness(1.2) hue-rotate(150deg) saturate(1.8);
+    box-shadow: 0 0 14px 2px #ff5d5d;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blink,
+  .blinkRed {
+    animation: none;
+    outline: 3px solid #fff;
+  }
+}

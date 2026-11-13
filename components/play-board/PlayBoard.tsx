@@ -41,6 +41,8 @@ import { artBackground, withSpellDamageText } from './card-face-model';
 import { loadDecks } from '../deck-builder/deck-storage';
 import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
 import { HeroBar } from './HeroBar';
+import { heroImage } from './hero-images';
+import { EnergyBar } from './EnergyBar';
 import { HeroSkills } from './HeroSkills';
 import { heroOptions, loadHeroChoices, resolveHero, saveHeroChoices, HeroChoice } from './hero-choice';
 import { deckRows } from './deck-rows';
@@ -155,7 +157,7 @@ const DeckRow = ({ name, children, className }: { name: string; children: React.
 };
 /** A board minion: hovering shows its printed card next to its current stats. */
 const MinionTip = ({ card, m, className, onClick, children, nodeRef, ...rest }: any) => {
-  const printed = card ? `${tipByName.get(card.name)}` : undefined;
+  const printed = card ? tipByName.get(card.name) ?? [card.name, card.text].filter(Boolean).join('\n') : undefined;
   const { handlers, node } = useTip(printed && `${printed}\nNow: ${m.attack}/${m.health} (max ${m.maxHealth})`);
   return (
     <button
@@ -860,6 +862,7 @@ export const PlayBoard = () => {
         onPick={pickSkill}
         skills={hero.skills.map((s) => ({
           index: s.index,
+          icon: heroImage(hero.id, `skill-${s.index + 1}`),
           name: s.name,
           cost: s.cost,
           text: s.text,
@@ -874,6 +877,7 @@ export const PlayBoard = () => {
       <HeroBar
         name={label(owner)}
         emblem={isAi ? 'AI' : owner === '0' ? '1' : '2'}
+        portrait={hero ? heroImage(hero.id, 'avatar') : undefined}
         team={owner === '0' ? 'green' : 'red'}
         accent={sideColors[owner]}
         turnTag={owner === state.activePlayer ? (isAi ? 'thinking...' : 'your turn') : ''}
@@ -924,6 +928,13 @@ export const PlayBoard = () => {
   };
 
   const handCount = state.players[me].hand.length;
+  // The card being dragged or selected: the energy bar blinks the orbs it would spend.
+  const pendingIndex = selection?.kind === 'hand' ? selection.index : dragIndex;
+  const pendingCard = pendingIndex === null ? undefined : byId.get(state.players[me].hand[pendingIndex]?.cardId ?? '');
+  const pendingCost =
+    pendingIndex === null || !pendingCard || over || !myTurn
+      ? undefined
+      : effectiveCost(state, viewer, pendingCard, byId, getCardDef, state.players[me].hand[pendingIndex]?.costDelta ?? 0);
   const zoomNow = handZoom(handWidth, handCount, HAND_CARD_WIDTH);
   const renderHandCard = (card: Card | undefined, index: number, instanceId: number) => {
     const playable = actions.some((a) => a.type === 'PlayCard' && a.handIndex === index);
@@ -1292,6 +1303,7 @@ export const PlayBoard = () => {
           else playFromArea(e, 'table', true);
         }}
       >
+        <EnergyBar current={state.players[me].energy.current} total={state.players[me].energy.total} cost={pendingCost} />
         {areaZone && <div className={[styles.castArea, areaHot ? styles.castAreaHot : ''].join(' ')} style={{ height: areaHeight }} />}
         <section className={[styles.side, styles.top].join(' ')}>
           <div className={styles.backs}>

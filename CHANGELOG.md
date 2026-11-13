@@ -4,6 +4,9 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-13
 
+- **Energy bar:** a tall column of energy orbs beside the board (right edge), with the count above. Dragging or selecting a card pulses the orbs it would spend (red when you cannot afford it).
+- **Playtest fixes:** a selected hand card is bigger (2x), hero skill tooltips open over the minions, the Attack number on board minions is centred on its badge, and hero tokens (Spirit Animals, Eagle) get a real tooltip instead of "undefined", and a hovered hand card draws over the hero bar and skills.
+- **Hero art:** the "1" / "2" / "AI" circle on the hero bar is now the hero's portrait (still shown when a player has no hero), and the skill buttons are round icons with a cost badge, a cooldown number and the name and text on hover. Art is in `public/images/heroes/<ID>/` (copied from `react-ccg-deprecated`, resized; provenance unchecked like the rest).
 - **Bot fix:** the greedy bot no longer sees through your face-down Mystery. It used to simulate its moves on the real state, so it avoided
   any attack the Mystery would punish (it could stop attacking for turns); now it plans without the Mystery and just attacks into it.
 - **Heroes:** five heroes (Zeus, Forsaken Druid, Exile, Warrior, Cleric) with three skills each, usable on `/play`: skill buttons above

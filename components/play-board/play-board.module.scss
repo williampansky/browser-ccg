@@ -219,11 +219,14 @@
   visibility: hidden;
 }
 
-.slotSelected {
+// Doubled class so it outranks `.handSlot:hover`: a selected card keeps its size and glow while the pointer is on it.
+// The lift is more than a hover's (-170px), because the card is bigger and would otherwise sink below the window edge.
+.handSlot.slotSelected,
+.handSlot.slotSelected:hover {
   filter: drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e);
   z-index: 20;
-  transform: translate(var(--x), calc(var(--y-comp) + (-150px + var(--hand-sink)) * var(--zoom))) rotate(0deg)
-    scale(calc(1.3 * var(--zoom)));
+  transform: translate(var(--x), calc(var(--y-comp) + (-225px + var(--hand-sink)) * var(--zoom))) rotate(0deg)
+    scale(calc(2 * var(--zoom)));
 }
 
 .cost {
@@ -729,6 +732,7 @@
 // The hand never wraps: the cards shrink together instead (--hand-zoom scales their spacing and size).
 .hand {
   position: relative;
+  z-index: 50; // a lifted card covers the hero bar, its skills and the mystery tooltip
   // Cards are absolutely placed around the middle, so the row keeps the room of a full-size card (144px wide, 1 : 1.4)
   // itself, which also stops the board shifting when the hand empties.
   height: 202px;

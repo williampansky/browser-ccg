@@ -96,6 +96,14 @@ $bonus: #ffd45e;
   text-shadow: 0 1px 0 #fff6;
 }
 
+.portrait {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
 .hp {
   position: absolute;
   left: 50%;

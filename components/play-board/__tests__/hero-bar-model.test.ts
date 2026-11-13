@@ -1,4 +1,4 @@
-import { energyPips, healthFraction, healthTone } from '../hero-bar-model';
+import { energyPips, healthFraction, healthTone, pipsToSpend } from '../hero-bar-model';
 
 describe('energyPips', () => {
   it('always shows ten slots', () => {
@@ -39,5 +39,25 @@ describe('healthFraction and healthTone', () => {
     expect(healthTone(0.26)).toBe('hurt');
     expect(healthTone(0.25)).toBe('critical');
     expect(healthTone(0)).toBe('critical');
+  });
+});
+
+describe('pipsToSpend', () => {
+  const idx = (cur: number, total: number, cost: number) =>
+    pipsToSpend(energyPips(cur, total), cost).flatMap((on, i) => (on ? [i] : []));
+  it('marks the topmost available slots, as many as the cost', () => {
+    expect(idx(5, 7, 2)).toEqual([3, 4]);
+  });
+  it('marks nothing for a free card', () => {
+    expect(idx(5, 7, 0)).toEqual([]);
+  });
+  it('spends the bonus slot first (The Orb: 2/1)', () => {
+    expect(idx(2, 1, 1)).toEqual([1]);
+  });
+  it('skips already spent slots', () => {
+    expect(idx(2, 4, 1)).toEqual([1]);
+  });
+  it('marks every available slot when the card costs more than you have', () => {
+    expect(idx(2, 4, 5)).toEqual([0, 1]);
   });
 });

@@ -2,6 +2,8 @@ import styles from './hero-skills.module.scss';
 
 export interface SkillView {
   index: number;
+  /** Icon image URL */
+  icon: string;
   name: string;
   cost: number;
   text: string;
@@ -38,16 +40,20 @@ export const HeroSkills = ({ heroName, skills, selected, interactive, nodeRef, o
           type="button"
           disabled={!interactive || !s.usable}
           aria-pressed={selected === s.index}
+          aria-label={`${s.name}, cost ${s.cost}${status ? `, ${status}` : ''}: ${s.text}`}
           className={[styles.skill, s.usable && interactive ? styles.ready : '', selected === s.index ? styles.selected : '', s.spent ? styles.spent : ''].join(' ')}
           onClick={() => onPick(s.index)}
         >
+          <img className={styles.icon} src={s.icon} alt="" draggable={false} />
           <b className={styles.cost}>{s.cost}</b>
-          <span className={styles.name}>
-            {s.name}
-            {s.targeted ? ' ⌖' : ''}
+          {s.targeted && <i className={styles.target}>⌖</i>}
+          {status && <em className={styles.status}>{s.spent ? '✕' : s.cooldownLeft}</em>}
+          <span className={styles.tip}>
+            <strong>{s.name}</strong>
+            {status && <em> ({status})</em>}
+            <br />
+            {s.text}
           </span>
-          {status && <em className={styles.status}>{status}</em>}
-          <span className={styles.tip}>{s.text}</span>
         </button>
       );
     })}
