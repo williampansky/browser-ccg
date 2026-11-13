@@ -14,7 +14,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_068",
@@ -34,11 +35,12 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "depingo",
-    "artistUrl": "https://www.deviantart.com/depingo"
+    "artistUrl": "https://www.deviantart.com/depingo",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_017",
-    "name": "Disgruntled Miner",
+    "name": "Ogre/goblin freak",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -55,7 +57,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_074",
@@ -78,7 +81,8 @@
     "flavor": "Bubbles pop when touched.",
     "howToEarn": "Provided to all players.",
     "artistName": "kingkostas",
-    "artistUrl": "https://www.deviantart.com/kingkostas"
+    "artistUrl": "https://www.deviantart.com/kingkostas",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_088",
@@ -100,7 +104,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Imatcio Art",
-    "artistUrl": "https://www.artstation.com/imatcio"
+    "artistUrl": "https://www.artstation.com/imatcio",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_024",
@@ -117,7 +122,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_120",
@@ -140,7 +146,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Seiorai",
-    "artistUrl": "https://www.deviantart.com/seiorai"
+    "artistUrl": "https://www.deviantart.com/seiorai",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_036",
@@ -167,7 +174,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "onemt",
-    "artistUrl": "https://www.artstation.com/kuside_sangu"
+    "artistUrl": "https://www.artstation.com/kuside_sangu",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_053",
@@ -188,7 +196,8 @@
     "targetingArrowText": "Deal %NUM1% damage",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_132",
@@ -206,7 +215,8 @@
     "entourage": "CORE_132a",
     "howToEarn": "Provided to all players.",
     "artistName": "Elodie Mondoloni",
-    "artistUrl": "https://www.artstation.com/elodiemondoloni"
+    "artistUrl": "https://www.artstation.com/elodiemondoloni",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_093",
@@ -229,7 +239,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Anna Christenson",
-    "artistUrl": "http://www.annachristenson.com"
+    "artistUrl": "http://www.annachristenson.com",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_115",
@@ -256,6 +267,7 @@
     "howToEarn": "Provided to all players.",
     "artistName": "Aaron Nakahara",
     "artistUrl": "https://www.deviantart.com/cobaltplasma",
+    "artStatus": "FPO",
     "description": "Spell can only be cast on minions."
   },
   {
@@ -279,7 +291,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Scott Murphy",
-    "artistUrl": "http://www.murphyillustration.com/"
+    "artistUrl": "http://www.murphyillustration.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_098",
@@ -302,7 +315,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "lun jie",
-    "artistUrl": "https://www.artstation.com/lunjie"
+    "artistUrl": "https://www.artstation.com/lunjie",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_033",
@@ -326,7 +340,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_047",
@@ -347,7 +362,8 @@
     "targetingArrowText": "Heal 10 Health",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_089",
@@ -367,7 +383,8 @@
     "targetingArrowText": "%DESTROY% minion",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_056",
@@ -387,7 +404,8 @@
     "targetingArrowText": "Set Health to 1",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_095",
@@ -406,7 +424,8 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_039",
@@ -427,7 +446,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_090",
@@ -447,7 +467,8 @@
     "targetingArrowText": "%DESTROY% minion",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_070",
@@ -470,7 +491,8 @@
     "entourage": "CORE_070a",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_043",
@@ -489,7 +511,8 @@
     "playContext": "%BUFF%",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_012",
@@ -514,7 +537,8 @@
     "flavor": "\"Larryyyyy\"",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_069",
@@ -537,7 +561,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Aaron Nakahara",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma"
+    "artistUrl": "https://www.deviantart.com/cobaltplasma",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_020",
@@ -560,7 +585,8 @@
     "entourage": "CORE_020a, CORE_020b",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_021",
@@ -588,7 +614,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_078",
@@ -612,7 +639,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Fiery Stork",
-    "artistUrl": "https://www.behance.net/FieryStork"
+    "artistUrl": "https://www.behance.net/FieryStork",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_037",
@@ -635,7 +663,8 @@
     "flavor": "<em>\"WHERE IS SHE!?\"</em>",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_112",
@@ -662,7 +691,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Marius Siergiejew",
-    "artistUrl": "https://www.artstation.com/noistromo"
+    "artistUrl": "https://www.artstation.com/noistromo",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_003",
@@ -684,7 +714,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_011",
@@ -706,7 +737,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_032",
@@ -729,7 +761,8 @@
     "playContext": "%HEAL%",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_050",
@@ -754,7 +787,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "David Astruga",
-    "artistUrl": "https://www.artstation.com/davidastruga"
+    "artistUrl": "https://www.artstation.com/davidastruga",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_035",
@@ -779,7 +813,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_084",
@@ -801,6 +836,7 @@
     "howToEarn": "Provided to all players.",
     "artistName": "M. Irberry",
     "artistUrl": "https://www.artstation.com/irberry",
+    "artStatus": "FPO",
     "description": "Note that this card requires your opponent to have already played cards from their hand."
   },
   {
@@ -824,7 +860,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "FlixArts",
-    "artistUrl": "https://www.deviantart.com/flixarts"
+    "artistUrl": "https://www.deviantart.com/flixarts",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_106",
@@ -848,7 +885,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Scott Murphy",
-    "artistUrl": "http://www.murphyillustration.com/"
+    "artistUrl": "http://www.murphyillustration.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_083",
@@ -871,7 +909,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_079",
@@ -893,7 +932,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "ThemeFinland",
-    "artistUrl": "https://www.deviantart.com/themefinland"
+    "artistUrl": "https://www.deviantart.com/themefinland",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_010",
@@ -914,7 +954,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_006",
@@ -941,7 +982,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_009",
@@ -962,7 +1004,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_025",
@@ -986,7 +1029,8 @@
     "entourage": "CORE_025a",
     "howToEarn": "Provided to all players.",
     "artistName": "Andhika Hafzy",
-    "artistUrl": "https://www.artstation.com/andhikahafzy"
+    "artistUrl": "https://www.artstation.com/andhikahafzy",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_038",
@@ -1003,7 +1047,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_004",
@@ -1020,7 +1065,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_042",
@@ -1037,7 +1083,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_129",
@@ -1058,7 +1105,8 @@
     "collectible": true,
     "active": true,
     "flavor": "\"Activate ray shields.\"",
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_108",
@@ -1083,7 +1131,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_071",
@@ -1103,7 +1152,8 @@
     ],
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_077",
@@ -1126,7 +1176,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Vera Velichko",
-    "artistUrl": "https://www.artstation.com/vera_velichko"
+    "artistUrl": "https://www.artstation.com/vera_velichko",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_029",
@@ -1148,7 +1199,8 @@
     "flavor": "Logrund. Low ground. Get it? Cause he's short.",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_086",
@@ -1172,7 +1224,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Andrey Bormin",
-    "artistUrl": "https://www.artstation.com/lynxintie"
+    "artistUrl": "https://www.artstation.com/lynxintie",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_105",
@@ -1196,7 +1249,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Kim Jakobsson",
-    "artistUrl": "https://www.artstation.com/kimjakobsson"
+    "artistUrl": "https://www.artstation.com/kimjakobsson",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_131",
@@ -1217,7 +1271,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_125",
@@ -1240,7 +1295,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "benedickbana",
-    "artistUrl": "https://www.deviantart.com/benedickbana"
+    "artistUrl": "https://www.deviantart.com/benedickbana",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_116",
@@ -1267,7 +1323,8 @@
     "flavor": "Livin' that Necro Mage life.",
     "howToEarn": "Provided to all players.",
     "artistName": "Kevin T. Chin",
-    "artistUrl": "https://www.artstation.com/kevinchinart"
+    "artistUrl": "https://www.artstation.com/kevinchinart",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_030",
@@ -1289,7 +1346,8 @@
     "flavor": "...aka, Gary.",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_057",
@@ -1308,7 +1366,8 @@
     "collectible": true,
     "active": true,
     "entourage": "CORE_057a, CORE_057b, CORE_057c, CORE_057d",
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_099",
@@ -1333,7 +1392,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_113",
@@ -1357,7 +1417,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_049",
@@ -1377,7 +1438,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_064",
@@ -1398,7 +1460,8 @@
     "entourage": "CORE_064a",
     "howToEarn": "Provided to all players.",
     "artistName": "Dean Spencer",
-    "artistUrl": "https://www.artstation.com/deanspencerart"
+    "artistUrl": "https://www.artstation.com/deanspencerart",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_052",
@@ -1419,7 +1482,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "onemt",
-    "artistUrl": "https://www.artstation.com/kuside_sangu"
+    "artistUrl": "https://www.artstation.com/kuside_sangu",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_100",
@@ -1436,7 +1500,8 @@
     "entourage": "CORE_100a",
     "howToEarn": "Provided to all players.",
     "artistName": "lun jie",
-    "artistUrl": "https://www.artstation.com/lunjie"
+    "artistUrl": "https://www.artstation.com/lunjie",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_080",
@@ -1458,7 +1523,8 @@
     "targetingArrowText": "Deal %NUM1% damage,<br /> and draw a card",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_019",
@@ -1484,7 +1550,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_002",
@@ -1505,7 +1572,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_067",
@@ -1523,7 +1591,8 @@
     "playType": "GLOBAL",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_061",
@@ -1545,7 +1614,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Max Duran",
-    "artistUrl": "https://www.artstation.com/maxduran"
+    "artistUrl": "https://www.artstation.com/maxduran",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_123",
@@ -1571,7 +1641,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_007",
@@ -1594,7 +1665,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_103",
@@ -1620,7 +1692,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Marina Ovchinnikova",
-    "artistUrl": "https://www.artstation.com/marinaovchkv"
+    "artistUrl": "https://www.artstation.com/marinaovchkv",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_040",
@@ -1637,7 +1710,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_065",
@@ -1660,7 +1734,8 @@
     "flavor": "Remember kids, if you are going to fight an evil pyromancer, always wear your armor... it may not save your life but, at least you'll last longer...",
     "howToEarn": "Provided to all players.",
     "artistName": "Viking-Heart",
-    "artistUrl": "https://www.deviantart.com/viking-heart"
+    "artistUrl": "https://www.deviantart.com/viking-heart",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_127",
@@ -1685,6 +1760,7 @@
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "description": "If you already have a weapon equipped, <strong><em>add</em></strong> +4 Attack; otherwise, equip this as a weapon for this turn only."
   },
   {
@@ -1706,7 +1782,8 @@
     "targetingArrowText": "Deal %NUM1% damage",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_046",
@@ -1731,7 +1808,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_013",
@@ -1753,7 +1831,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_028",
@@ -1773,7 +1852,8 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_122",
@@ -1797,7 +1877,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "LI qian",
-    "artistUrl": "https://www.artstation.com/liqian"
+    "artistUrl": "https://www.artstation.com/liqian",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_045",
@@ -1821,7 +1902,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Jeff Chen",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns"
+    "artistUrl": "https://www.artstation.com/jeffchendesigns",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_060",
@@ -1842,7 +1924,8 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_066",
@@ -1867,7 +1950,8 @@
     "flavor": "Why settle for simply freezing <em>or</em> incinerating your target when you can do both?",
     "howToEarn": "Provided to all players.",
     "artistName": "Aaron Nakahara",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma"
+    "artistUrl": "https://www.deviantart.com/cobaltplasma",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_073",
@@ -1890,7 +1974,8 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistUrl": "https://www.reddit.com/user/shutupandsuckmyclit"
+    "artistUrl": "https://www.reddit.com/user/shutupandsuckmyclit",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_082",
@@ -1912,7 +1997,8 @@
     "playContext": "%HEAL%",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_110",
@@ -1938,7 +2024,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Marius Siergiejew",
-    "artistUrl": "https://www.artstation.com/noistromo"
+    "artistUrl": "https://www.artstation.com/noistromo",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_092",
@@ -1958,7 +2045,8 @@
     "targetingArrowText": "%STEAL% minion",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_087",
@@ -1979,7 +2067,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Michał Werder",
-    "artistUrl": "https://www.artstation.com/temir"
+    "artistUrl": "https://www.artstation.com/temir",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_107",
@@ -2004,7 +2093,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Hanonaut",
-    "artistUrl": "https://www.deviantart.com/hanonaut"
+    "artistUrl": "https://www.deviantart.com/hanonaut",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_034",
@@ -2021,7 +2111,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_008",
@@ -2038,7 +2129,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_128",
@@ -2056,7 +2148,8 @@
     "entourage": "CORE_128a, CORE_128b",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_055",
@@ -2080,7 +2173,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Daniel Cheng",
-    "artistUrl": "https://www.artstation.com/danielcheng"
+    "artistUrl": "https://www.artstation.com/danielcheng",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_072",
@@ -2100,7 +2194,8 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_014",
@@ -2117,7 +2212,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_022",
@@ -2139,7 +2235,8 @@
     "flavor": "From the Isle of Khials. Procreation method unknown.",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_059",
@@ -2167,7 +2264,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Hongkun_st (Hong)",
-    "artistUrl": "https://www.artstation.com/hongkun_st"
+    "artistUrl": "https://www.artstation.com/hongkun_st",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_091",
@@ -2188,7 +2286,8 @@
     "playType": "GLOBAL",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_048",
@@ -2211,7 +2310,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Seiorai",
-    "artistUrl": "https://www.deviantart.com/seiorai"
+    "artistUrl": "https://www.deviantart.com/seiorai",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_085",
@@ -2236,6 +2336,7 @@
     "howToEarn": "Provided to all players.",
     "artistName": "Aaron Nakahara",
     "artistUrl": "https://www.deviantart.com/cobaltplasma",
+    "artStatus": "FPO",
     "description": "The event is only triggered when the healing effect actually restores Health; it's ignored if a target is already at its full Health value."
   },
   {
@@ -2259,7 +2360,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Tanathiel",
-    "artistUrl": "https://www.deviantart.com/tanathiel"
+    "artistUrl": "https://www.deviantart.com/tanathiel",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_097",
@@ -2283,7 +2385,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Jaynorn Lin",
-    "artistUrl": "https://www.artstation.com/jaynorn"
+    "artistUrl": "https://www.artstation.com/jaynorn",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_118",
@@ -2306,7 +2409,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "LI qian",
-    "artistUrl": "https://www.artstation.com/liqian"
+    "artistUrl": "https://www.artstation.com/liqian",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_023",
@@ -2327,7 +2431,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_121",
@@ -2349,7 +2454,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_031",
@@ -2370,7 +2476,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_081",
@@ -2391,7 +2498,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Cristian Chihaia",
-    "artistUrl": "https://www.artstation.com/sickbrush"
+    "artistUrl": "https://www.artstation.com/sickbrush",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_054",
@@ -2419,7 +2527,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Leon Ropeter",
-    "artistUrl": "https://www.artstation.com/chewlon"
+    "artistUrl": "https://www.artstation.com/chewlon",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_104",
@@ -2441,7 +2550,8 @@
     "playContext": "%BUFF%",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_044",
@@ -2462,7 +2572,8 @@
     "targetingArrowText": "Deal %NUM1% damage",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_062",
@@ -2485,7 +2596,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Einar Martinsen",
-    "artistUrl": "https://www.artstation.com/einarmartinsen"
+    "artistUrl": "https://www.artstation.com/einarmartinsen",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_015",
@@ -2508,7 +2620,8 @@
     "flavor": "<em>\"There is nothing to fear but fear itself.\"</em>",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_124",
@@ -2531,6 +2644,7 @@
     "howToEarn": "Provided to all players.",
     "artistName": "Pavel Kolomeyets",
     "artistUrl": "https://www.artstation.com/pav327",
+    "artStatus": "FPO",
     "description": "This also affects your own minions. This is different than Immolation (CORE_065) which only damages enemy minions, but costs an additional point to play."
   },
   {
@@ -2555,7 +2669,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_102",
@@ -2576,7 +2691,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Aaron Nakahara",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma"
+    "artistUrl": "https://www.deviantart.com/cobaltplasma",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_026",
@@ -2598,7 +2714,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_016",
@@ -2625,7 +2742,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_119",
@@ -2650,7 +2768,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "David Astruga",
-    "artistUrl": "https://www.artstation.com/davidastruga"
+    "artistUrl": "https://www.artstation.com/davidastruga",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_075",
@@ -2674,7 +2793,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Mário Fernandes",
-    "artistUrl": "https://www.artstation.com/mario-fernandes"
+    "artistUrl": "https://www.artstation.com/mario-fernandes",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_001",
@@ -2702,7 +2822,8 @@
     "flavor": "Watch out. They spit.",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_126",
@@ -2724,7 +2845,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Ari-Matti Toivonen",
-    "artistUrl": "https://www.artstation.com/wuggy"
+    "artistUrl": "https://www.artstation.com/wuggy",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_005",
@@ -2745,7 +2867,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_109",
@@ -2770,7 +2893,8 @@
     "entourage": "CORE_109a",
     "howToEarn": "Provided to all players.",
     "artistName": "Konstantin Vohwinkel",
-    "artistUrl": "https://www.artstation.com/kingstantin"
+    "artistUrl": "https://www.artstation.com/kingstantin",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_076",
@@ -2787,7 +2911,8 @@
     "entourage": "CORE_076a",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_101",
@@ -2809,7 +2934,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Yanchong Lim",
-    "artistUrl": "https://www.artstation.com/yclim"
+    "artistUrl": "https://www.artstation.com/yclim",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_117",
@@ -2830,7 +2956,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Benjamin Harris",
-    "artistUrl": "https://www.artstation.com/benjamesharris"
+    "artistUrl": "https://www.artstation.com/benjamesharris",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_096",
@@ -2850,7 +2977,8 @@
     "targetingArrowText": "%DISABLE%",
     "collectible": true,
     "active": true,
-    "howToEarn": "Provided to all players."
+    "howToEarn": "Provided to all players.",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_114",
@@ -2872,7 +3000,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Rachel Alderson",
-    "artistUrl": "https://www.artstation.com/aldersaur"
+    "artistUrl": "https://www.artstation.com/aldersaur",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_051",
@@ -2898,7 +3027,8 @@
     "entourage": "CORE_051a, CORE_051b",
     "howToEarn": "Provided to all players.",
     "artistName": "Anirudh Molee",
-    "artistUrl": "https://www.deviantart.com/molee"
+    "artistUrl": "https://www.deviantart.com/molee",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_018",
@@ -2915,7 +3045,8 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Fesbra",
-    "artistUrl": "https://www.deviantart.com/000fesbra000"
+    "artistUrl": "https://www.deviantart.com/000fesbra000",
+    "artStatus": "FPO"
   },
   {
     "id": "CORE_041",
@@ -2943,6 +3074,7 @@
     "active": true,
     "howToEarn": "Provided to all players.",
     "artistName": "Jeff Chen",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns"
+    "artistUrl": "https://www.artstation.com/jeffchendesigns",
+    "artStatus": "FPO"
   }
 ]

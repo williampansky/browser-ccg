@@ -75,6 +75,8 @@ export interface Card {
   targetingArrowText?: string;
   artistName?: string;
   artistUrl?: string;
+  /** Where the art stands, tracked in Airtable (`FINAL`, `FPO`, ...). Dev tooling only; free text, upper-cased. */
+  artStatus?: string;
 }
 
 export type CardIssueCode =

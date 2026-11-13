@@ -18,8 +18,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_061a",
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_250",
@@ -43,7 +44,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Boyko Julia",
-    "artistUrl": "https://jubo.artstation.com/"
+    "artistUrl": "https://jubo.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_168",
@@ -61,7 +63,8 @@
     "playType": "TARGETED",
     "playContext": "%HEAL%",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_101",
@@ -84,7 +87,8 @@
     "active": true,
     "elite": true,
     "artistName": "https://www.artstation.com/dianafranco",
-    "artistUrl": "https://www.artstation.com/dianafranco"
+    "artistUrl": "https://www.artstation.com/dianafranco",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_110",
@@ -99,7 +103,8 @@
     "text": "<strong>Battlecry:</strong> Destroy all other minions and discard your hand.",
     "collectible": true,
     "active": true,
-    "elite": true
+    "elite": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_223",
@@ -117,7 +122,8 @@
     "playType": "TARGETED",
     "playContext": "%DAMAGE%",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_074",
@@ -137,7 +143,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/einarmartinsen",
-    "artistUrl": "https://www.artstation.com/einarmartinsen"
+    "artistUrl": "https://www.artstation.com/einarmartinsen",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_165",
@@ -158,7 +165,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Jason O Toole",
-    "artistUrl": "https://www.artstation.com/ambit3d"
+    "artistUrl": "https://www.artstation.com/ambit3d",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_162",
@@ -180,7 +188,8 @@
     "active": true,
     "flavor": "The Demons were very strong, there were many bloody battles, many villages and towns were destroyed.",
     "artistName": "Ashot Avetisyan",
-    "artistUrl": "https://ashotavetisyan.artstation.com/"
+    "artistUrl": "https://ashotavetisyan.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_043",
@@ -198,7 +207,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/xistenceimaginations",
-    "artistUrl": "https://www.artstation.com/xistenceimaginations"
+    "artistUrl": "https://www.artstation.com/xistenceimaginations",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_103",
@@ -213,7 +223,8 @@
     "text": "<strong>Battlecry:</strong> Summon all friendly minions that died this turn",
     "collectible": true,
     "active": true,
-    "elite": true
+    "elite": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_047",
@@ -232,8 +243,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_142",
@@ -254,7 +266,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/openanewworld",
-    "artistUrl": "https://www.artstation.com/openanewworld"
+    "artistUrl": "https://www.artstation.com/openanewworld",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_239",
@@ -276,7 +289,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/rawi",
-    "artistUrl": "https://www.artstation.com/rawi"
+    "artistUrl": "https://www.artstation.com/rawi",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_132",
@@ -296,7 +310,8 @@
     "active": true,
     "flavor": "Late at night the dark things wake.",
     "artistName": "https://www.artstation.com/matvenup",
-    "artistUrl": "https://www.artstation.com/matvenup"
+    "artistUrl": "https://www.artstation.com/matvenup",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_011",
@@ -317,8 +332,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_114",
@@ -342,6 +358,7 @@
     "active": true,
     "artistName": "https://www.artstation.com/nordsol",
     "artistUrl": "https://www.artstation.com/nordsol",
+    "artStatus": "FPO",
     "description": "Adds an %ON_DEATH% property to your currently active board minions, which %SUMMON%s a %RANDOM% 2-cost %RACE_CREATURE%-race minion upon death."
   },
   {
@@ -366,7 +383,8 @@
     "elite": true,
     "entourage": "PRIME_100a",
     "artistName": "https://www.artstation.com/domenicosellaro",
-    "artistUrl": "https://www.artstation.com/domenicosellaro"
+    "artistUrl": "https://www.artstation.com/domenicosellaro",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_072",
@@ -387,7 +405,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/xistenceimaginations",
-    "artistUrl": "https://www.artstation.com/xistenceimaginations"
+    "artistUrl": "https://www.artstation.com/xistenceimaginations",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_002",
@@ -408,8 +427,9 @@
     "numberPrimary": 2,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_115",
@@ -434,7 +454,8 @@
     "active": true,
     "flavor": "It's a little cold out here.",
     "artistName": "https://www.artstation.com/yinyuming",
-    "artistUrl": "https://www.artstation.com/yinyuming"
+    "artistUrl": "https://www.artstation.com/yinyuming",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_062",
@@ -455,8 +476,9 @@
     "numberPrimary": 4,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_076",
@@ -476,8 +498,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_121",
@@ -499,7 +522,8 @@
     "active": true,
     "entourage": "PRIME_121a, PRIME_121b",
     "artistName": "J.K (Arthur) Choi",
-    "artistUrl": "https://user-6242.artstation.com/"
+    "artistUrl": "https://user-6242.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_088",
@@ -521,7 +545,8 @@
     "active": true,
     "elite": true,
     "artistName": "Angelica Donarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini"
+    "artistUrl": "https://www.artstation.com/angelicadonarini",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_131",
@@ -532,7 +557,8 @@
     "cost": 3,
     "text": "For each enemy minion, summon a 1/1 Hound with Charge.",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_140",
@@ -554,7 +580,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/petro15",
-    "artistUrl": "https://www.artstation.com/petro15"
+    "artistUrl": "https://www.artstation.com/petro15",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_056",
@@ -576,8 +603,9 @@
     "playContext": "%TRANSFORM%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_038",
@@ -597,8 +625,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_176",
@@ -623,7 +652,8 @@
     "active": true,
     "flavor": "The original apple tree.",
     "artistName": "https://www.artstation.com/zezael",
-    "artistUrl": "https://www.artstation.com/zezael"
+    "artistUrl": "https://www.artstation.com/zezael",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_102",
@@ -647,7 +677,8 @@
     "elite": true,
     "flavor": "\"Once they carved his face onto the rocks of the highest mountain.\"",
     "artistName": "https://www.artstation.com/diogoyoshikawa",
-    "artistUrl": "https://www.artstation.com/diogoyoshikawa"
+    "artistUrl": "https://www.artstation.com/diogoyoshikawa",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_139",
@@ -665,7 +696,8 @@
     ],
     "collectible": true,
     "active": true,
-    "elite": true
+    "elite": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_235",
@@ -679,7 +711,8 @@
     "health": 3,
     "text": "<strong>%ON_PLAY%:</strong> Equip a 2/2 weapon.",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_204",
@@ -700,8 +733,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_204a",
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_221",
@@ -723,7 +757,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Vincent Lefevre",
-    "artistUrl": "https://ptitvinc.artstation.com/"
+    "artistUrl": "https://ptitvinc.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_116",
@@ -746,7 +781,8 @@
     "active": true,
     "flavor": "It's like a wild gift, but different.",
     "artistName": "https://www.artstation.com/marinalepus",
-    "artistUrl": "https://www.artstation.com/marinalepus"
+    "artistUrl": "https://www.artstation.com/marinalepus",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_238",
@@ -768,7 +804,8 @@
     "active": true,
     "elite": true,
     "artistName": "https://www.artstation.com/andiedoesstuff",
-    "artistUrl": "https://www.artstation.com/andiedoesstuff"
+    "artistUrl": "https://www.artstation.com/andiedoesstuff",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_237",
@@ -791,7 +828,8 @@
     "active": true,
     "flavor": "He works hard for the money.",
     "artistName": "https://www.artstation.com/castaguer",
-    "artistUrl": "https://www.artstation.com/castaguer"
+    "artistUrl": "https://www.artstation.com/castaguer",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_127",
@@ -813,7 +851,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Pavel Kolomeyets",
-    "artistUrl": "https://www.artstation.com/pav327"
+    "artistUrl": "https://www.artstation.com/pav327",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_248",
@@ -838,7 +877,8 @@
     "elite": true,
     "flavor": "\"Ah-zoc-zin\"",
     "artistName": "https://www.artstation.com/fler",
-    "artistUrl": "https://www.artstation.com/fler"
+    "artistUrl": "https://www.artstation.com/fler",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_209",
@@ -859,7 +899,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Viking Heart",
-    "artistUrl": "https://www.deviantart.com/viking-heart"
+    "artistUrl": "https://www.deviantart.com/viking-heart",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_033",
@@ -879,7 +920,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/xistenceimaginations",
-    "artistUrl": "https://www.artstation.com/xistenceimaginations"
+    "artistUrl": "https://www.artstation.com/xistenceimaginations",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_193",
@@ -896,7 +938,8 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_251",
@@ -923,7 +966,8 @@
     "elite": true,
     "entourage": "PRIME_251a",
     "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin"
+    "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_016",
@@ -944,8 +988,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_018",
@@ -966,8 +1011,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_143",
@@ -987,7 +1033,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Ben Lo",
-    "artistUrl": "https://benlo.artstation.com/"
+    "artistUrl": "https://benlo.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_001",
@@ -1002,8 +1049,9 @@
     "health": 1,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_152",
@@ -1022,7 +1070,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/nordsol",
-    "artistUrl": "https://www.artstation.com/nordsol"
+    "artistUrl": "https://www.artstation.com/nordsol",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_026",
@@ -1045,7 +1094,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Nina Galinska",
-    "artistUrl": "https://ninko.artstation.com/"
+    "artistUrl": "https://ninko.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_218",
@@ -1066,7 +1116,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/missuskisses",
-    "artistUrl": "https://www.artstation.com/missuskisses"
+    "artistUrl": "https://www.artstation.com/missuskisses",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_136",
@@ -1088,7 +1139,8 @@
     "active": true,
     "entourage": "PRIME_136a",
     "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini"
+    "artistUrl": "https://www.artstation.com/angelicadonarini",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_160",
@@ -1113,7 +1165,8 @@
     "active": true,
     "flavor": "Fury of the NorthMen",
     "artistName": "https://www.artstation.com/stuharrington",
-    "artistUrl": "https://www.artstation.com/stuharrington"
+    "artistUrl": "https://www.artstation.com/stuharrington",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_065",
@@ -1132,7 +1185,8 @@
     ],
     "numberPrimary": 1,
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_174",
@@ -1153,7 +1207,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/marcus_lw",
-    "artistUrl": "https://www.artstation.com/marcus_lw"
+    "artistUrl": "https://www.artstation.com/marcus_lw",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_189",
@@ -1170,7 +1225,8 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_126",
@@ -1190,7 +1246,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/nordsol",
-    "artistUrl": "https://www.artstation.com/nordsol"
+    "artistUrl": "https://www.artstation.com/nordsol",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_222",
@@ -1204,7 +1261,8 @@
     "health": 3,
     "text": "<strong>Battlecry:</strong> Destroy the minions on either side of this minion and gain their Attack and Health.",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_183",
@@ -1226,7 +1284,8 @@
     "active": true,
     "flavor": "Since they appeared people are fearing them because it is known that they can control anything that is digital: computer, hover-cars, lift, even neural implants. As much it is unknown about them - what people know is that they are sent by usurper Taldan to control the masses.",
     "artistName": "https://www.artstation.com/xistenceimaginations",
-    "artistUrl": "https://www.artstation.com/xistenceimaginations"
+    "artistUrl": "https://www.artstation.com/xistenceimaginations",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_034",
@@ -1249,7 +1308,8 @@
     "active": true,
     "entourage": "PRIME_034a",
     "artistName": "https://www.artstation.com/dianafranco",
-    "artistUrl": "https://www.artstation.com/dianafranco"
+    "artistUrl": "https://www.artstation.com/dianafranco",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_080",
@@ -1271,7 +1331,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/jeffchendesigns",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns"
+    "artistUrl": "https://www.artstation.com/jeffchendesigns",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_119",
@@ -1296,7 +1357,8 @@
     "active": true,
     "flavor": "Formally worked in HR, but now has found his true calling.",
     "artistName": "https://www.artstation.com/jameschild",
-    "artistUrl": "https://www.artstation.com/jameschild"
+    "artistUrl": "https://www.artstation.com/jameschild",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_205",
@@ -1322,7 +1384,8 @@
     "collectible": true,
     "active": true,
     "artistName": "David Astruga",
-    "artistUrl": "https://www.artstation.com/davidastruga"
+    "artistUrl": "https://www.artstation.com/davidastruga",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_200",
@@ -1345,7 +1408,8 @@
     "active": true,
     "flavor": "He's on fire!",
     "artistName": "https://www.artstation.com/ruoyuchen",
-    "artistUrl": "https://www.artstation.com/ruoyuchen"
+    "artistUrl": "https://www.artstation.com/ruoyuchen",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_007",
@@ -1364,8 +1428,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_013",
@@ -1385,8 +1450,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_111",
@@ -1407,7 +1473,8 @@
     "active": true,
     "entourage": "PRIME_111c",
     "artistName": "Alexandra Malygina",
-    "artistUrl": "https://fler.artstation.com/"
+    "artistUrl": "https://fler.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_008",
@@ -1426,8 +1493,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_192",
@@ -1443,7 +1511,8 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_146",
@@ -1462,7 +1531,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Thomas Karlsson",
-    "artistUrl": "https://www.artstation.com/thomaskarlsson"
+    "artistUrl": "https://www.artstation.com/thomaskarlsson",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_093",
@@ -1489,7 +1559,8 @@
     "active": true,
     "elite": true,
     "artistName": "Ona Kristensen",
-    "artistUrl": "https://angevere.artstation.com/"
+    "artistUrl": "https://angevere.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_170",
@@ -1511,7 +1582,8 @@
     "active": true,
     "flavor": "May the light be with you.",
     "artistName": "Bayard Wu",
-    "artistUrl": "https://bayardwu.artstation.com/"
+    "artistUrl": "https://bayardwu.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_086",
@@ -1529,7 +1601,8 @@
       "%EVENT%"
     ],
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_020",
@@ -1551,8 +1624,9 @@
     "playContext": "%SILENCE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_177",
@@ -1566,7 +1640,8 @@
     "health": 5,
     "text": "Your cards and powers that restore Health now deal damage instead.",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_215",
@@ -1590,7 +1665,8 @@
     "active": true,
     "flavor": "\"Meepee\" or the Caput Mortuum",
     "artistName": "Justin Gerard",
-    "artistUrl": "https://www.artstation.com/justingerardillustration"
+    "artistUrl": "https://www.artstation.com/justingerardillustration",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_180",
@@ -1611,7 +1687,8 @@
     "collectible": true,
     "active": true,
     "artistName": "J.K (Arthur) Choi",
-    "artistUrl": "https://user-6242.artstation.com/"
+    "artistUrl": "https://user-6242.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_161",
@@ -1637,7 +1714,8 @@
     "active": true,
     "elite": true,
     "artistName": "Zi Chen Gong",
-    "artistUrl": "https://gzcgomad.artstation.com/"
+    "artistUrl": "https://gzcgomad.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_055",
@@ -1658,8 +1736,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_214",
@@ -1681,7 +1760,8 @@
     "active": true,
     "elite": true,
     "artistName": "Diana Franco",
-    "artistUrl": "https://www.artstation.com/dianafranco"
+    "artistUrl": "https://www.artstation.com/dianafranco",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_135",
@@ -1695,7 +1775,8 @@
     "playType": "TARGETED",
     "playContext": "%DAMAGE%",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_243",
@@ -1708,7 +1789,8 @@
     "health": 1,
     "text": "Attacking a minion costs 1 Attack instead of 1 Durability",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_049",
@@ -1732,7 +1814,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Conor Burke",
-    "artistUrl": "https://conorburke.artstation.com/"
+    "artistUrl": "https://conorburke.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_220",
@@ -1751,7 +1834,8 @@
     "active": true,
     "flavor": "Ancient and semi-plunged, but it still works.",
     "artistName": "https://www.artstation.com/dclart",
-    "artistUrl": "https://www.artstation.com/dclart"
+    "artistUrl": "https://www.artstation.com/dclart",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_137",
@@ -1773,7 +1857,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/petro15",
-    "artistUrl": "https://www.artstation.com/petro15"
+    "artistUrl": "https://www.artstation.com/petro15",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_044",
@@ -1793,8 +1878,9 @@
     "playContext": "%SET_VALUE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_188",
@@ -1808,7 +1894,8 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_232",
@@ -1832,7 +1919,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini"
+    "artistUrl": "https://www.artstation.com/angelicadonarini",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_184",
@@ -1853,7 +1941,8 @@
     "active": true,
     "elite": true,
     "artistName": "https://www.artstation.com/jeffchendesigns",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns"
+    "artistUrl": "https://www.artstation.com/jeffchendesigns",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_138",
@@ -1869,7 +1958,8 @@
       "%IMMUNE%"
     ],
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_249",
@@ -1895,7 +1985,8 @@
     "elite": true,
     "flavor": "Hope you like it... he like you, too.",
     "artistName": "Maxence Burgel",
-    "artistUrl": "https://inexam.artstation.com/"
+    "artistUrl": "https://inexam.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_022",
@@ -1917,8 +2008,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini"
+    "artistName": "angelicadonarini",
+    "artistUrl": "https://www.artstation.com/angelicadonarini",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_186",
@@ -1940,7 +2032,8 @@
     "active": true,
     "flavor": "\"Life's like a box of chocolates...\"",
     "artistName": "https://www.artstation.com/marinalepus",
-    "artistUrl": "https://www.artstation.com/marinalepus"
+    "artistUrl": "https://www.artstation.com/marinalepus",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_206",
@@ -1959,7 +2052,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Ramzi Firhad",
-    "artistUrl": "https://www.artstation.com/ramzifirhad"
+    "artistUrl": "https://www.artstation.com/ramzifirhad",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_130",
@@ -1970,7 +2064,8 @@
     "cost": 3,
     "text": "<strong>%DESTROY%</strong> a %RANDOM%<br>\nenemy minion—can only<br>\nbe played with 2+<br>\nminions on board",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_089",
@@ -1992,7 +2087,8 @@
     "active": true,
     "elite": true,
     "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini"
+    "artistUrl": "https://www.artstation.com/angelicadonarini",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_078",
@@ -2012,8 +2108,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_105",
@@ -2037,6 +2134,7 @@
     "elite": true,
     "artistName": "David Astruga",
     "artistUrl": "https://www.artstation.com/davidastruga",
+    "artStatus": "FPO",
     "description": "Players affected by this card may still regain Health greater than the initial 15 value that is set."
   },
   {
@@ -2057,8 +2155,9 @@
     "playContext": "%SET_VALUE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_195",
@@ -2072,7 +2171,8 @@
     "health": 4,
     "text": "<strong>Battlecry:</strong> Give a friendly minion <strong>Stealth</strong> until your next turn.",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_128",
@@ -2092,8 +2192,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_118",
@@ -2104,7 +2205,8 @@
     "cost": 4,
     "text": "Give your hero +4 Attack this turn. Gain 4 Armor.",
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_166",
@@ -2117,7 +2219,8 @@
     "health": 5,
     "text": "After you summon a minion, give it +1/+1 and this loses 1 Durability.",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_145",
@@ -2134,7 +2237,8 @@
     "playType": "TARGETED",
     "playContext": "%DAMAGE%",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_077",
@@ -2158,8 +2262,9 @@
     "playContext": "%SET_VALUE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_031",
@@ -2179,7 +2284,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/alanquiroz",
-    "artistUrl": "https://www.artstation.com/alanquiroz"
+    "artistUrl": "https://www.artstation.com/alanquiroz",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_133",
@@ -2193,7 +2299,8 @@
       "%MYSTERY%"
     ],
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_210",
@@ -2215,7 +2322,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_227",
@@ -2240,7 +2348,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Ching Yeh",
-    "artistUrl": "https://chingyeh.artstation.com/"
+    "artistUrl": "https://chingyeh.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_159",
@@ -2262,7 +2371,8 @@
     "active": true,
     "flavor": "<em>*Shivers*</em>",
     "artistName": "https://www.artstation.com/simon_gander",
-    "artistUrl": "https://www.artstation.com/simon_gander"
+    "artistUrl": "https://www.artstation.com/simon_gander",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_172",
@@ -2281,7 +2391,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/fredo_bernardo",
-    "artistUrl": "https://www.artstation.com/fredo_bernardo"
+    "artistUrl": "https://www.artstation.com/fredo_bernardo",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_109",
@@ -2296,7 +2407,8 @@
     "text": "At the end of your turn, add a Dream Card to your hand.",
     "collectible": true,
     "active": true,
-    "elite": true
+    "elite": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_148",
@@ -2317,7 +2429,8 @@
     "elite": true,
     "flavor": "Don't let your guard down.",
     "artistName": "Kevin T. Chin",
-    "artistUrl": "https://www.artstation.com/kevinchinart"
+    "artistUrl": "https://www.artstation.com/kevinchinart",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_197",
@@ -2338,7 +2451,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini"
+    "artistUrl": "https://www.artstation.com/angelicadonarini",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_191",
@@ -2352,7 +2466,8 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_129",
@@ -2370,7 +2485,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Gabriel Romann",
-    "artistUrl": "https://mantislash.artstation.com/"
+    "artistUrl": "https://mantislash.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_208",
@@ -2391,7 +2507,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Kevin Moran",
-    "artistUrl": "https://www.artstation.com/kevinmoranart"
+    "artistUrl": "https://www.artstation.com/kevinmoranart",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_045",
@@ -2415,7 +2532,8 @@
     "active": true,
     "flavor": "Art tutorial available on Patreon at patreon.com/justingerard",
     "artistName": "https://www.artstation.com/justingerardillustration",
-    "artistUrl": "https://www.artstation.com/justingerardillustration"
+    "artistUrl": "https://www.artstation.com/justingerardillustration",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_063",
@@ -2437,7 +2555,10 @@
     "numberRandom": 1,
     "playContext": "%STEAL%",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_158",
@@ -2456,7 +2577,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/stuharrington",
-    "artistUrl": "https://www.artstation.com/stuharrington"
+    "artistUrl": "https://www.artstation.com/stuharrington",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_181",
@@ -2467,7 +2589,8 @@
     "cost": 3,
     "text": "Your Hero Power becomes 'Deal 2 damage'. If already in Shadowform: 3 damage.",
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_027",
@@ -2488,7 +2611,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/claudiopilia",
-    "artistUrl": "https://www.artstation.com/claudiopilia"
+    "artistUrl": "https://www.artstation.com/claudiopilia",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_169",
@@ -2513,7 +2637,8 @@
     "entourage": "PRIME_169a",
     "flavor": "I have no friends, no family, no mercy, I am the wrath of the divine.",
     "artistName": "Maxence Burgel",
-    "artistUrl": "https://inexam.artstation.com/"
+    "artistUrl": "https://inexam.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_175",
@@ -2537,7 +2662,8 @@
     "active": true,
     "flavor": "Where do the Buffalo Roam?",
     "artistName": "https://www.artstation.com/taraiphillips",
-    "artistUrl": "https://www.artstation.com/taraiphillips"
+    "artistUrl": "https://www.artstation.com/taraiphillips",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_060",
@@ -2557,8 +2683,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_167",
@@ -2579,7 +2706,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/mrdream",
-    "artistUrl": "https://www.artstation.com/mrdream"
+    "artistUrl": "https://www.artstation.com/mrdream",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_163",
@@ -2599,7 +2727,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Alex Figini",
-    "artistUrl": "https://www.artstation.com/alexfigini"
+    "artistUrl": "https://www.artstation.com/alexfigini",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_244",
@@ -2624,7 +2753,8 @@
     "elite": true,
     "flavor": "This DragonMancer Lord carries the skull, and even the presence, of the ancient Death Dragon himself.",
     "artistName": "https://www.artstation.com/stuharrington",
-    "artistUrl": "https://www.artstation.com/stuharrington"
+    "artistUrl": "https://www.artstation.com/stuharrington",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_085",
@@ -2644,7 +2774,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/ludongjun",
-    "artistUrl": "https://www.artstation.com/ludongjun"
+    "artistUrl": "https://www.artstation.com/ludongjun",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_046",
@@ -2668,8 +2799,9 @@
     "playContext": "%BUFF%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_245",
@@ -2694,7 +2826,8 @@
     "active": true,
     "elite": true,
     "artistName": "https://www.artstation.com/riyuart",
-    "artistUrl": "https://www.artstation.com/riyuart"
+    "artistUrl": "https://www.artstation.com/riyuart",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_216",
@@ -2715,7 +2848,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Simon Fetscher",
-    "artistUrl": "https://www.artstation.com/simonfetscher"
+    "artistUrl": "https://www.artstation.com/simonfetscher",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_070",
@@ -2739,7 +2873,8 @@
     "collectible": true,
     "active": true,
     "artistName": "George Vostrikov",
-    "artistUrl": "https://georgevostrikov.artstation.com/"
+    "artistUrl": "https://georgevostrikov.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_005",
@@ -2757,7 +2892,10 @@
       "%BULWARK%"
     ],
     "collectible": true,
-    "active": true
+    "active": true,
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_099",
@@ -2778,7 +2916,8 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_099a"
+    "entourage": "PRIME_099a",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_036",
@@ -2797,8 +2936,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_213",
@@ -2820,7 +2960,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Andrew Morris",
-    "artistUrl": "https://www.artstation.com/tehbeardedone"
+    "artistUrl": "https://www.artstation.com/tehbeardedone",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_231",
@@ -2840,7 +2981,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/jeffchendesigns",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns"
+    "artistUrl": "https://www.artstation.com/jeffchendesigns",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_234",
@@ -2862,7 +3004,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Boyko Julia",
-    "artistUrl": "https://www.artstation.com/jubo"
+    "artistUrl": "https://www.artstation.com/jubo",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_247",
@@ -2882,7 +3025,8 @@
     "collectible": true,
     "active": true,
     "artistName": "George Vostrikov",
-    "artistUrl": "https://georgevostrikov.artstation.com/"
+    "artistUrl": "https://georgevostrikov.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_068",
@@ -2901,7 +3045,8 @@
       "%SET_VALUE%"
     ],
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_144",
@@ -2917,7 +3062,8 @@
     ],
     "playType": "GLOBAL",
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_028",
@@ -2941,7 +3087,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin"
+    "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_123",
@@ -2968,7 +3115,8 @@
     "entourage": "PRIME_123a, PRIME_123b",
     "flavor": "Don't mind her RBF; she's actually very helpful. Just don't ask her to \"smile more.\"",
     "artistName": "https://www.artstation.com/jameschild",
-    "artistUrl": "https://www.artstation.com/jameschild"
+    "artistUrl": "https://www.artstation.com/jameschild",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_039",
@@ -2990,7 +3138,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/maxduran",
-    "artistUrl": "https://www.artstation.com/maxduran"
+    "artistUrl": "https://www.artstation.com/maxduran",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_003",
@@ -3009,8 +3158,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_225",
@@ -3032,7 +3182,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/denstarsk8",
-    "artistUrl": "https://www.artstation.com/denstarsk8"
+    "artistUrl": "https://www.artstation.com/denstarsk8",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_117",
@@ -3043,7 +3194,8 @@
     "cost": 1,
     "text": "Deal damage equal to your hero's Attack to a minion.",
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_173",
@@ -3054,7 +3206,8 @@
     "cost": 3,
     "text": "Copy 2 cards from your opponent's deck and put them into your hand.",
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_228",
@@ -3075,7 +3228,8 @@
     "active": true,
     "elite": true,
     "artistName": "https://www.artstation.com/dylanpierpont",
-    "artistUrl": "https://www.artstation.com/dylanpierpont"
+    "artistUrl": "https://www.artstation.com/dylanpierpont",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_149",
@@ -3099,7 +3253,8 @@
     "active": true,
     "flavor": "The character of between. The one who leads the victim souls of dead. Dead of because nuclear reactions liberated.",
     "artistName": "Aion Harmonaut",
-    "artistUrl": "https://vanko.artstation.com/"
+    "artistUrl": "https://vanko.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_042",
@@ -3113,7 +3268,8 @@
     "health": 2,
     "text": "<strong>Battlecry:</strong> Remove 1 Durability from your opponent's weapon.",
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_120",
@@ -3134,7 +3290,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/jeffchendesigns",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns"
+    "artistUrl": "https://www.artstation.com/jeffchendesigns",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_147",
@@ -3157,7 +3314,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Dzhovanna Sallama",
-    "artistUrl": "https://www.artstation.com/jovannasallama"
+    "artistUrl": "https://www.artstation.com/jovannasallama",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_154",
@@ -3184,7 +3342,8 @@
     "active": true,
     "elite": true,
     "artistName": "Thomas Karlsson",
-    "artistUrl": "https://www.artstation.com/thomaskarlsson"
+    "artistUrl": "https://www.artstation.com/thomaskarlsson",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_150",
@@ -3205,7 +3364,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/dreyan",
-    "artistUrl": "https://www.artstation.com/dreyan"
+    "artistUrl": "https://www.artstation.com/dreyan",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_207",
@@ -3226,7 +3386,8 @@
     "playContext": "%SUMMON%",
     "collectible": true,
     "active": true,
-    "entourage": "PRIME_207a"
+    "entourage": "PRIME_207a",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_212",
@@ -3246,7 +3407,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Petro Krul",
-    "artistUrl": "https://www.artstation.com/petro15"
+    "artistUrl": "https://www.artstation.com/petro15",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_023",
@@ -3263,7 +3425,8 @@
       "%BUBBLE%"
     ],
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_108",
@@ -3278,7 +3441,8 @@
     "text": "<strong>Battlecry:</strong> Summon 1/1 Whelps until your side of the battlefield is full.",
     "collectible": true,
     "active": true,
-    "elite": true
+    "elite": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_178",
@@ -3296,7 +3460,8 @@
     "playType": "GLOBAL",
     "playContext": "%SILENCE%",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_084",
@@ -3321,8 +3486,9 @@
     "playContext": "%ON_DEATH%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_083",
@@ -3341,8 +3507,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_009",
@@ -3363,8 +3530,9 @@
     "numberPrimary": 2,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_201",
@@ -3385,7 +3553,8 @@
     "active": true,
     "flavor": "365 Day Challenge: Day 154",
     "artistName": "https://www.artstation.com/daniel_pencil",
-    "artistUrl": "https://www.artstation.com/daniel_pencil"
+    "artistUrl": "https://www.artstation.com/daniel_pencil",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_252",
@@ -3412,7 +3581,8 @@
     "elite": true,
     "entourage": "PRIME_252a",
     "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin"
+    "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_017",
@@ -3435,8 +3605,9 @@
     "playContext": "%HEAL%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_141",
@@ -3458,7 +3629,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Alexandra Malygina",
-    "artistUrl": "https://fler.artstation.com/"
+    "artistUrl": "https://fler.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_230",
@@ -3469,7 +3641,8 @@
     "cost": 0,
     "text": "Deal 1 damage to a minion and give it +2 Attack. ",
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_082",
@@ -3489,8 +3662,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_079",
@@ -3512,8 +3686,9 @@
     "collectible": true,
     "active": true,
     "flavor": "<em>\"Can I keep you?\"</em>",
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_107",
@@ -3531,7 +3706,8 @@
     "active": true,
     "elite": true,
     "artistName": "https://www.artstation.com/dianafranco",
-    "artistUrl": "https://www.artstation.com/dianafranco"
+    "artistUrl": "https://www.artstation.com/dianafranco",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_066",
@@ -3555,7 +3731,8 @@
     "active": true,
     "flavor": "One day he earned his freedom because of his great performance in arena. Now he's working as tutor for young gladiators.",
     "artistName": "Naranbaatar Ganbold",
-    "artistUrl": "https://www.artstation.com/naranbaatars"
+    "artistUrl": "https://www.artstation.com/naranbaatars",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_098",
@@ -3580,7 +3757,8 @@
     "elite": true,
     "entourage": "PRIME_098a",
     "artistName": "https://www.artstation.com/martanael",
-    "artistUrl": "https://www.artstation.com/martanael"
+    "artistUrl": "https://www.artstation.com/martanael",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_021",
@@ -3599,8 +3777,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_106",
@@ -3615,7 +3794,8 @@
     "text": "+5 %SPELL_DAMAGE%",
     "collectible": true,
     "active": true,
-    "elite": true
+    "elite": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_067",
@@ -3637,7 +3817,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/jeffchendesigns",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns"
+    "artistUrl": "https://www.artstation.com/jeffchendesigns",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_185",
@@ -3658,7 +3839,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/lightwave",
-    "artistUrl": "https://www.artstation.com/lightwave"
+    "artistUrl": "https://www.artstation.com/lightwave",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_164",
@@ -3669,7 +3851,8 @@
     "cost": 5,
     "text": "Draw a card and deal damage equal to its cost.",
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_092",
@@ -3691,8 +3874,9 @@
     "active": true,
     "elite": true,
     "entourage": "PRIME_092a",
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_171",
@@ -3712,7 +3896,8 @@
     "active": true,
     "flavor": "Once again the Elder Gods accompany me in yet another one of life's journeys. ",
     "artistName": "https://www.artstation.com/ramzifirhad",
-    "artistUrl": "https://www.artstation.com/ramzifirhad"
+    "artistUrl": "https://www.artstation.com/ramzifirhad",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_194",
@@ -3732,7 +3917,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Emir Raşit Gökçe",
-    "artistUrl": "https://www.artstation.com/vengam"
+    "artistUrl": "https://www.artstation.com/vengam",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_025",
@@ -3751,8 +3937,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_030",
@@ -3772,8 +3959,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_081",
@@ -3787,7 +3975,8 @@
     "health": 3,
     "text": "Your other %RACE_PIRATE%s have +1/+1.",
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_035",
@@ -3810,7 +3999,8 @@
     "active": true,
     "flavor": "Just a hired gun, axe, thing...",
     "artistName": "https://www.artstation.com/jameschild",
-    "artistUrl": "https://www.artstation.com/jameschild"
+    "artistUrl": "https://www.artstation.com/jameschild",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_019",
@@ -3832,8 +4022,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_019a",
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_253",
@@ -3859,7 +4050,8 @@
     "elite": true,
     "entourage": "PRIME_253a",
     "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin"
+    "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_006",
@@ -3879,8 +4071,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_024",
@@ -3901,8 +4094,9 @@
     "numberPrimary": 3,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_054",
@@ -3922,8 +4116,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_053",
@@ -3937,7 +4132,8 @@
     "health": 2,
     "text": "The first minion you play each turn costs (1) less.",
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_064",
@@ -3956,8 +4152,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_014",
@@ -3978,8 +4175,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_157",
@@ -4002,7 +4200,8 @@
     "entourage": "PRIME_157a",
     "flavor": "\"Oh, <em>s#!t</em>...\"",
     "artistName": "https://www.artstation.com/justingerardillustration",
-    "artistUrl": "https://www.artstation.com/justingerardillustration"
+    "artistUrl": "https://www.artstation.com/justingerardillustration",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_087",
@@ -4026,7 +4225,8 @@
     "active": true,
     "elite": true,
     "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini"
+    "artistUrl": "https://www.artstation.com/angelicadonarini",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_051",
@@ -4047,8 +4247,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_051a",
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_029",
@@ -4065,7 +4266,8 @@
       "%BULWARK%"
     ],
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_071",
@@ -4087,8 +4289,9 @@
     "playContext": "%DESTROY%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_242",
@@ -4109,7 +4312,8 @@
     "playContext": "%DESTROY%",
     "collectible": true,
     "active": true,
-    "elite": true
+    "elite": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_048",
@@ -4132,7 +4336,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini"
+    "artistUrl": "https://www.artstation.com/angelicadonarini",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_203",
@@ -4154,7 +4359,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/pimlimburg",
-    "artistUrl": "https://www.artstation.com/pimlimburg"
+    "artistUrl": "https://www.artstation.com/pimlimburg",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_151",
@@ -4172,7 +4378,8 @@
     "playType": "TARGETED",
     "playContext": "%DAMAGE%",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_012",
@@ -4191,8 +4398,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_050",
@@ -4215,8 +4423,9 @@
     "playContext": "%BOON%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_059",
@@ -4239,8 +4448,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_122",
@@ -4258,7 +4468,8 @@
     "playContext": "%SUMMON%",
     "collectible": true,
     "active": true,
-    "entourage": "PRIME_122a"
+    "entourage": "PRIME_122a",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_052",
@@ -4283,8 +4494,9 @@
     "playContext": "%BUFF%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_217",
@@ -4305,7 +4517,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Emir Raşit Gökçe",
-    "artistUrl": "https://www.artstation.com/vengam"
+    "artistUrl": "https://www.artstation.com/vengam",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_124",
@@ -4328,7 +4541,8 @@
     "active": true,
     "entourage": "PRIME_124a, PRIME_125b",
     "artistName": "Vincent Lefevre",
-    "artistUrl": "https://ptitvinc.artstation.com/"
+    "artistUrl": "https://ptitvinc.artstation.com/",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_090",
@@ -4348,8 +4562,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_095",
@@ -4372,7 +4587,8 @@
     "active": true,
     "elite": true,
     "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin"
+    "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_112",
@@ -4395,7 +4611,8 @@
     "active": true,
     "entourage": "PRIME112a, PRIME_112b",
     "artistName": "Hoàng Lập (Solan)",
-    "artistUrl": "https://www.artstation.com/hoanglap"
+    "artistUrl": "https://www.artstation.com/hoanglap",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_226",
@@ -4409,7 +4626,8 @@
     "health": 6,
     "text": "<strong>Battlecry:</strong> Deal 5 damage to your hero.",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_190",
@@ -4430,7 +4648,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.deviantart.com/cobaltplasma",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma"
+    "artistUrl": "https://www.deviantart.com/cobaltplasma",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_096",
@@ -4452,7 +4671,8 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_096a"
+    "entourage": "PRIME_096a",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_032",
@@ -4475,7 +4695,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/zezael",
-    "artistUrl": "https://www.artstation.com/zezael"
+    "artistUrl": "https://www.artstation.com/zezael",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_097",
@@ -4497,7 +4718,8 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_097a"
+    "entourage": "PRIME_097a",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_075",
@@ -4513,8 +4735,9 @@
     "text": "<strong>%HIDDEN%</strong>",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_182",
@@ -4525,7 +4748,8 @@
     "cost": 4,
     "text": "Put a copy of a random minion from your opponent's deck into the battlefield.",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_091",
@@ -4549,8 +4773,9 @@
     "active": true,
     "elite": true,
     "flavor": "Yup! He is related to Larry and Garry.",
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_236",
@@ -4561,7 +4786,8 @@
     "cost": 1,
     "text": "If you have a weapon, give it +1/+1. Otherwise equip a 1/3 weapon.",
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_094",
@@ -4576,7 +4802,8 @@
     "text": "<strong>Battlecry:</strong> Give your weapon +1/+1. ",
     "collectible": true,
     "active": false,
-    "elite": true
+    "elite": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_241",
@@ -4598,7 +4825,8 @@
     "active": true,
     "flavor": "An energy beam with enough power to shape a small portion of the planet to it's liking. I wonder where it came from?",
     "artistName": "https://www.artstation.com/crabbwalker",
-    "artistUrl": "https://www.artstation.com/crabbwalker"
+    "artistUrl": "https://www.artstation.com/crabbwalker",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_199",
@@ -4620,7 +4848,8 @@
     "active": false,
     "elite": true,
     "artistName": "https://www.artstation.com/dianafranco",
-    "artistUrl": "https://www.artstation.com/dianafranco"
+    "artistUrl": "https://www.artstation.com/dianafranco",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_254",
@@ -4645,7 +4874,8 @@
     "elite": true,
     "entourage": "PRIME_254a",
     "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin"
+    "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_069",
@@ -4667,8 +4897,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_069a",
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_041",
@@ -4689,8 +4920,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "description": "Gain +5 Attack only while this minion is damaged."
   },
   {
@@ -4710,7 +4942,10 @@
       "%SET_VALUE%"
     ],
     "collectible": true,
-    "active": true
+    "active": true,
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_104",
@@ -4734,7 +4969,8 @@
     "active": true,
     "elite": true,
     "artistName": "https://www.deviantart.com/cobaltplasma",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma"
+    "artistUrl": "https://www.deviantart.com/cobaltplasma",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_015",
@@ -4755,8 +4991,9 @@
     "playType": "TARGETED",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_125",
@@ -4772,7 +5009,8 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_125a, PRIME_125b, PRIME_125c"
+    "entourage": "PRIME_125a, PRIME_125b, PRIME_125c",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_187",
@@ -4792,11 +5030,12 @@
     "active": true,
     "flavor": "Who pays the bar tab?",
     "artistName": "https://www.artstation.com/maximlingert",
-    "artistUrl": "https://www.artstation.com/maximlingert"
+    "artistUrl": "https://www.artstation.com/maximlingert",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_040",
-    "name": "Slick Naga",
+    "name": "Slick Naga-lizard",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -4811,8 +5050,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_233",
@@ -4832,8 +5072,9 @@
     "playContext": "%BUFF%",
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_037",
@@ -4856,8 +5097,9 @@
     "numberPrimary": 3,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_156",
@@ -4878,7 +5120,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/fler",
-    "artistUrl": "https://www.artstation.com/fler"
+    "artistUrl": "https://www.artstation.com/fler",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_211",
@@ -4899,7 +5142,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_134",
@@ -4915,7 +5159,8 @@
       "%MYSTERY%"
     ],
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_198",
@@ -4932,7 +5177,8 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false
+    "active": false,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_153",
@@ -4949,7 +5195,8 @@
     "playType": "TARGETED",
     "playContext": "%DAMAGE%",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_155",
@@ -4971,7 +5218,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/zachsharts",
-    "artistUrl": "https://www.artstation.com/zachsharts"
+    "artistUrl": "https://www.artstation.com/zachsharts",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_113",
@@ -4994,7 +5242,8 @@
     "active": true,
     "flavor": "Illustration inspired by early spring colds.",
     "artistName": "https://www.artstation.com/kafis",
-    "artistUrl": "https://www.artstation.com/kafis"
+    "artistUrl": "https://www.artstation.com/kafis",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_240",
@@ -5005,7 +5254,8 @@
     "cost": 4,
     "text": "Deal 4 damage. If you have 12 or less Health, deal 6 instead.",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_196",
@@ -5022,7 +5272,8 @@
     "active": true,
     "elite": true,
     "artistName": "https://www.artstation.com/mattdemino",
-    "artistUrl": "https://www.artstation.com/mattdemino"
+    "artistUrl": "https://www.artstation.com/mattdemino",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_224",
@@ -5044,7 +5295,8 @@
     "active": true,
     "entourage": "PRIME_224a",
     "artistName": "https://www.artstation.com/rodreidizon",
-    "artistUrl": "https://www.artstation.com/rodreidizon"
+    "artistUrl": "https://www.artstation.com/rodreidizon",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_073",
@@ -5066,7 +5318,8 @@
     "collectible": true,
     "active": true,
     "artistName": "Francis Brunet",
-    "artistUrl": "https://www.artstation.com/francisbrunet"
+    "artistUrl": "https://www.artstation.com/francisbrunet",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_004",
@@ -5086,8 +5339,9 @@
     "numberPrimary": 2,
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_229",
@@ -5108,7 +5362,8 @@
     "active": true,
     "elite": true,
     "artistName": "https://www.artstation.com/jeffchendesigns",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns"
+    "artistUrl": "https://www.artstation.com/jeffchendesigns",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_246",
@@ -5133,7 +5388,8 @@
     "elite": true,
     "flavor": "Attempting the Warhammer aesthetic.",
     "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin"
+    "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_057",
@@ -5154,8 +5410,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://graphicriver.net/user/rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_219",
@@ -5175,7 +5432,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/bradoart",
-    "artistUrl": "https://www.artstation.com/bradoart"
+    "artistUrl": "https://www.artstation.com/bradoart",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_202",
@@ -5198,7 +5456,8 @@
     "collectible": true,
     "active": true,
     "artistName": "https://www.artstation.com/valyachernyshova",
-    "artistUrl": "https://www.artstation.com/valyachernyshova"
+    "artistUrl": "https://www.artstation.com/valyachernyshova",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_179",
@@ -5220,6 +5479,7 @@
     "active": true,
     "artistName": "João Florencio",
     "artistUrl": "https://joaoflorencio.artstation.com/",
+    "artStatus": "FPO",
     "description": "You retain control of any %ON_DEATH% effects activated while this card is active."
   }
 ]

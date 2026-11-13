@@ -15,6 +15,7 @@
     "elite": true,
     "artistName": "https://www.artstation.com/rawi",
     "artistUrl": "https://www.artstation.com/rawi",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -30,6 +31,7 @@
     "health": 2,
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -47,6 +49,7 @@
     "numberPrimary": 1,
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -64,6 +67,7 @@
     "elite": true,
     "artistName": "Daniel Kamarudin",
     "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -80,8 +84,9 @@
     "collectible": false,
     "active": false,
     "flavor": "One of the Bubbulgosh brothers.",
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -98,8 +103,9 @@
     "collectible": false,
     "active": false,
     "flavor": "One of the Bubbulgosh brothers.",
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -115,8 +121,9 @@
     "health": 1,
     "collectible": false,
     "active": false,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -131,6 +138,7 @@
     "health": 1,
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -146,8 +154,9 @@
     "health": 1,
     "collectible": false,
     "active": false,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -167,6 +176,7 @@
     "active": false,
     "artistName": "Alexandra Malygina",
     "artistUrl": "https://fler.artstation.com/",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -184,6 +194,7 @@
     "active": false,
     "artistName": "https://www.deviantart.com/ah-kai",
     "artistUrl": "https://www.deviantart.com/ah-kai",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -200,6 +211,7 @@
     "playContext": "%SUMMON%",
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -221,6 +233,7 @@
     "active": false,
     "artistName": "https://www.artstation.com/noistromo",
     "artistUrl": "https://www.artstation.com/noistromo",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -237,6 +250,7 @@
     "playContext": "%SUMMON%",
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -259,6 +273,7 @@
     "targetingArrowText": "Deal %NUM1% damage",
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -275,6 +290,7 @@
     "targetingArrowText": "Attack for 4 damage.",
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -293,6 +309,7 @@
     "playContext": "%DAMAGE%",
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -308,6 +325,7 @@
     "health": 1,
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -330,6 +348,7 @@
     "flavor": "This is Borik the Rat, a guard at famed tree dwelling of SummerHall the morning before the attack..",
     "artistName": "https://www.artstation.com/stuharrington",
     "artistUrl": "https://www.artstation.com/stuharrington",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -349,6 +368,7 @@
     ],
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -364,8 +384,9 @@
     "targetingArrowText": "Attack for 3 damage.",
     "collectible": false,
     "active": false,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -381,8 +402,9 @@
     "targetingArrowText": "Attack for 3 damage.",
     "collectible": false,
     "active": false,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -401,8 +423,9 @@
     ],
     "collectible": false,
     "active": false,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -418,8 +441,9 @@
     "targetingArrowText": "Attack for 1 damage.",
     "collectible": false,
     "active": false,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -437,6 +461,7 @@
     "elite": true,
     "artistName": "Daniel Kamarudin",
     "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -454,6 +479,7 @@
     "playType": "GLOBAL",
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -471,6 +497,7 @@
     "active": false,
     "artistName": "https://www.artstation.com/lunjie",
     "artistUrl": "https://www.artstation.com/lunjie",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -492,6 +519,7 @@
     "targetingArrowText": "Deal %NUM1% damage",
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -508,6 +536,7 @@
     "active": false,
     "artistName": "Alexandra Malygina",
     "artistUrl": "https://fler.artstation.com/",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -521,8 +550,9 @@
     "health": 3,
     "collectible": false,
     "active": false,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -537,6 +567,7 @@
     "health": 2,
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -555,6 +586,7 @@
     ],
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -576,6 +608,7 @@
     "active": false,
     "artistName": "https://www.artstation.com/jeffchendesigns",
     "artistUrl": "https://www.artstation.com/jeffchendesigns",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -595,6 +628,7 @@
     "playContext": "%BUFF%",
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -610,6 +644,7 @@
     "health": 1,
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -626,6 +661,7 @@
     "playContext": "%SUMMON%",
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -643,6 +679,7 @@
     "playContext": "%DAMAGE%",
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -658,8 +695,9 @@
     "health": 1,
     "collectible": false,
     "active": false,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -677,6 +715,7 @@
     "active": false,
     "artistName": "https://www.deviantart.com/ah-kai",
     "artistUrl": "https://www.deviantart.com/ah-kai",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -692,8 +731,9 @@
     "health": 2,
     "collectible": false,
     "active": false,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -714,8 +754,9 @@
     "targetingArrowText": "+1/+1 one turn only",
     "collectible": false,
     "active": false,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -733,6 +774,7 @@
     "elite": true,
     "artistName": "Daniel Kamarudin",
     "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -748,8 +790,9 @@
     "health": 1,
     "collectible": false,
     "active": false,
-    "artistName": "https://graphicriver.net/user/rexard",
+    "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -767,6 +810,7 @@
     "active": false,
     "artistName": "https://www.artstation.com/angelicadonarini",
     "artistUrl": "https://www.artstation.com/angelicadonarini",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -784,6 +828,7 @@
     "elite": true,
     "artistName": "Daniel Kamarudin",
     "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -803,6 +848,7 @@
     ],
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -818,6 +864,7 @@
     "health": 3,
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -837,6 +884,7 @@
     ],
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
     "isEntourage": true
   }
 ]

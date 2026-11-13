@@ -301,6 +301,7 @@ function normaliseCard(
   // artistName sometimes holds a URL in PRIME; keep what is there, do not guess
   if (typeof raw.artistName === 'string' && raw.artistName) card.artistName = raw.artistName;
   if (typeof raw.artistUrl === 'string' && raw.artistUrl) card.artistUrl = raw.artistUrl;
+  if (typeof raw.artStatus === 'string' && raw.artStatus.trim()) card.artStatus = raw.artStatus.trim().toUpperCase();
 
   return card;
 }

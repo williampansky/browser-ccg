@@ -46,7 +46,7 @@ const card = (f, isEntourage) =>
     playType: f.playType, playContext: f.playContext && P(f.playContext), targetingArrowText: f.targetingText,
     collectible: f.collectible ?? false, active: f.active ?? false, elite: f.elite, entourage: f.entourage,
     flavor: f.flavor, howToEarn: f.howToEarn, howToEarnGolden: f.howToEarnGolden, artistName: f.artistName,
-    artistUrl: f.artistUrl, description: f.description, isEntourage: isEntourage ? true : undefined,
+    artistUrl: f.artistUrl, artStatus: f.artStatus, description: f.description, isEntourage: isEntourage ? true : undefined,
   });
 
 (async () => {
