@@ -42,6 +42,7 @@ import { loadDecks } from '../deck-builder/deck-storage';
 import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
 import { HeroBar } from './HeroBar';
 import { heroImage } from './hero-images';
+import { lunge, nudge } from './motion';
 import { EnergyBar } from './EnergyBar';
 import { HeroSkills } from './HeroSkills';
 import { heroOptions, loadHeroChoices, resolveHero, saveHeroChoices, HeroChoice } from './hero-choice';
@@ -408,6 +409,14 @@ export const PlayBoard = () => {
         if ((played?.type === 'spell' || played?.type === 'item') && !getCardDef(played)?.mystery) {
           setCastFx({ card: played, owner: state.activePlayer, n: Date.now() });
         }
+      }
+      // Attacks are thrown at the target; a big hit jolts the table when it lands.
+      if (action.type === 'Attack' || action.type === 'WeaponAttack') {
+        const from = nodes.current.get(action.type === 'Attack' ? `m${action.attackerId}` : `h${state.activePlayer}`);
+        const to = action.target && nodes.current.get(targetKey(action.target));
+        if (from && to) lunge(from, to);
+        const dealt = result.events.reduce((n, e) => n + (e.type === 'MinionDamaged' || e.type === 'HeroDamaged' ? e.amount : 0), 0);
+        if (dealt >= 4 && tableRef.current) nudge(tableRef.current, dealt);
       }
       setState(result.state);
       playSounds(soundsFor(result.events));

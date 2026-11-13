@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { Card, MinionInstance } from '../../engine';
 import { artBackground } from './card-face-model';
 import { isDamaged, statTone, statusBadges, StatusBadge } from './minion-model';
+import { FloatDelta } from './FloatDelta';
 import styles from './board-minion.module.scss';
 
 /**
@@ -65,6 +66,8 @@ export const MinionFace = ({ card, m, turn, sick }: Props) => {
   const healthTone = isDamaged(m) ? 'down' : statTone(m.health, card?.health);
   return (
     <>
+      <span className={styles.dust} aria-hidden="true" />
+      <FloatDelta value={m.health} />
       {m.keywords.guard && <GuardShield />}
       <span
         className={[styles.oval, hurt ? styles.shake : '', m.keywords.hidden ? styles.veiled : '', m.silenced ? styles.muted : ''].join(' ')}

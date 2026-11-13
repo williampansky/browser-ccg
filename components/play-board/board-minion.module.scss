@@ -12,6 +12,44 @@
   cursor: default;
   font-family: 'Carter One', Arial, Helvetica, sans-serif;
   transition: transform 150ms cubic-bezier(0.19, 1, 0.22, 1);
+  // A new minion is dropped onto the board: it falls in, lands with a squash and settles (the dust ring marks the impact).
+  animation: minionLand 520ms both;
+  transform-origin: 50% 85%;
+}
+
+@keyframes minionLand {
+  0% { transform: translateY(-110px) scale(1.35); opacity: 0; animation-timing-function: cubic-bezier(0.55, 0, 1, 0.6); }
+  38% { transform: translateY(0) scale(1.02); opacity: 1; }
+  52% { transform: translateY(0) scale(1.1, 0.88); animation-timing-function: ease-out; }
+  72% { transform: translateY(-4px) scale(0.97, 1.04); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+// The ring of dust that spreads from where it lands.
+.dust {
+  position: absolute;
+  left: 50%;
+  bottom: 1.4rem;
+  width: var(--m-w);
+  height: calc(var(--m-w) * 0.3);
+  border-radius: 50%;
+  border: 3px solid rgba(235, 225, 200, 0.75);
+  transform: translateX(-50%) scale(0.3);
+  opacity: 0;
+  pointer-events: none;
+  animation: dustRing 600ms 190ms ease-out both;
+}
+
+@keyframes dustRing {
+  0% { transform: translateX(-50%) scale(0.3); opacity: 0.9; }
+  100% { transform: translateX(-50%) scale(1.5, 1.2); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slot,
+  .dust {
+    animation: none;
+  }
 }
 
 // The picture itself: an oval of the card's art with a thin light edge and a soft shadow (hsclone's --minion-border-radius: 50%).
@@ -198,7 +236,8 @@
 
 // hsclone's "was attacked": a short shake when Health drops.
 .shake {
-  animation: minionShake 500ms ease-out both;
+  // Waits for the attacker's strike to arrive (IMPACT_MS in motion.ts).
+  animation: minionShake 500ms 190ms ease-out both;
 }
 
 @keyframes minionShake {

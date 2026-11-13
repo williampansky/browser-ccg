@@ -1,4 +1,5 @@
 import React from 'react';
+import { FloatDelta } from './FloatDelta';
 import { energyPips, healthFraction, healthTone } from './hero-bar-model';
 import styles from './hero-bar.module.scss';
 
@@ -106,6 +107,7 @@ export const HeroBar = ({
         <span className={styles.face}>
           {portrait ? <img className={styles.portrait} src={portrait} alt="" draggable={false} /> : emblem}
         </span>
+        <FloatDelta value={health} />
         <span className={styles.hp} title={tt(`${health} health`)}>
           {health}
         </span>

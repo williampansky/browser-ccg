@@ -4,6 +4,7 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-13
 
+- **Weight (first pass):** new minions drop in, land with a squash and a dust ring; attackers wind up and lunge into their target (minions and weapon swings); the target shakes on contact, not before; damage and heal numbers float up from minions and heroes; a hit of 4+ jolts the table. All of it is skipped under reduced-motion. `components/play-board/motion.ts`.
 - **Energy bar:** a tall column of energy orbs beside the board (right edge), with the count above. Dragging or selecting a card pulses the orbs it would spend (red when you cannot afford it).
 - **Playtest fixes:** a selected hand card is bigger (2x), hero skill tooltips open over the minions, the Attack number on board minions is centred on its badge, and hero tokens (Spirit Animals, Eagle) get a real tooltip instead of "undefined", and a hovered hand card draws over the hero bar and skills.
 - **Hero art:** the "1" / "2" / "AI" circle on the hero bar is now the hero's portrait (still shown when a player has no hero), and the skill buttons are round icons with a cost badge, a cooldown number and the name and text on hover. Art is in `public/images/heroes/<ID>/` (copied from `react-ccg-deprecated`, resized; provenance unchecked like the rest).
