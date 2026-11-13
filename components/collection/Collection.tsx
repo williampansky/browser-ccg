@@ -188,6 +188,9 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
           <Link href="/deckbuilder">
             <a>Deck builder</a>
           </Link>
+          <Link href="/heroes">
+            <a>Heroes</a>
+          </Link>
         </div>
         <div className={gridStyles.grid} style={{ gridTemplateColumns: `repeat(auto-fill, ${cardWidth}px)`, ['--card-w' as string]: `${cardWidth}px` } as React.CSSProperties}>
           {shown.map((c) => (

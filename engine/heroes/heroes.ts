@@ -23,6 +23,12 @@ export interface HeroInfo {
   id: string;
   name: string;
   shortDescription: string;
+  /** `MELEE`, `RANGED` or `HYBRID` */
+  archetype: string;
+  /** Backstory as HTML paragraphs (from Airtable); empty when none is written yet */
+  lore: string;
+  artistName?: string;
+  artistUrl?: string;
   skills: HeroSkill[];
 }
 
@@ -42,7 +48,7 @@ type RawAbility = { name: string; hero: string; id: number | string; cost: numbe
 /** Heroes marked active in the data that also have skill code and all three abilities. */
 const build = (): HeroInfo[] => {
   const out: HeroInfo[] = [];
-  for (const h of heroData as { name: string; symbol: string; active?: boolean; shortDescription?: string }[]) {
+  for (const h of heroData as { name: string; symbol: string; active?: boolean; shortDescription?: string; archetype?: string; lore?: string; artistName?: string; artistUrl?: string }[]) {
     const id = keyOf(h.symbol);
     const code = SKILL_CODE[id];
     if (!h.active || !code) continue;
@@ -52,6 +58,10 @@ const build = (): HeroInfo[] => {
       id,
       name: h.name,
       shortDescription: h.shortDescription ?? '',
+      archetype: h.archetype ?? '',
+      lore: h.lore ?? '',
+      artistName: h.artistName,
+      artistUrl: h.artistUrl,
       skills: abilities.map((a, index) => ({
         index,
         name: display(a.name),

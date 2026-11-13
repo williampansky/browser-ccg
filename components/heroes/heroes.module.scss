@@ -1,0 +1,170 @@
+// The heroes page: a grid of portraits and a detail overlay in the style of the collection's card overlay.
+.page {
+  padding: 1.5rem 1.5rem 7rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 190px);
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.75rem 0.5rem;
+  border: 1px solid #2c3550;
+  border-radius: 12px;
+  background: rgba(20, 28, 48, 0.7);
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s, border-color 0.25s;
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-6px) scale(1.04);
+    border-color: #8aa4ff;
+    box-shadow: 0 14px 24px -10px rgba(0, 0, 0, 0.85), 0 0 22px -4px rgba(150, 175, 255, 0.5);
+    outline: none;
+  }
+}
+
+.portrait {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #3a456a;
+}
+
+.name {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.arch {
+  font-size: 0.8rem;
+  color: #9aa3b8;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  overflow: auto;
+  z-index: 200; // above the site's bottom nav (z-index 100)
+  padding: 32px;
+}
+
+.detail {
+  margin: auto;
+  padding: 8px 20px;
+  max-width: min(980px, 100%);
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  cursor: default;
+}
+
+.bigPortrait {
+  width: 300px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #3a456a;
+  box-shadow: 0 0 40px -6px rgba(150, 175, 255, 0.45);
+}
+
+.text {
+  flex: 1;
+  min-width: 260px;
+  max-width: 560px;
+
+  h2 {
+    margin: 0 0 4px;
+    font-size: 1.8rem;
+  }
+  h3 {
+    margin: 18px 0 8px;
+    font-size: 0.95rem;
+    color: #9aa3b8;
+  }
+}
+
+.meta {
+  margin: 0 0 10px;
+  color: #9aa3b8;
+}
+
+.blurb {
+  margin: 0 0 8px;
+  font-style: italic;
+  color: #cdd3e3;
+}
+
+.skills {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  img {
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex: none;
+  }
+  strong {
+    display: block;
+  }
+  small {
+    display: block;
+    color: #9aa3b8;
+  }
+  p {
+    margin: 4px 0 0;
+  }
+}
+
+.ultimate {
+  box-shadow: inset 0 0 0 1px #d4a84a;
+}
+
+.lore {
+  margin-top: 16px;
+  color: #cdd3e3;
+  font-size: 0.9rem;
+  line-height: 1.5;
+
+  p {
+    margin: 0 0 0.7em;
+  }
+}
+
+.credit {
+  font-size: 0.75rem;
+  color: #6f7890;
+}
+
+.closeHint {
+  margin-top: 16px;
+  font-size: 0.75rem;
+  color: #6f7890;
+}

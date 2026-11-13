@@ -21,7 +21,7 @@ const getFooterIcon = (name: string) => {
 /** The home button is only active on `/`; every other button also covers its sub-pages (`/deckbuilder` is under Cards). */
 const isActive = (route: string, path: string) => {
   if (route === '/') return path === '/';
-  if (route === '/collection') return path.startsWith('/collection') || path.startsWith('/deckbuilder');
+  if (route === '/collection') return path.startsWith('/collection') || path.startsWith('/deckbuilder') || path.startsWith('/heroes');
   return path === route || path.startsWith(route + '/');
 };
 

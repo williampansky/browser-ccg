@@ -51,6 +51,13 @@ export const sitePages: Pages = {
     headline: 'Your Collection',
     title: 'Collection',
   },
+  heroes: {
+    description: 'Heroes and their skills',
+    name: 'Heroes',
+    route: '/heroes',
+    headline: 'Heroes',
+    title: 'Heroes',
+  },
   deckbuilder: {
     description: '',
     name: 'Deck Builder',
