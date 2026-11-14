@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { loadHsCards } from '../engine';
 import type { Card, MinionInstance } from '../engine';
 import { createMinion } from '../engine/rules/minion';
@@ -187,6 +187,26 @@ const MinionLab = () => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
+  // The control panel's width (px): dragged by its right edge, remembered in localStorage, double-click resets.
+  const [panelW, setPanelW] = useState(290);
+  const resize = useRef<{ x: number; w: number } | null>(null);
+  useEffect(() => {
+    const saved = parseInt(window.localStorage.getItem('ccg.minionlab.width') ?? '', 10);
+    if (saved >= 220 && saved <= 900) setPanelW(saved);
+  }, []);
+  const startResize = (e: React.PointerEvent<HTMLDivElement>) => {
+    resize.current = { x: e.clientX, w: panelW };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+  const moveResize = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (resize.current) setPanelW(Math.min(900, Math.max(220, resize.current.w + e.clientX - resize.current.x)));
+  };
+  const endResize = () => {
+    if (!resize.current) return;
+    resize.current = null;
+    window.localStorage.setItem('ccg.minionlab.width', String(panelW));
+  };
+
   const setParams = (changes: Record<string, string | null>) => {
     const next: Record<string, string | string[] | undefined> = { ...router.query };
     Object.entries(changes).forEach(([k, v]) => (v === null || v === '' ? delete next[k] : (next[k] = v)));
@@ -267,7 +287,7 @@ const MinionLab = () => {
   return (
     <main style={{ position: 'fixed', inset: 0, display: 'flex', color: '#e8eaf2', background: '#14161c', font: '14px system-ui, sans-serif' }}>
       <style>{css}</style>
-      <aside style={{ width: 290, flex: 'none', overflow: 'auto', padding: 14, background: '#1b1e27', borderRight: '1px solid #3a4052' }}>
+      <aside style={{ width: panelW, flex: 'none', overflow: 'auto', padding: 14, boxSizing: 'border-box', background: '#1b1e27' }}>
         <h1 style={{ margin: '0 0 6px', fontSize: 20 }}>Minion lab</h1>
         <p style={{ color: '#9aa3b8', margin: '0 0 8px', fontSize: 12 }}>The board minion on its own. The URL holds every setting.</p>
         <label style={row}>
@@ -301,6 +321,18 @@ const MinionLab = () => {
           Reset everything
         </button>
       </aside>
+      <div
+        onPointerDown={startResize}
+        onPointerMove={moveResize}
+        onPointerUp={endResize}
+        onPointerCancel={endResize}
+        onDoubleClick={() => {
+          setPanelW(290);
+          window.localStorage.removeItem('ccg.minionlab.width');
+        }}
+        title="Drag to resize the controls; double-click to reset"
+        style={{ width: 7, flex: 'none', cursor: 'ew-resize', touchAction: 'none', background: '#3a4052' }}
+      />
       <div
         style={{
           flex: 1,
