@@ -22,6 +22,7 @@ This lists what was bought. It does **not** yet say which asset is used by which
 | [RPG Backgrounds 04](https://graphicriver.net/item/rpg-backgrounds-04/33670333) | a-ravlik | Regular License | 2022-11-14 | 33670333 |
 | [RPG Class Badges](https://graphicriver.net/item/rpg-class-badges/22800887) | REXARD | Regular License | 2020-04-24 | 22800887 |
 | [RPG Flat Ability Icons](https://graphicriver.net/item/rpg-flat-ability-icons/26294048) | Kate | Regular License | 2020-05-18 | 26294048 |
+| [RPG Fantasy Weapons Set 01](https://graphicriver.net/item/rpg-fantasy-weapons-set-01/43360668) | pasilan | Regular License | 2026-11-14 | 43360668 |
 | [RPG Gems Icons](https://graphicriver.net/item/rpg-gems-icons/25387033) | a-ravlik | Regular License | 2020-05-15 | 25387033 |
 | [RPG Loot Icons 01](https://graphicriver.net/item/rpg-loot-icons-01/24685106) | a-ravlik | Regular License | 2020-05-15 | 24685106 |
 | [RPG Potion Icons](https://graphicriver.net/item/rpg-potion-icons/24972053) | a-ravlik | Regular License | 2020-05-15 | 24972053 |
@@ -51,6 +52,23 @@ All from the purchased TCG Card Design Vol 14 (Regular License, certificate `580
 | `ui/hero-badge.png` | `TCG_vol14_front-assets/Card_Type_Board.png` |
 | `ui/hero-hp.png` | `TCG_vol14_front-assets/ic_attack.png` (red gem, used for health) |
 | `ui/hero-armor.png` | `TCG_vol14_front-assets/ic_shield.png` (green gem, used for armor) |
+
+## Where RPG Weapon and Armor 04 is used
+
+From the purchased RPG Weapon and Armor 04 (Regular License, certificate `58828715-rpg-weapon-and-armor-04-license.pdf`):
+
+| File in `public/images/` | Source file in the pack |
+|---|---|
+| `weapons/CORE_076-WEAPON.png` | `transparent/7353.png` (256 x 256; hero-lab prototype, weapon on the standing figure) |
+
+## Where RPG Fantasy Weapons Set 01 is used
+
+From the purchased RPG Fantasy Weapons Set 01 (Regular License, certificate `78001248-rpg-fantasy-weapons-set-01-license.txt`):
+
+| File in `public/images/` | Source file in the pack |
+|---|---|
+| `weapons/CORE_081-WEAPON.png` | `6.png` (cropped to the art and scaled to 640 px tall; hero-lab prototype) |
+| `weapons/CORE_100-WEAPON.png` | `13.png` (same crop and scale) |
 
 ## Free assets (no purchase certificate)
 

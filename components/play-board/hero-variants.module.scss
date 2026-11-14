@@ -23,7 +23,9 @@
   display: grid;
   place-items: center;
   border: 3px solid #000;
-  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.35), 0 3px 8px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    inset 0 3px 0 rgba(255, 255, 255, 0.35),
+    0 3px 8px rgba(0, 0, 0, 0.6);
 }
 
 .hpGem {
@@ -55,7 +57,9 @@
   height: 40px;
   border-radius: 50%;
   border: 3px solid var(--team);
-  box-shadow: 0 0 0 2px #000, 0 3px 8px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    0 0 0 2px #000,
+    0 3px 8px rgba(0, 0, 0, 0.6);
   background: #0b1020 center / cover no-repeat;
 }
 
@@ -79,7 +83,8 @@
 
 // Same for every hero and both seats: whose turn it is shows as a warm glow, not a colour change.
 .active.figure {
-  filter: drop-shadow(0 0 14px rgba(255, 214, 120, 0.7)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow(0 0 14px rgba(255, 214, 120, 0.7))
+    drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
 }
 
 .figPic {
@@ -135,27 +140,39 @@
   height: calc(var(--u) * var(--figSkillSize));
   border-radius: 50%;
   border: calc(var(--u) * 4) solid #5a6277;
-  box-shadow: 0 0 0 1px #000, 0 3px 6px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    0 0 0 1px #000,
+    0 3px 6px rgba(0, 0, 0, 0.6);
   background: #0b1020 center / cover no-repeat;
   color: inherit;
   font: inherit;
   cursor: default;
-  transition: box-shadow 150ms, border-color 150ms, filter 150ms, transform 150ms;
+  transition:
+    box-shadow 150ms,
+    border-color 150ms,
+    filter 150ms,
+    transform 150ms;
 
   &.ready {
     border-color: #4aa3ff;
     cursor: pointer;
-    box-shadow: 0 0 0 1px #000, 0 0 10px 1px #4aa3ff;
+    box-shadow:
+      0 0 0 1px #000,
+      0 0 10px 1px #4aa3ff;
 
     &:hover {
       transform: scale(1.1);
-      box-shadow: 0 0 0 1px #000, 0 0 16px 3px #4aa3ff;
+      box-shadow:
+        0 0 0 1px #000,
+        0 0 16px 3px #4aa3ff;
     }
   }
 
   &.picked {
     border-color: #3ddc84;
-    box-shadow: 0 0 0 1px #000, 0 0 16px 2px #3ddc84;
+    box-shadow:
+      0 0 0 1px #000,
+      0 0 16px 2px #3ddc84;
   }
 
   // Cooling down, used up or unaffordable: the icon is dimmed by a layer under the cost chip and status (a filter on the
@@ -176,20 +193,24 @@
 
 // Live-board states (HeroFigure on /play): can attack, legal target, hovered target, selected attacker.
 .figure.canAct {
-  filter: drop-shadow(0 0 10px rgba(61, 220, 132, 0.8)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow(0 0 10px rgba(61, 220, 132, 0.8))
+    drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
 }
 
 .figure.aim {
-  filter: drop-shadow(0 0 10px rgba(255, 90, 80, 0.85)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow(0 0 10px rgba(255, 90, 80, 0.85))
+    drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
   cursor: crosshair;
 }
 
 .figure.aimHover {
-  filter: drop-shadow(0 0 18px rgba(255, 90, 80, 1)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow(0 0 18px rgba(255, 90, 80, 1))
+    drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
 }
 
 .figure.sel {
-  filter: drop-shadow(0 0 16px rgba(61, 220, 132, 1)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow(0 0 16px rgba(61, 220, 132, 1))
+    drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
 }
 
 // Hovering a skill lifts the whole card above its neighbours so the tooltip is not covered.
@@ -259,6 +280,54 @@
   pointer-events: none;
 }
 
+// PROTOTYPE weapon: drawn over the lower right of the portrait window, tilted, with attack (left) and durability (right) badges.
+.figWeapon {
+  position: absolute;
+  z-index: 2;
+  left: 80%;
+  top: 20%;
+  width: 45%;
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+
+.figWeapon img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.7));
+}
+
+.figWpnAtk,
+.figWpnDur {
+  position: absolute;
+  bottom: 4%;
+  width: calc(var(--u) * 86);
+  height: calc(var(--u) * 86);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: calc(var(--u) * 5) solid #10131d;
+  font-weight: normal;
+  font-size: calc(var(--u) * 54);
+  line-height: 1;
+  text-shadow: 0 2px 0 #000;
+}
+
+.figWpnAtk {
+  left: -8%;
+  background: #d9a52b;
+  z-index: 1;
+  width: calc(var(--u) * 100);
+  height: calc(var(--u) * 100);
+  bottom: -2%;
+}
+
+.figWpnDur {
+  left: 19%;
+  background: #6b7288;
+}
+
 // Round gems from the pack: health (red, big) in the ring at the right, armor (green ring, number) on the window arc at the left.
 .figGem {
   --figGemSize: 175;
@@ -277,7 +346,9 @@
   font-size: calc(var(--u) * 80);
   line-height: 1;
   padding-bottom: 2px;
-  text-shadow: 0 2px 0 #000, 0 0 6px #000;
+  text-shadow:
+    0 2px 0 #000,
+    0 0 6px #000;
 }
 
 .figHp {
@@ -295,11 +366,13 @@
 }
 
 .figHp.hurt {
-  filter: drop-shadow(0 0 6px rgba(255, 180, 70, 0.95)) drop-shadow(0 3px 4px rgba(0, 0, 0, 0.7));
+  filter: drop-shadow(0 0 6px rgba(255, 180, 70, 0.95))
+    drop-shadow(0 3px 4px rgba(0, 0, 0, 0.7));
 }
 
 .figHp.low {
-  filter: drop-shadow(0 0 7px rgba(255, 70, 60, 1)) drop-shadow(0 3px 4px rgba(0, 0, 0, 0.7));
+  filter: drop-shadow(0 0 7px rgba(255, 70, 60, 1))
+    drop-shadow(0 3px 4px rgba(0, 0, 0, 0.7));
 }
 
 .figArmor {
@@ -329,11 +402,16 @@
   border-radius: 50%;
   // Health sweeps clockwise from the top; the colour follows --hp (the gem's tone).
   background: conic-gradient(var(--hp, #d8372c) var(--fill), #1a1c26 0);
-  box-shadow: 0 0 0 3px #000, 0 8px 22px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    0 0 0 3px #000,
+    0 8px 22px rgba(0, 0, 0, 0.6);
 }
 
 .active .medalRing {
-  box-shadow: 0 0 0 3px #000, 0 0 26px 6px var(--team), 0 8px 22px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    0 0 0 3px #000,
+    0 0 26px 6px var(--team),
+    0 8px 22px rgba(0, 0, 0, 0.6);
 }
 
 .medalArmor {

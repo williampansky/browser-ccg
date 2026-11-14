@@ -12,6 +12,8 @@ export interface HeroVariantProps {
   health: number;
   maxHealth?: number;
   armor?: number;
+  /** PROTOTYPE: an equipped weapon drawn over the portrait (HeroFigure only) */
+  weapon?: { image: string; attack: number; durability: number };
   team?: 'green' | 'red';
   active?: boolean;
   turnTag?: string;
@@ -66,6 +68,13 @@ export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & Fi
     >
       <div className={styles.figPic} style={{ backgroundImage: art(p.heroId) }} />
       <img className={styles.figFrame} src="/images/frames/HERO-VOL14.png" alt="" draggable={false} />
+      {p.weapon && (
+        <div className={styles.figWeapon} aria-label={`Weapon: ${p.weapon.attack} attack, ${p.weapon.durability} durability`}>
+          <img src={p.weapon.image} alt="" draggable={false} />
+          <b className={styles.figWpnAtk}>{p.weapon.attack}</b>
+          <b className={styles.figWpnDur}>{p.weapon.durability}</b>
+        </div>
+      )}
       <span className={styles.figName}>{p.name}</span>
       <div className={styles.figSkills}>
         {[1, 2, 3].map((n) => {

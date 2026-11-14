@@ -56,6 +56,13 @@ const skillFrom = (state: string, n: number, heroId: string): FigureSkill => {
   };
 };
 
+/** Prototype weapon art for the standing figure, keyed by card id (attack / durability from data/core.json). */
+const WEAPONS: Record<string, { image: string; attack: number; durability: number }> = {
+  CORE_076: { image: '/images/weapons/CORE_076-WEAPON.png', attack: 2, durability: 2 },
+  CORE_100: { image: '/images/weapons/CORE_100-WEAPON.png', attack: 3, durability: 4 },
+  CORE_081: { image: '/images/weapons/CORE_081-WEAPON.png', attack: 3, durability: 2 }
+};
+
 const HEROES = [
   ['ZEUS', 'Zeus'],
   ['ASAR', 'Asar'],
@@ -71,6 +78,7 @@ const HeroLab = () => {
   const [health, setHealth] = useState(30);
   const [armor, setArmor] = useState(0);
   const [active, setActive] = useState(true);
+  const [weapon, setWeapon] = useState('CORE_076');
   const [skillStates, setSkillStates] = useState(['ready', 'cd3', 'spent']);
   const router = useRouter();
 
@@ -189,6 +197,19 @@ const HeroLab = () => {
               </select>
             </label>
           ))}
+        {tab === 'figure' && (
+          <label>
+            Weapon{' '}
+            <select value={weapon} onChange={e => setWeapon(e.target.value)}>
+              <option value="">None</option>
+              {Object.entries(WEAPONS).map(([id, w]) => (
+                <option key={id} value={id}>
+                  {id} ({w.attack}/{w.durability})
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <label>
           <input
             type="checkbox"
@@ -222,7 +243,11 @@ const HeroLab = () => {
           return tab === 'bust' ? (
             <HeroBust key={id} {...p} />
           ) : tab === 'figure' ? (
-            <HeroFigure key={id} {...p} skills={skillStates.map((st, i) => skillFrom(st, i + 1, id))} />
+            <HeroFigure
+              key={id}
+              {...p}
+              weapon={WEAPONS[weapon]}
+              skills={skillStates.map((st, i) => skillFrom(st, i + 1, id))} />
           ) : tab === 'medal' ? (
             <HeroMedallion key={id} {...p} />
           ) : (
