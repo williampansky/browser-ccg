@@ -7,14 +7,16 @@ export interface AnimatedIconDef {
   id: string;
   label: string;
   frames: number;
+  /** A looping icon (dots) with no resting pose: it is sized by all its frames, not just the last one. */
+  spinner?: boolean;
 }
 
 export const ANIMATED_ICONS: AnimatedIconDef[] = [
   { id: 'cross-into-checkmark', label: 'Cross into checkmark', frames: 51 },
-  { id: 'dots-circle-2', label: 'Dots Circle 2', frames: 80 },
-  { id: 'dots-circle', label: 'Dots Circle', frames: 130 },
-  { id: 'parallel-dots-2', label: 'Parallel Dots 2', frames: 125 },
-  { id: 'parallel-dots', label: 'Parallel Dots', frames: 20 },
+  { id: 'dots-circle-2', spinner: true, label: 'Dots Circle 2', frames: 80 },
+  { id: 'dots-circle', spinner: true, label: 'Dots Circle', frames: 130 },
+  { id: 'parallel-dots-2', spinner: true, label: 'Parallel Dots 2', frames: 125 },
+  { id: 'parallel-dots', spinner: true, label: 'Parallel Dots', frames: 20 },
   { id: 'regular-cross-point-corner', label: 'Regular Cross Point Corner', frames: 35 },
   { id: 'regular-cross-rounded-corner-2', label: 'Regular Cross Rounded Corner 2', frames: 53 },
   { id: 'regular-cross-rounded-corner', label: 'Regular Cross Rounded Corner', frames: 26 },

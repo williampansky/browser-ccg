@@ -158,15 +158,15 @@ export default function UiLab() {
       </div>
 
       <h2>Animated icons</h2>
-      <p style={{ maxWidth: '40rem' }}>Click one to play it forward, click again to play it back. They take the text colour, so a theme can tint them.</p>
+      <p style={{ maxWidth: '40rem' }}>They start shown. Click one to play it back (to nothing) and again to play it forward. They take the text colour, so a theme can tint them.</p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
         {ANIMATED_ICONS.map((i) => (
           <Button
             key={i.id}
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', width: '9rem', fontSize: '0.75rem' }}
-            onClick={() => setOn({ ...on, [i.id]: !on[i.id] })}
+            onClick={() => setOn({ ...on, [i.id]: on[i.id] === false })}
           >
-            <AnimatedIcon name={i.id} size={56} on={!!on[i.id]} loop={i.id.startsWith('dots') || i.id.startsWith('parallel-dots')} />
+            <AnimatedIcon name={i.id} size={56} on={on[i.id] !== false} loop={i.id.startsWith('dots') || i.id.startsWith('parallel-dots')} />
             {i.label} ({i.frames})
           </Button>
         ))}
