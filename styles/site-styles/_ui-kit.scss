@@ -111,6 +111,7 @@ a.ui-btn {
   text-align: left;
   cursor: pointer;
 
+  // The switch: the <i> is the track, ::before the "on" track fading in over it, ::after the knob sliding between the two ends.
   i {
     position: relative;
     flex: none;
@@ -118,26 +119,37 @@ a.ui-btn {
     height: var(--ui-toggle-h);
     background: var(--ui-toggle-art) center / 100% 100% no-repeat, var(--ui-toggle-track);
     border-radius: 999px;
-    transition: background-color 0.15s;
 
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--ui-toggle-art-on) center / 100% 100% no-repeat, var(--ui-toggle-on);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
     &::after {
       content: '';
       position: absolute;
-      top: 0.15rem;
-      left: 0.15rem;
-      width: calc(var(--ui-toggle-h) - 0.3rem);
-      height: calc(var(--ui-toggle-h) - 0.3rem);
-      background: var(--ui-toggle-thumb);
+      top: var(--ui-toggle-knob-inset);
+      left: var(--ui-toggle-knob-inset);
+      width: var(--ui-toggle-knob-size);
+      height: var(--ui-toggle-knob-size);
       border-radius: 50%;
-      transition: transform 0.15s;
+      background: var(--ui-toggle-knob-art) center / 100% 100% no-repeat, var(--ui-toggle-thumb);
+      transform: translateX(0);
+      // A slight overshoot, so it settles like a physical switch. A knob picture (kit themes) swaps halfway along; a plain thumb fades.
+      transition: transform 0.22s cubic-bezier(0.3, 1.35, 0.5, 1), background-color 0.2s, background-image 0.02s 0.09s;
     }
   }
   &[aria-checked='true'] i {
-    background: var(--ui-toggle-art-on) center / 100% 100% no-repeat, var(--ui-toggle-on);
-
+    &::before {
+      opacity: 1;
+    }
     &::after {
       transform: translateX(var(--ui-toggle-travel));
-      background: var(--ui-toggle-on-thumb);
+      background: var(--ui-toggle-knob-art-on) center / 100% 100% no-repeat, var(--ui-toggle-on-thumb);
     }
   }
   &:focus-visible {
@@ -166,14 +178,19 @@ a.ui-btn {
     background: var(--ui-seg-bg);
     border: 1px solid var(--ui-seg-border);
 
+    // Neighbours share one border line (they overlap by 1px) and the chosen one sits on top, so its outline is whole on all four sides.
+    &:not(:first-of-type) {
+      margin-left: -1px;
+    }
     &:first-of-type {
       border-radius: 8px 0 0 8px;
     }
     &:last-of-type {
       border-radius: 0 8px 8px 0;
-      border-left: 0;
     }
     &[aria-checked='true'] {
+      position: relative;
+      z-index: 1;
       background: var(--ui-seg-on-bg);
       border-color: var(--ui-seg-on-border);
     }
@@ -291,11 +308,15 @@ select.ui-field {
   gap: 2px;
   padding-top: 0;
 
-  button {
+  // Separate chips (not a joined bar): every corner and every border alike, whatever its place in the row.
+  &.ui-seg button,
+  &.ui-seg button:first-of-type,
+  &.ui-seg button:last-of-type {
     min-width: 2rem;
     padding: 0.3rem 0.4rem;
-    border-radius: 0;
-    border-left: 1px solid var(--ui-seg-border);
+    margin-left: 0;
+    border-radius: 6px;
+    border-width: 1px;
   }
 }
 
@@ -326,5 +347,12 @@ select.ui-field {
   .ui-field {
     padding-top: 0;
     padding-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-toggle i::before,
+  .ui-toggle i::after {
+    transition: none;
   }
 }

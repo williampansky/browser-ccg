@@ -86,8 +86,12 @@ $classic: (
   'ui-toggle-thumb': #cfd4e6,
   'ui-toggle-on': #3f9f58,
   'ui-toggle-on-thumb': #ffffff,
-  'ui-toggle-art': none,
-  'ui-toggle-art-on': none,
+  'ui-toggle-knob-size': calc(var(--ui-toggle-h) - 0.3rem),
+  'ui-toggle-knob-inset': 0.15rem,
+  'ui-toggle-art': none, // the off track
+  'ui-toggle-art-on': none, // the on track (fades in over the off one)
+  'ui-toggle-knob-art': none,
+  'ui-toggle-knob-art-on': none,
   // the one height every control in a form row shares (`ui-controls`), so a button appearing never changes the row's height
   'ui-control-h': 2.1rem,
   // checkbox (with art: the two images replace the drawn box)
@@ -145,8 +149,14 @@ $classic: (
     'ui-toggle-thumb': transparent,
     'ui-toggle-on': transparent,
     'ui-toggle-on-thumb': transparent,
-    'ui-toggle-art': art($t, 'toggle_off'),
-    'ui-toggle-art-on': art($t, 'toggle_on'),
+    // Track and knob are separate pieces (cut from the kit's toggle_on / toggle_off) so the knob can slide.
+    'ui-toggle-art': art($t, 'toggle_track_off'),
+    'ui-toggle-art-on': art($t, 'toggle_track_on'),
+    'ui-toggle-knob-art': art($t, 'toggle_knob_off'),
+    'ui-toggle-knob-art-on': art($t, 'toggle_knob_on'),
+    'ui-toggle-knob-size': var(--ui-toggle-h),
+    'ui-toggle-knob-inset': 0,
+    'ui-toggle-travel': var(--ui-toggle-h),
     'ui-control-h': 2.5rem,
     'ui-check-size': 1.25rem,
     'ui-check-art': art($t, 'checkbox_off'),
