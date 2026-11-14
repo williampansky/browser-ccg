@@ -1,5 +1,5 @@
 // Interface themes. Each theme is a set of `--ui-*` custom properties on `[data-ui-theme='<id>']`; `<html>` carries the chosen id
-// (components/ui-theme/ui-themes.ts) but any element can carry its own, which is how /theme-lab shows them side by side.
+// (components/ui-theme/ui-themes.ts) but any element can carry its own, which is how /ui-lab shows them side by side.
 // Every theme is written as "classic + these overrides", so every block defines every property and a themed box inside a
 // differently themed page never inherits stray values. The shared pieces that read them are in site-styles/_ui-kit.scss.
 //

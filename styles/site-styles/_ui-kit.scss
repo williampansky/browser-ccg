@@ -100,6 +100,7 @@ a.ui-btn {
 // A switch row: a label and the switch. State is `aria-checked`, so it is both the accessible and the visual truth.
 .ui-toggle {
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   padding: 0.3rem 0;
