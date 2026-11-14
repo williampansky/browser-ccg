@@ -2,6 +2,10 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-14
+
+- **`/board-lab`** (dev only, not linked): the real `/play` board frozen into a setup you choose, with a draggable, collapsible overlay of layout knobs. Everything is in the URL, so a layout can be shared. No bot and no clock; boards, energy and whose turn it is change live without touching the hands or decks (heroes and hand ids restart it, with a fixed seed so the deck is the same each time). Knobs: minion size and gap, section gap, table width, hand sink, both hands' card widths, the clicked-card scale (with a preview), both hero figures' width and X/Y position, and the log / deck panels (swapped, or stacked and scrolling independently). Sliders start at the board's real values. Presets save the URL (all of it, or layout only), with a Flip A/B button. `PlayBoard` takes an optional `lab` prop for this; `/play` does not pass it.
+
 ## 2026-11-13
 
 - A card dragged to aim at a target no longer grows to the click's 2x; `.prettierrc` added (the hero skills component is reformatted to it).

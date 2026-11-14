@@ -261,8 +261,8 @@ const debugParams = (): { first?: PlayerId; hands: Record<PlayerId, string[]>; s
   };
 };
 
-const newGame = (vsAi: boolean): { state: GameState; rng: Rng; decks: Record<PlayerId, string[]>; first: PlayerId; deckNames: Record<PlayerId, string> } => {
-  const rng = createSeededRng(Date.now() % 2147483647);
+const newGame = (vsAi: boolean, seed?: number): { state: GameState; rng: Rng; decks: Record<PlayerId, string[]>; first: PlayerId; deckNames: Record<PlayerId, string> } => {
+  const rng = createSeededRng(seed ?? Date.now() % 2147483647);
   const choices = loadChoices();
   const saved = loadDecks(byId);
   const p0 = resolveDeck(choices['0'], pool, saved, rng, prime);
@@ -299,7 +299,19 @@ const newGame = (vsAi: boolean): { state: GameState; rng: Rng; decks: Record<Pla
 };
 
 /** Hot-seat board: the active player is always at the bottom, the other player's hand is hidden. */
-export const PlayBoard = () => {
+/**
+ * Layout-lab mode (the /board-lab page): no AI and no turn clock, a fixed seed (so decks and hands are the same every game), and the
+ * boards and energy follow these props live instead of restarting the game.
+ */
+export interface LabProps {
+  boards: Record<PlayerId, string[]>;
+  energy: Record<PlayerId, number | undefined>;
+  /** Whose turn it is (the toggle in the lab); unset leaves the game's own */
+  active?: PlayerId;
+}
+const LAB_SEED = 20261114;
+
+export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const [state, setState] = useState<GameState | null>(null);
   /** One entry per action, oldest first. */
   const [log, setLog] = useState<string[][]>([]);
@@ -360,7 +372,7 @@ export const PlayBoard = () => {
   const label = (p: PlayerId) => playerLabel(p, mode, profile.name);
 
   const start = useCallback(() => {
-    const g = newGame(modeRef.current === 'ai');
+    const g = newGame(modeRef.current === 'ai', lab ? LAB_SEED : undefined);
     rngRef.current = g.rng;
     setState(g.state);
     setStartDecks(g.decks);
@@ -495,7 +507,28 @@ export const PlayBoard = () => {
   // The viewer is who sits at the bottom: always Player 1 against the AI, the active player in hot-seat.
   const viewer: PlayerId = !state ? '0' : mode === 'ai' ? '0' : state.activePlayer;
   viewerRef.current = viewer;
-  const aiToMove = !!state && mode === 'ai' && state.status === 'playing' && state.activePlayer === AI_PLAYER;
+  const aiToMove = !lab && !!state && mode === 'ai' && state.status === 'playing' && state.activePlayer === AI_PLAYER;
+
+  // Lab mode: keep the boards and energy in step with the props without touching the hands, decks or heroes.
+  const labKey = lab ? JSON.stringify([lab.boards, lab.energy, lab.active]) : '';
+  useEffect(() => {
+    if (!lab) return;
+    setState((old) => {
+      if (!old) return old;
+      const cleared = produce(old, (g) => {
+        (['0', '1'] as PlayerId[]).forEach((p) => {
+          g.players[p].board = [];
+        });
+        if (lab.active) g.activePlayer = lab.active;
+      });
+      return applyDebugSetup(
+        cleared,
+        { boards: lab.boards, weapons: { '0': undefined, '1': undefined }, energy: lab.energy },
+        byId
+      );
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [labKey, gameKey]);
 
   // Once the new minion is on the board, measure where it is so the card knows where to land.
   useEffect(() => {
@@ -505,7 +538,7 @@ export const PlayBoard = () => {
   }, [flight]);
 
   // The clock restarts whenever a turn begins (or a new game). It counts only on a human's turn.
-  const timerApplies = timerOn && !!state && state.status === 'playing' && !aiToMove;
+  const timerApplies = !lab && timerOn && !!state && state.status === 'playing' && !aiToMove;
   useEffect(() => {
     turnStartedAt.current = Date.now();
     setNow(Date.now());
