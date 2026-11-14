@@ -52,7 +52,7 @@ const Elements = ({ disabled }: { disabled: boolean }) => {
 
       <Section title="TextInput and Select">
         <TextInput placeholder="Text" aria-label="Text" disabled={disabled} />
-        <TextInput type="search" placeholder="Search name or text" aria-label="Search" disabled={disabled} />
+        <TextInput type="search" defaultValue="Search with text (X)" aria-label="Search" disabled={disabled} />
         <TextInput defaultValue="With a value" aria-label="Value" disabled={disabled} />
         <Select aria-label="Select" disabled={disabled}>
           <option>Core + Prime</option>
@@ -72,27 +72,28 @@ const Elements = ({ disabled }: { disabled: boolean }) => {
 
       <Section title="Toggle" note="A switch row; the real menu stacks these.">
         <div style={{ width: '16rem' }}>
-          <Toggle label="On" checked={sw.a} onChange={(a) => setSw({ ...sw, a })} />
-          <Toggle label="Off" checked={sw.b} onChange={(b) => setSw({ ...sw, b })} />
+          <Toggle label="On" checked={sw.a} onChange={(a) => setSw({ ...sw, a })} disabled={disabled} />
+          <Toggle label="Off" checked={sw.b} onChange={(b) => setSw({ ...sw, b })} disabled={disabled} />
+          <Toggle label="Disabled" checked onChange={() => undefined} disabled />
         </div>
       </Section>
 
       <Section title="SegmentedControl" note="Labelled (Opponent, Mode) and chips (mana cost, card size). Both are radio groups.">
         <div style={{ width: '20rem' }}>
-          <SegmentedControl label="Opponent" value={opp} onChange={setOpp} options={[{ label: 'Greedy', value: true }, { label: 'Random', value: false }]} />
+          <SegmentedControl label="Opponent" disabled={disabled} value={opp} onChange={setOpp} options={[{ label: 'Greedy', value: true }, { label: 'Random', value: false }]} />
         </div>
-        <SegmentedControl chips ariaLabel="Mana cost" value={cost} onChange={setCost} options={(['all', 0, 1, 2, 3, 4, 5, 6, '7+' as unknown as number] as const).map((c) => ({ label: c === 'all' ? 'All' : c, value: c as number | 'all' }))} />
-        <SegmentedControl chips ariaLabel="Card size" value={size} onChange={setSize} options={['S', 'M', 'L', 'XL'].map((s) => ({ label: s, value: s }))} />
+        <SegmentedControl chips disabled={disabled} ariaLabel="Mana cost" value={cost} onChange={setCost} options={(['all', 0, 1, 2, 3, 4, 5, 6, '7+' as unknown as number] as const).map((c) => ({ label: c === 'all' ? 'All' : c, value: c as number | 'all' }))} />
+        <SegmentedControl chips disabled={disabled} ariaLabel="Card size" value={size} onChange={setSize} options={['S', 'M', 'L', 'XL'].map((s) => ({ label: s, value: s }))} />
         <SegmentedControl chips ariaLabel="Disabled" value="a" onChange={() => undefined} options={[{ label: 'A', value: 'a' }, { label: 'B', value: 'b', disabled: true }]} />
       </Section>
 
       <Section title="Form row (ui-controls)" note="Every control shares one height, and the row keeps it. Toggle the filter: Clear filters appears and nothing may move (watch the readout).">
         <div ref={rowRef} className="ui-controls" style={{ flexBasis: '100%' }}>
-          <TextInput type="search" placeholder="Search" aria-label="Row search" />
-          <Select aria-label="Row select"><option>All types</option><option>Minion</option></Select>
+          <TextInput type="search" placeholder="Search" aria-label="Row search" defaultValue="clear me" disabled={disabled} />
+          <Select aria-label="Row select" disabled={disabled}><option>All types</option><option>Minion</option></Select>
           <SegmentedControl chips ariaLabel="Row cost" value={cost} onChange={setCost} options={(['all', 1, 2] as const).map((c) => ({ label: c === 'all' ? 'All' : c, value: c }))} />
-          <Checkbox checked={checks.a} onChange={(a) => setChecks({ ...checks, a })}>Entourage</Checkbox>
-          {filtered && <Button onClick={() => setFiltered(false)}>Clear filters</Button>}
+          <Checkbox checked={checks.a} onChange={(a) => setChecks({ ...checks, a })} disabled={disabled}>Entourage</Checkbox>
+          {filtered && <Button disabled={disabled} onClick={() => setFiltered(false)}>Clear filters</Button>}
         </div>
         <Checkbox checked={filtered} onChange={setFiltered}>Filtered (shows Clear filters)</Checkbox>
         {rowH && (

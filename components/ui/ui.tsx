@@ -47,7 +47,7 @@ type CheckboxProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 
 
 /** A labelled checkbox: `<Checkbox checked onChange>Label</Checkbox>`. */
 export const Checkbox = ({ checked, onChange, children, title, className, ...rest }: CheckboxProps) => (
-  <label className={cx('ui-check', className)} title={title}>
+  <label className={cx('ui-check', rest.disabled && 'ui-check--disabled', className)} title={title}>
     <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} {...rest} />
     <i aria-hidden="true">
       {/* The tick is the cross-into-checkmark animation: it is drawn in on check and fades on uncheck, so the starting cross never shows while unchecked. */}
@@ -58,8 +58,8 @@ export const Checkbox = ({ checked, onChange, children, title, className, ...res
 );
 
 /** A switch row: the label on the left, the switch on the right. */
-export const Toggle = ({ label, checked, onChange, className }: { label: React.ReactNode; checked: boolean; onChange: (on: boolean) => void; className?: string }) => (
-  <button type="button" role="switch" aria-checked={checked} className={cx('ui-toggle', className)} onClick={() => onChange(!checked)}>
+export const Toggle = ({ label, checked, onChange, className, disabled }: { label: React.ReactNode; checked: boolean; onChange: (on: boolean) => void; className?: string; disabled?: boolean }) => (
+  <button type="button" role="switch" aria-checked={checked} disabled={disabled} className={cx('ui-toggle', className)} onClick={() => onChange(!checked)}>
     <span>{label}</span>
     <i aria-hidden="true" />
   </button>
@@ -84,6 +84,7 @@ export function SegmentedControl<T extends string | number | boolean>({
   onChange,
   chips,
   className,
+  disabled,
 }: {
   label?: string;
   ariaLabel?: string;
@@ -92,12 +93,14 @@ export function SegmentedControl<T extends string | number | boolean>({
   onChange: (value: T) => void;
   chips?: boolean;
   className?: string;
+  /** Disables every option. */
+  disabled?: boolean;
 }) {
   return (
     <div className={cx('ui-seg', chips && 'ui-seg--chips', className)} role="radiogroup" aria-label={ariaLabel ?? label}>
       {label && <span>{label}</span>}
       {options.map((o) => (
-        <button key={String(o.value)} type="button" role="radio" aria-checked={o.value === value} title={o.title} disabled={o.disabled} onClick={() => onChange(o.value)}>
+        <button key={String(o.value)} type="button" role="radio" aria-checked={o.value === value} title={o.title} disabled={disabled || o.disabled} onClick={() => onChange(o.value)}>
           {o.label}
         </button>
       ))}

@@ -144,6 +144,10 @@ a.ui-btn {
     outline: 2px solid var(--ui-focus);
     outline-offset: 2px;
   }
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
 }
 
 .ui-seg {
@@ -203,6 +207,27 @@ select.ui-field {
   cursor: pointer;
 }
 
+.ui-field:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+// The search box's own clear (X) button: the browser draws it in a fixed grey, so draw it from the theme's colour instead.
+.ui-field[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0.9em;
+  height: 0.9em;
+  margin-left: 0.4rem;
+  cursor: pointer;
+  background-color: var(--ui-text-dim);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 1.5l7 7M8.5 1.5l-7 7' stroke='%23000' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 1.5l7 7M8.5 1.5l-7 7' stroke='%23000' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.ui-field[type='search']::-webkit-search-cancel-button:hover {
+  background-color: var(--ui-text);
+}
+
 .ui-field:focus-visible {
   outline: 2px solid var(--ui-focus);
   outline-offset: 1px;
@@ -244,6 +269,10 @@ select.ui-field {
   input:disabled + i {
     opacity: 0.45;
   }
+}
+.ui-check--disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
 .ui-field-row {
