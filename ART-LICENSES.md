@@ -40,3 +40,11 @@ This lists what was bought. It does **not** yet say which asset is used by which
 | [TCG Cards Pack](https://graphicriver.net/item/tcg-cards-pack/19848390) | REXARD | Regular License | 2020-04-24 | 19848390 |
 | [Void Invaders](https://graphicriver.net/item/void-invaders/36722632) | a-ravlik | Regular License | 2022-11-14 | 36722632 |
 | [Walking Zombie](https://graphicriver.net/item/walking-zombie/39062652) | a-ravlik | Regular License | 2022-11-14 | 39062652 |
+
+## Free assets (no purchase certificate)
+
+| Item | Author | Source | Terms (as stated on the page) | Retrieved |
+|---|---|---|---|---|
+| Pipoya VFX Light Pillar (`pipo-mapeffect013a/b/c`, sprite sheets) | Pipoya | <https://pipoya.itch.io/pipoya-free-vfx-light-pillar> | For commercial or personal use. Use and edit freely. Do not redistribute or resell the assets. Can be used for game development and other productions. | 2026-11-13 (copied from the author's note; the download had no licence file) |
+
+**Note:** the Pipoya terms say not to redistribute the assets. They are used here in the game, not offered for download or resale, and the README's "not licensed for reuse" notice covers the repo. If that ever matters (e.g. the repo's licence changes), swap them for edited versions or ask the author.
