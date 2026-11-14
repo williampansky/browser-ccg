@@ -10,7 +10,8 @@ import minionStyles from '../components/play-board/board-minion.module.scss';
  * PROTOTYPE page (dev only, not linked): the board minion (MinionFace) on its own, a gallery of the different looks, with sliders for the
  * overall shape and for where each element sits. Static, like /hero-lab. Everything is in the URL, so a look can be shared:
  *  - shape: lm height px, la aspect (height / width), lr corner radius %, lbw border px, lot oval Y offset px, lgs guard shield scale
- *  - attack badge: lax / lay offset px, las size px;  health badge: lhx / lhy offset px, lhs size px;  numerals: lnf font size px
+ *  - attack badge: lax / lay offset px, las size px, lanf numeral font size px, lanx / lany numeral position inside the badge px
+ *  - health badge: lhx / lhy offset px, lhs size px, lhnf numeral font size px, lhnx / lhny numeral position inside the badge px
  *  - caption (name): lcx / lcy offset px, lcf font size px, lchide=1 hides it;  keyword icons: lkx / lky offset px, lks scale
  *  - preview only: state (ready|selected|aim|aimHover), bg (felt|dark), lz zoom
  */
@@ -30,7 +31,12 @@ const SLIDER_MAX = {
   lhx: 80,
   lhy: 80,
   lhs: 90,
-  lnf: 48,
+  lanf: 48,
+  lanx: 30,
+  lany: 30,
+  lhnf: 48,
+  lhnx: 30,
+  lhny: 30,
   lcx: 80,
   lcy: 60,
   lcf: 28,
@@ -95,11 +101,16 @@ const KNOBS: Knob[] = [
   { key: 'lax', label: 'Attack X offset (px)', css: (v) => VARS(ATTACK, 'x', v), read: () => 0 },
   { key: 'lay', label: 'Attack Y offset (px)', css: (v) => VARS(ATTACK, 'y', v), read: () => 0 },
   { key: 'las', label: 'Attack size (px)', min: 10, css: (v) => `${ATTACK}{width:${v}px !important;height:${v}px !important}`, read: () => num(computed(ATTACK)?.width) },
+  { key: 'lanf', label: 'Attack numeral size (px)', min: 6, step: 0.5, css: (v) => `${ATTACK} b{font-size:${v}px !important}`, read: () => num(computed(`${ATTACK} b`)?.fontSize, 1) },
+  { key: 'lanx', label: 'Attack numeral X (px, inside the badge)', step: 0.5, css: (v) => `${ATTACK} b{left:${v}px !important}`, read: () => num(computed(`${ATTACK} b`)?.left, 1) },
+  { key: 'lany', label: 'Attack numeral Y (px, inside the badge)', step: 0.5, css: (v) => `${ATTACK} b{top:${v}px !important}`, read: () => num(computed(`${ATTACK} b`)?.top, 1) },
   // Health badge (shield)
   { key: 'lhx', label: 'Health X offset (px)', css: (v) => VARS(HEALTH, 'x', v), read: () => 0 },
   { key: 'lhy', label: 'Health Y offset (px)', css: (v) => VARS(HEALTH, 'y', v), read: () => 0 },
   { key: 'lhs', label: 'Health size (px)', min: 10, css: (v) => `${HEALTH}{width:${v}px !important;height:${v}px !important}`, read: () => num(computed(HEALTH)?.width) },
-  { key: 'lnf', label: 'Numeral font size (px)', min: 6, step: 0.5, css: (v) => `${sel('stat')} b{font-size:${v}px !important}`, read: () => num(computed(`${ATTACK} b`)?.fontSize, 1) },
+  { key: 'lhnf', label: 'Health numeral size (px)', min: 6, step: 0.5, css: (v) => `${HEALTH} b{font-size:${v}px !important}`, read: () => num(computed(`${HEALTH} b`)?.fontSize, 1) },
+  { key: 'lhnx', label: 'Health numeral X (px, inside the badge)', step: 0.5, css: (v) => `${HEALTH} b{left:${v}px !important}`, read: () => num(computed(`${HEALTH} b`)?.left, 1) },
+  { key: 'lhny', label: 'Health numeral Y (px, inside the badge)', step: 0.5, css: (v) => `${HEALTH} b{top:${v}px !important}`, read: () => num(computed(`${HEALTH} b`)?.top, 1) },
   // Name caption
   { key: 'lcx', label: 'Name X offset (px)', css: (v) => VARS(CAPTION, 'x', v), read: () => 0 },
   { key: 'lcy', label: 'Name Y offset (px)', css: (v) => VARS(CAPTION, 'y', v), read: () => 0 },
@@ -114,8 +125,8 @@ const KNOBS: Knob[] = [
 
 const GROUPS: { id: string; title: string; keys: string[] }[] = [
   { id: 'shape', title: 'Overall shape', keys: ['lm', 'la', 'lr', 'lbw', 'lot', 'lgs'] },
-  { id: 'attack', title: 'Attack badge', keys: ['lax', 'lay', 'las'] },
-  { id: 'health', title: 'Health badge', keys: ['lhx', 'lhy', 'lhs', 'lnf'] },
+  { id: 'attack', title: 'Attack badge', keys: ['lax', 'lay', 'las', 'lanf', 'lanx', 'lany'] },
+  { id: 'health', title: 'Health badge', keys: ['lhx', 'lhy', 'lhs', 'lhnf', 'lhnx', 'lhny'] },
   { id: 'caption', title: 'Name', keys: ['lcx', 'lcy', 'lcf'] },
   { id: 'icons', title: 'Keyword icons', keys: ['lkx', 'lky', 'lks'] },
   { id: 'preview', title: 'Preview', keys: ['lz'] }
