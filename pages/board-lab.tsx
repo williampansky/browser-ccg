@@ -10,7 +10,7 @@ const PlayBoard = dynamic(() => import('../components/play-board/PlayBoard').the
  * PROTOTYPE page (dev only, not linked): the real /play board, frozen into a setup you choose, with an overlay of layout knobs.
  * Everything is in the URL, so a layout can be shared or bookmarked:
  *  - setup (the same debug params as /play): b0 b1 (board minion ids), turn (0 = player, 1 = enemy; applied live), p0 p1 (hand ids), w0 w1, e0 e1, h0 h1, first, herofig
- *  - layout (CSS overrides over the real stylesheet): lm minion height px, lg minion gap px, ls section gap px, lw table max width px,
+ *  - layout (CSS overrides over the real stylesheet): lm minion height px, lg minion gap px, lml/lms clicked-minion lift px / scale, lmpv=1 previews it on your first minion, ls section gap px, lw table max width px,
  *    lhs hand sink px, lhw0 / lhw1 my hand / enemy hand card width px, lfw0 / lfw1 my / enemy hero figure width px, lfs hero figure side (left|right), lfx0/lfy0/lfx1/lfy1 hero figure X/Y offsets px,
  *    lsel clicked-card scale, lpv=1 previews it on the first card, lpan log/deck arrangement (swap|stackL|stackR), lsplit stacked log share %,
  *    lgw/ldw log/deck width px, les energy bar scale, lex/ley its X/Y offsets px, leo=h horizontal energy bar, lgx/lgy/ldx/ldy their X/Y offsets px, lfelt=0 hides the felt panel
@@ -40,6 +40,10 @@ const cs = (name: string) => {
 };
 
 const CLS = (name: string) => `[class*="play-board_${name}__"]`;
+const SLOT = '[class*="board-minion_slot__"]';
+const OVAL = '[class*="board-minion_oval__"]';
+// The first minion on your own board (the one the preview lifts).
+const MY_FIRST = '[class*="play-board_center__"] > section [class*="play-board_row__"] > :first-child';
 const BAR = '[class*="energy-bar_bar__"]';
 const ORBS = '[class*="energy-bar_orbs__"]';
 
@@ -53,6 +57,9 @@ const SLIDER_MAX = {
   lg: 40,
   ls: 60,
   lw: 2000,
+  // Clicked minion
+  lml: 80,
+  lms: 2,
   // Hands
   lhs: 160,
   lhw0: 260,
@@ -75,8 +82,8 @@ const SLIDER_MAX = {
   ldy: 2000,
   // Energy bar
   les: 3,
-  lex: 2000,
-  ley: 2000,
+  lex: 1500,
+  ley: 1500,
   // Board (the engine caps a board at 7 minions; energy is 0-10)
   minions: 7,
   energy: 10
@@ -99,6 +106,9 @@ const NUMS: Num[] = [
   { key: 'lfy0', label: 'My hero Y offset (px)', min: -SLIDER_MAX.lfy0, max: SLIDER_MAX.lfy0, css: (v) => `${CLS('figMe')}{--lab-y:${v}px}`, read: () => 0 },
   { key: 'lfx1', label: 'Enemy hero X offset (px)', min: -SLIDER_MAX.lfx1, max: SLIDER_MAX.lfx1, css: (v) => `${CLS('figFoe')}{--lab-x:${v}px}`, read: () => 0 },
   { key: 'lfy1', label: 'Enemy hero Y offset (px)', min: -SLIDER_MAX.lfy1, max: SLIDER_MAX.lfy1, css: (v) => `${CLS('figFoe')}{--lab-y:${v}px}`, read: () => 0 },
+  // A clicked minion: how far it lifts and how much it grows (the board's own defaults are 14 px and 1.08x).
+  { key: 'lml', label: 'Clicked minion lift (px)', min: 0, max: SLIDER_MAX.lml, css: (v) => `${SLOT}{--sel-lift:${v}px}`, read: () => 14 },
+  { key: 'lms', label: 'Clicked minion scale (x)', min: 1, max: SLIDER_MAX.lms, step: 0.01, css: (v) => `${SLOT}{--sel-scale:${v}}`, read: () => 1.08 },
   // The clicked (selected) hand card: /play scales it 2x (hand zoom on top) and lifts it so it stays on screen.
   { key: 'lsel', label: 'Clicked card scale (x)', min: 1, max: SLIDER_MAX.lsel, step: 0.05, css: () => '', read: () => 2 },
   // The log and deck panels. Their presets are in `panelCss`; these are size and offset.
@@ -321,7 +331,14 @@ const BoardLab = () => {
     (one(q.lsel) ? `${slotSel},${slotSel}:hover{${selTransform}}` : '') +
     (one(q.lpv) ? `${CLS('handSlot')}:nth-child(1){${selTransform};z-index:20 !important;filter:drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e) !important}` : '');
 
+  // `lmpv` previews a clicked minion on your first one, with the same gold ring the real selection has.
+  const minionPreviewCss = one(q.lmpv)
+    ? `${MY_FIRST}{transform:translateY(calc(var(--sel-lift,14px) * -1)) scale(var(--sel-scale,1.08)) !important}` +
+      `${MY_FIRST} ${OVAL}{border-color:#ffd45e !important;box-shadow:0 0 0 3px #ffd45e,0 0 18px rgba(255,212,94,0.7) !important}`
+    : '';
+
   const css = [
+    minionPreviewCss,
     panelCss,
     // Horizontal energy bar: the orbs were listed bottom-first for the column, so row-reverse puts the first one on the left.
     one(q.leo) === 'h' ? `${ORBS}{flex-direction:row-reverse !important}` : '',
@@ -498,7 +515,12 @@ const BoardLab = () => {
                 My hand ids <input style={{ width: '100%' }} placeholder="CORE_045,CORE_051" value={one(q.p0)} onChange={(e) => setParams({ p0: e.target.value })} />
               </label>
             </>)}
-            {section('minions', 'Minions', 'live', <>{sliders(['lm', 'lg'])}</>)}
+            {section('minions', 'Minions', 'live', <>
+              {sliders(['lm', 'lg', 'lml', 'lms'])}
+              <label style={row}>
+                <input type="checkbox" checked={'lmpv' in q} onChange={(e) => setParams({ lmpv: e.target.checked ? '1' : null })} /> Preview clicked minion (my first)
+              </label>
+            </>)}
             {section('table', 'Table', 'live', <>
               {sliders(['ls', 'lw'])}
               <label style={row}>

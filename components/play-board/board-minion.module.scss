@@ -13,7 +13,8 @@
   font-family: 'Carter One', Arial, Helvetica, sans-serif;
   transition: transform 150ms cubic-bezier(0.19, 1, 0.22, 1);
   // A new minion is dropped onto the board: it falls in, lands with a squash and settles (the dust ring marks the impact).
-  animation: minionLand 520ms both;
+  // `backwards`, not `both`: holding the last frame forever would override the transform of the selected / aimed states below.
+  animation: minionLand 520ms backwards;
   transform-origin: 50% 85%;
 }
 
@@ -234,8 +235,9 @@
 }
 .ready { cursor: pointer; }
 
+// A clicked (or dragged) minion lifts off the board and grows a little. --sel-lift / --sel-scale are the defaults the board lab tunes.
 .selected {
-  transform: scale(1.08);
+  transform: translateY(calc(var(--sel-lift, 14px) * -1)) scale(var(--sel-scale, 1.08));
 }
 .selected .oval {
   border-color: #ffd45e;
