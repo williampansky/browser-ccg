@@ -213,14 +213,17 @@ a.ui-btn {
   border-radius: var(--ui-field-radius);
 }
 
-// A drop-down draws its own arrow, so it can sit away from the edge.
+// A drop-down draws its own arrow, so it can sit away from the edge. The arrow is two diagonal strokes made of gradients (a picture
+// could not use the text colour), so it is always `currentColor`: the field's text colour, dimmed with it when disabled.
 select.ui-field {
   appearance: none;
   -webkit-appearance: none;
   padding-right: 1.9rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23aab' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: linear-gradient(to top right, transparent calc(50% - 0.8px), currentColor calc(50% - 0.8px), currentColor calc(50% + 0.8px), transparent calc(50% + 0.8px)),
+    linear-gradient(to top left, transparent calc(50% - 0.8px), currentColor calc(50% - 0.8px), currentColor calc(50% + 0.8px), transparent calc(50% + 0.8px));
+  background-size: 6px 6px, 6px 6px;
   background-repeat: no-repeat;
-  background-position: right 0.65rem center;
+  background-position: right calc(0.65rem + 5px) center, right 0.65rem center;
   cursor: pointer;
 }
 
