@@ -13,7 +13,7 @@ const PlayBoard = dynamic(() => import('../components/play-board/PlayBoard').the
  *  - layout (CSS overrides over the real stylesheet): lm minion height px, lg minion gap px, ls section gap px, lw table max width px,
  *    lhs hand sink px, lhw0 / lhw1 my hand / enemy hand card width px, lfw0 / lfw1 my / enemy hero figure width px, lfs hero figure side (left|right), lfx0/lfy0/lfx1/lfy1 hero figure X/Y offsets px,
  *    lsel clicked-card scale, lpv=1 previews it on the first card, lpan log/deck arrangement (swap|stackL|stackR), lsplit stacked log share %,
- *    lgw/ldw log/deck width px, lgx/lgy/ldx/ldy their X/Y offsets px, lfelt=0 hides the felt panel
+ *    lgw/ldw log/deck width px, les energy bar scale, lex/ley its X/Y offsets px, leo=h horizontal energy bar, lgx/lgy/ldx/ldy their X/Y offsets px, lfelt=0 hides the felt panel
  * Changing a setup param restarts the board (it is a fresh game each time, not a live one); layout knobs apply instantly.
  */
 const { cards } = loadHsCards();
@@ -40,6 +40,8 @@ const cs = (name: string) => {
 };
 
 const CLS = (name: string) => `[class*="play-board_${name}__"]`;
+const BAR = '[class*="energy-bar_bar__"]';
+const ORBS = '[class*="energy-bar_orbs__"]';
 
 const NUMS: Num[] = [
   { key: 'lm', label: 'Minion height (px)', min: 70, max: 200, css: (v) => `${CLS('row')}{--m-h:${v}px !important}`, read: () => px(cs('row')?.getPropertyValue('--m-h')) },
@@ -67,7 +69,11 @@ const NUMS: Num[] = [
   { key: 'lgx', label: 'Log X offset (px)', min: -800, max: 800, css: (v) => `${CLS('log')}{--lab-x:${v}px}`, read: () => 0 },
   { key: 'lgy', label: 'Log Y offset (px)', min: -800, max: 800, css: (v) => `${CLS('log')}{--lab-y:${v}px}`, read: () => 0 },
   { key: 'ldx', label: 'Deck X offset (px)', min: -800, max: 800, css: (v) => `${CLS('deckView')}{--lab-x:${v}px}`, read: () => 0 },
-  { key: 'ldy', label: 'Deck Y offset (px)', min: -800, max: 800, css: (v) => `${CLS('deckView')}{--lab-y:${v}px}`, read: () => 0 }
+  { key: 'ldy', label: 'Deck Y offset (px)', min: -800, max: 800, css: (v) => `${CLS('deckView')}{--lab-y:${v}px}`, read: () => 0 },
+  // The energy bar: scale and an X / Y offset from where /play puts it (just outside the table's right edge).
+  { key: 'les', label: 'Energy bar scale (x)', min: 0.5, max: 3, step: 0.05, css: (v) => `${BAR}{scale:${v} !important}`, read: () => 1 },
+  { key: 'lex', label: 'Energy bar X offset (px)', min: -800, max: 800, css: (v) => `${BAR}{--lab-x:${v}px}`, read: () => 0 },
+  { key: 'ley', label: 'Energy bar Y offset (px)', min: -800, max: 800, css: (v) => `${BAR}{--lab-y:${v}px}`, read: () => 0 }
 ];
 
 const SETUP_KEYS = ['b0', 'b1', 'p0', 'p1', 'w0', 'w1', 'e0', 'e1', 'h0', 'h1', 'first', 'herofig', 'turn'];
@@ -243,7 +249,7 @@ const BoardLab = () => {
           `${CLS('deckView')}{${stackSide(preset === 'stackL')};top:calc(1rem + (100vh - 3rem) * ${split} + 1rem) !important;bottom:1rem !important;height:auto !important}`
         : '';
   // Offsets (hero figures and panels) ride on --lab-x / --lab-y so X and Y can be set separately.
-  const offsetCss = [CLS('figMe'), CLS('figFoe'), CLS('log'), CLS('deckView')]
+  const offsetCss = [CLS('figMe'), CLS('figFoe'), CLS('log'), CLS('deckView'), BAR]
     .map((sel) => `${sel}{translate:var(--lab-x,0px) var(--lab-y,0px) !important}`)
     .join('');
   // The clicked card's size. `lpv` previews it on the first card in hand without clicking.
@@ -256,6 +262,8 @@ const BoardLab = () => {
 
   const css = [
     panelCss,
+    // Horizontal energy bar: the orbs were listed bottom-first for the column, so row-reverse puts the first one on the left.
+    one(q.leo) === 'h' ? `${ORBS}{flex-direction:row-reverse !important}` : '',
     offsetCss,
     selCss,
     ...NUMS.filter((n) => one(q[n.key]) !== '' && !Number.isNaN(+one(q[n.key]))).map((n) => n.css(+one(q[n.key]))),
@@ -429,6 +437,21 @@ const BoardLab = () => {
               <label style={row}>
                 <input type="checkbox" checked={'lpv' in q} onChange={(e) => setParams({ lpv: e.target.checked ? '1' : null })} /> Preview clicked card (first card)
               </label>
+            </>)}
+            {section('energy', 'Energy bar', 'live', <>
+              <div style={row}>
+                Orientation{' '}
+                {([['v', 'Vertical'], ['h', 'Horizontal']] as const).map(([v, name]) => (
+                  <button
+                    key={v}
+                    onClick={() => setParams({ leo: v === 'v' ? null : v })}
+                    style={{ marginRight: 4, padding: '3px 10px', borderRadius: 6, border: '1px solid #3a4052', cursor: 'pointer', color: '#fff', background: (one(q.leo) === 'h') === (v === 'h') ? '#3d5afe' : '#232634' }}
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+              {sliders(['les', 'lex', 'ley'])}
             </>)}
             {section('panels', 'Log and deck', 'live', <>
               <label style={row}>
