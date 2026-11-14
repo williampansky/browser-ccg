@@ -43,37 +43,76 @@ const CLS = (name: string) => `[class*="play-board_${name}__"]`;
 const BAR = '[class*="energy-bar_bar__"]';
 const ORBS = '[class*="energy-bar_orbs__"]';
 
+/**
+ * The top end of every slider, in one place (px unless noted). Edit freely: a slider whose real default is above its max stretches
+ * to fit it anyway. The offset sliders (lfx0 ... ley, lgx ... ldy) run from minus this value to plus it.
+ */
+const SLIDER_MAX = {
+  // Minions and table
+  lm: 200,
+  lg: 40,
+  ls: 60,
+  lw: 2000,
+  // Hands
+  lhs: 160,
+  lhw0: 260,
+  lhw1: 260,
+  lsel: 3,
+  // Hero figures (width, then X / Y offset: the offset sliders run from minus this to plus this)
+  lfw0: 320,
+  lfw1: 320,
+  lfx0: 2000,
+  lfy0: 2000,
+  lfx1: 2000,
+  lfy1: 2000,
+  // Log and deck panels
+  lsplit: 85,
+  lgw: 700,
+  ldw: 700,
+  lgx: 2000,
+  lgy: 2000,
+  ldx: 2000,
+  ldy: 2000,
+  // Energy bar
+  les: 3,
+  lex: 2000,
+  ley: 2000,
+  // Board (the engine caps a board at 7 minions; energy is 0-10)
+  minions: 7,
+  energy: 10
+};
+
 const NUMS: Num[] = [
-  { key: 'lm', label: 'Minion height (px)', min: 70, max: 200, css: (v) => `${CLS('row')}{--m-h:${v}px !important}`, read: () => px(cs('row')?.getPropertyValue('--m-h')) },
-  { key: 'lg', label: 'Minion gap (px)', min: 0, max: 40, css: (v) => `${CLS('row')}{gap:${v}px !important}`, read: () => px(cs('row')?.columnGap) },
-  { key: 'ls', label: 'Section gap (px)', min: 0, max: 60, css: (v) => `${CLS('table')},${CLS('center')}{gap:${v}px !important}`, read: () => px(cs('center')?.rowGap) },
-  { key: 'lw', label: 'Table max width (px)', min: 300, max: 2000, step: 10, css: (v) => `${CLS('table')}{max-width:${v}px !important}`, read: () => px(cs('table')?.maxWidth) ?? px(String(first('table')?.offsetWidth)) },
-  { key: 'lhs', label: 'Hand sink (px)', min: 0, max: 160, css: (v) => `${CLS('hand')}{--hand-sink:${v}px !important}`, read: () => px(cs('hand')?.getPropertyValue('--hand-sink')) },
+  { key: 'lm', label: 'Minion height (px)', min: 70, max: SLIDER_MAX.lm, css: (v) => `${CLS('row')}{--m-h:${v}px !important}`, read: () => px(cs('row')?.getPropertyValue('--m-h')) },
+  { key: 'lg', label: 'Minion gap (px)', min: 0, max: SLIDER_MAX.lg, css: (v) => `${CLS('row')}{gap:${v}px !important}`, read: () => px(cs('row')?.columnGap) },
+  { key: 'ls', label: 'Section gap (px)', min: 0, max: SLIDER_MAX.ls, css: (v) => `${CLS('table')},${CLS('center')}{gap:${v}px !important}`, read: () => px(cs('center')?.rowGap) },
+  { key: 'lw', label: 'Table max width (px)', min: 300, max: SLIDER_MAX.lw, step: 10, css: (v) => `${CLS('table')}{max-width:${v}px !important}`, read: () => px(cs('table')?.maxWidth) ?? px(String(first('table')?.offsetWidth)) },
+  { key: 'lhs', label: 'Hand sink (px)', min: 0, max: SLIDER_MAX.lhs, css: (v) => `${CLS('hand')}{--hand-sink:${v}px !important}`, read: () => px(cs('hand')?.getPropertyValue('--hand-sink')) },
   // Your hand: the cards are 144 px wide at zoom 1 (the board computes a smaller zoom to fit a big hand), so width = 144 x zoom.
-  { key: 'lhw0', label: 'My hand card width (px)', min: 60, max: 260, css: (v) => `${CLS('hand')}{--hand-zoom:${v / 144} !important}`, read: () => { const z = parseFloat(cs('hand')?.getPropertyValue('--hand-zoom') ?? ''); return Number.isNaN(z) ? undefined : Math.round(z * 144); } },
+  { key: 'lhw0', label: 'My hand card width (px)', min: 60, max: SLIDER_MAX.lhw0, css: (v) => `${CLS('hand')}{--hand-zoom:${v / 144} !important}`, read: () => { const z = parseFloat(cs('hand')?.getPropertyValue('--hand-zoom') ?? ''); return Number.isNaN(z) ? undefined : Math.round(z * 144); } },
   // The enemy's hand: card backs (144 x 152 px by default, overlapping by 40 px each side), scaled together.
-  { key: 'lhw1', label: 'Enemy hand card width (px)', min: 40, max: 260, css: (v) => `${CLS('cardBack')}{width:${v}px !important;height:${(v * 9.5) / 9}px !important;margin-left:${(-v * 2.5) / 9}px !important;margin-right:${(-v * 2.5) / 9}px !important}`, read: () => px(cs('cardBack')?.width) },
-  { key: 'lfw0', label: 'My hero width (px)', min: 110, max: 320, css: (v) => `${CLS('figMe')}{width:${v}px !important;--figW:${v}px !important}`, read: () => px(cs('figMe')?.width) },
-  { key: 'lfw1', label: 'Enemy hero width (px)', min: 110, max: 320, css: (v) => `${CLS('figFoe')}{width:${v}px !important;--figW:${v}px !important}`, read: () => px(cs('figFoe')?.width) },
+  { key: 'lhw1', label: 'Enemy hand card width (px)', min: 40, max: SLIDER_MAX.lhw1, css: (v) => `${CLS('cardBack')}{width:${v}px !important;height:${(v * 9.5) / 9}px !important;margin-left:${(-v * 2.5) / 9}px !important;margin-right:${(-v * 2.5) / 9}px !important}`, read: () => px(cs('cardBack')?.width) },
+  { key: 'lfw0', label: 'My hero width (px)', min: 110, max: SLIDER_MAX.lfw0, css: (v) => `${CLS('figMe')}{width:${v}px !important;--figW:${v}px !important}`, read: () => px(cs('figMe')?.width) },
+  { key: 'lfw1', label: 'Enemy hero width (px)', min: 110, max: SLIDER_MAX.lfw1, css: (v) => `${CLS('figFoe')}{width:${v}px !important;--figW:${v}px !important}`, read: () => px(cs('figFoe')?.width) },
   // Hero figure position: an offset from where /play puts it (via the individual `translate` property, so it composes with the rest).
-  { key: 'lfx0', label: 'My hero X offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('figMe')}{--lab-x:${v}px}`, read: () => 0 },
-  { key: 'lfy0', label: 'My hero Y offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('figMe')}{--lab-y:${v}px}`, read: () => 0 },
-  { key: 'lfx1', label: 'Enemy hero X offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('figFoe')}{--lab-x:${v}px}`, read: () => 0 },
-  { key: 'lfy1', label: 'Enemy hero Y offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('figFoe')}{--lab-y:${v}px}`, read: () => 0 },
+  { key: 'lfx0', label: 'My hero X offset (px)', min: -SLIDER_MAX.lfx0, max: SLIDER_MAX.lfx0, css: (v) => `${CLS('figMe')}{--lab-x:${v}px}`, read: () => 0 },
+  { key: 'lfy0', label: 'My hero Y offset (px)', min: -SLIDER_MAX.lfy0, max: SLIDER_MAX.lfy0, css: (v) => `${CLS('figMe')}{--lab-y:${v}px}`, read: () => 0 },
+  { key: 'lfx1', label: 'Enemy hero X offset (px)', min: -SLIDER_MAX.lfx1, max: SLIDER_MAX.lfx1, css: (v) => `${CLS('figFoe')}{--lab-x:${v}px}`, read: () => 0 },
+  { key: 'lfy1', label: 'Enemy hero Y offset (px)', min: -SLIDER_MAX.lfy1, max: SLIDER_MAX.lfy1, css: (v) => `${CLS('figFoe')}{--lab-y:${v}px}`, read: () => 0 },
   // The clicked (selected) hand card: /play scales it 2x (hand zoom on top) and lifts it so it stays on screen.
-  { key: 'lsel', label: 'Clicked card scale (x)', min: 1, max: 3, step: 0.05, css: () => '', read: () => 2 },
+  { key: 'lsel', label: 'Clicked card scale (x)', min: 1, max: SLIDER_MAX.lsel, step: 0.05, css: () => '', read: () => 2 },
   // The log and deck panels. Their presets are in `panelCss`; these are size and offset.
-  { key: 'lsplit', label: 'Stacked: log share of height (%)', min: 15, max: 85, css: () => '', read: () => 50 },
-  { key: 'lgw', label: 'Log width (px)', min: 120, max: 700, css: (v) => `${CLS('log')}{width:${v}px !important}`, read: () => px(cs('log')?.width) },
-  { key: 'ldw', label: 'Deck width (px)', min: 120, max: 700, css: (v) => `${CLS('deckView')}{width:${v}px !important}`, read: () => px(cs('deckView')?.width) },
-  { key: 'lgx', label: 'Log X offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('log')}{--lab-x:${v}px}`, read: () => 0 },
-  { key: 'lgy', label: 'Log Y offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('log')}{--lab-y:${v}px}`, read: () => 0 },
-  { key: 'ldx', label: 'Deck X offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('deckView')}{--lab-x:${v}px}`, read: () => 0 },
-  { key: 'ldy', label: 'Deck Y offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('deckView')}{--lab-y:${v}px}`, read: () => 0 },
+  { key: 'lsplit', label: 'Stacked: log share of height (%)', min: 15, max: SLIDER_MAX.lsplit, css: () => '', read: () => 50 },
+  { key: 'lgw', label: 'Log width (px)', min: 120, max: SLIDER_MAX.lgw, css: (v) => `${CLS('log')}{width:${v}px !important}`, read: () => px(cs('log')?.width) },
+  { key: 'ldw', label: 'Deck width (px)', min: 120, max: SLIDER_MAX.ldw, css: (v) => `${CLS('deckView')}{width:${v}px !important}`, read: () => px(cs('deckView')?.width) },
+  { key: 'lgx', label: 'Log X offset (px)', min: -SLIDER_MAX.lgx, max: SLIDER_MAX.lgx, css: (v) => `${CLS('log')}{--lab-x:${v}px}`, read: () => 0 },
+  { key: 'lgy', label: 'Log Y offset (px)', min: -SLIDER_MAX.lgy, max: SLIDER_MAX.lgy, css: (v) => `${CLS('log')}{--lab-y:${v}px}`, read: () => 0 },
+  { key: 'ldx', label: 'Deck X offset (px)', min: -SLIDER_MAX.ldx, max: SLIDER_MAX.ldx, css: (v) => `${CLS('deckView')}{--lab-x:${v}px}`, read: () => 0 },
+  { key: 'ldy', label: 'Deck Y offset (px)', min: -SLIDER_MAX.ldy, max: SLIDER_MAX.ldy, css: (v) => `${CLS('deckView')}{--lab-y:${v}px}`, read: () => 0 },
   // The energy bar: scale and an X / Y offset from where /play puts it (just outside the table's right edge).
-  { key: 'les', label: 'Energy bar scale (x)', min: 0.5, max: 3, step: 0.05, css: (v) => `${BAR}{scale:${v} !important}`, read: () => 1 },
-  { key: 'lex', label: 'Energy bar X offset (px)', min: -2000, max: 2000, css: (v) => `${BAR}{--lab-x:${v}px}`, read: () => 0 },
-  { key: 'ley', label: 'Energy bar Y offset (px)', min: -2000, max: 2000, css: (v) => `${BAR}{--lab-y:${v}px}`, read: () => 0 }
+  { key: 'les', label: 'Energy bar scale (x)', min: 0.5, max: SLIDER_MAX.les, step: 0.05, css: (v) => `${BAR}{scale:${v} !important}`, read: () => 1 },
+  { key: 'lex', label: 'Energy bar X offset (px)', min: -SLIDER_MAX.lex, max: SLIDER_MAX.lex, css: (v) => `${BAR}{--lab-x:${v}px}`, read: () => 0 },
+  { key: 'ley', label: 'Energy bar Y offset (px)', min: -SLIDER_MAX.ley, max: SLIDER_MAX.ley, css: (v) => `${BAR}{--lab-y:${v}px}`, read: () => 0 }
 ];
 
 const SETUP_KEYS = ['b0', 'b1', 'p0', 'p1', 'w0', 'w1', 'e0', 'e1', 'h0', 'h1', 'first', 'herofig', 'turn'];
@@ -419,12 +458,12 @@ const BoardLab = () => {
             {section('board', 'Board', 'live', <>
               <label style={row}>
                 My minions: <b>{count('b0')}</b>
-                <input type="range" min={0} max={7} value={count('b0')} style={wide}
+                <input type="range" min={0} max={SLIDER_MAX.minions} value={count('b0')} style={wide}
                   onChange={(e) => setParams({ b0: +e.target.value ? pick(+e.target.value, 1) : null })} />
               </label>
               <label style={row}>
                 Their minions: <b>{count('b1')}</b>
-                <input type="range" min={0} max={7} value={count('b1')} style={wide}
+                <input type="range" min={0} max={SLIDER_MAX.minions} value={count('b1')} style={wide}
                   onChange={(e) => setParams({ b1: +e.target.value ? pick(+e.target.value, 2) : null })} />
               </label>
               <div style={row}>
@@ -440,7 +479,7 @@ const BoardLab = () => {
                 ))}
               </div>
               <label style={row}>
-                Energy (mine) <input type="number" min={0} max={10} style={{ width: 50 }} value={one(q.e0)} onChange={(e) => setParams({ e0: e.target.value })} />
+                Energy (mine) <input type="number" min={0} max={SLIDER_MAX.energy} style={{ width: 50 }} value={one(q.e0)} onChange={(e) => setParams({ e0: e.target.value })} />
               </label>
             </>)}
             {section('restart', 'Heroes and hand', 'restarts the board, same deck each time', <>
