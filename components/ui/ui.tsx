@@ -50,8 +50,8 @@ export const Checkbox = ({ checked, onChange, children, title, className, ...res
   <label className={cx('ui-check', className)} title={title}>
     <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} {...rest} />
     <i aria-hidden="true">
-      {/* The tick is the cross-into-checkmark animation: it plays forward on check and back on uncheck, hidden while unchecked. */}
-      <AnimatedIcon name="cross-into-checkmark" on={checked} size={0} style={{ width: '100%', height: '100%', opacity: checked ? 1 : 0, transition: 'opacity 0.12s' }} />
+      {/* The tick is the cross-into-checkmark animation: it is drawn in on check and fades on uncheck, so the starting cross never shows while unchecked. */}
+      <AnimatedIcon name="cross-into-checkmark" on={checked} hideWhenOff size={0} style={{ width: '100%', height: '100%' }} />
     </i>
     {children !== undefined && <span>{children}</span>}
   </label>
