@@ -229,23 +229,12 @@ select.ui-field {
     border: 1px solid var(--ui-field-border);
     border-radius: 4px;
     position: relative;
+    display: grid;
+    color: var(--ui-primary-text); // the tick (an AnimatedIcon) takes this colour
   }
   input:checked + i {
     background: var(--ui-check-art-on) center / 100% 100% no-repeat, var(--ui-seg-on-bg);
     border-color: var(--ui-seg-on-border);
-
-    // The drawn tick; hidden when the theme has art (the art draws its own).
-    &::after {
-      content: '';
-      position: absolute;
-      left: 30%;
-      top: 8%;
-      width: 28%;
-      height: 55%;
-      border: solid var(--ui-primary-text);
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
-    }
   }
   input:focus-visible + i {
     outline: 2px solid var(--ui-focus);

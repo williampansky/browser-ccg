@@ -150,7 +150,7 @@ $classic: (
     'ui-control-h': 2.5rem,
     'ui-check-size': 1.25rem,
     'ui-check-art': art($t, 'checkbox_off'),
-    'ui-check-art-on': art($t, 'checkbox_on'),
+    'ui-check-art-on': art($t, 'checkbox_off'), // the tick is the animated icon, not the kit's drawn one
     'ui-font-heading': (Georgia, 'Times New Roman', serif),
     'ui-heading-spacing': 0.08em
   );

@@ -76,3 +76,16 @@ describe('themed screens use the shared controls', () => {
     expect(src).not.toMatch(/<(select|input|textarea)\b/);
   });
 });
+
+describe('animated icons', () => {
+  const fs = require('fs') as typeof import('fs');
+  const path = require('path') as typeof import('path');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { ANIMATED_ICONS, frameUrl } = require('../animated-icons');
+  it('every icon has all of its numbered frames on disk', () => {
+    for (const i of ANIMATED_ICONS as { id: string; frames: number }[]) {
+      for (let f = 0; f < i.frames; f++) expect(fs.existsSync(path.join(__dirname, '../../../public', frameUrl(i.id, f)))).toBe(true);
+      expect(fs.existsSync(path.join(__dirname, '../../../public', frameUrl(i.id, i.frames)))).toBe(false); // and no extra frames the registry misses
+    }
+  });
+});

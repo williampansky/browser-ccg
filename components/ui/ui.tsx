@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
+import { AnimatedIcon } from './AnimatedIcon';
 
 /**
  * The shared interface controls. Every screen that is meant to follow the interface theme builds its buttons, drop-downs, checkboxes
@@ -48,7 +49,10 @@ type CheckboxProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 
 export const Checkbox = ({ checked, onChange, children, title, className, ...rest }: CheckboxProps) => (
   <label className={cx('ui-check', className)} title={title}>
     <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} {...rest} />
-    <i aria-hidden="true" />
+    <i aria-hidden="true">
+      {/* The tick is the cross-into-checkmark animation: it plays forward on check and back on uncheck, hidden while unchecked. */}
+      <AnimatedIcon name="cross-into-checkmark" on={checked} size={0} style={{ width: '100%', height: '100%', opacity: checked ? 1 : 0, transition: 'opacity 0.12s' }} />
+    </i>
     {children !== undefined && <span>{children}</span>}
   </label>
 );
