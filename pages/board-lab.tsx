@@ -184,6 +184,12 @@ const BoardLab = () => {
       /* no saved sections */
     }
   }, []);
+  const SECTION_IDS = ['presets', 'board', 'restart', 'minions', 'table', 'hands', 'energy', 'panels', 'heroes'];
+  const setAllSections = (open: boolean) => {
+    const next = Object.fromEntries(SECTION_IDS.map((id) => [id, open]));
+    setSections(next);
+    window.localStorage.setItem('ccg.boardlab.sections', JSON.stringify(next));
+  };
   const toggleSection = (id: string, isOpen: boolean) =>
     setSections((old) => {
       if (!!old[id] === isOpen) return old;
@@ -447,6 +453,9 @@ const BoardLab = () => {
               boxShadow: '0 6px 24px #000a'
             }}
           >
+            <div style={{ marginBottom: 6 }}>
+              <button onClick={() => setAllSections(false)}>Collapse all</button> <button onClick={() => setAllSections(true)}>Expand all</button>
+            </div>
             {section('presets', 'Presets', 'saved in this browser', <>
               <div style={row}>
                 <input

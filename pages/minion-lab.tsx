@@ -228,10 +228,9 @@ const buildSamples = (): Sample[] => {
   ];
 };
 
-const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <details open style={{ borderTop: '1px solid #3a4052', padding: '6px 0' }}>
-    <summary style={{ cursor: 'pointer', userSelect: 'none', fontSize: '1.25rem',
-    padding: '0 0 0.25rem 0' }}>
+const Section = ({ title, open, onToggle, children }: { title: string; open: boolean; onToggle: (open: boolean) => void; children: React.ReactNode }) => (
+  <details open={open} onToggle={(e) => onToggle((e.currentTarget as HTMLDetailsElement).open)} style={{ borderTop: '1px solid #3a4052', padding: '6px 0' }}>
+    <summary style={{ cursor: 'pointer', userSelect: 'none' }}>
       <b>{title}</b>
     </summary>
     {children}
@@ -247,6 +246,24 @@ const MinionLab = () => {
   // Render only on the client: the URL params are not known on the server, so a first render there would not match.
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+
+  // Which sections are open (all, to start with); "Collapse all" / "Expand all" set every one. Remembered in localStorage.
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(window.localStorage.getItem('ccg.minionlab.sections') ?? 'null');
+      if (saved && typeof saved === 'object') setOpenSections(saved);
+    } catch {
+      /* none saved */
+    }
+  }, []);
+  const isOpen = (id: string) => openSections[id] !== false;
+  const storeSections = (next: Record<string, boolean>) => {
+    setOpenSections(next);
+    window.localStorage.setItem('ccg.minionlab.sections', JSON.stringify(next));
+  };
+  const setAllSections = (open: boolean) => storeSections(Object.fromEntries(GROUPS.map((g) => [g.id, open])));
+  const toggleSection = (id: string, open: boolean) => isOpen(id) !== open && storeSections({ ...openSections, [id]: open });
 
   // The control panel's width (px): dragged by its right edge, remembered in localStorage, double-click resets.
   const [panelW, setPanelW] = useState(290);
@@ -405,8 +422,11 @@ const MinionLab = () => {
             </select>
           </label>
         </header>
+        <div style={row}>
+          <button onClick={() => setAllSections(false)}>Collapse all</button> <button onClick={() => setAllSections(true)}>Expand all</button>
+        </div>
         {GROUPS.map((g) => (
-          <Section key={g.id} title={g.title}>
+          <Section key={g.id} title={g.title} open={isOpen(g.id)} onToggle={(o) => toggleSection(g.id, o)}>
             {g.keys.map(knob)}
             {g.id === 'icons' && (
               <>
