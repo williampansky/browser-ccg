@@ -100,6 +100,28 @@ const BoardLab = () => {
       /* no saved position */
     }
   }, []);
+  // The overlay's width (px): dragged by the panel's outer edge (left edge while docked top right, since the right side is pinned).
+  const [width, setWidth] = useState(250);
+  const resize = useRef<{ x: number; w: number } | null>(null);
+  useEffect(() => {
+    const saved = parseInt(window.localStorage.getItem('ccg.boardlab.width') ?? '', 10);
+    if (saved >= 200 && saved <= 1000) setWidth(saved);
+  }, []);
+  const startResize = (e: React.PointerEvent<HTMLDivElement>) => {
+    resize.current = { x: e.clientX, w: width };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    e.stopPropagation();
+  };
+  const moveResize = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!resize.current) return;
+    const dx = e.clientX - resize.current.x;
+    setWidth(Math.min(1000, Math.max(200, resize.current.w + (pos ? dx : -dx))));
+  };
+  const endResize = () => {
+    if (!resize.current) return;
+    resize.current = null;
+    window.localStorage.setItem('ccg.boardlab.width', String(width));
+  };
   // Which accordion sections are open (default: just "Board"); remembered in localStorage.
   const [sections, setSections] = useState<Record<string, boolean>>({ presets: true, board: true });
   useEffect(() => {
@@ -333,10 +355,22 @@ const BoardLab = () => {
           </button>
         </div>
         {open && (
+          <div style={{ position: 'relative', marginTop: 6, width }}>
+            <div
+              onPointerDown={startResize}
+              onPointerMove={moveResize}
+              onPointerUp={endResize}
+              onPointerCancel={endResize}
+              onDoubleClick={() => {
+                setWidth(250);
+                window.localStorage.removeItem('ccg.boardlab.width');
+              }}
+              title="Drag to resize; double-click to reset the width"
+              style={{ position: 'absolute', top: 0, bottom: 0, [pos ? 'right' : 'left']: -4, width: 9, cursor: 'ew-resize', touchAction: 'none', zIndex: 1 }}
+            />
           <div
             style={{
-              marginTop: 6,
-              width: 250,
+              width: '100%',
               maxHeight: pos ? `calc(100vh - ${pos.y + 50}px)` : 'calc(100vh - 60px)',
               overflow: 'auto',
               padding: 12,
@@ -479,6 +513,7 @@ const BoardLab = () => {
               Reset everything
             </button>
             <p style={{ color: '#9aa3b8', fontSize: 11 }}>The URL holds all of it: copy it to keep a layout.</p>
+          </div>
           </div>
         )}
       </div>
