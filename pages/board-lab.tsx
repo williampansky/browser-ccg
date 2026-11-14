@@ -10,7 +10,7 @@ const PlayBoard = dynamic(() => import('../components/play-board/PlayBoard').the
  * PROTOTYPE page (dev only, not linked): the real /play board, frozen into a setup you choose, with an overlay of layout knobs.
  * Everything is in the URL, so a layout can be shared or bookmarked:
  *  - setup (the same debug params as /play): b0 b1 (board minion ids), turn (0 = player, 1 = enemy; applied live), p0 p1 (hand ids), w0 w1, e0 e1, h0 h1, first, herofig
- *  - layout (CSS overrides over the real stylesheet): lm minion height px, lg minion gap px, lml/lms clicked-minion lift px / scale, lmpv=1 previews it on your first minion, ls section gap px, lw table max width px,
+ *  - layout (CSS overrides over the real stylesheet): lm minion height px, lg minion gap px, lml/lms clicked-minion lift px / scale, lmh aimed-at target scale, lmpv=1 previews it on your first minion, ls section gap px, lw table max width px,
  *    lhs hand sink px, lhw0 / lhw1 my hand / enemy hand card width px, lfw0 / lfw1 my / enemy hero figure width px, lfs hero figure side (left|right), lfx0/lfy0/lfx1/lfy1 hero figure X/Y offsets px,
  *    lsel clicked-card scale, lpv=1 previews it on the first card, lpan log/deck arrangement (swap|stackL|stackR), lsplit stacked log share %,
  *    lgw/ldw log/deck width px, les energy bar scale, lex/ley its X/Y offsets px, leo=h horizontal energy bar, lgx/lgy/ldx/ldy their X/Y offsets px, lfelt=0 hides the felt panel
@@ -60,6 +60,7 @@ const SLIDER_MAX = {
   // Clicked minion
   lml: 80,
   lms: 2,
+  lmh: 1.5,
   // Hands
   lhs: 160,
   lhw0: 260,
@@ -107,8 +108,10 @@ const NUMS: Num[] = [
   { key: 'lfx1', label: 'Enemy hero X offset (px)', min: -SLIDER_MAX.lfx1, max: SLIDER_MAX.lfx1, css: (v) => `${CLS('figFoe')}{--lab-x:${v}px}`, read: () => 0 },
   { key: 'lfy1', label: 'Enemy hero Y offset (px)', min: -SLIDER_MAX.lfy1, max: SLIDER_MAX.lfy1, css: (v) => `${CLS('figFoe')}{--lab-y:${v}px}`, read: () => 0 },
   // A clicked minion: how far it lifts and how much it grows (the board's own defaults are 14 px and 1.08x).
-  { key: 'lml', label: 'Clicked minion lift (px)', min: 0, max: SLIDER_MAX.lml, css: (v) => `${SLOT}{--sel-lift:${v}px}`, read: () => 14 },
-  { key: 'lms', label: 'Clicked minion scale (x)', min: 1, max: SLIDER_MAX.lms, step: 0.01, css: (v) => `${SLOT}{--sel-scale:${v}}`, read: () => 1.08 },
+  { key: 'lml', label: 'Clicked minion lift (px)', min: 0, max: SLIDER_MAX.lml, step: 0.5, css: (v) => `${SLOT}{--sel-lift:${v}px}`, read: () => 14 },
+  { key: 'lms', label: 'Clicked minion scale (x)', min: 1, max: SLIDER_MAX.lms, step: 0.005, css: (v) => `${SLOT}{--sel-scale:${v}}`, read: () => 1.08 },
+  // A target under the pointer while aiming: 1 = no change (a ring only).
+  { key: 'lmh', label: 'Target hover scale (x)', min: 0.8, max: SLIDER_MAX.lmh, step: 0.005, css: (v) => `${SLOT}{--aim-scale:${v}}`, read: () => 1 },
   // The clicked (selected) hand card: /play scales it 2x (hand zoom on top) and lifts it so it stays on screen.
   { key: 'lsel', label: 'Clicked card scale (x)', min: 1, max: SLIDER_MAX.lsel, step: 0.05, css: () => '', read: () => 2 },
   // The log and deck panels. Their presets are in `panelCss`; these are size and offset.
@@ -377,7 +380,15 @@ const BoardLab = () => {
       const raw = one(q[n.key]);
       return (
         <label key={n.key} style={row}>
-          {n.label}: <b>{raw || (defaults[n.key] ?? '...')}</b>{!raw && defaults[n.key] !== undefined && <span style={{ color: '#9aa3b8' }}> (default)</span>}
+          {n.label}{' '}
+          <input
+            type="number"
+            step={n.step ?? 1}
+            value={raw || (defaults[n.key] ?? '')}
+            style={{ width: 66 }}
+            onChange={(e) => setParams({ [n.key]: e.target.value })}
+          />
+          {!raw && defaults[n.key] !== undefined && <span style={{ color: '#9aa3b8' }}> (default)</span>}
           {raw && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ [n.key]: null })}>reset</a>}
           <input type="range" min={Math.min(n.min, defaults[n.key] ?? n.min)} max={Math.max(n.max, defaults[n.key] ?? n.max)} step={n.step ?? 1} value={raw || (defaults[n.key] ?? n.min)} style={wide}
             onChange={(e) => setParams({ [n.key]: e.target.value })} />
@@ -516,7 +527,7 @@ const BoardLab = () => {
               </label>
             </>)}
             {section('minions', 'Minions', 'live', <>
-              {sliders(['lm', 'lg', 'lml', 'lms'])}
+              {sliders(['lm', 'lg', 'lml', 'lms', 'lmh'])}
               <label style={row}>
                 <input type="checkbox" checked={'lmpv' in q} onChange={(e) => setParams({ lmpv: e.target.checked ? '1' : null })} /> Preview clicked minion (my first)
               </label>
