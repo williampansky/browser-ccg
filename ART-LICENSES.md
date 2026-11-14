@@ -41,6 +41,17 @@ This lists what was bought. It does **not** yet say which asset is used by which
 | [Void Invaders](https://graphicriver.net/item/void-invaders/36722632) | a-ravlik | Regular License | 2022-11-14 | 36722632 |
 | [Walking Zombie](https://graphicriver.net/item/walking-zombie/39062652) | a-ravlik | Regular License | 2022-11-14 | 39062652 |
 
+## Where the Vol 14 pack is used (started provenance table)
+
+All from the purchased TCG Card Design Vol 14 (Regular License, certificate `58070686-tcg-card-design-vol-14-license.pdf`):
+
+| File in `public/images/` | Source file in the pack |
+|---|---|
+| `frames/HERO-VOL14.png` | `TCG_vol14_front.png` (the neutral frame, 857 x 1200 export) |
+| `ui/hero-badge.png` | `TCG_vol14_front-assets/Card_Type_Board.png` |
+| `ui/hero-hp.png` | `TCG_vol14_front-assets/ic_attack.png` (red gem, used for health) |
+| `ui/hero-armor.png` | `TCG_vol14_front-assets/ic_shield.png` (green gem, used for armor) |
+
 ## Free assets (no purchase certificate)
 
 | Item | Author | Source | Terms (as stated on the page) | Retrieved |

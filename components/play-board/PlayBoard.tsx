@@ -43,6 +43,7 @@ import { artBackground, withSpellDamageText } from './card-face-model';
 import { loadDecks } from '../deck-builder/deck-storage';
 import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
 import { HeroBar } from './HeroBar';
+import { HeroFigure } from './HeroVariants';
 import { heroImage } from './hero-images';
 import { CardFlight } from './CardFlight';
 import { FLIGHT_MS, IMPACT_MS, lunge, nudge, reducedMotion } from './motion';
@@ -328,6 +329,9 @@ export const PlayBoard = () => {
    *  selecting a card. Off by default; saved. More settings will be split out of it later. */
   const [a11y, setA11y] = useState(false);
   useEffect(() => setA11y(isAccessible()), []);
+  // PROTOTYPE: ?herofig=1 draws each hero as the Vol 14 figure card (components/play-board/HeroVariants.tsx) instead of the bar.
+  const [figUi, setFigUi] = useState(false);
+  useEffect(() => setFigUi(new URLSearchParams(window.location.search).has('herofig')), []);
   /** Turn timer: 60 s per turn (15 s with Cronus on a board), on by default; running out ends the turn. Local stand-in for a server clock. */
   const [timerOn, setTimerOnState] = useState(true);
   useEffect(() => setTimerOnState(isTimerOn()), []);
@@ -988,6 +992,48 @@ export const PlayBoard = () => {
         }))}
       />
     );
+    if (figUi && hero && p.hero) {
+      return (
+        <div className={[styles.figSlot, isMe ? styles.figMe : styles.figFoe].join(' ')}>
+          <HeroFigure
+            heroId={hero.id}
+            name={hero.name}
+            health={p.health}
+            armor={p.armor}
+            team={owner === '0' ? 'green' : 'red'}
+            active={owner === state.activePlayer && !over}
+            rootRef={track(`h${owner}`)}
+            skillRef={(i) => track(`s${owner}-${i}`)}
+            onSkill={pickSkill}
+            aim={aim}
+            aimHover={hover?.kind === 'hero' && hover.player === owner}
+            selected={selection?.kind === 'hero' && isMe}
+            canAct={isMe && heroCanSwing}
+            skills={hero.skills.map((s) => {
+              const cooldownLeft = p.hero!.cooldowns[s.index] ?? 0;
+              const spent = !!p.hero!.spent[s.index];
+              return {
+                name: s.name,
+                cost: s.cost,
+                text: s.text,
+                usable: isMe && !over && myTurn && actions.some((a) => a.type === 'HeroSkill' && a.skill === s.index),
+                cooldownLeft,
+                spent,
+                selected: selection?.kind === 'skill' && isMe && selection.index === s.index,
+                targeted: !!s.target,
+              };
+            })}
+            dom={{
+              onMouseEnter: () => setHover({ kind: 'hero', player: owner }),
+              onMouseLeave: () => setHover(null),
+              ...dropOnTarget({ kind: 'hero', player: owner }),
+              ...(!over && isMe && heroCanSwing ? dragFrom({ kind: 'hero' }) : {}),
+              onClick: () => clickHero(owner),
+            }}
+          />
+        </div>
+      );
+    }
     const bar = (
       <HeroBar
         name={label(owner)}
@@ -1410,9 +1456,10 @@ export const PlayBoard = () => {
         {areaZone && <div className={[styles.castArea, areaHot ? styles.castAreaHot : ''].join(' ')} style={{ height: areaHeight }} />}
         <section className={[styles.side, styles.top].join(' ')}>
           <div className={styles.backs}>
-            {state.players[foe].hand.map((_, i) => (
+            {state.players[foe].hand.map((_, i, all) => (
               <div
                 key={i}
+                style={{ ['--back-rot' as string]: `${-fanRotation(i, all.length)}deg`, ['--back-rise' as string]: `${fanDrop(i, all.length) * 0.4}px` }}
                 className={[styles.cardBack, foeAim?.action.type === 'PlayCard' && foeAim.action.handIndex === i ? styles.backPicked : ''].join(' ')}
               />
             ))}

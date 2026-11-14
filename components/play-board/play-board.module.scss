@@ -68,6 +68,7 @@
 }
 
 .side {
+  position: relative;
   display: flex;
   align-items: stretch;
   flex-direction: column;
@@ -635,12 +636,13 @@
   border-radius: 8px;
   border: 2px solid #0008;
   background: #2b3042 url('/images/backs/default.png') center / cover no-repeat;
-  transform: translateY(-6.6rem);
+  // Fanned the opposite way to your hand: the middle hangs lowest, the ends tilt and rise (--back-rot, --back-rise from the board).
+  transform: translateY(calc(-6.6rem - var(--back-rise, 0px))) rotate(var(--back-rot, 0deg));
   transition: transform 0.15s;
 }
 
 .backPicked {
-  transform: translateY(-3.2rem);
+  transform: translateY(-3.2rem) rotate(0deg);
   box-shadow: 0 0 0 2px #ff6b6b;
   z-index: 1;
 }
@@ -1026,4 +1028,21 @@
   justify-content: space-around;
   padding-top: 0.25rem;
   font-size: 0.9rem;
+}
+
+// PROTOTYPE (?herofig=1): the hero figure card sits at the left edge of its side, over the board.
+.figSlot {
+  position: absolute;
+  left: 0.5rem;
+  z-index: 30;
+  --figW: 170px;
+  width: 170px;
+}
+
+.figFoe {
+  top: 0.5rem;
+}
+
+.figMe {
+  bottom: 6.5rem; // above the fanned hand
 }

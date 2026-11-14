@@ -1,0 +1,123 @@
+// PROTOTYPE hero display (see HeroBust.tsx): an arched portrait window rising out of a base plate, with health and armor as gems.
+.bust {
+  --team: #4fbf7a;
+  --w: 230px;
+  position: relative;
+  width: var(--w);
+  height: calc(var(--w) * 0.95);
+  font-family: 'Carter One', Arial, Helvetica, sans-serif;
+  color: #fff;
+  user-select: none;
+}
+
+.red {
+  --team: #e0584a;
+}
+
+// The arch is taller than the plate is deep, so the head stands above the plate.
+.arch {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--w) * 0.17);
+  width: calc(var(--w) * 0.68);
+  height: calc(var(--w) * 0.76);
+  transform: translateX(-50%);
+  border-radius: calc(var(--w) * 0.34) calc(var(--w) * 0.34) 10px 10px;
+  border: 4px solid var(--team);
+  background-size: cover;
+  background-position: 50% 0;
+  background-color: #0b1020;
+  box-shadow: 0 0 0 2px #000, 0 6px 18px rgba(0, 0, 0, 0.6), inset 0 -26px 24px -10px rgba(0, 0, 0, 0.55);
+  transition: box-shadow 250ms;
+}
+
+.active .arch {
+  box-shadow: 0 0 0 2px #000, 0 0 22px 4px var(--team), 0 6px 18px rgba(0, 0, 0, 0.6), inset 0 -26px 24px -10px rgba(0, 0, 0, 0.55);
+}
+
+.plate {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--w) * 0.26);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #000;
+  border-radius: 12px;
+  background: linear-gradient(#3a4052, #1b1f2b);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.25), inset 0 0 0 2px var(--team), 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+.name {
+  font-size: calc(var(--w) * 0.085);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 0 #000;
+  padding-top: calc(var(--w) * 0.03);
+  max-width: 56%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.longName {
+  font-size: calc(var(--w) * 0.055);
+}
+
+.turn {
+  position: absolute;
+  z-index: 2;
+  bottom: -1.5em;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.1em 0.7em;
+  border-radius: 99px;
+  background: var(--team);
+  color: #0b1020;
+  font-size: calc(var(--w) * 0.07);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.gem {
+  position: absolute;
+  bottom: calc(var(--w) * 0.06);
+  width: calc(var(--w) * 0.27);
+  height: calc(var(--w) * 0.27);
+  display: grid;
+  place-items: center;
+  font-size: calc(var(--w) * 0.13);
+  text-shadow: 0 2px 0 #000;
+  border: 3px solid #000;
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.35), 0 3px 8px rgba(0, 0, 0, 0.6);
+}
+
+.hp {
+  left: calc(var(--w) * -0.02);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff8a7a, #b3201a 70%);
+}
+
+.hp.hurt {
+  background: radial-gradient(circle at 35% 30%, #ffc27a, #c4620f 70%);
+}
+
+.hp.low {
+  background: radial-gradient(circle at 35% 30%, #ff5a5a, #7a0b0b 70%);
+  animation: throb 900ms ease-in-out infinite;
+}
+
+.armor {
+  right: calc(var(--w) * -0.02);
+  border-radius: 12px 12px 50% 50%;
+  background: radial-gradient(circle at 35% 30%, #dfe5f2, #6a7490 70%);
+}
+
+@keyframes throb {
+  50% {
+    transform: scale(1.1);
+  }
+}

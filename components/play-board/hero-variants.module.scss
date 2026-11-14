@@ -1,0 +1,442 @@
+// PROTOTYPE hero displays 2-4 (see HeroVariants.tsx). Shared: --team colour, Carter One lettering, a black-outlined number.
+.root {
+  --team: #4fbf7a;
+  position: relative;
+  font-family: 'Carter One', Arial, Helvetica, sans-serif;
+  color: #fff;
+  user-select: none;
+}
+
+.red {
+  --team: #e0584a;
+}
+
+.num {
+  text-shadow: 0 2px 0 #000;
+  -webkit-text-stroke: 0.08em #000;
+  paint-order: stroke fill;
+}
+
+.hpGem,
+.armorGem {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border: 3px solid #000;
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.35), 0 3px 8px rgba(0, 0, 0, 0.6);
+}
+
+.hpGem {
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff8a7a, #b3201a 70%);
+}
+
+.hpGem.hurt {
+  background: radial-gradient(circle at 35% 30%, #ffc27a, #c4620f 70%);
+}
+
+.hpGem.low {
+  background: radial-gradient(circle at 35% 30%, #ff5a5a, #7a0b0b 70%);
+}
+
+.armorGem {
+  border-radius: 12px 12px 50% 50%;
+  background: radial-gradient(circle at 35% 30%, #dfe5f2, #6a7490 70%);
+}
+
+.skills {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.skill {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid var(--team);
+  box-shadow: 0 0 0 2px #000, 0 3px 8px rgba(0, 0, 0, 0.6);
+  background: #0b1020 center / cover no-repeat;
+}
+
+.turnTag {
+  padding: 0.1em 0.8em;
+  border-radius: 99px;
+  background: var(--team);
+  color: #0b1020;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+// ---- 2: the standing figure: the TCG Vol 14 frame with its sample layout (all offsets are % of the 857 x 1200 frame) ----------
+.figure {
+  width: var(--figW, 220px);
+  aspect-ratio: 857 / 1200;
+  --u: calc(var(--figW, 220px) / 857);
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
+  transition: filter 300ms;
+}
+
+// Same for every hero and both seats: whose turn it is shows as a warm glow, not a colour change.
+.active.figure {
+  filter: drop-shadow(0 0 14px rgba(255, 214, 120, 0.7)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
+}
+
+.figPic {
+  position: absolute;
+  inset: 0 0 25% 0;
+  border-radius: 4.5% 4.5% 0 0 / 3.2% 3.2% 0 0;
+  background: #0b1020 center top / cover no-repeat;
+}
+
+.figFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+// The ribbon above the text panel.
+.figName {
+  position: absolute;
+  left: 6.4%;
+  width: 60.7%;
+  top: 68.8%;
+  height: 4.6%;
+  display: grid;
+  place-items: center;
+  font-size: calc(var(--u) * 44);
+  line-height: 1;
+  padding-top: 0.12em; // Carter One sits high in its line box
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 0 #000;
+  white-space: nowrap;
+}
+
+// The text panel: three skill icons, then deck and hand.
+.figSkills {
+  position: absolute;
+  z-index: 5; // above the gems, so a skill tooltip is never covered
+  left: 8%;
+  width: 57%;
+  top: 77.6%;
+  display: flex;
+  gap: calc(var(--u) * 22);
+  justify-content: center;
+}
+
+.figSkill {
+  --figSkillSize: 125;
+  position: relative;
+  padding: 0;
+  width: calc(var(--u) * var(--figSkillSize));
+  height: calc(var(--u) * var(--figSkillSize));
+  border-radius: 50%;
+  border: calc(var(--u) * 4) solid #5a6277;
+  box-shadow: 0 0 0 1px #000, 0 3px 6px rgba(0, 0, 0, 0.6);
+  background: #0b1020 center / cover no-repeat;
+  color: inherit;
+  font: inherit;
+  cursor: default;
+  transition: box-shadow 150ms, border-color 150ms, filter 150ms, transform 150ms;
+
+  &.ready {
+    border-color: #4aa3ff;
+    cursor: pointer;
+    box-shadow: 0 0 0 1px #000, 0 0 10px 1px #4aa3ff;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 1px #000, 0 0 16px 3px #4aa3ff;
+    }
+  }
+
+  &.picked {
+    border-color: #3ddc84;
+    box-shadow: 0 0 0 1px #000, 0 0 16px 2px #3ddc84;
+  }
+
+  // Cooling down, used up or unaffordable: the icon is dimmed by a layer under the cost chip and status (a filter on the
+  // button itself would dim the chip too and trap the tooltip in its own stacking context).
+  &.off::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    backdrop-filter: grayscale(0.7) brightness(0.55);
+  }
+
+  &:hover .figTip,
+  &:focus-visible .figTip {
+    visibility: visible;
+  }
+}
+
+// Live-board states (HeroFigure on /play): can attack, legal target, hovered target, selected attacker.
+.figure.canAct {
+  filter: drop-shadow(0 0 10px rgba(61, 220, 132, 0.8)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
+}
+
+.figure.aim {
+  filter: drop-shadow(0 0 10px rgba(255, 90, 80, 0.85)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
+  cursor: crosshair;
+}
+
+.figure.aimHover {
+  filter: drop-shadow(0 0 18px rgba(255, 90, 80, 1)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
+}
+
+.figure.sel {
+  filter: drop-shadow(0 0 16px rgba(61, 220, 132, 1)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.65));
+}
+
+// Hovering a skill lifts the whole card above its neighbours so the tooltip is not covered.
+.figure:hover {
+  z-index: 10;
+}
+
+.figCost {
+  position: absolute;
+  left: -12%;
+  bottom: -10%;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+  width: 42%;
+  height: 42%;
+  border-radius: 50%;
+  background: #4aa3ff;
+  border: 1px solid #10131d;
+  color: #10131d;
+  font-weight: normal;
+  font-size: calc(var(--u) * 31);
+  line-height: 1;
+}
+
+.figTarget {
+  position: absolute;
+  right: -8%;
+  top: -20%;
+  font-style: normal;
+  font-size: calc(var(--u) * 48);
+  text-shadow: 0 0 3px #000;
+}
+
+// Cooldown turns left (or a cross once an ultimate is used) over the dimmed icon.
+.figStatus {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #000a;
+  font-style: normal;
+  font-size: calc(var(--u) * 70);
+  text-shadow: 0 2px 0 #000;
+}
+
+.figTip {
+  visibility: hidden;
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 190px;
+  padding: 6px 9px;
+  background: #10131d;
+  border: 1px solid #343846;
+  border-radius: 8px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+}
+
+// Round gems from the pack: health (red, big) in the ring at the right, armor (green ring, number) on the window arc at the left.
+.figGem {
+  --figGemSize: 175;
+  position: absolute;
+  width: calc(var(--u) * var(--figGemSize));
+  height: calc(var(--u) * var(--figGemSize));
+  display: grid;
+  place-items: center;
+  background: center / contain no-repeat;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.7));
+  z-index: 3;
+}
+
+.figGem b {
+  font-weight: normal;
+  font-size: calc(var(--u) * 80);
+  line-height: 1;
+  padding-bottom: 2px;
+  text-shadow: 0 2px 0 #000, 0 0 6px #000;
+}
+
+.figHp {
+  // Centred on the ring (about 745, 945 in frame units), larger than the other gem.
+  --figHpSize: 300;
+  width: calc(var(--u) * var(--figHpSize));
+  height: calc(var(--u) * var(--figHpSize));
+  left: 70.5%;
+  top: 66.7%;
+  background-image: url('/images/ui/hero-hp.png');
+}
+
+.figHp b {
+  font-size: calc(var(--u) * 95);
+}
+
+.figHp.hurt {
+  filter: drop-shadow(0 0 6px rgba(255, 180, 70, 0.95)) drop-shadow(0 3px 4px rgba(0, 0, 0, 0.7));
+}
+
+.figHp.low {
+  filter: drop-shadow(0 0 7px rgba(255, 70, 60, 1)) drop-shadow(0 3px 4px rgba(0, 0, 0, 0.7));
+}
+
+.figArmor {
+  left: 2.6%;
+  top: 53.6%;
+  background-image: url('/images/ui/hero-armor.png');
+}
+
+.figArmor b {
+  color: #c0d996;
+  font-size: calc(var(--u) * 75);
+}
+
+// ---- 3: the big medallion ---------------------------------------------------------------------------------------------------
+.medal {
+  --size: 240px;
+  width: var(--size);
+  height: calc(var(--size) + 30px);
+}
+
+.medalRing {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  // Health sweeps clockwise from the top; the colour follows --hp (the gem's tone).
+  background: conic-gradient(var(--hp, #d8372c) var(--fill), #1a1c26 0);
+  box-shadow: 0 0 0 3px #000, 0 8px 22px rgba(0, 0, 0, 0.6);
+}
+
+.active .medalRing {
+  box-shadow: 0 0 0 3px #000, 0 0 26px 6px var(--team), 0 8px 22px rgba(0, 0, 0, 0.6);
+}
+
+.medalArmor {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: conic-gradient(#aeb8d0 var(--armor), #232634 0);
+}
+
+.medalFace {
+  position: absolute;
+  inset: 22px;
+  border-radius: 50%;
+  border: 4px solid #000;
+  background: #0b1020 center 8% / 150% no-repeat;
+  box-shadow: inset 0 -30px 28px -12px rgba(0, 0, 0, 0.6);
+}
+
+.medalHp {
+  left: 50%;
+  top: calc(var(--size) - 46px);
+  width: 62px;
+  height: 62px;
+  transform: translateX(-50%);
+  font-size: 30px;
+}
+
+.medalName {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  font-size: 22px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 0 #000;
+}
+
+.medalTag {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  z-index: 2;
+}
+
+// ---- 4: the hero as a framed card -------------------------------------------------------------------------------------------
+.card {
+  --u: 1.18px; // pixels per unit of the frame's 178 x 250 design
+  width: calc(178 * var(--u));
+  height: calc(250 * var(--u));
+}
+
+.cardArt {
+  position: absolute;
+  left: calc(12 * var(--u));
+  top: calc(25 * var(--u));
+  width: calc(157 * var(--u));
+  height: calc(137 * var(--u));
+  background: #191919 center top / cover no-repeat;
+}
+
+.cardFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cardName {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(165 * var(--u));
+  text-align: center;
+  font-size: calc(15 * var(--u));
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 0 #000;
+}
+
+.card .hpGem {
+  left: calc(6 * var(--u));
+  bottom: calc(8 * var(--u));
+  width: calc(36 * var(--u));
+  height: calc(36 * var(--u));
+  font-size: calc(19 * var(--u));
+}
+
+.card .armorGem {
+  right: calc(6 * var(--u));
+  bottom: calc(8 * var(--u));
+  width: calc(34 * var(--u));
+  height: calc(34 * var(--u));
+  font-size: calc(18 * var(--u));
+}
+
+.cardTag {
+  position: absolute;
+  left: 50%;
+  bottom: calc(14 * var(--u));
+  transform: translateX(-50%);
+  font-size: calc(10 * var(--u));
+}
