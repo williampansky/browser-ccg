@@ -307,14 +307,12 @@ const MinionLab = () => {
             <option value="dark">Dark</option>
           </select>
         </label>
+        <label style={row}>
+          <input type="checkbox" checked={one(q.labels) !== '0'} onChange={(e) => setParams({ labels: e.target.checked ? null : '0' })} /> Show the gray words under each minion
+        </label>
         {GROUPS.map((g) => (
           <Section key={g.id} title={g.title}>
             {g.keys.map(knob)}
-            {g.id === 'preview' && (
-              <label style={row}>
-                <input type="checkbox" checked={one(q.labels) !== '0'} onChange={(e) => setParams({ labels: e.target.checked ? null : '0' })} /> Show the gray words under each minion
-              </label>
-            )}
             {g.id === 'caption' && (
               <label style={row}>
                 <input type="checkbox" checked={one(q.lchide) === '1'} onChange={(e) => setParams({ lchide: e.target.checked ? '1' : null })} /> Hide the name
