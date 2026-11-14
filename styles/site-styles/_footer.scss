@@ -11,8 +11,8 @@
   ul {
     display: flex;
     flex-flow: row nowrap;
-    background-color: #1b1e27;
-    border-top: 2px solid #3f4660;
+    background-color: var(--ui-nav-bg);
+    border-top: 2px solid var(--ui-nav-border);
     list-style-type: none;
     width: 100%;
     height: var(--nav-height);
@@ -34,7 +34,7 @@
     gap: 0.5em;
     height: 100%;
     box-sizing: border-box;
-    color: #aab0c8;
+    color: var(--ui-nav-text);
     white-space: nowrap;
     line-height: 1;
     font-family: var(--font-family-card);
@@ -48,15 +48,15 @@
 
     &:hover,
     &:focus-visible {
-      color: #fff;
-      background-color: #262a38;
+      color: var(--ui-nav-hover-text);
+      background-color: var(--ui-nav-hover-bg);
     }
   }
 
   a.item--active {
-    color: #fff;
-    background-color: #262a38;
-    border-top-color: var(--color-rarity-MYTHIC);
+    color: var(--ui-nav-hover-text);
+    background-color: var(--ui-nav-hover-bg);
+    border-top-color: var(--ui-nav-accent);
   }
 
   a svg {

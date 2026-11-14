@@ -55,6 +55,8 @@ import { describeEvents, MYSTERY_HINT, mysteryCategory } from './describe-events
 import { isMuted, playSounds, setMuted, soundsFor } from './sounds';
 import { targetLinePath, TargetLineStyle } from './target-line';
 import { startDragGhost, DragGhost } from './drag-ghost';
+import { UiThemePicker } from '../ui-theme/UiThemePicker';
+import { playUiSound } from '../ui-theme/ui-sfx';
 import styles from './play-board.module.scss';
 
 let activeGhost: DragGhost | null = null; // the opaque card that follows the pointer during a hand drag
@@ -667,6 +669,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const modalOpenRef = useRef(false);
   const menuOpenRef = useRef(false);
   menuOpenRef.current = menuOpen;
+  // The menu's own sounds (they come from the interface theme and are silent in a theme without any).
+  const menuWasOpen = useRef(false);
+  useEffect(() => {
+    if (menuOpen !== menuWasOpen.current) playUiSound(menuOpen ? 'open' : 'close');
+    menuWasOpen.current = menuOpen;
+  }, [menuOpen]);
   /** Set each render to `onNukeHero` while "Attack hero" is available (null otherwise): Shift+Space runs it. */
   const nukeRef = useRef<(() => void) | null>(null);
   const canEndTurn = !!state && state.status === 'playing' && !aiToMove;
@@ -1248,12 +1256,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           </button>
         </div>
       )}
-      <button type="button" className={styles.menuButton} onClick={() => setMenuOpen(true)}>
+      <button type="button" className={`${styles.menuButton} ui-btn`} onClick={() => setMenuOpen(true)}>
         Menu
       </button>
       {menuOpen && (
-        <div className={styles.modalBackdrop} onClick={() => setMenuOpen(false)}>
-          <div className={styles.menu} role="dialog" aria-label="Menu" onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalBackdrop} data-ui-sfx onClick={() => setMenuOpen(false)}>
+          <div className={`${styles.menu} ui-panel`} role="dialog" aria-label="Menu" onClick={(e) => e.stopPropagation()}>
             <header className={styles.menuHead}>
               <h3>Menu</h3>
               <span className={styles.menuWho}>
@@ -1264,17 +1272,17 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               </span>
             </header>
 
-            <button type="button" className={styles.menuPrimary} autoFocus onClick={() => setMenuOpen(false)}>
+            <button type="button" className={`${styles.menuPrimary} ui-btn ui-btn--primary`} autoFocus onClick={() => setMenuOpen(false)}>
               Resume
             </button>
             <div className={styles.menuPair}>
-              <button type="button" onClick={() => { setMenuOpen(false); setPicker(loadChoices()); setHeroPicker(loadHeroChoices()); }}>
+              <button type="button" className="ui-btn" onClick={() => { setMenuOpen(false); setPicker(loadChoices()); setHeroPicker(loadHeroChoices()); }}>
                 New game
                 <small>choose decks</small>
               </button>
               <button
                 type="button"
-                className={styles.menuDanger}
+                className="ui-btn ui-btn--danger"
                 disabled={over || !myTurn}
                 onClick={() => { setMenuOpen(false); dispatch({ type: 'Concede' }); }}
               >
@@ -1283,19 +1291,19 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               </button>
             </div>
 
-            <section className={styles.menuGroup} aria-label="Settings">
+            <section className={`${styles.menuGroup} ui-group`} aria-label="Settings">
               <h4>Settings</h4>
               {[
                 { label: 'Sound', on: soundOn, flip: () => { setMuted(soundOn); setSoundOn(!soundOn); } },
                 { label: `Turn timer (${turnLimit}s)`, on: timerOn, flip: () => { setTimerOn(!timerOn); setTimerOnState(!timerOn); } },
                 { label: 'Accessibility mode', on: a11y, flip: () => { setAccessible(!a11y); setA11y(!a11y); } },
               ].map((t) => (
-                <button key={t.label} type="button" role="switch" aria-checked={t.on} className={styles.menuToggle} onClick={t.flip}>
+                <button key={t.label} type="button" role="switch" aria-checked={t.on} className="ui-toggle" onClick={t.flip}>
                   <span>{t.label}</span>
-                  <i className={t.on ? styles.on : ''} aria-hidden="true" />
+                  <i aria-hidden="true" />
                 </button>
               ))}
-              <div className={styles.menuSeg} role="radiogroup" aria-label="Opponent">
+              <div className="ui-seg" role="radiogroup" aria-label="Opponent">
                 <span>Opponent</span>
                 {[
                   { name: 'Greedy', hint: 'looks one move ahead', value: true },
@@ -1306,8 +1314,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                     type="button"
                     role="radio"
                     aria-checked={smartAi === o.value}
-                    className={smartAi === o.value ? styles.on : ''}
-                    disabled={mode !== 'ai'}
+                                        disabled={mode !== 'ai'}
                     title={o.hint}
                     onClick={() => setSmartAi(o.value)}
                   >
@@ -1315,7 +1322,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                   </button>
                 ))}
               </div>
-              <div className={styles.menuSeg} role="radiogroup" aria-label="Mode">
+              <div className="ui-seg" role="radiogroup" aria-label="Mode">
                 <span>Mode</span>
                 {([['ai', 'vs AI'], ['hotseat', 'Hot-seat']] as const).map(([m, name]) => (
                   <button
@@ -1323,8 +1330,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                     type="button"
                     role="radio"
                     aria-checked={mode === m}
-                    className={mode === m ? styles.on : ''}
-                    title="Switching starts a new game"
+                                        title="Switching starts a new game"
                     onClick={() => {
                       if (mode === m) return;
                       setMode(m);
@@ -1336,6 +1342,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                   </button>
                 ))}
               </div>
+              <UiThemePicker blurb={false} />
             </section>
 
             <footer className={styles.menuLinks}>
@@ -1347,8 +1354,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         </div>
       )}
       {picker && (
-        <div className={styles.modalBackdrop} onClick={() => setPicker(null)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalBackdrop} data-ui-sfx onClick={() => setPicker(null)}>
+          <div className={`${styles.modal} ui-panel`} onClick={(e) => e.stopPropagation()}>
             <h3>New game: choose decks</h3>
             {(['0', '1'] as PlayerId[]).map((p) => {
               const savedDecks = mode === 'ai' && p === AI_PLAYER ? [] : loadDecks(byId);
@@ -1359,7 +1366,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               return (
                 <label key={p} className={styles.deckPick}>
                   <span>{label(p)}</span>
-                  <select value={picked.value} onChange={(e) => setPicker({ ...picker, [p]: e.target.value })}>
+                  <select className="ui-field" value={picked.value} onChange={(e) => setPicker({ ...picker, [p]: e.target.value })}>
                     {options.map((o) => (
                       <option key={o.value} value={o.value}>
                         {o.label}
@@ -1368,6 +1375,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                   </select>
                   <small>{picked.plan ?? ' '}</small>
                   <select
+                    className="ui-field"
                     aria-label={`${label(p)} hero`}
                     disabled={!!deckHero(picked.value)}
                     title={deckHero(picked.value) ? 'This deck chooses its own hero (set in the deck builder)' : undefined}
@@ -1385,11 +1393,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               );
             })}
             <div className={styles.deckPickButtons}>
-              <button type="button" onClick={() => setPicker(null)}>
+              <button type="button" className="ui-btn" onClick={() => setPicker(null)}>
                 Cancel
               </button>
               <button
                 type="button"
+                className="ui-btn ui-btn--primary"
                 autoFocus
                 onClick={() => {
                   saveChoices(picker);
@@ -1406,8 +1415,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         </div>
       )}
       {droneModal && (
-        <div className={styles.modalBackdrop} onClick={() => setSelection(null)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalBackdrop} data-ui-sfx onClick={() => setSelection(null)}>
+          <div className={`${styles.modal} ui-panel`} onClick={(e) => e.stopPropagation()}>
             <h3>{selectedCard?.name}: pick a card to keep on top</h3>
             <div className={styles.modalCards}>
               {choiceOptions.map((c) => {
@@ -1427,15 +1436,15 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                 );
               })}
             </div>
-            <button type="button" onClick={() => setSelection(null)}>
+            <button type="button" className="ui-btn" onClick={() => setSelection(null)}>
               Cancel
             </button>
           </div>
         </div>
       )}
       {choiceModal && (
-        <div className={styles.modalBackdrop} onClick={() => setSelection(null)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalBackdrop} data-ui-sfx onClick={() => setSelection(null)}>
+          <div className={`${styles.modal} ui-panel`} onClick={(e) => e.stopPropagation()}>
             <h3>{selectedCard?.name}: choose one</h3>
             <div className={styles.modalCards}>
               {choiceOptions.map((c) => {
@@ -1463,7 +1472,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                 );
               })}
             </div>
-            <button type="button" onClick={() => setSelection(null)}>
+            <button type="button" className="ui-btn" onClick={() => setSelection(null)}>
               Cancel
             </button>
           </div>

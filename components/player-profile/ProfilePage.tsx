@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ProfileEditor } from './ProfileEditor';
 import { DEFAULT_PROFILE, foeTheme, loadProfile, normalizeProfile, PlayerProfile, saveProfile, themeOf } from './profile';
+import { UiThemePicker } from '../ui-theme/UiThemePicker';
 import styles from './profile-page.module.scss';
 
 /** Edits the player profile. Everything is saved as you type, in this browser (`loadProfile` / `saveProfile`). */
@@ -24,6 +25,9 @@ export const ProfilePage = () => {
     <div className={styles.page}>
       <h1>Profile</h1>
       <ProfileEditor profile={profile} onChange={change} />
+      <section className={styles.theme} aria-label="Interface theme">
+        <UiThemePicker />
+      </section>
       <section className={styles.preview} aria-label="Preview">
         <span className={styles.side} style={{ ['--side' as string]: themeOf(profile.theme).color } as React.CSSProperties}>
           {profile.name}

@@ -78,6 +78,11 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   The last picks are remembered (`ccg.newGame.v1`). **The AI seat never plays a saved deck**: it defaults to Surprise (a random
   starter deck, with a 1-in-10 chance of a fully random deck instead; `SURPRISE_RANDOM_ODDS`) and any saved pick becomes Surprise.
 
+## Interface themes (UI skins, not the card look)
+
+- `components/ui-theme/` + `styles/themes/_themes.scss` + `styles/site-styles/_ui-kit.scss`: `data-ui-theme` on `<html>` (set before paint by `NO_FLASH_SCRIPT` in `_document`; `?ui=<id>` forces and saves one) selects a block of `--ui-*` variables; the shared classes (`ui-panel`, `ui-btn`, `ui-group`, `ui-toggle`, `ui-seg`, `ui-field`) read only those. Screens keep layout in their own SCSS and put the look on the shared classes. **New menu or dialog: use them, not literal colours.** Themed: site base, bottom nav, markdown pages, profile, the `/play` menu/pickers/dialogs. Not themed (on purpose, for now): cards, minions, heroes, the board, End turn, log, deck list, and the other pages (deckbuilder, collection...).
+- Themes now: `classic` (the old look, default), `emberhold`, `frostforged` (art in `public/images/ui/<id>/`, sounds in `public/sounds/emberhold/`). A theme is an entry in `UI_THEMES` + a block in `_themes.scss` (written as classic + overrides); a test checks they match. `/theme-lab` shows all side by side. Menu sounds (`ui-sfx.ts`) play for clicks inside any `[data-ui-sfx]` area and share the Sound switch. The profile's "colour theme" (`THEMES` in `profile.ts`) is a different thing: the player's side colour.
+
 ## Player profile (name + colour theme)
 
 - `components/player-profile/` (`profile.ts`, `ProfileEditor.tsx`): a display name (up to 20 characters, cleaned by `cleanName`) and a colour theme

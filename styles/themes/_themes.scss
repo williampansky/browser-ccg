@@ -1,0 +1,212 @@
+// Interface themes. Each theme is a set of `--ui-*` custom properties on `[data-ui-theme='<id>']`; `<html>` carries the chosen id
+// (components/ui-theme/ui-themes.ts) but any element can carry its own, which is how /theme-lab shows them side by side.
+// Every theme is written as "classic + these overrides", so every block defines every property and a themed box inside a
+// differently themed page never inherits stray values. The shared pieces that read them are in site-styles/_ui-kit.scss.
+//
+// To add a theme: add `{ id, label, blurb }` to UI_THEMES, add a block below, and (if it has art) a folder in public/images/ui/<id>/.
+//
+// Art is 9-slice: `--*-art` is an image (or `none`), `--*-slice` is the inset in the image's own pixels, `--*-art-w` the width it is
+// drawn at (half the image's scale keeps the kit's 26px corners at a size that suits a 22rem menu). With art, set the matching
+// `--*-border-w` to the same width and the flat background to transparent.
+@use 'sass:map';
+
+$classic: (
+  // page
+  'ui-page-bg': #151515,
+  'ui-page-text': #d1d1d1,
+  'ui-text': #e8eaf2,
+  'ui-link': #8aa4ff,
+  'ui-link-page': #8cc8ff,
+  'ui-focus': #8aa4ff,
+  'ui-font': (-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif),
+  'ui-font-heading': inherit,
+  'ui-heading-transform': uppercase,
+  'ui-heading-spacing': 0.04em,
+  'ui-backdrop': rgba(0, 0, 0, 0.6),
+  // dark wells: code blocks, the bottom nav, segmented controls
+  'ui-sunken': #1b1e27,
+  'ui-line': #3f4660,
+  'ui-line-soft': #343846,
+  // panels (the menu, dialogs)
+  'ui-panel-bg': linear-gradient(180deg, #232738, #171a24),
+  'ui-panel-border': #3f4660,
+  'ui-panel-border-w': 2px,
+  'ui-panel-radius': 14px,
+  'ui-panel-shadow': 0 18px 50px rgba(0, 0, 0, 0.6),
+  'ui-panel-art': none,
+  'ui-panel-slice': 1,
+  'ui-panel-art-w': 1px,
+  'ui-group-bg': rgba(255, 255, 255, 0.03),
+  'ui-group-border': #343846,
+  // buttons
+  'ui-btn-text': #e8eaf2,
+  'ui-btn-bg': #2b3042,
+  'ui-btn-bg-hover': #353b52,
+  'ui-btn-border': #555b70,
+  'ui-btn-border-w': 1px,
+  'ui-btn-radius': 10px,
+  'ui-btn-pad': 0.55rem 0.9rem,
+  'ui-btn-art': none,
+  'ui-btn-art-hover': none,
+  'ui-btn-art-pressed': none,
+  'ui-btn-art-disabled': none,
+  'ui-btn-slice': 1,
+  'ui-btn-art-w': 1px,
+  'ui-btn-disabled-opacity': 0.45,
+  'ui-primary-text': #ffffff,
+  'ui-primary-bg': linear-gradient(180deg, #4a58c8, #3441a0),
+  'ui-primary-bg-hover': linear-gradient(180deg, #5766dc, #3d4bb4),
+  'ui-primary-border': #7080e8,
+  'ui-danger-text': #ff9a9a,
+  'ui-danger-border': #7a3b3b,
+  // toggle switch (with art, set the track/thumb to transparent and the art on)
+  'ui-toggle-w': 2.4rem,
+  'ui-toggle-h': 1.35rem,
+  'ui-toggle-travel': 1.05rem,
+  'ui-toggle-track': #3a3f52,
+  'ui-toggle-thumb': #cfd4e6,
+  'ui-toggle-on': #3f9f58,
+  'ui-toggle-on-thumb': #ffffff,
+  'ui-toggle-art': none,
+  'ui-toggle-art-on': none,
+  // segmented choice (Opponent, Mode)
+  'ui-seg-bg': #1b1e27,
+  'ui-seg-border': #454c63,
+  'ui-seg-on-bg': #3f4aa8,
+  'ui-seg-on-border': #5b68d0,
+  // drop-downs and text fields
+  'ui-field-bg': #0f1118,
+  'ui-field-border': #3f4660,
+  'ui-field-radius': 6px,
+  // the bottom nav
+  'ui-nav-bg': #1b1e27,
+  'ui-nav-border': #3f4660,
+  'ui-nav-text': #aab0c8,
+  'ui-nav-hover-text': #ffffff,
+  'ui-nav-hover-bg': #262a38,
+  'ui-nav-accent': var(--color-rarity-MYTHIC)
+);
+
+@function art($theme, $file) {
+  @return url('/images/ui/#{$theme}/#{$file}.png');
+}
+
+// The Emberhold kit's pieces for a theme folder (the two kit themes share names and sizes: switching is swapping the folder).
+@function kit-art($t) {
+  @return (
+    'ui-panel-art': art($t, 'panel_ornate'),
+    'ui-panel-slice': 26,
+    'ui-panel-art-w': 13px,
+    'ui-panel-border-w': 13px,
+    'ui-panel-bg': transparent,
+    'ui-panel-shadow': 0 18px 50px rgba(0, 0, 0, 0.6),
+    'ui-btn-bg': transparent,
+    'ui-btn-bg-hover': transparent,
+    'ui-btn-border-w': 9px,
+    'ui-btn-art-w': 9px,
+    'ui-btn-slice': 18,
+    'ui-btn-radius': 0,
+    'ui-btn-pad': 0.35rem 0.6rem,
+    'ui-btn-art': art($t, 'btn_standard_normal'),
+    'ui-btn-art-hover': art($t, 'btn_standard_hover'),
+    'ui-btn-art-pressed': art($t, 'btn_standard_pressed'),
+    'ui-btn-art-disabled': art($t, 'btn_standard_disabled'),
+    'ui-btn-disabled-opacity': 1,
+    'ui-primary-bg': transparent,
+    'ui-primary-bg-hover': transparent,
+    'ui-toggle-w': 2.7rem,
+    'ui-toggle-h': 1.35rem,
+    'ui-toggle-track': transparent,
+    'ui-toggle-thumb': transparent,
+    'ui-toggle-on': transparent,
+    'ui-toggle-on-thumb': transparent,
+    'ui-toggle-art': art($t, 'toggle_off'),
+    'ui-toggle-art-on': art($t, 'toggle_on'),
+    'ui-font-heading': (Georgia, 'Times New Roman', serif),
+    'ui-heading-spacing': 0.08em
+  );
+}
+
+@mixin theme($overrides: ()) {
+  @each $name, $value in map.merge($classic, $overrides) {
+    --#{$name}: #{$value};
+  }
+}
+
+// `:root` too, so a page with no data-ui-theme (or a script-less render) is Classic.
+:root,
+[data-ui-theme='classic'] {
+  @include theme();
+}
+
+[data-ui-theme='emberhold'] {
+  @include theme(
+    map.merge(
+      kit-art('emberhold'),
+      (
+        'ui-page-bg': #100d15,
+        'ui-page-text': #d9ceb4,
+        'ui-text': #e8dcc0,
+        'ui-link': #e6c079,
+        'ui-link-page': #e6c079,
+        'ui-focus': #e6c079,
+        'ui-sunken': #17131d,
+        'ui-line': #b8893c,
+        'ui-line-soft': #4a3c26,
+        'ui-btn-text': #e8dcc0,
+        'ui-primary-text': #f3d69a,
+        'ui-danger-text': #ff8a7a,
+        'ui-group-bg': rgba(184, 137, 60, 0.07),
+        'ui-group-border': #4a3c26,
+        'ui-seg-bg': #17131d,
+        'ui-seg-border': #6b5530,
+        'ui-seg-on-bg': #6b4a1c,
+        'ui-seg-on-border': #e6c079,
+        'ui-field-bg': #17131d,
+        'ui-field-border': #6b5530,
+        'ui-nav-bg': #17131d,
+        'ui-nav-border': #b8893c,
+        'ui-nav-text': #b9a982,
+        'ui-nav-hover-bg': #241e2e,
+        'ui-nav-hover-text': #f3d69a,
+        'ui-nav-accent': #e6c079
+      )
+    )
+  );
+}
+
+[data-ui-theme='frostforged'] {
+  @include theme(
+    map.merge(
+      kit-art('frostforged'),
+      (
+        'ui-page-bg': #0d1118,
+        'ui-page-text': #cfdbe6,
+        'ui-text': #dbe8f3,
+        'ui-link': #9fd0f5,
+        'ui-link-page': #9fd0f5,
+        'ui-focus': #9fd0f5,
+        'ui-sunken': #131a24,
+        'ui-line': #6f93b3,
+        'ui-line-soft': #2e3d50,
+        'ui-btn-text': #dbe8f3,
+        'ui-primary-text': #e6f4ff,
+        'ui-danger-text': #ff9a9a,
+        'ui-group-bg': rgba(111, 147, 179, 0.08),
+        'ui-group-border': #2e3d50,
+        'ui-seg-bg': #131a24,
+        'ui-seg-border': #4a6580,
+        'ui-seg-on-bg': #2f5a82,
+        'ui-seg-on-border': #9fd0f5,
+        'ui-field-bg': #131a24,
+        'ui-field-border': #4a6580,
+        'ui-nav-bg': #131a24,
+        'ui-nav-border': #6f93b3,
+        'ui-nav-text': #9db4c9,
+        'ui-nav-hover-bg': #1c2736,
+        'ui-nav-hover-text': #e6f4ff,
+        'ui-nav-accent': #9fd0f5
+      )
+    )
+  );
+}

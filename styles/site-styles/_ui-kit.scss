@@ -1,0 +1,194 @@
+// The shared interface pieces. They read only `--ui-*` properties (styles/themes/_themes.scss), so a theme restyles every screen that
+// uses them. Layout (width, gaps, grids) stays in each screen's own stylesheet; these classes are the look.
+//   ui-panel   a titled box (menu, dialogs)         ui-group    a quieter box inside a panel
+//   ui-btn     a button (+ ui-btn--primary / --danger)   ui-toggle   a switch row     ui-seg   a segmented choice
+//   ui-field   a drop-down or text field            ui-dim      secondary text         ui-link   a link
+// A screen that wants menu sounds puts `data-ui-sfx` on its root (components/ui-theme/ui-sfx.ts).
+
+.ui-panel {
+  color: var(--ui-text);
+  background: var(--ui-panel-bg);
+  border: var(--ui-panel-border-w) solid var(--ui-panel-border);
+  border-radius: var(--ui-panel-radius);
+  border-image: var(--ui-panel-art) var(--ui-panel-slice) fill / var(--ui-panel-art-w) stretch;
+  box-shadow: var(--ui-panel-shadow);
+  font-family: var(--ui-font);
+
+  h3 {
+    font-family: var(--ui-font-heading);
+    text-transform: var(--ui-heading-transform);
+    letter-spacing: var(--ui-heading-spacing);
+  }
+  a {
+    color: var(--ui-link);
+  }
+  button,
+  select {
+    font: inherit;
+  }
+}
+
+.ui-group {
+  background: var(--ui-group-bg);
+  border: 1px solid var(--ui-group-border);
+  border-radius: 10px;
+
+  h4 {
+    margin: 0 0 0.2rem;
+    font-family: var(--ui-font-heading);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+}
+
+.ui-btn {
+  font: inherit;
+  cursor: pointer;
+  color: var(--ui-btn-text);
+  padding: var(--ui-btn-pad);
+  background: var(--ui-btn-bg);
+  border: var(--ui-btn-border-w) solid var(--ui-btn-border);
+  border-radius: var(--ui-btn-radius);
+  border-image: var(--ui-btn-art) var(--ui-btn-slice) fill / var(--ui-btn-art-w) stretch;
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    background: var(--ui-btn-bg-hover);
+    border-image-source: var(--ui-btn-art-hover);
+  }
+  &:active:not(:disabled) {
+    border-image-source: var(--ui-btn-art-pressed);
+  }
+  &:disabled {
+    opacity: var(--ui-btn-disabled-opacity);
+    border-image-source: var(--ui-btn-art-disabled);
+    cursor: not-allowed;
+  }
+  &:focus-visible {
+    outline: 2px solid var(--ui-focus);
+    outline-offset: 2px;
+  }
+}
+
+.ui-btn--primary {
+  color: var(--ui-primary-text);
+  font-weight: 700;
+  background: var(--ui-primary-bg);
+  border-color: var(--ui-primary-border);
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    background: var(--ui-primary-bg-hover);
+  }
+}
+
+.ui-btn--danger:not(:disabled) {
+  color: var(--ui-danger-text);
+  border-color: var(--ui-danger-border);
+}
+
+// A switch row: a label and the switch. State is `aria-checked`, so it is both the accessible and the visual truth.
+.ui-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+
+  i {
+    position: relative;
+    flex: none;
+    width: var(--ui-toggle-w);
+    height: var(--ui-toggle-h);
+    background: var(--ui-toggle-art) center / 100% 100% no-repeat, var(--ui-toggle-track);
+    border-radius: 999px;
+    transition: background-color 0.15s;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0.15rem;
+      left: 0.15rem;
+      width: calc(var(--ui-toggle-h) - 0.3rem);
+      height: calc(var(--ui-toggle-h) - 0.3rem);
+      background: var(--ui-toggle-thumb);
+      border-radius: 50%;
+      transition: transform 0.15s;
+    }
+  }
+  &[aria-checked='true'] i {
+    background: var(--ui-toggle-art-on) center / 100% 100% no-repeat, var(--ui-toggle-on);
+
+    &::after {
+      transform: translateX(var(--ui-toggle-travel));
+      background: var(--ui-toggle-on-thumb);
+    }
+  }
+  &:focus-visible {
+    outline: 2px solid var(--ui-focus);
+    outline-offset: 2px;
+  }
+}
+
+.ui-seg {
+  display: flex;
+  align-items: center;
+  padding-top: 0.2rem;
+
+  > span {
+    flex: 1;
+  }
+  button {
+    font: inherit;
+    cursor: pointer;
+    padding: 0.3rem 0.7rem;
+    color: inherit;
+    background: var(--ui-seg-bg);
+    border: 1px solid var(--ui-seg-border);
+
+    &:first-of-type {
+      border-radius: 8px 0 0 8px;
+    }
+    &:last-of-type {
+      border-radius: 0 8px 8px 0;
+      border-left: 0;
+    }
+    &[aria-checked='true'] {
+      background: var(--ui-seg-on-bg);
+      border-color: var(--ui-seg-on-border);
+    }
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    &:focus-visible {
+      outline: 2px solid var(--ui-focus);
+    }
+  }
+}
+
+.ui-field {
+  padding: 0.35rem;
+  font: inherit;
+  color: inherit;
+  background: var(--ui-field-bg);
+  border: 1px solid var(--ui-field-border);
+  border-radius: var(--ui-field-radius);
+}
+
+.ui-field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ui-dim {
+  opacity: 0.7;
+}

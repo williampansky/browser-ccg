@@ -1,0 +1,24 @@
+EMBERHOLD FREE
+Royalty-Free Licence
+
+Copyright (c) 2026 VinniBr. All rights reserved.
+
+PERMITTED
+  - Use in an unlimited number of projects, personal or commercial.
+  - Use in games, applications, videos, prototypes and printed material.
+  - Modification, recolouring, resizing and remixing.
+  - No attribution required.
+
+NOT PERMITTED
+  - Reselling, redistributing or sublicensing these files as an asset pack,
+    template or asset collection, in original or modified form.
+  - Including them in a product whose primary value is the assets themselves.
+  - Claiming authorship of the assets.
+  - Using them to train machine-learning or generative models.
+
+NO WARRANTY
+  Provided "as is", without warranty of any kind. The author is not liable for
+  any claim or damages arising from their use.
+
+In short: build whatever you like with them, including things you sell.
+Just do not sell the assets themselves.
