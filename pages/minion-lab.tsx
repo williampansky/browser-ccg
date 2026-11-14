@@ -12,7 +12,7 @@ import minionStyles from '../components/play-board/board-minion.module.scss';
  *  - shape: lm height px, la aspect (height / width), lr corner radius %, lbw border px, lot oval Y offset px, lgs guard shield scale
  *  - attack badge: lax / lay offset px, las size px, lanf numeral font size px, lanx / lany numeral position inside the badge px
  *  - health badge: lhx / lhy offset px, lhs size px, lhnf numeral font size px, lhnx / lhny numeral position inside the badge px
- *  - caption (name): lcx / lcy offset px, lcf font size px, lchide=1 hides it;  keyword icons: lkx / lky offset px, lks scale
+ *  - caption (name): lcx / lcy offset px, lcf font size px, lcshow=1 shows it (it is hidden by default);  keyword icons: lkx / lky offset px, lks scale
  *  - preview only: state (ready|selected|aim|aimHover), bg (felt|dark), lz zoom, labels=0 hides the gray words under each minion
  */
 const { cards } = loadHsCards();
@@ -77,7 +77,14 @@ const computed = (selector: string) => {
   const e = first(selector);
   return e ? getComputedStyle(e) : undefined;
 };
-const VARS = (selector: string, axis: 'x' | 'y', v: number) => `${selector}{--lab-${axis}:${v}px}`;
+// The stylesheet reads --nudge-x / --nudge-y into `translate` (with the real default offsets), so each axis has its own slider.
+const VARS = (selector: string, axis: 'x' | 'y', v: number) => `${selector}{--nudge-${axis}:${v}px}`;
+/** The element's current offset on one axis, read from its computed `translate`. */
+const nudge = (selector: string, axis: 'x' | 'y') => {
+  const t = computed(selector)?.translate;
+  if (!t || t === 'none') return 0;
+  return num(t.split(' ')[axis === 'x' ? 0 : 1] ?? '0', 1) ?? 0;
+};
 
 const KNOBS: Knob[] = [
   // Overall shape
@@ -95,29 +102,29 @@ const KNOBS: Knob[] = [
   },
   { key: 'lr', label: 'Corner radius (%; 50 = oval)', min: 0, css: (v) => `${OVAL}{border-radius:${v}% !important}`, read: () => 50 },
   { key: 'lbw', label: 'Border width (px)', min: 0, css: (v) => `${OVAL}{border-width:${v}px !important}`, read: () => num(computed(OVAL)?.borderTopWidth) },
-  { key: 'lot', label: 'Picture Y offset (px)', css: (v) => VARS(OVAL, 'y', v), read: () => 0 },
+  { key: 'lot', label: 'Picture Y offset (px)', css: (v) => VARS(OVAL, 'y', v), read: () => nudge(OVAL, 'y') },
   { key: 'lgs', label: 'Guard shield scale (x)', min: 0.5, step: 0.01, css: (v) => `${SHIELD}{scale:${v}}`, read: () => 1 },
   // Attack badge (sword)
-  { key: 'lax', label: 'Attack X offset (px)', css: (v) => VARS(ATTACK, 'x', v), read: () => 0 },
-  { key: 'lay', label: 'Attack Y offset (px)', css: (v) => VARS(ATTACK, 'y', v), read: () => 0 },
+  { key: 'lax', label: 'Attack X offset (px)', css: (v) => VARS(ATTACK, 'x', v), read: () => nudge(ATTACK, 'x') },
+  { key: 'lay', label: 'Attack Y offset (px)', css: (v) => VARS(ATTACK, 'y', v), read: () => nudge(ATTACK, 'y') },
   { key: 'las', label: 'Attack size (px)', min: 10, css: (v) => `${ATTACK}{width:${v}px !important;height:${v}px !important}`, read: () => num(computed(ATTACK)?.width) },
   { key: 'lanf', label: 'Attack numeral size (px)', min: 6, step: 0.5, css: (v) => `${ATTACK} b{font-size:${v}px !important}`, read: () => num(computed(`${ATTACK} b`)?.fontSize, 1) },
   { key: 'lanx', label: 'Attack numeral X (px, inside the badge)', step: 0.5, css: (v) => `${ATTACK} b{left:${v}px !important}`, read: () => num(computed(`${ATTACK} b`)?.left, 1) },
   { key: 'lany', label: 'Attack numeral Y (px, inside the badge)', step: 0.5, css: (v) => `${ATTACK} b{top:${v}px !important}`, read: () => num(computed(`${ATTACK} b`)?.top, 1) },
   // Health badge (shield)
-  { key: 'lhx', label: 'Health X offset (px)', css: (v) => VARS(HEALTH, 'x', v), read: () => 0 },
-  { key: 'lhy', label: 'Health Y offset (px)', css: (v) => VARS(HEALTH, 'y', v), read: () => 0 },
+  { key: 'lhx', label: 'Health X offset (px)', css: (v) => VARS(HEALTH, 'x', v), read: () => nudge(HEALTH, 'x') },
+  { key: 'lhy', label: 'Health Y offset (px)', css: (v) => VARS(HEALTH, 'y', v), read: () => nudge(HEALTH, 'y') },
   { key: 'lhs', label: 'Health size (px)', min: 10, css: (v) => `${HEALTH}{width:${v}px !important;height:${v}px !important}`, read: () => num(computed(HEALTH)?.width) },
   { key: 'lhnf', label: 'Health numeral size (px)', min: 6, step: 0.5, css: (v) => `${HEALTH} b{font-size:${v}px !important}`, read: () => num(computed(`${HEALTH} b`)?.fontSize, 1) },
   { key: 'lhnx', label: 'Health numeral X (px, inside the badge)', step: 0.5, css: (v) => `${HEALTH} b{left:${v}px !important}`, read: () => num(computed(`${HEALTH} b`)?.left, 1) },
   { key: 'lhny', label: 'Health numeral Y (px, inside the badge)', step: 0.5, css: (v) => `${HEALTH} b{top:${v}px !important}`, read: () => num(computed(`${HEALTH} b`)?.top, 1) },
   // Name caption
-  { key: 'lcx', label: 'Name X offset (px)', css: (v) => VARS(CAPTION, 'x', v), read: () => 0 },
-  { key: 'lcy', label: 'Name Y offset (px)', css: (v) => VARS(CAPTION, 'y', v), read: () => 0 },
+  { key: 'lcx', label: 'Name X offset (px)', css: (v) => VARS(CAPTION, 'x', v), read: () => nudge(CAPTION, 'x') },
+  { key: 'lcy', label: 'Name Y offset (px)', css: (v) => VARS(CAPTION, 'y', v), read: () => nudge(CAPTION, 'y') },
   { key: 'lcf', label: 'Name font size (px)', min: 4, step: 0.5, css: (v) => `${CAPTION}{font-size:${v}px !important}`, read: () => num(computed(CAPTION)?.fontSize, 1) },
   // Keyword icons along the top
-  { key: 'lkx', label: 'Keyword icons X offset (px)', css: (v) => VARS(BADGES, 'x', v), read: () => 0 },
-  { key: 'lky', label: 'Keyword icons Y offset (px)', css: (v) => VARS(BADGES, 'y', v), read: () => 0 },
+  { key: 'lkx', label: 'Keyword icons X offset (px)', css: (v) => VARS(BADGES, 'x', v), read: () => nudge(BADGES, 'x') },
+  { key: 'lky', label: 'Keyword icons Y offset (px)', css: (v) => VARS(BADGES, 'y', v), read: () => nudge(BADGES, 'y') },
   { key: 'lks', label: 'Keyword icons scale (x)', min: 0.4, step: 0.01, css: (v) => `${BADGES}{scale:${v}}`, read: () => 1 },
   // Preview only (not part of the minion)
   { key: 'lz', label: 'Preview zoom (x)', min: 0.4, step: 0.05, css: () => '', read: () => 1 }
@@ -239,9 +246,7 @@ const MinionLab = () => {
 
   const css = [
     ...KNOBS.filter((k) => one(q[k.key]) !== '' && !Number.isNaN(+one(q[k.key]))).map((k) => k.css(+one(q[k.key]))),
-    // X / Y offsets ride on --lab-x / --lab-y so each axis has its own slider.
-    [ATTACK, HEALTH, CAPTION, BADGES, OVAL].map((s) => `${s}{translate:var(--lab-x,0px) var(--lab-y,0px) !important}`).join(''),
-    one(q.lchide) === '1' ? `${CAPTION}{display:none !important}` : ''
+    one(q.lcshow) === '1' ? `${CAPTION}{opacity:1 !important}` : ''
   ].join('\n');
 
   const state = STATES.find(([v]) => v === one(q.state))?.[0] ?? '';
@@ -317,7 +322,7 @@ const MinionLab = () => {
             )}
             {g.id === 'caption' && (
               <label style={row}>
-                <input type="checkbox" checked={one(q.lchide) === '1'} onChange={(e) => setParams({ lchide: e.target.checked ? '1' : null })} /> Hide the name
+                <input type="checkbox" checked={one(q.lcshow) === '1'} onChange={(e) => setParams({ lcshow: e.target.checked ? '1' : null })} /> Show the name (hidden by default)
               </label>
             )}
           </Section>

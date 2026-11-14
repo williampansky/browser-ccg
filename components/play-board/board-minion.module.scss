@@ -82,6 +82,7 @@
   width: var(--m-w);
   height: var(--m-h, 128px);
   transform: translateX(-50%);
+  translate: var(--nudge-x, 0px) var(--nudge-y, 0px); // --nudge-x / --nudge-y are what the minion lab sets
   border-radius: 50%;
   background: #191919 center top / cover no-repeat;
   border: 2px solid rgba(220, 226, 240, 0.55);
@@ -144,6 +145,7 @@
   top: -0.55rem;
   left: 50%;
   transform: translateX(-50%);
+  translate: var(--nudge-x, 0px) var(--nudge-y, 0.25rem); // 4px lower than its first position (minion lab, 2026-11-14)
   display: flex;
   gap: 2px;
   z-index: 4;
@@ -202,17 +204,31 @@
   }
 }
 
-.attack { left: 0; }
-.health { right: 0; }
+// Tuned in the minion lab (2026-11-14); px below are at the 16px root. The attack badge is a little bigger (44px) and 1px lower, the
+// health badge 2px lower.
+.attack {
+  left: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  translate: var(--nudge-x, 0px) var(--nudge-y, 0.0625rem);
+}
+.health {
+  right: 0;
+  translate: var(--nudge-x, 0px) var(--nudge-y, 0.125rem);
+}
 // The numerals sit on the art's visual centre, not the box's: the sword badge's disc is lower than its box centre.
-.attack b { top: 0.2rem; }
-.health b { top: 0.05rem; }
+.attack b { top: 0.2625rem; left: 0.125rem; } // 4.2px, 2px
+.health b { top: 0.05rem; left: -0.03125rem; } // 0.8px, -0.5px
 
 // Compared with the printed card: buffed green, a damaged or weakened stat orange-red.
 .tone_up b { color: #7dff8a; }
 .tone_down b { color: #ff6a2a; }
 
+// The minion's name is not shown on the board (opacity, not display: the text stays for screen readers). The minion lab's "Show the name"
+// (lcshow=1) turns it back on.
 .caption {
+  opacity: 0;
+  translate: var(--nudge-x, 0px) var(--nudge-y, 0px);
   position: absolute;
   left: 0;
   right: 0;
