@@ -88,6 +88,8 @@ $classic: (
   'ui-toggle-on-thumb': #ffffff,
   'ui-toggle-art': none,
   'ui-toggle-art-on': none,
+  // the one height every control in a form row shares (`ui-controls`), so a button appearing never changes the row's height
+  'ui-control-h': 2.1rem,
   // checkbox (with art: the two images replace the drawn box)
   'ui-check-size': 1.1rem,
   'ui-check-art': none,
@@ -145,6 +147,7 @@ $classic: (
     'ui-toggle-on-thumb': transparent,
     'ui-toggle-art': art($t, 'toggle_off'),
     'ui-toggle-art-on': art($t, 'toggle_on'),
+    'ui-control-h': 2.5rem,
     'ui-check-size': 1.25rem,
     'ui-check-art': art($t, 'checkbox_off'),
     'ui-check-art-on': art($t, 'checkbox_on'),

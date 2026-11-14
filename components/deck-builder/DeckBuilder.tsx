@@ -94,7 +94,7 @@ export const DeckBuilder = () => {
   return (
     <div className={styles.page}>
       <section className={styles.pool}>
-        <div className={styles.filters}>
+        <div className={`${styles.filters} ui-controls`}>
           <TextInput type="search" placeholder="Search name or text" aria-label="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
           <Select value={set} onChange={(e) => setSet(e.target.value as typeof set)} aria-label="Card set">
             <option value="core">Core ({corePool.length})</option>

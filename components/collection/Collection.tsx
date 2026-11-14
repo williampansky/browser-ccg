@@ -101,7 +101,7 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
   return (
     <div className={styles.page}>
       <section className={styles.pool}>
-        <div className={styles.filters}>
+        <div className={`${styles.filters} ui-controls`}>
           <TextInput type="search" placeholder="Search name or text" aria-label="Search" value={filters.search} onChange={(e) => set('search', e.target.value)} />
           <Select value={filters.set} onChange={(e) => set('set', e.target.value as CollectionFilters['set'])} aria-label="Card set">
             {SETS.map((s) => (
@@ -142,7 +142,7 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
             ))}
           </Select>
         </div>
-        <div className={styles.filters}>
+        <div className={`${styles.filters} ui-controls`}>
           <SegmentedControl chips ariaLabel="Mana cost" value={filters.cost} onChange={(c) => set('cost', c)} options={COSTS.map((c) => ({ label: c === 'all' ? 'All' : c, value: c }))} />
           <Select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} aria-label="Sort by">
             {SORTS.map((s) => (

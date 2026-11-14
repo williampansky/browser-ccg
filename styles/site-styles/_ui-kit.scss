@@ -279,3 +279,33 @@ select.ui-field {
     border-left: 1px solid var(--ui-seg-border);
   }
 }
+
+// A row of form controls (filters, toolbars): add `ui-controls` to the row. Buttons, drop-downs, text boxes, chips and checkboxes all get
+// `--ui-control-h`, and the row keeps at least that height, so a control that appears or goes (Clear filters) never shifts what is below.
+.ui-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: var(--ui-control-h);
+
+  .ui-btn,
+  .ui-field,
+  .ui-seg button,
+  .ui-check {
+    height: var(--ui-control-h);
+  }
+  .ui-btn,
+  .ui-seg button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    white-space: nowrap;
+  }
+  .ui-field {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
