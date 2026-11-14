@@ -32,6 +32,7 @@ import {
   TYPES,
 } from './collection-model';
 import type { CollectionFilters } from './collection-model';
+import { Button, Checkbox, Select, SegmentedControl, TextInput } from '../ui';
 import gridStyles from './collection.module.scss';
 import styles from '../deck-builder/deck-builder.module.scss';
 
@@ -101,90 +102,80 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
     <div className={styles.page}>
       <section className={styles.pool}>
         <div className={styles.filters}>
-          <input type="search" placeholder="Search name or text" value={filters.search} onChange={(e) => set('search', e.target.value)} />
-          <select value={filters.set} onChange={(e) => set('set', e.target.value as CollectionFilters['set'])} aria-label="Card set">
+          <TextInput type="search" placeholder="Search name or text" aria-label="Search" value={filters.search} onChange={(e) => set('search', e.target.value)} />
+          <Select value={filters.set} onChange={(e) => set('set', e.target.value as CollectionFilters['set'])} aria-label="Card set">
             {SETS.map((s) => (
               <option key={s} value={s}>
                 {s === 'both' ? 'Core + Prime' : s === 'core' ? `Core (${corePool.length})` : `Prime (${prime.length}, more coming)`}
               </option>
             ))}
-          </select>
-          <select value={filters.type} onChange={(e) => set('type', e.target.value as CollectionFilters['type'])} aria-label="Card type">
+          </Select>
+          <Select value={filters.type} onChange={(e) => set('type', e.target.value as CollectionFilters['type'])} aria-label="Card type">
             {TYPES.map((t) => (
               <option key={t} value={t}>
                 {t === 'all' ? 'All types' : t}
               </option>
             ))}
-          </select>
-          <select value={filters.rarity} onChange={(e) => set('rarity', e.target.value)} aria-label="Rarity">
+          </Select>
+          <Select value={filters.rarity} onChange={(e) => set('rarity', e.target.value)} aria-label="Rarity">
             <option value="all">All rarities</option>
             {RARITIES.map((r) => (
               <option key={r.id} value={r.id}>
                 {r.label}
               </option>
             ))}
-          </select>
-          <select value={filters.race} onChange={(e) => set('race', e.target.value)} aria-label="Minion race">
+          </Select>
+          <Select value={filters.race} onChange={(e) => set('race', e.target.value)} aria-label="Minion race">
             <option value="all">All races</option>
             {races.map((r) => (
               <option key={r.value} value={r.value}>
                 {r.label}
               </option>
             ))}
-          </select>
-          <select value={filters.effect} onChange={(e) => set('effect', e.target.value)} aria-label="Effect">
+          </Select>
+          <Select value={filters.effect} onChange={(e) => set('effect', e.target.value)} aria-label="Effect">
             <option value="all">Any effect</option>
             {effects.map((x) => (
               <option key={x.value} value={x.value}>
                 {x.label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
         <div className={styles.filters}>
-          <div className={styles.costs} role="group" aria-label="Mana cost">
-            {COSTS.map((c) => (
-              <button key={c} type="button" className={c === filters.cost ? styles.on : ''} onClick={() => set('cost', c)}>
-                {c === 'all' ? 'All' : c}
-              </button>
-            ))}
-          </div>
-          <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} aria-label="Sort by">
+          <SegmentedControl chips ariaLabel="Mana cost" value={filters.cost} onChange={(c) => set('cost', c)} options={COSTS.map((c) => ({ label: c === 'all' ? 'All' : c, value: c }))} />
+          <Select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} aria-label="Sort by">
             {SORTS.map((s) => (
               <option key={s.id} value={s.id}>
                 Sort: {s.label}
               </option>
             ))}
-          </select>
-          <label className={gridStyles.check} title="Also show the summoned and offered entourage cards">
-            <input type="checkbox" checked={showTokens} onChange={(e) => setShowTokens(e.target.checked)} /> Entourage
-          </label>
+          </Select>
+          <Checkbox checked={showTokens} onChange={setShowTokens} title="Also show the summoned and offered entourage cards">
+            Entourage
+          </Checkbox>
           {debug && (
-            <select value={art} onChange={(e) => setArt(e.target.value as ArtFilter)} aria-label="Art status (dev only)" title="Dev only">
+            <Select value={art} onChange={(e) => setArt(e.target.value as ArtFilter)} aria-label="Art status (dev only)" title="Dev only">
               {ART_FILTERS.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.id === 'all' ? 'Art: any' : a.label}
                 </option>
               ))}
-            </select>
+            </Select>
           )}
           {(isFiltered(filters) || art !== 'all' || showTokens) && (
-            <button type="button" className={gridStyles.reset} onClick={() => {
+            <Button
+              onClick={() => {
                 setFilters(DEFAULT_FILTERS);
                 setArt('all');
                 setShowTokens(false);
-              }}>
+              }}
+            >
               Clear filters
-            </button>
+            </Button>
           )}
           <span className={styles.count}>{shown.length === 1 ? '1 card' : `${shown.length} cards`}</span>
-          <div className={styles.costs} role="group" aria-label="Card size">
-            {SIZES.map((s) => (
-              <button key={s.id} type="button" className={s.id === size ? styles.on : ''} onClick={() => pickSize(s.id)} aria-pressed={s.id === size} title={`${s.label} cards`}>
-                {s.label}
-              </button>
-            ))}
-          </div>
+          <SegmentedControl chips ariaLabel="Card size" value={size} onChange={pickSize} options={SIZES.map((s) => ({ label: s.label, value: s.id, title: `${s.label} cards` }))} />
           <Link href="/deckbuilder">
             <a>Deck builder</a>
           </Link>

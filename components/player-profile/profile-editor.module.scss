@@ -3,9 +3,9 @@
   flex-direction: column;
   gap: 0.6rem;
   padding: 0.6rem 0.7rem;
-  border: 1px solid #343846;
+  border: 1px solid var(--ui-line-soft);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--ui-group-bg);
 }
 
 .field {
@@ -13,16 +13,8 @@
   flex-direction: column;
   gap: 0.25rem;
   font-size: 0.8rem;
-  color: #aab3c8;
+  color: var(--ui-text-dim);
 
-  input {
-    padding: 0.4rem 0.5rem;
-    border-radius: 6px;
-    border: 1px solid #454c63;
-    background: #12141b;
-    color: #e8eaf2;
-    font-size: 0.95rem;
-  }
 }
 
 .swatches {
@@ -42,6 +34,6 @@
 
   &.on {
     border-color: #fff;
-    box-shadow: 0 0 0 2px #12141b, 0 0 0 4px var(--swatch);
+    box-shadow: 0 0 0 2px var(--ui-sunken), 0 0 0 4px var(--swatch);
   }
 }

@@ -2,7 +2,9 @@
 // uses them. Layout (width, gaps, grids) stays in each screen's own stylesheet; these classes are the look.
 //   ui-panel   a titled box (menu, dialogs)         ui-group    a quieter box inside a panel
 //   ui-btn     a button (+ ui-btn--primary / --danger)   ui-toggle   a switch row     ui-seg   a segmented choice
-//   ui-field   a drop-down or text field            ui-dim      secondary text         ui-link   a link
+//   ui-field   a drop-down or text field            ui-check   a checkbox          ui-dim   secondary text
+// Screens use these through the React components in components/ui/ (Button, Select, TextInput, Checkbox, Toggle, SegmentedControl, Panel),
+// so a change to how a control looks or behaves happens in one place.
 // A screen that wants menu sounds puts `data-ui-sfx` on its root (components/ui-theme/ui-sfx.ts).
 
 .ui-panel {
@@ -70,6 +72,12 @@
     outline: 2px solid var(--ui-focus);
     outline-offset: 2px;
   }
+}
+
+a.ui-btn {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
 }
 
 .ui-btn--primary {
@@ -183,6 +191,71 @@
   border-radius: var(--ui-field-radius);
 }
 
+// A drop-down draws its own arrow, so it can sit away from the edge.
+select.ui-field {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 1.9rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23aab' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.65rem center;
+  cursor: pointer;
+}
+
+.ui-field:focus-visible {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 1px;
+}
+
+// A checkbox: the real input is visually hidden (still focusable and clickable); the box is the <i> after it.
+.ui-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  user-select: none;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  i {
+    flex: none;
+    width: var(--ui-check-size);
+    height: var(--ui-check-size);
+    background: var(--ui-check-art) center / 100% 100% no-repeat, var(--ui-field-bg);
+    border: 1px solid var(--ui-field-border);
+    border-radius: 4px;
+    position: relative;
+  }
+  input:checked + i {
+    background: var(--ui-check-art-on) center / 100% 100% no-repeat, var(--ui-seg-on-bg);
+    border-color: var(--ui-seg-on-border);
+
+    // The drawn tick; hidden when the theme has art (the art draws its own).
+    &::after {
+      content: '';
+      position: absolute;
+      left: 30%;
+      top: 8%;
+      width: 28%;
+      height: 55%;
+      border: solid var(--ui-primary-text);
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+  }
+  input:focus-visible + i {
+    outline: 2px solid var(--ui-focus);
+    outline-offset: 2px;
+  }
+  input:disabled + i {
+    opacity: 0.45;
+  }
+}
+
 .ui-field-row {
   display: flex;
   flex-direction: column;
@@ -191,4 +264,18 @@
 
 .ui-dim {
   opacity: 0.7;
+}
+
+// A row of small separate choices (mana cost, card size): same radio semantics as ui-seg, drawn as chips.
+.ui-seg--chips {
+  display: flex;
+  gap: 2px;
+  padding-top: 0;
+
+  button {
+    min-width: 2rem;
+    padding: 0.3rem 0.4rem;
+    border-radius: 0;
+    border-left: 1px solid var(--ui-seg-border);
+  }
 }

@@ -18,14 +18,6 @@
   mask-image: linear-gradient(to bottom, transparent 0, #000 1.75rem, #000 calc(100% - 5.5rem), transparent 100%);
 }
 
-.check {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  cursor: pointer;
-  user-select: none;
-}
-
 .card {
   --rx: 0deg;
   --ry: 0deg;
@@ -53,7 +45,7 @@
     transform: perspective(700px) translateY(-6px) scale(1.05) rotateX(var(--rx)) rotateY(var(--ry));
   }
   &:focus-visible {
-    outline: 3px solid #8aa4ff;
+    outline: 3px solid var(--ui-focus);
     outline-offset: 3px;
     z-index: 5;
     transform: translateY(-8px) scale(1.08);
@@ -84,18 +76,5 @@
   }
   .card:hover {
     filter: brightness(1.1);
-  }
-}
-
-.reset {
-  padding: 0.3rem 0.7rem;
-  color: inherit;
-  background: #1b1e27;
-  border: 1px solid #3f4660;
-  border-radius: 6px;
-  cursor: pointer;
-
-  &:hover {
-    background: #262a38;
   }
 }

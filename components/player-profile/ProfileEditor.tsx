@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { cleanName, MAX_NAME_LENGTH, normalizeProfile, PlayerProfile, THEMES } from './profile';
+import { TextInput } from '../ui';
 import styles from './profile-editor.module.scss';
 
 interface Props {
@@ -17,8 +18,7 @@ export const ProfileEditor = ({ profile, onChange }: Props) => {
     <section className={styles.editor} aria-label="Your profile">
       <label className={styles.field}>
         <span>Your name</span>
-        <input
-          type="text"
+        <TextInput
           value={draft}
           maxLength={MAX_NAME_LENGTH}
           spellCheck={false}

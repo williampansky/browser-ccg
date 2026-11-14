@@ -5,7 +5,7 @@
   min-height: 0;
   padding: 0.75rem 1rem var(--nav-height); // ends exactly at the fixed bottom nav
   box-sizing: border-box;
-  color: #e8eaf2;
+  color: var(--ui-text);
 }
 
 .pool {
@@ -21,43 +21,6 @@
   align-items: center;
   gap: 0.5rem;
   padding-bottom: 0.5rem;
-
-  input,
-  select {
-    padding: 0.35rem 0.5rem;
-    background: #1b1e27;
-    color: inherit;
-    border: 1px solid #3f4660;
-    border-radius: 6px;
-  }
-
-  // A drawn arrow instead of the native one, so it can sit away from the edge.
-  select {
-    appearance: none;
-    -webkit-appearance: none;
-    padding-right: 1.9rem;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23aab' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.65rem center;
-    cursor: pointer;
-  }
-}
-
-.costs {
-  display: flex;
-  gap: 2px;
-
-  button {
-    min-width: 2rem;
-    padding: 0.3rem 0.4rem;
-    background: #1b1e27;
-    color: inherit;
-    border: 1px solid #3f4660;
-    cursor: pointer;
-  }
-  .on {
-    background: #3f4aa8;
-  }
 }
 
 .count {
@@ -89,7 +52,7 @@
     transform: translateY(-3px);
   }
   &:focus-visible {
-    outline: 3px solid #8aa4ff;
+    outline: 3px solid var(--ui-focus);
   }
 }
 
@@ -115,8 +78,8 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.75rem;
-  background: #1b1e27;
-  border: 2px solid #3f4660;
+  background: var(--ui-sunken);
+  border: 2px solid var(--ui-line);
   border-radius: 10px;
   min-height: 0;
 
@@ -129,20 +92,21 @@
 
 .deckHead {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.3rem;
 
+  // The drop-down takes a row of its own; the buttons share the next one (a themed button is wider than a flat one).
   select {
-    flex: 1;
+    flex: 1 1 100%;
     min-width: 0;
+  }
+  button {
+    flex: 1;
   }
 }
 
 .name {
   padding: 0.3rem 0.5rem;
-  background: #0f1118;
-  color: inherit;
-  border: 1px solid #3f4660;
-  border-radius: 6px;
 }
 
 .size {
@@ -151,7 +115,7 @@
 }
 
 .full {
-  color: #7fe08a;
+  color: var(--ui-ok);
 }
 
 .curve {
@@ -171,7 +135,7 @@
 
   span {
     display: block;
-    background: #5b6bd6;
+    background: var(--ui-bar);
     font-size: 0.7rem;
     min-height: 0;
   }
@@ -182,7 +146,7 @@
 
 .note {
   margin: 0;
-  color: #ffb37a;
+  color: var(--ui-warn);
   font-size: 0.85rem;
 }
 
@@ -201,12 +165,12 @@
     background: none;
     color: inherit;
     border: 0;
-    border-bottom: 1px solid #2a2f3e;
+    border-bottom: 1px solid var(--ui-row-line);
     text-align: left;
     cursor: pointer;
 
     &:hover {
-      background: #2a2f3e;
+      background: var(--ui-row-line);
     }
   }
 }
@@ -214,7 +178,7 @@
 .rowCost {
   width: 1.4rem;
   font-weight: 700;
-  color: #8fb6ff;
+  color: var(--ui-accent);
 }
 
 .rowName {
@@ -234,12 +198,8 @@
 }
 
 .playLink {
-  text-align: center;
+  display: block;
   padding: 0.45rem;
-  background: #3f4aa8;
-  color: #fff;
-  border-radius: 6px;
-  text-decoration: none;
 }
 
 .hint {
@@ -255,7 +215,7 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: var(--ui-overlay);
   display: flex;
   overflow: auto;
   z-index: 200; // above the site's bottom nav (z-index 100)
@@ -290,7 +250,7 @@
 
 .detailMeta {
   margin: 0 0 12px;
-  color: #9aa3b8;
+  color: var(--ui-text-dim);
 }
 
 .cardId {
@@ -299,13 +259,13 @@
   padding: 0;
   border: 0;
   background: none;
-  color: #6f7890;
+  color: var(--ui-text-faint);
   font: 10px/1.2 monospace;
   letter-spacing: 0.04em;
   cursor: pointer;
 
   &:hover {
-    color: #aab4cc;
+    color: var(--ui-text-dim);
   }
 }
 
@@ -316,13 +276,13 @@
 .flavor {
   margin: 0 0 14px;
   padding-left: 12px;
-  border-left: 3px solid #4a5578;
+  border-left: 3px solid var(--ui-quote-line);
   font-style: italic;
-  color: #cdd3e3;
+  color: var(--ui-text-soft);
 }
 
 .noFlavor {
-  color: #6f7890;
+  color: var(--ui-text-faint);
   font-style: italic;
 }
 
@@ -338,7 +298,7 @@
   h3 {
     margin: 0 0 8px;
     font-size: 0.95rem;
-    color: #9aa3b8;
+    color: var(--ui-text-dim);
   }
   ul {
     margin: 0;
@@ -353,33 +313,33 @@
     flex-direction: column;
     gap: 2px;
     padding-left: 10px;
-    border-left: 3px solid #4a5578;
+    border-left: 3px solid var(--ui-quote-line);
   }
   strong {
-    color: #e8eaf2;
+    color: var(--ui-text);
   }
   span {
     font-size: 0.88rem;
     line-height: 1.35;
-    color: #b4bcd0;
+    color: var(--ui-text-dim);
   }
 }
 
 .closeHint {
   margin: 14px 0 0;
   font-size: 0.8rem;
-  color: #6f7890;
+  color: var(--ui-text-faint);
 }
 
 .tokens {
   margin-top: 18px;
-  border-top: 1px solid #2c3347;
+  border-top: 1px solid var(--ui-row-line);
   padding-top: 12px;
 
   h3 {
     margin: 0 0 8px;
     font-size: 0.95rem;
-    color: #9aa3b8;
+    color: var(--ui-text-dim);
   }
 }
 

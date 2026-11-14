@@ -16,9 +16,9 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.75rem 0.5rem;
-  border: 1px solid #2c3550;
+  border: 1px solid var(--ui-tile-border);
   border-radius: 12px;
-  background: rgba(20, 28, 48, 0.7);
+  background: var(--ui-tile-bg);
   color: inherit;
   cursor: pointer;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s, border-color 0.25s;
@@ -26,8 +26,8 @@
   &:hover,
   &:focus-visible {
     transform: translateY(-6px) scale(1.04);
-    border-color: #8aa4ff;
-    box-shadow: 0 14px 24px -10px rgba(0, 0, 0, 0.85), 0 0 22px -4px rgba(150, 175, 255, 0.5);
+    border-color: var(--ui-tile-hover-border);
+    box-shadow: 0 14px 24px -10px rgba(0, 0, 0, 0.85), 0 0 22px -4px var(--ui-tile-glow);
     outline: none;
   }
 }
@@ -37,7 +37,7 @@
   height: 150px;
   object-fit: cover;
   border-radius: 50%;
-  border: 3px solid #3a456a;
+  border: 3px solid var(--ui-portrait-border);
 }
 
 .name {
@@ -47,13 +47,13 @@
 
 .arch {
   font-size: 0.8rem;
-  color: #9aa3b8;
+  color: var(--ui-text-dim);
 }
 
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: var(--ui-overlay);
   display: flex;
   overflow: auto;
   z-index: 200; // above the site's bottom nav (z-index 100)
@@ -77,7 +77,7 @@
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 50%;
-  border: 4px solid #3a456a;
+  border: 4px solid var(--ui-portrait-border);
   box-shadow: 0 0 40px -6px rgba(150, 175, 255, 0.45);
 }
 
@@ -93,19 +93,19 @@
   h3 {
     margin: 18px 0 8px;
     font-size: 0.95rem;
-    color: #9aa3b8;
+    color: var(--ui-text-dim);
   }
 }
 
 .meta {
   margin: 0 0 10px;
-  color: #9aa3b8;
+  color: var(--ui-text-dim);
 }
 
 .blurb {
   margin: 0 0 8px;
   font-style: italic;
-  color: #cdd3e3;
+  color: var(--ui-text-soft);
 }
 
 .skills {
@@ -136,7 +136,7 @@
   }
   small {
     display: block;
-    color: #9aa3b8;
+    color: var(--ui-text-dim);
   }
   p {
     margin: 4px 0 0;
@@ -144,12 +144,12 @@
 }
 
 .ultimate {
-  box-shadow: inset 0 0 0 1px #d4a84a;
+  box-shadow: inset 0 0 0 1px var(--ui-gold);
 }
 
 .lore {
   margin-top: 16px;
-  color: #cdd3e3;
+  color: var(--ui-text-soft);
   font-size: 0.9rem;
   line-height: 1.5;
 
@@ -160,11 +160,11 @@
 
 .credit {
   font-size: 0.75rem;
-  color: #6f7890;
+  color: var(--ui-text-faint);
 }
 
 .closeHint {
   margin-top: 16px;
   font-size: 0.75rem;
-  color: #6f7890;
+  color: var(--ui-text-faint);
 }

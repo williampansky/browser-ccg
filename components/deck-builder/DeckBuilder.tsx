@@ -7,6 +7,7 @@ import { CardEffects } from '../card-detail/CardEffects';
 import { heroes } from '../../engine/heroes';
 import { addCard, blankDeck, countOf, curve, removeCard, SavedDeck, whyNotAdd } from './deck-model';
 import { loadDecks, saveDecks } from './deck-storage';
+import { Button, LinkButton, SegmentedControl, Select, TextInput } from '../ui';
 import styles from './deck-builder.module.scss';
 
 const { cards, byId } = loadHsCards();
@@ -94,26 +95,20 @@ export const DeckBuilder = () => {
     <div className={styles.page}>
       <section className={styles.pool}>
         <div className={styles.filters}>
-          <input type="search" placeholder="Search name or text" value={search} onChange={(e) => setSearch(e.target.value)} />
-          <select value={set} onChange={(e) => setSet(e.target.value as typeof set)} aria-label="Card set">
+          <TextInput type="search" placeholder="Search name or text" aria-label="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <Select value={set} onChange={(e) => setSet(e.target.value as typeof set)} aria-label="Card set">
             <option value="core">Core ({corePool.length})</option>
             <option value="prime">Prime ({prime.length}, more coming)</option>
             <option value="both">Core + Prime</option>
-          </select>
-          <select value={type} onChange={(e) => setType(e.target.value as typeof type)} aria-label="Card type">
+          </Select>
+          <Select value={type} onChange={(e) => setType(e.target.value as typeof type)} aria-label="Card type">
             {TYPES.map((t) => (
               <option key={t} value={t}>
                 {t === 'all' ? 'All types' : t}
               </option>
             ))}
-          </select>
-          <div className={styles.costs} role="group" aria-label="Mana cost">
-            {COSTS.map((c) => (
-              <button key={c} type="button" className={c === cost ? styles.on : ''} onClick={() => setCost(c)}>
-                {c === 'all' ? 'All' : c}
-              </button>
-            ))}
-          </div>
+          </Select>
+          <SegmentedControl chips ariaLabel="Mana cost" value={cost} onChange={setCost} options={COSTS.map((c) => ({ label: c === 'all' ? 'All' : c, value: c }))} />
           <span className={styles.count}>{shown.length} cards</span>
         </div>
         <div className={styles.grid}>
@@ -164,12 +159,10 @@ export const DeckBuilder = () => {
                       {why && <p className={styles.note}>{why}</p>}
                       <CardEffects card={c} />
                       <div className={styles.detailButtons}>
-                        <button type="button" disabled={!!why} onClick={() => add(c.id)}>
+                        <Button disabled={!!why} onClick={() => add(c.id)}>
                           Add to deck
-                        </button>
-                        <button type="button" onClick={() => setViewing(null)}>
-                          Close
-                        </button>
+                        </Button>
+                        <Button onClick={() => setViewing(null)}>Close</Button>
                       </div>
                       {tokens.length > 0 && (
                         <div className={styles.tokens}>
@@ -195,18 +188,18 @@ export const DeckBuilder = () => {
 
       <aside className={styles.deck}>
         <div className={styles.deckHead}>
-          <select value={deck.id} onChange={(e) => { setCurrentId(e.target.value); setNote(''); }} aria-label="Saved decks">
+          <Select value={deck.id} onChange={(e) => { setCurrentId(e.target.value); setNote(''); }} aria-label="Saved decks">
             {decks.map((d) => (
               <option key={d.id} value={d.id}>
                 {d.name || 'Unnamed'} ({d.cards.length})
               </option>
             ))}
-          </select>
-          <button type="button" onClick={newDeck}>New</button>
-          <button type="button" onClick={deleteDeck}>Delete</button>
+          </Select>
+          <Button onClick={newDeck}>New</Button>
+          <Button variant="danger" onClick={deleteDeck}>Delete</Button>
         </div>
-        <input className={styles.name} value={deck.name} maxLength={30} onChange={(e) => update({ ...deck, name: e.target.value })} aria-label="Deck name" />
-        <select
+        <TextInput className={styles.name} value={deck.name} maxLength={30} onChange={(e) => update({ ...deck, name: e.target.value })} aria-label="Deck name" />
+        <Select
           className={styles.name}
           value={deck.hero ?? ''}
           onChange={(e) => update({ ...deck, hero: e.target.value || undefined })}
@@ -218,7 +211,7 @@ export const DeckBuilder = () => {
               Hero: {h.name}
             </option>
           ))}
-        </select>
+        </Select>
         <div className={[styles.size, full ? styles.full : ''].join(' ')}>
           {deck.cards.length} / {MAX_DECK_SIZE} cards
         </div>
@@ -246,9 +239,9 @@ export const DeckBuilder = () => {
           })}
           {rows.length === 0 && <li className={styles.empty}>Right-click a card to add it (click it to look closer). Click a row here to remove one.</li>}
         </ul>
-        <Link href="/play">
-          <a className={styles.playLink}>Play (choose this deck under New game)</a>
-        </Link>
+        <LinkButton href="/play" variant="primary" className={styles.playLink}>
+          Play (choose this deck under New game)
+        </LinkButton>
         {deck.cards.length < MAX_DECK_SIZE && deck.cards.length > 0 && (
           <p className={styles.hint}>A deck under {MAX_DECK_SIZE} cards runs out sooner, and you take fatigue damage.</p>
         )}
