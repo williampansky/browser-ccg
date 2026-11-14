@@ -13,7 +13,7 @@ import minionStyles from '../components/play-board/board-minion.module.scss';
  *  - attack badge: lax / lay offset px, las size px, lanf numeral font size px, lanx / lany numeral position inside the badge px
  *  - health badge: lhx / lhy offset px, lhs size px, lhnf numeral font size px, lhnx / lhny numeral position inside the badge px
  *  - caption (name): lcx / lcy offset px, lcf font size px, lchide=1 hides it;  keyword icons: lkx / lky offset px, lks scale
- *  - preview only: state (ready|selected|aim|aimHover), bg (felt|dark), lz zoom
+ *  - preview only: state (ready|selected|aim|aimHover), bg (felt|dark), lz zoom, labels=0 hides the gray words under each minion
  */
 const { cards } = loadHsCards();
 
@@ -310,6 +310,11 @@ const MinionLab = () => {
         {GROUPS.map((g) => (
           <Section key={g.id} title={g.title}>
             {g.keys.map(knob)}
+            {g.id === 'preview' && (
+              <label style={row}>
+                <input type="checkbox" checked={one(q.labels) !== '0'} onChange={(e) => setParams({ labels: e.target.checked ? null : '0' })} /> Show the gray words under each minion
+              </label>
+            )}
             {g.id === 'caption' && (
               <label style={row}>
                 <input type="checkbox" checked={one(q.lchide) === '1'} onChange={(e) => setParams({ lchide: e.target.checked ? '1' : null })} /> Hide the name
@@ -347,7 +352,7 @@ const MinionLab = () => {
               <div className={[minionStyles.slot, state ? minionStyles[state] : ''].join(' ')} style={{ margin: '0 auto' }}>
                 <MinionFace card={s.card} m={s.m} turn={3} sick={s.sick} />
               </div>
-              <figcaption style={{ marginTop: 6, color: '#9aa3b8', fontSize: 12 }}>{s.label}</figcaption>
+              {one(q.labels) !== '0' && <figcaption style={{ marginTop: 6, color: '#9aa3b8', fontSize: 12 }}>{s.label}</figcaption>}
             </figure>
           ))}
         </div>
