@@ -13,6 +13,8 @@ import minionStyles from '../components/play-board/board-minion.module.scss';
  *  - attack badge: lax / lay offset px, las size px, lanf numeral font size px, lanx / lany numeral position inside the badge px
  *  - health badge: lhx / lhy offset px, lhs size px, lhnf numeral font size px, lhnx / lhny numeral position inside the badge px
  *  - caption (name): lcx / lcy offset px, lcf font size px, lcshow=1 shows it (it is hidden by default);  keyword icons: lkx / lky offset px, lks scale
+ *  - keyword icons: lki size px, lkg gap px, lkb border px, lkr corner radius %, lkf glyph size px; colours (hex without #): kbg background,
+ *    kb-<kind> border and kg-<kind> glyph for rush, onslaught, noAttack, disabled, expiring, silenced, asleep
  *  - preview only: state (ready|selected|aim|aimHover), bg (felt|dark), lz zoom, labels=0 hides the gray words under each minion
  */
 const { cards } = loadHsCards();
@@ -43,6 +45,11 @@ const SLIDER_MAX = {
   lkx: 80,
   lky: 60,
   lks: 2.5,
+  lki: 60,
+  lkg: 20,
+  lkb: 6,
+  lkr: 50,
+  lkf: 40,
   lz: 3
 };
 
@@ -54,6 +61,8 @@ const ATTACK = `${sel('stat')}${sel('attack')}`;
 const HEALTH = `${sel('stat')}${sel('health')}`;
 const CAPTION = sel('caption');
 const BADGES = sel('badges');
+const BADGE = sel('badge');
+const ONSLAUGHT = sel('badge_onslaught');
 
 const first = (selector: string) => document.querySelector<HTMLElement>(selector);
 const num = (v: string | undefined, decimals = 0) => {
@@ -126,16 +135,47 @@ const KNOBS: Knob[] = [
   { key: 'lkx', label: 'Keyword icons X offset (px)', css: (v) => VARS(BADGES, 'x', v), read: () => nudge(BADGES, 'x') },
   { key: 'lky', label: 'Keyword icons Y offset (px)', css: (v) => VARS(BADGES, 'y', v), read: () => nudge(BADGES, 'y') },
   { key: 'lks', label: 'Keyword icons scale (x)', min: 0.4, step: 0.01, css: (v) => `${BADGES}{scale:${v}}`, read: () => 1 },
+  { key: 'lki', label: 'Icon size (px)', min: 8, css: (v) => `${BADGE}{width:${v}px !important;height:${v}px !important}`, read: () => num(computed(BADGE)?.width, 1) },
+  { key: 'lkg', label: 'Gap between icons (px)', min: 0, step: 0.5, css: (v) => `${BADGES}{gap:${v}px !important}`, read: () => num(computed(BADGES)?.columnGap, 1) },
+  { key: 'lkb', label: 'Icon border width (px)', min: 0, step: 0.5, css: (v) => `${BADGE}{border-width:${v}px !important}`, read: () => 1.5 /* the stylesheet's value; a computed border reads rounded to whole pixels on a 1x screen */ },
+  { key: 'lkr', label: 'Icon corner radius (%; 50 = round)', min: 0, css: (v) => `${BADGE}{border-radius:${v}% !important}`, read: () => 50 },
+  // Onslaught's "x2" is drawn smaller than the other glyphs (0.72rem vs 0.95rem), so it follows at the same ratio.
+  { key: 'lkf', label: 'Glyph size (px)', min: 4, step: 0.5, css: (v) => `${BADGE}{font-size:${v}px !important}${ONSLAUGHT}{font-size:${Math.round(v * 0.758 * 10) / 10}px !important}`, read: () => num(computed(`${BADGE}:not(${ONSLAUGHT})`)?.fontSize, 1) },
   // Preview only (not part of the minion)
   { key: 'lz', label: 'Preview zoom (x)', min: 0.4, step: 0.05, css: () => '', read: () => 1 }
 ];
+
+
+// Keyword icon colours (hex without #). Per keyword: the ring (kb-) and the glyph (kg-); `kbg` is the shared background.
+const KINDS: [string, string][] = [
+  ['rush', 'Stampede'],
+  ['onslaught', 'Onslaught'],
+  ['noAttack', "Can't attack"],
+  ['disabled', 'Disabled'],
+  ['expiring', 'Expiring'],
+  ['silenced', 'Suppressed'],
+  ['asleep', 'Not ready']
+];
+const toHex = (rgb: string | undefined) => {
+  const m = rgb?.match(/[\d.]+/g);
+  return m && m.length >= 3 ? '#' + m.slice(0, 3).map((n) => Math.round(+n).toString(16).padStart(2, '0')).join('') : undefined;
+};
+type ColourKnob = { key: string; label: string; css: (hex: string) => string; read: () => string | undefined };
+const COLOURS: ColourKnob[] = [
+  { key: 'kbg', label: 'Background', css: (h) => `${BADGE}{background:${h} !important}`, read: () => toHex(computed(BADGE)?.backgroundColor) },
+  ...KINDS.flatMap(([kind, name]): ColourKnob[] => [
+    { key: `kb-${kind}`, label: `${name} ring`, css: (h) => `${sel(`badge_${kind}`)}{border-color:${h} !important}`, read: () => toHex(computed(sel(`badge_${kind}`))?.borderTopColor) },
+    { key: `kg-${kind}`, label: `${name} glyph`, css: (h) => `${sel(`badge_${kind}`)}{color:${h} !important}`, read: () => toHex(computed(sel(`badge_${kind}`))?.color) }
+  ])
+];
+const HEX = /^[0-9a-f]{6}$/i;
 
 const GROUPS: { id: string; title: string; keys: string[] }[] = [
   { id: 'shape', title: 'Overall shape', keys: ['lm', 'la', 'lr', 'lbw', 'lot', 'lgs'] },
   { id: 'attack', title: 'Attack badge', keys: ['lax', 'lay', 'las', 'lanf', 'lanx', 'lany'] },
   { id: 'health', title: 'Health badge', keys: ['lhx', 'lhy', 'lhs', 'lhnf', 'lhnx', 'lhny'] },
   { id: 'caption', title: 'Name', keys: ['lcx', 'lcy', 'lcf'] },
-  { id: 'icons', title: 'Keyword icons', keys: ['lkx', 'lky', 'lks'] },
+  { id: 'icons', title: 'Keyword icons', keys: ['lkx', 'lky', 'lks', 'lki', 'lkg', 'lkb', 'lkr', 'lkf'] },
   { id: 'preview', title: 'Preview', keys: ['lz'] }
 ];
 
@@ -172,13 +212,26 @@ const buildSamples = (): Sample[] => {
     { label: 'Damaged', ...tweak(6, (m) => (m.health = Math.max(1, m.maxHealth - 2))), sick: false },
     { label: 'Buffed', ...tweak(7, (m) => ((m.attack += 3), (m.health += 3), (m.maxHealth += 3))), sick: false },
     { label: 'Not ready + suppressed', ...tweak(8, (m) => (m.silenced = true)), sick: true },
+    {
+      label: 'Every keyword icon',
+      ...tweak(10, (m) => {
+        m.keywords.rush = true;
+        m.keywords.doubleAttack = true;
+        m.keywords.noAttack = true;
+        m.disabledOnTurn = 4;
+        m.expiresOnTurn = 5;
+        m.silenced = true;
+      }),
+      sick: true
+    },
     { label: 'Expiring + disabled', ...tweak(9, (m) => ((m.expiresOnTurn = 5), (m.disabledOnTurn = 4))), sick: false }
   ];
 };
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <details open style={{ borderTop: '1px solid #3a4052', padding: '6px 0' }}>
-    <summary style={{ cursor: 'pointer', userSelect: 'none' }}>
+    <summary style={{ cursor: 'pointer', userSelect: 'none', fontSize: '1.25rem',
+    padding: '0 0 0.25rem 0' }}>
       <b>{title}</b>
     </summary>
     {children}
@@ -190,6 +243,7 @@ const MinionLab = () => {
   const q = router.query;
   const samples = useMemo(buildSamples, []);
   const [defaults, setDefaults] = useState<Record<string, number>>({});
+  const [colourDefaults, setColourDefaults] = useState<Record<string, string>>({});
   // Render only on the client: the URL params are not known on the server, so a first render there would not match.
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -237,8 +291,26 @@ const MinionLab = () => {
         });
         return changed ? next : old;
       });
+    const measureColours = () =>
+      setColourDefaults((old) => {
+        const next = { ...old };
+        let changed = false;
+        COLOURS.forEach((c) => {
+          if (one(router.query[c.key]) !== '') return;
+          const v = c.read();
+          if (v !== undefined && next[c.key] !== v) {
+            next[c.key] = v;
+            changed = true;
+          }
+        });
+        return changed ? next : old;
+      });
     measure();
-    const t = setInterval(measure, 400);
+    measureColours();
+    const t = setInterval(() => {
+      measure();
+      measureColours();
+    }, 400);
     return () => clearInterval(t);
   }, [router.isReady, router.query]);
 
@@ -246,6 +318,7 @@ const MinionLab = () => {
 
   const css = [
     ...KNOBS.filter((k) => one(q[k.key]) !== '' && !Number.isNaN(+one(q[k.key]))).map((k) => k.css(+one(q[k.key]))),
+    ...COLOURS.filter((c) => HEX.test(one(q[c.key]))).map((c) => c.css('#' + one(q[c.key]))),
     one(q.lcshow) === '1' ? `${CAPTION}{opacity:1 !important}` : ''
   ].join('\n');
 
@@ -289,32 +362,58 @@ const MinionLab = () => {
     );
   };
 
+  const colour = (c: ColourKnob) => {
+    const raw = one(q[c.key]);
+    const def = colourDefaults[c.key];
+    const value = HEX.test(raw) ? '#' + raw : (def ?? '#000000');
+    return (
+      <label key={c.key} style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '4px 0' }}>
+        <input type="color" value={value} onChange={(e) => setParams({ [c.key]: e.target.value.slice(1) })} />
+        <span style={{ flex: 1 }}>{c.label}</span>
+        <code style={{ color: '#9aa3b8', fontSize: 11 }}>{value}</code>
+        {raw ? (
+          <a style={{ cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ [c.key]: null })}>reset</a>
+        ) : (
+          <span style={{ color: '#9aa3b8', fontSize: 11 }}>(default)</span>
+        )}
+      </label>
+    );
+  };
+
   return (
     <main style={{ position: 'fixed', inset: 0, display: 'flex', color: '#e8eaf2', background: '#14161c', font: '14px system-ui, sans-serif' }}>
       <style>{css}</style>
       <aside style={{ width: panelW, flex: 'none', overflow: 'auto', padding: 14, boxSizing: 'border-box', background: '#1b1e27' }}>
-        <h1 style={{ margin: '0 0 6px', fontSize: 20 }}>Minion lab</h1>
-        <p style={{ color: '#9aa3b8', margin: '0 0 8px', fontSize: 12 }}>The board minion on its own. The URL holds every setting.</p>
-        <label style={row}>
-          State{' '}
-          <select value={state} onChange={(e) => setParams({ state: e.target.value })}>
-            {STATES.map(([v, name]) => (
-              <option key={v} value={v}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label style={row}>
-          Background{' '}
-          <select value={felt ? 'felt' : 'dark'} onChange={(e) => setParams({ bg: e.target.value === 'felt' ? null : 'dark' })}>
-            <option value="felt">Board felt</option>
-            <option value="dark">Dark</option>
-          </select>
-        </label>
+        <header>
+          <h1 style={{ margin: '0 0 6px', fontSize: 20 }}>Minion lab</h1>
+          <p style={{ color: '#9aa3b8', margin: '0 0 8px', fontSize: 12 }}>The board minion on its own. The URL holds every setting.</p>
+          <label style={row}>
+            State{' '}
+            <select value={state} onChange={(e) => setParams({ state: e.target.value })}>
+              {STATES.map(([v, name]) => (
+                <option key={v} value={v}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label style={row}>
+            Background{' '}
+            <select value={felt ? 'felt' : 'dark'} onChange={(e) => setParams({ bg: e.target.value === 'felt' ? null : 'dark' })}>
+              <option value="felt">Board felt</option>
+              <option value="dark">Dark</option>
+            </select>
+          </label>
+        </header>
         {GROUPS.map((g) => (
           <Section key={g.id} title={g.title}>
             {g.keys.map(knob)}
+            {g.id === 'icons' && (
+              <>
+                <div style={{ margin: '8px 0 2px', color: '#9aa3b8', fontSize: 12 }}>Colours</div>
+                {COLOURS.map(colour)}
+              </>
+            )}
             {g.id === 'icons' && (
               <label style={row}>
                 <input type="checkbox" checked={one(q.labels) !== '0'} onChange={(e) => setParams({ labels: e.target.checked ? null : '0' })} /> Show the gray words under each minion
