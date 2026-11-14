@@ -56,24 +56,24 @@ const NUMS: Num[] = [
   { key: 'lfw0', label: 'My hero width (px)', min: 110, max: 320, css: (v) => `${CLS('figMe')}{width:${v}px !important;--figW:${v}px !important}`, read: () => px(cs('figMe')?.width) },
   { key: 'lfw1', label: 'Enemy hero width (px)', min: 110, max: 320, css: (v) => `${CLS('figFoe')}{width:${v}px !important;--figW:${v}px !important}`, read: () => px(cs('figFoe')?.width) },
   // Hero figure position: an offset from where /play puts it (via the individual `translate` property, so it composes with the rest).
-  { key: 'lfx0', label: 'My hero X offset (px)', min: -600, max: 600, css: (v) => `${CLS('figMe')}{--lab-x:${v}px}`, read: () => 0 },
-  { key: 'lfy0', label: 'My hero Y offset (px)', min: -600, max: 600, css: (v) => `${CLS('figMe')}{--lab-y:${v}px}`, read: () => 0 },
-  { key: 'lfx1', label: 'Enemy hero X offset (px)', min: -600, max: 600, css: (v) => `${CLS('figFoe')}{--lab-x:${v}px}`, read: () => 0 },
-  { key: 'lfy1', label: 'Enemy hero Y offset (px)', min: -600, max: 600, css: (v) => `${CLS('figFoe')}{--lab-y:${v}px}`, read: () => 0 },
+  { key: 'lfx0', label: 'My hero X offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('figMe')}{--lab-x:${v}px}`, read: () => 0 },
+  { key: 'lfy0', label: 'My hero Y offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('figMe')}{--lab-y:${v}px}`, read: () => 0 },
+  { key: 'lfx1', label: 'Enemy hero X offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('figFoe')}{--lab-x:${v}px}`, read: () => 0 },
+  { key: 'lfy1', label: 'Enemy hero Y offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('figFoe')}{--lab-y:${v}px}`, read: () => 0 },
   // The clicked (selected) hand card: /play scales it 2x (hand zoom on top) and lifts it so it stays on screen.
   { key: 'lsel', label: 'Clicked card scale (x)', min: 1, max: 3, step: 0.05, css: () => '', read: () => 2 },
   // The log and deck panels. Their presets are in `panelCss`; these are size and offset.
   { key: 'lsplit', label: 'Stacked: log share of height (%)', min: 15, max: 85, css: () => '', read: () => 50 },
   { key: 'lgw', label: 'Log width (px)', min: 120, max: 700, css: (v) => `${CLS('log')}{width:${v}px !important}`, read: () => px(cs('log')?.width) },
   { key: 'ldw', label: 'Deck width (px)', min: 120, max: 700, css: (v) => `${CLS('deckView')}{width:${v}px !important}`, read: () => px(cs('deckView')?.width) },
-  { key: 'lgx', label: 'Log X offset (px)', min: -800, max: 800, css: (v) => `${CLS('log')}{--lab-x:${v}px}`, read: () => 0 },
-  { key: 'lgy', label: 'Log Y offset (px)', min: -800, max: 800, css: (v) => `${CLS('log')}{--lab-y:${v}px}`, read: () => 0 },
-  { key: 'ldx', label: 'Deck X offset (px)', min: -800, max: 800, css: (v) => `${CLS('deckView')}{--lab-x:${v}px}`, read: () => 0 },
-  { key: 'ldy', label: 'Deck Y offset (px)', min: -800, max: 800, css: (v) => `${CLS('deckView')}{--lab-y:${v}px}`, read: () => 0 },
+  { key: 'lgx', label: 'Log X offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('log')}{--lab-x:${v}px}`, read: () => 0 },
+  { key: 'lgy', label: 'Log Y offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('log')}{--lab-y:${v}px}`, read: () => 0 },
+  { key: 'ldx', label: 'Deck X offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('deckView')}{--lab-x:${v}px}`, read: () => 0 },
+  { key: 'ldy', label: 'Deck Y offset (px)', min: -2000, max: 2000, css: (v) => `${CLS('deckView')}{--lab-y:${v}px}`, read: () => 0 },
   // The energy bar: scale and an X / Y offset from where /play puts it (just outside the table's right edge).
   { key: 'les', label: 'Energy bar scale (x)', min: 0.5, max: 3, step: 0.05, css: (v) => `${BAR}{scale:${v} !important}`, read: () => 1 },
-  { key: 'lex', label: 'Energy bar X offset (px)', min: -800, max: 800, css: (v) => `${BAR}{--lab-x:${v}px}`, read: () => 0 },
-  { key: 'ley', label: 'Energy bar Y offset (px)', min: -800, max: 800, css: (v) => `${BAR}{--lab-y:${v}px}`, read: () => 0 }
+  { key: 'lex', label: 'Energy bar X offset (px)', min: -2000, max: 2000, css: (v) => `${BAR}{--lab-x:${v}px}`, read: () => 0 },
+  { key: 'ley', label: 'Energy bar Y offset (px)', min: -2000, max: 2000, css: (v) => `${BAR}{--lab-y:${v}px}`, read: () => 0 }
 ];
 
 const SETUP_KEYS = ['b0', 'b1', 'p0', 'p1', 'w0', 'w1', 'e0', 'e1', 'h0', 'h1', 'first', 'herofig', 'turn'];
