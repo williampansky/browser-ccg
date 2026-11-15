@@ -164,7 +164,7 @@
   top: -0.55rem;
   left: 50%;
   transform: translateX(-50%);
-  translate: var(--nudge-x, 0px) var(--nudge-y, 0.25rem); // 4px lower than its first position (minion lab, 2026-11-14)
+  translate: var(--nudge-x, -0.35px) var(--nudge-y, 0.25rem); // 4px lower than its first position, 0.35px left (minion lab, 2026-11-14 and 2026-11-15)
   display: flex;
   gap: 2px;
   z-index: 4;
