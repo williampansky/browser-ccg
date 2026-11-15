@@ -137,7 +137,7 @@ export const HeroBar = ({
         {mystery && (
           <span className={styles.mystery} title={tt('A face-down Mystery: it reacts on the opponent\'s turn')}>
             ? {mystery}
-            {mysteryTip && <span className={[styles.mysteryTip, mysteryTipBelow ? styles.mysteryTipBelow : ''].join(' ')}>{mysteryTip}</span>}
+            {mysteryTip && <span data-tip="" className={[styles.mysteryTip, mysteryTipBelow ? styles.mysteryTipBelow : ''].join(' ')}>{mysteryTip}</span>}
           </span>
         )}
         <span className={styles.counts}>

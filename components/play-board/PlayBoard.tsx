@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import { createPortal } from 'react-dom';
 import { AimArrow } from './AimArrow';
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   Action,
   applyAction,
@@ -30,6 +30,7 @@ import {
 } from '../../engine';
 import { gapIndex } from './board-position';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
+import { nudgeIntoViewport, useKeepTipsInViewport } from './viewport-nudge';
 import { formatClock, isTimerOn, secondsLeft, setTimerOn } from './turn-timer';
 import { fanDrop, fanRotation, fanX, HAND_CARD_HEIGHT, handSink as computeHandSink, handZoom } from './hand-fan';
 import { applyDebugSetup, DebugSetup } from './debug-setup';
@@ -125,6 +126,11 @@ const tipByName = new Map(
 /** Instant tooltip (fixed-position, so scrolling panels can't clip it). `side` is which way it opens from the element. */
 const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right', quiet = false) => {
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const tipRef = useRef<HTMLSpanElement>(null);
+  // Once drawn, slide it back inside the window if it opened past an edge.
+  useLayoutEffect(() => {
+    if (tipRef.current) nudgeIntoViewport(tipRef.current);
+  }, [pos, tip]);
   const handlers = {
     onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
       const r = e.currentTarget.getBoundingClientRect();
@@ -138,6 +144,7 @@ const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right', quiet
     pos && tip && !quiet && typeof document !== 'undefined'
       ? createPortal(
           <span
+            ref={tipRef}
             className={styles.logTip}
             style={{ left: pos.x, top: pos.y, transform: side === 'left' ? 'translateX(-100%)' : undefined }}
           >
@@ -418,6 +425,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     window.addEventListener('keydown', key);
     return () => window.removeEventListener('keydown', key);
   }, [menuOpen]);
+
+  useKeepTipsInViewport();
 
   // Start on the client only: the deck shuffle uses the clock, which would not match server rendering.
   useEffect(start, [start]);

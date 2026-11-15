@@ -136,9 +136,9 @@ describe('Warrior', () => {
 });
 
 describe('Cleric (SAGE)', () => {
-  it('Revitalize heals 2', () => {
+  it('Revitalize heals 3', () => {
     const s = produce(game('SAGE'), (g) => void (g.players['0'].health = 20));
-    expect(skill(s, 0, { kind: 'hero', player: '0' }).state.players['0'].health).toBe(22);
+    expect(skill(s, 0, { kind: 'hero', player: '0' }).state.players['0'].health).toBe(23);
   });
   it('Resurrect brings back a dead friendly minion once, and nothing from an empty graveyard', () => {
     expect(skill(game('SAGE'), 1).state.players['0'].board).toHaveLength(0);

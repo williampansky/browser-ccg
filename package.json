@@ -8,6 +8,7 @@
   "scripts": {
     "airtable": "node ./airtable.node.js",
     "sim": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\"}' ./engine/sim/run.node.ts",
+    "sim:heroes": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\"}' ./engine/sim/hero-sim.node.ts",
     "tune": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\"}' ./engine/sim/tune.node.ts",
     "dev": "next dev",
     "build": "next build",

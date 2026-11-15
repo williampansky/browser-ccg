@@ -43,7 +43,7 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
 
 /** The layout /play uses: the lab's "wip" preset, layout knobs only (no setup params). A `?l...` param in the /play URL overrides one. */
 export const PLAY_LAYOUT: Record<string, string> = {
-  ldw: '300',
+  ldw: '242',
   ldx: '15',
   les: '0.8',
   lex: '-1230',
@@ -54,7 +54,7 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lfx1: '-265',
   lfy0: '99',
   lfy1: '-2',
-  lgw: '300',
+  lgw: '242',
   lgx: '15',
   lgy: '9',
   lhw0: '135',

@@ -68,7 +68,7 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
     { target: anyMinion, effects: [hitChosen((ctx) => ctx.g.players[ctx.caster].armor)] },
   ],
   SAGE: [
-    { target: anyCharacter, effects: [heal(chosenTarget(), 2)] },
+    { target: anyCharacter, effects: [heal(chosenTarget(), 3)] },
     { effects: [resurrect(1)] },
     { effects: [resurrect(3)] },
   ],

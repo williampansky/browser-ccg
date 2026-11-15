@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { heroes, loadHsCards } from '../engine';
-import { CSS_FNS, buildLayoutCss } from '../components/play-board/layout-css';
+import { CSS_FNS, PLAY_LAYOUT, buildLayoutCss } from '../components/play-board/layout-css';
 
 // The real /play board (client only, like /play itself).
 const PlayBoard = dynamic(() => import('../components/play-board/PlayBoard').then((m) => m.PlayBoard), { ssr: false });
@@ -309,7 +309,8 @@ const BoardLab = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
 
-  const css = buildLayoutCss(Object.fromEntries(Object.keys(q).map((k) => [k, one(q[k])])));
+  // With no layout params the lab shows exactly what /play shows (PLAY_LAYOUT); a param in the URL overrides one knob.
+  const css = buildLayoutCss({ ...PLAY_LAYOUT, ...Object.fromEntries(Object.keys(q).map((k) => [k, one(q[k])])) });
 
   const boardKey = RESTART_KEYS.map((k) => one(q[k])).join('|');
   const ids = (k: string) => one(q[k]).split(',').filter(Boolean);

@@ -98,7 +98,7 @@ export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & Fi
               {k?.targeted && <i className={styles.figTarget}>⌖</i>}
               {status && <em className={styles.figStatus}>{k?.spent ? '✕' : k?.cooldownLeft}</em>}
               {k && (
-                <span className={styles.figTip}>
+                <span data-tip="" className={styles.figTip}>
                   <strong>{k.name}</strong>
                   {status && <em><small> ({status})</small></em>}
                   <br />

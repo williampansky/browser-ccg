@@ -22,10 +22,13 @@ export const playGame = (
   decks: Record<PlayerId, string[]>,
   bots: Record<PlayerId, Bot>,
   catalog: CardCatalog,
-  seed: number
+  seed: number,
+  /** Hero key per player (e.g. `ZEUS`); the catalog must then come from `withHeroTokens` */
+  heroes?: Partial<Record<PlayerId, string>>
 ): GameResult => {
   const rng = createSeededRng(seed);
-  let s = createGame({ decks, firstPlayer: '0', secondPlayerBonusCard: 'GAME_001' }, rng);
+  const heroSetup = heroes && (heroes['0'] || heroes['1']) ? { heroes } : {};
+  let s = createGame({ decks, firstPlayer: '0', secondPlayerBonusCard: 'GAME_001', ...heroSetup }, rng);
   for (let steps = 0; s.status === 'playing'; steps++) {
     if (steps > STEP_LIMIT) throw new Error(`game with seed ${seed} did not finish`);
     const r = applyAction(s, bots[s.activePlayer](s, catalog, rng), { rng, catalog });
@@ -39,6 +42,8 @@ export interface Contestant {
   name: string;
   deck: string[];
   bot: Bot;
+  /** Hero key; none means a game without a hero (no skills) */
+  hero?: string;
 }
 
 export interface MatchupResult {
@@ -68,7 +73,8 @@ export const playMatchup = (
       { '0': sides['0'].deck, '1': sides['1'].deck },
       { '0': sides['0'].bot, '1': sides['1'].bot },
       catalog,
-      seedBase + i
+      seedBase + i,
+      { '0': sides['0'].hero, '1': sides['1'].hero }
     );
     turns += r.turns;
     onGame?.(r, sides);

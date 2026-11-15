@@ -90,7 +90,7 @@ export const HeroSkills = ({
                 {s.spent ? '✕' : s.cooldownLeft}
               </em>
             )}
-            <span className={styles.tip}>
+            <span data-tip="" className={styles.tip}>
               <strong>{s.name}</strong>
               {status && <em> ({status})</em>}
               <br />
