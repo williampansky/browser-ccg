@@ -158,6 +158,36 @@ the framing and how it responds. Roughly cheapest first:
 
 Tried and rejected: procedural noise textures (stone, felt, wood) and a blurred painted backdrop behind the board.
 
+## Maintenance: split `PlayBoard.tsx` (not scheduled)
+
+`components/play-board/PlayBoard.tsx` is about 1,700 lines (lines 1-338 are module-level code, 340-1703 is one component with about 35
+`useState` calls and 30 effects sharing one set of closures). It is in roughly a quarter of recent commits, and every edit pays to find its
+way around it. The board lab was split the same way on 2026-11-15 (`pages/board-lab.tsx` 627 -> 100 lines, pieces in `components/board-lab/`).
+
+Expected payoff (a judgment, not a measurement): edits that land in an extracted piece get roughly 30-50% cheaper (a 100-200 line file
+instead of hunting through 1,700) and fail less often (the main file has many near-duplicate lines); edits to the central state wiring
+save little. The one-time cost is about 3-5 typical feature edits, spread over several commits, so it pays back after roughly 6-10 more edits.
+
+Target layout (line counts are rough):
+
+```
+components/play-board/
+  PlayBoard.tsx          ~250: shared state, wiring, page layout JSX
+  model/    game-data.ts (byId, pools, Selection/Mode types, targetKey, sameTarget, targetOf), new-game.ts (debugParams, newGame, LabProps)
+  tooltips/ useTip.tsx, MinionTip.tsx, LogCard.tsx, DeckRow.tsx, tip-text.ts
+  hooks/    useSelection.ts, useDragAndDrop.ts, useAiTurn.ts, useHandLayout.ts
+  parts/    Hand.tsx, BoardRows.tsx, HeroArea.tsx, SidePanels.tsx, MenuDialog.tsx, ChoiceDialog.tsx
+```
+
+`PlayBoard.tsx` keeps the game state and `dispatch`, runs the hooks and passes results to the parts; a small `BoardContext` (state, viewer,
+selection, handlers) avoids long prop lists. `play-board.module.scss` stays one file at first.
+
+Order, safest first, with tests and a browser check after each step: (1) `tooltips/` and `model/` (already outside the component, nearly
+free); (2) the setup and debug code; (3) the drag-and-drop handlers and ghost state (the most-edited area lately); (4) hand rendering;
+(5) the menu and pickers dialog; (6) the AI loop and sound effects. `useSelection` and `useDragAndDrop` are the riskiest (they share
+selection, hover and drag state), so they go after the module-level pieces are out and tested. Do the same for `pages/minion-lab.tsx`
+(also one big knob table plus UI) if it keeps being edited.
+
 ## Ideas / unscheduled
 
 - Collectible heroes with different abilities (the old repos had 9 heroes) as a monetization angle
