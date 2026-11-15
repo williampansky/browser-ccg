@@ -12,6 +12,10 @@ export const ORBS = '[class*="energy-bar_orbs__"]';
 
 
 export const CSS_FNS: Record<string, (v: number) => string> = {
+  lpsh: (v) => `${SLOT}{--port-hover:${v}}`,
+  lpss: (v) => `${SLOT}{--port-sel:${v}}`,
+  lpsm: (v) => `${SLOT}{--port-ms:${v}ms}`,
+  lpsy: (v) => `${SLOT}{--port-oy:${v}%}`,
   lshdefy: (v) => `${SLOT}{--sh-def-y:${v}px}`,
   lshdefb: (v) => `${SLOT}{--sh-def-b:${v}px}`,
   lshdefa: (v) => `${SLOT}{--sh-def-a:${v}}`,
@@ -141,6 +145,7 @@ export const buildLayoutCss = (q: Record<string, string | undefined>): string =>
   // `lmpv` previews a clicked minion on your first one, with the same gold ring the real selection has.
   const minionPreviewCss = one('lmpv')
     ? `${MY_FIRST}{transform:translateY(calc(var(--sel-lift,14px) * -1)) scale(var(--sel-scale,1.08)) !important}` +
+      `${MY_FIRST} [class*="board-minion_portrait__"]{transform:scale(var(--port-sel,1)) !important}` +
       `${MY_FIRST} ${OVAL}{border-color:#ffd45e !important;box-shadow:0 0 0 3px #ffd45e,0 0 18px rgba(255,212,94,0.7),0 var(--sh-sel-y,14px) var(--sh-sel-b,18px) rgba(0,0,0,var(--sh-sel-a,0)) !important}`
     : '';
   return [

@@ -66,6 +66,13 @@ export const RestartPanel = ({ q, setParams, sliders, count, pick }: PanelProps)
 export const MinionsPanel = ({ q, setParams, sliders, count, pick }: PanelProps) => (
   <>
     {sliders(['lm', 'lg', 'lml', 'lms', 'lmh'])}
+    <div style={{ margin: '8px 0 2px', borderTop: '1px solid #2a2f3e', paddingTop: 6 }}>
+      <b>Portrait inside the frame</b>
+      <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+        The picture scales inside the oval (the frame stays put) when you hover a minion, and when one is selected. 1 = off. Needs no click: hover a minion on the board.
+      </small>
+      {sliders(['lpsh', 'lpss', 'lpsm', 'lpsy'])}
+    </div>
     <label style={row}>
       <input type="checkbox" checked={'lmpv' in q} onChange={(e) => setParams({ lmpv: e.target.checked ? '1' : null })} /> Preview clicked minion (my first)
     </label>

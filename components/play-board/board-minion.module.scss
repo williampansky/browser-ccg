@@ -84,12 +84,30 @@
   transform: translateX(-50%);
   translate: var(--nudge-x, 0px) var(--nudge-y, 0px); // --nudge-x / --nudge-y are what the minion lab sets
   border-radius: 50%;
-  background: #191919 center top / cover no-repeat;
+  overflow: hidden; // clips the portrait layer when it scales
+  background: #191919;
   border: 2px solid rgba(220, 226, 240, 0.55);
   // The dark drop shadow is a variable per state (--sh-def-*, --sh-rdy-*, --sh-sel-*, --sh-aim-*, --sh-hov-*: y offset, blur, alpha) that the board lab tunes.
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.9), 0 var(--sh-def-y, 3px) var(--sh-def-b, 12px) rgba(0, 0, 0, var(--sh-def-a, 0.55)), inset 0 0 0 2px rgba(0, 0, 0, 0.35);
   transition: box-shadow 200ms, filter 200ms;
   z-index: 1;
+}
+
+.portrait {
+  position: absolute;
+  inset: 0;
+  background: center top / cover no-repeat;
+  transform-origin: 50% var(--port-oy, 30%);
+  transition: transform var(--port-ms, 150ms) ease-out;
+}
+// The portrait scales inside its frame on hover and while selected. 1 = no change (the default). The board lab tunes these (lpsh, lpss, lpsm, lpsy).
+.slot:hover .portrait {
+  transform: scale(var(--port-hover, 1));
+}
+// Selected wins over hover: the extra `.slot.selected:hover` is there so the hover rule above (more specific) cannot override it while the pointer is still on a selected minion.
+.selected .portrait,
+.slot.selected:hover .portrait {
+  transform: scale(var(--port-sel, 1));
 }
 
 .veiled {

@@ -66,6 +66,10 @@ export const SLIDER_MAX = {
 };
 
 export const NUMS: Num[] = [
+  { key: 'lpsh', label: 'Portrait scale on hover (x)', min: 1, max: 1.6, step: 0.01, css: CSS_FNS.lpsh, read: () => 1 },
+  { key: 'lpss', label: 'Portrait scale when selected (x)', min: 1, max: 1.6, step: 0.01, css: CSS_FNS.lpss, read: () => 1 },
+  { key: 'lpsm', label: 'Portrait scale speed (ms)', min: 0, max: 600, step: 10, css: CSS_FNS.lpsm, read: () => 150 },
+  { key: 'lpsy', label: 'Portrait scale centre, from top (%)', min: 0, max: 100, step: 1, css: CSS_FNS.lpsy, read: () => 30 },
   { key: 'lshdefy', label: 'Default: shadow down (px)', min: -20, max: 60, css: CSS_FNS.lshdefy, read: () => 3 },
   { key: 'lshdefb', label: 'Default: shadow blur (px)', min: 0, max: 60, css: CSS_FNS.lshdefb, read: () => 12 },
   { key: 'lshdefa', label: 'Default: shadow darkness', min: 0, max: 1, step: 0.05, css: CSS_FNS.lshdefa, read: () => 0.55 },

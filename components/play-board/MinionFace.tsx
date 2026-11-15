@@ -73,8 +73,10 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
       {m.keywords.guard && <GuardShield />}
       <span
         className={[styles.oval, hurt ? styles.shake : '', m.keywords.hidden ? styles.veiled : '', m.silenced ? styles.muted : ''].join(' ')}
-        style={{ backgroundImage: minionArtBackground(m.cardId) }}
-      />
+      >
+        {/* The picture is its own layer inside the oval (which clips it), so it can scale on hover without scaling the frame. */}
+        <span className={styles.portrait} style={{ backgroundImage: minionArtBackground(m.cardId) }} />
+      </span>
       {doomed && (
         <span className={styles.doomed} role="img" aria-label="Would die">
           ☠
