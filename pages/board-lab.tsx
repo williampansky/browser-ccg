@@ -1,10 +1,15 @@
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { heroes, loadHsCards } from '../engine';
-import { CSS_FNS, PLAY_LAYOUT, buildLayoutCss } from '../components/play-board/layout-css';
-import { previewSound, setHoverGapMs, setSoundTuning, soundDefaults } from '../components/play-board/sounds';
-import type { TunableSound } from '../components/play-board/sounds';
+import { LabOverlay } from '../components/board-lab/LabOverlay';
+import { LabSliders, useMeasuredDefaults } from '../components/board-lab/LabSliders';
+import { LabSection, useLabSections } from '../components/board-lab/lab-sections';
+import { BoardPanel, EnergyPanel, HandsPanel, HeroFiguresPanel, LogDeckPanel, MinionsPanel, RestartPanel, TablePanel } from '../components/board-lab/lab-panels';
+import { RESTART_KEYS, SETUP_KEYS, one } from '../components/board-lab/lab-model';
+import { PresetsPanel } from '../components/board-lab/PresetsPanel';
+import { SoundPanel } from '../components/board-lab/SoundPanel';
+import { PLAY_LAYOUT, buildLayoutCss } from '../components/play-board/layout-css';
 
 // The real /play board (client only, like /play itself).
 const PlayBoard = dynamic(() => import('../components/play-board/PlayBoard').then((m) => m.PlayBoard), { ssr: false });
@@ -18,276 +23,15 @@ const PlayBoard = dynamic(() => import('../components/play-board/PlayBoard').the
  *    lsel clicked-card scale, lpv=1 previews it on the first card, lpan log/deck arrangement (swap|stackL|stackR), lsplit stacked log share %,
  *    lgw/ldw log/deck width px, les energy bar scale, lex/ley its X/Y offsets px, leo=h horizontal energy bar, lgx/lgy/ldx/ldy their X/Y offsets px, lfelt=0 hides the felt panel
  * Changing a setup param restarts the board (it is a fresh game each time, not a live one); layout knobs apply instantly.
+ * The pieces live in components/board-lab/: lab-model (knob table), lab-panels (the sections), LabOverlay (the floating panel), PresetsPanel, SoundPanel.
  */
 const { cards } = loadHsCards();
 
-type Num = {
-  key: string;
-  label: string;
-  min: number;
-  max: number;
-  step?: number;
-  css: (v: number) => string;
-  /** Reads the board's current value for this knob from the DOM (used for the slider's default while no override is set). */
-  read: () => number | undefined;
-};
-
-const px = (v: string | undefined) => {
-  const n = parseFloat(v ?? '');
-  return Number.isNaN(n) ? undefined : Math.round(n);
-};
-const first = (name: string) => document.querySelector<HTMLElement>(`[class*="play-board_${name}__"]`);
-const cs = (name: string) => {
-  const el = first(name);
-  return el ? getComputedStyle(el) : undefined;
-};
-
-/**
- * The top end of every slider, in one place (px unless noted). Edit freely: a slider whose real default is above its max stretches
- * to fit it anyway. The offset sliders (lfx0 ... ley, lgx ... ldy) run from minus this value to plus it.
- */
-const SLIDER_MAX = {
-  // Minions and table
-  lm: 200,
-  lg: 40,
-  ls: 60,
-  lw: 2000,
-  // Clicked minion
-  lml: 80,
-  lms: 2,
-  lmh: 1.5,
-  // Hands
-  lhs: 160,
-  lhw0: 260,
-  lhw1: 260,
-  lsel: 3,
-  // Hero figures (width, then X / Y offset: the offset sliders run from minus this to plus this)
-  lfw0: 320,
-  lfw1: 320,
-  lfx0: 2000,
-  lfy0: 2000,
-  lfx1: 2000,
-  lfy1: 2000,
-  // Log and deck panels
-  lsplit: 85,
-  lgw: 700,
-  ldw: 700,
-  lgx: 2000,
-  lgy: 2000,
-  ldx: 2000,
-  ldy: 2000,
-  // Energy bar
-  les: 3,
-  lex: 1500,
-  ley: 1500,
-  // Board (the engine caps a board at 7 minions; energy is 0-10)
-  minions: 7,
-  energy: 10
-};
-
-const NUMS: Num[] = [
-  { key: 'lm', label: 'Minion height (px)', min: 70, max: SLIDER_MAX.lm, css: CSS_FNS.lm, read: () => px(cs('row')?.getPropertyValue('--m-h')) },
-  { key: 'lg', label: 'Minion gap (px)', min: 0, max: SLIDER_MAX.lg, css: CSS_FNS.lg, read: () => px(cs('row')?.columnGap) },
-  { key: 'ls', label: 'Section gap (px)', min: 0, max: SLIDER_MAX.ls, css: CSS_FNS.ls, read: () => px(cs('center')?.rowGap) },
-  { key: 'lw', label: 'Table max width (px)', min: 300, max: SLIDER_MAX.lw, step: 10, css: CSS_FNS.lw, read: () => px(cs('table')?.maxWidth) ?? px(String(first('table')?.offsetWidth)) },
-  { key: 'lhs', label: 'Hand sink (px)', min: 0, max: SLIDER_MAX.lhs, css: CSS_FNS.lhs, read: () => px(cs('hand')?.getPropertyValue('--hand-sink')) },
-  // Your hand: the cards are 144 px wide at zoom 1 (the board computes a smaller zoom to fit a big hand), so width = 144 x zoom.
-  { key: 'lhw0', label: 'My hand card width (px)', min: 60, max: SLIDER_MAX.lhw0, css: CSS_FNS.lhw0, read: () => { const z = parseFloat(cs('hand')?.getPropertyValue('--hand-zoom') ?? ''); return Number.isNaN(z) ? undefined : Math.round(z * 144); } },
-  // The enemy's hand: card backs (144 x 152 px by default, overlapping by 40 px each side), scaled together.
-  { key: 'lhw1', label: 'Enemy hand card width (px)', min: 40, max: SLIDER_MAX.lhw1, css: CSS_FNS.lhw1, read: () => px(cs('cardBack')?.width) },
-  { key: 'lfw0', label: 'My hero width (px)', min: 110, max: SLIDER_MAX.lfw0, css: CSS_FNS.lfw0, read: () => px(cs('figMe')?.width) },
-  { key: 'lfw1', label: 'Enemy hero width (px)', min: 110, max: SLIDER_MAX.lfw1, css: CSS_FNS.lfw1, read: () => px(cs('figFoe')?.width) },
-  // Hero figure position: an offset from where /play puts it (via the individual `translate` property, so it composes with the rest).
-  { key: 'lfx0', label: 'My hero X offset (px)', min: -SLIDER_MAX.lfx0, max: SLIDER_MAX.lfx0, css: CSS_FNS.lfx0, read: () => 0 },
-  { key: 'lfy0', label: 'My hero Y offset (px)', min: -SLIDER_MAX.lfy0, max: SLIDER_MAX.lfy0, css: CSS_FNS.lfy0, read: () => 0 },
-  { key: 'lfx1', label: 'Enemy hero X offset (px)', min: -SLIDER_MAX.lfx1, max: SLIDER_MAX.lfx1, css: CSS_FNS.lfx1, read: () => 0 },
-  { key: 'lfy1', label: 'Enemy hero Y offset (px)', min: -SLIDER_MAX.lfy1, max: SLIDER_MAX.lfy1, css: CSS_FNS.lfy1, read: () => 0 },
-  // A clicked minion: how far it lifts and how much it grows (the board's own defaults are 14 px and 1.08x).
-  { key: 'lml', label: 'Clicked minion lift (px)', min: 0, max: SLIDER_MAX.lml, step: 0.5, css: CSS_FNS.lml, read: () => 14 },
-  { key: 'lms', label: 'Clicked minion scale (x)', min: 1, max: SLIDER_MAX.lms, step: 0.005, css: CSS_FNS.lms, read: () => 1.08 },
-  // A target under the pointer while aiming: 1 = no change (a ring only).
-  { key: 'lmh', label: 'Target hover scale (x)', min: 0.8, max: SLIDER_MAX.lmh, step: 0.005, css: CSS_FNS.lmh, read: () => 1 },
-  // The clicked (selected) hand card: /play scales it 2x (hand zoom on top) and lifts it so it stays on screen.
-  { key: 'lsel', label: 'Clicked card scale (x)', min: 1, max: SLIDER_MAX.lsel, step: 0.05, css: CSS_FNS.lsel, read: () => 2 },
-  // The log and deck panels. Their presets are in `panelCss`; these are size and offset.
-  { key: 'lsplit', label: 'Stacked: log share of height (%)', min: 15, max: SLIDER_MAX.lsplit, css: CSS_FNS.lsplit, read: () => 50 },
-  { key: 'lgw', label: 'Log width (px)', min: 120, max: SLIDER_MAX.lgw, css: CSS_FNS.lgw, read: () => px(cs('log')?.width) },
-  { key: 'ldw', label: 'Deck width (px)', min: 120, max: SLIDER_MAX.ldw, css: CSS_FNS.ldw, read: () => px(cs('deckView')?.width) },
-  { key: 'lgx', label: 'Log X offset (px)', min: -SLIDER_MAX.lgx, max: SLIDER_MAX.lgx, css: CSS_FNS.lgx, read: () => 0 },
-  { key: 'lgy', label: 'Log Y offset (px)', min: -SLIDER_MAX.lgy, max: SLIDER_MAX.lgy, css: CSS_FNS.lgy, read: () => 0 },
-  { key: 'ldx', label: 'Deck X offset (px)', min: -SLIDER_MAX.ldx, max: SLIDER_MAX.ldx, css: CSS_FNS.ldx, read: () => 0 },
-  { key: 'ldy', label: 'Deck Y offset (px)', min: -SLIDER_MAX.ldy, max: SLIDER_MAX.ldy, css: CSS_FNS.ldy, read: () => 0 },
-  // The energy bar: scale and an X / Y offset from where /play puts it (just outside the table's right edge).
-  { key: 'les', label: 'Energy bar scale (x)', min: 0.5, max: SLIDER_MAX.les, step: 0.05, css: CSS_FNS.les, read: () => 1 },
-  { key: 'lex', label: 'Energy bar X offset (px)', min: -SLIDER_MAX.lex, max: SLIDER_MAX.lex, css: CSS_FNS.lex, read: () => 0 },
-  { key: 'ley', label: 'Energy bar Y offset (px)', min: -SLIDER_MAX.ley, max: SLIDER_MAX.ley, css: CSS_FNS.ley, read: () => 0 }
-];
-
-const SETUP_KEYS = ['b0', 'b1', 'p0', 'p1', 'w0', 'w1', 'e0', 'e1', 'h0', 'h1', 'first', 'herofig', 'turn'];
-/** The setup params that need a new game (heroes are chosen at deal time, hands are dealt). Boards and energy are applied live. */
-const RESTART_KEYS = ['p0', 'p1', 'w0', 'w1', 'h0', 'h1', 'first', 'herofig'];
-const HEROES = ['', ...heroes().map((h) => h.id), 'none'];
-
-const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? '';
-
 const BoardLab = () => {
   const router = useRouter();
-  const [open, setOpen] = useState(true);
   const q = router.query;
-
-  // The overlay's position (top-left corner, px); null = docked top right. Dragged by its header, remembered in localStorage.
-  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
-  const boxRef = useRef<HTMLDivElement>(null);
-  const drag = useRef<{ dx: number; dy: number } | null>(null);
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(window.localStorage.getItem('ccg.boardlab.pos') ?? 'null');
-      if (saved && typeof saved.x === 'number' && typeof saved.y === 'number') setPos(saved);
-    } catch {
-      /* no saved position */
-    }
-  }, []);
-  // The overlay's width (px): dragged by the panel's outer edge (left edge while docked top right, since the right side is pinned).
-  const [width, setWidth] = useState(250);
-  const resize = useRef<{ x: number; w: number } | null>(null);
-  useEffect(() => {
-    const saved = parseInt(window.localStorage.getItem('ccg.boardlab.width') ?? '', 10);
-    if (saved >= 200 && saved <= 1000) setWidth(saved);
-  }, []);
-  const startResize = (e: React.PointerEvent<HTMLDivElement>) => {
-    resize.current = { x: e.clientX, w: width };
-    e.currentTarget.setPointerCapture(e.pointerId);
-    e.stopPropagation();
-  };
-  const moveResize = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!resize.current) return;
-    const dx = e.clientX - resize.current.x;
-    setWidth(Math.min(1000, Math.max(200, resize.current.w + (pos ? dx : -dx))));
-  };
-  const endResize = () => {
-    if (!resize.current) return;
-    resize.current = null;
-    window.localStorage.setItem('ccg.boardlab.width', String(width));
-  };
-  // Which accordion sections are open (default: just "Board"); remembered in localStorage.
-  const [sections, setSections] = useState<Record<string, boolean>>({ presets: true, board: true });
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(window.localStorage.getItem('ccg.boardlab.sections') ?? 'null');
-      if (saved && typeof saved === 'object') setSections(saved);
-    } catch {
-      /* no saved sections */
-    }
-  }, []);
-  const SECTION_IDS = ['presets', 'board', 'restart', 'minions', 'table', 'hands', 'energy', 'panels', 'heroes', 'sounds'];
-  const setAllSections = (open: boolean) => {
-    const next = Object.fromEntries(SECTION_IDS.map((id) => [id, open]));
-    setSections(next);
-    window.localStorage.setItem('ccg.boardlab.sections', JSON.stringify(next));
-  };
-  const toggleSection = (id: string, isOpen: boolean) =>
-    setSections((old) => {
-      if (!!old[id] === isOpen) return old;
-      const next = { ...old, [id]: isOpen };
-      window.localStorage.setItem('ccg.boardlab.sections', JSON.stringify(next));
-      return next;
-    });
-
-  // Presets: a name plus a saved URL param string (everything, or only the layout params: all of them start with "l").
-  // Loading one replaces the URL; the board restarts only if a restart-needing param (heroes, hand) differs.
-  type Preset = { name: string; qs: string; layoutOnly: boolean };
-  const PRESET_KEY = 'ccg.boardlab.presets';
-  const [presets, setPresets] = useState<Preset[]>([]);
-  const [presetName, setPresetName] = useState('');
-  const [layoutOnly, setLayoutOnly] = useState(false);
-  const [prevQs, setPrevQs] = useState<string | null>(null); // the URL before the last load, for the A/B flip
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(window.localStorage.getItem(PRESET_KEY) ?? '[]');
-      if (Array.isArray(saved)) setPresets(saved.filter((x) => x && typeof x.name === 'string' && typeof x.qs === 'string'));
-    } catch {
-      /* no saved presets */
-    }
-  }, []);
-  const storePresets = (next: Preset[]) => {
-    setPresets(next);
-    window.localStorage.setItem(PRESET_KEY, JSON.stringify(next));
-  };
-  const qsOf = (only: boolean) => {
-    const u = new URLSearchParams();
-    Object.entries(router.query)
-      .filter(([k]) => !only || k.startsWith('l'))
-      .sort(([a], [b]) => (a < b ? -1 : 1))
-      .forEach(([k, v]) => u.set(k, Array.isArray(v) ? v[0] : (v ?? '')));
-    return u.toString();
-  };
-  const applyQs = (qs: string, only: boolean) => {
-    setPrevQs(qsOf(false));
-    const next: Record<string, string> = {};
-    if (only) Object.entries(router.query).forEach(([k, v]) => !k.startsWith('l') && (next[k] = Array.isArray(v) ? v[0] : (v ?? '')));
-    new URLSearchParams(qs).forEach((v, k) => (next[k] = v));
-    router.replace({ pathname: router.pathname, query: next }, undefined, { shallow: true });
-  };
-  const savePreset = (name: string, only: boolean) => {
-    const n = name.trim();
-    if (!n) return;
-    const entry = { name: n, qs: qsOf(only), layoutOnly: only };
-    storePresets(presets.some((x) => x.name === n) ? presets.map((x) => (x.name === n ? entry : x)) : [...presets, entry]);
-    setPresetName('');
-  };
-  const exportPresets = () => navigator.clipboard?.writeText(JSON.stringify(presets, null, 1));
-  const importPresets = () => {
-    const text = window.prompt('Paste presets JSON (same names are replaced)');
-    if (!text) return;
-    try {
-      const incoming = JSON.parse(text);
-      if (!Array.isArray(incoming)) throw new Error('not a list');
-      const ok: Preset[] = incoming.filter((x) => x && typeof x.name === 'string' && typeof x.qs === 'string').map((x) => ({ name: x.name, qs: x.qs, layoutOnly: !!x.layoutOnly }));
-      storePresets([...presets.filter((x) => !ok.some((y) => y.name === x.name)), ...ok]);
-    } catch {
-      window.alert('That is not a presets list.');
-    }
-  };
-
-  // What the board uses when a knob has no override: measured from the DOM, so an untouched slider sits at the real default.
-  const [defaults, setDefaults] = useState<Record<string, number>>({});
-  useEffect(() => {
-    const measure = () =>
-      setDefaults((old) => {
-        const next = { ...old };
-        let changed = false;
-        NUMS.forEach((n) => {
-          if (one(router.query[n.key]) !== '') return; // overridden: keep the last default we saw
-          const v = n.read();
-          if (v !== undefined && next[n.key] !== v) {
-            next[n.key] = v;
-            changed = true;
-          }
-        });
-        return changed ? next : old;
-      });
-    measure();
-    const t = setInterval(measure, 400); // the board mounts late and resizes with the window
-    return () => clearInterval(t);
-  }, [router.query]);
-  const clamp = (x: number, y: number) => ({
-    x: Math.min(Math.max(0, x), Math.max(0, window.innerWidth - 60)),
-    y: Math.min(Math.max(0, y), Math.max(0, window.innerHeight - 30))
-  });
-  const startDrag = (e: React.PointerEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest('button')) return;
-    const r = boxRef.current!.getBoundingClientRect();
-    drag.current = { dx: e.clientX - r.left, dy: e.clientY - r.top };
-    e.currentTarget.setPointerCapture(e.pointerId);
-  };
-  const moveDrag = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (drag.current) setPos(clamp(e.clientX - drag.current.dx, e.clientY - drag.current.dy));
-  };
-  const endDrag = () => {
-    if (!drag.current) return;
-    drag.current = null;
-    if (pos) window.localStorage.setItem('ccg.boardlab.pos', JSON.stringify(pos));
-  };
+  const { sections, setAllSections, toggleSection } = useLabSections();
+  const defaults = useMeasuredDefaults(q);
 
   // A stable list of real CORE minions to build boards from.
   const minionIds = useMemo(
@@ -314,32 +58,6 @@ const BoardLab = () => {
   // With no layout params the lab shows exactly what /play shows (PLAY_LAYOUT); a param in the URL overrides one knob.
   const css = buildLayoutCss({ ...PLAY_LAYOUT, ...Object.fromEntries(Object.keys(q).map((k) => [k, one(q[k])])) });
 
-  // Sounds: the lab's overrides (file `lsf_<slot>`, volume `lsg_<slot>`, pitch variation `lsj_<slot>`, hover gap `lsgap`) go straight to the sound engine.
-  const SOUND_SLOTS: [TunableSound, string][] = [
-    ['cardPlay', 'Card play'],
-    ['draw', 'Card draw'],
-    ['cardHover', 'Hand hover'],
-    ['hold', 'Held card (loop)'],
-  ];
-  const [soundFiles, setSoundFiles] = useState<string[]>([]);
-  useEffect(() => {
-    fetch('/api/sounds')
-      .then((r) => r.json())
-      .then(setSoundFiles)
-      .catch(() => setSoundFiles([]));
-  }, []);
-  const soundKey = SOUND_SLOTS.map(([n]) => [one(q[`lsf_${n}`]), one(q[`lsg_${n}`]), one(q[`lsj_${n}`])].join('|')).join(';') + one(q.lsgap);
-  useEffect(() => {
-    SOUND_SLOTS.forEach(([n]) => {
-      const file = one(q[`lsf_${n}`]);
-      const gain = one(q[`lsg_${n}`]);
-      const jitter = one(q[`lsj_${n}`]);
-      setSoundTuning(n, file || gain || jitter ? { file: file || undefined, gain: gain ? +gain : undefined, jitter: jitter ? +jitter : undefined } : undefined);
-    });
-    setHoverGapMs(one(q.lsgap) ? +one(q.lsgap) : undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [soundKey]);
-
   const boardKey = RESTART_KEYS.map((k) => one(q[k])).join('|');
   const ids = (k: string) => one(q[k]).split(',').filter(Boolean);
   const energy = (k: string) => (one(q[k]) === '' || Number.isNaN(+one(q[k])) ? undefined : Math.min(10, Math.max(0, +one(q[k]))));
@@ -352,274 +70,29 @@ const BoardLab = () => {
 
   if (!router.isReady) return null;
 
-  const row = { display: 'block', margin: '6px 0' } as const;
-  const wide = { display: 'block', width: '100%' } as const;
-  // A render helper, not a component: a component defined here would remount (and drop a slider drag) on every render.
-  const section = (id: string, title: string, note: string, children: React.ReactNode) => (
-    <details key={id} open={!!sections[id]} onToggle={(e) => toggleSection(id, (e.currentTarget as HTMLDetailsElement).open)} style={{ borderTop: '1px solid #3a4052', padding: '6px 0' }}>
-      <summary style={{ cursor: 'pointer', userSelect: 'none' }}>
-        <b>{title}</b> <span style={{ color: '#9aa3b8', fontSize: 11 }}>({note})</span>
-      </summary>
+  const sliders = (keys: string[]) => <LabSliders keys={keys} q={q} defaults={defaults} setParams={setParams} />;
+  const panel = { q, setParams, sliders, count, pick };
+  const sec = (id: string, title: string, note: string, children: React.ReactNode) => (
+    <LabSection key={id} id={id} title={title} note={note} open={!!sections[id]} onToggle={toggleSection}>
       {children}
-    </details>
+    </LabSection>
   );
-  const sliders = (keys: string[]) =>
-    NUMS.filter((n) => keys.includes(n.key)).map((n) => {
-      const raw = one(q[n.key]);
-      return (
-        <label key={n.key} style={row}>
-          {n.label}{' '}
-          <input
-            type="number"
-            step={n.step ?? 1}
-            value={raw || (defaults[n.key] ?? '')}
-            style={{ width: 66 }}
-            onChange={(e) => setParams({ [n.key]: e.target.value })}
-          />
-          {!raw && defaults[n.key] !== undefined && <span style={{ color: '#9aa3b8' }}> (default)</span>}
-          {raw && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ [n.key]: null })}>reset</a>}
-          <input type="range" min={Math.min(n.min, defaults[n.key] ?? n.min)} max={Math.max(n.max, defaults[n.key] ?? n.max)} step={n.step ?? 1} value={raw || (defaults[n.key] ?? n.min)} style={wide}
-            onChange={(e) => setParams({ [n.key]: e.target.value })} />
-        </label>
-      );
-    });
-  const box = { position: 'fixed', zIndex: 2000, ...(pos ? { left: pos.x, top: pos.y } : { top: 8, right: 8 }), font: '13px system-ui, sans-serif', color: '#e8eaf2' } as const;
   return (
     <>
       <style>{css}</style>
       <PlayBoard key={boardKey} lab={lab} />
-      <div ref={boxRef} style={box}>
-        <div
-          onPointerDown={startDrag}
-          onPointerMove={moveDrag}
-          onPointerUp={endDrag}
-          onPointerCancel={endDrag}
-          onDoubleClick={() => {
-            setPos(null);
-            window.localStorage.removeItem('ccg.boardlab.pos');
-          }}
-          title="Drag to move; double-click to dock top right"
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '4px 6px 4px 10px', borderRadius: 6, border: '1px solid #3a4052', background: '#232634', cursor: 'grab', touchAction: 'none', userSelect: 'none' }}
-        >
-          <span>⠿ Board lab</span>
-          <button
-            onClick={() => setOpen(!open)}
-            style={{ padding: '2px 8px', borderRadius: 4, border: '1px solid #3a4052', background: '#14161c', color: '#fff', cursor: 'pointer' }}
-          >
-            {open ? 'Hide' : 'Show'}
-          </button>
-        </div>
-        {open && (
-          <div style={{ position: 'relative', marginTop: 6, width }}>
-            <div
-              onPointerDown={startResize}
-              onPointerMove={moveResize}
-              onPointerUp={endResize}
-              onPointerCancel={endResize}
-              onDoubleClick={() => {
-                setWidth(250);
-                window.localStorage.removeItem('ccg.boardlab.width');
-              }}
-              title="Drag to resize; double-click to reset the width"
-              style={{ position: 'absolute', top: 0, bottom: 0, [pos ? 'right' : 'left']: -4, width: 9, cursor: 'ew-resize', touchAction: 'none', zIndex: 1 }}
-            />
-          <div
-            style={{
-              width: '100%',
-              maxHeight: pos ? `calc(100vh - ${pos.y + 50}px)` : 'calc(100vh - 60px)',
-              overflow: 'auto',
-              padding: 12,
-              borderRadius: 10,
-              border: '1px solid #3a4052',
-              background: 'rgba(20,22,28,0.94)',
-              boxShadow: '0 6px 24px #000a'
-            }}
-          >
-            <div style={{ marginBottom: 6 }}>
-              <button onClick={() => setAllSections(false)}>Collapse all</button> <button onClick={() => setAllSections(true)}>Expand all</button>
-            </div>
-            {section('presets', 'Presets', 'saved in this browser', <>
-              <div style={row}>
-                <input
-                  placeholder="Preset name"
-                  value={presetName}
-                  style={{ width: 130 }}
-                  onChange={(e) => setPresetName(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && savePreset(presetName, layoutOnly)}
-                />{' '}
-                <button disabled={!presetName.trim()} onClick={() => savePreset(presetName, layoutOnly)}>Save</button>
-              </div>
-              <label style={row}>
-                <input type="checkbox" checked={layoutOnly} onChange={(e) => setLayoutOnly(e.target.checked)} /> Layout only (keeps whatever board you have)
-              </label>
-              {presets.length === 0 && <div style={{ color: '#9aa3b8', fontSize: 11 }}>None yet. Save the current URL to compare it later.</div>}
-              {presets.map((pr) => {
-                const active = qsOf(pr.layoutOnly) === pr.qs;
-                return (
-                  <div key={pr.name} style={{ display: 'flex', alignItems: 'center', gap: 4, margin: '4px 0' }}>
-                    <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: active ? 700 : 400, color: active ? '#8ff0a4' : undefined }} title={pr.qs}>
-                      {pr.name}
-                      {pr.layoutOnly && <span style={{ color: '#9aa3b8', fontSize: 10 }}> layout</span>}
-                    </span>
-                    <button onClick={() => applyQs(pr.qs, pr.layoutOnly)}>Load</button>
-                    <button title="Overwrite this preset with the current URL" onClick={() => savePreset(pr.name, pr.layoutOnly)}>Update</button>
-                    <button title="Delete" onClick={() => storePresets(presets.filter((x) => x.name !== pr.name))}>✕</button>
-                  </div>
-                );
-              })}
-              <div style={row}>
-                <button disabled={prevQs === null} title="Go back to the URL from before the last Load (press again to come back)" onClick={() => prevQs !== null && applyQs(prevQs, false)}>
-                  Flip A/B
-                </button>{' '}
-                <button onClick={exportPresets}>Export</button> <button onClick={importPresets}>Import</button>
-              </div>
-            </>)}
-            {section('board', 'Board', 'live', <>
-              <label style={row}>
-                My minions: <b>{count('b0')}</b>
-                <input type="range" min={0} max={SLIDER_MAX.minions} value={count('b0')} style={wide}
-                  onChange={(e) => setParams({ b0: +e.target.value ? pick(+e.target.value, 1) : null })} />
-              </label>
-              <label style={row}>
-                Their minions: <b>{count('b1')}</b>
-                <input type="range" min={0} max={SLIDER_MAX.minions} value={count('b1')} style={wide}
-                  onChange={(e) => setParams({ b1: +e.target.value ? pick(+e.target.value, 2) : null })} />
-              </label>
-              <div style={row}>
-                Turn{' '}
-                {([['0', 'Player'], ['1', 'Enemy']] as const).map(([v, name]) => (
-                  <button
-                    key={v}
-                    onClick={() => setParams({ turn: v })}
-                    style={{ marginRight: 4, padding: '3px 10px', borderRadius: 6, border: '1px solid #3a4052', cursor: 'pointer', color: '#fff', background: one(q.turn) === v ? '#3d5afe' : '#232634' }}
-                  >
-                    {name}
-                  </button>
-                ))}
-              </div>
-              <label style={row}>
-                Energy (mine) <input type="number" min={0} max={SLIDER_MAX.energy} style={{ width: 50 }} value={one(q.e0)} onChange={(e) => setParams({ e0: e.target.value })} />
-              </label>
-            </>)}
-            {section('restart', 'Heroes and hand', 'restarts the board, same deck each time', <>
-              {(['h0', 'h1'] as const).map((k) => (
-                <label key={k} style={row}>
-                  {k === 'h0' ? 'My hero' : 'Their hero'}{' '}
-                  <select value={one(q[k])} onChange={(e) => setParams({ [k]: e.target.value })}>
-                    {HEROES.map((h) => <option key={h} value={h}>{h || 'default'}</option>)}
-                  </select>
-                </label>
-              ))}
-              <label style={row}>
-                <input type="checkbox" checked={'herofig' in q} onChange={(e) => setParams({ herofig: e.target.checked ? '1' : null })} /> Hero figure UI
-              </label>
-              <label style={row}>
-                My hand ids <input style={{ width: '100%' }} placeholder="CORE_045,CORE_051" value={one(q.p0)} onChange={(e) => setParams({ p0: e.target.value })} />
-              </label>
-            </>)}
-            {section('minions', 'Minions', 'live', <>
-              {sliders(['lm', 'lg', 'lml', 'lms', 'lmh'])}
-              <label style={row}>
-                <input type="checkbox" checked={'lmpv' in q} onChange={(e) => setParams({ lmpv: e.target.checked ? '1' : null })} /> Preview clicked minion (my first)
-              </label>
-            </>)}
-            {section('table', 'Table', 'live', <>
-              {sliders(['ls', 'lw'])}
-              <label style={row}>
-                <input type="checkbox" checked={one(q.lfelt) !== '0'} onChange={(e) => setParams({ lfelt: e.target.checked ? null : '0' })} /> Felt panel
-              </label>
-            </>)}
-            {section('hands', 'Hands', 'live', <>
-              {sliders(['lhw0', 'lhw1', 'lhs', 'lsel'])}
-              <label style={row}>
-                <input type="checkbox" checked={'lpv' in q} onChange={(e) => setParams({ lpv: e.target.checked ? '1' : null })} /> Preview clicked card (first card)
-              </label>
-            </>)}
-            {section('energy', 'Energy bar', 'live', <>
-              <div style={row}>
-                Orientation{' '}
-                {([['v', 'Vertical'], ['h', 'Horizontal']] as const).map(([v, name]) => (
-                  <button
-                    key={v}
-                    onClick={() => setParams({ leo: v === 'v' ? null : v })}
-                    style={{ marginRight: 4, padding: '3px 10px', borderRadius: 6, border: '1px solid #3a4052', cursor: 'pointer', color: '#fff', background: (one(q.leo) === 'h') === (v === 'h') ? '#3d5afe' : '#232634' }}
-                  >
-                    {name}
-                  </button>
-                ))}
-              </div>
-              {sliders(['les', 'lex', 'ley'])}
-            </>)}
-            {section('panels', 'Log and deck', 'live', <>
-              <label style={row}>
-                Arrangement{' '}
-                <select value={one(q.lpan) || 'default'} onChange={(e) => setParams({ lpan: e.target.value === 'default' ? null : e.target.value })}>
-                  <option value="default">Log left, deck right</option>
-                  <option value="swap">Deck left, log right</option>
-                  <option value="stackL">Stacked on the left</option>
-                  <option value="stackR">Stacked on the right</option>
-                </select>
-              </label>
-              {sliders(['lsplit', 'lgw', 'ldw', 'lgx', 'lgy', 'ldx', 'ldy'])}
-            </>)}
-            {section('heroes', 'Hero figures', 'live', <>
-              {sliders(['lfw0', 'lfw1', 'lfx0', 'lfy0', 'lfx1', 'lfy1'])}
-              <label style={row}>
-                Figure side{' '}
-                <select value={one(q.lfs) || 'left'} onChange={(e) => setParams({ lfs: e.target.value === 'left' ? null : e.target.value })}>
-                  <option value="left">left</option>
-                  <option value="right">right</option>
-                </select>
-              </label>
-            </>)}
-            {section('sounds', 'Sounds', 'live; Play to hear', <>
-              {SOUND_SLOTS.map(([n, label]) => {
-                const d = soundDefaults(n);
-                const file = one(q[`lsf_${n}`]);
-                const gain = one(q[`lsg_${n}`]);
-                const jitter = one(q[`lsj_${n}`]);
-                return (
-                  <div key={n} style={{ margin: '8px 0', paddingBottom: 6, borderBottom: '1px solid #2a2f3e' }}>
-                    <b>{label}</b>{' '}
-                    <button onClick={() => previewSound(n)}>Play</button>
-                    <label style={row}>
-                      File{' '}
-                      <select style={{ maxWidth: '100%' }} value={file} onChange={(e) => setParams({ [`lsf_${n}`]: e.target.value || null })}>
-                        <option value="">default ({d.files.length > 1 ? `${d.files.length} variants` : d.files[0].split('/').pop()})</option>
-                        {soundFiles.map((f) => (
-                          <option key={f} value={f}>{f.replace('/sounds/', '')}</option>
-                        ))}
-                      </select>
-                    </label>
-                    <label style={row}>
-                      Volume <input type="number" step={0.05} style={{ width: 60 }} value={gain || d.gain} onChange={(e) => setParams({ [`lsg_${n}`]: e.target.value })} />
-                      {gain && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ [`lsg_${n}`]: null })}>reset</a>}
-                      <input type="range" min={0} max={1.5} step={0.05} value={gain || d.gain} style={wide} onChange={(e) => setParams({ [`lsg_${n}`]: e.target.value })} />
-                    </label>
-                    {n !== 'hold' && (
-                      <label style={row}>
-                        Pitch variation <input type="number" step={0.01} style={{ width: 60 }} value={jitter || d.jitter} onChange={(e) => setParams({ [`lsj_${n}`]: e.target.value })} />
-                        {jitter && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ [`lsj_${n}`]: null })}>reset</a>}
-                        <input type="range" min={0} max={0.4} step={0.01} value={jitter || d.jitter} style={wide} onChange={(e) => setParams({ [`lsj_${n}`]: e.target.value })} />
-                      </label>
-                    )}
-                  </div>
-                );
-              })}
-              <label style={row}>
-                Hover gap (ms) <input type="number" step={5} style={{ width: 60 }} value={one(q.lsgap) || 55} onChange={(e) => setParams({ lsgap: e.target.value })} />
-                {one(q.lsgap) && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ lsgap: null })}>reset</a>}
-                <input type="range" min={0} max={300} step={5} value={one(q.lsgap) || 55} style={wide} onChange={(e) => setParams({ lsgap: e.target.value })} />
-              </label>
-            </>)}
-            <button onClick={() => router.replace(router.pathname, undefined, { shallow: true })} style={{ marginTop: 8 }}>
-              Reset everything
-            </button>
-            <p style={{ color: '#9aa3b8', fontSize: 11 }}>The URL holds all of it: copy it to keep a layout.</p>
-          </div>
-          </div>
-        )}
-      </div>
+      <LabOverlay onSetAll={setAllSections}>
+        {sec('presets', 'Presets', 'saved in this browser', <PresetsPanel />)}
+        {sec('board', 'Board', 'live', <BoardPanel {...panel} />)}
+        {sec('restart', 'Heroes and hand', 'restarts the board, same deck each time', <RestartPanel {...panel} />)}
+        {sec('minions', 'Minions', 'live', <MinionsPanel {...panel} />)}
+        {sec('table', 'Table', 'live', <TablePanel {...panel} />)}
+        {sec('hands', 'Hands', 'live', <HandsPanel {...panel} />)}
+        {sec('energy', 'Energy bar', 'live', <EnergyPanel {...panel} />)}
+        {sec('panels', 'Log and deck', 'live', <LogDeckPanel {...panel} />)}
+        {sec('heroes', 'Hero figures', 'live', <HeroFiguresPanel {...panel} />)}
+        {sec('sounds', 'Sounds', 'live; Play to hear', <SoundPanel q={q} setParams={setParams} />)}
+      </LabOverlay>
     </>
   );
 };

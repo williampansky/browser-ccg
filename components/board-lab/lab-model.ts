@@ -1,0 +1,114 @@
+import { heroes } from '../../engine';
+import { CSS_FNS } from '../play-board/layout-css';
+
+export type Num = {
+  key: string;
+  label: string;
+  min: number;
+  max: number;
+  step?: number;
+  css: (v: number) => string;
+  /** Reads the board's current value for this knob from the DOM (used for the slider's default while no override is set). */
+  read: () => number | undefined;
+};
+
+export const px = (v: string | undefined) => {
+  const n = parseFloat(v ?? '');
+  return Number.isNaN(n) ? undefined : Math.round(n);
+};
+export const first = (name: string) => document.querySelector<HTMLElement>(`[class*="play-board_${name}__"]`);
+export const cs = (name: string) => {
+  const el = first(name);
+  return el ? getComputedStyle(el) : undefined;
+};
+
+/**
+ * The top end of every slider, in one place (px unless noted). Edit freely: a slider whose real default is above its max stretches
+ * to fit it anyway. The offset sliders (lfx0 ... ley, lgx ... ldy) run from minus this value to plus it.
+ */
+export const SLIDER_MAX = {
+  // Minions and table
+  lm: 200,
+  lg: 40,
+  ls: 60,
+  lw: 2000,
+  // Clicked minion
+  lml: 80,
+  lms: 2,
+  lmh: 1.5,
+  // Hands
+  lhs: 160,
+  lhw0: 260,
+  lhw1: 260,
+  lsel: 3,
+  // Hero figures (width, then X / Y offset: the offset sliders run from minus this to plus this)
+  lfw0: 320,
+  lfw1: 320,
+  lfx0: 2000,
+  lfy0: 2000,
+  lfx1: 2000,
+  lfy1: 2000,
+  // Log and deck panels
+  lsplit: 85,
+  lgw: 700,
+  ldw: 700,
+  lgx: 2000,
+  lgy: 2000,
+  ldx: 2000,
+  ldy: 2000,
+  // Energy bar
+  les: 3,
+  lex: 1500,
+  ley: 1500,
+  // Board (the engine caps a board at 7 minions; energy is 0-10)
+  minions: 7,
+  energy: 10
+};
+
+export const NUMS: Num[] = [
+  { key: 'lm', label: 'Minion height (px)', min: 70, max: SLIDER_MAX.lm, css: CSS_FNS.lm, read: () => px(cs('row')?.getPropertyValue('--m-h')) },
+  { key: 'lg', label: 'Minion gap (px)', min: 0, max: SLIDER_MAX.lg, css: CSS_FNS.lg, read: () => px(cs('row')?.columnGap) },
+  { key: 'ls', label: 'Section gap (px)', min: 0, max: SLIDER_MAX.ls, css: CSS_FNS.ls, read: () => px(cs('center')?.rowGap) },
+  { key: 'lw', label: 'Table max width (px)', min: 300, max: SLIDER_MAX.lw, step: 10, css: CSS_FNS.lw, read: () => px(cs('table')?.maxWidth) ?? px(String(first('table')?.offsetWidth)) },
+  { key: 'lhs', label: 'Hand sink (px)', min: 0, max: SLIDER_MAX.lhs, css: CSS_FNS.lhs, read: () => px(cs('hand')?.getPropertyValue('--hand-sink')) },
+  // Your hand: the cards are 144 px wide at zoom 1 (the board computes a smaller zoom to fit a big hand), so width = 144 x zoom.
+  { key: 'lhw0', label: 'My hand card width (px)', min: 60, max: SLIDER_MAX.lhw0, css: CSS_FNS.lhw0, read: () => { const z = parseFloat(cs('hand')?.getPropertyValue('--hand-zoom') ?? ''); return Number.isNaN(z) ? undefined : Math.round(z * 144); } },
+  // The enemy's hand: card backs (144 x 152 px by default, overlapping by 40 px each side), scaled together.
+  { key: 'lhw1', label: 'Enemy hand card width (px)', min: 40, max: SLIDER_MAX.lhw1, css: CSS_FNS.lhw1, read: () => px(cs('cardBack')?.width) },
+  { key: 'lfw0', label: 'My hero width (px)', min: 110, max: SLIDER_MAX.lfw0, css: CSS_FNS.lfw0, read: () => px(cs('figMe')?.width) },
+  { key: 'lfw1', label: 'Enemy hero width (px)', min: 110, max: SLIDER_MAX.lfw1, css: CSS_FNS.lfw1, read: () => px(cs('figFoe')?.width) },
+  // Hero figure position: an offset from where /play puts it (via the individual `translate` property, so it composes with the rest).
+  { key: 'lfx0', label: 'My hero X offset (px)', min: -SLIDER_MAX.lfx0, max: SLIDER_MAX.lfx0, css: CSS_FNS.lfx0, read: () => 0 },
+  { key: 'lfy0', label: 'My hero Y offset (px)', min: -SLIDER_MAX.lfy0, max: SLIDER_MAX.lfy0, css: CSS_FNS.lfy0, read: () => 0 },
+  { key: 'lfx1', label: 'Enemy hero X offset (px)', min: -SLIDER_MAX.lfx1, max: SLIDER_MAX.lfx1, css: CSS_FNS.lfx1, read: () => 0 },
+  { key: 'lfy1', label: 'Enemy hero Y offset (px)', min: -SLIDER_MAX.lfy1, max: SLIDER_MAX.lfy1, css: CSS_FNS.lfy1, read: () => 0 },
+  // A clicked minion: how far it lifts and how much it grows (the board's own defaults are 14 px and 1.08x).
+  { key: 'lml', label: 'Clicked minion lift (px)', min: 0, max: SLIDER_MAX.lml, step: 0.5, css: CSS_FNS.lml, read: () => 14 },
+  { key: 'lms', label: 'Clicked minion scale (x)', min: 1, max: SLIDER_MAX.lms, step: 0.005, css: CSS_FNS.lms, read: () => 1.08 },
+  // A target under the pointer while aiming: 1 = no change (a ring only).
+  { key: 'lmh', label: 'Target hover scale (x)', min: 0.8, max: SLIDER_MAX.lmh, step: 0.005, css: CSS_FNS.lmh, read: () => 1 },
+  // The clicked (selected) hand card: /play scales it 2x (hand zoom on top) and lifts it so it stays on screen.
+  { key: 'lsel', label: 'Clicked card scale (x)', min: 1, max: SLIDER_MAX.lsel, step: 0.05, css: CSS_FNS.lsel, read: () => 2 },
+  // The log and deck panels. Their presets are in `panelCss`; these are size and offset.
+  { key: 'lsplit', label: 'Stacked: log share of height (%)', min: 15, max: SLIDER_MAX.lsplit, css: CSS_FNS.lsplit, read: () => 50 },
+  { key: 'lgw', label: 'Log width (px)', min: 120, max: SLIDER_MAX.lgw, css: CSS_FNS.lgw, read: () => px(cs('log')?.width) },
+  { key: 'ldw', label: 'Deck width (px)', min: 120, max: SLIDER_MAX.ldw, css: CSS_FNS.ldw, read: () => px(cs('deckView')?.width) },
+  { key: 'lgx', label: 'Log X offset (px)', min: -SLIDER_MAX.lgx, max: SLIDER_MAX.lgx, css: CSS_FNS.lgx, read: () => 0 },
+  { key: 'lgy', label: 'Log Y offset (px)', min: -SLIDER_MAX.lgy, max: SLIDER_MAX.lgy, css: CSS_FNS.lgy, read: () => 0 },
+  { key: 'ldx', label: 'Deck X offset (px)', min: -SLIDER_MAX.ldx, max: SLIDER_MAX.ldx, css: CSS_FNS.ldx, read: () => 0 },
+  { key: 'ldy', label: 'Deck Y offset (px)', min: -SLIDER_MAX.ldy, max: SLIDER_MAX.ldy, css: CSS_FNS.ldy, read: () => 0 },
+  // The energy bar: scale and an X / Y offset from where /play puts it (just outside the table's right edge).
+  { key: 'les', label: 'Energy bar scale (x)', min: 0.5, max: SLIDER_MAX.les, step: 0.05, css: CSS_FNS.les, read: () => 1 },
+  { key: 'lex', label: 'Energy bar X offset (px)', min: -SLIDER_MAX.lex, max: SLIDER_MAX.lex, css: CSS_FNS.lex, read: () => 0 },
+  { key: 'ley', label: 'Energy bar Y offset (px)', min: -SLIDER_MAX.ley, max: SLIDER_MAX.ley, css: CSS_FNS.ley, read: () => 0 }
+];
+
+export const SETUP_KEYS = ['b0', 'b1', 'p0', 'p1', 'w0', 'w1', 'e0', 'e1', 'h0', 'h1', 'first', 'herofig', 'turn'];
+/** The setup params that need a new game (heroes are chosen at deal time, hands are dealt). Boards and energy are applied live. */
+export const RESTART_KEYS = ['p0', 'p1', 'w0', 'w1', 'h0', 'h1', 'first', 'herofig'];
+export const HEROES = ['', ...heroes().map((h) => h.id), 'none'];
+
+export const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? '';
+
+export const row = { display: 'block', margin: '6px 0' } as const;
+export const wide = { display: 'block', width: '100%' } as const;

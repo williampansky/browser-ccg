@@ -128,6 +128,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - **Visual work (board art, textures, backgrounds, themes): ask for a reference or a clear description first**, then build ONE opt-in option (a URL param such as the board lab's `l...` knobs) for the author to look at in their own browser. Do not build several variants and screenshot each (three board-art prototypes were tried and thrown away on 2026-11-14).
 - **Check with the cheapest tool that answers the question:** a unit test, a DOM query through `browser_run_code_unsafe` (read one element's text or rect), or a screenshot of one element. A full-page accessibility snapshot (`browser_snapshot`) dumps the whole board, log and deck list; avoid it, or pass `depth` / a `target`. Take a full screenshot only when the look itself is the question.
 - **Read only the part of a big file you need** (`pages/board-lab.tsx` is 600 lines; `PlayBoard.tsx` is far larger): `git grep -n` first, then read a range.
+- **Board lab edits:** the lab is split into `components/board-lab/` (a new knob = one entry in `lab-model.ts` `NUMS` + its CSS in `play-board/layout-css.ts` `CSS_FNS`; a new section = a component in `lab-panels.tsx` or its own file + one `sec(...)` line in `pages/board-lab.tsx`). Edit the one small file; do not read the whole lab.
 - Balance sims (`npm run sim`, `npm run sim:heroes`) cost wall-clock time, not tokens: run them in the background and read only the summary.
 
 ## Commands
