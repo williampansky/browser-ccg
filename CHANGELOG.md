@@ -4,6 +4,7 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-15
 
+- **Stampede lunge fix:** a minion with Stampede that attacked right after being played lunged while it was still invisible or falling in (card flight + 520 ms landing), so the lunge was never seen. The lunge now waits until the minion has landed (`landedAt` in `PlayBoard.tsx`); the attack itself still resolves at once. The direction is read when you attack (the target may be dead by the time it lunges), and an attacker that dies in the exchange lunges as its death ghost (it used to lunge on a minion that had already been removed, so no lunge showed).
 - **Kill preview ("doomed") look:** a minion the aimed action would kill now also has its portrait darkened (brightness 0.45, saturation 1.5, white behind it) as well as the skull over it (`doomedPortrait` in `board-minion.module.scss`; the skull class is renamed `doomedIcon`). The minion lab gallery has a "Will die" sample showing it. `MinionFace.tsx` was also reformatted to the repo's Prettier config.
 
 ## 2026-11-14

@@ -37,20 +37,28 @@ const centre = (el: HTMLElement): Point => {
   return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
 };
 
-/** Throws `attacker` at `target` (both on screen) and back. Raises it above its neighbours for the duration. */
-export const lunge = (attacker: HTMLElement, target: HTMLElement): void => {
-  if (reducedMotion() || !attacker.animate) return;
+/** The vector from `attacker`'s centre to `target`'s, read now (so it survives either element leaving the page later). */
+export const aimVector = (attacker: HTMLElement, target: HTMLElement): Point => {
   const a = centre(attacker);
   const t = centre(target);
+  return { x: t.x - a.x, y: t.y - a.y };
+};
+
+/** Throws `attacker` along `to` (see `aimVector`) and back. Raises it above its neighbours for the duration. */
+export const lungeBy = (attacker: HTMLElement, to: Point): void => {
+  if (reducedMotion() || !attacker.animate || !attacker.isConnected) return;
   const prev = attacker.style.zIndex;
   attacker.style.zIndex = '60';
-  const anim = attacker.animate(lungeFrames({ x: t.x - a.x, y: t.y - a.y }), { duration: LUNGE_MS });
+  const anim = attacker.animate(lungeFrames(to), { duration: LUNGE_MS });
   const done = () => {
     attacker.style.zIndex = prev;
   };
   anim.onfinish = done;
   anim.oncancel = done;
 };
+
+/** Throws `attacker` at `target` (both on screen) and back. */
+export const lunge = (attacker: HTMLElement, target: HTMLElement): void => lungeBy(attacker, aimVector(attacker, target));
 
 /** A short jolt of the whole table, for a big hit. */
 export const nudge = (el: HTMLElement, strength: number): void => {

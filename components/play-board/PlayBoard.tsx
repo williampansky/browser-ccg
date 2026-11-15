@@ -48,7 +48,7 @@ import { HeroBar } from './HeroBar';
 import { HeroFigure } from './HeroVariants';
 import { heroImage } from './hero-images';
 import { CardFlight } from './CardFlight';
-import { FLIGHT_MS, IMPACT_MS, lunge, nudge, reducedMotion } from './motion';
+import { aimVector, FLIGHT_MS, IMPACT_MS, lunge, lungeBy, nudge, reducedMotion } from './motion';
 import { EnergyBar } from './EnergyBar';
 import { HeroSkills } from './HeroSkills';
 import { heroOptions, loadHeroChoices, resolveHero, saveHeroChoices, HeroChoice } from './hero-choice';
@@ -390,6 +390,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const [flight, setFlight] = useState<{ card: Card; instanceId: number; from: DOMRect } | null>(null);
   const [flightTo, setFlightTo] = useState<DOMRect | null>(null);
   const landDelay = useRef(new Map<number, number>());
+  /** When a freshly played minion has finished falling in (flight + landing), so a Stampede attack waits before it lunges. */
+  const landedAt = useRef(new Map<number, number>());
   const [foeAim, setFoeAim] = useState<{ action: Action; from: string; to: TargetRef } | null>(null);
   const [hover, setHover] = useState<TargetRef | null>(null);
   const nodes = useRef(new Map<string, HTMLElement>());
@@ -500,11 +502,30 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           }, FLIGHT_MS + 60);
         }
       }
+      const summoned = result.events.find((e) => e.type === 'MinionPlayed');
+      if (summoned && summoned.type === 'MinionPlayed') {
+        landedAt.current.set(summoned.instanceId, Date.now() + (landDelay.current.get(summoned.instanceId) ?? 0) + 520);
+      }
       // Attacks are thrown at the target; a big hit jolts the table when it lands.
       if (action.type === 'Attack' || action.type === 'WeaponAttack') {
         const from = nodes.current.get(action.type === 'Attack' ? `m${action.attackerId}` : `h${state.activePlayer}`);
         const to = action.target && nodes.current.get(targetKey(action.target));
-        if (from && to) lunge(from, to);
+        // A minion that attacks (Stampede) before it has landed would lunge unseen: wait for it to land.
+        const wait = action.type === 'Attack' ? Math.max(0, (landedAt.current.get(action.attackerId) ?? 0) - Date.now()) : 0;
+        // An attacker that dies in the exchange is replaced by a death ghost on the next render, so the lunge goes to the ghost
+        // (which is already visible, so it does not wait for the landing).
+        const attackerDies = action.type === 'Attack' && result.events.some((e) => e.type === 'MinionDied' && e.instanceId === action.attackerId);
+        if (from && to) {
+          const vec = aimVector(from, to); // read now: the target may be dead and gone when the lunge starts
+          if (attackerDies && action.type === 'Attack') {
+            const id = action.attackerId;
+            setTimeout(() => {
+              const ghost = nodes.current.get(`g${id}`);
+              if (ghost) lungeBy(ghost, vec);
+            }, 30);
+          } else if (wait > 0) setTimeout(() => lungeBy(from, vec), wait);
+          else lungeBy(from, vec);
+        }
         const dealt = result.events.reduce((n, e) => n + (e.type === 'MinionDamaged' || e.type === 'HeroDamaged' ? e.amount : 0), 0);
         if (dealt >= 4 && tableRef.current) nudge(tableRef.current, dealt);
       }
@@ -1065,6 +1086,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       data-gap
       aria-hidden="true"
       className={[minionStyles.slot, minionStyles.dying].join(' ')}
+      ref={track(`g${g.key}`)}
       style={{ animationDelay: `${g.delay}ms` }}
     >
       <MinionFace card={byId.get(g.m.cardId)} m={g.m} turn={state.turn} sick={false} />
