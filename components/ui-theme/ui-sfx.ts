@@ -19,7 +19,7 @@ const FILE: Record<UiSound, string> = {
   select: 'ui_choice_select',
 };
 
-const VOLUME = 0.5;
+const VOLUME = 0.15;
 const cache = new Map<string, HTMLAudioElement>();
 
 export const uiSoundUrl = (folder: string, sound: UiSound) => `/sounds/${folder}/${FILE[sound]}.ogg`;

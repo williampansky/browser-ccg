@@ -1,7 +1,7 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
-import { PLAY_LAYOUT } from '../play-board/layout-css';
-import { one, row, wide } from './lab-model';
+import { ENERGY_COLOURS, PLAY_LAYOUT } from '../play-board/layout-css';
+import { NUMS, one, row, wide } from './lab-model';
 
 const note = { display: 'block', color: '#9aa3b8', fontSize: 11 } as const;
 
@@ -25,8 +25,20 @@ export const BackgroundPanel = ({ q: urlQuery, setParams }: { q: ParsedUrlQuery;
     </label>
   );
   const tile = one(q.lbgm) === 'tile';
+  const colour = (key: string) => (
+    <label key={key} style={row}>
+      <input type="color" value={`#${/^[0-9a-f]{6}$/i.test(one(q[key])) ? one(q[key]) : ENERGY_COLOURS[key].fallback}`} onChange={(e) => setParams({ [key]: e.target.value.slice(1) })} /> {ENERGY_COLOURS[key].label}{' '}
+      {one(urlQuery[key]) && <a style={{ cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ [key]: null })}>reset</a>}
+    </label>
+  );
+  const knob = (key: string) => {
+    const n = NUMS.find((x) => x.key === key)!;
+    return num(key, n.label, n.read() ?? 0, n.min, n.max, n.step ?? 1);
+  };
+  const groupStyle = { margin: '8px 0', paddingTop: 6, borderTop: '1px solid #2a2f3e' } as const;
   return (
     <>
+      <small style={note}>Image: the picture on the play surface. Below it: the colours around the image (the backdrop and the felt panel). An image replaces the felt's own tint and glow.</small>
       <label style={row}>
         Image{' '}
         <select value={one(q.lbgf) || 'none'} onChange={(e) => setParams({ lbgf: e.target.value })}>
@@ -55,6 +67,16 @@ export const BackgroundPanel = ({ q: urlQuery, setParams }: { q: ParsedUrlQuery;
       {num('lbgb', 'Blur (px)', 0, 0, 30, 1)}
       {!tile && num('lbgx', 'Focus X (%)', 50, 0, 100, 1, 'Which part of the image stays in view when it is cropped.')}
       {!tile && num('lbgy', 'Focus Y (%)', 50, 0, 100, 1)}
+      <div style={groupStyle}>
+        <b>Backdrop (behind the table)</b>
+        {['lpgcb', 'lpgc1', 'lpgc2', 'lpgc3'].map(colour)}
+        {['lpgm', 'lpgw'].map(knob)}
+      </div>
+      <div style={groupStyle}>
+        <b>Felt panel (the table's own surface)</b>
+        {['lflc', 'lflgc', 'lflrc'].map(colour)}
+        {['lflt', 'lfla', 'lflra', 'lflw', 'lflr', 'lfli', 'lflo', 'lflx', 'lfly'].map(knob)}
+      </div>
     </>
   );
 };

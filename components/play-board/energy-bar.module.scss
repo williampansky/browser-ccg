@@ -1,6 +1,8 @@
 // The tall energy column just outside the board's right edge (the left has the log, and End turn sits inside it).
-$energy: #4aa3ff;
-$bonus: #ffd45e;
+// The board lab's Energy bar section overrides --en (orbs and number), --en-bonus, --en-text, the glows (--en-glow, --en-text-glow),
+// the number's size (--en-cs) and the blink (--en-br seconds per pulse, --en-bb brightness, --en-bg glow). Defaults are the old look.
+$energy: var(--en, #4aa3ff);
+$bonus: var(--en-bonus, #ffd45e);
 
 .bar {
   position: absolute;
@@ -15,14 +17,14 @@ $bonus: #ffd45e;
 }
 
 .count {
-  font-size: 1.5rem;
+  font-size: calc(1.5rem * var(--en-cs, 1));
   line-height: 1;
-  color: $energy;
-  text-shadow: 0 0 8px $energy;
+  color: var(--en-text, #{$energy});
+  text-shadow: 0 0 var(--en-text-glow, 8px) var(--en-text, #{$energy});
   font-variant-numeric: tabular-nums;
 
   small {
-    font-size: 0.85rem;
+    font-size: 0.57em;
     opacity: 0.7;
   }
 }
@@ -45,13 +47,13 @@ $bonus: #ffd45e;
 }
 
 .ready {
-  background: radial-gradient(circle at 35% 30%, #bfe1ff 0, $energy 45%, #1d5fa8 100%);
-  box-shadow: 0 0 8px $energy;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, #{$energy} 40%, white) 0, $energy 45%, color-mix(in srgb, #{$energy} 60%, black) 100%);
+  box-shadow: 0 0 var(--en-glow, 8px) $energy;
 }
 
 .bonus {
-  background: radial-gradient(circle at 35% 30%, #fff1b8 0, $bonus 45%, #a8791d 100%);
-  box-shadow: 0 0 8px $bonus;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, #{$bonus} 40%, white) 0, $bonus 45%, color-mix(in srgb, #{$bonus} 60%, black) 100%);
+  box-shadow: 0 0 var(--en-glow, 8px) $bonus;
 }
 
 .spent {
@@ -66,24 +68,24 @@ $bonus: #ffd45e;
 
 // The orbs a picked card would use pulse with a soft highlight (no shrinking or going dark); red when it costs more than you have.
 .blink {
-  animation: orbGlow 1.2s ease-in-out infinite;
+  animation: orbGlow var(--en-br, 1.2s) ease-in-out infinite;
 }
 
 .blinkRed {
-  animation: orbGlowRed 1.2s ease-in-out infinite;
+  animation: orbGlowRed var(--en-br, 1.2s) ease-in-out infinite;
 }
 
 @keyframes orbGlow {
   50% {
-    filter: brightness(1.5) saturate(0.8);
-    box-shadow: 0 0 14px 2px #fff;
+    filter: brightness(var(--en-bb, 1.5)) saturate(0.8);
+    box-shadow: 0 0 var(--en-bg, 14px) 2px #fff;
   }
 }
 
 @keyframes orbGlowRed {
   50% {
     filter: brightness(1.2) hue-rotate(150deg) saturate(1.8);
-    box-shadow: 0 0 14px 2px #ff5d5d;
+    box-shadow: 0 0 var(--en-bg, 14px) 2px #ff5d5d;
   }
 }
 

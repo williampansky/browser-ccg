@@ -75,8 +75,8 @@ const RECIPES: Record<SoundName, Recipe> = {
  * variation, so repeats do not sound identical. A sound with no entry here (or whose files fail to load) uses its tone above.
  */
 const SAMPLES: Partial<Record<SoundName, { files: string[]; gain: number; jitter?: number; maxMs?: number }>> = {
-  cardPlay: { files: ['/sounds/cards/card-place-2.ogg'], gain: 0.35, jitter: 0.07 },
-  draw: { files: [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `/sounds/cards/card-slide-${n}.ogg`), gain: 0.7 },
+  cardPlay: { files: ['/sounds/cards/card-slide-7.ogg'], gain: 0.15, jitter: 0.07 },
+  draw: { files: [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `/sounds/cards/card-slide-${n}.ogg`), gain: 0.3 },
   // Fanning across the hand: one short slide, quiet, with wide pitch variation so a sweep over several cards does not repeat itself.
   cardHover: { files: ['/sounds/cards/card-slide-5.ogg'], gain: 0.15, jitter: 0.03, maxMs: 150 },
 };
@@ -130,11 +130,17 @@ const fetchFile = (url: string) => {
   }
   return p;
 };
-/** Starts fetching every sample (call once when the board mounts), so the first play does not wait for the network. */
+/**
+ * Starts fetching and decoding every sample (call once when the board mounts), so the first play of each file is the recording and not
+ * the stand-in tone. (Fetching alone was not enough: a file is only usable once decoded, and decoding used to wait for its first play.)
+ */
 export const preloadSounds = () => {
   if (typeof window === 'undefined') return;
-  Object.values(SAMPLES).forEach((s) => s?.files.forEach((f) => void fetchFile(f)));
-  void fetchFile(HOLD_FILE);
+  const files = [...Object.values(SAMPLES).flatMap((s) => s?.files ?? []), HOLD_FILE];
+  files.forEach((f) => void fetchFile(f));
+  // Decoding needs an audio context; a suspended one (no click yet) can still decode.
+  const c = audioContext();
+  if (c) files.forEach((f) => void decode(c, f));
 };
 const decode = async (c: AudioContext, url: string): Promise<AudioBuffer | null> => {
   const hit = decoded.get(url);

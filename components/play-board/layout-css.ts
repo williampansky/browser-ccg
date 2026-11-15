@@ -58,7 +58,101 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   les: (v) => `${BAR}{scale:${v} !important}`,
   lex: (v) => `${BAR}{--lab-x:${v}px}`,
   ley: (v) => `${BAR}{--lab-y:${v}px}`,
+  // Green "play this" overlays: outline width / radius, fill strength (%) idle / hovered / landing gap, gap width, dashed (1) or solid (0), hand glow.
+  lpow: (v) => `${CLS('page')}{--po-w:${v}px}`,
+  lpor: (v) => `${CLS('page')}{--po-r:${v}px}`,
+  lpoi: (v) => `${CLS('page')}{--po-idle:${v}}`,
+  lpoh: (v) => `${CLS('page')}{--po-hot:${v}}`,
+  lpog: (v) => `${CLS('page')}{--po-gap:${v}}`,
+  lpogw: (v) => `${CLS('page')}{--po-gapw:${v}px}`,
+  lpoo: (v) => `${CLS('page')}{--po-op:${v}}`,
+  lpos: (v) => (v ? '' : `${CLS('page')}{--po-style:solid}`),
+  lpoga: (v) => `${CLS('page')}{--po-glow:${v}px}`,
+  // Per-element play overlays: a = global cast area, z = minion zone, g = landing gap. o opacity, i idle fill, h hover fill, hw hover outline width,
+  // hg hover glow, t hover fade ms. Gap: gb outline width, gd open ms, gs start opacity, gp pulse seconds (0 = off), gq pulse brightness.
+  lpoao: (v) => `${CLS('page')}{--po-ao:${v}}`,
+  lpoai: (v) => `${CLS('page')}{--po-ai:${v}}`,
+  lpoah: (v) => `${CLS('page')}{--po-ah:${v}}`,
+  lpoahw: (v) => `${CLS('page')}{--po-ahw:${v}px}`,
+  lpoahg: (v) => `${CLS('page')}{--po-ahg:${v}px}`,
+  lpoat: (v) => `${CLS('page')}{--po-at:${v}ms}`,
+  lpozo: (v) => `${CLS('page')}{--po-zo:${v}}`,
+  lpozi: (v) => `${CLS('page')}{--po-zi:${v}}`,
+  lpozh: (v) => `${CLS('page')}{--po-zh:${v}}`,
+  lpozhw: (v) => `${CLS('page')}{--po-zhw:${v}px}`,
+  lpozhg: (v) => `${CLS('page')}{--po-zhg:${v}px}`,
+  lpozt: (v) => `${CLS('page')}{--po-zt:${v}ms}`,
+  lpogo: (v) => `${CLS('page')}{--po-go:${v}}`,
+  lpogb: (v) => `${CLS('page')}{--po-gb-w:${v}px}`,
+  lpogd: (v) => `${CLS('page')}{--po-gd:${v}ms}`,
+  lpogs: (v) => `${CLS('page')}{--po-gs:${v}}`,
+  lpogp: (v) => `${CLS('page')}{--po-gp:${v}s}`,
+  lpogq: (v) => `${CLS('page')}{--po-gb:${v}}`,
+  // Backdrop and felt panel (the area around the image): weave, middle-colour position, felt alphas, corner radius, rim, shadows, extra size.
+  lpgw: (v) => `${CLS('page')}{--bg-weave:${v}}`,
+  lpgm: (v) => `${CLS('page')}{--bg-mid:${v}%}`,
+  lflt: (v) => `${CLS('page')}{--felt-tint-a:${v}}`,
+  lfla: (v) => `${CLS('page')}{--felt-glow-a:${v}}`,
+  lflra: (v) => `${CLS('page')}{--felt-rim-a:${v}}`,
+  lflr: (v) => `${CLS('page')}{--felt-r:${v}px}`,
+  lflw: (v) => `${CLS('page')}{--felt-rw:${v}px}`,
+  lfli: (v) => `${CLS('page')}{--felt-in:${v}}`,
+  lflo: (v) => `${CLS('page')}{--felt-out:${v}}`,
+  lflx: (v) => `${CLS('page')}{--felt-x:${v}px}`,
+  lfly: (v) => `${CLS('page')}{--felt-y:${v}px}`,
+  // Energy bar look: glows, number size / visibility, blink rate / strength (colours are `ENERGY_COLOURS`, below).
+  leg: (v) => `${BAR}{--en-glow:${v}px}`,
+  legt: (v) => `${BAR}{--en-text-glow:${v}px}`,
+  lecs: (v) => `${BAR}{--en-cs:${v}}`,
+  lecv: (v) => (v ? '' : `${BAR} > b{display:none !important}`),
+  lect: (v) => (v ? '' : `${BAR} > b small{display:none !important}`),
+  lebr: (v) => `${BAR}{--en-br:${v}s}`,
+  lebb: (v) => `${BAR}{--en-bb:${v}}`,
+  lebg: (v) => `${BAR}{--en-bg:${v}px}`,
+  // The cast popup (a spell or item being played): offset from its default spot, size, length, slam size, glow, shockwave ring.
+  lcx: (v) => `${CLS('castFx')}{--cast-x:${v}px}`,
+  lcy: (v) => `${CLS('castFx')}{--cast-y:${v}px}`,
+  lcs: (v) => `${CLS('castFx')}{--cast-size:${v}}`,
+  lcms: (v) => `${CLS('castFx')}{--cast-ms:${v}ms}`,
+  lcpeak: (v) => `${CLS('castFx')}{--cast-peak:${v}}`,
+  lcglow: (v) => `${CLS('castFx')}{--cast-glow:${v}px}`,
+  lcring: (v) => (v ? '' : `${CLS('castFx')}::after{display:none !important}`),
 };
+
+/** Energy bar colours: URL key -> CSS variable. Values are 6-digit hex without the `#` (so they are never mistaken for the numeric knobs). */
+export const ENERGY_COLOURS: Record<string, { cssVar: string; label: string; fallback: string; target?: 'page' }> = {
+  lpoc: { cssVar: '--po-c', label: 'All three (base colour)', fallback: '5fd16a', target: 'page' },
+  lpoac: { cssVar: '--po-ac', label: 'Global / spell area', fallback: '5fd16a', target: 'page' },
+  lpoahc: { cssVar: '--po-ahc', label: 'Global / spell area, hovered', fallback: '5fd16a', target: 'page' },
+  lpozc: { cssVar: '--po-zc', label: 'Minion zone', fallback: '5fd16a', target: 'page' },
+  lpozhc: { cssVar: '--po-zhc', label: 'Minion zone, hovered', fallback: '5fd16a', target: 'page' },
+  lpogc: { cssVar: '--po-gc', label: 'Landing gap', fallback: '5fd16a', target: 'page' },
+  lpgcb: { cssVar: '--bg-base', label: 'Page base (behind the vignette)', fallback: '14161c', target: 'page' },
+  lpgc1: { cssVar: '--bg-c1', label: 'Backdrop centre', fallback: '24454a', target: 'page' },
+  lpgc2: { cssVar: '--bg-c2', label: 'Backdrop middle', fallback: '162a31', target: 'page' },
+  lpgc3: { cssVar: '--bg-c3', label: 'Backdrop edge', fallback: '0a1015', target: 'page' },
+  lflc: { cssVar: '--felt-tint', label: 'Felt tint', fallback: '081216', target: 'page' },
+  lflgc: { cssVar: '--felt-glow', label: 'Felt centre glow', fallback: '509696', target: 'page' },
+  lflrc: { cssVar: '--felt-rim', label: 'Felt rim', fallback: 'ffffff', target: 'page' },
+  lecr: { cssVar: '--en', label: 'Orbs (and number)', fallback: '4aa3ff' },
+  lecb: { cssVar: '--en-bonus', label: 'Bonus orbs', fallback: 'ffd45e' },
+  lecn: { cssVar: '--en-text', label: 'Number (overrides orbs)', fallback: '4aa3ff' },
+};
+const energyColourCss = (one: (k: string) => string) =>
+  Object.entries(ENERGY_COLOURS)
+    .filter(([k]) => /^[0-9a-f]{6}$/i.test(one(k)))
+    .map(([k, c]) => `${c.target === 'page' ? CLS('page') : BAR}{${c.cssVar}:#${one(k)}}`)
+    .join('');
+
+/** The landing gap's opening easing (`lpoge`): a named choice, not a number. */
+export const GAP_EASINGS: Record<string, string> = {
+  out: 'ease-out',
+  inout: 'ease-in-out',
+  linear: 'linear',
+  spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+  snap: 'steps(4, end)',
+};
+const gapEasingCss = (one: (k: string) => string) => (GAP_EASINGS[one('lpoge')] ? `${CLS('page')}{--po-ge:${GAP_EASINGS[one('lpoge')]}}` : '');
 
 /** The layout /play uses: the lab's "wip" preset, layout knobs only (no setup params). A `?l...` param in the /play URL overrides one. */
 export const PLAY_LAYOUT: Record<string, string> = {
@@ -92,7 +186,7 @@ export const PLAY_LAYOUT: Record<string, string> = {
   // Background: the paper texture on the play surface
   lbgb: '0',
   lbgd: '0.1',
-  lbgf: '/images/backgrounds/paper-v2.jpg',
+  lbgf: '/images/backgrounds/paper-v1.jpg',
   // Minion drop shadows (darkness per state; the selected one is also pushed 27 px down)
   lshaima: '0.75',
   lshdefa: '0.75',
@@ -100,6 +194,23 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lshrdya: '0.75',
   lshsela: '0.15',
   lshsely: '27',
+  // Backdrop and felt panel (the author's 2026-11-15 "board-and-casting" preset)
+  lflgc: 'ced12e',
+  lflo: '0.85',
+  lflrc: 'ffaa33',
+  lflw: '2',
+  lfly: '-44',
+  lpgc1: '91592b',
+  lpgc2: '2a1b09',
+  lpgc3: '573905',
+  // Play overlays: base colour, global-area opacity 0, minion-zone opacity 0, gap opening (570 ms, springy, pulsing every 2 s)
+  lpoao: '0',
+  lpoc: 'bdff42',
+  lpogd: '570',
+  lpoge: 'spring',
+  lpogp: '2',
+  lpoo: '1',
+  lpozo: '0',
 };
 
 /**
@@ -159,6 +270,8 @@ export const buildLayoutCss = (q: Record<string, string | undefined>): string =>
     // Horizontal energy bar: the orbs were listed bottom-first for the column, so row-reverse puts the first one on the left.
     one('leo') === 'h' ? `${ORBS}{flex-direction:row-reverse !important}` : '',
     offsetCss,
+    energyColourCss(one),
+    gapEasingCss(one),
     selCss,
     ...Object.keys(CSS_FNS)
       .filter((k) => one(k) !== '' && !Number.isNaN(+one(k)))

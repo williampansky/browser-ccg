@@ -1,5 +1,6 @@
 import type { ParsedUrlQuery } from 'querystring';
 import type { ReactNode } from 'react';
+import { ENERGY_COLOURS } from '../play-board/layout-css';
 import { HEROES, SLIDER_MAX, one, row, wide } from './lab-model';
 
 export interface PanelProps {
@@ -97,6 +98,93 @@ export const HandsPanel = ({ q, setParams, sliders, count, pick }: PanelProps) =
   </>
 );
 
+const colourPick = (q: PanelProps['q'], setParams: PanelProps['setParams'], key: string) => {
+  const c = ENERGY_COLOURS[key];
+  return (
+    <label key={key} style={row}>
+      <input type="color" value={`#${/^[0-9a-f]{6}$/i.test(one(q[key])) ? one(q[key]) : c.fallback}`} onChange={(e) => setParams({ [key]: e.target.value.slice(1) })} /> {c.label}{' '}
+      {one(q[key]) && <button onClick={() => setParams({ [key]: null })} style={{ fontSize: 11 }}>reset</button>}
+    </label>
+  );
+};
+const groupStyle = { margin: '8px 0', paddingBottom: 4, borderBottom: '1px solid #2a2f3e' } as const;
+
+export const PlayOverlayPanel = ({ q, setParams, sliders }: PanelProps) => (
+  <>
+    <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+      The green that shows where a card from your hand can go. Three overlays: the global cast area (spells), the minion zone (your board row) and the
+      landing gap (the in-between space a minion opens up). The example buttons show them without picking a card; the minion examples need a
+      minion on the board (My minions, in Setup). A colour or fill left alone follows the "All three" settings.
+    </small>
+    <div style={row}>
+      Example{' '}
+      {([['', 'Off'], ['minion', 'Minion zone + gap'], ['minion-hot', 'Minion (hovered)'], ['spell', 'Global'], ['spell-hot', 'Global (hovered)']] as const).map(([v, name]) => (
+        <button
+          key={v}
+          onClick={() => setParams({ lpopv: v || null })}
+          style={{ marginRight: 4, marginBottom: 4, padding: '3px 10px', borderRadius: 6, border: '1px solid #3a4052', cursor: 'pointer', color: '#fff', background: one(q.lpopv) === v ? '#3d5afe' : '#232634' }}
+        >
+          {name}
+        </button>
+      ))}
+    </div>
+    <div style={groupStyle}>
+      <b>All three</b>
+      {colourPick(q, setParams, 'lpoc')}
+      {sliders(['lpoo', 'lpow', 'lpor', 'lpoi', 'lpoh', 'lpos', 'lpoga'])}
+    </div>
+    <div style={groupStyle}>
+      <b>Global / spell area</b>
+      {colourPick(q, setParams, 'lpoac')}
+      {colourPick(q, setParams, 'lpoahc')}
+      {sliders(['lpoao', 'lpoai', 'lpoah', 'lpoahw', 'lpoahg', 'lpoat'])}
+    </div>
+    <div style={groupStyle}>
+      <b>Minion zone</b>
+      {colourPick(q, setParams, 'lpozc')}
+      {colourPick(q, setParams, 'lpozhc')}
+      {sliders(['lpozo', 'lpozi', 'lpozh', 'lpozhw', 'lpozhg', 'lpozt'])}
+    </div>
+    <div style={groupStyle}>
+      <b>Landing gap (the in-between)</b>
+      {colourPick(q, setParams, 'lpogc')}
+      {sliders(['lpogo', 'lpog', 'lpogw', 'lpogb'])}
+      <label style={row}>
+        Opening easing{' '}
+        <select value={one(q.lpoge) || 'out'} onChange={(e) => setParams({ lpoge: e.target.value === 'out' ? null : e.target.value })}>
+          <option value="out">ease out (default)</option>
+          <option value="inout">ease in-out</option>
+          <option value="linear">linear</option>
+          <option value="spring">springy overshoot</option>
+          <option value="snap">stepped</option>
+        </select>
+      </label>
+      {sliders(['lpogd', 'lpogs', 'lpogp', 'lpogq'])}
+    </div>
+  </>
+);
+
+export const CastPanel = ({ q, setParams, sliders }: PanelProps) => (
+  <>
+    <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+      The card that flashes in the middle when a spell or item is played. Turn the preview on to replay it every 3 seconds while you tune.
+    </small>
+    {sliders(['lcx', 'lcy', 'lcs', 'lcms', 'lcpeak', 'lcglow', 'lcring'])}
+    <div style={row}>
+      Preview{' '}
+      {([['', 'Off'], ['0', 'My cast'], ['1', 'Enemy cast']] as const).map(([v, name]) => (
+        <button
+          key={v}
+          onClick={() => setParams({ lcpv: v || null })}
+          style={{ marginRight: 4, padding: '3px 10px', borderRadius: 6, border: '1px solid #3a4052', cursor: 'pointer', color: '#fff', background: one(q.lcpv) === v ? '#3d5afe' : '#232634' }}
+        >
+          {name}
+        </button>
+      ))}
+    </div>
+  </>
+);
+
 export const EnergyPanel = ({ q, setParams, sliders, count, pick }: PanelProps) => (
   <>
     <div style={row}>
@@ -112,6 +200,29 @@ export const EnergyPanel = ({ q, setParams, sliders, count, pick }: PanelProps) 
       ))}
     </div>
     {sliders(['les', 'lex', 'ley'])}
+    <b style={{ display: 'block', marginTop: 8 }}>Colours</b>
+    {Object.entries(ENERGY_COLOURS).filter(([, c]) => c.target !== 'page').map(([k, c]) => (
+      <label key={k} style={row}>
+        <input type="color" value={`#${/^[0-9a-f]{6}$/i.test(one(q[k])) ? one(q[k]) : c.fallback}`} onChange={(e) => setParams({ [k]: e.target.value.slice(1) })} /> {c.label}{' '}
+        {one(q[k]) && <button onClick={() => setParams({ [k]: null })} style={{ fontSize: 11 }}>reset</button>}
+      </label>
+    ))}
+    <b style={{ display: 'block', marginTop: 8 }}>Glow and number</b>
+    {sliders(['leg', 'legt', 'lecs', 'lecv', 'lect'])}
+    <b style={{ display: 'block', marginTop: 8 }}>Blink (orbs a picked card would spend)</b>
+    {sliders(['lebr', 'lebb', 'lebg'])}
+    <div style={row}>
+      Preview blink{' '}
+      {([['', 'Off'], ['spend', 'Spend'], ['red', 'Cannot afford']] as const).map(([v, name]) => (
+        <button
+          key={v}
+          onClick={() => setParams({ lebpv: v || null })}
+          style={{ marginRight: 4, padding: '3px 10px', borderRadius: 6, border: '1px solid #3a4052', cursor: 'pointer', color: '#fff', background: one(q.lebpv) === v ? '#3d5afe' : '#232634' }}
+        >
+          {name}
+        </button>
+      ))}
+    </div>
   </>
 );
 

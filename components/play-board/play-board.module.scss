@@ -1,4 +1,6 @@
-// The backdrop: a dark teal vignette with a faint weave. A fixed pseudo-element, because the site's `#__next > main` rule
+// The backdrop: a dark teal vignette with a faint weave. The board lab's Background section sets --bg-c1/-c2/-c3 (centre, middle, edge colours),
+// --bg-mid (where the middle colour sits, %), --bg-weave (weave strength), --bg-base, and for the felt panel --felt-tint, --felt-tint-a, --felt-glow,
+// --felt-glow-a, --felt-rim, --felt-rim-a, --felt-rw, --felt-r, --felt-in, --felt-out, --felt-x, --felt-y. A fixed pseudo-element, because the site's `#__next > main` rule
 // sets a flat background on this element that a class cannot beat.
 .page {
   position: relative;
@@ -9,7 +11,7 @@
   gap: 1rem;
   padding: 1rem;
   min-height: 100vh;
-  background: #14161c;
+  background: var(--bg-base, #14161c);
   color: #e8e8ee;
   font-family: system-ui, sans-serif;
   font-size: 14px;
@@ -21,8 +23,8 @@
   inset: 0;
   z-index: -2;
   background:
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.018) 0 2px, transparent 2px 7px),
-    radial-gradient(ellipse at 50% 42%, #24454a 0%, #162a31 52%, #0a1015 100%);
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, var(--bg-weave, 0.018)) 0 2px, transparent 2px 7px),
+    radial-gradient(ellipse at 50% 42%, var(--bg-c1, #24454a) 0%, var(--bg-c2, #162a31) var(--bg-mid, 52%), var(--bg-c3, #0a1015) 100%);
   pointer-events: none;
 }
 
@@ -30,14 +32,14 @@
 .table::before {
   content: '';
   position: absolute;
-  inset: -0.5rem -1rem;
+  inset: calc(var(--felt-y, 8px) * -1) calc(var(--felt-x, 16px) * -1);
   z-index: -2;
-  border-radius: 22px;
-  border: 2px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--felt-r, 22px);
+  border: var(--felt-rw, 2px) solid color-mix(in srgb, var(--felt-rim, #fff) calc(var(--felt-rim-a, 0.09) * 100%), transparent);
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(80, 150, 150, 0.16), transparent 70%),
-    rgba(8, 18, 22, 0.35);
-  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.45), 0 0 40px rgba(0, 0, 0, 0.35);
+    radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--felt-glow, #509696) calc(var(--felt-glow-a, 0.16) * 100%), transparent), transparent 70%),
+    color-mix(in srgb, var(--felt-tint, #081216) calc(var(--felt-tint-a, 0.35) * 100%), transparent);
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, var(--felt-in, 0.45)), 0 0 40px rgba(0, 0, 0, var(--felt-out, 0.35));
   pointer-events: none;
 }
 
@@ -90,8 +92,12 @@
   align-items: center;
   justify-content: flex-start;
   padding: 0.5rem 0.75rem;
-  border-top: 1px solid #343846;
-  border-bottom: 1px solid #343846;
+  border-top: 1px solid #afa18c;
+  border-bottom: 1px solid #afa18c;
+}
+
+.middle .text {
+  color: #372810;
 }
 
 .banner {
@@ -202,8 +208,10 @@
   }
 }
 
+// The green "you can play this" overlays (hand glow, cast area, board zone, landing gap) read the board lab's "Play overlays" knobs:
+// --po-c colour, --po-w outline width, --po-r radius, --po-op overall opacity (0-1), --po-idle / --po-hot / --po-gap fill strength (%, unitless), --po-glow hand glow, --po-gapw gap width.
 .slotReady {
-  filter: drop-shadow(0 0 5px #5fd16a);
+  filter: drop-shadow(0 0 var(--po-glow, 5px) color-mix(in srgb, var(--po-c, #5fd16a) calc(var(--po-op, 1) * 100%), transparent));
 }
 
 .slotDim {
@@ -362,37 +370,60 @@
   text-transform: capitalize;
 }
 
+// The green "play here" overlays. Each of the three (global cast area, minion zone, landing gap) has its own colour, opacity, fill and hover look,
+// each falling back to the shared knob. Set by the board lab's "Play overlays" section: --po-{a,z,g}c colour, -o opacity, -i idle fill, -h hover fill,
+// -hc hover colour, -hw hover outline width, -hg hover glow, -t hover fade ms (fills are unitless %).
+@function po-mix($colour, $opacity, $fill: 100) {
+  @return color-mix(in srgb, #{$colour} calc(#{$fill} * #{$opacity} * 1%), transparent);
+}
+$po-green: var(--po-c, #5fd16a);
+
 // The cast area: the whole board above the player bar. An overlay, so the dashed outline stops at the bar.
 .castArea {
+  $c: var(--po-ac, #{$po-green});
+  $o: calc(var(--po-ao, 1) * var(--po-op, 1));
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  border-radius: 8px;
-  outline: 2px dashed #5fd16a;
-  outline-offset: -2px;
-  background: rgba(95, 209, 106, 0.06);
+  border-radius: var(--po-r, 8px);
+  outline: var(--po-w, 2px) var(--po-style, dashed) po-mix($c, $o);
+  outline-offset: calc(var(--po-w, 2px) * -1);
+  background: po-mix($c, $o, var(--po-ai, var(--po-idle, 6)));
   pointer-events: none;
   z-index: -1;
-  transition: background 0.1s;
+  transition: background var(--po-at, 100ms), outline-color var(--po-at, 100ms), box-shadow var(--po-at, 100ms);
 }
 
 .castAreaHot {
-  background: rgba(95, 209, 106, 0.18);
+  $c: var(--po-ahc, var(--po-ac, #{$po-green}));
+  $o: calc(var(--po-ao, 1) * var(--po-op, 1));
+  background: po-mix($c, $o, var(--po-ah, var(--po-hot, 18)));
+  outline-color: po-mix($c, $o);
+  outline-width: var(--po-ahw, var(--po-w, 2px));
   outline-style: solid;
+  box-shadow: 0 0 var(--po-ahg, 0px) po-mix($c, $o);
 }
 
-// Something is selected and a click on this area would play it.
+// Something is selected and a click on this area would play it (the minion zone: your board row).
 .zone {
-  border-radius: 8px;
-  outline: 2px dashed #5fd16a;
+  $c: var(--po-zc, #{$po-green});
+  $o: calc(var(--po-zo, 1) * var(--po-op, 1));
+  border-radius: var(--po-r, 8px);
+  outline: var(--po-w, 2px) var(--po-style, dashed) po-mix($c, $o);
   outline-offset: 2px;
-  background: rgba(95, 209, 106, 0.06);
+  background: po-mix($c, $o, var(--po-zi, var(--po-idle, 6)));
   cursor: pointer;
+  transition: background var(--po-zt, 0ms), outline-color var(--po-zt, 0ms), box-shadow var(--po-zt, 0ms);
 
-  &:hover {
-    background: rgba(95, 209, 106, 0.18);
+  &:hover,
+  &.zoneHot {
+    $hc: var(--po-zhc, var(--po-zc, #{$po-green}));
+    background: po-mix($hc, $o, var(--po-zh, var(--po-hot, 18)));
+    outline-color: po-mix($hc, $o);
+    outline-width: var(--po-zhw, var(--po-w, 2px));
     outline-style: solid;
+    box-shadow: 0 0 var(--po-zhg, 0px) po-mix($hc, $o);
   }
 }
 
@@ -576,21 +607,30 @@
   white-space: pre-line;
 }
 
-// Shown in the gap a minion would land in: it opens up, pushing the neighbours apart.
+// Shown in the gap a minion would land in: it opens up, pushing the neighbours apart (the "in-between" animation: --po-gd length ms,
+// --po-ge easing, --po-gs starting opacity, --po-gp / --po-gb an optional pulse: seconds per beat (0 = none) and its peak brightness).
 .gapSpacer {
+  $c: var(--po-gc, #{$po-green});
+  $o: calc(var(--po-go, 1) * var(--po-op, 1));
   flex: 0 0 auto;
-  width: 4rem;
+  width: var(--po-gapw, 4rem);
   align-self: stretch;
-  border-radius: 8px;
-  border: 2px dashed #5fd16a;
-  background: rgba(95, 209, 106, 0.25);
-  animation: gapOpen 0.12s ease-out;
+  border-radius: var(--po-r, 8px);
+  border: var(--po-gb-w, var(--po-w, 2px)) var(--po-style, dashed) po-mix($c, $o);
+  background: po-mix($c, $o, var(--po-gap, 25));
+  animation: gapOpen var(--po-gd, 120ms) var(--po-ge, ease-out), gapPulse var(--po-gp, 0s) ease-in-out infinite alternate;
 }
 
 @keyframes gapOpen {
   from {
     width: 0;
-    opacity: 0;
+    opacity: var(--po-gs, 0);
+  }
+}
+
+@keyframes gapPulse {
+  to {
+    filter: brightness(var(--po-gb, 1.4));
   }
 }
 
@@ -690,16 +730,22 @@
 // A cast spell flashes in the middle of the screen, then fades. Red-ringed when the enemy cast it.
 .castFx {
   position: fixed;
-  left: 22rem; // between the log (ends at 21rem) and the board
-  top: 45%;
+  // The board lab's "Played-card overlay" section sets --cast-x / -y (offset), --cast-size, --cast-ms, --cast-peak and --cast-glow.
+  left: calc(22rem + var(--cast-x, 0px)); // between the log (ends at 21rem) and the board
+  top: calc(45% + var(--cast-y, 0px));
   z-index: 35;
   pointer-events: none;
-  filter: drop-shadow(0 0 10px #5fd16a);
-  animation: castFlash 1.6s ease-out forwards;
+  filter: drop-shadow(0 0 var(--cast-glow, 10px) #5fd16a);
+  animation: castFlash var(--cast-ms, 1600ms) ease-out forwards;
+}
+
+.castSize {
+  transform: scale(var(--cast-size, 1));
+  transform-origin: left center;
 }
 
 .castFoe {
-  filter: drop-shadow(0 0 10px #ff6b6b);
+  filter: drop-shadow(0 0 var(--cast-glow, 10px) #ff6b6b);
 }
 
 // Slams in from small and tilted with an overshoot, a shockwave ring spreads from it, then it holds and fades.
@@ -710,7 +756,7 @@
   }
   12% {
     opacity: 1;
-    transform: translateY(-50%) scale(1.3) rotate(2deg);
+    transform: translateY(-50%) scale(var(--cast-peak, 1.3)) rotate(2deg);
     box-shadow: 0 0 70px 24px rgba(255, 255, 255, 0.8);
   }
   22% {

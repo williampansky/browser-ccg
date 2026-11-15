@@ -5,7 +5,7 @@ import { one } from './lab-model';
 
 /** The URL params each accordion section owns, for its Copy / Paste config buttons. (Presets has none.) */
 const SHADOW_KEYS = ['def', 'rdy', 'sel', 'aim', 'hov'].flatMap((st) => ['y', 'b', 'a'].map((k) => `lsh${st}${k}`));
-const SOUND_KEYS = ['cardPlay', 'draw', 'cardHover', 'hold'].flatMap((n) => ['lsf', 'lsg', 'lsj', 'lsm'].map((k) => `${k}_${n}`)).concat('lsgap');
+const slotKeys = (n: string) => ['lsf', 'lsg', 'lsj', 'lsm'].map((k) => `${k}_${n}`);
 export const SECTION_KEYS: Record<string, string[]> = {
   board: ['b0', 'b1', 'e0', 'e1', 'turn'],
   restart: ['p0', 'p1', 'w0', 'w1', 'h0', 'h1', 'first', 'herofig'],
@@ -13,14 +13,20 @@ export const SECTION_KEYS: Record<string, string[]> = {
   shadows: SHADOW_KEYS,
   table: ['ls', 'lw', 'lfelt'],
   hands: ['lhw0', 'lhw1', 'lhs', 'lsel', 'lpv'],
-  energy: ['les', 'lex', 'ley', 'leo'],
+  play: ['lpoc', 'lpoo', 'lpow', 'lpor', 'lpoi', 'lpoh', 'lpog', 'lpogw', 'lpos', 'lpoga', 'lpopv', 'lpoac', 'lpoahc', 'lpozc', 'lpozhc', 'lpogc', 'lpoge', 'lpoao', 'lpoai', 'lpoah', 'lpoahw', 'lpoahg', 'lpoat', 'lpozo', 'lpozi', 'lpozh', 'lpozhw', 'lpozhg', 'lpozt', 'lpogo', 'lpogb', 'lpogd', 'lpogs', 'lpogp', 'lpogq'],
+  cast: ['lcx', 'lcy', 'lcs', 'lcms', 'lcpeak', 'lcglow', 'lcring', 'lcpv'],
+  energy: ['les', 'lex', 'ley', 'leo', 'leg', 'legt', 'lecs', 'lecv', 'lect', 'lebr', 'lebb', 'lebg', 'lecr', 'lecb', 'lecn', 'lebpv'],
   panels: ['lpan', 'lsplit', 'lgw', 'ldw', 'lgx', 'lgy', 'ldx', 'ldy'],
   heroes: ['lfw0', 'lfw1', 'lfx0', 'lfy0', 'lfx1', 'lfy1', 'lfs'],
-  sounds: SOUND_KEYS,
-  background: ['lbgf', 'lbgt', 'lbgm', 'lbgs', 'lbgd', 'lbgb', 'lbgx', 'lbgy'],
+  'snd-cardPlay': slotKeys('cardPlay'),
+  'snd-draw': slotKeys('draw'),
+  'snd-cardHover': slotKeys('cardHover'),
+  'snd-hold': slotKeys('hold'),
+  'snd-gap': ['lsgap'],
+  background: ['lbgf', 'lbgt', 'lbgm', 'lbgs', 'lbgd', 'lbgb', 'lbgx', 'lbgy', 'lpgcb', 'lpgc1', 'lpgc2', 'lpgc3', 'lpgw', 'lpgm', 'lflc', 'lflgc', 'lflrc', 'lflt', 'lfla', 'lflra', 'lflw', 'lflr', 'lfli', 'lflo', 'lflx', 'lfly'],
 };
 
-export const SECTION_IDS = ['presets', 'board', 'restart', 'minions', 'table', 'hands', 'energy', 'panels', 'heroes', 'sounds', 'background', 'shadows'];
+export const SECTION_IDS = ['presets', 'board', 'restart', 'minions', 'table', 'hands', 'play', 'cast', 'energy', 'panels', 'heroes', 'snd-cardPlay', 'snd-draw', 'snd-cardHover', 'snd-hold', 'snd-gap', 'background', 'shadows'];
 
 /** Which accordion sections are open (default: Presets and Board); remembered in localStorage. */
 export const useLabSections = () => {
@@ -114,10 +120,10 @@ export const LabSection = ({
 export const LAB_TABS: { id: string; label: string; sections: string[] }[] = [
   { id: 'setup', label: 'Setup', sections: ['presets', 'board', 'restart'] },
   { id: 'board', label: 'Board', sections: ['minions', 'shadows', 'table', 'energy', 'background'] },
-  { id: 'hand', label: 'Hand', sections: ['hands'] },
+  { id: 'hand', label: 'Hand', sections: ['hands', 'play', 'cast'] },
   { id: 'panels', label: 'Log/deck', sections: ['panels'] },
   { id: 'heroes', label: 'Heroes', sections: ['heroes'] },
-  { id: 'sounds', label: 'Sounds', sections: ['sounds'] },
+  { id: 'sounds', label: 'Sounds', sections: ['snd-cardPlay', 'snd-draw', 'snd-cardHover', 'snd-hold', 'snd-gap'] },
 ];
 
 /** Which tab is showing; remembered in localStorage. */

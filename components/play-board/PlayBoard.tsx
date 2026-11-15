@@ -334,6 +334,12 @@ export interface LabProps {
   energy: Record<PlayerId, number | undefined>;
   /** Whose turn it is (the toggle in the lab); unset leaves the game's own */
   active?: PlayerId;
+  /** Replay the cast popup (a sample spell) on a loop so its overlay knobs can be tuned: whose cast it looks like */
+  castPreview?: PlayerId;
+  /** Make the energy bar blink as if a card were picked: the orbs it would spend, or all of them red (cannot afford) */
+  /** Show the green play overlays without picking a card: the board zone and landing gap (a minion), or the cast area (a spell) */
+  overlayPreview?: 'minion' | 'minion-hot' | 'spell' | 'spell-hot';
+  blinkPreview?: 'spend' | 'red';
 }
 const LAB_SEED = 20261114;
 
@@ -642,11 +648,26 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     return () => window.removeEventListener('keydown', key);
   }, []);
 
+  const castRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (!castFx) return;
-    const timer = setTimeout(() => setCastFx(null), 1600);
+    // The animation length can be changed in the board lab, so read it from the element (1.6 s by default).
+    const secs = castRef.current ? parseFloat(getComputedStyle(castRef.current).animationDuration) : NaN;
+    const timer = setTimeout(() => setCastFx(null), (Number.isNaN(secs) ? 1.6 : secs) * 1000);
     return () => clearTimeout(timer);
   }, [castFx]);
+
+  // Lab only: keep replaying the cast popup with the first spell in the pool, so it can be tuned without playing one.
+  const castPreview = lab?.castPreview;
+  useEffect(() => {
+    if (castPreview === undefined) return;
+    const sample = Array.from(byId.values()).find((c) => c.type === 'spell');
+    if (!sample) return;
+    const play = () => setCastFx({ card: sample, owner: castPreview, n: Date.now() });
+    play();
+    const loop = setInterval(play, 3000);
+    return () => clearInterval(loop);
+  }, [castPreview, byId]);
 
   // Keep the hand on one row: past what fits, the cards shrink together.
   const handRef = useRef<HTMLDivElement | null>(null);
@@ -949,11 +970,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const placedPlays = untargetedPlays.filter((a) => a.type === 'PlayCard' && a.boardIndex !== undefined);
   const dragPlaced = dragPlays.some((a) => a.boardIndex !== undefined && !a.target);
   const dragLoose = dragPlays.some((a) => a.boardIndex === undefined && !a.target);
-  const boardZone = (placedPlays.length > 0 || dragPlaced) && !over;
+  const overlayPreview = lab?.overlayPreview; // lab only: show an overlay without picking a card
+  const boardZone = (placedPlays.length > 0 || dragPlaced || overlayPreview?.startsWith('minion')) && !over;
   // A dragged choose-one card is a global play until it is dropped: anywhere on the board opens its dialog (a targeted option
   // is then aimed with the arrow), as well as straight onto a target. Unless its options are placed on the board (a gap).
   const dragChoice = dragIndex !== null;
-  const areaZone = ((untargetedPlays.length > 0 && placedPlays.length === 0) || ((dragLoose || dragChoice) && !dragPlaced)) && !over;
+  const areaZone = ((untargetedPlays.length > 0 && placedPlays.length === 0) || ((dragLoose || dragChoice) && !dragPlaced) || overlayPreview?.startsWith('spell')) && !over;
   const dropChoiceCard = (ctx: { boardIndex?: number; target?: TargetRef }) => {
     if (dragIndex === null) return;
     setPendingDrop(ctx);
@@ -973,7 +995,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       clickX
     );
   const myBoard = state.players[me].board;
-  const gapMarker = boardZone && hoverGap !== null && myBoard.length > 0 ? Math.min(hoverGap, myBoard.length) : null;
+  const gapMarker = boardZone && (hoverGap ?? (overlayPreview?.startsWith('minion') ? 1 : null)) !== null && myBoard.length > 0 ? Math.min(hoverGap ?? 1, myBoard.length) : null;
 
   // Click-to-play: with a minion selected, click your board where you want it to land (between two minions, or at either end);
   // with a spell or other card that needs no aim, click anywhere in the play area.
@@ -1343,8 +1365,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         </svg>
       )}
       {castFx && (
-        <div key={castFx.n} className={[styles.castFx, castFx.owner === me ? styles.castMine : styles.castFoe].join(' ')}>
-          <CardFace card={castFx.card} width={190} />
+        <div ref={castRef} key={castFx.n} className={[styles.castFx, castFx.owner === me ? styles.castMine : styles.castFoe].join(' ')}>
+          <div className={styles.castSize}>
+            <CardFace card={castFx.card} width={190} />
+          </div>
         </div>
       )}
       {over && !menuOpen && (
@@ -1564,8 +1588,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         }}
       >
         {flight && flightTo && <CardFlight card={flight.card} from={flight.from} to={flightTo} width={HAND_CARD_WIDTH} />}
-        <EnergyBar current={state.players[me].energy.current} total={state.players[me].energy.total} cost={pendingCost} />
-        {areaZone && <div className={[styles.castArea, areaHot ? styles.castAreaHot : ''].join(' ')} style={{ height: areaHeight }} />}
+        <EnergyBar current={state.players[me].energy.current} total={state.players[me].energy.total} cost={lab?.blinkPreview ? (lab.blinkPreview === 'red' ? 99 : Math.min(3, state.players[me].energy.current)) : pendingCost} />
+        {areaZone && <div className={[styles.castArea, areaHot || overlayPreview === 'spell-hot' ? styles.castAreaHot : ''].join(' ')} style={{ height: areaHeight }} />}
         <section className={[styles.side, styles.top].join(' ')}>
           <div className={styles.backs}>
             {state.players[foe].hand.map((_, i, all) => (
@@ -1598,14 +1622,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               {state.winner === 'draw' ? 'Draw!' : `${label(state.winner as PlayerId)} wins!`}
             </strong>
           ) : (
-            <span>
+            <small className={styles.text}>
               Turn {state.turn}: {label(state.activePlayer)}
               {timerApplies && <b className={[styles.clock, clockLeft <= 10 ? styles.clockLow : ''].join(' ')}> {formatClock(clockLeft)}</b>}
               {choiceOptions.length > 0 ? ' - choose one option' : ''}
               {boardZone ? ' - drag it (or click) onto your board; it lands in the gap you pick, between minions or at either end' : ''}
               {areaZone ? ' - drag it (or click) onto the play area to cast it' : ''}
               {aimable.length > 0 ? ' - drop it on a target, or click one (Esc, right-click or clicking the selection again cancels)' : ''}
-            </span>
+            </small>
           )}
           {message && <span className={styles.error}>{message}</span>}
           {canNukeHero && (
@@ -1621,7 +1645,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         </div>
           <section className={styles.side}>
           <div
-            className={[styles.row, boardZone ? styles.zone : ''].join(' ')}
+            className={[styles.row, boardZone ? styles.zone : '', overlayPreview === 'minion-hot' ? styles.zoneHot : ''].join(' ')}
             style={minionRowStyle}
             onClick={(e) => playFromArea(e, 'board')}
             onMouseMove={(e) => boardZone && setHoverGap(gapAt(e.currentTarget, e.clientX))}
