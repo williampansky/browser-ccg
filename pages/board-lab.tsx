@@ -4,7 +4,7 @@ import { useEffect, useMemo } from 'react';
 import { heroes, loadHsCards } from '../engine';
 import { LabOverlay } from '../components/board-lab/LabOverlay';
 import { LabSliders, useMeasuredDefaults } from '../components/board-lab/LabSliders';
-import { LAB_TABS, LabSection, LabTabBar, useLabSections, useLabTab } from '../components/board-lab/lab-sections';
+import { LAB_TABS, LabSection, LabTabBar, SECTION_KEYS, useLabSections, useLabTab } from '../components/board-lab/lab-sections';
 import { BoardPanel, EnergyPanel, HandsPanel, HeroFiguresPanel, LogDeckPanel, MinionsPanel, RestartPanel, ShadowsPanel, TablePanel } from '../components/board-lab/lab-panels';
 import { RESTART_KEYS, SETUP_KEYS, one } from '../components/board-lab/lab-model';
 import { BackgroundPanel } from '../components/board-lab/BackgroundPanel';
@@ -76,7 +76,7 @@ const BoardLab = () => {
   const sliders = (keys: string[]) => <LabSliders keys={keys} q={q} defaults={defaults} setParams={setParams} />;
   const panel = { q, setParams, sliders, count, pick };
   const sec = (id: string, title: string, note: string, children: React.ReactNode) => (
-    <LabSection key={id} id={id} title={title} note={note} open={!!sections[id]} onToggle={toggleSection}>
+    <LabSection key={id} id={id} title={title} note={note} open={!!sections[id]} onToggle={toggleSection} config={SECTION_KEYS[id] ? { keys: SECTION_KEYS[id], q, setParams } : undefined}>
       {children}
     </LabSection>
   );
