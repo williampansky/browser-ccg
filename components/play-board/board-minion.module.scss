@@ -118,6 +118,11 @@
   filter: grayscale(0.6);
 }
 
+.doomedPortrait {
+  filter: brightness(0.45) saturate(1.5);
+  background: #fff;
+}
+
 .hiddenMark {
   position: absolute;
   left: 50%;
@@ -309,7 +314,7 @@
 }
 
 // The aimed action would kill this minion: a skull over the middle of the oval (a stand-in for real art).
-.doomed {
+.doomedIcon {
   position: absolute;
   left: 50%;
   top: calc(0.45rem + var(--m-h, 128px) / 2);

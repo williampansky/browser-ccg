@@ -2,6 +2,10 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-15
+
+- **Kill preview ("doomed") look:** a minion the aimed action would kill now also has its portrait darkened (brightness 0.45, saturation 1.5, white behind it) as well as the skull over it (`doomedPortrait` in `board-minion.module.scss`; the skull class is renamed `doomedIcon`). The minion lab gallery has a "Will die" sample showing it. `MinionFace.tsx` was also reformatted to the repo's Prettier config.
+
 ## 2026-11-14
 
 - **Card sounds:** playing a card (a minion or a spell) and drawing a card now use recorded sounds (Kenney's Casino Audio, CC0): 4 `card-place` and 8 `card-slide` variants, picked at random with a little pitch variation. They load when the board opens, follow the Sound switch, and the old synth tone is the fallback if a file is missing. The card sounds do not count toward the 3-sound cap, so a spell that kills a minion keeps its death sound. Credits in the README.

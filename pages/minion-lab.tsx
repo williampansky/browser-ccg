@@ -190,7 +190,7 @@ const STATES: [string, string][] = [
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? '';
 
 /** Real CORE minions for the gallery, each dressed up to show one thing. */
-type Sample = { label: string; card: Card; m: MinionInstance; sick: boolean };
+type Sample = { label: string; card: Card; m: MinionInstance; sick: boolean, doomed?: boolean };
 const buildSamples = (): Sample[] => {
   const pool = cards.filter((c) => c.source === 'core' && !c.isToken && c.type === 'minion' && c.name && (c.attack ?? 0) > 0);
   const make = (i: number): { card: Card; m: MinionInstance } => {
@@ -224,7 +224,8 @@ const buildSamples = (): Sample[] => {
       }),
       sick: true
     },
-    { label: 'Expiring + disabled', ...tweak(9, (m) => ((m.expiresOnTurn = 5), (m.disabledOnTurn = 4))), sick: false }
+    { label: 'Expiring + disabled', ...tweak(9, (m) => ((m.expiresOnTurn = 5), (m.disabledOnTurn = 4))), sick: false },
+    { label: 'Will die', ...make(0), sick: false, doomed: true },
   ];
 };
 
@@ -474,7 +475,7 @@ const MinionLab = () => {
           {samples.map((s) => (
             <figure key={s.label} style={{ margin: 0, textAlign: 'center' }}>
               <div className={[minionStyles.slot, state ? minionStyles[state] : ''].join(' ')} style={{ margin: '0 auto' }}>
-                <MinionFace card={s.card} m={s.m} turn={3} sick={s.sick} />
+                <MinionFace card={s.card} m={s.m} turn={3} sick={s.sick} doomed={s.doomed} />
               </div>
               {one(q.labels) !== '0' && <figcaption style={{ marginTop: 6, color: '#9aa3b8', fontSize: 12 }}>{s.label}</figcaption>}
             </figure>

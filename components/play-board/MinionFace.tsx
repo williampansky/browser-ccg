@@ -19,7 +19,7 @@ const GLYPH: Record<StatusBadge['kind'], string> = {
   expiring: '⌛',
   asleep: 'z',
   noAttack: '⊘',
-  silenced: '∅',
+  silenced: '∅'
 };
 
 /** True for half a second after the minion's Health goes down, so it can shake (hsclone's "was attacked"). */
@@ -38,7 +38,13 @@ const useHurtFlash = (health: number): boolean => {
 };
 
 const GuardShield = () => (
-  <svg className={styles.guardShield} viewBox="0 0 120 150" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <svg
+    className={styles.guardShield}
+    viewBox="0 0 120 150"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+    focusable="false"
+  >
     <defs>
       <linearGradient id="bm-guard" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stopColor="#aab3c4" />
@@ -46,8 +52,19 @@ const GuardShield = () => (
         <stop offset="1" stopColor="#2c3242" />
       </linearGradient>
     </defs>
-    <path d="M60 3 L113 20 V72 Q113 122 60 147 Q7 122 7 72 V20 Z" fill="url(#bm-guard)" stroke="#0b0d12" strokeWidth="3" />
-    <path d="M60 11 L105 25 V72 Q105 114 60 138 Q15 114 15 72 V25 Z" fill="none" stroke="#e3e8f2" strokeWidth="1.4" opacity="0.55" />
+    <path
+      d="M60 3 L113 20 V72 Q113 122 60 147 Q7 122 7 72 V20 Z"
+      fill="url(#bm-guard)"
+      stroke="#0b0d12"
+      strokeWidth="3"
+    />
+    <path
+      d="M60 11 L105 25 V72 Q105 114 60 138 Q15 114 15 72 V25 Z"
+      fill="none"
+      stroke="#e3e8f2"
+      strokeWidth="1.4"
+      opacity="0.55"
+    />
   </svg>
 );
 
@@ -72,32 +89,67 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
       <FloatDelta value={m.health} />
       {m.keywords.guard && <GuardShield />}
       <span
-        className={[styles.oval, hurt ? styles.shake : '', m.keywords.hidden ? styles.veiled : '', m.silenced ? styles.muted : ''].join(' ')}
+        className={[
+          styles.oval,
+          hurt ? styles.shake : '',
+          m.keywords.hidden ? styles.veiled : '',
+          m.silenced ? styles.muted : '',
+          doomed ? styles.doomedPortrait : ''
+        ].join(' ')}
       >
         {/* The picture is its own layer inside the oval (which clips it), so it can scale on hover without scaling the frame. */}
-        <span className={styles.portrait} style={{ backgroundImage: minionArtBackground(m.cardId) }} />
+        <span
+          className={styles.portrait}
+          style={{ backgroundImage: minionArtBackground(m.cardId) }}
+        />
       </span>
       {doomed && (
-        <span className={styles.doomed} role="img" aria-label="Would die">
+        <span className={styles.doomedIcon} role="img" aria-label="Would die">
           ☠
         </span>
       )}
-      {m.keywords.hidden && <img className={styles.hiddenMark} src="/images/mechanics/HIDDEN.png" alt="" draggable={false} />}
+      {m.keywords.hidden && (
+        <img
+          className={styles.hiddenMark}
+          src="/images/mechanics/HIDDEN.png"
+          alt=""
+          draggable={false}
+        />
+      )}
       {m.keywords.bubble && <span className={styles.bubble} />}
       {badges.length > 0 && (
         <span className={styles.badges}>
-          {badges.map((b) => (
-            <span key={b.kind} className={[styles.badge, styles[`badge_${b.kind}`]].join(' ')} title={b.label} aria-label={b.label}>
+          {badges.map(b => (
+            <span
+              key={b.kind}
+              className={[styles.badge, styles[`badge_${b.kind}`]].join(' ')}
+              title={b.label}
+              aria-label={b.label}
+            >
               {GLYPH[b.kind]}
             </span>
           ))}
         </span>
       )}
-      <span className={[styles.stat, styles.attack, styles[`tone_${attackTone}`]].join(' ')} aria-label={`Attack ${m.attack}`}>
+      <span
+        className={[
+          styles.stat,
+          styles.attack,
+          styles[`tone_${attackTone}`]
+        ].join(' ')}
+        aria-label={`Attack ${m.attack}`}
+      >
         <img src="/images/ui/stat-attack.png" alt="" draggable={false} />
         <b>{m.attack}</b>
       </span>
-      <span className={[styles.stat, styles.health, styles[`tone_${healthTone}`]].join(' ')} aria-label={`Health ${m.health}`}>
+      <span
+        className={[
+          styles.stat,
+          styles.health,
+          styles[`tone_${healthTone}`]
+        ].join(' ')}
+        aria-label={`Health ${m.health}`}
+      >
         <img src="/images/ui/stat-health.png" alt="" draggable={false} />
         <b>{m.health}</b>
       </span>
