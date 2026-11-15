@@ -77,11 +77,16 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lgx: '15',
   lgy: '9',
   lhw0: '135',
-  lmh: '1.01',
+  lmh: '1.025',
   lml: '1.5',
   lpan: 'stackR',
   ls: '20',
   lsel: '1.6',
+  // Minion portrait scale inside the frame: hover (1 = none), selected, speed in ms, centre from the top in %
+  lpsh: '1',
+  lpss: '1.1',
+  lpsm: '60',
+  lpsy: '45',
   lsplit: '30',
   lw: '1200',
   // Background: the paper texture on the play surface
