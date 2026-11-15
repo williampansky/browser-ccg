@@ -4,11 +4,11 @@ import { useEffect, useMemo } from 'react';
 import { heroes, loadHsCards } from '../engine';
 import { LabOverlay } from '../components/board-lab/LabOverlay';
 import { LabSliders, useMeasuredDefaults } from '../components/board-lab/LabSliders';
-import { LabSection, useLabSections } from '../components/board-lab/lab-sections';
+import { LAB_TABS, LabSection, LabTabBar, useLabSections, useLabTab } from '../components/board-lab/lab-sections';
 import { BoardPanel, EnergyPanel, HandsPanel, HeroFiguresPanel, LogDeckPanel, MinionsPanel, RestartPanel, TablePanel } from '../components/board-lab/lab-panels';
 import { RESTART_KEYS, SETUP_KEYS, one } from '../components/board-lab/lab-model';
 import { PresetsPanel } from '../components/board-lab/PresetsPanel';
-import { SoundPanel } from '../components/board-lab/SoundPanel';
+import { SoundPanel, useSoundTuning } from '../components/board-lab/SoundPanel';
 import { PLAY_LAYOUT, buildLayoutCss } from '../components/play-board/layout-css';
 
 // The real /play board (client only, like /play itself).
@@ -31,7 +31,9 @@ const BoardLab = () => {
   const router = useRouter();
   const q = router.query;
   const { sections, setAllSections, toggleSection } = useLabSections();
+  const { tab, setTab } = useLabTab();
   const defaults = useMeasuredDefaults(q);
+  useSoundTuning(q);
 
   // A stable list of real CORE minions to build boards from.
   const minionIds = useMemo(
@@ -77,21 +79,25 @@ const BoardLab = () => {
       {children}
     </LabSection>
   );
+  const panels: Record<string, React.ReactNode> = {
+    presets: sec('presets', 'Presets', 'saved in this browser', <PresetsPanel />),
+    board: sec('board', 'Board', 'live', <BoardPanel {...panel} />),
+    restart: sec('restart', 'Heroes and hand', 'restarts the board, same deck each time', <RestartPanel {...panel} />),
+    minions: sec('minions', 'Minions', 'live', <MinionsPanel {...panel} />),
+    table: sec('table', 'Table', 'live', <TablePanel {...panel} />),
+    hands: sec('hands', 'Hands', 'live', <HandsPanel {...panel} />),
+    energy: sec('energy', 'Energy bar', 'live', <EnergyPanel {...panel} />),
+    panels: sec('panels', 'Log and deck', 'live', <LogDeckPanel {...panel} />),
+    heroes: sec('heroes', 'Hero figures', 'live', <HeroFiguresPanel {...panel} />),
+    sounds: sec('sounds', 'Sounds', 'live; Play to hear', <SoundPanel q={q} setParams={setParams} />),
+  };
   return (
     <>
       <style>{css}</style>
       <PlayBoard key={boardKey} lab={lab} />
       <LabOverlay onSetAll={setAllSections}>
-        {sec('presets', 'Presets', 'saved in this browser', <PresetsPanel />)}
-        {sec('board', 'Board', 'live', <BoardPanel {...panel} />)}
-        {sec('restart', 'Heroes and hand', 'restarts the board, same deck each time', <RestartPanel {...panel} />)}
-        {sec('minions', 'Minions', 'live', <MinionsPanel {...panel} />)}
-        {sec('table', 'Table', 'live', <TablePanel {...panel} />)}
-        {sec('hands', 'Hands', 'live', <HandsPanel {...panel} />)}
-        {sec('energy', 'Energy bar', 'live', <EnergyPanel {...panel} />)}
-        {sec('panels', 'Log and deck', 'live', <LogDeckPanel {...panel} />)}
-        {sec('heroes', 'Hero figures', 'live', <HeroFiguresPanel {...panel} />)}
-        {sec('sounds', 'Sounds', 'live; Play to hear', <SoundPanel q={q} setParams={setParams} />)}
+        <LabTabBar tab={tab} onTab={setTab} />
+        {LAB_TABS.find((t) => t.id === tab)?.sections.map((id) => panels[id])}
       </LabOverlay>
     </>
   );

@@ -4,22 +4,18 @@ import { previewSound, setHoverGapMs, setSoundTuning, soundDefaults } from '../p
 import type { TunableSound } from '../play-board/sounds';
 import { one, row, wide } from './lab-model';
 
-/** The lab's sound controls: pick a file, volume, pitch variation and hover gap per sound; values live in the URL and go straight to the sound engine. */
-export const SoundPanel = ({ q, setParams }: { q: ParsedUrlQuery; setParams: (changes: Record<string, string | null>) => void }) => {
-  // Sounds: the lab's overrides (file `lsf_<slot>`, volume `lsg_<slot>`, pitch variation `lsj_<slot>`, hover gap `lsgap`) go straight to the sound engine.
-  const SOUND_SLOTS: [TunableSound, string][] = [
-    ['cardPlay', 'Card play'],
-    ['draw', 'Card draw'],
-    ['cardHover', 'Hand hover'],
-    ['hold', 'Held card (loop)'],
-  ];
-  const [soundFiles, setSoundFiles] = useState<string[]>([]);
-  useEffect(() => {
-    fetch('/api/sounds')
-      .then((r) => r.json())
-      .then(setSoundFiles)
-      .catch(() => setSoundFiles([]));
-  }, []);
+const SOUND_SLOTS: [TunableSound, string][] = [
+  ['cardPlay', 'Card play'],
+  ['draw', 'Card draw'],
+  ['cardHover', 'Hand hover'],
+  ['hold', 'Held card (loop)'],
+];
+
+/**
+ * Applies the URL's sound overrides (file `lsf_<slot>`, volume `lsg_<slot>`, pitch variation `lsj_<slot>`, hover gap `lsgap`) to the sound engine.
+ * The page runs it always, so a URL's sounds apply whichever tab is showing.
+ */
+export const useSoundTuning = (q: ParsedUrlQuery) => {
   const soundKey = SOUND_SLOTS.map(([n]) => [one(q[`lsf_${n}`]), one(q[`lsg_${n}`]), one(q[`lsj_${n}`])].join('|')).join(';') + one(q.lsgap);
   useEffect(() => {
     SOUND_SLOTS.forEach(([n]) => {
@@ -31,6 +27,17 @@ export const SoundPanel = ({ q, setParams }: { q: ParsedUrlQuery; setParams: (ch
     setHoverGapMs(one(q.lsgap) ? +one(q.lsgap) : undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [soundKey]);
+};
+
+/** The lab's sound controls: pick a file, volume, pitch variation and hover gap per sound; values live in the URL and go straight to the sound engine. */
+export const SoundPanel = ({ q, setParams }: { q: ParsedUrlQuery; setParams: (changes: Record<string, string | null>) => void }) => {
+  const [soundFiles, setSoundFiles] = useState<string[]>([]);
+  useEffect(() => {
+    fetch('/api/sounds')
+      .then((r) => r.json())
+      .then(setSoundFiles)
+      .catch(() => setSoundFiles([]));
+  }, []);
   return (
     <>
     {SOUND_SLOTS.map(([n, label]) => {
@@ -61,6 +68,9 @@ export const SoundPanel = ({ q, setParams }: { q: ParsedUrlQuery; setParams: (ch
               Pitch variation <input type="number" step={0.01} style={{ width: 60 }} value={jitter || d.jitter} onChange={(e) => setParams({ [`lsj_${n}`]: e.target.value })} />
               {jitter && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ [`lsj_${n}`]: null })}>reset</a>}
               <input type="range" min={0} max={0.4} step={0.01} value={jitter || d.jitter} style={wide} onChange={(e) => setParams({ [`lsj_${n}`]: e.target.value })} />
+              <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+                How much each play is randomly sped up or slowed down (0.1 = up to 10% either way), so repeats do not sound identical.
+              </small>
             </label>
           )}
         </div>
@@ -70,6 +80,9 @@ export const SoundPanel = ({ q, setParams }: { q: ParsedUrlQuery; setParams: (ch
       Hover gap (ms) <input type="number" step={5} style={{ width: 60 }} value={one(q.lsgap) || 55} onChange={(e) => setParams({ lsgap: e.target.value })} />
       {one(q.lsgap) && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ lsgap: null })}>reset</a>}
       <input type="range" min={0} max={300} step={5} value={one(q.lsgap) || 55} style={wide} onChange={(e) => setParams({ lsgap: e.target.value })} />
+      <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+        Shortest time between two hand-hover sounds. Higher means fewer ticks when you sweep across your hand; 0 plays one on every card.
+      </small>
     </label>
     </>
   );
