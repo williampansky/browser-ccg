@@ -2,10 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { loadHsCards, playablePool, primePool } from '../../engine';
-import { CardFace } from '../play-board/CardFace';
-import { useDetailCardWidth } from '../card-detail/detail-card-width';
-import { CardEffects } from '../card-detail/CardEffects';
-import { TiltFace } from '../card-detail/TiltFace';
+import { CardDetailOverlay } from '../card-detail/CardDetailOverlay';
 import { CollectionCard } from './CollectionCard';
 import {
   ART_FILTERS,
@@ -56,8 +53,6 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
   const [sort, setSort] = useState<SortKey>('cost');
   const [size, setSize] = useState<SizeId>('medium');
   const [viewing, setViewing] = useState<string | null>(null);
-  const [copied, setCopied] = useState<string | null>(null);
-  const bigWidth = useDetailCardWidth();
   const set = <K extends keyof CollectionFilters>(key: K, value: CollectionFilters[K]) => setFilters((f) => ({ ...f, [key]: value }));
 
   // The filters live in the URL (?q=...&type=spell) so a refresh or a shared link keeps them. Read once the router knows
@@ -86,17 +81,10 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
     saveSize(id);
   };
 
-  useEffect(() => {
-    if (!viewing) return;
-    const key = (e: KeyboardEvent) => e.key === 'Escape' && setViewing(null);
-    window.addEventListener('keydown', key);
-    return () => window.removeEventListener('keydown', key);
-  }, [viewing]);
 
   const shown = useMemo(() => sortCards([...filterCards(pool, filters), ...(showTokens ? filterCards(tokenPool, { ...filters, set: 'both' }) : [])], sort).filter((c) => !debug || matchesArt(c, art, missing)), [filters, sort, art, showTokens, debug, missing]);
   const cardWidth = sizeOf(size).width;
   const open = viewing ? byId.get(viewing) : undefined;
-  const tokens = open ? open.entourage.map((id) => byId.get(id)).filter((t): t is NonNullable<typeof t> => !!t) : [];
 
   return (
     <div className={styles.page}>
@@ -193,52 +181,7 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
         </div>
       </section>
 
-      {open && (
-        <div className={styles.backdrop} onClick={() => setViewing(null)}>
-          <div className={styles.detail} role="dialog" aria-label={open.name}>
-            <div className={styles.detailMain}>
-              <TiltFace card={open} width={bigWidth} />
-              <div className={styles.detailText}>
-                <h2>{open.name}</h2>
-                <p className={styles.detailMeta}>
-                  {open.source === 'prime' ? 'Prime' : 'Core'} · <span className={styles.cap}>{open.type}</span>
-                </p>
-                <button
-                  type="button"
-                  className={styles.cardId}
-                  title="Click to copy"
-                  onClick={(e) => {
-                    e.stopPropagation(); // a click anywhere else closes the dialog; this one only copies
-                    navigator.clipboard?.writeText(open.id).then(() => {
-                      setCopied(open.id);
-                      window.setTimeout(() => setCopied((id) => (id === open.id ? null : id)), 1200);
-                    });
-                  }}
-                >
-                  {copied === open.id ? 'Copied!' : open.id}
-                </button>
-                {open.flavor ? <blockquote className={styles.flavor}>{open.flavor}</blockquote> : <p className={styles.noFlavor}>No flavor text.</p>}
-                <CardEffects card={open} />
-
-                {tokens.length > 0 && (
-                  <div className={styles.tokens}>
-                    <h3>Makes or offers</h3>
-                    <div className={styles.tokenRow}>
-                      {tokens.map((t) => (
-                        <div key={t.id} className={styles.token}>
-                          <CardFace card={t} width={110} />
-                          <span>{t.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                <p className={styles.closeHint}>Click anywhere or press Esc to close</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {open && <CardDetailOverlay card={open} byId={byId} onClose={() => setViewing(null)} />}
     </div>
   );
 };

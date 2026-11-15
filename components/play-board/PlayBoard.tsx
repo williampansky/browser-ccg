@@ -30,6 +30,7 @@ import {
 } from '../../engine';
 import { gapIndex } from './board-position';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
+import { CardDetailOverlay } from '../card-detail/CardDetailOverlay';
 import { nudgeIntoViewport, useKeepTipsInViewport } from './viewport-nudge';
 import { formatClock, isTimerOn, secondsLeft, setTimerOn } from './turn-timer';
 import { fanDrop, fanRotation, fanX, HAND_CARD_HEIGHT, handSink as computeHandSink, handZoom } from './hand-fan';
@@ -62,9 +63,9 @@ import { playUiSound } from '../ui-theme/ui-sfx';
 import styles from './play-board.module.scss';
 
 let activeGhost: DragGhost | null = null; // the opaque card that follows the pointer during a hand drag
-
 /** Un-hides the dragged hand card once the ghost has flown back to it (at once when there is no ghost), so the real card and the ghost are never both visible. */
 const clearDraggedHandWhenLanded = (set: (v: null) => void) => (activeGhost ? activeGhost.whenDone(() => set(null)) : set(null));
+
 type Mode = 'ai' | 'hotseat';
 type PlayAction = Extract<Action, { type: 'PlayCard' }>;
 const AI_PLAYER: PlayerId = '1';
@@ -126,8 +127,12 @@ const tipByName = new Map(
   ])
 );
 /** Instant tooltip (fixed-position, so scrolling panels can't clip it). `side` is which way it opens from the element. */
-const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right', quiet = false) => {
+/** How long the pointer must rest on a board minion before its tooltip shows (ms). */
+const MINION_TIP_DELAY_MS = 800;
+const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right', quiet = false, delayMs = 0) => {
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout>>();
+  useEffect(() => () => clearTimeout(timer.current), []);
   const tipRef = useRef<HTMLSpanElement>(null);
   // Once drawn, slide it back inside the window if it opened past an edge.
   useLayoutEffect(() => {
@@ -135,10 +140,19 @@ const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right', quiet
   }, [pos, tip]);
   const handlers = {
     onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-      const r = e.currentTarget.getBoundingClientRect();
-      setPos({ x: side === 'right' ? r.right + 8 : r.left - 8, y: r.top });
+      const el = e.currentTarget;
+      const show = () => {
+        const r = el.getBoundingClientRect(); // measured when it shows, not when the pointer arrived (a minion may have lifted since)
+        setPos({ x: side === 'right' ? r.right + 8 : r.left - 8, y: r.top });
+      };
+      clearTimeout(timer.current);
+      if (delayMs > 0) timer.current = setTimeout(show, delayMs);
+      else show();
     },
-    onMouseLeave: () => setPos(null),
+    onMouseLeave: () => {
+      clearTimeout(timer.current);
+      setPos(null);
+    },
   };
   // Rendered into <body>: inside a minion (which is scaled while selected and thrown while attacking) a fixed element
   // is positioned against that transform, not the window, and the tip landed far away (playtest 2026-11-13).
@@ -202,7 +216,7 @@ const withGhosts = (nodes: React.ReactNode[], ghosts: Ghost[], owner: PlayerId, 
 /** A board minion: hovering shows its printed card next to its current stats. */
 const MinionTip = ({ card, m, className, onClick, children, nodeRef, quiet, ...rest }: any) => {
   const printed = card ? tipByName.get(card.name) ?? [card.name, card.text].filter(Boolean).join('\n') : undefined;
-  const { handlers, node } = useTip(printed && `${printed}\nNow: ${m.attack}/${m.health} (max ${m.maxHealth})`, 'right', quiet);
+  const { handlers, node } = useTip(printed && `${printed}\nNow: ${m.attack}/${m.health} (max ${m.maxHealth})`, 'right', quiet, MINION_TIP_DELAY_MS);
   return (
     <button
       {...rest}
@@ -330,6 +344,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   /** Each player's deck list at the start, for the deck tracker on the right. */
   const [startDecks, setStartDecks] = useState<Record<PlayerId, string[]>>({ '0': [], '1': [] });
   const [selection, setSelection] = useState<Selection | null>(null);
+  /** The card whose big view is open (right-click on a minion) */
+  const [inspect, setInspect] = useState<Card | null>(null);
   const [message, setMessage] = useState('');
   const [mode, setMode] = useState<Mode>('ai');
   const [smartAi, setSmartAi] = useState(true);
@@ -1021,6 +1037,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         quiet={!!selection && selection.kind !== 'hand'} // no tooltips while an attack or skill is being aimed
         onMouseEnter={() => setHover({ kind: 'minion', instanceId: m.instanceId })}
         onMouseLeave={() => setHover(null)}
+        // Right-click shows the card in the collection's big view (while something is selected, right-click cancels it instead).
+        onContextMenu={(e: React.MouseEvent) => {
+          if (hasSelection || !card) return;
+          e.preventDefault();
+          setInspect(card);
+        }}
         {...dropOnTarget({ kind: 'minion', instanceId: m.instanceId })}
         {...(!over && owner === me && canAttack(m) ? dragFrom({ kind: 'minion', id: m.instanceId }) : {})}
         className={[
@@ -1243,6 +1265,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         onDragEnd={() => {
           setDragging(false);
           activeGhost?.stop();
+          clearDraggedHandWhenLanded(setDraggedHand);
           activeGhost = null;
           if (!isChoice) setSelection(null); // a dropped choose-one card has just opened its dialog: keep that
           setDragIndex(null);
@@ -1264,7 +1287,6 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       ? `m${selection.id}`
       : selection?.kind === 'skill'
       ? `s${me}-${selection.index}`
-          clearDraggedHandWhenLanded(setDraggedHand);
       : selection
       ? `h${me}`
       : null;
@@ -1316,6 +1338,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       <Button className={styles.menuButton} onClick={() => setMenuOpen(true)}>
         Menu
       </Button>
+      {inspect && <CardDetailOverlay card={inspect} byId={byId} onClose={() => setInspect(null)} />}
       {menuOpen && (
         <div className={styles.modalBackdrop} data-ui-sfx onClick={() => setMenuOpen(false)}>
           <Panel className={styles.menu} role="dialog" aria-label="Menu" onClick={(e) => e.stopPropagation()}>
