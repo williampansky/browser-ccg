@@ -40,7 +40,7 @@ describe('the playable heroes', () => {
     for (const h of heroes()) expect(h.skills).toHaveLength(3);
   });
   it('take their skill numbers from the ability data', () => {
-    expect(getHero('ZEUS')!.skills.map((k) => [k.cost, k.cooldown])).toEqual([[2, 1], [6, 2], [10, undefined]]);
+    expect(getHero('ZEUS')!.skills.map((k) => [k.cost, k.cooldown])).toEqual([[2, 1], [6, 3], [10, undefined]]);
   });
   it('createGame refuses an unknown hero', () => {
     expect(() => game('NOPE')).toThrow();
@@ -66,10 +66,11 @@ describe('skill rules', () => {
     const next = endTurns(s, 2);
     expect(err(next, { type: 'HeroSkill', skill: 0, target: foeHero })).toBeNull();
   });
-  it('a cooldown of 2 skips one of the owner\'s turns', () => {
+  it('a cooldown of 3 skips two of the owner\'s turns', () => {
     const s = skill(game('ZEUS'), 1).state;
     expect(err(endTurns(s, 2), { type: 'HeroSkill', skill: 1 })).toBe('SKILL_UNAVAILABLE');
-    expect(err(endTurns(s, 4), { type: 'HeroSkill', skill: 1 })).toBeNull();
+    expect(err(endTurns(s, 4), { type: 'HeroSkill', skill: 1 })).toBe('SKILL_UNAVAILABLE');
+    expect(err(endTurns(s, 6), { type: 'HeroSkill', skill: 1 })).toBeNull();
   });
   it('an ultimate (no cooldown) works once per game', () => {
     const s = skill(game('ZEUS'), 2, foeHero).state;

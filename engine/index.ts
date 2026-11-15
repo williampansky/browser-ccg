@@ -12,7 +12,7 @@ export type { EngineContext, ActionResult } from './rules/apply-action';
 export { legalTargets } from './rules/targeting';
 export type { TargetSource } from './rules/targeting';
 export { getCardDef } from './definitions';
-export { getHero, heroes, heroSkill, HERO_TOKENS, withHeroTokens } from './heroes';
+export { getHero, heroes, heroSkill, HERO_TOKENS, skillCard, withHeroTokens } from './heroes';
 export type { HeroInfo, HeroSkill } from './heroes';
 export { skillReady } from './rules/hero-skill';
 export { legalActions } from './rules/legal-actions';

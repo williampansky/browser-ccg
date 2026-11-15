@@ -11,6 +11,8 @@ import {
   DEFAULT_TURN_SECONDS,
   getCardDef,
   getHero,
+  heroSkill,
+  skillCard,
   withHeroTokens,
   Card,
   createGame,
@@ -493,6 +495,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         if ((played?.type === 'spell' || played?.type === 'item') && !getCardDef(played)?.mystery) {
           setCastFx({ card: played, owner: state.activePlayer, n: Date.now() });
         }
+      }
+      if (action.type === 'HeroSkill') {
+        // An ultimate (once per game: no cooldown) gets the cast popup, like a spell.
+        const heroId = state.players[state.activePlayer].hero?.id;
+        const skill = heroSkill(heroId, action.skill);
+        if (heroId && skill && skill.cooldown === undefined) setCastFx({ card: skillCard(heroId, skill), owner: state.activePlayer, n: Date.now() });
       }
       if (action.type === 'PlayCard' && state.activePlayer === viewerRef.current) {
         const card = byId.get(state.players[state.activePlayer].hand[action.handIndex]?.cardId ?? '');
