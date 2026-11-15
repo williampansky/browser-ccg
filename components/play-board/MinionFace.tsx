@@ -57,9 +57,11 @@ interface Props {
   turn: number;
   /** The viewer's own minion that cannot attack yet (summoning sickness) */
   sick: boolean;
+  /** The action being aimed would kill this minion (shows a skull over it) */
+  doomed?: boolean;
 }
 
-export const MinionFace = ({ card, m, turn, sick }: Props) => {
+export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
   const hurt = useHurtFlash(m.health);
   const badges = statusBadges(m, turn, sick);
   const attackTone = statTone(m.attack, card?.attack);
@@ -73,6 +75,11 @@ export const MinionFace = ({ card, m, turn, sick }: Props) => {
         className={[styles.oval, hurt ? styles.shake : '', m.keywords.hidden ? styles.veiled : '', m.silenced ? styles.muted : ''].join(' ')}
         style={{ backgroundImage: minionArtBackground(m.cardId) }}
       />
+      {doomed && (
+        <span className={styles.doomed} role="img" aria-label="Would die">
+          ☠
+        </span>
+      )}
       {m.keywords.hidden && <img className={styles.hiddenMark} src="/images/mechanics/HIDDEN.png" alt="" draggable={false} />}
       {m.keywords.bubble && <span className={styles.bubble} />}
       {badges.length > 0 && (

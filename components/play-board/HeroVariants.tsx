@@ -13,7 +13,7 @@ export interface HeroVariantProps {
   maxHealth?: number;
   armor?: number;
   /** PROTOTYPE: an equipped weapon drawn over the portrait (HeroFigure only) */
-  weapon?: { image: string; attack: number; durability: number };
+  weapon?: { image?: string; attack: number; durability: number; name?: string; temporary?: boolean };
   team?: 'green' | 'red';
   active?: boolean;
   turnTag?: string;
@@ -69,8 +69,11 @@ export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & Fi
       <div className={styles.figPic} style={{ backgroundImage: art(p.heroId) }} />
       <img className={styles.figFrame} src="/images/frames/HERO-VOL14.png" alt="" draggable={false} />
       {p.weapon && (
-        <div className={styles.figWeapon} aria-label={`Weapon: ${p.weapon.attack} attack, ${p.weapon.durability} durability`}>
-          <img src={p.weapon.image} alt="" draggable={false} />
+        <div
+          className={[styles.figWeapon, p.weapon.image ? '' : styles.figWeaponBare, p.weapon.temporary ? styles.figWeaponTemp : ''].join(' ')}
+          aria-label={`${p.weapon.name ?? 'Weapon'}: ${p.weapon.attack} attack, ${p.weapon.durability} durability${p.weapon.temporary ? ', this turn only' : ''}`}
+        >
+          {p.weapon.image && <img src={p.weapon.image} alt="" draggable={false} />}
           <b className={styles.figWpnAtk}>{p.weapon.attack}</b>
           <b className={styles.figWpnDur}>{p.weapon.durability}</b>
         </div>

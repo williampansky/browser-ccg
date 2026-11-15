@@ -761,6 +761,27 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     return true;
   };
 
+  // Minions the action under the pointer would kill (a skull is drawn on each): the action is tried on a copy of the game, so
+  // attacks (including the attacker dying to the counter-hit), Bubble, spells and skills are all judged by the real rules. The
+  // opponent's face-down Mystery is left out of the copy, so this never reveals what it does.
+  const doomed = new Set<number>();
+  if (hover && !over) {
+    const act = options.find((a) => {
+      const at = targetOf(a);
+      return !!at && sameTarget(at, hover);
+    });
+    if (act) {
+      const seen: GameState = state.players[foe].mystery
+        ? { ...state, players: { ...state.players, [foe]: { ...state.players[foe], mystery: null } } }
+        : state;
+      const r = applyAction(seen, act, { rng: createSeededRng(1), catalog: byId });
+      if (!('error' in r)) {
+        const here = new Set([...seen.players['0'].board, ...seen.players['1'].board].map((m) => m.instanceId));
+        r.events.forEach((e) => e.type === 'MinionDied' && here.has(e.instanceId) && doomed.add(e.instanceId));
+      }
+    }
+  }
+
   // Spell damage from the viewer's board, shown on the spells in their hand.
   const mySpellDamage = state.players[viewer].board.reduce(
     (sum, m) => sum + (m.silenced ? 0 : getCardDef(byId.get(m.cardId)!)?.spellDamage ?? 0),
@@ -1000,7 +1021,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         ].join(' ')}
         onClick={() => clickMinion(owner, m)}
       >
-        <MinionFace card={card} m={m} turn={state.turn} sick={sick} />
+        <MinionFace card={card} m={m} turn={state.turn} sick={sick} doomed={doomed.has(m.instanceId)} />
       </MinionTip>
     );
   };
@@ -1051,6 +1072,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             name={hero.name}
             health={p.health}
             armor={p.armor}
+            weapon={weapon && p.weapon ? { name: weapon.name, attack: p.weapon.attack, durability: p.weapon.durability, temporary: p.weapon.temporary } : undefined}
             team={owner === '0' ? 'green' : 'red'}
             active={owner === state.activePlayer && !over}
             rootRef={track(`h${owner}`)}

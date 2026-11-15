@@ -4,6 +4,8 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-14
 
+- **Kill preview:** while aiming (attack, spell or skill), a skull (placeholder glyph) shows over every minion the action under the pointer would kill, including your own attacker when the counter-hit kills it. It tries the action on a copy of the game with the opponent's Mystery left out, so it never reveals it.
+- **Weapon on the hero figure:** the figure shows the equipped weapon's attack and durability as two badges (dashed outline when it only lasts this turn). Temporary look while the design is worked out.
 - **Hero balance sim:** `npm run sim:heroes -- heroes|decks <games>` plays hero against hero on the same starter deck (`heroes`), or the starter-deck grid with heroes drawn from the five next to the same grid without (`decks`). First full run (greedy bot): Forsaken Druid 91%, Zeus 60%, Warrior 51%, Exile 46%, Sage 34%, no hero 17%. First tuning (data edits, to copy into Airtable): Spirit Animal cooldown 1 to 2, Revitalize heals 3 (was 2). Druid is still at about 83%, so more is needed.
 - **`/play` uses the board lab's "wip" layout** (`PLAY_LAYOUT` in `components/play-board/layout-css.ts`, shared with `/board-lab`, which now matches `/play` with no params; an `l...` URL param overrides one knob). Hero figures are the default (`?herofig=0` for the old bar). Log and deck are 242 px wide.
 - **Tooltips stay on screen:** `viewport-nudge.ts` (`nudgeIntoViewport`, `useKeepTipsInViewport`; CSS tooltips carry `data-tip`).

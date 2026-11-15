@@ -298,6 +298,26 @@
   filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.7));
 }
 
+// No art for this weapon yet (PROTOTYPE): just the two stat badges, side by side at the same spot; dashed when it only lasts this turn.
+.figWeaponBare {
+  aspect-ratio: auto;
+  height: calc(var(--u) * 110);
+}
+
+.figWeaponBare .figWpnAtk {
+  bottom: 0;
+}
+
+.figWeaponBare .figWpnDur {
+  bottom: 0;
+}
+
+.figWeaponTemp .figWpnAtk,
+.figWeaponTemp .figWpnDur {
+  border-style: dashed;
+  border-color: #fff;
+}
+
 .figWpnAtk,
 .figWpnDur {
   position: absolute;
