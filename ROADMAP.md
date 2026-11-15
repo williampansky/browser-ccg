@@ -139,6 +139,25 @@ across with little change; the UI is where the upgrade work will be.
 Deliberately last. Only after the game plays, has been played by real people, and the card set is
 settled: CI running `tsc`, `jest` and `next build`. Not before.
 
+## Possible board enhancements (not scheduled)
+
+Written down after comparing our board with Hearthstone's (2026-11-14). Its core board surface is plain; what makes it feel good is
+the framing and how it responds. Roughly cheapest first:
+
+- **Interactive feel, no new art:** idle motion and hover wiggles on minions, heroes and the energy bar (the "idle cursor tapping"
+  idea: the board reacts when you poke at it or leave it alone). Mostly CSS.
+- **Audio pass:** card pickup, hover, drop and play sounds; a hit sound that scales with damage; per-minion or per-keyword sounds
+  (`sounds.ts` has the basics).
+- **Effects:** distinct spell and skill effects (fire, lightning, heal) on top of `SpriteEffect` and the `/fx` sprites, instead of one generic effect.
+- **A shaped play surface:** an elongated diamond with chamfered corners and a metal rim (CSS `clip-path` plus a border image), on a
+  bright, opaque surface. The surface matters: a dark or translucent one made the minions look like they float (tried and dropped 2026-11-14).
+- **Side bands** in the player colours (green for you, red for the opponent) behind each hero.
+- **Corner props:** small whimsical machines, objects or furniture sitting on the board's corners, drawn from a slightly raised angle,
+  never over the play area. Needs a matching art set; check owned packs before planning around it.
+- **Hero frames:** arched portrait frames with a gem and health drop.
+
+Tried and rejected: procedural noise textures (stone, felt, wood) and a blurred painted backdrop behind the board.
+
 ## Ideas / unscheduled
 
 - Collectible heroes with different abilities (the old repos had 9 heroes) as a monetization angle
