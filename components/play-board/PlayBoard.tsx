@@ -344,9 +344,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
    *  selecting a card. Off by default; saved. More settings will be split out of it later. */
   const [a11y, setA11y] = useState(false);
   useEffect(() => setA11y(isAccessible()), []);
-  // PROTOTYPE: ?herofig=1 draws each hero as the Vol 14 figure card (components/play-board/HeroVariants.tsx) instead of the bar.
-  const [figUi, setFigUi] = useState(false);
-  useEffect(() => setFigUi(new URLSearchParams(window.location.search).has('herofig')), []);
+  // Each hero is drawn as the Vol 14 figure card (components/play-board/HeroVariants.tsx); ?herofig=0 brings back the old bar.
+  const [figUi, setFigUi] = useState(true);
+  useEffect(() => setFigUi(new URLSearchParams(window.location.search).get('herofig') !== '0'), []);
   /** Turn timer: 60 s per turn (15 s with Cronus on a board), on by default; running out ends the turn. Local stand-in for a server clock. */
   const [timerOn, setTimerOnState] = useState(true);
   useEffect(() => setTimerOnState(isTimerOn()), []);
