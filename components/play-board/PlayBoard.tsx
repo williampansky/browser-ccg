@@ -1188,6 +1188,18 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         title={titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`)}
         className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index || aimable.length > 0 ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : ''].join(' ')}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
+        // A quick double-click plays a minion at the far right of your board. (The two clicks before it select and deselect the card,
+        // so a minion that needs aiming, or a choose-one card, is left selected for the normal flow.)
+        onDoubleClick={() => {
+          if (over || !playable) return;
+          const plays = actions.filter((x): x is PlayAction => x.type === 'PlayCard' && x.handIndex === index);
+          const placed = plays.filter((x) => card?.type === 'minion' && x.boardIndex !== undefined && !x.target && x.choice === undefined);
+          if (placed.length > 0) {
+            dispatch(placed.reduce((x, y) => ((y.boardIndex ?? 0) > (x.boardIndex ?? 0) ? y : x)));
+            return;
+          }
+          setSelection({ kind: 'hand', index });
+        }}
         draggable={draggable}
         onDragStart={(e) => {
           e.dataTransfer.setData('text/plain', String(index)); // Firefox needs data to start a drag
