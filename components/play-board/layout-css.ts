@@ -80,6 +80,17 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lsel: '1.6',
   lsplit: '30',
   lw: '1200',
+  // Background: the paper texture on the play surface
+  lbgb: '0',
+  lbgd: '0.1',
+  lbgf: '/images/backgrounds/paper-v2.jpg',
+  // Minion drop shadows (darkness per state; the selected one is also pushed 27 px down)
+  lshaima: '0.75',
+  lshdefa: '0.75',
+  lshhova: '0.65',
+  lshrdya: '0.75',
+  lshsela: '0.15',
+  lshsely: '27',
 };
 
 /**

@@ -1,11 +1,14 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
+import { PLAY_LAYOUT } from '../play-board/layout-css';
 import { one, row, wide } from './lab-model';
 
 const note = { display: 'block', color: '#9aa3b8', fontSize: 11 } as const;
 
 /** The board background: pick an image from public/images/backgrounds, where it goes, how it fits, and how dark / blurred it is. All in the URL (`lbg*`). */
-export const BackgroundPanel = ({ q, setParams }: { q: ParsedUrlQuery; setParams: (changes: Record<string, string | null>) => void }) => {
+export const BackgroundPanel = ({ q: urlQuery, setParams }: { q: ParsedUrlQuery; setParams: (changes: Record<string, string | null>) => void }) => {
+  // What the board really uses: /play's saved background (PLAY_LAYOUT) under whatever the URL sets.
+  const q = { ...PLAY_LAYOUT, ...urlQuery };
   const [files, setFiles] = useState<string[]>([]);
   useEffect(() => {
     fetch('/api/backgrounds')
@@ -16,7 +19,7 @@ export const BackgroundPanel = ({ q, setParams }: { q: ParsedUrlQuery; setParams
   const num = (key: string, label: string, def: number, min: number, max: number, step: number, hint?: string) => (
     <label style={row}>
       {label} <input type="number" step={step} style={{ width: 66 }} value={one(q[key]) || def} onChange={(e) => setParams({ [key]: e.target.value })} />
-      {one(q[key]) && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ [key]: null })}>reset</a>}
+      {one(urlQuery[key]) && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ [key]: null })}>reset</a>}
       <input type="range" min={min} max={max} step={step} value={one(q[key]) || def} style={wide} onChange={(e) => setParams({ [key]: e.target.value })} />
       {hint && <small style={note}>{hint}</small>}
     </label>
@@ -26,8 +29,8 @@ export const BackgroundPanel = ({ q, setParams }: { q: ParsedUrlQuery; setParams
     <>
       <label style={row}>
         Image{' '}
-        <select value={one(q.lbgf)} onChange={(e) => setParams({ lbgf: e.target.value || null })}>
-          <option value="">none</option>
+        <select value={one(q.lbgf) || 'none'} onChange={(e) => setParams({ lbgf: e.target.value })}>
+          <option value="none">none</option>
           {files.map((f) => (
             <option key={f} value={f}>{f.replace('/images/backgrounds/', '')}</option>
           ))}
