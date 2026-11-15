@@ -1,6 +1,6 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
-import { HOVER_GAP_MS, previewSound, setHoverGapMs, setSoundTuning, soundDefaults } from '../play-board/sounds';
+import { HOVER_GAP_MS, previewSound, setHoverGapMs, stopPreview, setSoundTuning, soundDefaults } from '../play-board/sounds';
 import type { TunableSound } from '../play-board/sounds';
 import { one, row, wide } from './lab-model';
 
@@ -50,7 +50,7 @@ export const SoundPanel = ({ q, setParams }: { q: ParsedUrlQuery; setParams: (ch
       return (
         <div key={n} style={{ margin: '8px 0', paddingBottom: 6, borderBottom: '1px solid #2a2f3e' }}>
           <b>{label}</b>{' '}
-          <button onClick={() => previewSound(n)}>Play</button>
+          <button onClick={() => previewSound(n)}>Play</button> <button onClick={stopPreview}>Stop</button>
           <label style={row}>
             File{' '}
             <select style={{ maxWidth: '100%' }} value={file} onChange={(e) => setParams({ [`lsf_${n}`]: e.target.value || null })}>

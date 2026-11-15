@@ -20,7 +20,7 @@ data is on the roadmap. The rules reference is the author's earlier `hsclone` re
 The card sounds in `public/sounds/cards/` (`card-place-*`, `card-slide-*`) are Kenney's Casino Audio (kenney.nl), released under CC0 and
 found on OpenGameArt.org.
 
-The shimmer that plays while a card is held (`magic-fireflies.m4a`) is "Magic Fireflies" by ienba (freesound.org, sound 875330), CC0, converted to AAC.
+The shimmer that plays while a card is held (`magic-fireflies.m4a`) is "Magic Fireflies" by ienba (freesound.org, sound 875330), CC0, converted to AAC. `magic-glow.m4a` is "Magic Glow" by ienba (freesound.org, sound 752274), also CC0 and also converted to AAC, an alternative for the held-card sound.
 
 ## Card art and licensing notice
 

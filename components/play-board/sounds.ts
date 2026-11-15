@@ -118,6 +118,8 @@ const HOLD_FADE_OUT_S = 0.2;
 let hold: { src: AudioBufferSourceNode; gain: GainNode } | null = null;
 /** True while the card is held, so a shimmer that finished decoding after the card was let go does not start. */
 let holdWanted = false;
+/** The recorded sounds playing right now, so the lab's Stop button can cut them off. */
+const live = new Set<AudioBufferSourceNode>();
 const rawFiles = new Map<string, Promise<ArrayBuffer | null>>();
 const decoded = new Map<string, AudioBuffer>();
 const fetchFile = (url: string) => {
@@ -166,6 +168,8 @@ const playSample = (c: AudioContext, name: SoundName, at: number): boolean => {
   g.gain.value = t?.gain ?? sample.gain;
   src.connect(g).connect(c.destination);
   src.start(at);
+  live.add(src);
+  src.onended = () => live.delete(src);
   const maxMs = t?.maxMs ?? sample.maxMs;
   if (maxMs) {
     // A short fade-out so the cut is not a click.
@@ -318,11 +322,10 @@ export const cancelCardHover = () => {
   pendingHover = null;
 };
 
-/** Plays a tunable sound once, for the lab's Play buttons (the held-card loop plays for two seconds). */
+/** Plays a tunable sound once, for the lab's Play buttons (the held-card loop keeps going until Stop). */
 export const previewSound = (name: TunableSound) => {
   if (name === 'hold') {
-    startHoldSound();
-    window.setTimeout(stopHoldSound, 2000);
+    startHoldSound(); // loops until `stopPreview`
   } else {
     // Decode the file first, so a newly picked one plays as itself and not as the fallback tone.
     const c = audioContext();
@@ -330,4 +333,18 @@ export const previewSound = (name: TunableSound) => {
     if (!c) return;
     void Promise.all(files.map((f) => decode(c, f))).then(() => playSounds([name]));
   }
+};
+
+/** Stops everything the lab's Play buttons started: recorded sounds still playing, a pending hover sound and the held-card loop. */
+export const stopPreview = () => {
+  cancelCardHover();
+  live.forEach((s) => {
+    try {
+      s.stop();
+    } catch {
+      /* already stopped */
+    }
+  });
+  live.clear();
+  stopHoldSound();
 };
