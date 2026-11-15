@@ -15,6 +15,13 @@ An earlier zone/SNAP-style version is preserved at tag `snap-style-v0` and branc
 data is on the roadmap. The rules reference is the author's earlier `hsclone` repo
 ([PREVIOUS-VERSIONS.md](PREVIOUS-VERSIONS.md), [RULES.md](RULES.md)).
 
+## Sound credits
+
+The card sounds in `public/sounds/cards/` (`card-place-*`, `card-slide-*`) are Kenney's Casino Audio (kenney.nl), released under CC0 and
+found on OpenGameArt.org.
+
+The shimmer that plays while a card is held (`magic-fireflies.m4a`) is "Magic Fireflies" by ienba (freesound.org, sound 875330), CC0, converted to AAC.
+
 ## Card art and licensing notice
 
 The card art and the card frames, badges and other UI art in `public/images/` are **placeholders used for prototyping.

@@ -4,6 +4,10 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-14
 
+- **Card sounds:** playing a card (a minion or a spell) and drawing a card now use recorded sounds (Kenney's Casino Audio, CC0): 4 `card-place` and 8 `card-slide` variants, picked at random with a little pitch variation. They load when the board opens, follow the Sound switch, and the old synth tone is the fallback if a file is missing. The card sounds do not count toward the 3-sound cap, so a spell that kills a minion keeps its death sound. Credits in the README.
+- **Board lab: Sounds section.** For card play, card draw, hand hover and the held-card loop: pick any file under `public/sounds` (listed by `/api/sounds`), set the volume and the pitch variation, set the hover gap, and press Play. Values live in the URL (`lsf_*`, `lsg_*`, `lsj_*`, `lsgap`) and change the sound engine live (`setSoundTuning` in `sounds.ts`); `/play` never sets them.
+- **Hand hover sound:** moving the pointer onto a card in your hand plays `card-slide-5` quietly, with wide pitch variation and a 55 ms minimum gap so a sweep across the hand is a run of ticks. Not while dragging, or while a card is selected.
+- **Held-card sound:** a soft looping shimmer ("Magic Fireflies", CC0, 130 KB as AAC) fades in while a hand card is clicked or dragged and fades out when it is let go or played. It follows the Sound switch.
 - **Double-click to play:** a quick double-click on a minion in your hand plays it at the far right of your board (a minion that needs aiming, or a choose-one card, stays selected for the normal flow).
 - **Kill preview:** while aiming (attack, spell or skill), a skull (placeholder glyph) shows over every minion the action under the pointer would kill, including your own attacker when the counter-hit kills it. It tries the action on a copy of the game with the opponent's Mystery left out, so it never reveals it.
 - **Weapon on the hero figure:** the figure shows the equipped weapon's attack and durability as two badges (dashed outline when it only lasts this turn). Temporary look while the design is worked out.

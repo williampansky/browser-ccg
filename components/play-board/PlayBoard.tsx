@@ -53,7 +53,7 @@ import { HeroSkills } from './HeroSkills';
 import { heroOptions, loadHeroChoices, resolveHero, saveHeroChoices, HeroChoice } from './hero-choice';
 import { deckRows } from './deck-rows';
 import { describeEvents, MYSTERY_HINT, mysteryCategory } from './describe-events';
-import { isMuted, playSounds, setMuted, soundsFor } from './sounds';
+import { isMuted, playSounds, playCardHover, preloadSounds, setMuted, soundsFor, startHoldSound, stopHoldSound } from './sounds';
 import { targetLinePath, TargetLineStyle } from './target-line';
 import { startDragGhost, DragGhost } from './drag-ghost';
 import { Button, Group, Panel, SegmentedControl, Select, Toggle } from '../ui';
@@ -427,6 +427,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   }, [menuOpen]);
 
   useKeepTipsInViewport();
+  useEffect(preloadSounds, []);
 
   // Start on the client only: the deck shuffle uses the clock, which would not match server rendering.
   useEffect(start, [start]);
@@ -707,6 +708,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       window.removeEventListener('keyup', up);
     };
   }, [canEndTurn, dispatch]);
+
+  // A soft shimmer plays while a card is held: clicked (selected) or being dragged.
+  const cardHeld = selection?.kind === 'hand' || dragIndex !== null || draggedHand !== null || heldHand !== null;
+  useEffect(() => {
+    if (cardHeld) startHoldSound();
+    else stopHoldSound();
+  }, [cardHeld]);
+  useEffect(() => stopHoldSound, []);
 
   // `legalActions` is empty when it is not that player's turn, which also locks the board during the AI's turn.
   const actions = useMemo(() => (state ? legalActions(state, viewer, byId) : []), [state, viewer]);
@@ -1187,6 +1196,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         }}
         title={titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`)}
         className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index || aimable.length > 0 ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : ''].join(' ')}
+        onMouseEnter={() => !over && !document.body.classList.contains('dragging') && !selection && playCardHover()}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
         // A quick double-click plays a minion at the far right of your board. (The two clicks before it select and deselect the card,
         // so a minion that needs aiming, or a choose-one card, is left selected for the normal flow.)
