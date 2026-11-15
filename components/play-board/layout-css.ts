@@ -12,6 +12,21 @@ export const ORBS = '[class*="energy-bar_orbs__"]';
 
 
 export const CSS_FNS: Record<string, (v: number) => string> = {
+  lshdefy: (v) => `${SLOT}{--sh-def-y:${v}px}`,
+  lshdefb: (v) => `${SLOT}{--sh-def-b:${v}px}`,
+  lshdefa: (v) => `${SLOT}{--sh-def-a:${v}}`,
+  lshrdyy: (v) => `${SLOT}{--sh-rdy-y:${v}px}`,
+  lshrdyb: (v) => `${SLOT}{--sh-rdy-b:${v}px}`,
+  lshrdya: (v) => `${SLOT}{--sh-rdy-a:${v}}`,
+  lshsely: (v) => `${SLOT}{--sh-sel-y:${v}px}`,
+  lshselb: (v) => `${SLOT}{--sh-sel-b:${v}px}`,
+  lshsela: (v) => `${SLOT}{--sh-sel-a:${v}}`,
+  lshaimy: (v) => `${SLOT}{--sh-aim-y:${v}px}`,
+  lshaimb: (v) => `${SLOT}{--sh-aim-b:${v}px}`,
+  lshaima: (v) => `${SLOT}{--sh-aim-a:${v}}`,
+  lshhovy: (v) => `${SLOT}{--sh-hov-y:${v}px}`,
+  lshhovb: (v) => `${SLOT}{--sh-hov-b:${v}px}`,
+  lshhova: (v) => `${SLOT}{--sh-hov-a:${v}}`,
   lm: (v) => `${CLS('row')}{--m-h:${v}px !important}`,
   lg: (v) => `${CLS('row')}{gap:${v}px !important}`,
   ls: (v) => `${CLS('table')},${CLS('center')}{gap:${v}px !important}`,
@@ -67,6 +82,26 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lw: '1200',
 };
 
+/**
+ * The board's background image (the lab's Background section): `lbgf` the image URL (none = off), `lbgt` where it goes (`table` = the play
+ * surface, the default; `page` = behind everything), `lbgm` `cover` or `tile`, `lbgs` the tile size in px, `lbgx` / `lbgy` the focus point in %,
+ * `lbgd` how much it is darkened (0 to 1), `lbgb` blur in px.
+ */
+const backgroundCss = (one: (k: string) => string): string => {
+  const file = one('lbgf');
+  if (!/^\/[\w./-]+$/.test(file)) return '';
+  const dark = Math.min(1, Math.max(0, one('lbgd') === '' ? 0 : +one('lbgd') || 0));
+  const x = one('lbgx') === '' ? 50 : +one('lbgx') || 0;
+  const y = one('lbgy') === '' ? 50 : +one('lbgy') || 0;
+  const tile = one('lbgm') === 'tile';
+  const size = tile ? `${Math.max(50, +one('lbgs') || 600)}px` : 'cover';
+  const blur = Math.max(0, +one('lbgb') || 0);
+  const image = `linear-gradient(rgba(0,0,0,${dark}),rgba(0,0,0,${dark})),url(${file}) ${x}% ${y}% / ${size} ${tile ? 'repeat' : 'no-repeat'}`;
+  return one('lbgt') === 'page'
+    ? `${CLS('page')}::before{inset:-24px !important;background:${image} !important;filter:blur(${blur}px)}`
+    : `${CLS('table')}::before{background:${image} !important;filter:blur(${blur}px)}`;
+};
+
 /** The CSS for a set of layout params (values are strings, as in a URL query). */
 export const buildLayoutCss = (q: Record<string, string | undefined>): string => {
   const one = (k: string) => q[k] ?? '';
@@ -95,7 +130,7 @@ export const buildLayoutCss = (q: Record<string, string | undefined>): string =>
   // `lmpv` previews a clicked minion on your first one, with the same gold ring the real selection has.
   const minionPreviewCss = one('lmpv')
     ? `${MY_FIRST}{transform:translateY(calc(var(--sel-lift,14px) * -1)) scale(var(--sel-scale,1.08)) !important}` +
-      `${MY_FIRST} ${OVAL}{border-color:#ffd45e !important;box-shadow:0 0 0 3px #ffd45e,0 0 18px rgba(255,212,94,0.7) !important}`
+      `${MY_FIRST} ${OVAL}{border-color:#ffd45e !important;box-shadow:0 0 0 3px #ffd45e,0 0 18px rgba(255,212,94,0.7),0 var(--sh-sel-y,14px) var(--sh-sel-b,18px) rgba(0,0,0,var(--sh-sel-a,0)) !important}`
     : '';
   return [
     minionPreviewCss,
@@ -108,6 +143,7 @@ export const buildLayoutCss = (q: Record<string, string | undefined>): string =>
       .filter((k) => one(k) !== '' && !Number.isNaN(+one(k)))
       .map((k) => CSS_FNS[k](+one(k))),
     one('lfs') === 'right' ? `${CLS('figSlot')}{left:auto !important;right:0.5rem !important}` : '',
+    backgroundCss(one),
     one('lfelt') === '0' ? `${CLS('table')}::before{display:none !important}` : '',
   ].join('\n');
 };

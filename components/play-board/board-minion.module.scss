@@ -86,7 +86,8 @@
   border-radius: 50%;
   background: #191919 center top / cover no-repeat;
   border: 2px solid rgba(220, 226, 240, 0.55);
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.9), 0 3px 12px rgba(0, 0, 0, 0.55), inset 0 0 0 2px rgba(0, 0, 0, 0.35);
+  // The dark drop shadow is a variable per state (--sh-def-*, --sh-rdy-*, --sh-sel-*, --sh-aim-*, --sh-hov-*: y offset, blur, alpha) that the board lab tunes.
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.9), 0 var(--sh-def-y, 3px) var(--sh-def-b, 12px) rgba(0, 0, 0, var(--sh-def-a, 0.55)), inset 0 0 0 2px rgba(0, 0, 0, 0.35);
   transition: box-shadow 200ms, filter 200ms;
   z-index: 1;
 }
@@ -247,7 +248,7 @@
 // States of the button around it.
 .ready .oval {
   border-color: #5fd16a;
-  box-shadow: 0 0 0 2px rgba(95, 209, 106, 0.5), 0 0 14px rgba(95, 209, 106, 0.55), 0 3px 12px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0 0 2px rgba(95, 209, 106, 0.5), 0 0 14px rgba(95, 209, 106, 0.55), 0 var(--sh-rdy-y, 3px) var(--sh-rdy-b, 12px) rgba(0, 0, 0, var(--sh-rdy-a, 0.55));
 }
 .ready { cursor: pointer; }
 
@@ -257,13 +258,13 @@
 }
 .selected .oval {
   border-color: #ffd45e;
-  box-shadow: 0 0 0 3px #ffd45e, 0 0 18px rgba(255, 212, 94, 0.7);
+  box-shadow: 0 0 0 3px #ffd45e, 0 0 18px rgba(255, 212, 94, 0.7), 0 var(--sh-sel-y, 14px) var(--sh-sel-b, 18px) rgba(0, 0, 0, var(--sh-sel-a, 0));
 }
 
 .aim { cursor: crosshair; }
 .aim .oval {
   border-color: #ff6b6b;
-  box-shadow: 0 0 0 2px #ff6b6b, 0 0 16px rgba(255, 107, 107, 0.65);
+  box-shadow: 0 0 0 2px #ff6b6b, 0 0 16px rgba(255, 107, 107, 0.65), 0 var(--sh-aim-y, 3px) var(--sh-aim-b, 12px) rgba(0, 0, 0, var(--sh-aim-a, 0));
 }
 // A target under the pointer while aiming: ring only. (It used to scale 1.1x, but the landing animation hid that; the lift belongs to your own selection.)
 // --aim-scale is 1 unless the board lab changes it.
@@ -272,7 +273,7 @@
 }
 .aimHover .oval {
   border-color: #3ddc84;
-  box-shadow: 0 0 0 3px #3ddc84, 0 0 20px rgba(61, 220, 132, 0.8);
+  box-shadow: 0 0 0 3px #3ddc84, 0 0 20px rgba(61, 220, 132, 0.8), 0 var(--sh-hov-y, 3px) var(--sh-hov-b, 12px) rgba(0, 0, 0, var(--sh-hov-a, 0));
 }
 
 // hsclone's "was attacked": a short shake when Health drops.

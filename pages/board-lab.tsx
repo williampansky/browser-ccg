@@ -5,8 +5,9 @@ import { heroes, loadHsCards } from '../engine';
 import { LabOverlay } from '../components/board-lab/LabOverlay';
 import { LabSliders, useMeasuredDefaults } from '../components/board-lab/LabSliders';
 import { LAB_TABS, LabSection, LabTabBar, useLabSections, useLabTab } from '../components/board-lab/lab-sections';
-import { BoardPanel, EnergyPanel, HandsPanel, HeroFiguresPanel, LogDeckPanel, MinionsPanel, RestartPanel, TablePanel } from '../components/board-lab/lab-panels';
+import { BoardPanel, EnergyPanel, HandsPanel, HeroFiguresPanel, LogDeckPanel, MinionsPanel, RestartPanel, ShadowsPanel, TablePanel } from '../components/board-lab/lab-panels';
 import { RESTART_KEYS, SETUP_KEYS, one } from '../components/board-lab/lab-model';
+import { BackgroundPanel } from '../components/board-lab/BackgroundPanel';
 import { PresetsPanel } from '../components/board-lab/PresetsPanel';
 import { SoundPanel, useSoundTuning } from '../components/board-lab/SoundPanel';
 import { PLAY_LAYOUT, buildLayoutCss } from '../components/play-board/layout-css';
@@ -83,9 +84,11 @@ const BoardLab = () => {
     presets: sec('presets', 'Presets', 'saved in this browser', <PresetsPanel />),
     board: sec('board', 'Board', 'live', <BoardPanel {...panel} />),
     restart: sec('restart', 'Heroes and hand', 'restarts the board, same deck each time', <RestartPanel {...panel} />),
+    shadows: sec('shadows', 'Minion shadows', 'live', <ShadowsPanel {...panel} />),
     minions: sec('minions', 'Minions', 'live', <MinionsPanel {...panel} />),
     table: sec('table', 'Table', 'live', <TablePanel {...panel} />),
     hands: sec('hands', 'Hands', 'live', <HandsPanel {...panel} />),
+    background: sec('background', 'Background', 'live', <BackgroundPanel q={q} setParams={setParams} />),
     energy: sec('energy', 'Energy bar', 'live', <EnergyPanel {...panel} />),
     panels: sec('panels', 'Log and deck', 'live', <LogDeckPanel {...panel} />),
     heroes: sec('heroes', 'Hero figures', 'live', <HeroFiguresPanel {...panel} />),

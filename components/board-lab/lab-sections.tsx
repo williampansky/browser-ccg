@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export const SECTION_IDS = ['presets', 'board', 'restart', 'minions', 'table', 'hands', 'energy', 'panels', 'heroes', 'sounds'];
+export const SECTION_IDS = ['presets', 'board', 'restart', 'minions', 'table', 'hands', 'energy', 'panels', 'heroes', 'sounds', 'background', 'shadows'];
 
 /** Which accordion sections are open (default: Presets and Board); remembered in localStorage. */
 export const useLabSections = () => {
@@ -41,7 +41,7 @@ export const LabSection = ({ id, title, note, open, onToggle, children }: { id: 
 /** The top-level groups: a tab each, with the accordion sections inside it. */
 export const LAB_TABS: { id: string; label: string; sections: string[] }[] = [
   { id: 'setup', label: 'Setup', sections: ['presets', 'board', 'restart'] },
-  { id: 'board', label: 'Board', sections: ['minions', 'table', 'energy'] },
+  { id: 'board', label: 'Board', sections: ['minions', 'shadows', 'table', 'energy', 'background'] },
   { id: 'hand', label: 'Hand', sections: ['hands'] },
   { id: 'panels', label: 'Log/deck', sections: ['panels'] },
   { id: 'heroes', label: 'Heroes', sections: ['heroes'] },

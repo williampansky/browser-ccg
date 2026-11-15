@@ -66,6 +66,21 @@ export const SLIDER_MAX = {
 };
 
 export const NUMS: Num[] = [
+  { key: 'lshdefy', label: 'Default: shadow down (px)', min: -20, max: 60, css: CSS_FNS.lshdefy, read: () => 3 },
+  { key: 'lshdefb', label: 'Default: shadow blur (px)', min: 0, max: 60, css: CSS_FNS.lshdefb, read: () => 12 },
+  { key: 'lshdefa', label: 'Default: shadow darkness', min: 0, max: 1, step: 0.05, css: CSS_FNS.lshdefa, read: () => 0.55 },
+  { key: 'lshrdyy', label: 'Ready to attack: shadow down (px)', min: -20, max: 60, css: CSS_FNS.lshrdyy, read: () => 3 },
+  { key: 'lshrdyb', label: 'Ready to attack: shadow blur (px)', min: 0, max: 60, css: CSS_FNS.lshrdyb, read: () => 12 },
+  { key: 'lshrdya', label: 'Ready to attack: shadow darkness', min: 0, max: 1, step: 0.05, css: CSS_FNS.lshrdya, read: () => 0.55 },
+  { key: 'lshsely', label: 'Selected / lifted: shadow down (px)', min: -20, max: 60, css: CSS_FNS.lshsely, read: () => 14 },
+  { key: 'lshselb', label: 'Selected / lifted: shadow blur (px)', min: 0, max: 60, css: CSS_FNS.lshselb, read: () => 18 },
+  { key: 'lshsela', label: 'Selected / lifted: shadow darkness', min: 0, max: 1, step: 0.05, css: CSS_FNS.lshsela, read: () => 0 },
+  { key: 'lshaimy', label: 'Can be aimed at: shadow down (px)', min: -20, max: 60, css: CSS_FNS.lshaimy, read: () => 3 },
+  { key: 'lshaimb', label: 'Can be aimed at: shadow blur (px)', min: 0, max: 60, css: CSS_FNS.lshaimb, read: () => 12 },
+  { key: 'lshaima', label: 'Can be aimed at: shadow darkness', min: 0, max: 1, step: 0.05, css: CSS_FNS.lshaima, read: () => 0 },
+  { key: 'lshhovy', label: 'Aimed at (hovered): shadow down (px)', min: -20, max: 60, css: CSS_FNS.lshhovy, read: () => 3 },
+  { key: 'lshhovb', label: 'Aimed at (hovered): shadow blur (px)', min: 0, max: 60, css: CSS_FNS.lshhovb, read: () => 12 },
+  { key: 'lshhova', label: 'Aimed at (hovered): shadow darkness', min: 0, max: 1, step: 0.05, css: CSS_FNS.lshhova, read: () => 0 },
   { key: 'lm', label: 'Minion height (px)', min: 70, max: SLIDER_MAX.lm, css: CSS_FNS.lm, read: () => px(cs('row')?.getPropertyValue('--m-h')) },
   { key: 'lg', label: 'Minion gap (px)', min: 0, max: SLIDER_MAX.lg, css: CSS_FNS.lg, read: () => px(cs('row')?.columnGap) },
   { key: 'ls', label: 'Section gap (px)', min: 0, max: SLIDER_MAX.ls, css: CSS_FNS.ls, read: () => px(cs('center')?.rowGap) },

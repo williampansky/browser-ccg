@@ -135,3 +135,26 @@ export const HeroFiguresPanel = ({ q, setParams, sliders, count, pick }: PanelPr
     </label>
   </>
 );
+
+const SHADOW_STATES: [string, string][] = [
+  ['def', 'Default'],
+  ['rdy', 'Ready to attack'],
+  ['sel', 'Selected / lifted'],
+  ['aim', 'Can be aimed at'],
+  ['hov', 'Aimed at (hovered)'],
+];
+/** The dark drop shadow under a board minion, for each state. */
+export const ShadowsPanel = ({ sliders }: PanelProps) => (
+  <>
+    <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+      The dark shadow under a minion's oval, per state. Darkness 0 = none. Selected, aimed and hovered start at 0 (no shadow), as before. Select a minion
+      (or use the Minions preview) to see its lifted shadow.
+    </small>
+    {SHADOW_STATES.map(([s, label]) => (
+      <div key={s} style={{ margin: '6px 0', paddingBottom: 4, borderBottom: '1px solid #2a2f3e' }}>
+        <b>{label}</b>
+        {sliders([`lsh${s}y`, `lsh${s}b`, `lsh${s}a`])}
+      </div>
+    ))}
+  </>
+);
