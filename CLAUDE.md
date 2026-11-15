@@ -5,7 +5,7 @@ Browser-based collectible card game: Next.js 12 + React 17 front end, with game 
 
 **Direction:** a Hearthstone-style game (minions that attack, hero health, alternating
 turns, Guard/taunt, spells, weapons, class skills). The earlier zone/SNAP-style game was
-removed on branch `hs-rebuild`; it is preserved at tag `snap-style-v0` and branch
+removed on branch `hs-rebuild` (now merged into `main`; use feature branches for large new work); it is preserved at tag `snap-style-v0` and branch
 `archive/snap-style`. The new engine is being rebuilt from scratch, using the author's
 earlier `hsclone` repo as the rules reference. Read these first:
 
