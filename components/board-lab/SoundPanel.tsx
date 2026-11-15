@@ -1,6 +1,6 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
-import { previewSound, setHoverGapMs, setSoundTuning, soundDefaults } from '../play-board/sounds';
+import { HOVER_GAP_MS, previewSound, setHoverGapMs, setSoundTuning, soundDefaults } from '../play-board/sounds';
 import type { TunableSound } from '../play-board/sounds';
 import { one, row, wide } from './lab-model';
 
@@ -16,13 +16,14 @@ const SOUND_SLOTS: [TunableSound, string][] = [
  * The page runs it always, so a URL's sounds apply whichever tab is showing.
  */
 export const useSoundTuning = (q: ParsedUrlQuery) => {
-  const soundKey = SOUND_SLOTS.map(([n]) => [one(q[`lsf_${n}`]), one(q[`lsg_${n}`]), one(q[`lsj_${n}`])].join('|')).join(';') + one(q.lsgap);
+  const soundKey = SOUND_SLOTS.map(([n]) => [one(q[`lsf_${n}`]), one(q[`lsg_${n}`]), one(q[`lsj_${n}`]), one(q[`lsm_${n}`])].join('|')).join(';') + one(q.lsgap);
   useEffect(() => {
     SOUND_SLOTS.forEach(([n]) => {
       const file = one(q[`lsf_${n}`]);
       const gain = one(q[`lsg_${n}`]);
       const jitter = one(q[`lsj_${n}`]);
-      setSoundTuning(n, file || gain || jitter ? { file: file || undefined, gain: gain ? +gain : undefined, jitter: jitter ? +jitter : undefined } : undefined);
+      const len = one(q[`lsm_${n}`]);
+      setSoundTuning(n, file || gain || jitter || len ? { file: file || undefined, gain: gain ? +gain : undefined, jitter: jitter ? +jitter : undefined, maxMs: len ? +len : undefined } : undefined);
     });
     setHoverGapMs(one(q.lsgap) ? +one(q.lsgap) : undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,6 +46,7 @@ export const SoundPanel = ({ q, setParams }: { q: ParsedUrlQuery; setParams: (ch
       const file = one(q[`lsf_${n}`]);
       const gain = one(q[`lsg_${n}`]);
       const jitter = one(q[`lsj_${n}`]);
+          const len = one(q[`lsm_${n}`]);
       return (
         <div key={n} style={{ margin: '8px 0', paddingBottom: 6, borderBottom: '1px solid #2a2f3e' }}>
           <b>{label}</b>{' '}
@@ -73,13 +75,23 @@ export const SoundPanel = ({ q, setParams }: { q: ParsedUrlQuery; setParams: (ch
               </small>
             </label>
           )}
+          {n !== 'hold' && (
+            <label style={row}>
+              Length (ms) <input type="number" step={10} style={{ width: 60 }} value={len || d.maxMs || 0} onChange={(e) => setParams({ [`lsm_${n}`]: e.target.value })} />
+              {len && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ [`lsm_${n}`]: null })}>reset</a>}
+              <input type="range" min={0} max={1000} step={10} value={len || d.maxMs || 0} style={wide} onChange={(e) => setParams({ [`lsm_${n}`]: e.target.value })} />
+              <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+                Cuts the sound short after this long (with a quick fade). Short flicks stack into a ruffle when you fan across cards; 0 plays the whole sound.
+              </small>
+            </label>
+          )}
         </div>
       );
     })}
     <label style={row}>
-      Hover gap (ms) <input type="number" step={5} style={{ width: 60 }} value={one(q.lsgap) || 55} onChange={(e) => setParams({ lsgap: e.target.value })} />
+      Hover gap (ms) <input type="number" step={5} style={{ width: 60 }} value={one(q.lsgap) || HOVER_GAP_MS} onChange={(e) => setParams({ lsgap: e.target.value })} />
       {one(q.lsgap) && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ lsgap: null })}>reset</a>}
-      <input type="range" min={0} max={300} step={5} value={one(q.lsgap) || 55} style={wide} onChange={(e) => setParams({ lsgap: e.target.value })} />
+      <input type="range" min={0} max={300} step={5} value={one(q.lsgap) || HOVER_GAP_MS} style={wide} onChange={(e) => setParams({ lsgap: e.target.value })} />
       <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
         Shortest time between two hand-hover sounds. Higher means fewer ticks when you sweep across your hand; 0 plays one on every card.
       </small>

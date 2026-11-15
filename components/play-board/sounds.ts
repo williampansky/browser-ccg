@@ -74,11 +74,11 @@ const RECIPES: Record<SoundName, Recipe> = {
  * Recorded sounds (CC0, Kenney's Casino Audio via OpenGameArt): a variant is picked at random each time, with a little pitch
  * variation, so repeats do not sound identical. A sound with no entry here (or whose files fail to load) uses its tone above.
  */
-const SAMPLES: Partial<Record<SoundName, { files: string[]; gain: number; jitter?: number }>> = {
-  cardPlay: { files: [1, 2, 3, 4].map((n) => `/sounds/cards/card-place-${n}.ogg`), gain: 0.9 },
+const SAMPLES: Partial<Record<SoundName, { files: string[]; gain: number; jitter?: number; maxMs?: number }>> = {
+  cardPlay: { files: ['/sounds/cards/card-place-2.ogg'], gain: 0.35, jitter: 0.07 },
   draw: { files: [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `/sounds/cards/card-slide-${n}.ogg`), gain: 0.7 },
   // Fanning across the hand: one short slide, quiet, with wide pitch variation so a sweep over several cards does not repeat itself.
-  cardHover: { files: ['/sounds/cards/card-slide-5.ogg'], gain: 0.28, jitter: 0.16 },
+  cardHover: { files: ['/sounds/cards/card-slide-5.ogg'], gain: 0.15, jitter: 0.03, maxMs: 150 },
 };
 const PITCH_JITTER = 0.06;
 
@@ -87,6 +87,8 @@ export interface SoundTuning {
   file?: string;
   gain?: number;
   jitter?: number;
+  /** Cut the sound off after this many ms (with a short fade), so quick repeats are short flicks and do not smear */
+  maxMs?: number;
 }
 export type TunableSound = 'cardPlay' | 'draw' | 'cardHover' | 'hold';
 const tuning: Partial<Record<TunableSound, SoundTuning>> = {};
@@ -100,17 +102,17 @@ export const setHoverGapMs = (ms: number | undefined) => {
   hoverGapOverride = ms;
 };
 /** What a tunable sound uses when nothing is overridden (files, gain, pitch variation), for the lab's sliders. */
-export const soundDefaults = (name: TunableSound): { files: string[]; gain: number; jitter: number } =>
+export const soundDefaults = (name: TunableSound): { files: string[]; gain: number; jitter: number; maxMs?: number } =>
   name === 'hold'
     ? { files: [HOLD_FILE], gain: HOLD_GAIN, jitter: 0 }
-    : { files: SAMPLES[name]!.files, gain: SAMPLES[name]!.gain, jitter: SAMPLES[name]!.jitter ?? PITCH_JITTER };
+    : { files: SAMPLES[name]!.files, gain: SAMPLES[name]!.gain, jitter: SAMPLES[name]!.jitter ?? PITCH_JITTER, maxMs: SAMPLES[name]!.maxMs };
 
 /**
  * The sound while a card is held (clicked, or being dragged): a soft magical shimmer (CC0, "Magic Fireflies" by ienba, freesound.org),
  * looped and faded in when the card is picked up and out when it is let go.
  */
 const HOLD_FILE = '/sounds/cards/magic-fireflies.m4a';
-const HOLD_GAIN = 0.3;
+const HOLD_GAIN = 0.65;
 const HOLD_FADE_IN_S = 0.12;
 const HOLD_FADE_OUT_S = 0.2;
 let hold: { src: AudioBufferSourceNode; gain: GainNode } | null = null;
@@ -164,6 +166,14 @@ const playSample = (c: AudioContext, name: SoundName, at: number): boolean => {
   g.gain.value = t?.gain ?? sample.gain;
   src.connect(g).connect(c.destination);
   src.start(at);
+  const maxMs = t?.maxMs ?? sample.maxMs;
+  if (maxMs) {
+    // A short fade-out so the cut is not a click.
+    const end = at + maxMs / 1000;
+    g.gain.setValueAtTime(g.gain.value, Math.max(at, end - 0.03));
+    g.gain.linearRampToValueAtTime(0, end);
+    src.stop(end + 0.01);
+  }
   return true;
 };
 
@@ -278,14 +288,34 @@ export const stopHoldSound = () => {
 };
 
 /** Minimum gap between hover sounds (ms), so a fast sweep over the hand is a run of ticks, not a pile. */
-const HOVER_GAP_MS = 55;
+export const HOVER_GAP_MS = 35;
 let lastHover = 0;
-/** The quiet slide when the pointer moves onto a card in hand. */
+let pendingHover: ReturnType<typeof setTimeout> | null = null;
+/**
+ * The quiet slide when the pointer moves onto a card in hand. A hover that comes inside the gap is not thrown away: it plays when the gap
+ * ends (a newer hover replaces it, and `cancelCardHover` drops it when the pointer has already left), so resting on a card always sounds.
+ */
 export const playCardHover = () => {
   const now = typeof performance !== 'undefined' ? performance.now() : 0;
-  if (now - lastHover < (hoverGapOverride ?? HOVER_GAP_MS)) return;
-  lastHover = now;
-  playSounds(['cardHover']);
+  const gap = hoverGapOverride ?? HOVER_GAP_MS;
+  if (pendingHover) clearTimeout(pendingHover);
+  pendingHover = null;
+  const wait = lastHover + gap - now;
+  if (wait <= 0) {
+    lastHover = now;
+    playSounds(['cardHover']);
+    return;
+  }
+  pendingHover = setTimeout(() => {
+    pendingHover = null;
+    lastHover = typeof performance !== 'undefined' ? performance.now() : 0;
+    playSounds(['cardHover']);
+  }, wait);
+};
+/** The pointer left the card before its delayed hover sound played: drop it. */
+export const cancelCardHover = () => {
+  if (pendingHover) clearTimeout(pendingHover);
+  pendingHover = null;
 };
 
 /** Plays a tunable sound once, for the lab's Play buttons (the held-card loop plays for two seconds). */

@@ -53,7 +53,7 @@ import { HeroSkills } from './HeroSkills';
 import { heroOptions, loadHeroChoices, resolveHero, saveHeroChoices, HeroChoice } from './hero-choice';
 import { deckRows } from './deck-rows';
 import { describeEvents, MYSTERY_HINT, mysteryCategory } from './describe-events';
-import { isMuted, playSounds, playCardHover, preloadSounds, setMuted, soundsFor, startHoldSound, stopHoldSound } from './sounds';
+import { isMuted, playSounds, cancelCardHover, playCardHover, preloadSounds, setMuted, soundsFor, startHoldSound, stopHoldSound } from './sounds';
 import { targetLinePath, TargetLineStyle } from './target-line';
 import { startDragGhost, DragGhost } from './drag-ghost';
 import { Button, Group, Panel, SegmentedControl, Select, Toggle } from '../ui';
@@ -1197,6 +1197,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         title={titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`)}
         className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index || aimable.length > 0 ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : ''].join(' ')}
         onMouseEnter={() => !over && !document.body.classList.contains('dragging') && !selection && playCardHover()}
+        onMouseLeave={cancelCardHover}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
         // A quick double-click plays a minion at the far right of your board. (The two clicks before it select and deselect the card,
         // so a minion that needs aiming, or a choose-one card, is left selected for the normal flow.)
