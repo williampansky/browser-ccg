@@ -63,6 +63,8 @@ import styles from './play-board.module.scss';
 
 let activeGhost: DragGhost | null = null; // the opaque card that follows the pointer during a hand drag
 
+/** Un-hides the dragged hand card once the ghost has flown back to it (at once when there is no ghost), so the real card and the ghost are never both visible. */
+const clearDraggedHandWhenLanded = (set: (v: null) => void) => (activeGhost ? activeGhost.whenDone(() => set(null)) : set(null));
 type Mode = 'ai' | 'hotseat';
 type PlayAction = Extract<Action, { type: 'PlayCard' }>;
 const AI_PLAYER: PlayerId = '1';
@@ -657,7 +659,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   // cleared on a state change, never on drop, because the drop handlers still need it.
   useEffect(() => {
     const clear = () => {
-      setDraggedHand(null);
+      clearDraggedHandWhenLanded(setDraggedHand);
       setHeldHand(null);
     };
     window.addEventListener('drop', clear, true);
@@ -1244,7 +1246,6 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           activeGhost = null;
           if (!isChoice) setSelection(null); // a dropped choose-one card has just opened its dialog: keep that
           setDragIndex(null);
-          setDraggedHand(null);
           setHeldHand(null);
           setHover(null);
           setHoverGap(null);
@@ -1263,6 +1264,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       ? `m${selection.id}`
       : selection?.kind === 'skill'
       ? `s${me}-${selection.index}`
+          clearDraggedHandWhenLanded(setDraggedHand);
       : selection
       ? `h${me}`
       : null;

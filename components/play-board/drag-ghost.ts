@@ -7,7 +7,11 @@ const TILT_PER_PX = 1.6; // degrees of 3D tilt per pixel of speed per frame (the
 const MAX_TILT = 22; // degrees
 const MAX_ROLL = 8; // degrees of sideways roll
 
-export type DragGhost = { stop: () => void };
+export type DragGhost = {
+  stop: () => void;
+  /** Runs `cb` once the ghost has landed (flown back to the hand slot) or vanished; at once if it already has. The hand uses it to keep the real card hidden until then. */
+  whenDone: (cb: () => void) => void;
+};
 
 const clamp = (v: number, m: number) => Math.max(-m, Math.min(m, v));
 
@@ -70,9 +74,17 @@ export const startDragGhost = (source: HTMLElement, width: number, height: numbe
   };
   raf = requestAnimationFrame(frame);
 
+  const callbacks: (() => void)[] = [];
+  let landed = false;
+  /** The ghost is as good as gone (arrived, or faded): whoever was waiting can show the real card. */
+  const land = () => {
+    landed = true;
+    callbacks.splice(0).forEach((cb) => cb());
+  };
   const finish = () => {
     cancelAnimationFrame(raf);
     el.remove();
+    land();
   };
 
   // Released: if the card was played its hand button is gone (fade out where it is); if not, fly back to its hand slot.
@@ -89,13 +101,13 @@ export const startDragGhost = (source: HTMLElement, width: number, height: numbe
         tx = r.left + r.width / 2;
         ty = r.top + r.height / 2;
         scaleTarget = 1;
-        el.style.transition = 'opacity 120ms ease-in 90ms';
-        el.style.opacity = '0';
-        setTimeout(finish, 220);
+        // The ghost has all but arrived after ~110 ms: swap it for the real card in one frame (no fade), so the two are never on screen together.
+        setTimeout(finish, 110);
       } else {
         scaleTarget = 0.8;
         el.style.transition = 'opacity 100ms ease-out';
         el.style.opacity = '0';
+        land();
         setTimeout(finish, 120);
       }
     }, 30);
@@ -104,5 +116,5 @@ export const startDragGhost = (source: HTMLElement, width: number, height: numbe
   document.addEventListener('drop', stop, true);
   document.addEventListener('dragend', stop, true);
 
-  return { stop };
+  return { stop, whenDone: (cb) => (landed ? cb() : callbacks.push(cb)) };
 };
