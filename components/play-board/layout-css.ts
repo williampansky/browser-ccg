@@ -119,6 +119,57 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lcring: (v) => (v ? '' : `${CLS('castFx')}::after{display:none !important}`),
 };
 
+/**
+ * The middle strip's number knobs: one row each (URL key, label, range, default, the CSS variable it sets and its unit). The lab builds its
+ * sliders from this and `CSS_FNS` its CSS, so a new knob is one line here plus the rule in play-board.module.scss.
+ */
+export const MID_KNOBS: { key: string; label: string; min: number; max: number; step?: number; def: number; cssVar: string; unit: string }[] = [
+  // Horizontal lines (the border above and below the strip)
+  { key: 'lmdlw', label: 'Lines: thickness (px)', min: 0, max: 12, def: 1, cssVar: '--mid-lw', unit: 'px' },
+  { key: 'lmdla', label: 'Lines: opacity', min: 0, max: 1, step: 0.05, def: 1, cssVar: '--mid-la', unit: '' },
+  { key: 'lmdlt', label: 'Lines: top line (1 = show, 0 = hide)', min: 0, max: 1, def: 1, cssVar: '--mid-lt', unit: '' },
+  { key: 'lmdlb', label: 'Lines: bottom line (1 = show, 0 = hide)', min: 0, max: 1, def: 1, cssVar: '--mid-lb', unit: '' },
+  // Strip spacing
+  { key: 'lmdp', label: 'Strip: padding up and down (px)', min: 0, max: 80, def: 8, cssVar: '--mid-p', unit: 'px' },
+  { key: 'lmdpx', label: 'Strip: padding left and right (px)', min: 0, max: 200, def: 12, cssVar: '--mid-px', unit: 'px' },
+  { key: 'lmdg', label: 'Strip: gap between items (px)', min: 0, max: 120, def: 16, cssVar: '--mid-g', unit: 'px' },
+  { key: 'lmdh', label: 'Strip: minimum height (px)', min: 0, max: 200, def: 0, cssVar: '--mid-h', unit: 'px' },
+  // Middle text
+  { key: 'lmdts', label: 'Text: size (x)', min: 0.5, max: 3, step: 0.05, def: 1, cssVar: '--mid-ts', unit: '' },
+  { key: 'lmdtw', label: 'Text: weight', min: 100, max: 900, step: 100, def: 400, cssVar: '--mid-tw', unit: '' },
+  { key: 'lmdto', label: 'Text: opacity', min: 0, max: 1, step: 0.05, def: 1, cssVar: '--mid-to', unit: '' },
+  { key: 'lmdtl', label: 'Text: letter spacing (px)', min: -2, max: 10, step: 0.1, def: 0, cssVar: '--mid-tl', unit: 'px' },
+  { key: 'lmdks', label: 'Clock: size (x)', min: 0.5, max: 3, step: 0.05, def: 1, cssVar: '--mid-ks', unit: '' },
+  // End turn button
+  { key: 'lmdbr', label: 'End turn: corner radius (px)', min: 0, max: 40, def: 6, cssVar: '--mid-br', unit: 'px' },
+  { key: 'lmdbx', label: 'End turn: padding left and right (px)', min: 0, max: 80, def: 19, cssVar: '--mid-bx', unit: 'px' },
+  { key: 'lmdby', label: 'End turn: padding up and down (px)', min: 0, max: 40, def: 8, cssVar: '--mid-by', unit: 'px' },
+  { key: 'lmdbs', label: 'End turn: text size (x)', min: 0.5, max: 3, step: 0.05, def: 1, cssVar: '--mid-bs', unit: '' },
+  { key: 'lmdbw', label: 'End turn: text weight', min: 100, max: 900, step: 100, def: 700, cssVar: '--mid-bw', unit: '' },
+  { key: 'lmdbg', label: 'End turn: glow (px)', min: 0, max: 40, def: 0, cssVar: '--mid-bg', unit: 'px' },
+  { key: 'lmdbh', label: 'End turn: brightness on hover (x)', min: 0.5, max: 2, step: 0.05, def: 1, cssVar: '--mid-bh', unit: '' },
+  { key: 'lmdbd', label: 'End turn: opacity when disabled', min: 0, max: 1, step: 0.05, def: 0.4, cssVar: '--mid-bd', unit: '' },
+  // Timer bar
+  { key: 'lmdtb', label: 'Timer bar: show (1 = yes, 0 = no)', min: 0, max: 1, def: 1, cssVar: '--mid-tb', unit: '' },
+  { key: 'lmdth', label: 'Timer bar: height (px)', min: 1, max: 60, def: 4, cssVar: '--mid-th', unit: 'px' },
+  { key: 'lmdtv', label: 'Timer bar: width (1 = whole window, 0 = just the strip)', min: 0, max: 1, def: 1, cssVar: '--mid-tv', unit: '' },
+  { key: 'lmdty', label: 'Timer bar: move down (px)', min: -100, max: 100, def: 0, cssVar: '--mid-ty', unit: 'px' },
+  { key: 'lmdtr', label: 'Timer bar: corner radius (px)', min: 0, max: 30, def: 0, cssVar: '--mid-tr', unit: 'px' },
+  { key: 'lmdtta', label: 'Timer bar: track opacity', min: 0, max: 1, step: 0.05, def: 0.25, cssVar: '--mid-tta', unit: '' },
+];
+MID_KNOBS.forEach((k) => (CSS_FNS[k.key] = (v) => `${CLS('page')}{${k.cssVar}:${v}${k.unit}}`));
+/** The lab's preview for the timer bar: how full it is (%), since the lab has no turn clock. */
+export const MID_TIMER_PREVIEW_KEY = 'lmdtpv';
+
+/** The middle strip's text choices (`lmdj` alignment, `lmdtpos` where the timer bar sits): named, not numbers. */
+const MID_JUSTIFY: Record<string, string> = { start: 'flex-start', center: 'center', end: 'flex-end', between: 'space-between' };
+const midChoicesCss = (one: (k: string) => string) =>
+  [
+    MID_JUSTIFY[one('lmdj')] ? `${CLS('page')}{--mid-j:${MID_JUSTIFY[one('lmdj')]}}` : '',
+    one('lmdtpos') === 'top' ? `${CLS('page')}{--mid-ttop:0px;--mid-tbot:auto}` : '',
+    one('lmdtpos') === 'middle' ? `${CLS('page')}{--mid-ttop:50%;--mid-tbot:auto}` : '',
+  ].join('');
+
 /** Energy bar colours: URL key -> CSS variable. Values are 6-digit hex without the `#` (so they are never mistaken for the numeric knobs). */
 export const ENERGY_COLOURS: Record<string, { cssVar: string; label: string; fallback: string; target?: 'page' }> = {
   lpoc: { cssVar: '--po-c', label: 'All three (base colour)', fallback: '5fd16a', target: 'page' },
@@ -134,6 +185,16 @@ export const ENERGY_COLOURS: Record<string, { cssVar: string; label: string; fal
   lflc: { cssVar: '--felt-tint', label: 'Felt tint', fallback: '081216', target: 'page' },
   lflgc: { cssVar: '--felt-glow', label: 'Felt centre glow', fallback: '509696', target: 'page' },
   lflrc: { cssVar: '--felt-rim', label: 'Felt rim', fallback: 'ffffff', target: 'page' },
+  lmdlc: { cssVar: '--mid-lc', label: 'Lines', fallback: 'afa18c', target: 'page' },
+  lmdtc: { cssVar: '--mid-tc', label: 'Middle text', fallback: '372810', target: 'page' },
+  lmdkc: { cssVar: '--mid-kc', label: 'Clock', fallback: 'cfd6e6', target: 'page' },
+  lmdkl: { cssVar: '--mid-kl', label: 'Clock, last 10 s', fallback: 'ff7d7d', target: 'page' },
+  lmdbc: { cssVar: '--mid-bc', label: 'End turn: fill', fallback: '3b6fd4', target: 'page' },
+  lmdbb: { cssVar: '--mid-bb', label: 'End turn: border', fallback: '5a8cf0', target: 'page' },
+  lmdbt: { cssVar: '--mid-bt', label: 'End turn: text', fallback: 'e8e8ee', target: 'page' },
+  lmdtfc: { cssVar: '--mid-tfc', label: 'Timer bar: fill', fallback: '5fd16a', target: 'page' },
+  lmdtlc: { cssVar: '--mid-tlc', label: 'Timer bar: fill, last 10 s', fallback: 'ff7d7d', target: 'page' },
+  lmdttc: { cssVar: '--mid-ttc', label: 'Timer bar: track', fallback: '000000', target: 'page' },
   lecr: { cssVar: '--en', label: 'Orbs (and number)', fallback: '4aa3ff' },
   lecb: { cssVar: '--en-bonus', label: 'Bonus orbs', fallback: 'ffd45e' },
   lecn: { cssVar: '--en-text', label: 'Number (overrides orbs)', fallback: '4aa3ff' },
@@ -160,7 +221,8 @@ export const PLAY_LAYOUT: Record<string, string> = {
   ldx: '15',
   les: '0.8',
   lex: '-1230',
-  ley: '175',
+  ley: '118',
+  lecv: '0',
   lfw0: '235',
   lfw1: '235',
   lfx0: '-265',
@@ -204,6 +266,19 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lpgc2: '2a1b09',
   lpgc3: '573905',
   // Play overlays: base colour, global-area opacity 0, minion-zone opacity 0, gap opening (570 ms, springy, pulsing every 2 s)
+  // Middle strip: End turn (radius 14, glow 14, hover 1.35x, brown fill and border), timer bar (strip width, 5 px down, faint track, tan / red fill);
+  // lmdtpv is only the lab's preview fill (%)
+  lmdbr: '14',
+  lmdbg: '14',
+  lmdbh: '1.35',
+  lmdtv: '0',
+  lmdty: '5',
+  lmdtta: '0.05',
+  lmdbc: '4c4240',
+  lmdbb: '3e302e',
+  lmdtfc: 'c79d75',
+  lmdtlc: 'e14747',
+  lmdtpv: '16',
   lpoao: '0',
   lpoc: 'bdff42',
   lpogd: '570',
@@ -230,7 +305,7 @@ const backgroundCss = (one: (k: string) => string): string => {
   const image = `linear-gradient(rgba(0,0,0,${dark}),rgba(0,0,0,${dark})),url(${file}) ${x}% ${y}% / ${size} ${tile ? 'repeat' : 'no-repeat'}`;
   return one('lbgt') === 'page'
     ? `${CLS('page')}::before{inset:-24px !important;background:${image} !important;filter:blur(${blur}px)}`
-    : `${CLS('table')}::before{background:${image} !important;filter:blur(${blur}px)}`;
+    : `${CLS('table')}::before{background:${image} !important;background-origin:border-box !important;filter:blur(${blur}px)}`;
 };
 
 /** The CSS for a set of layout params (values are strings, as in a URL query). */
@@ -272,6 +347,7 @@ export const buildLayoutCss = (q: Record<string, string | undefined>): string =>
     offsetCss,
     energyColourCss(one),
     gapEasingCss(one),
+    midChoicesCss(one),
     selCss,
     ...Object.keys(CSS_FNS)
       .filter((k) => one(k) !== '' && !Number.isNaN(+one(k)))

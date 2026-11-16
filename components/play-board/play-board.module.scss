@@ -86,18 +86,53 @@
   justify-content: center;
 }
 
+// The middle strip (End turn, status text, clock, the two horizontal lines, timer bar). The board lab's "Middle strip" section sets the
+// --mid-* variables: l* lines, p/px/g/h spacing, j alignment, t* text, k* clock, b* End turn button, tb/th/tv/ty/tr/tta/tf*/tl* timer bar.
 .middle {
+  position: relative;
   display: flex;
-  gap: 1rem;
+  gap: var(--mid-g, 16px);
   align-items: center;
-  justify-content: flex-start;
-  padding: 0.5rem 0.75rem;
-  border-top: 1px solid #afa18c;
-  border-bottom: 1px solid #afa18c;
+  justify-content: var(--mid-j, flex-start);
+  min-height: var(--mid-h, 0px);
+  padding: var(--mid-p, 8px) var(--mid-px, 12px);
+  border-top: calc(var(--mid-lw, 1px) * var(--mid-lt, 1)) solid color-mix(in srgb, var(--mid-lc, #afa18c) calc(var(--mid-la, 1) * 100%), transparent);
+  border-bottom: calc(var(--mid-lw, 1px) * var(--mid-lb, 1)) solid color-mix(in srgb, var(--mid-lc, #afa18c) calc(var(--mid-la, 1) * 100%), transparent);
 }
 
 .middle .text {
-  color: #372810;
+  color: var(--mid-tc, #372810);
+  font-size: calc(var(--mid-ts, 1) * 0.8333em);
+  font-weight: var(--mid-tw, 400);
+  opacity: var(--mid-to, 1);
+  letter-spacing: var(--mid-tl, 0px);
+}
+
+// The turn timer as a bar across the strip (or the whole window): drains as the turn clock runs down, a second colour for the last 10 s.
+.timerBar {
+  position: absolute;
+  left: 50%;
+  top: var(--mid-ttop, auto);
+  bottom: var(--mid-tbot, 0px);
+  width: calc(100% + (100vw - 100%) * var(--mid-tv, 1));
+  height: calc(var(--mid-th, 4px) * var(--mid-tb, 1));
+  translate: -50% var(--mid-ty, 0px);
+  border-radius: var(--mid-tr, 0px);
+  background: color-mix(in srgb, var(--mid-ttc, #000) calc(var(--mid-tta, 0.25) * 100%), transparent);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.timerFill {
+  display: block;
+  height: 100%;
+  background: var(--mid-tfc, #5fd16a);
+  transition: background 200ms; // the width is set every frame by PlayBoard, so it needs no transition
+}
+
+.timerLow .timerFill {
+  background: var(--mid-tlc, #ff7d7d);
 }
 
 .banner {
@@ -572,16 +607,25 @@ $po-green: var(--po-c, #5fd16a);
 }
 
 .endTurn {
-  padding: 0.5rem 1.2rem;
-  border-radius: 6px;
-  border: 1px solid #5a8cf0;
-  background: #3b6fd4;
-  color: inherit;
-  font-weight: 700;
+  padding: var(--mid-by, 8px) var(--mid-bx, 19px);
+  border-radius: var(--mid-br, 6px);
+  border: 1px solid var(--mid-bb, #5a8cf0);
+  background: var(--mid-bc, #3b6fd4);
+  color: var(--mid-bt, inherit);
+  font-size: calc(1em * var(--mid-bs, 1));
+  font-weight: var(--mid-bw, 700);
   cursor: pointer;
 
+  &:not(:disabled) {
+    box-shadow: 0 0 var(--mid-bg, 0px) var(--mid-bc, #3b6fd4);
+  }
+
+  &:not(:disabled):hover {
+    filter: brightness(var(--mid-bh, 1));
+  }
+
   &:disabled {
-    opacity: 0.4;
+    opacity: var(--mid-bd, 0.4);
     cursor: not-allowed;
   }
 }
@@ -860,11 +904,12 @@ $po-green: var(--po-c, #5fd16a);
 .clock {
   margin-left: 0.5em;
   font-variant-numeric: tabular-nums;
-  color: #cfd6e6;
+  font-size: calc(1em * var(--mid-ks, 1));
+  color: var(--mid-kc, #75452f);
 }
 
 .clockLow {
-  color: #ff7d7d;
+  color: var(--mid-kl, #ff7d7d);
 }
 
 // The /play menu: a titled panel with a big Resume, a New game / Concede pair, switch rows and links out. Only layout lives here;

@@ -1,6 +1,6 @@
 import type { ParsedUrlQuery } from 'querystring';
 import type { ReactNode } from 'react';
-import { ENERGY_COLOURS } from '../play-board/layout-css';
+import { ENERGY_COLOURS, MID_KNOBS } from '../play-board/layout-css';
 import { HEROES, SLIDER_MAX, one, row, wide } from './lab-model';
 
 export interface PanelProps {
@@ -274,5 +274,63 @@ export const ShadowsPanel = ({ sliders }: PanelProps) => (
         {sliders([`lsh${s}y`, `lsh${s}b`, `lsh${s}a`])}
       </div>
     ))}
+  </>
+);
+
+const midKeys = (prefix: string) => MID_KNOBS.filter((k) => k.key.startsWith(prefix)).map((k) => k.key);
+const midColour = (q: PanelProps['q'], setParams: PanelProps['setParams'], key: string) => {
+  const c = ENERGY_COLOURS[key];
+  return (
+    <label key={key} style={row}>
+      <input type="color" value={`#${/^[0-9a-f]{6}$/i.test(one(q[key])) ? one(q[key]) : c.fallback}`} onChange={(e) => setParams({ [key]: e.target.value.slice(1) })} /> {c.label}{' '}
+      {one(q[key]) && <button onClick={() => setParams({ [key]: null })} style={{ fontSize: 11 }}>reset</button>}
+    </label>
+  );
+};
+const midGroup = { margin: '8px 0', paddingBottom: 4, borderBottom: '1px solid #2a2f3e' } as const;
+
+/** The strip between the two boards: End turn, the status text and clock, the horizontal lines and a turn-timer bar. */
+export const MiddlePanel = ({ q, setParams, sliders }: PanelProps) => (
+  <>
+    <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+      The strip between the boards. The lab has no turn clock, so the timer bar shows the preview fill below; on /play it drains with the real clock.
+    </small>
+    <div style={midGroup}>
+      <b>Horizontal lines and strip</b>
+      {midColour(q, setParams, 'lmdlc')}
+      {sliders(['lmdlw', 'lmdla', 'lmdlt', 'lmdlb', 'lmdp', 'lmdpx', 'lmdg', 'lmdh'])}
+      <label style={row}>
+        Items sit{' '}
+        <select value={one(q.lmdj) || 'start'} onChange={(e) => setParams({ lmdj: e.target.value === 'start' ? null : e.target.value })}>
+          <option value="start">at the left</option>
+          <option value="center">in the middle</option>
+          <option value="end">at the right</option>
+          <option value="between">spread out</option>
+        </select>
+      </label>
+    </div>
+    <div style={midGroup}>
+      <b>Middle text and clock</b>
+      {['lmdtc', 'lmdkc', 'lmdkl'].map((k) => midColour(q, setParams, k))}
+      {sliders(['lmdts', 'lmdtw', 'lmdto', 'lmdtl', 'lmdks'])}
+    </div>
+    <div style={midGroup}>
+      <b>End turn button</b>
+      {['lmdbc', 'lmdbb', 'lmdbt'].map((k) => midColour(q, setParams, k))}
+      {sliders(midKeys('lmdb'))}
+    </div>
+    <div style={midGroup}>
+      <b>Timer bar</b>
+      {['lmdtfc', 'lmdtlc', 'lmdttc'].map((k) => midColour(q, setParams, k))}
+      <label style={row}>
+        Sits on the strip's{' '}
+        <select value={one(q.lmdtpos) || 'bottom'} onChange={(e) => setParams({ lmdtpos: e.target.value === 'bottom' ? null : e.target.value })}>
+          <option value="bottom">bottom edge</option>
+          <option value="middle">middle</option>
+          <option value="top">top edge</option>
+        </select>
+      </label>
+      {sliders(['lmdtpv', 'lmdtb', 'lmdth', 'lmdtv', 'lmdty', 'lmdtr', 'lmdtta'])}
+    </div>
   </>
 );

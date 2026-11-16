@@ -5,7 +5,7 @@ import { heroes, loadHsCards } from '../engine';
 import { LabOverlay } from '../components/board-lab/LabOverlay';
 import { LabSliders, useMeasuredDefaults } from '../components/board-lab/LabSliders';
 import { LAB_TABS, LabSection, LabTabBar, SECTION_KEYS, useLabSections, useLabTab } from '../components/board-lab/lab-sections';
-import { BoardPanel, CastPanel, EnergyPanel, PlayOverlayPanel, HandsPanel, HeroFiguresPanel, LogDeckPanel, MinionsPanel, RestartPanel, ShadowsPanel, TablePanel } from '../components/board-lab/lab-panels';
+import { BoardPanel, CastPanel, EnergyPanel, MiddlePanel, PlayOverlayPanel, HandsPanel, HeroFiguresPanel, LogDeckPanel, MinionsPanel, RestartPanel, ShadowsPanel, TablePanel } from '../components/board-lab/lab-panels';
 import { RESTART_KEYS, SETUP_KEYS, one } from '../components/board-lab/lab-model';
 import { BackgroundPanel } from '../components/board-lab/BackgroundPanel';
 import { PresetsPanel } from '../components/board-lab/PresetsPanel';
@@ -70,6 +70,7 @@ const BoardLab = () => {
     castPreview: (one(q.lcpv) === '0' || one(q.lcpv) === '1' ? one(q.lcpv) : undefined) as '0' | '1' | undefined,
     blinkPreview: (one(q.lebpv) === 'spend' || one(q.lebpv) === 'red' ? one(q.lebpv) : undefined) as 'spend' | 'red' | undefined,
     overlayPreview: (['minion', 'minion-hot', 'spell', 'spell-hot'].includes(one(q.lpopv)) ? one(q.lpopv) : undefined) as 'minion' | 'minion-hot' | 'spell' | 'spell-hot' | undefined,
+    timerPct: (() => { const v = one(q.lmdtpv) || PLAY_LAYOUT.lmdtpv || ''; return v === '' || Number.isNaN(+v) ? 70 : Math.min(100, Math.max(0, +v)); })(),
     active: (one(q.turn) === '0' || one(q.turn) === '1' ? one(q.turn) : undefined) as '0' | '1' | undefined
   };
   const count = (k: string) => (one(q[k]) ? one(q[k]).split(',').length : 0);
@@ -90,6 +91,7 @@ const BoardLab = () => {
     shadows: sec('shadows', 'Minion shadows', 'live', <ShadowsPanel {...panel} />),
     minions: sec('minions', 'Minions', 'live', <MinionsPanel {...panel} />),
     table: sec('table', 'Table', 'live', <TablePanel {...panel} />),
+    middle: sec('middle', 'Middle strip', 'live', <MiddlePanel {...panel} />),
     hands: sec('hands', 'Hands', 'live', <HandsPanel {...panel} />),
     background: sec('background', 'Background', 'live', <BackgroundPanel q={q} setParams={setParams} />),
     play: sec('play', 'Play overlays (green)', 'live', <PlayOverlayPanel {...panel} />),

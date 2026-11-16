@@ -1,12 +1,14 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
-import { PLAY_LAYOUT } from '../play-board/layout-css';
+import { ENERGY_COLOURS, MID_KNOBS, PLAY_LAYOUT } from '../play-board/layout-css';
 import { one } from './lab-model';
 
 /** The URL params each accordion section owns, for its Copy / Paste config buttons. (Presets has none.) */
 const SHADOW_KEYS = ['def', 'rdy', 'sel', 'aim', 'hov'].flatMap((st) => ['y', 'b', 'a'].map((k) => `lsh${st}${k}`));
 const slotKeys = (n: string) => ['lsf', 'lsg', 'lsj', 'lsm'].map((k) => `${k}_${n}`);
+const MID_KEYS = [...MID_KNOBS.map((k) => k.key), ...Object.keys(ENERGY_COLOURS).filter((k) => k.startsWith('lmd')), 'lmdtpv', 'lmdj', 'lmdtpos'];
 export const SECTION_KEYS: Record<string, string[]> = {
+  middle: MID_KEYS,
   board: ['b0', 'b1', 'e0', 'e1', 'turn'],
   restart: ['p0', 'p1', 'w0', 'w1', 'h0', 'h1', 'first', 'herofig'],
   minions: ['lm', 'lg', 'lml', 'lms', 'lmh', 'lmpv', 'lpsh', 'lpss', 'lpsm', 'lpsy'],
@@ -26,7 +28,7 @@ export const SECTION_KEYS: Record<string, string[]> = {
   background: ['lbgf', 'lbgt', 'lbgm', 'lbgs', 'lbgd', 'lbgb', 'lbgx', 'lbgy', 'lpgcb', 'lpgc1', 'lpgc2', 'lpgc3', 'lpgw', 'lpgm', 'lflc', 'lflgc', 'lflrc', 'lflt', 'lfla', 'lflra', 'lflw', 'lflr', 'lfli', 'lflo', 'lflx', 'lfly'],
 };
 
-export const SECTION_IDS = ['presets', 'board', 'restart', 'minions', 'table', 'hands', 'play', 'cast', 'energy', 'panels', 'heroes', 'snd-cardPlay', 'snd-draw', 'snd-cardHover', 'snd-hold', 'snd-gap', 'background', 'shadows'];
+export const SECTION_IDS = ['presets', 'board', 'restart', 'minions', 'table', 'middle', 'hands', 'play', 'cast', 'energy', 'panels', 'heroes', 'snd-cardPlay', 'snd-draw', 'snd-cardHover', 'snd-hold', 'snd-gap', 'background', 'shadows'];
 
 /** Which accordion sections are open (default: Presets and Board); remembered in localStorage. */
 export const useLabSections = () => {
@@ -119,7 +121,7 @@ export const LabSection = ({
 /** The top-level groups: a tab each, with the accordion sections inside it. */
 export const LAB_TABS: { id: string; label: string; sections: string[] }[] = [
   { id: 'setup', label: 'Setup', sections: ['presets', 'board', 'restart'] },
-  { id: 'board', label: 'Board', sections: ['minions', 'shadows', 'table', 'energy', 'background'] },
+  { id: 'board', label: 'Board', sections: ['minions', 'shadows', 'table', 'middle', 'energy', 'background'] },
   { id: 'hand', label: 'Hand', sections: ['hands', 'play', 'cast'] },
   { id: 'panels', label: 'Log/deck', sections: ['panels'] },
   { id: 'heroes', label: 'Heroes', sections: ['heroes'] },

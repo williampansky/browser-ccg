@@ -1,5 +1,5 @@
 import { heroes } from '../../engine';
-import { CSS_FNS } from '../play-board/layout-css';
+import { CSS_FNS, MID_KNOBS, MID_TIMER_PREVIEW_KEY, PLAY_LAYOUT } from '../play-board/layout-css';
 
 export type Num = {
   key: string;
@@ -177,6 +177,10 @@ export const NUMS: Num[] = [
   { key: 'lcglow', label: 'Cast popup glow (px, 0 = none)', min: 0, max: 60, css: CSS_FNS.lcglow, read: () => 10 },
   { key: 'lcring', label: 'Cast popup shockwave ring (1 = on, 0 = off)', min: 0, max: 1, css: CSS_FNS.lcring, read: () => 1 }
 ];
+
+// The middle strip (built from MID_KNOBS) and the timer bar's preview fill.
+MID_KNOBS.forEach((k) => NUMS.push({ key: k.key, label: k.label, min: k.min, max: k.max, step: k.step, css: CSS_FNS[k.key], read: () => k.def }));
+NUMS.push({ key: MID_TIMER_PREVIEW_KEY, label: 'Timer bar: preview fill (%)', min: 0, max: 100, css: () => '', read: () => +(PLAY_LAYOUT[MID_TIMER_PREVIEW_KEY] ?? 70) });
 
 export const SETUP_KEYS = ['b0', 'b1', 'p0', 'p1', 'w0', 'w1', 'e0', 'e1', 'h0', 'h1', 'first', 'herofig', 'turn'];
 /** The setup params that need a new game (heroes are chosen at deal time, hands are dealt). Boards and energy are applied live. */

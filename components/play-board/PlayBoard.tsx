@@ -338,6 +338,8 @@ export interface LabProps {
   active?: PlayerId;
   /** Replay the cast popup (a sample spell) on a loop so its overlay knobs can be tuned: whose cast it looks like */
   castPreview?: PlayerId;
+  /** How full the timer bar looks (%), since the lab has no turn clock */
+  timerPct?: number;
   /** Make the energy bar blink as if a card were picked: the orbs it would spend, or all of them red (cannot afford) */
   /** Show the green play overlays without picking a card: the board zone and landing gap (a minion), or the cast area (a spell) */
   overlayPreview?: 'minion' | 'minion-hot' | 'spell' | 'spell-hot';
@@ -617,6 +619,19 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const turnLimit = state ? turnSeconds(state, byId) : DEFAULT_TURN_SECONDS;
   const clockLeft = secondsLeft(turnStartedAt.current, now, turnLimit);
   const timedOut = timerApplies && clockLeft <= 0;
+  // The timer bar drains every frame from the exact time left (the clock text above counts whole seconds, which made the bar step once a second).
+  const timerFillRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!timerApplies) return;
+    let frame = 0;
+    const draw = () => {
+      const left = Math.max(0, turnLimit - (Date.now() - turnStartedAt.current) / 1000);
+      if (timerFillRef.current) timerFillRef.current.style.width = `${Math.min(100, (left / turnLimit) * 100)}%`;
+      frame = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => cancelAnimationFrame(frame);
+  }, [timerApplies, turnLimit, gameKey, state?.turn, state?.activePlayer]);
   useEffect(() => {
     if (timedOut) dispatch({ type: 'EndTurn' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1616,6 +1631,11 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             {withGhosts(state.players[foe].board.map((m) => renderMinion(foe, m)), ghosts, foe, renderGhost)}
           </div>
         <div className={styles.middle}>
+          {!over && (lab || timerApplies) && (
+            <div className={[styles.timerBar, (lab ? (lab.timerPct ?? 70) <= 17 : clockLeft <= 10) ? styles.timerLow : ''].join(' ')} aria-hidden="true">
+              <i ref={timerFillRef} className={styles.timerFill} style={lab ? { width: `${lab.timerPct ?? 70}%` } : undefined} />
+            </div>
+          )}
           <button
             type="button"
             disabled={over || !myTurn}
