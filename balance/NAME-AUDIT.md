@@ -2,7 +2,7 @@
 
 Source: Gemini audit of the CARDS table (46 flagged; CORE_023 Marauder is also resolved by the rename). The 6 mechanical fixes (typo, casing, duplicate Marauder) are already done and committed, so they are left out.
 
-**How to use:** write a number (1-3) or your own name in **Your pick**, or `keep`. Suggestions are Gemini's; **My take** is mine. Card stats come from `data/`.
+**How to use:** write a number (1-3) or your own name in **Your pick**, or `keep`. Suggestions are Gemini's. Card stats come from `data/`.
 
 
 ## Tone clash (taste calls: keep the name if the humour is intended)
