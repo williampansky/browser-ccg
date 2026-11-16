@@ -3032,7 +3032,7 @@
   },
   {
     "id": "CORE_018",
-    "name": "Ethereal Primordial",
+    "name": "Amorphous Primordial",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -3044,9 +3044,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Fesbra",
-    "artistUrl": "https://www.deviantart.com/000fesbra000",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_041",

@@ -3460,8 +3460,7 @@
     "playType": "GLOBAL",
     "playContext": "%SILENCE%",
     "collectible": true,
-    "active": true,
-    "artStatus": "FPO"
+    "active": true
   },
   {
     "id": "PRIME_084",
@@ -4253,21 +4252,25 @@
   },
   {
     "id": "PRIME_029",
+    "name": "Winterhog Warrior",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
-    "race": "%RACE_PIRATE%",
+    "race": "%RACE_NONE%",
     "cost": 4,
     "attack": 3,
     "health": 3,
     "text": "Costs 1 less per<br />\nAttack of your weapon",
     "mechanics": [
-      "%BULWARK%"
+      "%BULWARK%",
+      "%COST%"
     ],
     "collectible": true,
-    "active": false,
-    "artStatus": "FPO"
+    "active": true,
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_071",

@@ -307,9 +307,9 @@
       "%TARGET%",
       "%HEAL%"
     ],
-    "text": "Heal 3 Health",
-    "numberPrimary": 3,
-    "targetingArrowText": "Heal 3 Health"
+    "text": "Heal 2 Health",
+    "numberPrimary": 2,
+    "targetingArrowText": "Heal 2 Health"
   },
   {
     "name": "Vital Shot",
@@ -336,7 +336,7 @@
     "id": 1,
     "cost": 2,
     "active": true,
-    "cooldown": 2,
+    "cooldown": 1,
     "mechanics": [
       "%SUMMON%"
     ],

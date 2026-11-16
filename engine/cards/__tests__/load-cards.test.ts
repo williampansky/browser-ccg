@@ -206,8 +206,8 @@ describe('loadHsCards: the committed card data', () => {
     expect(bySource('core').every((c) => c.active && !c.isToken)).toBe(true);
   });
 
-  test('22 PRIME cards are inactive; every token counts as active', () => {
-    expect(bySource('prime').filter((c) => !c.active)).toHaveLength(22);
+  test('21 PRIME cards are inactive; every token counts as active', () => {
+    expect(bySource('prime').filter((c) => !c.active)).toHaveLength(21);
     expect(bySource('entourage').every((c) => c.active && c.isToken)).toBe(true);
   });
 
@@ -264,8 +264,8 @@ describe('loadHsCards: the committed card data', () => {
     expect(issues.filter((i) => i.code === 'unresolved-entourage')).toHaveLength(12);
   });
 
-  test('57 cards have no name and 35 cards disagree about targeting (reported, not hidden)', () => {
-    expect(issues.filter((i) => i.code === 'missing-name')).toHaveLength(57);
+  test('56 cards have no name and 35 cards disagree about targeting (reported, not hidden)', () => {
+    expect(issues.filter((i) => i.code === 'missing-name')).toHaveLength(56);
     expect(issues.filter((i) => i.code === 'playtype-target-mismatch')).toHaveLength(35);
   });
 });

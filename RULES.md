@@ -735,3 +735,5 @@ three skills. Name, cost, cooldown and text come from `data/abilities.json`; wha
   catalog from `withHeroTokens(...)`.
 - Not playable yet: Atlas, Asar, Mystic, Summoner (inactive or missing skills; Atlas's skills are now in ABILITIES, but need
   delayed damage).
+
+- **PRIME_029** ("Costs 1 less per Attack of your weapon"): your weapon's current Attack, including a this-turn boost; the opponent's weapon does not count; never below 0. Guard comes from the data.
