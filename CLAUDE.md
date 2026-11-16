@@ -145,6 +145,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - `npm run tune -- [gamesPerDeck]` - plays tweaked greedy-bot weights against the defaults (same deck both sides). A first run
   (60 games per deck) found no variant clearly better than the defaults (all within noise, 44-51%), so the weights are not the bottleneck.
 - `npm run art` - turns the master pictures in `art-inbox/` (git-ignored, Drive can sync it; named by card id, `CORE_117.png`) into `NNN-CARD.jpg` (1000 x 1000), `NNN-DECK.jpg` (600 x 75 strip) and, if the card already has one or with `--minion`, `NNN-MINION.jpg` (640 x 800) in `public/images/sets/SET_<SET>/` (`scripts/art/`; `sharp`). Where the strip and portrait are cut from is `art-focus.json` (`{ "CORE_117": { "x": 0.5, "y": 0.3, "zoom": 1.4 } }`, default centred a little high). Flags: a card id, `--dry`, `--keep`, `--minion`. Done masters move to `art-inbox/done/`.
+- `/art-lab` (dev only, localhost; `components/art-lab/`, `pages/api/art-lab/`, `scripts/art/`): look a card up by id or name from `data/`, then `/art-lab?id=CORE_122` shows the files on disk, a per-kind (card/deck/minion) crop adjuster over the master in `art-inbox/` ("Write images" cuts with `sharp`, then moves the master to `art-inbox/done/`), and every editable CARDS field (dropdown options come from the base's schema; `id`/`set`/`isEntourage` locked). "Save" PATCHes only the changed fields to Airtable and can then run `npm run airtable`. `sharp` is loaded with `eval('require')` in `scripts/art/render.ts` because Next's server bundle broke a normal import; keep `sharp` out of any module the card routes import.
 - `npm run airtable` - pulls the card database from Airtable into `data/*.json` (`airtable.node.js`): CORE 132, PRIME 254,
   ENTOURAGE 43, GAME 1, 9 heroes, 18 abilities, mechanics, constants. This is the data the engine and `/play` use. It
   fetches every table first and writes nothing if any fails or comes back empty.
@@ -153,7 +154,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   `%...%` back. `balance/airtable/` has the scripts that built and loaded it (`build.js`, `rebuild.js`; the Airtable API
   cannot delete tables or columns, so removals are done by hand in the UI). Balance proposals and the bot-evaluation patch
   are in `balance/` (see `balance/README.md`); `data/` already includes proposals 1-3 plus the trims in 4-5.
-- It needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID` in `./.env.local` (git-ignored, none checked in; read access is enough).
+- It needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID` in `./.env.local` (git-ignored, none checked in; read access is enough for the pull). The art lab prefers `AIRTABLE_API_KEY_CLAUDE_CODE` / `AIRTABLE_BASE_ID_CLAUDE_CODE` (a token with `data.records:write`; it falls back to the plain pair, which cannot save).
   You don't need either to run the site; the JSON is committed.
 
 ## Layout

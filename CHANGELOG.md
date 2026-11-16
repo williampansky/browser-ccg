@@ -2,6 +2,11 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-16
+
+- **Art lab (`/art-lab`, dev only):** find a card by id or name, then `/art-lab?id=CORE_122` shows its current CARD/DECK/MINION files, a crop adjuster per file over the master in `art-inbox/` (drag + zoom; "Write images" moves the master to `done/`), and all its Airtable CARDS fields to edit and save back (only changed fields are sent; uses the `_CLAUDE_CODE` token). API under `pages/api/art-lab/`, helpers in `scripts/art/`.
+- **Art:** CORE_017 and CORE_112 final art and names (CORE_017 Blight-Kin Brute, CORE_112 Vicious Striker), from the lab and an Airtable pull.
+
 ## 2026-11-15
 
 - **Airtable pull + Winterhog Warrior (PRIME_029):** CORE_018 is now Amorphous Primordial (final art); PRIME_029 is named, active and final art ("Costs 1 less per Attack of your weapon", `ownCost` in `engine/definitions/prime/prime-029.ts`, tagged `%COST%` so the engine requires that definition). The pull had put back Revitalize heal 2 and Spirit Animal cooldown 1 (the hero tuning was never copied to Airtable); both are re-applied (Revitalize heals 3, Spirit Animal cooldown 2) in `data/abilities.json` and in Airtable.
