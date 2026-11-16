@@ -388,7 +388,7 @@
   },
   {
     "id": "PRIME_072",
-    "name": "Marauder",
+    "name": "Chrome Raider",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -1144,7 +1144,7 @@
   },
   {
     "id": "PRIME_160",
-    "name": "BattleMage",
+    "name": "Battlemage",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -2732,7 +2732,7 @@
   },
   {
     "id": "PRIME_244",
-    "name": "The DragonMancer",
+    "name": "The Dragonmancer",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -2921,7 +2921,7 @@
   },
   {
     "id": "PRIME_036",
-    "name": "Egg Theif",
+    "name": "Egg Thief",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -3164,7 +3164,7 @@
   },
   {
     "id": "PRIME_225",
-    "name": "WarBoss",
+    "name": "Warboss",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",

@@ -154,7 +154,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   `%...%` back. `balance/airtable/` has the scripts that built and loaded it (`build.js`, `rebuild.js`; the Airtable API
   cannot delete tables or columns, so removals are done by hand in the UI). Balance proposals and the bot-evaluation patch
   are in `balance/` (see `balance/README.md`); `data/` already includes proposals 1-3 plus the trims in 4-5.
-- It needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID` in `./.env.local` (git-ignored, none checked in; read access is enough for the pull). The art lab prefers `AIRTABLE_API_KEY_CLAUDE_CODE` / `AIRTABLE_BASE_ID_CLAUDE_CODE` (a token with `data.records:write`; it falls back to the plain pair, which cannot save).
+- It needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID` in `./.env.local` (git-ignored, none checked in; read access is enough for the pull). The art lab prefers `AIRTABLE_API_KEY_CLAUDE_CODE` / `AIRTABLE_BASE_ID_CLAUDE_CODE` (a token with `data.records:write`; it falls back to the plain pair, which cannot save). **Claude may write to Airtable with the `_CLAUDE_CODE` pair** (e.g. renaming cards: PATCH the `CARDS` row found by `{id}`, then `npm run airtable`); the plain `AIRTABLE_API_KEY` / `AIRTABLE_BASE_ID` pair is read-only. Only write what the author asked for, check the current value first, and keep one-off scripts outside the repo.
   You don't need either to run the site; the JSON is committed.
 
 ## Layout
