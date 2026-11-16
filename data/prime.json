@@ -148,7 +148,7 @@
   },
   {
     "id": "PRIME_165",
-    "name": "Bubbles for All!",
+    "name": "Prismatic Ward",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -609,7 +609,7 @@
   },
   {
     "id": "PRIME_038",
-    "name": "Insectoid Chomper",
+    "name": "Mandible Primordial",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -1017,7 +1017,7 @@
   },
   {
     "id": "PRIME_143",
-    "name": "Commissioned Armor",
+    "name": "Contingency Ward",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -1564,7 +1564,7 @@
   },
   {
     "id": "PRIME_170",
-    "name": "Holy Light",
+    "name": "Radiant Mend",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -1645,7 +1645,7 @@
   },
   {
     "id": "PRIME_215",
-    "name": "Mushroomer",
+    "name": "Spore-Weaver",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -1719,7 +1719,7 @@
   },
   {
     "id": "PRIME_055",
-    "name": "Suicidal Wizard",
+    "name": "Reckless Arcanist",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -2327,7 +2327,7 @@
   },
   {
     "id": "PRIME_227",
-    "name": "Zap",
+    "name": "Hellfire Bolt",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -2562,7 +2562,7 @@
   },
   {
     "id": "PRIME_158",
-    "name": "Resurrection",
+    "name": "Soul Recall",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -2711,7 +2711,7 @@
   },
   {
     "id": "PRIME_163",
-    "name": "Enhancement",
+    "name": "Titan's Might",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -2758,7 +2758,7 @@
   },
   {
     "id": "PRIME_085",
-    "name": "Bark Creature",
+    "name": "Ancient Timber-Hulk",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -2878,7 +2878,7 @@
   },
   {
     "id": "PRIME_005",
-    "name": "Chubster",
+    "name": "Iron-Belly Guard",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -3143,7 +3143,7 @@
   },
   {
     "id": "PRIME_003",
-    "name": "Shielded Monster",
+    "name": "Carapace Beetle",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -4003,7 +4003,7 @@
   },
   {
     "id": "PRIME_019",
-    "name": "Phatcat Warrior",
+    "name": "Scrap-Prowler",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -4407,7 +4407,7 @@
   },
   {
     "id": "PRIME_050",
-    "name": "Crazed Imp",
+    "name": "Spiteful Sprite",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -4906,7 +4906,7 @@
   },
   {
     "id": "PRIME_041",
-    "name": "Crazy Imp",
+    "name": "Frenzied Imp",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -5038,7 +5038,7 @@
   },
   {
     "id": "PRIME_040",
-    "name": "Slick Naga-lizard",
+    "name": "Scale-Shedder",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -5081,7 +5081,7 @@
   },
   {
     "id": "PRIME_037",
-    "name": "Skelly",
+    "name": "Dread Skeleton",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",

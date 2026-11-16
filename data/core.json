@@ -86,7 +86,7 @@
   },
   {
     "id": "CORE_088",
-    "name": "Aspect of Enhancement",
+    "name": "Aspect of Vitality",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -180,7 +180,7 @@
   },
   {
     "id": "CORE_053",
-    "name": "Knife Attack",
+    "name": "Quick Slash",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -517,7 +517,7 @@
   },
   {
     "id": "CORE_012",
-    "name": "Sprite Support",
+    "name": "Fae Enlistment",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -543,7 +543,7 @@
   },
   {
     "id": "CORE_069",
-    "name": "Magic Missile",
+    "name": "Aether Bolt",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -645,7 +645,7 @@
   },
   {
     "id": "CORE_037",
-    "name": "Mageman",
+    "name": "Runesmith Elder",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -1212,7 +1212,7 @@
   },
   {
     "id": "CORE_086",
-    "name": "Enhancement Potion",
+    "name": "Tonic of Vigor",
     "set": "%SET_002%",
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_FREE%",
@@ -1706,7 +1706,7 @@
   },
   {
     "id": "CORE_040",
-    "name": "Wandering Blobber",
+    "name": "Mire Colossus",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -2146,7 +2146,7 @@
   },
   {
     "id": "CORE_128",
-    "name": "Crude Weapon",
+    "name": "Jagged Cleaver",
     "set": "%SET_002%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_FREE%",
@@ -2355,7 +2355,7 @@
   },
   {
     "id": "CORE_063",
-    "name": "Fireballs",
+    "name": "Cinder Volley",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -2379,7 +2379,7 @@
   },
   {
     "id": "CORE_097",
-    "name": "Slice",
+    "name": "Arterial Cut",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -2548,7 +2548,7 @@
   },
   {
     "id": "CORE_104",
-    "name": "Armor Distribution",
+    "name": "Ironclad Decree",
     "set": "%SET_002%",
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_FREE%",
@@ -2617,7 +2617,7 @@
   },
   {
     "id": "CORE_015",
-    "name": "Johnny Crow",
+    "name": "Omen-Feather",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -2690,7 +2690,7 @@
   },
   {
     "id": "CORE_102",
-    "name": "Meditation",
+    "name": "Astral Focus",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -2735,7 +2735,7 @@
   },
   {
     "id": "CORE_016",
-    "name": "Spaghetti Javelinier",
+    "name": "Bog Skirmisher",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -2914,7 +2914,7 @@
   },
   {
     "id": "CORE_076",
-    "name": "Basic Mace",
+    "name": "Iron Mace",
     "set": "%SET_002%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_FREE%",

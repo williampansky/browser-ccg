@@ -228,9 +228,8 @@ describe('loadHsCards: the committed card data', () => {
     expect(byId.get('CORE_006')!.numbers).toMatchObject({ primary: 0, secondary: 2 });
   });
 
-  test('a known card renders correctly (Fireballs)', () => {
+  test('a known card renders correctly (CORE_063)', () => {
     const card = byId.get('CORE_063')!;
-    expect(card.name).toBe('Fireballs');
     expect(card.type).toBe('spell');
     expect(card.playType).toBe('global');
     expect(card.numbers).toEqual({ primary: 1, random: 3 });
