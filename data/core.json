@@ -1600,7 +1600,7 @@
   },
   {
     "id": "CORE_061",
-    "name": "Ancient Raptor",
+    "name": "Pack-Drake Courier",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -1616,10 +1616,11 @@
     ],
     "collectible": true,
     "active": true,
+    "flavor": "\"Nasty heavy bags! Why can't we leave them behind?\" — Gollum (The Two Towers)",
     "howToEarn": "Provided to all players.",
-    "artistName": "Max Duran",
-    "artistUrl": "https://www.artstation.com/maxduran",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_123",
@@ -2266,10 +2267,11 @@
     "targetingArrowText": "Buff with %BULWARK% and +1/+2",
     "collectible": true,
     "active": true,
+    "flavor": "\"I am fond of pigs. Dogs look up to us. Cats look down on us. Pigs treat us as equals.\" — Winston Churchill",
     "howToEarn": "Provided to all players.",
-    "artistName": "Hongkun_st (Hong)",
-    "artistUrl": "https://www.artstation.com/hongkun_st",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_091",
@@ -2337,10 +2339,11 @@
     "playContext": "%DRAW_CARD%",
     "collectible": true,
     "active": true,
+    "flavor": "“Keep a little fire burning; however small, however hidden.” ― Cormac McCarthy, The Road",
     "howToEarn": "Provided to all players.",
-    "artistName": "Aaron Nakahara",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma",
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "description": "The event is only triggered when the healing effect actually restores Health; it's ignored if a target is already at its full Health value."
   },
   {
@@ -2508,7 +2511,7 @@
   },
   {
     "id": "CORE_054",
-    "name": "Wolpertinger",
+    "name": "Timber Warden",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -2530,10 +2533,11 @@
     "targetingArrowText": "Give +1 Health",
     "collectible": true,
     "active": true,
+    "flavor": "And I bestow upon you... well, uhm, just one health point.",
     "howToEarn": "Provided to all players.",
-    "artistName": "Leon Ropeter",
-    "artistUrl": "https://www.artstation.com/chewlon",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_104",
