@@ -239,7 +239,7 @@
   min-width: 220px;
   max-width: 340px;
 
-  h2 {
+  h1, h2 {
     margin: 0 0 4px;
     font-size: 1.6rem;
   }
@@ -361,4 +361,19 @@
   align-items: center;
   gap: 4px;
   font-size: 0.85rem;
+}
+
+.artistCredit {
+  border-top: 1px solid var(--ui-row-line);
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+
+  p {
+    color: var(--ui-text-dim);
+    margin: 0;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
 }
