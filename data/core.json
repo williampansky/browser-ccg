@@ -40,12 +40,12 @@
   },
   {
     "id": "CORE_017",
-    "name": "Ogre/goblin freak",
+    "name": "Blight-Kin Brute",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
-    "race": "%RACE_NONE%",
+    "race": "%RACE_CREATURE%",
     "cost": 3,
     "attack": 3,
     "health": 3,
@@ -669,7 +669,7 @@
   },
   {
     "id": "CORE_112",
-    "name": "Horrific Primordial",
+    "name": "Vicious Striker",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -691,9 +691,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Marius Siergiejew",
-    "artistUrl": "https://www.artstation.com/noistromo",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_003",
