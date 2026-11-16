@@ -2939,7 +2939,7 @@
   },
   {
     "id": "CORE_117",
-    "name": "Forgotten Guardian",
+    "name": "Mire Lurker",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -2955,9 +2955,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Benjamin Harris",
-    "artistUrl": "https://www.artstation.com/benjamesharris",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_096",
