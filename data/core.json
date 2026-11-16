@@ -1868,7 +1868,7 @@
   },
   {
     "id": "CORE_122",
-    "name": "Volcanic Primordial",
+    "name": "Fissure Fiend",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -1886,10 +1886,11 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
+    "flavor": "\"When trapped magmatic gases exceed the tensile strength of the surrounding rock, the resulting fracture releases a violent, undirected wave of thermal energy.\" — USGS Volcanic Hazards Program",
     "howToEarn": "Provided to all players.",
-    "artistName": "LI qian",
-    "artistUrl": "https://www.artstation.com/liqian",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_045",
