@@ -5,16 +5,17 @@ const { byId } = loadHsCards();
 const symbols = (id: string) => effectsOf(byId.get(id)!).map((e) => e.symbol);
 
 describe('effectsOf', () => {
-  it('lists the keywords named in the card text first, then its other tags (CORE_007)', () => {
-    expect(symbols('CORE_007')).toEqual(['NO_ATTACK', 'DESTROY', 'ON_PLAY']);
+  it('lists exactly the card\'s mechanics array, in its order (CORE_007)', () => {
+    expect(symbols('CORE_007')).toEqual(byId.get('CORE_007')!.mechanics.map((m) => m.replace(/%/g, '')));
   });
 
-  it('leaves out internal tags players have no use for (CORE_123 is tagged TARGET)', () => {
-    expect(symbols('CORE_123')).toEqual(['RUSH', 'BUFF']);
+  it('hides no tag: bookkeeping ones are listed too (CORE_123 is tagged TARGET)', () => {
+    expect(symbols('CORE_123')).toContain('TARGET');
   });
 
-  it('lists Random for a card that has it (CORE_063 is tagged RANDOM and DAMAGE)', () => {
-    expect(symbols('CORE_063')).toContain('RANDOM');
+  it('does not add a keyword the text names but the array lacks (CORE_099 names Buff in its text only)', () => {
+    expect(byId.get('CORE_099')!.mechanics).not.toContain('BUFF');
+    expect(symbols('CORE_099')).not.toContain('BUFF');
   });
 
   it('gives each effect its display name and a full-sentence description', () => {
@@ -24,8 +25,12 @@ describe('effectsOf', () => {
     }
   });
 
-  it('is empty for a card with no player-facing effect tags (PRIME_086 is tagged only EVENT)', () => {
-    expect(symbols('PRIME_086')).toEqual([]);
+  it('lists a card tagged only EVENT (PRIME_086) as Event', () => {
+    expect(symbols('PRIME_086')).toEqual(['EVENT']);
+  });
+
+  it('lists Random for a card that has it (CORE_063 is tagged RANDOM and DAMAGE)', () => {
+    expect(symbols('CORE_063')).toContain('RANDOM');
   });
 
   it('never lists an effect twice, and never shows a placeholder', () => {

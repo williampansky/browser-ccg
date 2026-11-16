@@ -10,23 +10,20 @@ export interface CardEffect {
   description: string;
 }
 
-/** Tags that are bookkeeping for the card data, not something a player needs explained. */
-const INTERNAL = new Set(['TARGET', 'SET_VALUE', 'EVENT', 'BOOLEAN', 'AOE', 'GLOBAL_SPELL', 'ENERGY', 'ENERGY_CRYSTAL', 'DURABILITY']);
-
 const glossary = new Map<string, RawGlossaryEntry>();
 for (const m of mechanics as unknown as RawGlossaryEntry[]) glossary.set(String(m.symbol).replace(/%/g, ''), m);
 
 /**
- * The effects a card has, for the card detail window: each keyword or effect named in its text (in the order the text
- * names them), then its remaining tags, each with the glossary's name and description. Internal tags are left out.
+ * The effects a card has, for the card detail window: exactly the entries in its Airtable `mechanics` array, in that order, each with the
+ * glossary's name and description. Nothing is hidden (the window is the deep look at a card) and nothing is added from the card text, so
+ * a keyword the text names but the array lacks is not listed: fix the array in Airtable.
  */
 export const effectsOf = (card: Card): CardEffect[] => {
-  const named = Array.from(card.textTemplate.matchAll(/%([A-Z_0-9]+)%/g), (m) => m[1]);
-  const tagged = card.mechanics.map((s) => s.replace(/%/g, ''));
   const out: CardEffect[] = [];
-  for (const symbol of [...named, ...tagged]) {
+  for (const tag of card.mechanics) {
+    const symbol = tag.replace(/%/g, '');
     const entry = glossary.get(symbol);
-    if (!entry || INTERNAL.has(symbol) || out.some((e) => e.symbol === symbol)) continue;
+    if (!entry || out.some((e) => e.symbol === symbol)) continue;
     const description = typeof entry.description === 'string' ? entry.description.replace(/\{X\}/g, 'X') : '';
     if (entry.name && description) out.push({ symbol, name: String(entry.name), description });
   }
