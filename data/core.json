@@ -2390,7 +2390,7 @@
   },
   {
     "id": "CORE_118",
-    "name": "Tidal Primordial",
+    "name": "Mind-Leech",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -2408,9 +2408,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "LI qian",
-    "artistUrl": "https://www.artstation.com/liqian",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_023",
