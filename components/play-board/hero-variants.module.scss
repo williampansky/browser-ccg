@@ -584,8 +584,8 @@
   margin-left: calc(var(--ring-d) / -2);
   box-sizing: border-box;
   border-radius: 50%;
-  border: var(--ring-w) solid #0b0d14;
-  background: #0b0d14;
+  border: var(--ring-w) solid var(--ring-c, #0b0d14);
+  background: var(--ring-c, #0b0d14);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.14),
     inset 0 0 8px rgba(0, 0, 0, 0.7);
@@ -598,13 +598,20 @@
   background: center 20% / cover no-repeat;
 }
 
-// Anything on the rim: anchored on the ring's centre, turned `--a`, pushed out to the radius, then turned back upright.
+// Anything on the rim: anchored on the ring's centre, turned `--a`, pushed out to the radius (plus --rim-s / --rim-p), then turned back upright.
 .ringSock,
 .ringPill {
   position: absolute;
   left: 50%;
   top: var(--cy);
-  transform: translate(-50%, -50%) rotate(var(--a)) translateX(calc(var(--ring-d) / 2)) rotate(calc(var(--a) * -1));
+}
+
+.ringSock {
+  transform: translate(-50%, -50%) rotate(var(--a)) translateX(calc(var(--ring-d) / 2 + var(--rim-s, 0px))) rotate(calc(var(--a) * -1));
+}
+
+.ringPill {
+  transform: translate(-50%, -50%) rotate(var(--a)) translateX(calc(var(--ring-d) / 2 + var(--rim-p, 0px))) rotate(calc(var(--a) * -1));
 }
 
 .ringSock {
@@ -613,8 +620,8 @@
   box-sizing: border-box;
   padding: 0;
   border-radius: 50%;
-  border: 2px solid #0b0d14;
-  background: #151925 center / cover no-repeat;
+  border: 2px solid var(--ring-c, #0b0d14);
+  background: var(--sock-c, #151925) center / cover no-repeat;
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.14),
     0 2px 5px rgba(0, 0, 0, 0.6);
@@ -696,7 +703,7 @@
 }
 
 .ringWeapon {
-  background-color: #151925;
+  background-color: var(--sock-c, #151925);
   cursor: default;
 
   img {
@@ -740,13 +747,13 @@
 .ringPill {
   display: grid;
   place-items: center;
-  min-width: 46px;
-  height: 22px;
+  min-width: var(--pill-w, 46px);
+  height: var(--pill-h, 22px);
   padding: 0 10px;
   box-sizing: border-box;
   border-radius: 99px;
-  border: 2px solid #0b0d14;
-  font-size: 15px;
+  border: 2px solid var(--ring-c, #0b0d14);
+  font-size: var(--pill-f, 15px);
   line-height: 1;
   box-shadow:
     inset 0 2px 0 rgba(255, 255, 255, 0.25),
@@ -766,6 +773,6 @@
 }
 
 .ringArmor {
-  min-width: 34px;
+  min-width: calc(var(--pill-w, 46px) * 0.75);
   background: linear-gradient(#cfd6ea, #6a7490);
 }

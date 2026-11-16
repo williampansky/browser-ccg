@@ -164,20 +164,75 @@ export const HeroCard = (p: HeroVariantProps) => {
 /**
  * 5: a thin dark ring with the portrait inside and the stats orbiting its rim like a watch face: the skills along the left (9 o'clock),
  * the weapon at 3 o'clock, a pill-shaped health badge at 6 o'clock and an armor pill beside it. Kept thin and dark so it does not read as
- * a thick sculpted bezel. Sizes are knobs (`ringD` ring diameter, `ringW` ring thickness, `socket` socket diameter, all px).
+ * a thick sculpted bezel. Every size, angle and colour is in `RingTune` (the hero lab's ring tab edits it).
  * Angles are CSS ones: 0deg = 3 o'clock, 90deg = 6, 180deg = 9, 270deg = 12.
  */
-const RING_SKILL_ANGLES = [225, 180, 135];
-export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; ringD?: number; ringW?: number; socket?: number }) => {
+export interface RingTune {
+  /** Ring diameter and thickness, socket diameter (px) */
+  d: number;
+  w: number;
+  sock: number;
+  /** How far the sockets / pills sit out from the rim (px; negative = inside the ring) */
+  rimSock: number;
+  rimPill: number;
+  /** The middle skill's angle, and the angle between skills (the first skill is above the middle one) */
+  skillAngle: number;
+  skillSpacing: number;
+  weaponAngle: number;
+  hpAngle: number;
+  armorAngle: number;
+  pillW: number;
+  pillH: number;
+  pillFont: number;
+  /** Colours as 6-digit hex without the # */
+  ringColour: string;
+  socketColour: string;
+  showName: boolean;
+  showTag: boolean;
+  showCost: boolean;
+}
+
+export const RING_DEFAULTS: RingTune = {
+  d: 96,
+  w: 2,
+  sock: 32,
+  rimSock: 0,
+  rimPill: 0,
+  skillAngle: 180,
+  skillSpacing: 45,
+  weaponAngle: 0,
+  hpAngle: 90,
+  armorAngle: 55,
+  pillW: 46,
+  pillH: 22,
+  pillFont: 15,
+  ringColour: '0b0d14',
+  socketColour: '151925',
+  showName: true,
+  showTag: true,
+  showCost: true,
+};
+
+export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: Partial<RingTune> }) => {
+  const r: RingTune = { ...RING_DEFAULTS, ...p.tune };
   const max = p.maxHealth ?? 30;
   const t = tone(p.health, max);
+  const vars = {
+    '--ring-d': `${r.d}px`,
+    '--ring-w': `${r.w}px`,
+    '--sock': `${r.sock}px`,
+    '--rim-s': `${r.rimSock}px`,
+    '--rim-p': `${r.rimPill}px`,
+    '--pill-w': `${r.pillW}px`,
+    '--pill-h': `${r.pillH}px`,
+    '--pill-f': `${r.pillFont}px`,
+    '--ring-c': `#${r.ringColour}`,
+    '--sock-c': `#${r.socketColour}`,
+  } as React.CSSProperties;
   return (
-    <div
-      className={root(p, styles.ring)}
-      style={{ ['--ring-d' as string]: `${p.ringD ?? 96}px`, ['--ring-w' as string]: `${p.ringW ?? 2}px`, ['--sock' as string]: `${p.socket ?? 32}px` }}
-    >
-      <span className={styles.ringName}>{p.name}</span>
-      {p.turnTag && <span className={cx(styles.turnTag, styles.ringTag)}>{p.turnTag}</span>}
+    <div className={root(p, styles.ring)} style={vars}>
+      {r.showName && <span className={styles.ringName}>{p.name}</span>}
+      {r.showTag && p.turnTag && <span className={cx(styles.turnTag, styles.ringTag)}>{p.turnTag}</span>}
       <div className={styles.ringDisc}>
         <span className={styles.ringArt} style={{ backgroundImage: art(p.heroId) }} />
       </div>
@@ -191,9 +246,9 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; ringD?:
             disabled={!!k && !k.usable}
             aria-label={k ? `${k.name}, cost ${k.cost}${status ? `, ${status}` : ''}: ${k.text}` : `Skill ${n}`}
             className={cx(styles.ringSock, styles.ringSkill, k?.usable ? styles.ready : '', k?.selected ? styles.picked : '', k && !k.usable ? styles.off : '')}
-            style={{ ['--a' as string]: `${RING_SKILL_ANGLES[n - 1]}deg`, backgroundImage: `url(${heroImage(p.heroId, `skill-${n}`)})` }}
+            style={{ ['--a' as string]: `${r.skillAngle + (2 - n) * r.skillSpacing}deg`, backgroundImage: `url(${heroImage(p.heroId, `skill-${n}`)})` }}
           >
-            {k && <b className={styles.ringCost}>{k.cost}</b>}
+            {k && r.showCost && <b className={styles.ringCost}>{k.cost}</b>}
             {status && <em className={styles.ringStatus}>{k?.spent ? '✕' : k?.cooldownLeft}</em>}
             {k && (
               <span data-tip="" className={styles.ringTip}>
@@ -208,7 +263,7 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; ringD?:
       })}
       <div
         className={cx(styles.ringSock, styles.ringWeapon, p.weapon ? '' : styles.ringEmpty, p.weapon?.temporary ? styles.ringWeaponTemp : '')}
-        style={{ ['--a' as string]: '0deg' }}
+        style={{ ['--a' as string]: `${r.weaponAngle}deg` }}
         aria-label={p.weapon ? `${p.weapon.name ?? 'Weapon'}: ${p.weapon.attack} attack, ${p.weapon.durability} durability` : 'No weapon'}
       >
         {p.weapon?.image && <img src={p.weapon.image} alt="" draggable={false} />}
@@ -220,11 +275,11 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; ringD?:
         )}
       </div>
       {!!p.armor && (
-        <span className={cx(styles.ringPill, styles.ringArmor, styles.num)} style={{ ['--a' as string]: '55deg' }} aria-label={`${p.armor} armor`}>
+        <span className={cx(styles.ringPill, styles.ringArmor, styles.num)} style={{ ['--a' as string]: `${r.armorAngle}deg` }} aria-label={`${p.armor} armor`}>
           {p.armor}
         </span>
       )}
-      <span className={cx(styles.ringPill, styles.ringHp, styles.num, t)} style={{ ['--a' as string]: '90deg' }} aria-label={`${p.health} health`}>
+      <span className={cx(styles.ringPill, styles.ringHp, styles.num, t)} style={{ ['--a' as string]: `${r.hpAngle}deg` }} aria-label={`${p.health} health`}>
         {p.health}
       </span>
     </div>

@@ -7,7 +7,9 @@ import {
   HeroCard,
   HeroFigure,
   HeroMedallion,
-  HeroRing
+  HeroRing,
+  RING_DEFAULTS,
+  RingTune
 } from '../components/play-board/HeroVariants';
 
 const TABS = [
@@ -69,6 +71,35 @@ const WEAPONS: Record<string, { image: string; attack: number; durability: numbe
   CORE_081: { image: '/images/weapons/CORE_081-WEAPON.png', attack: 3, durability: 2 }
 };
 
+type NumKey = { [K in keyof RingTune]: RingTune[K] extends number ? K : never }[keyof RingTune];
+type FlagKey = { [K in keyof RingTune]: RingTune[K] extends boolean ? K : never }[keyof RingTune];
+type ColourKey = 'ringColour' | 'socketColour';
+/** The ring tab's number knobs. Each lives in the URL as `r_<field>` so a setup can be copied. */
+const RING_KNOBS: { field: NumKey; label: string; min: number; max: number; step?: number }[] = [
+  { field: 'd', label: 'Ring diameter (px)', min: 60, max: 160 },
+  { field: 'w', label: 'Ring thickness (px)', min: 0, max: 10 },
+  { field: 'sock', label: 'Socket size (px)', min: 16, max: 64 },
+  { field: 'rimSock', label: 'Sockets: out from the rim (px, minus = inside)', min: -30, max: 40 },
+  { field: 'rimPill', label: 'Pills: out from the rim (px, minus = inside)', min: -30, max: 40 },
+  { field: 'skillAngle', label: 'Skills: middle one at (deg, 180 = 9 o\'clock)', min: 0, max: 360, step: 5 },
+  { field: 'skillSpacing', label: 'Skills: angle between them (deg)', min: 10, max: 90, step: 5 },
+  { field: 'weaponAngle', label: 'Weapon at (deg, 0 = 3 o\'clock)', min: -180, max: 180, step: 5 },
+  { field: 'hpAngle', label: 'Health at (deg, 90 = 6 o\'clock)', min: 0, max: 360, step: 5 },
+  { field: 'armorAngle', label: 'Armor at (deg)', min: 0, max: 360, step: 5 },
+  { field: 'pillW', label: 'Pill width (px)', min: 24, max: 100 },
+  { field: 'pillH', label: 'Pill height (px)', min: 14, max: 44 },
+  { field: 'pillFont', label: 'Pill number size (px)', min: 9, max: 30 }
+];
+const RING_COLOURS: { field: ColourKey; label: string }[] = [
+  { field: 'ringColour', label: 'Ring colour' },
+  { field: 'socketColour', label: 'Socket colour' }
+];
+const RING_FLAGS: { field: FlagKey; label: string }[] = [
+  { field: 'showName', label: 'Name' },
+  { field: 'showTag', label: 'Turn tag' },
+  { field: 'showCost', label: 'Skill costs' }
+];
+
 const HEROES = [
   ['ZEUS', 'Zeus'],
   ['ASAR', 'Asar'],
@@ -86,9 +117,6 @@ const HeroLab = () => {
   const [active, setActive] = useState(true);
   const [weapon, setWeapon] = useState('CORE_076');
   const [skillStates, setSkillStates] = useState(['ready', 'cd3', 'spent']);
-  const [ringD, setRingD] = useState(96);
-  const [ringW, setRingW] = useState(2);
-  const [socket, setSocket] = useState(32);
   const router = useRouter();
 
   // The tab lives in ?tab= so a refresh (or a shared link) keeps it.
@@ -106,6 +134,19 @@ const HeroLab = () => {
       { shallow: true }
     );
   };
+
+  // The ring tab's settings come from the URL (`r_<field>`), over the defaults.
+  const q1 = (k: string) => (Array.isArray(router.query[k]) ? router.query[k]?.[0] : (router.query[k] as string | undefined)) ?? '';
+  const ring: RingTune = { ...RING_DEFAULTS };
+  RING_KNOBS.forEach(k => { const v = q1(`r_${k.field}`); if (v !== '' && !Number.isNaN(+v)) ring[k.field] = +v; });
+  RING_COLOURS.forEach(c => { const v = q1(`r_${c.field}`); if (/^[0-9a-f]{6}$/i.test(v)) ring[c.field] = v; });
+  RING_FLAGS.forEach(f => { if (q1(`r_${f.field}`) === '0') ring[f.field] = false; });
+  const setRing = (changes: Record<string, string | null>) => {
+    const query = { ...router.query };
+    Object.entries(changes).forEach(([k, v]) => (v === null ? delete query[k] : (query[k] = v)));
+    router.replace({ pathname: router.pathname, query }, undefined, { shallow: true });
+  };
+  const resetRing = () => setRing(Object.fromEntries(Object.keys(router.query).filter(k => k.startsWith('r_')).map(k => [k, null])));
 
   const setTab = (id: string) =>
     router.replace(
@@ -188,22 +229,6 @@ const HeroLab = () => {
             ))}
           </select>
         </label>
-        {tab === 'ring' && (
-          <>
-            <label>
-              Ring diameter {ringD}px{' '}
-              <input type="range" min={70} max={140} value={ringD} onChange={e => setRingD(+e.target.value)} />
-            </label>
-            <label>
-              Ring thickness {ringW}px{' '}
-              <input type="range" min={1} max={8} value={ringW} onChange={e => setRingW(+e.target.value)} />
-            </label>
-            <label>
-              Socket size {socket}px{' '}
-              <input type="range" min={20} max={56} value={socket} onChange={e => setSocket(+e.target.value)} />
-            </label>
-          </>
-        )}
         {(tab === 'figure' || tab === 'ring') &&
           skillStates.map((st, i) => (
             <label key={i}>
@@ -244,6 +269,41 @@ const HeroLab = () => {
           Their turn
         </label>
       </div>
+      {tab === 'ring' && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 24px', alignItems: 'center', margin: '0 0 28px', maxWidth: 1100 }}>
+          {RING_KNOBS.map(k => (
+            <label key={k.field} style={{ minWidth: 260 }}>
+              {k.label}: <b>{ring[k.field]}</b>
+              {q1(`r_${k.field}`) !== '' && (
+                <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setRing({ [`r_${k.field}`]: null })}>reset</a>
+              )}
+              <input
+                type="range"
+                min={k.min}
+                max={k.max}
+                step={k.step ?? 1}
+                value={ring[k.field]}
+                style={{ display: 'block', width: '100%' }}
+                onChange={e => setRing({ [`r_${k.field}`]: e.target.value })}
+              />
+            </label>
+          ))}
+          {RING_COLOURS.map(c => (
+            <label key={c.field}>
+              <input type="color" value={`#${ring[c.field]}`} onChange={e => setRing({ [`r_${c.field}`]: e.target.value.slice(1) })} /> {c.label}
+            </label>
+          ))}
+          {RING_FLAGS.map(f => (
+            <label key={f.field}>
+              <input type="checkbox" checked={ring[f.field]} onChange={e => setRing({ [`r_${f.field}`]: e.target.checked ? null : '0' })} /> {f.label}
+            </label>
+          ))}
+          <button onClick={resetRing} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #3a4052', background: '#232634', color: '#fff', cursor: 'pointer' }}>
+            Reset ring
+          </button>
+          <small style={{ color: '#9aa3b8', flexBasis: '100%' }}>The settings are in the page URL: copy it to keep or share a setup.</small>
+        </div>
+      )}
       <div
         style={{
           display: 'flex',
@@ -279,9 +339,7 @@ const HeroLab = () => {
             <HeroRing
               key={id}
               {...p}
-              ringD={ringD}
-              ringW={ringW}
-              socket={socket}
+              tune={ring}
               weapon={WEAPONS[weapon]}
               skills={skillStates.map((st, i) => skillFrom(st, i + 1, id))} />
           ) : (
