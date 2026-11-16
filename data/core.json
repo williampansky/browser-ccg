@@ -1140,7 +1140,7 @@
   },
   {
     "id": "CORE_071",
-    "name": "Ice Primordial",
+    "name": "Abyssal Mesmer",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -1156,8 +1156,12 @@
     ],
     "collectible": true,
     "active": true,
+    "flavor": "Real-world accounts from early Mariana Trench descents (like Jacques Piccard and Don Walsh on the Trieste) talk about seeing living things stare back at their floodlights at crushing depths where nothing was thought to survive.",
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
+    "description": "The effect can also be used on players."
   },
   {
     "id": "CORE_077",
@@ -1841,7 +1845,7 @@
   },
   {
     "id": "CORE_028",
-    "name": "Predatory Shaman",
+    "name": "Void Shaman",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -1858,7 +1862,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_122",
@@ -2586,7 +2592,7 @@
   },
   {
     "id": "CORE_062",
-    "name": "Blood-starved Beast",
+    "name": "Gorge-Maw Brute",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -2604,9 +2610,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Einar Martinsen",
-    "artistUrl": "https://www.artstation.com/einarmartinsen",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_015",
