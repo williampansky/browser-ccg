@@ -70,7 +70,7 @@ export interface Card {
   active: boolean;
   collectible: boolean;
   flavor?: string;
-  /** Designer note about rules edge cases; not player-facing text. */
+  /** The row's Airtable `description`: a note on rules edge cases, as plain text. Shown in the card detail window. */
   designNote?: string;
   targetingArrowText?: string;
   artistName?: string;

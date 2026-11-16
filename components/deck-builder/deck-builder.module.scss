@@ -272,15 +272,24 @@
 
 .flavor {
   margin: 0 0 14px;
-  padding-left: 12px;
-  border-left: 3px solid var(--ui-quote-line);
   font-style: italic;
   color: var(--ui-text-soft);
 }
 
-.noFlavor {
-  color: var(--ui-text-faint);
-  font-style: italic;
+// The card's rules note (Airtable `description`), under the effects list.
+.rulesNote {
+  margin-top: 16px;
+
+  h3 {
+    margin: 0 0 6px;
+    font-size: 0.95rem;
+    color: var(--ui-text-dim);
+  }
+
+  p {
+    margin: 0;
+    color: var(--ui-text-soft);
+  }
 }
 
 .detailButtons {

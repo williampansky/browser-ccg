@@ -156,9 +156,15 @@ export const DeckBuilder = () => {
                       <p className={styles.detailMeta}>
                         {c.source === 'prime' ? 'Prime' : 'Core'} · <span className={styles.cap}>{c.type}</span> · {countOf(deck, c.id)} in {deck.name || 'this deck'}
                       </p>
-                      {c.flavor ? <blockquote className={styles.flavor}>{c.flavor}</blockquote> : <p className={styles.noFlavor}>No flavor text.</p>}
+                      {c.flavor && <blockquote className={styles.flavor}>{c.flavor}</blockquote>}
                       {why && <p className={styles.note}>{why}</p>}
                       <CardEffects card={c} />
+                      {c.designNote && (
+                        <section className={styles.rulesNote} aria-label="Rules note">
+                          <h3>Rules note</h3>
+                          <p>{c.designNote}</p>
+                        </section>
+                      )}
                       <div className={styles.detailButtons}>
                         <Button disabled={!!why} onClick={() => add(c.id)}>
                           Add to deck

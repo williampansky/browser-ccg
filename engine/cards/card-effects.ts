@@ -11,7 +11,7 @@ export interface CardEffect {
 }
 
 /** Tags that are bookkeeping for the card data, not something a player needs explained. */
-const INTERNAL = new Set(['TARGET', 'SET_VALUE', 'EVENT', 'BOOLEAN', 'RANDOM', 'AOE', 'GLOBAL_SPELL', 'ENERGY', 'ENERGY_CRYSTAL', 'DURABILITY']);
+const INTERNAL = new Set(['TARGET', 'SET_VALUE', 'EVENT', 'BOOLEAN', 'AOE', 'GLOBAL_SPELL', 'ENERGY', 'ENERGY_CRYSTAL', 'DURABILITY']);
 
 const glossary = new Map<string, RawGlossaryEntry>();
 for (const m of mechanics as unknown as RawGlossaryEntry[]) glossary.set(String(m.symbol).replace(/%/g, ''), m);

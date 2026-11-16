@@ -2407,6 +2407,7 @@
     ],
     "collectible": true,
     "active": true,
+    "flavor": "\"Something stirs deep within you, hungry and alert... It's taking something you'll never get back.\" <em>— Illithid Tadpole</em>",
     "howToEarn": "Provided to all players.",
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",

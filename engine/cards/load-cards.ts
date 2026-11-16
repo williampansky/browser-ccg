@@ -294,7 +294,10 @@ function normaliseCard(
   const playContext = stripSymbol(raw.playContext);
   if (playContext) card.playContext = playContext;
   if (typeof raw.flavor === 'string' && raw.flavor) card.flavor = sanitizeText(raw.flavor);
-  if (typeof raw.description === 'string' && raw.description) card.designNote = raw.description;
+  if (typeof raw.description === 'string' && raw.description) {
+    // The rules note, shown in the card detail window: plain text, with the glossary names put in for any %SYMBOL%.
+    card.designNote = renderText(sanitizeText(raw.description), numbers, glossary, () => {});
+  }
   if (typeof raw.targetingArrowText === 'string' && raw.targetingArrowText) {
     card.targetingArrowText = raw.targetingArrowText;
   }

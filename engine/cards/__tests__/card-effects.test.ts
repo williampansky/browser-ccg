@@ -13,6 +13,10 @@ describe('effectsOf', () => {
     expect(symbols('CORE_123')).toEqual(['RUSH', 'BUFF']);
   });
 
+  it('lists Random for a card that has it (CORE_063 is tagged RANDOM and DAMAGE)', () => {
+    expect(symbols('CORE_063')).toContain('RANDOM');
+  });
+
   it('gives each effect its display name and a full-sentence description', () => {
     for (const e of effectsOf(byId.get('CORE_007')!)) {
       expect(e.name.length).toBeGreaterThan(0);

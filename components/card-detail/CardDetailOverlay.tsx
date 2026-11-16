@@ -9,7 +9,7 @@ import { TiltFace } from './TiltFace';
 import { useDetailCardWidth } from './detail-card-width';
 
 /**
- * The enlarged-card window: the tilting card, its text and effects, the flavour line, and the tokens it makes. Click anywhere or press Esc
+ * The enlarged-card window: the tilting card, its text and effects, the flavour line (left out when a card has none), its rules note, and the tokens it makes. Click anywhere or press Esc
  * to close. Used by the collection and by right-clicking a minion on the board. Drawn into <body> so no parent's stacking context can cover it.
  */
 export const CardDetailOverlay = ({ card, byId, onClose }: { card: Card; byId: Map<string, Card>; onClose: () => void }) => {
@@ -45,8 +45,14 @@ export const CardDetailOverlay = ({ card, byId, onClose }: { card: Card; byId: M
           >
             {copied === card.id ? 'Copied!' : card.id}
           </button>
-          {card.flavor ? <blockquote className={styles.flavor}>{card.flavor}</blockquote> : <p className={styles.noFlavor}>No flavor text.</p>}
+          {card.flavor && <blockquote className={styles.flavor}>{card.flavor}</blockquote>}
           <CardEffects card={card} />
+          {card.designNote && (
+            <section className={styles.rulesNote} aria-label="Rules note">
+              <h3>Rules note</h3>
+              <p>{card.designNote}</p>
+            </section>
+          )}
   
           {tokens.length > 0 && (
             <div className={styles.tokens}>
