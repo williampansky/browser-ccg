@@ -151,7 +151,7 @@
   },
   {
     "id": "CORE_036",
-    "name": "Skilled Hunter",
+    "name": "Gloom Stalker",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -172,10 +172,11 @@
     "targetingArrowText": "Deal 2 damage",
     "collectible": true,
     "active": true,
+    "flavor": "Pew pew!",
     "howToEarn": "Provided to all players.",
-    "artistName": "onemt",
-    "artistUrl": "https://www.artstation.com/kuside_sangu",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_053",
@@ -742,7 +743,7 @@
   },
   {
     "id": "CORE_032",
-    "name": "Wondrous Wisp",
+    "name": "Bog Shaman",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -761,8 +762,11 @@
     "playContext": "%HEAL%",
     "collectible": true,
     "active": true,
+    "flavor": "Take your meds, damnit.",
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_050",
@@ -2992,7 +2996,8 @@
     "text": "<strong>%DESTROY%</strong> a minion at the<br />\nstart of your next turn",
     "mechanics": [
       "%EXPIRATION%",
-      "%TARGET%"
+      "%TARGET%",
+      "%DESTROY%"
     ],
     "playType": "TARGETED",
     "playContext": "%EXPIRATION%",
