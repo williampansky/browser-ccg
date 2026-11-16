@@ -726,10 +726,28 @@ $po-green: var(--po-c, #5fd16a);
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, var(--end-dark, 0.55));
+  animation: endFade var(--end-fade, 0ms) ease-out;
+
+  // The lab's "End game" tab sets --end-dark (overlay darkness), --end-fade (fade-in ms), --end-bs (banner size x), --end-bc (banner colour).
+  .banner {
+    font-size: calc(2.4rem * var(--end-bs, 1));
+    color: var(--end-bc, #ffd45e);
+  }
+}
+
+// A loss against the AI (--end-lc banner colour and --end-dark-l darkness, each following the win look until set).
+.gameOverLoss {
+  background: rgba(0, 0, 0, var(--end-dark-l, var(--end-dark, 0.55)));
 
   .banner {
-    font-size: 2.4rem;
+    color: var(--end-lc, var(--end-bc, #ffd45e));
+  }
+}
+
+@keyframes endFade {
+  from {
+    opacity: 0;
   }
 }
 

@@ -59,6 +59,7 @@ import { describeEvents, MYSTERY_HINT, mysteryCategory } from './describe-events
 import { isMuted, playSounds, cancelCardHover, playCardHover, preloadSounds, setMuted, soundsFor, startHoldSound, stopHoldSound } from './sounds';
 import { targetLinePath, TargetLineStyle } from './target-line';
 import { startDragGhost, DragGhost } from './drag-ghost';
+import { fireEndConfetti } from './end-celebration';
 import { Button, Group, Panel, SegmentedControl, Select, Toggle } from '../ui';
 import { UiThemePicker } from '../ui-theme/UiThemePicker';
 import { playUiSound } from '../ui-theme/ui-sfx';
@@ -338,6 +339,8 @@ export interface LabProps {
   active?: PlayerId;
   /** Replay the cast popup (a sample spell) on a loop so its overlay knobs can be tuned: whose cast it looks like */
   castPreview?: PlayerId;
+  /** Hold the end-of-game overlay and banner on the board, as a win or a loss (the confetti fires when it turns on) */
+  endPreview?: 'win' | 'loss';
   /** How full the timer bar looks (%), since the lab has no turn clock */
   timerPct?: number;
   /** Make the energy bar blink as if a card were picked: the orbs it would spend, or all of them red (cannot afford) */
@@ -575,6 +578,17 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   // The viewer is who sits at the bottom: always Player 1 against the AI, the active player in hot-seat.
   const viewer: PlayerId = !state ? '0' : mode === 'ai' ? '0' : state.activePlayer;
   viewerRef.current = viewer;
+
+  // The end-of-game confetti, once when a game ends (or when the lab's end screen preview turns on). In hot-seat both seats are at the screen, so it counts as a win.
+  const gameEnded = state?.status === 'over' || !!lab?.endPreview;
+  // Who the end screen says won (the lab's preview picks a side: you, or the opponent).
+  const endWinner = lab?.endPreview ? (lab.endPreview === 'win' ? viewer : otherPlayer(viewer)) : state?.winner;
+  useEffect(() => {
+    if (!gameEnded) return;
+    const winner = state?.winner;
+    void fireEndConfetti(lab?.endPreview ? lab.endPreview === 'win' : mode !== 'ai' || winner === viewerRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameEnded]);
   const aiToMove = !lab && !!state && mode === 'ai' && state.status === 'playing' && state.activePlayer === AI_PLAYER;
 
   // Lab mode: keep the boards and energy in step with the props without touching the hands, decks or heroes.
@@ -1394,10 +1408,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           </div>
         </div>
       )}
-      {over && !menuOpen && (
-        <div className={styles.gameOver}>
+      {(over || lab?.endPreview) && !menuOpen && (
+        <div className={[styles.gameOver, endWinner !== 'draw' && endWinner !== me && mode === 'ai' ? styles.gameOverLoss : ''].join(' ')}>
           <strong className={styles.banner}>
-            {state.winner === 'draw' ? 'Draw!' : `${label(state.winner as PlayerId)} wins!`}
+            {endWinner === 'draw' ? 'Draw!' : `${label(endWinner as PlayerId)} wins!`}
           </strong>
           <button type="button" className={styles.endTurn} onClick={start}>
             New game

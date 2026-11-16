@@ -1,5 +1,6 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
+import { END_KNOBS } from '../play-board/end-celebration';
 import { ENERGY_COLOURS, MID_KNOBS, PLAY_LAYOUT } from '../play-board/layout-css';
 import { one } from './lab-model';
 
@@ -8,6 +9,7 @@ const SHADOW_KEYS = ['def', 'rdy', 'sel', 'aim', 'hov'].flatMap((st) => ['y', 'b
 const slotKeys = (n: string) => ['lsf', 'lsg', 'lsj', 'lsm'].map((k) => `${k}_${n}`);
 const MID_KEYS = [...MID_KNOBS.map((k) => k.key), ...Object.keys(ENERGY_COLOURS).filter((k) => k.startsWith('lmd')), 'lmdtpv', 'lmdj', 'lmdtpos'];
 export const SECTION_KEYS: Record<string, string[]> = {
+  endgame: ['leno', 'lenf', 'lenbs', 'lenbc', 'lenlc', 'lenol', 'lenon', 'lenw', 'lenm', 'lenp', ...END_KNOBS.map((k) => k.key)],
   middle: MID_KEYS,
   board: ['b0', 'b1', 'e0', 'e1', 'turn'],
   restart: ['p0', 'p1', 'w0', 'w1', 'h0', 'h1', 'first', 'herofig'],
@@ -28,7 +30,7 @@ export const SECTION_KEYS: Record<string, string[]> = {
   background: ['lbgf', 'lbgt', 'lbgm', 'lbgs', 'lbgd', 'lbgb', 'lbgx', 'lbgy', 'lpgcb', 'lpgc1', 'lpgc2', 'lpgc3', 'lpgw', 'lpgm', 'lflc', 'lflgc', 'lflrc', 'lflt', 'lfla', 'lflra', 'lflw', 'lflr', 'lfli', 'lflo', 'lflx', 'lfly'],
 };
 
-export const SECTION_IDS = ['presets', 'board', 'restart', 'minions', 'table', 'middle', 'hands', 'play', 'cast', 'energy', 'panels', 'heroes', 'snd-cardPlay', 'snd-draw', 'snd-cardHover', 'snd-hold', 'snd-gap', 'background', 'shadows'];
+export const SECTION_IDS = ['endgame', 'presets', 'board', 'restart', 'minions', 'table', 'middle', 'hands', 'play', 'cast', 'energy', 'panels', 'heroes', 'snd-cardPlay', 'snd-draw', 'snd-cardHover', 'snd-hold', 'snd-gap', 'background', 'shadows'];
 
 /** Which accordion sections are open (default: Presets and Board); remembered in localStorage. */
 export const useLabSections = () => {
@@ -125,6 +127,7 @@ export const LAB_TABS: { id: string; label: string; sections: string[] }[] = [
   { id: 'hand', label: 'Hand', sections: ['hands', 'play', 'cast'] },
   { id: 'panels', label: 'Log/deck', sections: ['panels'] },
   { id: 'heroes', label: 'Heroes', sections: ['heroes'] },
+  { id: 'end', label: 'End game', sections: ['endgame'] },
   { id: 'sounds', label: 'Sounds', sections: ['snd-cardPlay', 'snd-draw', 'snd-cardHover', 'snd-hold', 'snd-gap'] },
 ];
 

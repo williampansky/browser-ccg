@@ -9,6 +9,7 @@ import { BoardPanel, CastPanel, EnergyPanel, MiddlePanel, PlayOverlayPanel, Hand
 import { RESTART_KEYS, SETUP_KEYS, one } from '../components/board-lab/lab-model';
 import { BackgroundPanel } from '../components/board-lab/BackgroundPanel';
 import { PresetsPanel } from '../components/board-lab/PresetsPanel';
+import { EndPanel, useEndTuning } from '../components/board-lab/EndPanel';
 import { HoverGapPanel, SoundSlotPanel, useSoundTuning } from '../components/board-lab/SoundPanel';
 import { PLAY_LAYOUT, buildLayoutCss } from '../components/play-board/layout-css';
 
@@ -35,6 +36,7 @@ const BoardLab = () => {
   const { tab, setTab } = useLabTab();
   const defaults = useMeasuredDefaults(q);
   useSoundTuning(q);
+  useEndTuning(q);
 
   // A stable list of real CORE minions to build boards from.
   const minionIds = useMemo(
@@ -67,6 +69,7 @@ const BoardLab = () => {
   const lab = {
     boards: { '0': ids('b0'), '1': ids('b1') },
     energy: { '0': energy('e0'), '1': energy('e1') },
+    endPreview: (one(q.lenpv) === 'loss' ? 'loss' : one(q.lenpv) ? 'win' : undefined) as 'win' | 'loss' | undefined,
     castPreview: (one(q.lcpv) === '0' || one(q.lcpv) === '1' ? one(q.lcpv) : undefined) as '0' | '1' | undefined,
     blinkPreview: (one(q.lebpv) === 'spend' || one(q.lebpv) === 'red' ? one(q.lebpv) : undefined) as 'spend' | 'red' | undefined,
     overlayPreview: (['minion', 'minion-hot', 'spell', 'spell-hot'].includes(one(q.lpopv)) ? one(q.lpopv) : undefined) as 'minion' | 'minion-hot' | 'spell' | 'spell-hot' | undefined,
@@ -91,6 +94,7 @@ const BoardLab = () => {
     shadows: sec('shadows', 'Minion shadows', 'live', <ShadowsPanel {...panel} />),
     minions: sec('minions', 'Minions', 'live', <MinionsPanel {...panel} />),
     table: sec('table', 'Table', 'live', <TablePanel {...panel} />),
+    endgame: sec('endgame', 'End game screen', 'live', <EndPanel {...panel} />),
     middle: sec('middle', 'Middle strip', 'live', <MiddlePanel {...panel} />),
     hands: sec('hands', 'Hands', 'live', <HandsPanel {...panel} />),
     background: sec('background', 'Background', 'live', <BackgroundPanel q={q} setParams={setParams} />),

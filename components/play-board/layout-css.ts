@@ -100,6 +100,11 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lflo: (v) => `${CLS('page')}{--felt-out:${v}}`,
   lflx: (v) => `${CLS('page')}{--felt-x:${v}px}`,
   lfly: (v) => `${CLS('page')}{--felt-y:${v}px}`,
+  // End game screen: overlay darkness, fade-in ms, banner size (x).
+  leno: (v) => `${CLS('page')}{--end-dark:${v}}`,
+  lenf: (v) => `${CLS('page')}{--end-fade:${v}ms}`,
+  lenol: (v) => `${CLS('page')}{--end-dark-l:${v}}`,
+  lenbs: (v) => `${CLS('page')}{--end-bs:${v}}`,
   // Energy bar look: glows, number size / visibility, blink rate / strength (colours are `ENERGY_COLOURS`, below).
   leg: (v) => `${BAR}{--en-glow:${v}px}`,
   legt: (v) => `${BAR}{--en-text-glow:${v}px}`,
@@ -195,6 +200,8 @@ export const ENERGY_COLOURS: Record<string, { cssVar: string; label: string; fal
   lmdtfc: { cssVar: '--mid-tfc', label: 'Timer bar: fill', fallback: '5fd16a', target: 'page' },
   lmdtlc: { cssVar: '--mid-tlc', label: 'Timer bar: fill, last 10 s', fallback: 'ff7d7d', target: 'page' },
   lmdttc: { cssVar: '--mid-ttc', label: 'Timer bar: track', fallback: '000000', target: 'page' },
+  lenlc: { cssVar: '--end-lc', label: 'Loss: banner colour', fallback: 'ff7b7b', target: 'page' },
+  lenbc: { cssVar: '--end-bc', label: 'Win: banner colour', fallback: 'ffd45e', target: 'page' },
   lecr: { cssVar: '--en', label: 'Orbs (and number)', fallback: '4aa3ff' },
   lecb: { cssVar: '--en-bonus', label: 'Bonus orbs', fallback: 'ffd45e' },
   lecn: { cssVar: '--en-text', label: 'Number (overrides orbs)', fallback: '4aa3ff' },
@@ -279,6 +286,11 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lmdtfc: 'c79d75',
   lmdtlc: 'e14747',
   lmdtpv: '16',
+  // End game screen: overlay darkness (win .75, loss .5), 200 ms fade, banner size 1 (the confetti defaults are END_DEFAULTS)
+  leno: '0.75',
+  lenf: '200',
+  lenbs: '1',
+  lenol: '0.5',
   lpoao: '0',
   lpoc: 'bdff42',
   lpogd: '570',
