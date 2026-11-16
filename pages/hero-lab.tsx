@@ -6,7 +6,8 @@ import {
   FigureSkill,
   HeroCard,
   HeroFigure,
-  HeroMedallion
+  HeroMedallion,
+  HeroRing
 } from '../components/play-board/HeroVariants';
 
 const TABS = [
@@ -29,6 +30,11 @@ const TABS = [
     id: 'card',
     label: '4 Card panel',
     note: 'The hero drawn like the hand cards, in the same frame art.'
+  },
+  {
+    id: 'ring',
+    label: '5 Ring + sockets',
+    note: 'A thin dark ring with the portrait inside; the stats orbit its rim like a watch face: skills at 9 o\'clock (all three along the left), weapon at 3, a pill-shaped health badge at 6 and an armor pill beside it.'
   }
 ] as const;
 
@@ -80,6 +86,9 @@ const HeroLab = () => {
   const [active, setActive] = useState(true);
   const [weapon, setWeapon] = useState('CORE_076');
   const [skillStates, setSkillStates] = useState(['ready', 'cd3', 'spent']);
+  const [ringD, setRingD] = useState(96);
+  const [ringW, setRingW] = useState(2);
+  const [socket, setSocket] = useState(32);
   const router = useRouter();
 
   // The tab lives in ?tab= so a refresh (or a shared link) keeps it.
@@ -179,7 +188,23 @@ const HeroLab = () => {
             ))}
           </select>
         </label>
-        {tab === 'figure' &&
+        {tab === 'ring' && (
+          <>
+            <label>
+              Ring diameter {ringD}px{' '}
+              <input type="range" min={70} max={140} value={ringD} onChange={e => setRingD(+e.target.value)} />
+            </label>
+            <label>
+              Ring thickness {ringW}px{' '}
+              <input type="range" min={1} max={8} value={ringW} onChange={e => setRingW(+e.target.value)} />
+            </label>
+            <label>
+              Socket size {socket}px{' '}
+              <input type="range" min={20} max={56} value={socket} onChange={e => setSocket(+e.target.value)} />
+            </label>
+          </>
+        )}
+        {(tab === 'figure' || tab === 'ring') &&
           skillStates.map((st, i) => (
             <label key={i}>
               Skill {i + 1}{' '}
@@ -197,7 +222,7 @@ const HeroLab = () => {
               </select>
             </label>
           ))}
-        {tab === 'figure' && (
+        {(tab === 'figure' || tab === 'ring') && (
           <label>
             Weapon{' '}
             <select value={weapon} onChange={e => setWeapon(e.target.value)}>
@@ -250,6 +275,15 @@ const HeroLab = () => {
               skills={skillStates.map((st, i) => skillFrom(st, i + 1, id))} />
           ) : tab === 'medal' ? (
             <HeroMedallion key={id} {...p} />
+          ) : tab === 'ring' ? (
+            <HeroRing
+              key={id}
+              {...p}
+              ringD={ringD}
+              ringW={ringW}
+              socket={socket}
+              weapon={WEAPONS[weapon]}
+              skills={skillStates.map((st, i) => skillFrom(st, i + 1, id))} />
           ) : (
             <HeroCard key={id} {...p} />
           );

@@ -160,3 +160,73 @@ export const HeroCard = (p: HeroVariantProps) => {
     </div>
   );
 };
+
+/**
+ * 5: a thin dark ring with the portrait inside and the stats orbiting its rim like a watch face: the skills along the left (9 o'clock),
+ * the weapon at 3 o'clock, a pill-shaped health badge at 6 o'clock and an armor pill beside it. Kept thin and dark so it does not read as
+ * a thick sculpted bezel. Sizes are knobs (`ringD` ring diameter, `ringW` ring thickness, `socket` socket diameter, all px).
+ * Angles are CSS ones: 0deg = 3 o'clock, 90deg = 6, 180deg = 9, 270deg = 12.
+ */
+const RING_SKILL_ANGLES = [225, 180, 135];
+export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; ringD?: number; ringW?: number; socket?: number }) => {
+  const max = p.maxHealth ?? 30;
+  const t = tone(p.health, max);
+  return (
+    <div
+      className={root(p, styles.ring)}
+      style={{ ['--ring-d' as string]: `${p.ringD ?? 96}px`, ['--ring-w' as string]: `${p.ringW ?? 2}px`, ['--sock' as string]: `${p.socket ?? 32}px` }}
+    >
+      <span className={styles.ringName}>{p.name}</span>
+      {p.turnTag && <span className={cx(styles.turnTag, styles.ringTag)}>{p.turnTag}</span>}
+      <div className={styles.ringDisc}>
+        <span className={styles.ringArt} style={{ backgroundImage: art(p.heroId) }} />
+      </div>
+      {[1, 2, 3].map((n) => {
+        const k = p.skills?.[n - 1];
+        const status = !k ? '' : k.spent ? 'Used' : k.cooldownLeft > 0 ? `Ready in ${k.cooldownLeft}` : '';
+        return (
+          <button
+            key={n}
+            type="button"
+            disabled={!!k && !k.usable}
+            aria-label={k ? `${k.name}, cost ${k.cost}${status ? `, ${status}` : ''}: ${k.text}` : `Skill ${n}`}
+            className={cx(styles.ringSock, styles.ringSkill, k?.usable ? styles.ready : '', k?.selected ? styles.picked : '', k && !k.usable ? styles.off : '')}
+            style={{ ['--a' as string]: `${RING_SKILL_ANGLES[n - 1]}deg`, backgroundImage: `url(${heroImage(p.heroId, `skill-${n}`)})` }}
+          >
+            {k && <b className={styles.ringCost}>{k.cost}</b>}
+            {status && <em className={styles.ringStatus}>{k?.spent ? '✕' : k?.cooldownLeft}</em>}
+            {k && (
+              <span data-tip="" className={styles.ringTip}>
+                <strong>{k.name}</strong>
+                {status && <em><small> ({status})</small></em>}
+                <br />
+                {k.text}
+              </span>
+            )}
+          </button>
+        );
+      })}
+      <div
+        className={cx(styles.ringSock, styles.ringWeapon, p.weapon ? '' : styles.ringEmpty, p.weapon?.temporary ? styles.ringWeaponTemp : '')}
+        style={{ ['--a' as string]: '0deg' }}
+        aria-label={p.weapon ? `${p.weapon.name ?? 'Weapon'}: ${p.weapon.attack} attack, ${p.weapon.durability} durability` : 'No weapon'}
+      >
+        {p.weapon?.image && <img src={p.weapon.image} alt="" draggable={false} />}
+        {p.weapon && (
+          <>
+            <b className={cx(styles.ringStat, styles.ringAtk, styles.num)}>{p.weapon.attack}</b>
+            <b className={cx(styles.ringStat, styles.ringDur, styles.num)}>{p.weapon.durability}</b>
+          </>
+        )}
+      </div>
+      {!!p.armor && (
+        <span className={cx(styles.ringPill, styles.ringArmor, styles.num)} style={{ ['--a' as string]: '55deg' }} aria-label={`${p.armor} armor`}>
+          {p.armor}
+        </span>
+      )}
+      <span className={cx(styles.ringPill, styles.ringHp, styles.num, t)} style={{ ['--a' as string]: '90deg' }} aria-label={`${p.health} health`}>
+        {p.health}
+      </span>
+    </div>
+  );
+};

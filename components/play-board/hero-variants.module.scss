@@ -540,3 +540,232 @@
   transform: translateX(-50%);
   font-size: calc(10 * var(--u));
 }
+
+// ---- 5: thin ring with orbiting sockets (HeroRing). Everything orbits one centre: a point `--ring-d / 2 + 24px` below the top. ----------
+.ring {
+  --cy: calc(var(--ring-d) / 2 + 24px);
+  width: calc(var(--ring-d) + var(--sock) * 2 + 28px);
+  height: calc(var(--ring-d) + 24px + var(--sock) + 16px);
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+  transition: filter 300ms;
+}
+
+.active.ring {
+  filter: drop-shadow(0 0 12px rgba(255, 214, 120, 0.6)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+}
+
+.ring:hover {
+  z-index: 10;
+}
+
+.ringName {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% 0;
+  font-size: 13px;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px #000;
+}
+
+.ringTag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 9px;
+}
+
+.ringDisc {
+  position: absolute;
+  left: 50%;
+  top: 24px;
+  width: var(--ring-d);
+  height: var(--ring-d);
+  margin-left: calc(var(--ring-d) / -2);
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: var(--ring-w) solid #0b0d14;
+  background: #0b0d14;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    inset 0 0 8px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+.ringArt {
+  position: absolute;
+  inset: 0;
+  background: center 20% / cover no-repeat;
+}
+
+// Anything on the rim: anchored on the ring's centre, turned `--a`, pushed out to the radius, then turned back upright.
+.ringSock,
+.ringPill {
+  position: absolute;
+  left: 50%;
+  top: var(--cy);
+  transform: translate(-50%, -50%) rotate(var(--a)) translateX(calc(var(--ring-d) / 2)) rotate(calc(var(--a) * -1));
+}
+
+.ringSock {
+  width: var(--sock);
+  height: var(--sock);
+  box-sizing: border-box;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid #0b0d14;
+  background: #151925 center / cover no-repeat;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 2px 5px rgba(0, 0, 0, 0.6);
+  color: inherit;
+  font: inherit;
+}
+
+.ringSkill {
+  cursor: pointer;
+
+  &.ready {
+    border-color: var(--team);
+  }
+
+  &.picked {
+    border-color: #ffd45e;
+    box-shadow: 0 0 0 2px #ffd45e, 0 0 10px #ffd45e;
+  }
+
+  &.off {
+    filter: grayscale(0.7) brightness(0.65);
+    cursor: not-allowed;
+  }
+
+  &:hover .ringTip {
+    visibility: visible;
+  }
+}
+
+.ringCost {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  translate: 25% -50%;
+  display: grid;
+  place-items: center;
+  width: 46%;
+  height: 46%;
+  border-radius: 50%;
+  background: #4aa3ff;
+  border: 1px solid #0b0d14;
+  color: #0b0d14;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.ringStatus {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #000a;
+  font-style: normal;
+  font-size: 15px;
+  text-shadow: 0 2px 0 #000;
+}
+
+.ringTip {
+  visibility: hidden;
+  position: absolute;
+  z-index: 20;
+  right: calc(100% + 8px);
+  top: 50%;
+  translate: 0 -50%;
+  width: max-content;
+  max-width: 190px;
+  padding: 6px 9px;
+  background: #10131d;
+  border: 1px solid #343846;
+  border-radius: 8px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+}
+
+.ringWeapon {
+  background-color: #151925;
+  cursor: default;
+
+  img {
+    position: absolute;
+    inset: 8%;
+    width: 84%;
+    height: 84%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7));
+  }
+}
+
+.ringEmpty {
+  border: 2px dashed rgba(255, 255, 255, 0.25);
+  background: transparent;
+  box-shadow: none;
+}
+
+.ringWeaponTemp {
+  border-style: dashed;
+  border-color: #fff;
+}
+
+// Weapon numbers: attack bottom-left, durability bottom-right, small and outlined.
+.ringStat {
+  position: absolute;
+  bottom: -24%;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1;
+}
+
+.ringAtk {
+  left: -22%;
+}
+
+.ringDur {
+  right: -22%;
+}
+
+.ringPill {
+  display: grid;
+  place-items: center;
+  min-width: 46px;
+  height: 22px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border-radius: 99px;
+  border: 2px solid #0b0d14;
+  font-size: 15px;
+  line-height: 1;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+.ringHp {
+  background: linear-gradient(#e0584a, #a8261c);
+}
+
+.ringHp.hurt {
+  background: linear-gradient(#f0a04a, #b8630f);
+}
+
+.ringHp.low {
+  background: linear-gradient(#ff6a6a, #8a1010);
+}
+
+.ringArmor {
+  min-width: 34px;
+  background: linear-gradient(#cfd6ea, #6a7490);
+}
