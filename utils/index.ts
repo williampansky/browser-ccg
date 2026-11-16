@@ -5,7 +5,7 @@ export { default as cardIsMinion } from './card-is-minion';
 export { default as cardIsNotSelf } from './card-is-not-self';
 export { default as cardUuidMatch } from './card-uuid-match';
 export { default as cardWasHealed } from './card-was-healed';
-export { default as classesArray } from './classes-array';
+export { default as cx } from './cx';
 export { default as createArtistHtmlLink } from './create-artist-html-link';
 export { default as createCardKey } from './create-card-key';
 export { default as createCardObject } from './create-card-object';

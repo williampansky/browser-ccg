@@ -60,6 +60,7 @@ import { isMuted, playSounds, cancelCardHover, playCardHover, preloadSounds, set
 import { targetLinePath, TargetLineStyle } from './target-line';
 import { startDragGhost, DragGhost } from './drag-ghost';
 import { fireEndConfetti } from './end-celebration';
+import cx from '../../utils/cx';
 import { Button, Group, Panel, SegmentedControl, Select, Toggle } from '../ui';
 import { UiThemePicker } from '../ui-theme/UiThemePicker';
 import { playUiSound } from '../ui-theme/ui-sfx';
@@ -1409,11 +1410,11 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         </div>
       )}
       {(over || lab?.endPreview) && !menuOpen && (
-        <div className={[styles.gameOver, endWinner !== 'draw' && endWinner !== me && mode === 'ai' ? styles.gameOverLoss : ''].join(' ')}>
+        <div className={cx(styles.gameOver, endWinner !== 'draw' && endWinner !== me && mode === 'ai' && styles.gameOverLoss)}>
           <strong className={styles.banner}>
             {endWinner === 'draw' ? 'Draw!' : `${label(endWinner as PlayerId)} wins!`}
           </strong>
-          <button type="button" className={styles.endTurn} onClick={start}>
+          <button type="button" className={styles.endGameButton} onClick={start}>
             New game
           </button>
         </div>

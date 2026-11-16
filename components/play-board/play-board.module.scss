@@ -630,6 +630,20 @@ $po-green: var(--po-c, #5fd16a);
   }
 }
 
+.endGameButton {
+  padding: var(--mid-by, 16px) var(--mid-bx, 39px);
+  border-radius: var(--mid-br, 6px);
+  border: 1px solid var(--mid-bb, #5a8cf0);
+  background: var(--mid-bc, #3b6fd4);
+  color: var(--mid-bt, inherit);
+  font-size: calc(1em * var(--mid-bs, 1.45));
+  font-weight: var(--mid-bw, 700);
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(var(--mid-bh, 1));
+  }
+}
 
 .logCard {
   cursor: help;
