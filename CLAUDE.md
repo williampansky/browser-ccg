@@ -144,6 +144,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   (`engine/starter-decks.ts`) plus best/worst cards (`engine/sim/`). 100 games per pair takes about 15 seconds.
 - `npm run tune -- [gamesPerDeck]` - plays tweaked greedy-bot weights against the defaults (same deck both sides). A first run
   (60 games per deck) found no variant clearly better than the defaults (all within noise, 44-51%), so the weights are not the bottleneck.
+- `npm run art` - turns the master pictures in `art-inbox/` (git-ignored, Drive can sync it; named by card id, `CORE_117.png`) into `NNN-CARD.jpg` (1000 x 1000), `NNN-DECK.jpg` (600 x 75 strip) and, if the card already has one or with `--minion`, `NNN-MINION.jpg` (640 x 800) in `public/images/sets/SET_<SET>/` (`scripts/art/`; `sharp`). Where the strip and portrait are cut from is `art-focus.json` (`{ "CORE_117": { "x": 0.5, "y": 0.3, "zoom": 1.4 } }`, default centred a little high). Flags: a card id, `--dry`, `--keep`, `--minion`. Done masters move to `art-inbox/done/`.
 - `npm run airtable` - pulls the card database from Airtable into `data/*.json` (`airtable.node.js`): CORE 132, PRIME 254,
   ENTOURAGE 43, GAME 1, 9 heroes, 18 abilities, mechanics, constants. This is the data the engine and `/play` use. It
   fetches every table first and writes nothing if any fails or comes back empty.

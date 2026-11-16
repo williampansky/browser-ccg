@@ -42,3 +42,6 @@ next-env.d.ts
 backups/
 
 .next-test/
+
+# raw master pictures for `npm run art` (Drive-synced, not committed)
+/art-inbox/

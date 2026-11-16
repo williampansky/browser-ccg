@@ -7,6 +7,7 @@
   },
   "scripts": {
     "airtable": "node ./airtable.node.js",
+    "art": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\",\"esModuleInterop\":true}' ./scripts/art/art.node.ts",
     "sim": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\"}' ./engine/sim/run.node.ts",
     "sim:heroes": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\"}' ./engine/sim/hero-sim.node.ts",
     "tune": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\"}' ./engine/sim/tune.node.ts",
@@ -60,6 +61,7 @@
     "jest-matcher-one-of": "^1.0.2",
     "node-sass": "^7.0.3",
     "sass": "^1.55.0",
+    "sharp": "^0.35.5",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1"
   }
