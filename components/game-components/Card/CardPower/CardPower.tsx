@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import BADGE_POWER from '../../../../public/images/card-assets/BADGE_POWER.png';
 import styles from './card-power.module.scss';
+import cx from '../../../../utils/cx';
 
 interface CardPowerProps {
   basePower: number;
@@ -19,12 +20,12 @@ export const CardPower = ({
 }: CardPowerProps) => {
   return (
     <div
-      className={[
+      className={cx(
         styles['card__power'],
         elite ? styles['power__elite'] : '',
         isIncreased ? styles['card__power--buffed'] : '',
         isReduced ? styles['card__power--debuffed'] : '',
-      ].join(' ')}
+      )}
       data-component='CardPower'
     >
       <div

@@ -1,5 +1,6 @@
 import { heroImage } from './hero-images';
 import styles from './hero-bust.module.scss';
+import cx from '../../utils/cx';
 
 /**
  * PROTOTYPE hero display ("option 1"): an arched portrait window that rises above a base plate, so the head stands out from the
@@ -29,17 +30,17 @@ export const HeroBust = ({
   const tone = health <= maxHealth / 3 ? styles.low : health < maxHealth ? styles.hurt : '';
   return (
     <div
-      className={[styles.bust, team === 'red' ? styles.red : '', active ? styles.active : ''].join(' ')}
+      className={cx(styles.bust, team === 'red' ? styles.red : '', active ? styles.active : '')}
       style={{ ['--w' as string]: `${width}px` }}
       aria-label={`${name}: ${health} health, ${armor} armor`}
     >
       <div className={styles.arch} style={{ backgroundImage: `url(${heroImage(heroId, 'avatar')})` }} />
       <div className={styles.plate}>
-        <span className={[styles.name, name.length > 8 ? styles.longName : ''].join(' ')}>{name}</span>
+        <span className={cx(styles.name, name.length > 8 ? styles.longName : '')}>{name}</span>
         {turnTag && <span className={styles.turn}>{turnTag}</span>}
       </div>
-      <span className={[styles.gem, styles.hp, tone].join(' ')}>{health}</span>
-      {armor > 0 && <span className={[styles.gem, styles.armor].join(' ')}>{armor}</span>}
+      <span className={cx(styles.gem, styles.hp, tone)}>{health}</span>
+      {armor > 0 && <span className={cx(styles.gem, styles.armor)}>{armor}</span>}
     </div>
   );
 };

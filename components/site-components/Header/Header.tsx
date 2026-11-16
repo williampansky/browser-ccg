@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Fragment, useState } from 'react';
 import { siteConfig } from '../../../app.config';
 import { Nav } from '../Nav';
+import cx from '../../../utils/cx';
 const { pages } = siteConfig;
 
 export const Header = () => {
@@ -17,7 +18,7 @@ export const Header = () => {
   }
 
   return (
-    <header className={['site__header', active ? 'active' : ''].join(' ')}>
+    <header className={cx('site__header', active ? 'active' : '')}>
       <div className='text__value'>{siteConfig.longName}</div>
       <button onClick={onClick}>
         <img

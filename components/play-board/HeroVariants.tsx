@@ -1,6 +1,7 @@
 import React from 'react';
 import { heroImage } from './hero-images';
 import styles from './hero-variants.module.scss';
+import cx from '../../utils/cx';
 
 /**
  * PROTOTYPE hero displays 2 to 4 (option 1 is HeroBust): the standing figure, the big medallion and the hero as a framed card.
@@ -22,7 +23,7 @@ export interface HeroVariantProps {
 const tone = (health: number, maxHealth: number) => (health <= maxHealth / 3 ? styles.low : health < maxHealth ? styles.hurt : '');
 const art = (id: string) => `url(${heroImage(id, 'avatar')})`;
 const root = (p: HeroVariantProps, extra: string) =>
-  [styles.root, extra, p.team === 'red' ? styles.red : '', p.active ? styles.active : ''].join(' ');
+  cx(styles.root, extra, p.team === 'red' ? styles.red : '', p.active ? styles.active : '');
 
 /**
  * 2: the hero as a tall framed figure, laid out like the TCG Vol 14 sample card: portrait in the window, name on the ribbon, skills
@@ -64,13 +65,13 @@ export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & Fi
     <div
       {...p.dom}
       ref={p.rootRef}
-      className={[root(p, styles.figure), p.canAct ? styles.canAct : '', p.aim ? styles.aim : '', p.aim && p.aimHover ? styles.aimHover : '', p.selected ? styles.sel : ''].join(' ')}
+      className={cx(root(p, styles.figure), p.canAct ? styles.canAct : '', p.aim ? styles.aim : '', p.aim && p.aimHover ? styles.aimHover : '', p.selected ? styles.sel : '')}
     >
       <div className={styles.figPic} style={{ backgroundImage: art(p.heroId) }} />
       <img className={styles.figFrame} src="/images/frames/HERO-VOL14.png" alt="" draggable={false} />
       {p.weapon && (
         <div
-          className={[styles.figWeapon, p.weapon.image ? '' : styles.figWeaponBare, p.weapon.temporary ? styles.figWeaponTemp : ''].join(' ')}
+          className={cx(styles.figWeapon, p.weapon.image ? '' : styles.figWeaponBare, p.weapon.temporary ? styles.figWeaponTemp : '')}
           aria-label={`${p.weapon.name ?? 'Weapon'}: ${p.weapon.attack} attack, ${p.weapon.durability} durability${p.weapon.temporary ? ', this turn only' : ''}`}
         >
           {p.weapon.image && <img src={p.weapon.image} alt="" draggable={false} />}
@@ -94,7 +95,7 @@ export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & Fi
               }}
               disabled={!!k && !k.usable}
               aria-label={k ? `${k.name}, cost ${k.cost}${status ? `, ${status}` : ''}: ${k.text}` : `Skill ${n}`}
-              className={[styles.figSkill, k?.usable ? styles.ready : '', k?.selected ? styles.picked : '', k && !k.usable ? styles.off : ''].join(' ')}
+              className={cx(styles.figSkill, k?.usable ? styles.ready : '', k?.selected ? styles.picked : '', k && !k.usable ? styles.off : '')}
               style={{ backgroundImage: `url(${heroImage(p.heroId, `skill-${n}`)})` }}
             >
               {k && <b className={styles.figCost}>{k.cost}</b>}
@@ -113,11 +114,11 @@ export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & Fi
         })}
       </div>
       {!!p.armor && (
-        <span className={[styles.figGem, styles.figArmor].join(' ')} aria-label={`${p.armor} armor`}>
+        <span className={cx(styles.figGem, styles.figArmor)} aria-label={`${p.armor} armor`}>
           <b>{p.armor}</b>
         </span>
       )}
-      <span className={[styles.figGem, styles.figHp, state].join(' ')} aria-label={`${p.health} health`}>
+      <span className={cx(styles.figGem, styles.figHp, state)} aria-label={`${p.health} health`}>
         <b>{p.health}</b>
       </span>
     </div>
@@ -138,8 +139,8 @@ export const HeroMedallion = (p: HeroVariantProps) => {
         {!!p.armor && <span className={styles.medalArmor} style={{ ['--armor' as string]: `${Math.min(p.armor / 15, 1) * 360}deg` }} />}
         <span className={styles.medalFace} style={{ backgroundImage: art(p.heroId) }} />
       </div>
-      {p.turnTag && <span className={[styles.turnTag, styles.medalTag].join(' ')}>{p.turnTag}</span>}
-      <span className={[styles.hpGem, styles.medalHp, styles.num, t].join(' ')}>{p.health}</span>
+      {p.turnTag && <span className={cx(styles.turnTag, styles.medalTag)}>{p.turnTag}</span>}
+      <span className={cx(styles.hpGem, styles.medalHp, styles.num, t)}>{p.health}</span>
       <span className={styles.medalName}>{p.name}</span>
     </div>
   );
@@ -153,9 +154,9 @@ export const HeroCard = (p: HeroVariantProps) => {
       <span className={styles.cardArt} style={{ backgroundImage: art(p.heroId) }} />
       <img className={styles.cardFrame} src={`/images/frames/${p.team === 'red' ? 'RED' : 'GREEN'}.png`} alt="" draggable={false} />
       <span className={styles.cardName}>{p.name}</span>
-      <span className={[styles.hpGem, styles.num, tone(p.health, max)].join(' ')}>{p.health}</span>
-      {!!p.armor && <span className={[styles.armorGem, styles.num].join(' ')}>{p.armor}</span>}
-      {p.turnTag && <span className={[styles.turnTag, styles.cardTag].join(' ')}>{p.turnTag}</span>}
+      <span className={cx(styles.hpGem, styles.num, tone(p.health, max))}>{p.health}</span>
+      {!!p.armor && <span className={cx(styles.armorGem, styles.num)}>{p.armor}</span>}
+      {p.turnTag && <span className={cx(styles.turnTag, styles.cardTag)}>{p.turnTag}</span>}
     </div>
   );
 };

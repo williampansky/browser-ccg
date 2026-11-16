@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { siteConfig } from '../../../app.config';
 import type { RootState } from '../../../store';
 import styles from './scroll-to-top.module.scss';
+import cx from '../../../utils/cx';
 const { pages } = siteConfig;
 
 interface ScrollToTopProps {
@@ -52,7 +53,7 @@ export const ScrollToTop = ({
 
   return visible ? (
     <button
-      className={[styles['component'], 'bccg-animation-slide-bottom'].join(' ')}
+      className={cx(styles['component'], 'bccg-animation-slide-bottom')}
       data-component='ScrollToTop'
       onClick={() => scrollToTopFunc(smooth)}
       aria-label='Scroll to top'

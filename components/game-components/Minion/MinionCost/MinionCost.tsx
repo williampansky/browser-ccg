@@ -1,5 +1,6 @@
 import { ReactElement } from 'react';
 import styles from './minion-cost.module.scss';
+import cx from '../../../../utils/cx';
 
 export interface ReactMinionCostProps {
   cost: number;
@@ -19,14 +20,14 @@ export const MinionCost = ({
       data-value={cost}
     >
       <div
-        className={[styles['text'], elite ? styles['elite'] : ''].join(' ')}
+        className={cx(styles['text'], elite ? styles['elite'] : '')}
       >
         <div className="text__value">{cost}</div>
       </div>
       {elite ? (
         <img
           alt=""
-          className={[styles['badge'], styles['elite']].join(' ')}
+          className={cx(styles['badge'], styles['elite'])}
           role="presentation"
           src={imageSrc}
         />

@@ -8,6 +8,7 @@ import { removeCard } from '../../../features';
 
 import energyImg from '../../../public/images/card-assets/ENERGY_SLOT_EMPTY.png';
 import { getDeckbuilderDeckLength } from '../../../utils';
+import cx from '../../../utils/cx';
 
 interface SidebarProps {
   active: boolean;
@@ -38,11 +39,11 @@ export const Sidebar = ({
 
   return (
     <aside
-      className={[
+      className={cx(
         'site__sidebar',
         active ? 'sidebar--decks' : '',
         activeDeck !== undefined ? 'sidebar--deckbuilder' : '',
-      ].join(' ')}
+      )}
     >
       {active && !activeDeck && decks && (
         <ul className='decks__grid'>

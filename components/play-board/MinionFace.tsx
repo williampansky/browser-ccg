@@ -4,6 +4,7 @@ import { minionArtBackground } from './card-face-model';
 import { isDamaged, statTone, statusBadges, StatusBadge } from './minion-model';
 import { FloatDelta } from './FloatDelta';
 import styles from './board-minion.module.scss';
+import cx from '../../utils/cx';
 
 /**
  * What a minion on the board looks like, ported from hsclone's `MinionV2`: an oval portrait of the card's art, a sword badge for Attack
@@ -89,13 +90,13 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
       <FloatDelta value={m.health} />
       {m.keywords.guard && <GuardShield />}
       <span
-        className={[
+        className={cx(
           styles.oval,
           hurt ? styles.shake : '',
           m.keywords.hidden ? styles.veiled : '',
           m.silenced ? styles.muted : '',
           doomed ? styles.doomedPortrait : ''
-        ].join(' ')}
+        )}
       >
         {/* The picture is its own layer inside the oval (which clips it), so it can scale on hover without scaling the frame. */}
         <span
@@ -122,7 +123,7 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
           {badges.map(b => (
             <span
               key={b.kind}
-              className={[styles.badge, styles[`badge_${b.kind}`]].join(' ')}
+              className={cx(styles.badge, styles[`badge_${b.kind}`])}
               title={b.label}
               aria-label={b.label}
             >
@@ -132,22 +133,22 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
         </span>
       )}
       <span
-        className={[
+        className={cx(
           styles.stat,
           styles.attack,
           styles[`tone_${attackTone}`]
-        ].join(' ')}
+        )}
         aria-label={`Attack ${m.attack}`}
       >
         <img src="/images/ui/stat-attack.png" alt="" draggable={false} />
         <b>{m.attack}</b>
       </span>
       <span
-        className={[
+        className={cx(
           styles.stat,
           styles.health,
           styles[`tone_${healthTone}`]
-        ].join(' ')}
+        )}
         aria-label={`Health ${m.health}`}
       >
         <img src="/images/ui/stat-health.png" alt="" draggable={false} />

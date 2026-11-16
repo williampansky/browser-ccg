@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { IMPACT_MS, reducedMotion } from './motion';
 import styles from './float-delta.module.scss';
+import cx from '../../utils/cx';
 
 interface Pop {
   id: number;
@@ -29,7 +30,7 @@ export const FloatDelta = ({ value, gain = 'heal' }: { value: number; gain?: 'he
   return (
     <>
       {pops.map((p) => (
-        <span key={p.id} className={[styles.pop, p.amount < 0 ? styles.hurt : styles[gain]].join(' ')} aria-hidden="true">
+        <span key={p.id} className={cx(styles.pop, p.amount < 0 ? styles.hurt : styles[gain])} aria-hidden="true">
           {p.amount > 0 ? `+${p.amount}` : p.amount}
         </span>
       ))}

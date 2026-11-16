@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import type { GameOver, PlayerID } from '../../types';
 import type { RootState } from '../../store';
 import styles from './game-over-overlay.module.scss';
+import cx from '../../utils/cx';
 
 interface GameOverOverlayComponent {
   playerID: PlayerID | null;
@@ -37,10 +38,10 @@ export const GameOverOverlay = ({
 
   return (
     <div
-      className={[
+      className={cx(
         styles['component'],
         gameOver.draw || gameOver.winner ? styles['active'] : '',
-      ].join(' ')}
+      )}
     >
       <h2>{getWinner(gameOver)}</h2>
       <div

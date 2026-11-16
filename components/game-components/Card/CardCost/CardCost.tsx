@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import BADGE_COST from '../../../../public/images/card-assets/BADGE_COST.png';
 import styles from './card-cost.module.scss';
+import cx from '../../../../utils/cx';
 
 interface CardCostProps {
   base: number;
@@ -17,11 +18,11 @@ export const CardCost = ({
 }: CardCostProps) => {
   return (
     <div
-      className={[
+      className={cx(
         styles['card__cost'],
         isIncreased ? styles['cost--increased'] : '',
         isReduced ? styles['cost--decreased'] : '',
-      ].join(' ')}
+      )}
       data-component='CardCost'
     >
       <div className='text__value text__value--shadow'>{current}</div>

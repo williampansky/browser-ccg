@@ -1126,13 +1126,13 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         }}
         {...dropOnTarget({ kind: 'minion', instanceId: m.instanceId })}
         {...(!over && owner === me && canAttack(m) ? dragFrom({ kind: 'minion', id: m.instanceId }) : {})}
-        className={[
+        className={cx(
           minionStyles.slot,
           owner === me && canAttack(m) ? minionStyles.ready : '',
           selected ? minionStyles.selected : '',
           aim ? minionStyles.aim : '',
           aim && hover?.kind === 'minion' && hover.instanceId === m.instanceId ? minionStyles.aimHover : '',
-        ].join(' ')}
+        )}
         onClick={() => clickMinion(owner, m)}
       >
         <MinionFace card={card} m={m} turn={state.turn} sick={sick} doomed={doomed.has(m.instanceId)} />
@@ -1145,7 +1145,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       key={`dead${g.key}`}
       data-gap
       aria-hidden="true"
-      className={[minionStyles.slot, minionStyles.dying].join(' ')}
+      className={cx(minionStyles.slot, minionStyles.dying)}
       ref={track(`g${g.key}`)}
       style={{ animationDelay: `${g.delay}ms` }}
     >
@@ -1181,7 +1181,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     );
     if (figUi && hero && p.hero) {
       return (
-        <div className={[styles.figSlot, isMe ? styles.figMe : styles.figFoe].join(' ')}>
+        <div className={cx(styles.figSlot, isMe ? styles.figMe : styles.figFoe)}>
           <HeroFigure
             heroId={hero.id}
             name={hero.name}
@@ -1301,7 +1301,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           ['--fan-x' as string]: `${fanX(index, handCount, HAND_CARD_WIDTH)}px`,
         }}
         title={titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`)}
-        className={[styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index || aimable.length > 0 ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : ''].join(' ')}
+        className={cx(styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index || aimable.length > 0 ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : '')}
         onMouseEnter={() => !over && !document.body.classList.contains('dragging') && !selection && playCardHover()}
         onMouseLeave={cancelCardHover}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
@@ -1383,7 +1383,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const foeTo = foeToEl ? centerOf(foeToEl) : null;
 
   return (
-    <main className={[styles.page, a11y ? styles.a11y : ''].join(' ')}>
+    <main className={cx(styles.page, a11y ? styles.a11y : '')}>
       {hasSelection && lineFrom && <AimArrow from={lineFrom} hit={!!overTarget} />}
       {foeFrom && foeTo && (
         <svg className={styles.targetLine} aria-hidden="true">
@@ -1403,7 +1403,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         </svg>
       )}
       {castFx && (
-        <div ref={castRef} key={castFx.n} className={[styles.castFx, castFx.owner === me ? styles.castMine : styles.castFoe].join(' ')}>
+        <div ref={castRef} key={castFx.n} className={cx(styles.castFx, castFx.owner === me ? styles.castMine : styles.castFoe)}>
           <div className={styles.castSize}>
             <CardFace card={castFx.card} width={190} />
           </div>
@@ -1558,7 +1558,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               {choiceOptions.map((c) => {
                 const top = byId.get(state.players[me].deck[c]?.cardId ?? '');
                 return (
-                  <button key={c} type="button" style={artStyle(top?.id)} className={[styles.modalCard, styles.art].join(' ')} onClick={() => pickChoice(c)}>
+                  <button key={c} type="button" style={artStyle(top?.id)} className={cx(styles.modalCard, styles.art)} onClick={() => pickChoice(c)}>
                     <span className={styles.cost}>{top?.cost}</span>
                     <span className={styles.name}>{top?.name ?? 'Empty'}</span>
                     <span className={styles.type}>
@@ -1589,7 +1589,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                     key={c}
                     type="button"
                     style={artStyle(opt?.id ?? selectedCard?.id, selectedCard?.id)}
-                    className={[styles.modalCard, typeClass(opt?.type ?? selectedCard?.type), styles.art].join(' ')}
+                    className={cx(styles.modalCard, typeClass(opt?.type ?? selectedCard?.type), styles.art)}
                     onClick={() => pickChoice(c)}
                   >
                     {opt && <span className={styles.cost}>{opt.cost}</span>}
@@ -1627,14 +1627,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       >
         {flight && flightTo && <CardFlight card={flight.card} from={flight.from} to={flightTo} width={HAND_CARD_WIDTH} />}
         <EnergyBar current={state.players[me].energy.current} total={state.players[me].energy.total} cost={lab?.blinkPreview ? (lab.blinkPreview === 'red' ? 99 : Math.min(3, state.players[me].energy.current)) : pendingCost} />
-        {areaZone && <div className={[styles.castArea, areaHot || overlayPreview === 'spell-hot' ? styles.castAreaHot : ''].join(' ')} style={{ height: areaHeight }} />}
-        <section className={[styles.side, styles.top].join(' ')}>
+        {areaZone && <div className={cx(styles.castArea, areaHot || overlayPreview === 'spell-hot' ? styles.castAreaHot : '')} style={{ height: areaHeight }} />}
+        <section className={cx(styles.side, styles.top)}>
           <div className={styles.backs}>
             {state.players[foe].hand.map((_, i, all) => (
               <div
                 key={i}
                 style={{ ['--back-rot' as string]: `${-fanRotation(i, all.length)}deg`, ['--back-rise' as string]: `${fanDrop(i, all.length) * 0.4}px` }}
-                className={[styles.cardBack, foeAim?.action.type === 'PlayCard' && foeAim.action.handIndex === i ? styles.backPicked : ''].join(' ')}
+                className={cx(styles.cardBack, foeAim?.action.type === 'PlayCard' && foeAim.action.handIndex === i ? styles.backPicked : '')}
               />
             ))}
           </div>
@@ -1647,7 +1647,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           </div>
         <div className={styles.middle}>
           {!over && (lab || timerApplies) && (
-            <div className={[styles.timerBar, (lab ? (lab.timerPct ?? 70) <= 17 : clockLeft <= 10) ? styles.timerLow : ''].join(' ')} aria-hidden="true">
+            <div className={cx(styles.timerBar, (lab ? (lab.timerPct ?? 70) <= 17 : clockLeft <= 10) ? styles.timerLow : '')} aria-hidden="true">
               <i ref={timerFillRef} className={styles.timerFill} style={lab ? { width: `${lab.timerPct ?? 70}%` } : undefined} />
             </div>
           )}
@@ -1667,7 +1667,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           ) : (
             <small className={styles.text}>
               Turn {state.turn}: {label(state.activePlayer)}
-              {timerApplies && <b className={[styles.clock, clockLeft <= 10 ? styles.clockLow : ''].join(' ')}> {formatClock(clockLeft)}</b>}
+              {timerApplies && <b className={cx(styles.clock, clockLeft <= 10 ? styles.clockLow : '')}> {formatClock(clockLeft)}</b>}
               {choiceOptions.length > 0 ? ' - choose one option' : ''}
               {boardZone ? ' - drag it (or click) onto your board; it lands in the gap you pick, between minions or at either end' : ''}
               {areaZone ? ' - drag it (or click) onto the play area to cast it' : ''}
@@ -1688,7 +1688,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         </div>
           <section className={styles.side}>
           <div
-            className={[styles.row, boardZone ? styles.zone : '', overlayPreview === 'minion-hot' ? styles.zoneHot : ''].join(' ')}
+            className={cx(styles.row, boardZone ? styles.zone : '', overlayPreview === 'minion-hot' ? styles.zoneHot : '')}
             style={minionRowStyle}
             onClick={(e) => playFromArea(e, 'board')}
             onMouseMove={(e) => boardZone && setHoverGap(gapAt(e.currentTarget, e.clientX))}
@@ -1727,10 +1727,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           </section>
         </div>
 
-        <section ref={bottomRef} className={[styles.side, styles.bottom].join(' ')}>
+        <section ref={bottomRef} className={cx(styles.side, styles.bottom)}>
           {renderHero(me, true)}
           <div
-            className={[styles.row, styles.hand].join(' ')}
+            className={cx(styles.row, styles.hand)}
             ref={handRef}
             style={{ ['--hand-zoom' as string]: zoomNow, ['--hand-sink' as string]: `${handSink}px` }}
           >
@@ -1759,7 +1759,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         </h2>
         <div className={styles.deckRows}>
           {deckRows(startDecks[me], state.players[me].deck.map((c) => c.cardId), byId).map((r) => (
-            <DeckRow key={r.id} name={r.name} className={[styles.deckRow, r.left === 0 ? styles.deckGone : ''].join(' ')}>
+            <DeckRow key={r.id} name={r.name} className={cx(styles.deckRow, r.left === 0 ? styles.deckGone : '')}>
               <span className={styles.deckCost}>{r.cost}</span>
               <span className={styles.deckName}>{r.name}</span>
               <span className={styles.deckCount}>{r.total > 1 ? `${r.left}/${r.total}` : r.left}</span>

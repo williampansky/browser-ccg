@@ -1,5 +1,6 @@
 import { energyPips, pipsToSpend } from './hero-bar-model';
 import styles from './energy-bar.module.scss';
+import cx from '../../utils/cx';
 
 interface EnergyBarProps {
   current: number;
@@ -27,7 +28,7 @@ export const EnergyBar = ({ current, total, cost }: EnergyBarProps) => {
           .map((p, i) => (
             <i
               key={i}
-              className={[styles.orb, styles[p], spend[i] ? (short ? styles.blinkRed : styles.blink) : ''].join(' ')}
+              className={cx(styles.orb, styles[p], spend[i] ? (short ? styles.blinkRed : styles.blink) : '')}
             />
           ))
           .reverse()}

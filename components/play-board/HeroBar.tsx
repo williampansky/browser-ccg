@@ -2,6 +2,7 @@ import React from 'react';
 import { FloatDelta } from './FloatDelta';
 import { energyPips, healthFraction, healthTone } from './hero-bar-model';
 import styles from './hero-bar.module.scss';
+import cx from '../../utils/cx';
 
 export interface HeroBarWeapon {
   name: string;
@@ -89,7 +90,7 @@ export const HeroBar = ({
       aria-label={`${name}: ${health} health, ${armor} armor, energy ${energy.current} of ${energy.total}, ${deck} cards in deck, ${hand} in hand, ${weaponText}`}
       {...rest}
       style={accent ? ({ ['--team' as string]: accent } as React.CSSProperties) : undefined}
-      className={[
+      className={cx(
         styles.bar,
         styles[team],
         active ? styles.active : '',
@@ -97,11 +98,11 @@ export const HeroBar = ({
         aim ? styles.aim : '',
         aim && aimHover ? styles.aimHover : '',
         selected ? styles.selected : '',
-      ].join(' ')}
+      )}
     >
       <span
         ref={avatarRef}
-        className={[styles.avatar, styles[tone]].join(' ')}
+        className={cx(styles.avatar, styles[tone])}
         style={{ ['--fill' as string]: `${Math.round(fraction * 360)}deg` }}
       >
         <span className={styles.face}>
@@ -137,7 +138,7 @@ export const HeroBar = ({
         {mystery && (
           <span className={styles.mystery} title={tt('A face-down Mystery: it reacts on the opponent\'s turn')}>
             ? {mystery}
-            {mysteryTip && <span data-tip="" className={[styles.mysteryTip, mysteryTipBelow ? styles.mysteryTipBelow : ''].join(' ')}>{mysteryTip}</span>}
+            {mysteryTip && <span data-tip="" className={cx(styles.mysteryTip, mysteryTipBelow ? styles.mysteryTipBelow : '')}>{mysteryTip}</span>}
           </span>
         )}
         <span className={styles.counts}>
@@ -153,7 +154,7 @@ export const HeroBar = ({
       </span>
 
       <span
-        className={[styles.weapon, weapon ? '' : styles.noWeapon, weapon && canAct ? (selected ? styles.weaponSelected : styles.weaponReady) : ''].join(' ')}
+        className={cx(styles.weapon, weapon ? '' : styles.noWeapon, weapon && canAct ? (selected ? styles.weaponSelected : styles.weaponReady) : '')}
         title={tt(weapon ? weaponText : 'No weapon equipped')}>
         {weapon ? (
           <>

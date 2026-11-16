@@ -4,6 +4,7 @@ import type { Card } from '../../../../types';
 
 import { getMechanicObject, replaceAllConstants } from '../../../../utils';
 import { Card as CardComponent, Minion } from '../../../game-components';
+import cx from '../../../../utils/cx';
 
 interface Props {
   data?: Card;
@@ -27,10 +28,10 @@ export const CardDetailModal = ({
 
   return (
     <div
-      className={[
+      className={cx(
         'card-detail__modal',
         data ? 'card-detail__modal--active' : '',
-      ].join(' ')}
+      )}
       onClick={onModalDismiss}
       style={{
         height: `calc(100vh - ${abSize}px)`,

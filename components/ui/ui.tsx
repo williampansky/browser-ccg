@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
+import cx from '../../utils/cx';
 import { AnimatedIcon } from './AnimatedIcon';
 
 /**
@@ -8,8 +9,6 @@ import { AnimatedIcon } from './AnimatedIcon';
  * (focus, sounds, a11y) lands everywhere at once. The look lives in styles/site-styles/_ui-kit.scss.
  * Not for the cards, minions or heroes: those have their own look.
  */
-
-const cx = (...parts: (string | false | null | undefined)[]) => parts.filter(Boolean).join(' ');
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'danger' };
 

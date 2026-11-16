@@ -20,6 +20,7 @@ import { CardTypeLabel } from './CardTypeLabel/CardTypeLabel';
 import styles from './card.module.scss';
 import { CardHealth } from './CardHealth/CardHealth';
 import { useCallback } from 'react';
+import cx from '../../../utils/cx';
 
 export interface ReactCardProps extends CardProps {
   isSelected?: boolean;
@@ -79,11 +80,11 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
 
   return (
     <div
-      className={[
+      className={cx(
         styles['card'],
         elite ? styles['elite'] : '',
         !canPlay ? styles['cant-play'] : '',
-      ].join(' ')}
+      )}
       data-component='Card'
       id={uuid}
     >

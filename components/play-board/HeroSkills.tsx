@@ -1,4 +1,5 @@
 import styles from './hero-skills.module.scss';
+import cx from '../../utils/cx';
 
 export interface SkillView {
   index: number;
@@ -69,12 +70,12 @@ export const HeroSkills = ({
             disabled={!interactive || !s.usable}
             aria-pressed={selected === s.index}
             aria-label={`${s.name}, cost ${s.cost}${status ? `, ${status}` : ''}: ${s.text}`}
-            className={[
+            className={cx(
               styles.skill,
               s.usable && interactive ? styles.ready : '',
               selected === s.index ? styles.selected : '',
               s.spent ? styles.spent : ''
-            ].join(' ')}
+            )}
             onClick={() => onPick(s.index)}
           >
             <img

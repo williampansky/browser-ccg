@@ -3,6 +3,7 @@ import Image from 'next/image';
 
 import styles from './minion-image.module.scss';
 import PLACEHOLDER from '../../../../public/images/sets/PLACEHOLDER.jpg';
+import cx from '../../../../utils/cx';
 
 export interface ReactMinionImageProps {
   src?: string;
@@ -32,11 +33,11 @@ export const MinionImage = ({
 
   return (
     <div
-      className={[
+      className={cx(
         styles['wrapper'],
         styles[rarity],
         isDestroyed ? styles['is-destroyed'] : '',
-      ].join(' ')}
+      )}
       data-component='MinionImage'
     >
       {fpoArt && <div className={styles['fpo']}>FPO</div>}

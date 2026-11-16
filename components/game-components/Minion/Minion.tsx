@@ -4,6 +4,7 @@ import { MinionImage } from './MinionImage/MinionImage';
 import { MinionPower } from './MinionPower/MinionPower';
 import { CardType } from '../../../enums';
 import styles from './minion.module.scss';
+import cx from '../../../utils/cx';
 
 export interface ReactMinionProps extends CardProps {
   isSelected?: boolean;
@@ -55,10 +56,10 @@ export const Minion = ({ isSelected = false, ...card }: ReactMinionProps) => {
 
   return (
     <div
-      className={[
+      className={cx(
         styles['minion'],
         booleans?.isHidden ? 'minion--is-hidden' : '',
-      ].join(' ')}
+      )}
       data-component='Minion'
       id={uuid}
     >

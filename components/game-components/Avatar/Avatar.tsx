@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import styles from './avatar.module.scss';
+import cx from '../../../utils/cx';
 
 interface Player {
   
@@ -8,7 +9,7 @@ interface Player {
 export const Avatar = () => {
   return (
     <div
-      className={[styles['component']].join(' ')}
+      className={cx(styles['component'])}
       data-component='Avatar'
     >
       <Image

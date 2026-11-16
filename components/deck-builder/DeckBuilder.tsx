@@ -9,6 +9,7 @@ import { addCard, blankDeck, countOf, curve, removeCard, SavedDeck, whyNotAdd } 
 import { loadDecks, saveDecks } from './deck-storage';
 import { Button, LinkButton, SegmentedControl, Select, TextInput } from '../ui';
 import styles from './deck-builder.module.scss';
+import cx from '../../utils/cx';
 
 const { cards, byId } = loadHsCards();
 const corePool = playablePool(cards);
@@ -119,7 +120,7 @@ export const DeckBuilder = () => {
               <div key={c.id} className={styles.cardWrap}>
                 <button
                   type="button"
-                  className={[styles.cardButton, blocked ? styles.blocked : ''].join(' ')}
+                  className={cx(styles.cardButton, blocked ? styles.blocked : '')}
                   onClick={() => setViewing(c.id)}
                   onContextMenu={(e) => {
                     // Right-click adds a copy without opening the card (and no browser menu).
@@ -212,7 +213,7 @@ export const DeckBuilder = () => {
             </option>
           ))}
         </Select>
-        <div className={[styles.size, full ? styles.full : ''].join(' ')}>
+        <div className={cx(styles.size, full ? styles.full : '')}>
           {deck.cards.length} / {MAX_DECK_SIZE} cards
         </div>
         <div className={styles.curve} aria-label="Mana curve">

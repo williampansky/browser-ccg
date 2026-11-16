@@ -5,6 +5,7 @@ import type { Card, MinionInstance } from '../engine';
 import { createMinion } from '../engine/rules/minion';
 import { MinionFace } from '../components/play-board/MinionFace';
 import minionStyles from '../components/play-board/board-minion.module.scss';
+import cx from '../utils/cx';
 
 /**
  * PROTOTYPE page (dev only, not linked): the board minion (MinionFace) on its own, a gallery of the different looks, with sliders for the
@@ -474,7 +475,7 @@ const MinionLab = () => {
         <div style={{ zoom, display: 'flex', flexWrap: 'wrap', gap: '36px 28px', justifyContent: 'center', alignContent: 'flex-start' }}>
           {samples.map((s) => (
             <figure key={s.label} style={{ margin: 0, textAlign: 'center' }}>
-              <div className={[minionStyles.slot, state ? minionStyles[state] : ''].join(' ')} style={{ margin: '0 auto' }}>
+              <div className={cx(minionStyles.slot, state ? minionStyles[state] : '')} style={{ margin: '0 auto' }}>
                 <MinionFace card={s.card} m={s.m} turn={3} sick={s.sick} doomed={s.doomed} />
               </div>
               {one(q.labels) !== '0' && <figcaption style={{ marginTop: 6, color: '#9aa3b8', fontSize: 12 }}>{s.label}</figcaption>}

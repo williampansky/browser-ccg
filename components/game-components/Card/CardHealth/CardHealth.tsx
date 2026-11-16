@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import BADGE_POWER from '../../../../public/images/card-assets/BADGE_POWER.png';
 import styles from './card-health.module.scss';
+import cx from '../../../../utils/cx';
 
 interface CardHealthProps {
   base: number;
@@ -19,12 +20,12 @@ export const CardHealth = ({
 }: CardHealthProps) => {
   return (
     <div
-      className={[
+      className={cx(
         styles['card__health'],
         elite ? styles['health__elite'] : '',
         isIncreased ? styles['card__health--buffed'] : '',
         isReduced ? styles['card__health--debuffed'] : '',
-      ].join(' ')}
+      )}
       data-component='CardHealth'
     >
       <div

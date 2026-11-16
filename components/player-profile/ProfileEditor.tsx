@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { cleanName, MAX_NAME_LENGTH, normalizeProfile, PlayerProfile, THEMES } from './profile';
 import { TextInput } from '../ui';
 import styles from './profile-editor.module.scss';
+import cx from '../../utils/cx';
 
 interface Props {
   profile: PlayerProfile;
@@ -42,7 +43,7 @@ export const ProfileEditor = ({ profile, onChange }: Props) => {
               aria-checked={profile.theme === t.id}
               aria-label={t.label}
               title={t.label}
-              className={[styles.swatch, profile.theme === t.id ? styles.on : ''].join(' ')}
+              className={cx(styles.swatch, profile.theme === t.id ? styles.on : '')}
               style={{ ['--swatch' as string]: t.color } as React.CSSProperties}
               onClick={() => onChange(normalizeProfile({ ...profile, theme: t.id }))}
             />
