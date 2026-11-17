@@ -2901,6 +2901,7 @@
     "text": "<strong>%TRANSFORM%</strong> a minion<br>\ninto a 0/1 %RACE_DEMONIC%<br>\nwith <strong>%BULWARK%</strong>",
     "mechanics": [
       "%TRANSFORM%",
+      "%TARGET%",
       "%BULWARK%"
     ],
     "numberPrimary": 0,
@@ -2912,9 +2913,9 @@
     "active": true,
     "entourage": "CORE_109a",
     "howToEarn": "Provided to all players.",
-    "artistName": "Konstantin Vohwinkel",
-    "artistUrl": "https://www.artstation.com/kingstantin",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_076",
