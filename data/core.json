@@ -1517,7 +1517,7 @@
   },
   {
     "id": "CORE_080",
-    "name": "Spice of Life",
+    "name": "Insightful Strike",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -1536,7 +1536,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_019",
@@ -1898,7 +1900,7 @@
   },
   {
     "id": "CORE_045",
-    "name": "Infernal Hanzo",
+    "name": "Gilded Wing",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -1917,13 +1919,13 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Jeff Chen",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_060",
-    "name": "Shock and Awe",
+    "name": "Dual Impact",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -1941,7 +1943,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_066",
@@ -2090,13 +2094,13 @@
   },
   {
     "id": "CORE_107",
-    "name": "%DOUBLE_ATTACK%",
+    "name": "Relentless Fury",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "%BUFF% with <strong>%DOUBLE_ATTACK%</strong><br />\n<small>Allows 2 attacks per turn</small>",
+    "text": "%BUFF% with <strong>%DOUBLE_ATTACK%</strong><br />\n<small>(Two attacks per turn)</small>",
     "mechanics": [
       "%BUFF%",
       "%DOUBLE_ATTACK%",
@@ -2110,9 +2114,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Hanonaut",
-    "artistUrl": "https://www.deviantart.com/hanonaut",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_034",
