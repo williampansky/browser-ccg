@@ -1991,7 +1991,7 @@
   },
   {
     "id": "CORE_082",
-    "name": "Knight Lieutenant",
+    "name": "Brew-Keeper Brute",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -2000,7 +2000,7 @@
     "cost": 6,
     "attack": 5,
     "health": 6,
-    "text": "<strong>%ON_PLAY%</strong><br>\nHeal your Hero for 4 Health",
+    "text": "<strong>%ON_PLAY%:</strong><br>\nHeal your Hero for 4 Health",
     "mechanics": [
       "%ON_PLAY%",
       "%HEAL%"
@@ -2010,7 +2010,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_110",
