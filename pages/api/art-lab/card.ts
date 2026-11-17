@@ -1,8 +1,26 @@
 import { execFile } from 'child_process';
+import fs from 'fs';
+import path from 'path';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { findMaster } from '../../../scripts/art/master-file';
 import { FieldValue, readCard, readSchema, toUpdate, writeCard } from '../../../scripts/art/airtable-card';
+import { collectArtists } from '../../../scripts/art/artists';
 import { devOnly } from '../../../scripts/art/dev-guard';
+
+/** Artist names/URLs already used in data/*.json (cards and heroes), for the lab's suggestions. */
+const artistSuggestions = () => {
+  const dir = path.join(process.cwd(), 'data');
+  const records: { artistName?: unknown; artistUrl?: unknown }[] = [];
+  for (const f of fs.readdirSync(dir).filter((n) => n.endsWith('.json'))) {
+    try {
+      const json = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+      if (Array.isArray(json)) records.push(...json.filter((r) => r && typeof r === 'object'));
+    } catch {
+      // a data file that is not JSON just contributes nothing
+    }
+  }
+  return collectArtists(records);
+};
 
 /**
  * Art lab: GET ?id=CORE_122 reads that CARDS row and the editable field types; POST { id, fields } writes only the fields sent
@@ -15,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const id = String(req.query.id || '').toUpperCase();
       const [schema, row] = await Promise.all([readSchema(), readCard(id)]);
       if (!row) return void res.status(404).json({ error: `No CARDS row with id ${id}` });
-      return void res.status(200).json({ id, recordId: row.recordId, fields: row.fields, schema, hasMaster: !!findMaster(id) });
+      return void res.status(200).json({ id, recordId: row.recordId, fields: row.fields, schema, hasMaster: !!findMaster(id), artists: artistSuggestions() });
     }
     if (req.method === 'POST') {
       const { id, fields, pull } = req.body as { id: string; fields: Record<string, FieldValue>; pull?: boolean };

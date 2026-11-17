@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Checkbox, Group, Select, TextInput } from '../ui';
 import { CardLookup } from './CardLookup';
+import { loadHsCards } from '../../engine';
+import { CardFace } from '../play-board/CardFace';
 import { ArtKind, DEFAULT_FOCUS, Focus, OUTPUTS, cropBox } from '../../scripts/art/crop';
 const LOCKED = ['id', 'set', 'isEntourage']; // same list as LOCKED_FIELDS in scripts/art/airtable-card.ts (that module uses fs, so it can't be imported here)
 import type { FieldInfo, FieldValue } from '../../scripts/art/airtable-card';
+import type { ArtistSuggestions } from '../../scripts/art/artists';
 
 type Fields = Record<string, FieldValue>;
 interface CardResponse {
@@ -12,7 +15,10 @@ interface CardResponse {
   fields: Fields;
   schema: FieldInfo[];
   hasMaster: boolean;
+  artists: ArtistSuggestions;
 }
+
+const hsCards = loadHsCards().cards;
 
 const KINDS: ArtKind[] = ['card', 'minion', 'deck'];
 const PREVIEW_W: Record<ArtKind, number> = { card: 260, deck: 480, minion: 208 };
@@ -102,6 +108,19 @@ const CropPanel = ({ kind, src, size, focus, onFocus, current, on, onOn }: {
   );
 };
 
+/** The card as the game draws it (frame, text, art), from the committed data/: an Airtable save with "pull" refreshes it. */
+const FinalCard = ({ id }: { id: string }) => {
+  const card = hsCards.find((c) => c.id === id);
+  return (
+    <Group style={{ padding: 12, marginBottom: 12 }}>
+      <strong>Final card</strong>
+      <div style={{ marginTop: 8 }}>
+        {card ? <CardFace card={card} width={260} /> : <span style={{ fontSize: 12, opacity: 0.7 }}>{id} is not in the game data (data/), so there is no card to draw.</span>}
+      </div>
+    </Group>
+  );
+};
+
 /** The three files the game reads for this card, straight from public/images/sets (a missing file says so instead of showing a broken image). */
 const CurrentArt = ({ urls }: { urls: Record<ArtKind, string> }) => {
   const [missing, setMissing] = useState<Record<string, boolean>>({});
@@ -124,7 +143,7 @@ const CurrentArt = ({ urls }: { urls: Record<ArtKind, string> }) => {
   );
 };
 
-const FieldEditor = ({ info, value, onChange }: { info: FieldInfo; value: FieldValue | undefined; onChange: (v: FieldValue) => void }) => {
+const FieldEditor = ({ info, value, onChange, suggestions }: { info: FieldInfo; value: FieldValue | undefined; onChange: (v: FieldValue) => void; suggestions?: string[] }) => {
   switch (info.kind) {
     case 'checkbox':
       return <Checkbox checked={!!value} onChange={onChange}>{info.name}</Checkbox>;
@@ -169,7 +188,12 @@ const FieldEditor = ({ info, value, onChange }: { info: FieldInfo; value: FieldV
       return (
         <label>
           {info.name}
-          <TextInput aria-label={info.name} value={(value as string) ?? ''} onChange={(e) => onChange(e.target.value)} style={{ width: '100%' }} />
+          <TextInput aria-label={info.name} value={(value as string) ?? ''} onChange={(e) => onChange(e.target.value)} list={suggestions ? `suggest-${info.name}` : undefined} autoComplete={suggestions ? 'off' : undefined} style={{ width: '100%' }} />
+          {suggestions && (
+            <datalist id={`suggest-${info.name}`}>
+              {suggestions.map((s) => <option key={s} value={s} />)}
+            </datalist>
+          )}
         </label>
       );
   }
@@ -232,6 +256,20 @@ export const ArtLab = ({ id }: { id: string }) => {
   const fileUrl = (kind: ArtKind) => `/images/sets/SET_${set}/${num}-${OUTPUTS[kind].suffix}.jpg?t=${stamp}`;
   const value = (f: FieldInfo) => (f.name in edits ? edits[f.name] : card?.fields[f.name]);
   const changed = Object.keys(edits);
+  const current = (name: string) => (name in edits ? edits[name] : card?.fields[name]);
+  /** Typing an artist name that is already in the data also fills an empty URL with the one it is usually credited with. */
+  const change = (name: string, v: FieldValue) =>
+    setEdits((e) => {
+      const next = { ...e, [name]: v };
+      const known = name === 'artistName' && typeof v === 'string' ? card?.artists.urlsByName[v.trim()]?.[0] : undefined;
+      if (known && !current('artistUrl')) next.artistUrl = known;
+      return next;
+    });
+  /** URLs to offer: those used with the typed name first, then all the rest. */
+  const urlSuggestions = (c: CardResponse) => {
+    const mine = c.artists.urlsByName[String(current('artistName') ?? '').trim()] ?? [];
+    return [...mine, ...c.artists.urls.filter((u) => !mine.includes(u))];
+  };
 
   return (
     <main style={{ height: '100vh', overflowY: 'auto', boxSizing: 'border-box', padding: '20px 24px 96px' }}>
@@ -247,6 +285,7 @@ export const ArtLab = ({ id }: { id: string }) => {
       <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
         <section style={{ flex: '1 1 560px', minWidth: 0 }}>
           <h2>Images</h2>
+          <FinalCard id={id} />
           <CurrentArt urls={{ card: fileUrl('card'), deck: fileUrl('deck'), minion: fileUrl('minion') }} />
           <label
             onDragOver={(e) => e.preventDefault()}
@@ -305,7 +344,7 @@ export const ArtLab = ({ id }: { id: string }) => {
               ))}
               {card.schema.map((f) => (
                 <div key={f.name} style={f.name in edits ? { borderLeft: '3px solid #d9a400', paddingLeft: 8 } : undefined}>
-                  <FieldEditor info={f} value={value(f)} onChange={(v) => setEdits((e) => ({ ...e, [f.name]: v }))} />
+                  <FieldEditor info={f} value={value(f)} onChange={(v) => change(f.name, v)} suggestions={f.name === 'artistName' ? card.artists.names : f.name === 'artistUrl' ? urlSuggestions(card) : undefined} />
                 </div>
               ))}
               <Checkbox checked={pull} onChange={setPull}>After saving, pull Airtable into data/ (runs npm run airtable)</Checkbox>
