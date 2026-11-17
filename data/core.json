@@ -497,7 +497,7 @@
   },
   {
     "id": "CORE_043",
-    "name": "Induce",
+    "name": "Inner Spark",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -513,7 +513,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_012",
@@ -2357,7 +2359,7 @@
   },
   {
     "id": "CORE_063",
-    "name": "Cinder Volley",
+    "name": "Arcane Volley",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -2375,9 +2377,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Tanathiel",
-    "artistUrl": "https://www.deviantart.com/tanathiel",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_097",
