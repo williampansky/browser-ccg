@@ -2988,13 +2988,13 @@
   },
   {
     "id": "CORE_096",
-    "name": "Disabling Kick",
+    "name": "Ice Tomb",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "<strong>%DISABLE%</strong> a minion",
+    "text": "<strong>%DISABLE%</strong> a minion<br />\n<small>(cannot attack next turn)</small>",
     "mechanics": [
       "%DISABLE%",
       "%TARGET%"
@@ -3005,7 +3005,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_114",
