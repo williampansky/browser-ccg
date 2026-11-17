@@ -1473,7 +1473,7 @@
   },
   {
     "id": "CORE_052",
-    "name": "Earthen Primordial",
+    "name": "Tectonic Bulwark",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -1489,9 +1489,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "onemt",
-    "artistUrl": "https://www.artstation.com/kuside_sangu",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_100",
