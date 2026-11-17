@@ -2016,7 +2016,7 @@
   },
   {
     "id": "CORE_110",
-    "name": "The Left Hand Of Chaos",
+    "name": "Twin-Axe Draconian",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -2025,7 +2025,7 @@
     "cost": 5,
     "attack": 4,
     "health": 3,
-    "text": "Give a minion<br />\n<strong>%DOUBLE_ATTACK%</strong>",
+    "text": "Give a minion<br />\n<strong>%DOUBLE_ATTACK%</strong><br />\n<small>(Can attack twice)</small>",
     "mechanics": [
       "%ON_PLAY%",
       "%DOUBLE_ATTACK%",
@@ -2037,9 +2037,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Marius Siergiejew",
-    "artistUrl": "https://www.artstation.com/noistromo",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_092",
