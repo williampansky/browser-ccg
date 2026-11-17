@@ -30,7 +30,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       return void res.status(200).send(fs.readFileSync(full));
     }
     const files = fs.existsSync(ROOT) ? walk(ROOT).sort() : [];
-    res.status(200).json({ files, exists: fs.existsSync(ROOT) });
+    let rules: unknown[] = [];
+    try {
+      rules = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'art-assets-attribution.json'), 'utf8')).rules ?? [];
+    } catch {
+      // no key file (or invalid JSON): no attribution
+    }
+    res.status(200).json({ files, exists: fs.existsSync(ROOT), rules });
   } catch (e) {
     res.status(500).json({ error: (e as Error).message });
   }
