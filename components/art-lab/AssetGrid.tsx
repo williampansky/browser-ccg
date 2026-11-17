@@ -178,7 +178,7 @@ export const AssetGrid = () => {
               style={{
                 fontSize: 12,
                 opacity: 0.75,
-                wordBreak: 'break-all',
+                wordBreak: 'break-word',
                 cursor: 'pointer'
               }}
               onClick={e => onAssetNameClick(e, f)}

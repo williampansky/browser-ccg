@@ -2,7 +2,12 @@
   "_help": "First matching rule wins. 'match' is a regex, or an array of regexes (any one matching counts), case-insensitive, tested against the path under art-assets/ (e.g. \"^kenney/\" or \"sword.*\\\\.png$\"). 'url' is optional.",
   "rules": [
     {
-      "match": ["^rpg-skills-icons-", "^skills-and-ability-icons-"],
+      "match": [
+        "^elemental-magic-icons-",
+        "^rpg-gems-icons-black-",
+        "^rpg-skills-icons-",
+        "^skills-and-ability-icons-"
+      ],
       "artist": "a-ravlik",
       "url": "https://graphicriver.net/user/a-ravlik"
     }
