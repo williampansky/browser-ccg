@@ -2567,7 +2567,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_044",
@@ -3067,7 +3069,7 @@
   },
   {
     "id": "CORE_041",
-    "name": "Nature Dragon",
+    "name": "Sylvan Herald",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -3089,6 +3091,7 @@
     "playContext": "%BUFF%",
     "collectible": true,
     "active": true,
+    "flavor": "\"In old-growth canopies, epiphytic communities create complex micro-ecosystems that sustain the entire forest's vitality.\" — Global Canopy Programme",
     "howToEarn": "Provided to all players.",
     "artistName": "Jeff Chen",
     "artistUrl": "https://www.artstation.com/jeffchendesigns",
