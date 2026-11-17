@@ -25,7 +25,7 @@
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 3,
-    "text": "%DISABLE% every<br />\nenemy minion.",
+    "text": "<strong>%DISABLE%</strong> every<br />\nenemy minion",
     "mechanics": [
       "%DISABLE%",
       "%AOE%"
@@ -34,9 +34,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "depingo",
-    "artistUrl": "https://www.deviantart.com/depingo",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_017",
@@ -221,7 +221,7 @@
   },
   {
     "id": "CORE_093",
-    "name": "Shot from Above",
+    "name": "Opening Shot",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -239,9 +239,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Anna Christenson",
-    "artistUrl": "http://www.annachristenson.com",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_115",
@@ -266,9 +266,9 @@
     "active": true,
     "flavor": "His skin is starting to slough off as he manifests more magic, revealing something much more sinister beneath.",
     "howToEarn": "Provided to all players.",
-    "artistName": "Aaron Nakahara",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma",
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "description": "Spell can only be cast on minions."
   },
   {
@@ -374,7 +374,7 @@
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "%DESTROY% an enemy minion that has 3 or less Attack",
+    "text": "<strong>%DESTROY%</strong> an enemy minion that has 3 or less Attack",
     "mechanics": [
       "%DESTROY%",
       "%TARGET%"
@@ -385,7 +385,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_056",
@@ -792,9 +794,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "David Astruga",
-    "artistUrl": "https://www.artstation.com/davidastruga",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_035",
@@ -2816,9 +2818,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Mário Fernandes",
-    "artistUrl": "https://www.artstation.com/mario-fernandes",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_001",
@@ -2941,13 +2943,13 @@
   },
   {
     "id": "CORE_101",
-    "name": "%DESTROY%",
+    "name": "Soul Burn",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 5,
-    "text": "<strong>%DESTROY%</strong> a minion<br>\n<small>Removes minion from battle</small>",
+    "text": "<strong>%DESTROY%</strong> a minion<br>\nand remove it from battle",
     "mechanics": [
       "%TARGET%",
       "%DESTROY%"
@@ -2958,9 +2960,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Yanchong Lim",
-    "artistUrl": "https://www.artstation.com/yclim",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_117",
