@@ -180,7 +180,7 @@
   },
   {
     "id": "CORE_053",
-    "name": "Quick Slash",
+    "name": "Shadow-Shiv",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -198,7 +198,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_132",
@@ -364,7 +366,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_089",
@@ -460,7 +464,7 @@
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 3,
-    "text": "%DESTROY% an enemy minion that has 5 or more Attack",
+    "text": "<strong>%DESTROY%</strong> an enemy minion that has 5 or more Attack",
     "mechanics": [
       "%DESTROY%",
       "%TARGET%"
@@ -471,7 +475,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_070",
@@ -565,9 +571,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Aaron Nakahara",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_020",
@@ -643,9 +649,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Fiery Stork",
-    "artistUrl": "https://www.behance.net/FieryStork",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_037",
@@ -826,7 +832,7 @@
   },
   {
     "id": "CORE_084",
-    "name": "Ethereal Mirror",
+    "name": "Memory Shard",
     "set": "%SET_002%",
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_FREE%",
@@ -842,14 +848,14 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "M. Irberry",
-    "artistUrl": "https://www.artstation.com/irberry",
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "description": "Note that this card requires your opponent to have already played cards from their hand."
   },
   {
     "id": "CORE_094",
-    "name": "Death Potion",
+    "name": "Acid Coating",
     "set": "%SET_002%",
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_FREE%",
@@ -867,13 +873,13 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "FlixArts",
-    "artistUrl": "https://www.deviantart.com/flixarts",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_106",
-    "name": "Imbue Strength",
+    "name": "Herald's Call",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -892,9 +898,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Scott Murphy",
-    "artistUrl": "http://www.murphyillustration.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_083",
@@ -1096,7 +1102,7 @@
   },
   {
     "id": "CORE_129",
-    "name": "Ray Shield",
+    "name": "Aegis Draw",
     "set": "%SET_002%",
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_FREE%",
@@ -1112,9 +1118,10 @@
     "playContext": "%SET_VALUE%",
     "collectible": true,
     "active": true,
-    "flavor": "\"Activate ray shields.\"",
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_108",
@@ -1187,9 +1194,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Vera Velichko",
-    "artistUrl": "https://www.artstation.com/vera_velichko",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_029",
@@ -1222,7 +1229,7 @@
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "%BUFF% a minion +2 Health<br>\nand draw a card",
+    "text": "<strong>%BUFF%</strong> a minion +2 Health and draw a card",
     "mechanics": [
       "%DRAW_CARD%",
       "%SET_VALUE%",
@@ -1235,9 +1242,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Andrey Bormin",
-    "artistUrl": "https://www.artstation.com/lynxintie",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_105",
@@ -1591,7 +1598,7 @@
   },
   {
     "id": "CORE_067",
-    "name": "Scholar's Desk",
+    "name": "Arcane Insight",
     "set": "%SET_002%",
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_FREE%",
@@ -1606,7 +1613,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_061",
@@ -1685,13 +1694,13 @@
   },
   {
     "id": "CORE_103",
-    "name": "Infernal Potion",
+    "name": "Sanctuary Draught",
     "set": "%SET_002%",
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 0,
-    "text": "%RESTORE_HP% and %BUFF% a<br />\nminion with <strong>%BULWARK%</strong>",
+    "text": "<strong>%RESTORE_HP%</strong> and <strong>%BUFF%</strong> a<br />\nminion with <strong>%BULWARK%</strong>",
     "mechanics": [
       "%RESTORE_HP%",
       "%BUFF%",
@@ -1701,14 +1710,14 @@
     "numberPrimary": 0,
     "numberSecondary": 0,
     "playType": "TARGETED",
-    "playContext": "%BOON%",
+    "playContext": "%BUFF%",
     "targetingArrowText": "%RESTORE_HP% and give %BULWARK%",
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Marina Ovchinnikova",
-    "artistUrl": "https://www.artstation.com/marinaovchkv",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_040",
@@ -1969,9 +1978,9 @@
     "active": true,
     "flavor": "Why settle for simply freezing <em>or</em> incinerating your target when you can do both?",
     "howToEarn": "Provided to all players.",
-    "artistName": "Aaron Nakahara",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_073",
@@ -1994,8 +2003,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistUrl": "https://www.reddit.com/user/shutupandsuckmyclit",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_082",
@@ -2088,9 +2098,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Michał Werder",
-    "artistUrl": "https://www.artstation.com/temir",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_107",
@@ -2200,7 +2210,7 @@
   },
   {
     "id": "CORE_072",
-    "name": "Cosmic Blast",
+    "name": "Aether Vortex",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -2217,7 +2227,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_014",
@@ -2292,7 +2304,7 @@
   },
   {
     "id": "CORE_091",
-    "name": "Aspect of Lightning",
+    "name": "Energy Transfer",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -2310,7 +2322,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_048",
@@ -2777,7 +2791,7 @@
   },
   {
     "id": "CORE_119",
-    "name": "Lifesteal",
+    "name": "Tidal Surge",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -2797,9 +2811,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "David Astruga",
-    "artistUrl": "https://www.artstation.com/davidastruga",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_075",
@@ -3015,7 +3029,7 @@
   },
   {
     "id": "CORE_114",
-    "name": "Expiration",
+    "name": "Corrosive Death",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -3033,9 +3047,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Rachel Alderson",
-    "artistUrl": "https://www.artstation.com/aldersaur",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_051",
