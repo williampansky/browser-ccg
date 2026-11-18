@@ -232,8 +232,8 @@ export interface RingTune {
 export const RING_DEFAULTS: RingTune = {
   d: 170,
   w: 1,
-  sock: 36,
-  rimSock: 30,
+  sock: 48,
+  rimSock: 20,
   rimPill: -12,
   skillAngle: 270,
   skillSpacing: 40,
@@ -273,7 +273,7 @@ export const RING_DEFAULTS: RingTune = {
   liquidAlpha: 85,
   liquidBubbles: 12,
   bezel: 100,
-  frame: 48,
+  frame: 66,
   mysteryAngle: 25,
 };
 
