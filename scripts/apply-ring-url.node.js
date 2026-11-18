@@ -22,7 +22,8 @@ if (!input) {
 
 let params;
 try {
-  params = new URL(input, 'http://localhost').searchParams;
+  // A bare query ("r_d=140&r_w=3") is not a URL; give it a `?`.
+  params = new URL(input.includes('?') || !input.includes('=') ? input : `?${input}`, 'http://localhost').searchParams;
 } catch (e) {
   console.error(`Not a valid URL: ${input}`);
   process.exit(1);

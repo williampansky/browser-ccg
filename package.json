@@ -8,6 +8,7 @@
   "scripts": {
     "airtable": "node ./airtable.node.js",
     "ring": "node ./scripts/apply-ring-url.node.js",
+    "board": "node ./scripts/apply-board-url.node.js",
     "art": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\",\"esModuleInterop\":true}' ./scripts/art/art.node.ts",
     "upscale": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\",\"esModuleInterop\":true}' ./scripts/art/upscale.node.ts",
     "sim": "ts-node --compiler-options '{\"module\":\"commonjs\",\"target\":\"es2019\"}' ./engine/sim/run.node.ts",
