@@ -106,6 +106,9 @@ const RING_KNOBS: { field: NumKey; label: string; min: number; max: number; step
   { field: 'hpArcWidth', label: 'Health arc: thickness (px)', min: 2, max: 24 },
   { field: 'liquidBand', label: 'Health liquid: ring width (px)', min: 8, max: 60 },
   { field: 'liquidBubbles', label: 'Health liquid: bubbles per side', min: 0, max: 24 },
+  { field: 'bezel', label: 'Metal bezel behind the disc (%, 0 = off, 100 = flush)', min: 0, max: 160, step: 5 },
+  { field: 'frame', label: 'Metal frame picture on skills and weapon (px across, 0 = off; about socket size ÷ 0.47 fits)', min: 0, max: 160 },
+  { field: 'mysteryAngle', label: 'Mystery socket at (deg, 0 = 3 o\'clock)', min: -180, max: 360, step: 5 },
   { field: 'liquidAlpha', label: 'Health liquid: opacity (%)', min: 10, max: 100, step: 5 }
 ];
 const RING_COLOURS: { field: ColourKey; label: string }[] = [
@@ -140,6 +143,7 @@ const HeroLab = () => {
   const [armor, setArmor] = useState(0);
   const [active, setActive] = useState(true);
   const [weapon, setWeapon] = useState('CORE_076');
+  const [mystery, setMystery] = useState<'' | 'mine' | 'foe'>('');
   const [skillStates, setSkillStates] = useState(['ready', 'cd3', 'spent']);
   const router = useRouter();
 
@@ -179,6 +183,61 @@ const HeroLab = () => {
       { shallow: true }
     );
 
+  const GROUPS: { title: string; open?: boolean; fields: NumKey[] }[] = [
+    { title: 'Size', open: true, fields: ['d', 'w', 'sock', 'bezel', 'frame'] },
+    { title: 'Where things sit', open: true, fields: ['rimSock', 'rimPill', 'rimArmor', 'skillAngle', 'skillSpacing', 'weaponAngle', 'mysteryAngle', 'hpAngle', 'armorAngle'] },
+    { title: 'Health and armor pills', fields: ['pillW', 'pillH', 'pillFont', 'armorW', 'armorH', 'armorFont'] },
+    { title: 'Weapon pills', fields: ['wpnW', 'wpnH', 'wpnFont', 'atkX', 'atkY', 'durX', 'durY'] },
+    { title: 'Health liquid', fields: ['liquidBand', 'liquidBubbles', 'liquidAlpha'] },
+    { title: 'Health arc', fields: ['hpArcStart', 'hpArcEnd', 'hpArcOffset', 'hpArcWidth'] }
+  ];
+  const knob = (k: (typeof RING_KNOBS)[number]) => {
+    const changed = q1(`r_${k.field}`) !== '';
+    return (
+      <label key={k.field} style={{ display: 'block', margin: '6px 0', fontSize: 12 }}>
+        <span style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+          <span style={{ color: changed ? '#fff' : '#9aa3b8' }}>{k.label}</span>
+          <span>
+            <b>{ring[k.field]}</b>
+            {changed && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setRing({ [`r_${k.field}`]: null })}>reset</a>}
+          </span>
+        </span>
+        <input type="range" min={k.min} max={k.max} step={k.step ?? 1} value={ring[k.field]} style={{ display: 'block', width: '100%', margin: 0 }} onChange={e => setRing({ [`r_${k.field}`]: e.target.value })} />
+      </label>
+    );
+  };
+  const summary = { cursor: 'pointer', fontWeight: 600, padding: '6px 0' } as const;
+  const ringPanel = (
+    <aside style={{ flex: '0 0 320px', overflow: 'auto', paddingRight: 12, paddingBottom: 48, borderRight: '1px solid #2a2f3d' }}>
+      <button onClick={resetRing} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #3a4052', background: '#232634', color: '#fff', cursor: 'pointer' }}>
+        Reset ring
+      </button>
+      <small style={{ color: '#9aa3b8', display: 'block', margin: '6px 0' }}>Settings are in the page URL: copy it to keep or share a setup.</small>
+      {GROUPS.map(g => (
+        <details key={g.title} open={g.open} style={{ borderTop: '1px solid #2a2f3d' }}>
+          <summary style={summary}>{g.title}</summary>
+          {g.fields.map(f => knob(RING_KNOBS.find(k => k.field === f)!))}
+        </details>
+      ))}
+      <details style={{ borderTop: '1px solid #2a2f3d' }}>
+        <summary style={summary}>Colours</summary>
+        {RING_COLOURS.map(c => (
+          <label key={c.field} style={{ display: 'block', margin: '6px 0', fontSize: 12 }}>
+            <input type="color" value={`#${ring[c.field]}`} onChange={e => setRing({ [`r_${c.field}`]: e.target.value.slice(1) })} /> {c.label}
+          </label>
+        ))}
+      </details>
+      <details open style={{ borderTop: '1px solid #2a2f3d' }}>
+        <summary style={summary}>Show</summary>
+        {RING_FLAGS.map(f => (
+          <label key={f.field} style={{ display: 'block', margin: '6px 0', fontSize: 12 }}>
+            <input type="checkbox" checked={ring[f.field]} onChange={e => setRing({ [`r_${f.field}`]: e.target.checked ? '1' : '0' })} /> {f.label}
+          </label>
+        ))}
+      </details>
+    </aside>
+  );
+
   return (
     <main
       style={{
@@ -187,7 +246,9 @@ const HeroLab = () => {
         background: '#14161c',
         position: 'fixed',
         inset: 0,
-        overflow: 'auto',
+        overflow: tab === 'ring' ? 'hidden' : 'auto',
+        display: tab === 'ring' ? 'flex' : 'block',
+        flexDirection: 'column',
         boxSizing: 'border-box'
       }}
     >
@@ -213,6 +274,9 @@ const HeroLab = () => {
       <p style={{ color: '#9aa3b8', maxWidth: 700 }}>
         {TABS.find(t => t.id === tab)?.note} Same art as /play (256 px).
       </p>
+      <div style={tab === 'ring' ? { display: 'flex', gap: 24, flex: 1, minHeight: 0 } : undefined}>
+      {tab === 'ring' && ringPanel}
+      <div style={tab === 'ring' ? { flex: 1, minWidth: 0, overflow: 'auto', paddingBottom: 48 } : undefined}>
       <div
         style={{
           display: 'flex',
@@ -271,6 +335,16 @@ const HeroLab = () => {
               </select>
             </label>
           ))}
+        {tab === 'ring' && (
+          <label>
+            Mystery{' '}
+            <select value={mystery} onChange={e => setMystery(e.target.value as '' | 'mine' | 'foe')}>
+              <option value="">None</option>
+              <option value="mine">Yours (card art)</option>
+              <option value="foe">Opponent's (?)</option>
+            </select>
+          </label>
+        )}
         {(tab === 'figure' || tab === 'ring') && (
           <label>
             Weapon{' '}
@@ -293,41 +367,6 @@ const HeroLab = () => {
           Their turn
         </label>
       </div>
-      {tab === 'ring' && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 24px', alignItems: 'center', margin: '0 0 28px', maxWidth: 1100 }}>
-          {RING_KNOBS.map(k => (
-            <label key={k.field} style={{ minWidth: 260 }}>
-              {k.label}: <b>{ring[k.field]}</b>
-              {q1(`r_${k.field}`) !== '' && (
-                <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setRing({ [`r_${k.field}`]: null })}>reset</a>
-              )}
-              <input
-                type="range"
-                min={k.min}
-                max={k.max}
-                step={k.step ?? 1}
-                value={ring[k.field]}
-                style={{ display: 'block', width: '100%' }}
-                onChange={e => setRing({ [`r_${k.field}`]: e.target.value })}
-              />
-            </label>
-          ))}
-          {RING_COLOURS.map(c => (
-            <label key={c.field}>
-              <input type="color" value={`#${ring[c.field]}`} onChange={e => setRing({ [`r_${c.field}`]: e.target.value.slice(1) })} /> {c.label}
-            </label>
-          ))}
-          {RING_FLAGS.map(f => (
-            <label key={f.field}>
-              <input type="checkbox" checked={ring[f.field]} onChange={e => setRing({ [`r_${f.field}`]: e.target.checked ? '1' : '0' })} /> {f.label}
-            </label>
-          ))}
-          <button onClick={resetRing} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #3a4052', background: '#232634', color: '#fff', cursor: 'pointer' }}>
-            Reset ring
-          </button>
-          <small style={{ color: '#9aa3b8', flexBasis: '100%' }}>The settings are in the page URL: copy it to keep or share a setup.</small>
-        </div>
-      )}
       <div
         style={{
           display: 'flex',
@@ -364,12 +403,21 @@ const HeroLab = () => {
               key={id}
               {...p}
               tune={ring}
+              mystery={
+                mystery === 'mine'
+                  ? { cardId: 'CORE_001', name: 'Sample Mystery (Attack)', tip: 'The card\'s text shows here for its owner.' }
+                  : mystery === 'foe'
+                  ? { name: 'Mystery (Attack)', tip: 'Reacts when you attack.' }
+                  : undefined
+              }
               weapon={WEAPONS[weapon]}
               skills={skillStates.map((st, i) => skillFrom(st, i + 1, id))} />
           ) : (
             <HeroCard key={id} {...p} />
           );
         })}
+      </div>
+      </div>
       </div>
     </main>
   );

@@ -98,6 +98,7 @@
   padding: var(--mid-p, 8px) var(--mid-px, 12px);
   border-top: calc(var(--mid-lw, 1px) * var(--mid-lt, 1)) solid color-mix(in srgb, var(--mid-lc, #afa18c) calc(var(--mid-la, 1) * 100%), transparent);
   border-bottom: calc(var(--mid-lw, 1px) * var(--mid-lb, 1)) solid color-mix(in srgb, var(--mid-lc, #afa18c) calc(var(--mid-la, 1) * 100%), transparent);
+  transform: translate(0, -10px);
 }
 
 .middle .text {

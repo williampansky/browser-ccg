@@ -1193,6 +1193,20 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         <div className={cx(styles.figSlot, heroType === 'ring' ? styles.figSlotRing : '', isMe ? styles.figMe : styles.figFoe)}>
           <HeroView
             tune={ringTune}
+            mystery={
+              p.mystery
+                ? owner === viewer
+                  ? {
+                      cardId: p.mystery.cardId,
+                      name: `${byId.get(p.mystery.cardId)?.name} (${mysteryCategory(p.mystery.cardId, byId)})`,
+                      tip: plain(byId.get(p.mystery.cardId)?.text),
+                    }
+                  : {
+                      name: `Mystery (${mysteryCategory(p.mystery.cardId, byId)})`,
+                      tip: MYSTERY_HINT[getCardDef(byId.get(p.mystery.cardId)!)?.mystery?.category ?? 'attack'],
+                    }
+                : undefined
+            }
             heroId={hero.id}
             name={hero.name}
             health={p.health}

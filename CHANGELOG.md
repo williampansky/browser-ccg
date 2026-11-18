@@ -2,6 +2,11 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-18
+
+- **Hero ring:** a metal bezel picture behind the disc (`bezel`, % of the disc; `public/images/ui/hero-ring-bezel.png`) and a metal frame around the skill, weapon and Mystery sockets (`frame`, px across; `hero-socket-frame.png`, drawn in a layer behind every socket, pill and gem, with its edge faded so the halo is not cut off). The weapon socket and its frame are hidden when no weapon is equipped. A Mystery socket (`mysteryAngle`) shows while a Mystery is set: the card art for its owner, a "?" for the opponent, with a hover tip. A hovered skill now lifts above its neighbours so its tooltip is not covered.
+- **Hero lab (ring tab):** the controls are a left sidebar of collapsible groups beside a scrolling preview, so a slider can be dragged without scrolling the page; a Mystery preview dropdown.
+
 ## 2026-11-16
 
 - **Art lab (`/art-lab`, dev only):** find a card by id or name, then `/art-lab?id=CORE_122` shows its current CARD/DECK/MINION files, a crop adjuster per file over the master in `art-inbox/` (drag + zoom; "Write images" moves the master to `done/`), and all its Airtable CARDS fields to edit and save back (only changed fields are sent; uses the `_CLAUDE_CODE` token). API under `pages/api/art-lab/`, helpers in `scripts/art/`.

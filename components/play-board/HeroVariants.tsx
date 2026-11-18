@@ -2,6 +2,7 @@ import React from 'react';
 import { heroImage } from './hero-images';
 import styles from './hero-variants.module.scss';
 import cx from '../../utils/cx';
+import { artBackground } from './card-face-model';
 
 /**
  * PROTOTYPE hero displays 2 to 4 (option 1 is HeroBust): the standing figure, the big medallion and the hero as a framed card.
@@ -220,33 +221,39 @@ export interface RingTune {
   liquidAlpha: number;
   /** Bubbles rising on each side of the liquid ring */
   liquidBubbles: number;
+  /** A metal bezel picture behind the disc (`public/images/ui/hero-ring-bezel.png`); 0 = off, 100 = its inner edge sits on the disc's rim, bigger = larger */
+  bezel: number;
+  /** A metal frame around the skill and weapon sockets (`public/images/ui/hero-socket-frame.png`): its outer diameter in px, 0 = off. Only the frame picture changes size; `sock` still sizes the socket and what is in it */
+  frame: number;
+  /** Where the Mystery socket sits (deg, 0 = 3 o'clock); it only shows while a Mystery is set */
+  mysteryAngle: number;
 }
 
 export const RING_DEFAULTS: RingTune = {
-  d: 230,
-  w: 2,
-  sock: 55,
-  rimSock: -10,
+  d: 170,
+  w: 1,
+  sock: 36,
+  rimSock: 30,
   rimPill: -12,
-  skillAngle: 90,
+  skillAngle: 270,
   skillSpacing: 40,
-  weaponAngle: -25,
-  hpAngle: 270,
-  armorAngle: 255,
-  armorW: 38,
-  armorH: 38,
+  weaponAngle: -175,
+  hpAngle: 90,
+  armorAngle: 75,
+  armorW: 24,
+  armorH: 24,
   rimArmor: 4,
-  armorFont: 15,
-  wpnW: 22,
-  wpnH: 22,
-  wpnFont: 13,
-  atkX: 8,
-  atkY: -2,
-  durX: -6,
-  durY: -2,
-  pillW: 44,
-  pillH: 44,
-  pillFont: 15,
+  armorFont: 12,
+  wpnW: 18,
+  wpnH: 18,
+  wpnFont: 10,
+  atkX: 0,
+  atkY: 1,
+  durX: 0,
+  durY: 1,
+  pillW: 40,
+  pillH: 26,
+  pillFont: 14,
   ringColour: '0b0d14',
   socketColour: '151925',
   hpFull: '4ce1a0',
@@ -265,6 +272,9 @@ export const RING_DEFAULTS: RingTune = {
   liquidBand: 15,
   liquidAlpha: 85,
   liquidBubbles: 12,
+  bezel: 100,
+  frame: 48,
+  mysteryAngle: 25,
 };
 
 const arcPath = (radius: number, from: number, to: number) => {
@@ -315,7 +325,15 @@ const Liquid = (p: { level: number; health: number; max: number; tone: string; a
   );
 };
 
-export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: Partial<RingTune> } & FigureLive) => {
+/** A face-down Mystery on the ring: `cardId` is set for its owner (the card's art shows), left out for the opponent (a question mark). */
+export interface RingMystery {
+  cardId?: string;
+  name: string;
+  /** Hover text: the card's text for the owner, what it reacts to for the opponent */
+  tip: string;
+}
+
+export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: Partial<RingTune>; mystery?: RingMystery } & FigureLive) => {
   const r: RingTune = { ...RING_DEFAULTS, ...p.tune };
   const max = p.maxHealth ?? 30;
   // The ring has four health states (the other variants keep three): full, graze, hurt, low.
@@ -336,6 +354,8 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
     '--pill-w': `${r.pillW}px`,
     '--pill-h': `${r.pillH}px`,
     '--pill-f': `${r.pillFont}px`,
+    '--bezel-d': `${(r.d / 0.68) * (r.bezel / 100)}px`,
+    '--frame-d': `${r.frame}px`,
     '--band': `${r.hpLiquid ? r.liquidBand : 0}px`,
     '--ring-c': `#${r.ringColour}`,
     '--sock-c': `#${r.socketColour}`,
@@ -353,10 +373,15 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
     >
       {r.showName && <span className={styles.ringName}>{p.name}</span>}
       {r.showTag && p.turnTag && <span className={cx(styles.turnTag, styles.ringTag)}>{p.turnTag}</span>}
+      {r.bezel > 0 && <span className={styles.ringBezel} />}
       <div className={styles.ringDisc}>
         {r.hpLiquid && p.health > 0 && <Liquid level={Math.min(1, p.health / max)} health={p.health} max={max} tone={t} alpha={r.liquidAlpha} bubbles={r.liquidBubbles} />}
         <span className={cx(styles.ringArt, r.hpLiquid ? styles.ringArtInset : '')} style={{ backgroundImage: art(p.heroId) }} />
       </div>
+      {r.frame > 0 &&
+        [r.skillAngle + r.skillSpacing, r.skillAngle, r.skillAngle - r.skillSpacing, ...(p.weapon ? [r.weaponAngle] : []), ...(p.mystery ? [r.mysteryAngle] : [])].map((a, i) => (
+          <span key={i} className={styles.ringFrame} style={{ ['--a' as string]: `${a}deg` }} />
+        ))}
       {[1, 2, 3].map((n) => {
         const k = p.skills?.[n - 1];
         const status = !k ? '' : k.spent ? 'Used' : k.cooldownLeft > 0 ? `Ready in ${k.cooldownLeft}` : '';
@@ -387,19 +412,31 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
           </button>
         );
       })}
+      {p.weapon && (
       <div
-        className={cx(styles.ringSock, styles.ringWeapon, p.weapon ? '' : styles.ringEmpty, p.weapon?.temporary ? styles.ringWeaponTemp : '')}
+        className={cx(styles.ringSock, styles.ringWeapon, p.weapon.temporary ? styles.ringWeaponTemp : '')}
         style={{ ['--a' as string]: `${r.weaponAngle}deg` }}
-        aria-label={p.weapon ? `${p.weapon.name ?? 'Weapon'}: ${p.weapon.attack} attack, ${p.weapon.durability} durability` : 'No weapon'}
+        aria-label={`${p.weapon.name ?? 'Weapon'}: ${p.weapon.attack} attack, ${p.weapon.durability} durability`}
       >
-        {p.weapon?.image && <img src={p.weapon.image} alt="" draggable={false} />}
-        {p.weapon && (
-          <>
-            <b className={cx(styles.ringStat, styles.ringAtk, styles.num)} style={{ translate: `${r.atkX}px ${r.atkY}px` }}>{p.weapon.attack}</b>
-            <b className={cx(styles.ringStat, styles.ringDur, styles.num)} style={{ translate: `${r.durX}px ${r.durY}px` }}>{p.weapon.durability}</b>
-          </>
-        )}
+        {p.weapon.image && <img src={p.weapon.image} alt="" draggable={false} />}
+        <b className={cx(styles.ringStat, styles.ringAtk, styles.num)} style={{ translate: `${r.atkX}px ${r.atkY}px` }}>{p.weapon.attack}</b>
+        <b className={cx(styles.ringStat, styles.ringDur, styles.num)} style={{ translate: `${r.durX}px ${r.durY}px` }}>{p.weapon.durability}</b>
       </div>
+      )}
+      {p.mystery && (
+        <div
+          className={cx(styles.ringSock, styles.ringMystery, p.mystery.cardId ? '' : styles.ringMysteryHidden)}
+          style={{ ['--a' as string]: `${r.mysteryAngle}deg`, ...(p.mystery.cardId ? { backgroundImage: artBackground(p.mystery.cardId) } : {}) }}
+          aria-label={`Mystery: ${p.mystery.name}. ${p.mystery.tip}`}
+        >
+          {!p.mystery.cardId && <b className={styles.ringQuestion}>?</b>}
+          <span data-tip="" className={styles.ringTip}>
+            <strong>{p.mystery.name}</strong>
+            <br />
+            {p.mystery.tip}
+          </span>
+        </div>
+      )}
       {!!p.armor && (
         <span className={cx(styles.ringPill, styles.ringArmor, styles.num)} style={{ ['--a' as string]: `${r.armorAngle}deg` }} aria-label={`${p.armor} armor`}>
           {p.armor}

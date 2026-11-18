@@ -610,6 +610,18 @@
   overflow: hidden;
 }
 
+// The metal bezel picture, centred on the disc and sitting behind it; the transparent PNG's inner edge is 68% of its width.
+.ringBezel {
+  position: absolute;
+  left: 50%;
+  top: calc(24px + var(--ring-d) / 2);
+  width: var(--bezel-d);
+  height: var(--bezel-d);
+  translate: -50% -48%;
+  background: url('/images/ui/hero-ring-bezel.png') center / contain no-repeat;
+  pointer-events: none;
+}
+
 .ringArt {
   position: absolute;
   inset: 0;
@@ -657,6 +669,19 @@
   font: inherit;
 }
 
+// The metal frame pictures, one per skill and the weapon, in a layer behind every socket, pill and gem (they come before them in the DOM).
+// Placed like .ringSock; the picture's hole is 47% of its width, so frame = socket size / 0.47 fits exactly.
+.ringFrame {
+  position: absolute;
+  left: 49.9%;
+  top: var(--cy);
+  width: var(--frame-d);
+  height: var(--frame-d);
+  transform: translate(-50%, -50%) rotate(var(--a)) translateX(calc(var(--ring-d) / 2 + var(--rim-s, 0px))) rotate(calc(var(--a) * -1));
+  background: url('/images/ui/hero-socket-frame.png') center / contain no-repeat;
+  pointer-events: none;
+}
+
 .ringSkill {
   cursor: pointer;
 
@@ -674,7 +699,14 @@
     cursor: not-allowed;
   }
 
-  &:hover .ringTip {
+  // Each socket is its own stacking context, so the tip would sit under the sockets after it: lift the one being read.
+  &:hover,
+  &:focus-visible {
+    z-index: 30;
+  }
+
+  &:hover .ringTip,
+  &:focus-visible .ringTip {
     visibility: visible;
   }
 }
@@ -745,10 +777,31 @@
   }
 }
 
-.ringEmpty {
-  border: 2px dashed rgba(255, 255, 255, 0.25);
-  background: transparent;
-  box-shadow: none;
+// A face-down Mystery: the card's art for its owner, a question mark for the opponent. Hover reads the tip.
+.ringMystery {
+  cursor: help;
+  border-color: #9b7bd4;
+
+  &:hover {
+    z-index: 30;
+  }
+
+  &:hover .ringTip {
+    visibility: visible;
+  }
+}
+
+.ringMysteryHidden {
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 40%, #3a2a5c, #171126);
+}
+
+.ringQuestion {
+  font-size: calc(var(--sock) * 0.6);
+  line-height: 1;
+  color: #d8c8f5;
+  text-shadow: 0 0 8px #9b7bd4;
 }
 
 .ringWeaponTemp {
