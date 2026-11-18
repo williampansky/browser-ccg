@@ -558,6 +558,24 @@
   z-index: 10;
 }
 
+// Live-board states, as on the figure: can attack, legal target, hovered target, selected attacker.
+.ring.canAct {
+  filter: drop-shadow(0 0 10px rgba(61, 220, 132, 0.8)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+}
+
+.ring.aim {
+  filter: drop-shadow(0 0 10px rgba(255, 90, 80, 0.85)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+  cursor: crosshair;
+}
+
+.ring.aimHover {
+  filter: drop-shadow(0 0 18px rgba(255, 90, 80, 1)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+}
+
+.ring.sel {
+  filter: drop-shadow(0 0 16px rgba(61, 220, 132, 1)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+}
+
 .ringName {
   position: absolute;
   top: 0;

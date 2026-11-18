@@ -21,7 +21,7 @@ export const SECTION_KEYS: Record<string, string[]> = {
   cast: ['lcx', 'lcy', 'lcs', 'lcms', 'lcpeak', 'lcglow', 'lcring', 'lcpv'],
   energy: ['les', 'lex', 'ley', 'leo', 'leg', 'legt', 'lecs', 'lecv', 'lect', 'lebr', 'lebb', 'lebg', 'lecr', 'lecb', 'lecn', 'lebpv'],
   panels: ['lpan', 'lsplit', 'lgw', 'ldw', 'lgx', 'lgy', 'ldx', 'ldy'],
-  heroes: ['lfw0', 'lfw1', 'lfx0', 'lfy0', 'lfx1', 'lfy1', 'lfs'],
+  heroes: ['herotype', 'lfw0', 'lfw1', 'lfx0', 'lfy0', 'lfx1', 'lfy1', 'lrx0', 'lry0', 'lrx1', 'lry1', 'lfs'],
   'snd-cardPlay': slotKeys('cardPlay'),
   'snd-draw': slotKeys('draw'),
   'snd-cardHover': slotKeys('cardHover'),

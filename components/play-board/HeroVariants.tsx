@@ -315,7 +315,7 @@ const Liquid = (p: { level: number; health: number; max: number; tone: string; a
   );
 };
 
-export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: Partial<RingTune> }) => {
+export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: Partial<RingTune> } & FigureLive) => {
   const r: RingTune = { ...RING_DEFAULTS, ...p.tune };
   const max = p.maxHealth ?? 30;
   // The ring has four health states (the other variants keep three): full, graze, hurt, low.
@@ -345,7 +345,12 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
     '--hp-low': `#${r.hpLow}`,
   } as React.CSSProperties;
   return (
-    <div className={root(p, styles.ring)} style={vars}>
+    <div
+      {...p.dom}
+      ref={p.rootRef}
+      className={cx(root(p, styles.ring), p.canAct ? styles.canAct : '', p.aim ? styles.aim : '', p.aim && p.aimHover ? styles.aimHover : '', p.selected ? styles.sel : '')}
+      style={vars}
+    >
       {r.showName && <span className={styles.ringName}>{p.name}</span>}
       {r.showTag && p.turnTag && <span className={cx(styles.turnTag, styles.ringTag)}>{p.turnTag}</span>}
       <div className={styles.ringDisc}>
@@ -358,7 +363,12 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
         return (
           <button
             key={n}
+            ref={p.skillRef?.(n - 1)}
             type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              p.onSkill?.(n - 1);
+            }}
             disabled={!!k && !k.usable}
             aria-label={k ? `${k.name}, cost ${k.cost}${status ? `, ${status}` : ''}: ${k.text}` : `Skill ${n}`}
             className={cx(styles.ringSock, styles.ringSkill, k?.usable ? styles.ready : '', k?.selected ? styles.picked : '', k && !k.usable ? styles.off : '')}

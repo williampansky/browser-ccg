@@ -49,6 +49,10 @@ export const SLIDER_MAX = {
   lfy0: 2000,
   lfx1: 2000,
   lfy1: 2000,
+  lrx0: 2000,
+  lry0: 2000,
+  lrx1: 2000,
+  lry1: 2000,
   // Log and deck panels
   lsplit: 85,
   lgw: 700,
@@ -99,6 +103,10 @@ export const NUMS: Num[] = [
   { key: 'lfw1', label: 'Enemy hero width (px)', min: 110, max: SLIDER_MAX.lfw1, css: CSS_FNS.lfw1, read: () => px(cs('figFoe')?.width) },
   // Hero figure position: an offset from where /play puts it (via the individual `translate` property, so it composes with the rest).
   { key: 'lfx0', label: 'My hero X offset (px)', min: -SLIDER_MAX.lfx0, max: SLIDER_MAX.lfx0, css: CSS_FNS.lfx0, read: () => 0 },
+  { key: 'lrx0', label: 'Ring: my hero X offset (px)', min: -SLIDER_MAX.lrx0, max: SLIDER_MAX.lrx0, css: CSS_FNS.lrx0, read: () => 0 },
+  { key: 'lry0', label: 'Ring: my hero Y offset (px)', min: -SLIDER_MAX.lry0, max: SLIDER_MAX.lry0, css: CSS_FNS.lry0, read: () => 0 },
+  { key: 'lrx1', label: 'Ring: enemy hero X offset (px)', min: -SLIDER_MAX.lrx1, max: SLIDER_MAX.lrx1, css: CSS_FNS.lrx1, read: () => 0 },
+  { key: 'lry1', label: 'Ring: enemy hero Y offset (px)', min: -SLIDER_MAX.lry1, max: SLIDER_MAX.lry1, css: CSS_FNS.lry1, read: () => 0 },
   { key: 'lfy0', label: 'My hero Y offset (px)', min: -SLIDER_MAX.lfy0, max: SLIDER_MAX.lfy0, css: CSS_FNS.lfy0, read: () => 0 },
   { key: 'lfx1', label: 'Enemy hero X offset (px)', min: -SLIDER_MAX.lfx1, max: SLIDER_MAX.lfx1, css: CSS_FNS.lfx1, read: () => 0 },
   { key: 'lfy1', label: 'Enemy hero Y offset (px)', min: -SLIDER_MAX.lfy1, max: SLIDER_MAX.lfy1, css: CSS_FNS.lfy1, read: () => 0 },
@@ -192,9 +200,9 @@ NUMS.push(
   ...END_KNOBS.map((k) => ({ key: k.key, label: k.label, min: k.min, max: k.max, step: k.step, css: () => '', read: () => END_DEFAULTS[k.field] }))
 );
 
-export const SETUP_KEYS = ['b0', 'b1', 'p0', 'p1', 'w0', 'w1', 'e0', 'e1', 'h0', 'h1', 'first', 'herofig', 'turn'];
+export const SETUP_KEYS = ['b0', 'b1', 'p0', 'p1', 'w0', 'w1', 'e0', 'e1', 'h0', 'h1', 'first', 'herofig', 'herotype', 'turn'];
 /** The setup params that need a new game (heroes are chosen at deal time, hands are dealt). Boards and energy are applied live. */
-export const RESTART_KEYS = ['p0', 'p1', 'w0', 'w1', 'h0', 'h1', 'first', 'herofig'];
+export const RESTART_KEYS = ['p0', 'p1', 'w0', 'w1', 'h0', 'h1', 'first', 'herofig', 'herotype'];
 export const HEROES = ['', ...heroes().map((h) => h.id), 'none'];
 
 export const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? '';

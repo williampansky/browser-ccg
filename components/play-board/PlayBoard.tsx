@@ -47,7 +47,8 @@ import { artBackground, withSpellDamageText } from './card-face-model';
 import { loadDecks } from '../deck-builder/deck-storage';
 import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
 import { HeroBar } from './HeroBar';
-import { HeroFigure } from './HeroVariants';
+import { HeroFigure, HeroRing } from './HeroVariants';
+import { parseRingTune } from './ring-tune';
 import { heroImage } from './hero-images';
 import { CardFlight } from './CardFlight';
 import { aimVector, FLIGHT_MS, IMPACT_MS, lunge, lungeBy, nudge, reducedMotion } from './motion';
@@ -386,6 +387,13 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   // Each hero is drawn as the Vol 14 figure card (components/play-board/HeroVariants.tsx); ?herofig=0 brings back the old bar.
   const [figUi, setFigUi] = useState(true);
   useEffect(() => setFigUi(new URLSearchParams(window.location.search).get('herofig') !== '0'), []);
+  // The hero is drawn as the thin ring with orbiting sockets (its look: RING_DEFAULTS, over the `r_<field>` params the hero lab writes); ?herotype=figure brings back the figure card.
+  const [heroType, setHeroType] = useState<'figure' | 'ring'>('ring');
+  const [ringTune, setRingTune] = useState(() => parseRingTune(''));
+  useEffect(() => {
+    setHeroType(new URLSearchParams(window.location.search).get('herotype') === 'figure' ? 'figure' : 'ring');
+    setRingTune(parseRingTune(window.location.search));
+  }, []);
   /** Turn timer: 60 s per turn (15 s with Cronus on a board), on by default; running out ends the turn. Local stand-in for a server clock. */
   const [timerOn, setTimerOnState] = useState(true);
   useEffect(() => setTimerOnState(isTimerOn()), []);
@@ -1180,9 +1188,11 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       />
     );
     if (figUi && hero && p.hero) {
+      const HeroView = heroType === 'ring' ? HeroRing : HeroFigure;
       return (
-        <div className={cx(styles.figSlot, isMe ? styles.figMe : styles.figFoe)}>
-          <HeroFigure
+        <div className={cx(styles.figSlot, heroType === 'ring' ? styles.figSlotRing : '', isMe ? styles.figMe : styles.figFoe)}>
+          <HeroView
+            tune={ringTune}
             heroId={hero.id}
             name={hero.name}
             health={p.health}

@@ -1019,6 +1019,11 @@ $po-green: var(--po-c, #5fd16a);
   width: 170px;
 }
 
+// The ring sizes itself (its width comes from the ring tune), so the slot does not pin one.
+.figSlotRing {
+  width: auto;
+}
+
 .figFoe {
   top: 0.5rem;
 }

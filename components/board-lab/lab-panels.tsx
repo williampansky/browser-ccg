@@ -243,7 +243,17 @@ export const LogDeckPanel = ({ q, setParams, sliders, count, pick }: PanelProps)
 
 export const HeroFiguresPanel = ({ q, setParams, sliders, count, pick }: PanelProps) => (
   <>
-    {sliders(['lfw0', 'lfw1', 'lfx0', 'lfy0', 'lfx1', 'lfy1'])}
+    <label style={row}>
+      Hero display{' '}
+      <select value={one(q.herotype) || 'ring'} onChange={(e) => setParams({ herotype: e.target.value === 'ring' ? null : e.target.value })}>
+        <option value="ring">Ring + sockets (default)</option>
+        <option value="figure">Figure card (Vol 14)</option>
+      </select>
+      <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+        Restarts the board. The ring's look is the hero lab's `r_...` params: paste them on this URL, or bake them in with `npm run ring`.
+      </small>
+    </label>
+    {sliders((one(q.herotype) || 'ring') === 'ring' ? ['lrx0', 'lry0', 'lrx1', 'lry1'] : ['lfw0', 'lfw1', 'lfx0', 'lfy0', 'lfx1', 'lfy1'])}
     <label style={row}>
       Figure side{' '}
       <select value={one(q.lfs) || 'left'} onChange={(e) => setParams({ lfs: e.target.value === 'left' ? null : e.target.value })}>

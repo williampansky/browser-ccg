@@ -44,6 +44,11 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lfy0: (v) => `${CLS('figMe')}{--lab-y:${v}px}`,
   lfx1: (v) => `${CLS('figFoe')}{--lab-x:${v}px}`,
   lfy1: (v) => `${CLS('figFoe')}{--lab-y:${v}px}`,
+  // The ring hero display has its own offsets: the figure's were tuned for a different shape and would push the ring off screen.
+  lrx0: (v) => `${CLS('figMe')}{--ring-x:${v}px}`,
+  lry0: (v) => `${CLS('figMe')}{--ring-y:${v}px}`,
+  lrx1: (v) => `${CLS('figFoe')}{--ring-x:${v}px}`,
+  lry1: (v) => `${CLS('figFoe')}{--ring-y:${v}px}`,
   lml: (v) => `${SLOT}{--sel-lift:${v}px}`,
   lms: (v) => `${SLOT}{--sel-scale:${v}}`,
   lmh: (v) => `${SLOT}{--aim-scale:${v}}`,
@@ -236,6 +241,8 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lfx1: '-265',
   lfy0: '99',
   lfy1: '-2',
+  lry0: '152',
+  lry1: '-34',
   lgw: '242',
   lgx: '15',
   lgy: '9',
@@ -337,7 +344,7 @@ export const buildLayoutCss = (q: Record<string, string | undefined>): string =>
   // Offsets (hero figures and panels) ride on --lab-x / --lab-y so X and Y can be set separately.
   const offsetCss = [CLS('figMe'), CLS('figFoe'), CLS('log'), CLS('deckView'), BAR]
     .map((s) => `${s}{translate:var(--lab-x,0px) var(--lab-y,0px) !important}`)
-    .join('');
+    .join('') + `${CLS('figSlotRing')}{translate:var(--ring-x,0px) var(--ring-y,0px) !important}`;
   // The clicked card's size. `lpv` previews it on the first card in hand without clicking.
   const sel = Math.min(3, Math.max(1, +one('lsel') || 2));
   const selTransform = `transform:translate(var(--x),calc(var(--y-comp) + (${-(110 * sel + 5)}px + var(--hand-sink)) * var(--zoom))) rotate(0deg) scale(calc(${sel} * var(--zoom))) !important`;
