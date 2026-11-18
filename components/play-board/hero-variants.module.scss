@@ -655,7 +655,7 @@
   position: absolute;
   right: 100%;
   top: 50%;
-  translate: 25% -50%;
+  translate: 45% -50%;
   display: grid;
   place-items: center;
   width: 46%;
@@ -667,6 +667,7 @@
   font-weight: normal;
   font-size: 11px;
   line-height: 1;
+  z-index: 1;
 }
 
 .ringStatus {
@@ -677,7 +678,7 @@
   border-radius: 50%;
   background: #000a;
   font-style: normal;
-  font-size: 15px;
+  font-size: 1.5rem;
   text-shadow: 0 2px 0 #000;
 }
 
@@ -758,6 +759,30 @@
   box-shadow:
     inset 0 2px 0 rgba(255, 255, 255, 0.25),
     0 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+// Health arc: a zero-size svg on the ring's centre, the paths are drawn around it (see arcPath).
+.ringArc {
+  position: absolute;
+  left: 50%;
+  top: var(--cy);
+  // 1px, not 0: a zero-size svg is not rendered at all, whatever its overflow.
+  width: 1px;
+  height: 1px;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+}
+
+.ringArcTrack {
+  stroke: var(--ring-c, #0b0d14);
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+
+.ringArcFill {
+  stroke-linecap: round;
+  transition: stroke 300ms;
 }
 
 .ringHp {

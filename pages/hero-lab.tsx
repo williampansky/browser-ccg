@@ -76,7 +76,7 @@ type FlagKey = { [K in keyof RingTune]: RingTune[K] extends boolean ? K : never 
 type ColourKey = 'ringColour' | 'socketColour';
 /** The ring tab's number knobs. Each lives in the URL as `r_<field>` so a setup can be copied. */
 const RING_KNOBS: { field: NumKey; label: string; min: number; max: number; step?: number }[] = [
-  { field: 'd', label: 'Ring diameter (px)', min: 60, max: 160 },
+  { field: 'd', label: 'Ring diameter (px)', min: 60, max: 300 },
   { field: 'w', label: 'Ring thickness (px)', min: 0, max: 10 },
   { field: 'sock', label: 'Socket size (px)', min: 16, max: 64 },
   { field: 'rimSock', label: 'Sockets: out from the rim (px, minus = inside)', min: -30, max: 40 },
@@ -88,7 +88,11 @@ const RING_KNOBS: { field: NumKey; label: string; min: number; max: number; step
   { field: 'armorAngle', label: 'Armor at (deg)', min: 0, max: 360, step: 5 },
   { field: 'pillW', label: 'Pill width (px)', min: 24, max: 100 },
   { field: 'pillH', label: 'Pill height (px)', min: 14, max: 44 },
-  { field: 'pillFont', label: 'Pill number size (px)', min: 9, max: 30 }
+  { field: 'pillFont', label: 'Pill number size (px)', min: 9, max: 30 },
+  { field: 'hpArcStart', label: 'Health arc: fills from (deg, 180 = 9 o\'clock)', min: -180, max: 360, step: 5 },
+  { field: 'hpArcEnd', label: 'Health arc: to (deg, 360 = 3 o\'clock, over the top)', min: -180, max: 360, step: 5 },
+  { field: 'hpArcOffset', label: 'Health arc: out from the rim (px)', min: -20, max: 60 },
+  { field: 'hpArcWidth', label: 'Health arc: thickness (px)', min: 2, max: 24 }
 ];
 const RING_COLOURS: { field: ColourKey; label: string }[] = [
   { field: 'ringColour', label: 'Ring colour' },
@@ -97,7 +101,8 @@ const RING_COLOURS: { field: ColourKey; label: string }[] = [
 const RING_FLAGS: { field: FlagKey; label: string }[] = [
   { field: 'showName', label: 'Name' },
   { field: 'showTag', label: 'Turn tag' },
-  { field: 'showCost', label: 'Skill costs' }
+  { field: 'showCost', label: 'Skill costs' },
+  { field: 'hpArc', label: 'Health arc' }
 ];
 
 const HEROES = [
@@ -140,7 +145,7 @@ const HeroLab = () => {
   const ring: RingTune = { ...RING_DEFAULTS };
   RING_KNOBS.forEach(k => { const v = q1(`r_${k.field}`); if (v !== '' && !Number.isNaN(+v)) ring[k.field] = +v; });
   RING_COLOURS.forEach(c => { const v = q1(`r_${c.field}`); if (/^[0-9a-f]{6}$/i.test(v)) ring[c.field] = v; });
-  RING_FLAGS.forEach(f => { if (q1(`r_${f.field}`) === '0') ring[f.field] = false; });
+  RING_FLAGS.forEach(f => { const v = q1(`r_${f.field}`); if (v === '0') ring[f.field] = false; else if (v === '1') ring[f.field] = true; });
   const setRing = (changes: Record<string, string | null>) => {
     const query = { ...router.query };
     Object.entries(changes).forEach(([k, v]) => (v === null ? delete query[k] : (query[k] = v)));
@@ -295,7 +300,7 @@ const HeroLab = () => {
           ))}
           {RING_FLAGS.map(f => (
             <label key={f.field}>
-              <input type="checkbox" checked={ring[f.field]} onChange={e => setRing({ [`r_${f.field}`]: e.target.checked ? null : '0' })} /> {f.label}
+              <input type="checkbox" checked={ring[f.field]} onChange={e => setRing({ [`r_${f.field}`]: e.target.checked ? '1' : '0' })} /> {f.label}
             </label>
           ))}
           <button onClick={resetRing} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #3a4052', background: '#232634', color: '#fff', cursor: 'pointer' }}>

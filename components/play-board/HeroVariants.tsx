@@ -190,28 +190,45 @@ export interface RingTune {
   showName: boolean;
   showTag: boolean;
   showCost: boolean;
+  /** Health as an arc around the outside of the ring: it fills from `hpArcStart` toward `hpArcEnd` (CSS angles), `hpArcOffset` px out from the rim */
+  hpArc: boolean;
+  hpArcStart: number;
+  hpArcEnd: number;
+  hpArcOffset: number;
+  hpArcWidth: number;
 }
 
 export const RING_DEFAULTS: RingTune = {
-  d: 96,
+  d: 230,
   w: 2,
-  sock: 32,
-  rimSock: 0,
+  sock: 55,
+  rimSock: 4,
   rimPill: 0,
-  skillAngle: 180,
-  skillSpacing: 45,
-  weaponAngle: 0,
-  hpAngle: 90,
+  skillAngle: 90,
+  skillSpacing: 40,
+  weaponAngle: -25,
+  hpAngle: 270,
   armorAngle: 55,
-  pillW: 46,
-  pillH: 22,
+  pillW: 44,
+  pillH: 44,
   pillFont: 15,
   ringColour: '0b0d14',
   socketColour: '151925',
-  showName: true,
-  showTag: true,
+  showName: false,
+  showTag: false,
   showCost: true,
+  hpArc: true,
+  hpArcStart: 180,
+  hpArcEnd: 360,
+  hpArcOffset: 22,
+  hpArcWidth: 8,
 };
+
+const arcPath = (radius: number, from: number, to: number) => {
+  const pt = (deg: number) => `${(radius * Math.cos((deg * Math.PI) / 180)).toFixed(2)} ${(radius * Math.sin((deg * Math.PI) / 180)).toFixed(2)}`;
+  return `M ${pt(from)} A ${radius} ${radius} 0 ${Math.abs(to - from) > 180 ? 1 : 0} ${to > from ? 1 : 0} ${pt(to)}`;
+};
+const ARC_COLOURS: Record<string, string> = { low: '#ff6a6a', hurt: '#f0a04a', '': '#e0584a' };
 
 export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: Partial<RingTune> }) => {
   const r: RingTune = { ...RING_DEFAULTS, ...p.tune };
@@ -278,6 +295,19 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
         <span className={cx(styles.ringPill, styles.ringArmor, styles.num)} style={{ ['--a' as string]: `${r.armorAngle}deg` }} aria-label={`${p.armor} armor`}>
           {p.armor}
         </span>
+      )}
+      {r.hpArc && (
+        <svg className={styles.ringArc} aria-hidden="true">
+          <path d={arcPath(r.d / 2 + r.hpArcOffset, r.hpArcStart, r.hpArcEnd)} className={styles.ringArcTrack} strokeWidth={r.hpArcWidth} />
+          {p.health > 0 && (
+            <path
+              d={arcPath(r.d / 2 + r.hpArcOffset, r.hpArcStart, r.hpArcStart + (r.hpArcEnd - r.hpArcStart) * Math.min(1, p.health / max))}
+              className={styles.ringArcFill}
+              strokeWidth={r.hpArcWidth}
+              stroke={t === styles.low ? ARC_COLOURS.low : t === styles.hurt ? ARC_COLOURS.hurt : ARC_COLOURS['']}
+            />
+          )}
+        </svg>
       )}
       <span className={cx(styles.ringPill, styles.ringHp, styles.num, t)} style={{ ['--a' as string]: `${r.hpAngle}deg` }} aria-label={`${p.health} health`}>
         {p.health}
