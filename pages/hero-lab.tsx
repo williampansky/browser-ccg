@@ -73,7 +73,7 @@ const WEAPONS: Record<string, { image: string; attack: number; durability: numbe
 
 type NumKey = { [K in keyof RingTune]: RingTune[K] extends number ? K : never }[keyof RingTune];
 type FlagKey = { [K in keyof RingTune]: RingTune[K] extends boolean ? K : never }[keyof RingTune];
-type ColourKey = 'ringColour' | 'socketColour';
+type ColourKey = 'ringColour' | 'socketColour' | 'hpFull' | 'hpGraze' | 'hpHurt' | 'hpLow';
 /** The ring tab's number knobs. Each lives in the URL as `r_<field>` so a setup can be copied. */
 const RING_KNOBS: { field: NumKey; label: string; min: number; max: number; step?: number }[] = [
   { field: 'd', label: 'Ring diameter (px)', min: 60, max: 300 },
@@ -86,23 +86,42 @@ const RING_KNOBS: { field: NumKey; label: string; min: number; max: number; step
   { field: 'weaponAngle', label: 'Weapon at (deg, 0 = 3 o\'clock)', min: -180, max: 180, step: 5 },
   { field: 'hpAngle', label: 'Health at (deg, 90 = 6 o\'clock)', min: 0, max: 360, step: 5 },
   { field: 'armorAngle', label: 'Armor at (deg)', min: 0, max: 360, step: 5 },
+  { field: 'armorW', label: 'Armor width (px)', min: 16, max: 100 },
+  { field: 'armorH', label: 'Armor height (px)', min: 16, max: 100 },
+  { field: 'armorFont', label: 'Armor number size (px)', min: 8, max: 40 },
+  { field: 'wpnW', label: 'Weapon pills: width (px)', min: 12, max: 60 },
+  { field: 'wpnH', label: 'Weapon pills: height (px)', min: 12, max: 60 },
+  { field: 'wpnFont', label: 'Weapon pills: number size (px)', min: 8, max: 30 },
+  { field: 'atkX', label: 'Attack pill: nudge right (px)', min: -40, max: 40 },
+  { field: 'atkY', label: 'Attack pill: nudge down (px)', min: -40, max: 40 },
+  { field: 'durX', label: 'Durability pill: nudge right (px)', min: -40, max: 40 },
+  { field: 'durY', label: 'Durability pill: nudge down (px)', min: -40, max: 40 },
+  { field: 'rimArmor', label: 'Armor: out from the rim (px, minus = inside)', min: -40, max: 40 },
   { field: 'pillW', label: 'Pill width (px)', min: 24, max: 100 },
   { field: 'pillH', label: 'Pill height (px)', min: 14, max: 44 },
   { field: 'pillFont', label: 'Pill number size (px)', min: 9, max: 30 },
   { field: 'hpArcStart', label: 'Health arc: fills from (deg, 180 = 9 o\'clock)', min: -180, max: 360, step: 5 },
   { field: 'hpArcEnd', label: 'Health arc: to (deg, 360 = 3 o\'clock, over the top)', min: -180, max: 360, step: 5 },
   { field: 'hpArcOffset', label: 'Health arc: out from the rim (px)', min: -20, max: 60 },
-  { field: 'hpArcWidth', label: 'Health arc: thickness (px)', min: 2, max: 24 }
+  { field: 'hpArcWidth', label: 'Health arc: thickness (px)', min: 2, max: 24 },
+  { field: 'liquidBand', label: 'Health liquid: ring width (px)', min: 8, max: 60 },
+  { field: 'liquidBubbles', label: 'Health liquid: bubbles per side', min: 0, max: 24 },
+  { field: 'liquidAlpha', label: 'Health liquid: opacity (%)', min: 10, max: 100, step: 5 }
 ];
 const RING_COLOURS: { field: ColourKey; label: string }[] = [
   { field: 'ringColour', label: 'Ring colour' },
-  { field: 'socketColour', label: 'Socket colour' }
+  { field: 'socketColour', label: 'Socket colour' },
+  { field: 'hpFull', label: 'Health: full' },
+  { field: 'hpGraze', label: 'Health: scratched (over two thirds)' },
+  { field: 'hpHurt', label: 'Health: hurt (over a third)' },
+  { field: 'hpLow', label: 'Health: low (a third or less)' }
 ];
 const RING_FLAGS: { field: FlagKey; label: string }[] = [
   { field: 'showName', label: 'Name' },
   { field: 'showTag', label: 'Turn tag' },
   { field: 'showCost', label: 'Skill costs' },
-  { field: 'hpArc', label: 'Health arc' }
+  { field: 'hpArc', label: 'Health arc' },
+  { field: 'hpLiquid', label: 'Health liquid' }
 ];
 
 const HEROES = [

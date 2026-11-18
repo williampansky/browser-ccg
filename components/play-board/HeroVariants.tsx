@@ -181,12 +181,30 @@ export interface RingTune {
   weaponAngle: number;
   hpAngle: number;
   armorAngle: number;
+  /** The armor pill's own size (a circle when equal) and its own offset from the rim (px, minus = inside) */
+  armorW: number;
+  armorH: number;
+  rimArmor: number;
+  armorFont: number;
+  /** The weapon's attack and durability pills: one size (a circle when equal) and font for both, plus a nudge for each (px, from its default corner) */
+  wpnW: number;
+  wpnH: number;
+  wpnFont: number;
+  atkX: number;
+  atkY: number;
+  durX: number;
+  durY: number;
   pillW: number;
   pillH: number;
   pillFont: number;
   /** Colours as 6-digit hex without the # */
   ringColour: string;
   socketColour: string;
+  /** Health colours (hex, no #): full (at max), graze (over two thirds), hurt (over a third) and low (a third of max or less); the pill, arc and liquid all use them */
+  hpFull: string;
+  hpGraze: string;
+  hpHurt: string;
+  hpLow: string;
   showName: boolean;
   showTag: boolean;
   showCost: boolean;
@@ -196,62 +214,143 @@ export interface RingTune {
   hpArcEnd: number;
   hpArcOffset: number;
   hpArcWidth: number;
+  /** Health as liquid in a hollow glass ring around a smaller portrait: it sloshes when health changes and bubbles rise. `liquidBand` is the ring's width (px), `liquidAlpha` the liquid's opacity (0 to 100) */
+  hpLiquid: boolean;
+  liquidBand: number;
+  liquidAlpha: number;
+  /** Bubbles rising on each side of the liquid ring */
+  liquidBubbles: number;
 }
 
 export const RING_DEFAULTS: RingTune = {
   d: 230,
   w: 2,
   sock: 55,
-  rimSock: 4,
-  rimPill: 0,
+  rimSock: -10,
+  rimPill: -12,
   skillAngle: 90,
   skillSpacing: 40,
   weaponAngle: -25,
   hpAngle: 270,
-  armorAngle: 55,
+  armorAngle: 255,
+  armorW: 38,
+  armorH: 38,
+  rimArmor: 4,
+  armorFont: 15,
+  wpnW: 22,
+  wpnH: 22,
+  wpnFont: 13,
+  atkX: 8,
+  atkY: -2,
+  durX: -6,
+  durY: -2,
   pillW: 44,
   pillH: 44,
   pillFont: 15,
   ringColour: '0b0d14',
   socketColour: '151925',
+  hpFull: '4ce1a0',
+  hpGraze: '96e14c',
+  hpHurt: 'f09b4c',
+  hpLow: 'ff3333',
   showName: false,
   showTag: false,
   showCost: true,
-  hpArc: true,
+  hpArc: false,
   hpArcStart: 180,
   hpArcEnd: 360,
   hpArcOffset: 22,
   hpArcWidth: 8,
+  hpLiquid: true,
+  liquidBand: 15,
+  liquidAlpha: 85,
+  liquidBubbles: 12,
 };
 
 const arcPath = (radius: number, from: number, to: number) => {
   const pt = (deg: number) => `${(radius * Math.cos((deg * Math.PI) / 180)).toFixed(2)} ${(radius * Math.sin((deg * Math.PI) / 180)).toFixed(2)}`;
   return `M ${pt(from)} A ${radius} ${radius} 0 ${Math.abs(to - from) > 180 ? 1 : 0} ${to > from ? 1 : 0} ${pt(to)}`;
 };
-const ARC_COLOURS: Record<string, string> = { low: '#ff6a6a', hurt: '#f0a04a', '': '#e0584a' };
+
+/** Bubble `i` of `n` on one side: left % of the band, size px, delay s, duration s. Spread by the golden ratio so they never line up. */
+const bubble = (i: number, side: number, n: number): [number, number, number, number] => {
+  const f = (k: number) => (((i + 1) * k + side * 0.37) % 1);
+  return [8 + f(0.618) * 70, 2 + Math.round(f(0.382) * 4), (i / n) * 5 + side * 0.9, 3.4 + f(0.754) * 2.6];
+};
+const WAVE = 'M0 6 Q25 0 50 6 T100 6 T150 6 T200 6 V12 H0 Z';
+
+/** The liquid inside the disc. `level` is 0 to 1; a change in health restarts the slosh (a tilt and a taller wave) at a strength set by the size of the change. */
+const Liquid = (p: { level: number; health: number; max: number; tone: string; alpha: number; bubbles: number }) => {
+  const prev = React.useRef(p.health);
+  const [slosh, setSlosh] = React.useState({ n: 0, strength: 0 });
+  React.useEffect(() => {
+    if (p.health === prev.current) return;
+    const strength = Math.min(1, 0.35 + (Math.abs(p.health - prev.current) / p.max) * 3);
+    prev.current = p.health;
+    setSlosh((s) => ({ n: s.n + 1, strength }));
+  }, [p.health, p.max]);
+  return (
+    <span
+      className={cx(styles.ringLiquid, p.tone)}
+      style={{ ['--lvl' as string]: p.level, ['--liq-a' as string]: p.alpha / 100, ['--slosh' as string]: slosh.strength }}
+    >
+      <span key={slosh.n} className={cx(styles.liquidTilt, slosh.n ? styles.sloshing : '')}>
+        <span className={styles.liquidWaveAmp}>
+          <svg className={cx(styles.liquidWave, styles.waveBack)} viewBox="0 0 200 12" preserveAspectRatio="none"><path d={WAVE} /></svg>
+          <svg className={styles.liquidWave} viewBox="0 0 200 12" preserveAspectRatio="none"><path d={WAVE} /></svg>
+        </span>
+        <span className={styles.liquidBody} />
+        <span className={styles.liquidDepth}>
+          {[0, 1].map((side) => (
+            <span key={side} className={cx(styles.liquidCol, side ? styles.colRight : '')}>
+              {Array.from({ length: p.bubbles }, (_, i) => {
+                const [x, size, delay, dur] = bubble(i, side, p.bubbles);
+                return <i key={i} style={{ left: `${x}%`, width: size, height: size, animationDelay: `${delay}s`, animationDuration: `${dur}s` }} />;
+              })}
+            </span>
+          ))}
+        </span>
+      </span>
+    </span>
+  );
+};
 
 export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: Partial<RingTune> }) => {
   const r: RingTune = { ...RING_DEFAULTS, ...p.tune };
   const max = p.maxHealth ?? 30;
-  const t = tone(p.health, max);
+  // The ring has four health states (the other variants keep three): full, graze, hurt, low.
+  const t = p.health <= max / 3 ? styles.low : p.health <= (max * 2) / 3 ? styles.hurt : p.health < max ? styles.graze : '';
   const vars = {
     '--ring-d': `${r.d}px`,
     '--ring-w': `${r.w}px`,
     '--sock': `${r.sock}px`,
     '--rim-s': `${r.rimSock}px`,
     '--rim-p': `${r.rimPill}px`,
+    '--rim-a': `${r.rimArmor}px`,
+    '--armor-w': `${r.armorW}px`,
+    '--armor-h': `${r.armorH}px`,
+    '--armor-f': `${r.armorFont}px`,
+    '--wpn-w': `${r.wpnW}px`,
+    '--wpn-h': `${r.wpnH}px`,
+    '--wpn-f': `${r.wpnFont}px`,
     '--pill-w': `${r.pillW}px`,
     '--pill-h': `${r.pillH}px`,
     '--pill-f': `${r.pillFont}px`,
+    '--band': `${r.hpLiquid ? r.liquidBand : 0}px`,
     '--ring-c': `#${r.ringColour}`,
     '--sock-c': `#${r.socketColour}`,
+    '--hp-full': `#${r.hpFull}`,
+    '--hp-graze': `#${r.hpGraze}`,
+    '--hp-hurt': `#${r.hpHurt}`,
+    '--hp-low': `#${r.hpLow}`,
   } as React.CSSProperties;
   return (
     <div className={root(p, styles.ring)} style={vars}>
       {r.showName && <span className={styles.ringName}>{p.name}</span>}
       {r.showTag && p.turnTag && <span className={cx(styles.turnTag, styles.ringTag)}>{p.turnTag}</span>}
       <div className={styles.ringDisc}>
-        <span className={styles.ringArt} style={{ backgroundImage: art(p.heroId) }} />
+        {r.hpLiquid && p.health > 0 && <Liquid level={Math.min(1, p.health / max)} health={p.health} max={max} tone={t} alpha={r.liquidAlpha} bubbles={r.liquidBubbles} />}
+        <span className={cx(styles.ringArt, r.hpLiquid ? styles.ringArtInset : '')} style={{ backgroundImage: art(p.heroId) }} />
       </div>
       {[1, 2, 3].map((n) => {
         const k = p.skills?.[n - 1];
@@ -286,8 +385,8 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
         {p.weapon?.image && <img src={p.weapon.image} alt="" draggable={false} />}
         {p.weapon && (
           <>
-            <b className={cx(styles.ringStat, styles.ringAtk, styles.num)}>{p.weapon.attack}</b>
-            <b className={cx(styles.ringStat, styles.ringDur, styles.num)}>{p.weapon.durability}</b>
+            <b className={cx(styles.ringStat, styles.ringAtk, styles.num)} style={{ translate: `${r.atkX}px ${r.atkY}px` }}>{p.weapon.attack}</b>
+            <b className={cx(styles.ringStat, styles.ringDur, styles.num)} style={{ translate: `${r.durX}px ${r.durY}px` }}>{p.weapon.durability}</b>
           </>
         )}
       </div>
@@ -304,7 +403,7 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
               d={arcPath(r.d / 2 + r.hpArcOffset, r.hpArcStart, r.hpArcStart + (r.hpArcEnd - r.hpArcStart) * Math.min(1, p.health / max))}
               className={styles.ringArcFill}
               strokeWidth={r.hpArcWidth}
-              stroke={t === styles.low ? ARC_COLOURS.low : t === styles.hurt ? ARC_COLOURS.hurt : ARC_COLOURS['']}
+              stroke={`#${t === styles.low ? r.hpLow : t === styles.hurt ? r.hpHurt : t === styles.graze ? r.hpGraze : r.hpFull}`}
             />
           )}
         </svg>
