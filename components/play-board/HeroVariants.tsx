@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { heroImage } from './hero-images';
 import styles from './hero-variants.module.scss';
 import cx from '../../utils/cx';
 import { artBackground } from './card-face-model';
+import { IMPACT_MS, reducedMotion } from './motion';
 
 /**
  * PROTOTYPE hero displays 2 to 4 (option 1 is HeroBust): the standing figure, the big medallion and the hero as a framed card.
@@ -227,6 +228,20 @@ export interface RingTune {
   frame: number;
   /** Where the Mystery socket sits (deg, 0 = 3 o'clock); it only shows while a Mystery is set */
   mysteryAngle: number;
+  /** Taking damage: the ring shakes (`hitShake` px sideways, `hitTilt` deg, over `hitShakeMs`; 0 px and 0 deg = no shake) and the amount floats up from the
+   *  middle (`popSize` px, `popRise` px up, over `popMs`; `showPop` off hides it). Both wait `hitDelay` ms, so they land with an attack's strike. Healing shows
+   *  the same number in `healColour`. */
+  hitShake: number;
+  hitTilt: number;
+  hitShakeMs: number;
+  hitDelay: number;
+  showPop: boolean;
+  popSize: number;
+  popRise: number;
+  popMs: number;
+  popY: number;
+  hitColour: string;
+  healColour: string;
 }
 
 export const RING_DEFAULTS: RingTune = {
@@ -275,6 +290,17 @@ export const RING_DEFAULTS: RingTune = {
   bezel: 100,
   frame: 66,
   mysteryAngle: 25,
+  hitShake: 6,
+  hitTilt: 2,
+  hitShakeMs: 450,
+  hitDelay: IMPACT_MS,
+  showPop: true,
+  popSize: 34,
+  popRise: 64,
+  popMs: 1000,
+  popY: 50,
+  hitColour: 'ff5d4a',
+  healColour: '5fe38a',
 };
 
 const arcPath = (radius: number, from: number, to: number) => {
@@ -325,6 +351,36 @@ const Liquid = (p: { level: number; health: number; max: number; tone: string; a
   );
 };
 
+/**
+ * What the ring does when its hero is hurt or healed: `hits` counts damage (health or armor lost) so the ring can restart its shake each
+ * time, and `pops` are the numbers floating up (negative = damage, positive = health gained). Both wait `r.hitDelay` ms. The first render never reacts.
+ */
+const useRingHit = (health: number, armor: number, r: RingTune) => {
+  const last = useRef({ health, armor });
+  const next = useRef(1);
+  const [hits, setHits] = useState(0);
+  const [pops, setPops] = useState<{ id: number; amount: number }[]>([]);
+  useEffect(() => {
+    const before = last.current;
+    last.current = { health, armor };
+    const lost = Math.max(0, before.health - health) + Math.max(0, before.armor - armor);
+    const gained = Math.max(0, health - before.health);
+    if ((lost === 0 && gained === 0) || reducedMotion()) return;
+    const amount = lost > 0 ? -lost : gained;
+    const id = next.current++;
+    const timers = [
+      setTimeout(() => {
+        if (lost > 0) setHits((n) => n + 1);
+        setPops((old) => [...old, { id, amount }]);
+      }, lost > 0 ? r.hitDelay : 0),
+      setTimeout(() => setPops((old) => old.filter((x) => x.id !== id)), (lost > 0 ? r.hitDelay : 0) + r.popMs + 50),
+    ];
+    return () => timers.forEach(clearTimeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [health, armor]);
+  return { hits, pops };
+};
+
 /** A face-down Mystery on the ring: `cardId` is set for its owner (the card's art shows), left out for the opponent (a question mark). */
 export interface RingMystery {
   cardId?: string;
@@ -335,6 +391,7 @@ export interface RingMystery {
 
 export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: Partial<RingTune>; mystery?: RingMystery } & FigureLive) => {
   const r: RingTune = { ...RING_DEFAULTS, ...p.tune };
+  const hit = useRingHit(p.health, p.armor ?? 0, r);
   const max = p.maxHealth ?? 30;
   // The ring has four health states (the other variants keep three): full, graze, hurt, low.
   const t = p.health <= max / 3 ? styles.low : p.health <= (max * 2) / 3 ? styles.hurt : p.health < max ? styles.graze : '';
@@ -363,14 +420,29 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
     '--hp-graze': `#${r.hpGraze}`,
     '--hp-hurt': `#${r.hpHurt}`,
     '--hp-low': `#${r.hpLow}`,
+    '--hit-amp': `${r.hitShake}px`,
+    '--hit-tilt': `${r.hitTilt}deg`,
+    '--hit-ms': `${r.hitShakeMs}ms`,
+    '--pop-size': `${r.popSize}px`,
+    '--pop-rise': `${r.popRise}px`,
+    '--pop-ms': `${r.popMs}ms`,
+    '--pop-y': `${r.popY}%`,
+    '--hit-c': `#${r.hitColour}`,
+    '--heal-c': `#${r.healColour}`,
   } as React.CSSProperties;
   return (
     <div
       {...p.dom}
       ref={p.rootRef}
-      className={cx(root(p, styles.ring), p.canAct ? styles.canAct : '', p.aim ? styles.aim : '', p.aim && p.aimHover ? styles.aimHover : '', p.selected ? styles.sel : '')}
+      className={cx(root(p, styles.ring), p.canAct ? styles.canAct : '', p.aim ? styles.aim : '', p.aim && p.aimHover ? styles.aimHover : '', p.selected ? styles.sel : '', hit.hits > 0 ? (hit.hits % 2 ? styles.hitA : styles.hitB) : '')}
       style={vars}
     >
+      {r.showPop &&
+        hit.pops.map((x) => (
+          <span key={x.id} className={cx(styles.ringPop, x.amount < 0 ? styles.ringPopHurt : styles.ringPopHeal)} aria-hidden="true">
+            {x.amount > 0 ? `+${x.amount}` : x.amount}
+          </span>
+        ))}
       {r.showName && <span className={styles.ringName}>{p.name}</span>}
       {r.showTag && p.turnTag && <span className={cx(styles.turnTag, styles.ringTag)}>{p.turnTag}</span>}
       {r.bezel > 0 && <span className={styles.ringBezel} />}

@@ -107,6 +107,13 @@
   font-weight: var(--mid-tw, 400);
   opacity: var(--mid-to, 1);
   letter-spacing: var(--mid-tl, 0px);
+  // Its own place in the strip, apart from the button (lmdta align, lmdtdx / lmdtdy nudge).
+  order: var(--mid-tpo, 0);
+  margin-left: var(--mid-tpl, 0px);
+  position: var(--mid-tpp, static);
+  left: 50%;
+  top: 50%;
+  translate: calc(var(--mid-tpsx, 0px) + var(--mid-tdx, 0px)) calc(var(--mid-tpsy, 0px) + var(--mid-tdy, 0px));
 }
 
 // The turn timer as a bar across the strip (or the whole window): drains as the turn clock runs down, a second colour for the last 10 s.
@@ -174,7 +181,9 @@
   --x: calc((var(--fan-x, 0px) + var(--fan-i, 0) * (20px - var(--h-overlap, 20px)) + var(--part, 0px)) * var(--zoom));
   --y-comp: calc(101px * (1 - var(--zoom)));
   --rot: calc(var(--fan-rot, 0deg) * var(--h-tilt, 1));
-  --drop: calc(var(--fan-drop, 0px) * var(--h-dropk, 1));
+  // --fan-t is 0 for the middle card and 1 for the ends; --h-curve blends the straight V of the drop (0) into a round arc (1) that stays flat
+  // in the middle and falls away faster toward the ends (the drop above 10px is scaled by (1 - curve) + curve * t).
+  --drop: calc((10px + (var(--fan-drop, 10px) - 10px) * (1 - var(--h-curve, 0) + var(--h-curve, 0) * var(--fan-t, 0))) * var(--h-dropk, 1));
   transform: translate(var(--x), calc(var(--y-comp) + (var(--drop) + var(--hand-sink)) * var(--zoom)))
     rotate(var(--rot)) scale(var(--zoom));
   transition: transform var(--h-settle, 800ms) cubic-bezier(0.19, 1, 0.22, 1), filter 0.15s;
@@ -640,6 +649,13 @@ $po-green: var(--po-c, #5fd16a);
 }
 
 .endTurn {
+  // Its own place in the strip, apart from the text (lmdba align, lmdbdx / lmdbdy nudge).
+  order: var(--mid-bpo, 0);
+  margin-left: var(--mid-bpl, 0px);
+  position: var(--mid-bpp, static);
+  left: 50%;
+  top: 50%;
+  translate: calc(var(--mid-bpsx, 0px) + var(--mid-bdx, 0px)) calc(var(--mid-bpsy, 0px) + var(--mid-bdy, 0px));
   padding: var(--mid-by, 8px) var(--mid-bx, 19px);
   border-radius: var(--mid-br, 6px);
   border: 1px solid var(--mid-bb, #5a8cf0);

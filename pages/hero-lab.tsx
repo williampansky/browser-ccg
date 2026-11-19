@@ -73,7 +73,7 @@ const WEAPONS: Record<string, { image: string; attack: number; durability: numbe
 
 type NumKey = { [K in keyof RingTune]: RingTune[K] extends number ? K : never }[keyof RingTune];
 type FlagKey = { [K in keyof RingTune]: RingTune[K] extends boolean ? K : never }[keyof RingTune];
-type ColourKey = 'ringColour' | 'socketColour' | 'hpFull' | 'hpGraze' | 'hpHurt' | 'hpLow';
+type ColourKey = 'ringColour' | 'socketColour' | 'hpFull' | 'hpGraze' | 'hpHurt' | 'hpLow' | 'hitColour' | 'healColour';
 /** The ring tab's number knobs. Each lives in the URL as `r_<field>` so a setup can be copied. */
 const RING_KNOBS: { field: NumKey; label: string; min: number; max: number; step?: number }[] = [
   { field: 'd', label: 'Ring diameter (px)', min: 60, max: 300 },
@@ -109,6 +109,14 @@ const RING_KNOBS: { field: NumKey; label: string; min: number; max: number; step
   { field: 'bezel', label: 'Metal bezel behind the disc (%, 0 = off, 100 = flush)', min: 0, max: 160, step: 5 },
   { field: 'frame', label: 'Metal frame picture on skills and weapon (px across, 0 = off; about socket size ÷ 0.47 fits)', min: 0, max: 160 },
   { field: 'mysteryAngle', label: 'Mystery socket at (deg, 0 = 3 o\'clock)', min: -180, max: 360, step: 5 },
+  { field: 'hitShake', label: 'Hit shake: sideways (px, 0 = none)', min: 0, max: 30, step: 0.5 },
+  { field: 'hitTilt', label: 'Hit shake: tilt (deg)', min: 0, max: 15, step: 0.25 },
+  { field: 'hitShakeMs', label: 'Hit shake: length (ms)', min: 100, max: 1500, step: 10 },
+  { field: 'hitDelay', label: 'Hit: delay before shake and number (ms)', min: 0, max: 800, step: 10 },
+  { field: 'popSize', label: 'Damage number: size (px)', min: 12, max: 90 },
+  { field: 'popRise', label: 'Damage number: rises (px)', min: 0, max: 200 },
+  { field: 'popMs', label: 'Damage number: length (ms)', min: 200, max: 3000, step: 50 },
+  { field: 'popY', label: 'Damage number: starts at (% down the disc)', min: 0, max: 100 },
   { field: 'liquidAlpha', label: 'Health liquid: opacity (%)', min: 10, max: 100, step: 5 }
 ];
 const RING_COLOURS: { field: ColourKey; label: string }[] = [
@@ -117,14 +125,17 @@ const RING_COLOURS: { field: ColourKey; label: string }[] = [
   { field: 'hpFull', label: 'Health: full' },
   { field: 'hpGraze', label: 'Health: scratched (over two thirds)' },
   { field: 'hpHurt', label: 'Health: hurt (over a third)' },
-  { field: 'hpLow', label: 'Health: low (a third or less)' }
+  { field: 'hpLow', label: 'Health: low (a third or less)' },
+  { field: 'hitColour', label: 'Damage number' },
+  { field: 'healColour', label: 'Heal number' }
 ];
 const RING_FLAGS: { field: FlagKey; label: string }[] = [
   { field: 'showName', label: 'Name' },
   { field: 'showTag', label: 'Turn tag' },
   { field: 'showCost', label: 'Skill costs' },
   { field: 'hpArc', label: 'Health arc' },
-  { field: 'hpLiquid', label: 'Health liquid' }
+  { field: 'hpLiquid', label: 'Health liquid' },
+  { field: 'showPop', label: 'Damage / heal numbers' }
 ];
 
 const HEROES = [
@@ -188,6 +199,7 @@ const HeroLab = () => {
     { title: 'Where things sit', open: true, fields: ['rimSock', 'rimPill', 'rimArmor', 'skillAngle', 'skillSpacing', 'weaponAngle', 'mysteryAngle', 'hpAngle', 'armorAngle'] },
     { title: 'Health and armor pills', fields: ['pillW', 'pillH', 'pillFont', 'armorW', 'armorH', 'armorFont'] },
     { title: 'Weapon pills', fields: ['wpnW', 'wpnH', 'wpnFont', 'atkX', 'atkY', 'durX', 'durY'] },
+    { title: 'Hit shake and damage number', fields: ['hitShake', 'hitTilt', 'hitShakeMs', 'hitDelay', 'popSize', 'popRise', 'popMs', 'popY'] },
     { title: 'Health liquid', fields: ['liquidBand', 'liquidBubbles', 'liquidAlpha'] },
     { title: 'Health arc', fields: ['hpArcStart', 'hpArcEnd', 'hpArcOffset', 'hpArcWidth'] }
   ];
@@ -296,6 +308,15 @@ const HeroLab = () => {
             onChange={e => setHealth(+e.target.value)}
           />
         </label>
+        {tab === 'ring' && (
+          <span style={{ display: 'inline-flex', gap: 6 }}>
+            {([['Hit 3', -3], ['Hit 8', -8], ['Heal 3', 3]] as const).map(([label, n]) => (
+              <button key={label} onClick={() => setHealth(h => Math.min(30, Math.max(1, h + n)))} style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #3a4052', background: '#232634', color: '#fff', cursor: 'pointer' }}>
+                {label}
+              </button>
+            ))}
+          </span>
+        )}
         <label>
           Armor {armor}{' '}
           <input

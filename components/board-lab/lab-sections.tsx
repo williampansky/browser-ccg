@@ -7,7 +7,7 @@ import { one } from './lab-model';
 /** The URL params each accordion section owns, for its Copy / Paste config buttons. (Presets has none.) */
 const SHADOW_KEYS = ['def', 'rdy', 'sel', 'aim', 'hov'].flatMap((st) => ['y', 'b', 'a'].map((k) => `lsh${st}${k}`));
 const slotKeys = (n: string) => ['lsf', 'lsg', 'lsj', 'lsm'].map((k) => `${k}_${n}`);
-const MID_KEYS = [...MID_KNOBS.map((k) => k.key), ...Object.keys(ENERGY_COLOURS).filter((k) => k.startsWith('lmd')), 'lmdtpv', 'lmdj', 'lmdtpos'];
+const MID_KEYS = [...MID_KNOBS.map((k) => k.key), ...Object.keys(ENERGY_COLOURS).filter((k) => k.startsWith('lmd')), 'lmdtpv', 'lmdj', 'lmdtpos', 'lmdba', 'lmdta'];
 export const SECTION_KEYS: Record<string, string[]> = {
   endgame: ['leno', 'lenf', 'lenbs', 'lenbc', 'lenlc', 'lenol', 'lenon', 'lenw', 'lenm', 'lenp', ...END_KNOBS.map((k) => k.key)],
   middle: MID_KEYS,
@@ -16,7 +16,7 @@ export const SECTION_KEYS: Record<string, string[]> = {
   minions: ['lm', 'lg', 'lml', 'lms', 'lmh', 'lmpv', 'lpsh', 'lpss', 'lpsm', 'lpsy'],
   shadows: SHADOW_KEYS,
   table: ['ls', 'lw', 'lfelt'],
-  hands: ['lhw0', 'lhw1', 'lhs', 'lsel', 'lpv', 'lhpv', 'lhrt', 'lhdp', 'lhol', 'lhov', 'lhoy', 'lhot', 'lhom', 'lhpa', 'lhpb', 'lhpm', 'lhha', 'lhhs', 'lhfl', 'lhsm', 'lhst', 'lhdr'],
+  hands: ['lhw0', 'lhw1', 'lhs', 'lsel', 'lpv', 'lhpv', 'lhrt', 'lhdp', 'lhdc', 'lhol', 'lhov', 'lhoy', 'lhot', 'lhom', 'lhpa', 'lhpb', 'lhpm', 'lhha', 'lhhs', 'lhfl', 'lhsm', 'lhst', 'lhdr'],
   play: ['lpoc', 'lpoo', 'lpow', 'lpor', 'lpoi', 'lpoh', 'lpog', 'lpogw', 'lpos', 'lpoga', 'lpopv', 'lpoac', 'lpoahc', 'lpozc', 'lpozhc', 'lpogc', 'lpoge', 'lpoao', 'lpoai', 'lpoah', 'lpoahw', 'lpoahg', 'lpoat', 'lpozo', 'lpozi', 'lpozh', 'lpozhw', 'lpozhg', 'lpozt', 'lpogo', 'lpogb', 'lpogd', 'lpogs', 'lpogp', 'lpogq'],
   cast: ['lcx', 'lcy', 'lcs', 'lcms', 'lcpeak', 'lcglow', 'lcring', 'lcpv'],
   energy: ['les', 'lex', 'ley', 'leo', 'leg', 'legt', 'lecs', 'lecv', 'lect', 'lebr', 'lebb', 'lebg', 'lecr', 'lecb', 'lecn', 'lebpv'],

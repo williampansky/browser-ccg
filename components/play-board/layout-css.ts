@@ -56,6 +56,7 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   // Hand look and feel: CSS variables on .hand (see the .handSlot block in play-board.module.scss for what each one does).
   lhrt: (v) => `${CLS('hand')}{--h-tilt:${v}}`,
   lhdp: (v) => `${CLS('hand')}{--h-dropk:${v}}`,
+  lhdc: (v) => `${CLS('hand')}{--h-curve:${v}}`,
   lhol: (v) => `${CLS('hand')}{--h-overlap:${v}px}`,
   lhov: (v) => `${CLS('hand')}{--h-hov:${v}}`,
   lhoy: (v) => `${CLS('hand')}{--h-lift:${-v}px}`,
@@ -166,6 +167,8 @@ export const MID_KNOBS: { key: string; label: string; min: number; max: number; 
   { key: 'lmdtw', label: 'Text: weight', min: 100, max: 900, step: 100, def: 400, cssVar: '--mid-tw', unit: '' },
   { key: 'lmdto', label: 'Text: opacity', min: 0, max: 1, step: 0.05, def: 1, cssVar: '--mid-to', unit: '' },
   { key: 'lmdtl', label: 'Text: letter spacing (px)', min: -2, max: 10, step: 0.1, def: 0, cssVar: '--mid-tl', unit: 'px' },
+  { key: 'lmdtdx', label: 'Text: move right (px)', min: -600, max: 600, def: 0, cssVar: '--mid-tdx', unit: 'px' },
+  { key: 'lmdtdy', label: 'Text: move down (px)', min: -100, max: 100, def: 0, cssVar: '--mid-tdy', unit: 'px' },
   { key: 'lmdks', label: 'Clock: size (x)', min: 0.5, max: 3, step: 0.05, def: 1, cssVar: '--mid-ks', unit: '' },
   // End turn button
   { key: 'lmdbr', label: 'End turn: corner radius (px)', min: 0, max: 40, def: 6, cssVar: '--mid-br', unit: 'px' },
@@ -175,6 +178,8 @@ export const MID_KNOBS: { key: string; label: string; min: number; max: number; 
   { key: 'lmdbw', label: 'End turn: text weight', min: 100, max: 900, step: 100, def: 700, cssVar: '--mid-bw', unit: '' },
   { key: 'lmdbg', label: 'End turn: glow (px)', min: 0, max: 40, def: 0, cssVar: '--mid-bg', unit: 'px' },
   { key: 'lmdbh', label: 'End turn: brightness on hover (x)', min: 0.5, max: 2, step: 0.05, def: 1, cssVar: '--mid-bh', unit: '' },
+  { key: 'lmdbdx', label: 'End turn: move right (px)', min: -600, max: 600, def: 0, cssVar: '--mid-bdx', unit: 'px' },
+  { key: 'lmdbdy', label: 'End turn: move down (px)', min: -100, max: 100, def: 0, cssVar: '--mid-bdy', unit: 'px' },
   { key: 'lmdbd', label: 'End turn: opacity when disabled', min: 0, max: 1, step: 0.05, def: 0.4, cssVar: '--mid-bd', unit: '' },
   // Timer bar
   { key: 'lmdtb', label: 'Timer bar: show (1 = yes, 0 = no)', min: 0, max: 1, def: 1, cssVar: '--mid-tb', unit: '' },
@@ -190,8 +195,20 @@ export const MID_TIMER_PREVIEW_KEY = 'lmdtpv';
 
 /** The middle strip's text choices (`lmdj` alignment, `lmdtpos` where the timer bar sits): named, not numbers. */
 const MID_JUSTIFY: Record<string, string> = { start: 'flex-start', center: 'center', end: 'flex-end', between: 'space-between' };
+/** Where the End turn button (`lmdba`) and the status text (`lmdta`) sit along the strip, each on its own: left (the default), center or right.
+ *  Left and right stay in the flow (right is an auto margin, after the others); center takes the item out of the flow and puts it on the
+ *  strip's exact middle, so it does not depend on what else is in the strip. */
+const MID_ALIGN: Record<string, string> = {
+  left: '--mid-%o:0;--mid-%l:0px;--mid-%p:static;--mid-%sx:0px;--mid-%sy:0px',
+  right: '--mid-%o:2;--mid-%l:auto;--mid-%p:static;--mid-%sx:0px;--mid-%sy:0px',
+  center: '--mid-%o:0;--mid-%l:0px;--mid-%p:absolute;--mid-%sx:-50%;--mid-%sy:-50%',
+};
+const midAlignCss = (which: 'bp' | 'tp', value: string) =>
+  MID_ALIGN[value] ? `${CLS('page')}{${MID_ALIGN[value].replace(/%(sx|sy|o|l|p)/g, `${which}$1`)}}` : '';
 const midChoicesCss = (one: (k: string) => string) =>
   [
+    midAlignCss('bp', one('lmdba')),
+    midAlignCss('tp', one('lmdta')),
     MID_JUSTIFY[one('lmdj')] ? `${CLS('page')}{--mid-j:${MID_JUSTIFY[one('lmdj')]}}` : '',
     one('lmdtpos') === 'top' ? `${CLS('page')}{--mid-ttop:0px;--mid-tbot:auto}` : '',
     one('lmdtpos') === 'middle' ? `${CLS('page')}{--mid-ttop:50%;--mid-tbot:auto}` : '',
@@ -332,11 +349,15 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lmdts: '0.9',
   lpoah: '68',
   lpoahg: '28',
-  lhol: '53',
+  lhol: '40',
   lhrt: '1.65',
   lhdp: '1.8',
   lhs: '46',
   lhoy: '120',
+  lcx: '-252',
+  lcs: '1.15',
+  lcpeak: '1.35',
+  lcy: '36',
 };
 
 /**

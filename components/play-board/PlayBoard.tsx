@@ -1312,6 +1312,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           ['--fan-drop' as string]: `${fanDrop(index, handCount)}px`,
           ['--fan-x' as string]: `${fanX(index, handCount, HAND_CARD_WIDTH)}px`,
           ['--fan-i' as string]: index - (handCount - 1) / 2,
+          ['--fan-t' as string]: Math.abs(index - (handCount - 1) / 2) / Math.max((handCount - 1) / 2, 0.5),
         }}
         title={titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`)}
         className={cx(styles.handSlot, lab?.handHover === index + 1 ? styles.slotHover : '', playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index || aimable.length > 0 ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : '')}

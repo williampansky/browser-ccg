@@ -119,6 +119,7 @@ export const NUMS: Num[] = [
   // Hand fan (tilt and drop as multiples of hsclone's numbers) and spacing
   { key: 'lhrt', label: 'Fan tilt (x, 0 = flat)', min: 0, max: 3, step: 0.05, css: CSS_FNS.lhrt, read: () => 1 },
   { key: 'lhdp', label: 'Fan drop (x, 0 = a straight row)', min: 0, max: 3, step: 0.05, css: CSS_FNS.lhdp, read: () => 1 },
+  { key: 'lhdc', label: 'Fan curve (0 = straight V, 1 = round arc)', min: 0, max: 1.5, step: 0.05, css: CSS_FNS.lhdc, read: () => 0 },
   { key: 'lhol', label: 'Card overlap (px at full size; minus = gaps)', min: -40, max: 120, css: CSS_FNS.lhol, read: () => 20 },
   // Hover: the card under the pointer, and how its neighbours part around it
   { key: 'lhov', label: 'Hover scale (x)', min: 1, max: 2.5, step: 0.05, css: CSS_FNS.lhov, read: () => 1.5 },

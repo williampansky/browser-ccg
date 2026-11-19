@@ -99,7 +99,7 @@ export const HandsPanel = ({ q, setParams, sliders, count, pick }: PanelProps) =
   <>
     {sliders(['lhw0', 'lhw1', 'lhs'])}
     <div style={groupStyle}><b>Fan</b></div>
-    {sliders(['lhrt', 'lhdp', 'lhol'])}
+    {sliders(['lhrt', 'lhdp', 'lhdc', 'lhol'])}
     <div style={groupStyle}><b>Hover</b> (the card under the pointer)</div>
     <label style={row}>
       Hold card number <input type="number" min={0} max={10} style={{ width: 50 }} value={one(q.lhpv)} onChange={(e) => setParams({ lhpv: e.target.value === '' || e.target.value === '0' ? null : e.target.value })} /> in its hover look (0 = off)
@@ -337,11 +337,27 @@ export const MiddlePanel = ({ q, setParams, sliders }: PanelProps) => (
     <div style={midGroup}>
       <b>Middle text and clock</b>
       {['lmdtc', 'lmdkc', 'lmdkl'].map((k) => midColour(q, setParams, k))}
-      {sliders(['lmdts', 'lmdtw', 'lmdto', 'lmdtl', 'lmdks'])}
+      <label style={row}>
+        Text sits{' '}
+        <select value={one(q.lmdta) || 'left'} onChange={(e) => setParams({ lmdta: e.target.value === 'left' ? null : e.target.value })}>
+          <option value="left">at the left</option>
+          <option value="center">in the middle</option>
+          <option value="right">at the right</option>
+        </select>
+      </label>
+      {sliders(['lmdtdx', 'lmdtdy', 'lmdts', 'lmdtw', 'lmdto', 'lmdtl', 'lmdks'])}
     </div>
     <div style={midGroup}>
       <b>End turn button</b>
       {['lmdbc', 'lmdbb', 'lmdbt'].map((k) => midColour(q, setParams, k))}
+      <label style={row}>
+        Button sits{' '}
+        <select value={one(q.lmdba) || 'left'} onChange={(e) => setParams({ lmdba: e.target.value === 'left' ? null : e.target.value })}>
+          <option value="left">at the left</option>
+          <option value="center">in the middle</option>
+          <option value="right">at the right</option>
+        </select>
+      </label>
       {sliders(midKeys('lmdb'))}
     </div>
     <div style={midGroup}>
