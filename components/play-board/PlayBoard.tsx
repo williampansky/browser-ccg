@@ -262,6 +262,9 @@ const renderLogLine = (line: string, myName: string, colors: Record<'0' | '1', s
     return part;
   });
 
+/** How long the hover look stays after the pointer leaves a hover slot (ms), so crossing the gap to the next slot does not flicker. */
+const HOVER_RELEASE_MS = 70;
+
 const targetOf = (a: Action): TargetRef | undefined =>
   a.type === 'PlayCard' || a.type === 'Attack' || a.type === 'WeaponAttack' || a.type === 'HeroSkill' ? a.target : undefined;
 
@@ -505,6 +508,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   }, []);
   useEffect(() => {
     setDragging(false);
+    setHoverHand(null); // the card under the pointer may be a different one now
   }, [state]);
 
   const dispatch = useCallback(
@@ -727,7 +731,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     if (!el) return;
     const measure = () => {
       setHandWidth(el.clientWidth);
-      const zoom = handZoom(el.clientWidth, el.childElementCount, HAND_CARD_WIDTH);
+      const zoom = handZoom(el.clientWidth, el.querySelectorAll('[class*="play-board_handSlot__"]').length, HAND_CARD_WIDTH);
       setHandSink(computeHandSink(window.innerHeight, el.getBoundingClientRect().bottom, zoom, HAND_PEEK));
       if (tableRef.current) setBoardWidth(tableRef.current.clientWidth);
       if (tableRef.current && bottomRef.current) {
@@ -748,6 +752,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   /** The hand card being dragged: hidden in the hand so only the drag image shows. */
   const [draggedHand, setDraggedHand] = useState<number | null>(null);
+  /** The card whose hover slot the pointer is on (it lifts); let go a moment after the pointer leaves. */
+  const [hoverHand, setHoverHand] = useState<number | null>(null);
+  const hoverRelease = useRef<ReturnType<typeof setTimeout> | null>(null);
   // A card dragged to aim at a target stays in the hand (selected, with the arrow); it must not take a click's enlargement.
   const [heldHand, setHeldHand] = useState<number | null>(null);
   // A dragged card that gets played unmounts its own button (when it was the last one in the hand), so its dragend never
@@ -1303,76 +1310,112 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     // "Choose one" cards are dragged without selecting (selecting opens the dialog); the drop opens it, then the pick plays it there.
     const isChoice = actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.choice !== undefined);
     const draggable = !over && playable;
-    return (
+    const fanVars = {
+      ['--fan-rot' as string]: `${fanRotation(index, handCount)}deg`,
+      ['--fan-drop' as string]: `${fanDrop(index, handCount)}px`,
+      ['--fan-x' as string]: `${fanX(index, handCount, HAND_CARD_WIDTH)}px`,
+      ['--fan-i' as string]: index - (handCount - 1) / 2,
+      ['--fan-t' as string]: Math.abs(index - (handCount - 1) / 2) / Math.max((handCount - 1) / 2, 0.5),
+    };
+    const title = titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`);
+    const toggleSelect = () => !over && playable && setSelection(selected ? null : { kind: 'hand', index });
+    // A quick double-click plays a minion at the far right of your board. (The two clicks before it select and deselect the card,
+    // so a minion that needs aiming, or a choose-one card, is left selected for the normal flow.)
+    const doubleClick = () => {
+      if (over || !playable) return;
+      const plays = actions.filter((x): x is PlayAction => x.type === 'PlayCard' && x.handIndex === index);
+      const placed = plays.filter((x) => card?.type === 'minion' && x.boardIndex !== undefined && !x.target && x.choice === undefined);
+      if (placed.length > 0) {
+        dispatch(placed.reduce((x, y) => ((y.boardIndex ?? 0) > (x.boardIndex ?? 0) ? y : x)));
+        return;
+      }
+      setSelection({ kind: 'hand', index });
+    };
+    const dragStart = (e: React.DragEvent) => {
+      e.dataTransfer.setData('text/plain', String(index)); // Firefox needs data to start a drag
+      e.dataTransfer.effectAllowed = 'move';
+      setDragging(true);
+      setHoverHand(null);
+      // A card that aims at a target gets the arrow instead of a ghost (the ghost would cover the target); one that is
+      // dropped on the board or play area has no arrow, so its ghost stays as the only drag feedback.
+      // (A choose-one card has no arrow while it is dragged, since it is not selected, so it gets the ghost like any other card.)
+      const aimsAtTarget = !!blankDragImage && !isChoice && actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.target);
+      if (aimsAtTarget) {
+        e.dataTransfer.setDragImage(blankDragImage!, 0, 0);
+      } else {
+        // The browser's own drag image is always semi-transparent, so hide it and draw an opaque ghost that follows the pointer.
+        if (blankDragImage) e.dataTransfer.setDragImage(blankDragImage, 0, 0);
+        activeGhost?.stop();
+        // The ghost copies the card, not the hover slot that was grabbed.
+        activeGhost = startDragGhost((nodes.current.get(`c${index}`) as HTMLElement | undefined) ?? (e.currentTarget as HTMLElement), HAND_CARD_WIDTH, HAND_CARD_WIDTH * 1.4, e.clientX, e.clientY);
+      }
+      // Select after the drag has begun: re-rendering the dragged card inside dragstart can cancel it.
+      // The card is hidden in the hand only when a ghost replaces it; one that aims with the arrow stays put, selected,
+      // so it does not vanish while the arrow is active (playtest 2026-11-12).
+      setTimeout(() => {
+        if (!aimsAtTarget) setDraggedHand(index);
+        else setHeldHand(index);
+        if (isChoice) setDragIndex(index);
+        else setSelection({ kind: 'hand', index });
+      }, 0);
+    };
+    const dragEnd = () => {
+      setDragging(false);
+      activeGhost?.stop();
+      clearDraggedHandWhenLanded(setDraggedHand);
+      activeGhost = null;
+      if (!isChoice) setSelection(null); // a dropped choose-one card has just opened its dialog: keep that
+      setDragIndex(null);
+      setHeldHand(null);
+      setHover(null);
+      setHoverGap(null);
+    };
+    // The hover slot: the pointer is tested against a slot (a column that never moves or grows), not the card, so a lifted, enlarged card
+    // cannot block the cards beside it. The card takes the hover look from `hoverHand`; it lets go a moment after the pointer leaves, so
+    // crossing a gap between slots does not flicker.
+    const enterSlot = () => {
+      if (hoverRelease.current) clearTimeout(hoverRelease.current);
+      if (over || document.body.classList.contains('dragging')) return;
+      setHoverHand((old) => {
+        if (old !== index && !selection) playCardHover();
+        return index;
+      });
+    };
+    const leaveSlot = () => {
+      if (hoverRelease.current) clearTimeout(hoverRelease.current);
+      hoverRelease.current = setTimeout(() => {
+        setHoverHand(null);
+        cancelCardHover();
+      }, HOVER_RELEASE_MS);
+    };
+    const cardEl = (
       <button
         key={instanceId}
         ref={track(`c${index}`)}
-        style={{
-          ['--fan-rot' as string]: `${fanRotation(index, handCount)}deg`,
-          ['--fan-drop' as string]: `${fanDrop(index, handCount)}px`,
-          ['--fan-x' as string]: `${fanX(index, handCount, HAND_CARD_WIDTH)}px`,
-          ['--fan-i' as string]: index - (handCount - 1) / 2,
-          ['--fan-t' as string]: Math.abs(index - (handCount - 1) / 2) / Math.max((handCount - 1) / 2, 0.5),
-        }}
-        title={titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`)}
-        className={cx(styles.handSlot, lab?.handHover === index + 1 ? styles.slotHover : '', playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index || aimable.length > 0 ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : '')}
-        onMouseEnter={() => !over && !document.body.classList.contains('dragging') && !selection && playCardHover()}
-        onMouseLeave={cancelCardHover}
-        onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
-        // A quick double-click plays a minion at the far right of your board. (The two clicks before it select and deselect the card,
-        // so a minion that needs aiming, or a choose-one card, is left selected for the normal flow.)
-        onDoubleClick={() => {
-          if (over || !playable) return;
-          const plays = actions.filter((x): x is PlayAction => x.type === 'PlayCard' && x.handIndex === index);
-          const placed = plays.filter((x) => card?.type === 'minion' && x.boardIndex !== undefined && !x.target && x.choice === undefined);
-          if (placed.length > 0) {
-            dispatch(placed.reduce((x, y) => ((y.boardIndex ?? 0) > (x.boardIndex ?? 0) ? y : x)));
-            return;
-          }
-          setSelection({ kind: 'hand', index });
-        }}
-        draggable={draggable}
-        onDragStart={(e) => {
-          e.dataTransfer.setData('text/plain', String(index)); // Firefox needs data to start a drag
-          e.dataTransfer.effectAllowed = 'move';
-          setDragging(true);
-          // A card that aims at a target gets the arrow instead of a ghost (the ghost would cover the target); one that is
-          // dropped on the board or play area has no arrow, so its ghost stays as the only drag feedback.
-          // (A choose-one card has no arrow while it is dragged, since it is not selected, so it gets the ghost like any other card.)
-          const aimsAtTarget = !!blankDragImage && !isChoice && actions.some((a) => a.type === 'PlayCard' && a.handIndex === index && a.target);
-          if (aimsAtTarget) {
-            e.dataTransfer.setDragImage(blankDragImage!, 0, 0);
-          } else {
-            // The browser's own drag image is always semi-transparent, so hide it and draw an opaque ghost that follows the pointer.
-            if (blankDragImage) e.dataTransfer.setDragImage(blankDragImage, 0, 0);
-            activeGhost?.stop();
-            activeGhost = startDragGhost(e.currentTarget, HAND_CARD_WIDTH, HAND_CARD_WIDTH * 1.4, e.clientX, e.clientY);
-          }
-          // Select after the drag has begun: re-rendering the dragged card inside dragstart can cancel it.
-          // The card is hidden in the hand only when a ghost replaces it; one that aims with the arrow stays put, selected,
-          // so it does not vanish while the arrow is active (playtest 2026-11-12).
-          setTimeout(() => {
-            if (!aimsAtTarget) setDraggedHand(index);
-            else setHeldHand(index);
-            if (isChoice) setDragIndex(index);
-            else setSelection({ kind: 'hand', index });
-          }, 0);
-        }}
-        onDragEnd={() => {
-          setDragging(false);
-          activeGhost?.stop();
-          clearDraggedHandWhenLanded(setDraggedHand);
-          activeGhost = null;
-          if (!isChoice) setSelection(null); // a dropped choose-one card has just opened its dialog: keep that
-          setDragIndex(null);
-          setHeldHand(null);
-          setHover(null);
-          setHoverGap(null);
-        }}
+        style={fanVars}
+        title={title}
+        className={cx(styles.handSlot, lab?.handHover === index + 1 || hoverHand === index ? styles.slotHover : '', playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index || aimable.length > 0 ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : '')}
+        onClick={toggleSelect}
       >
         {card && <CardFace card={card} width={HAND_CARD_WIDTH} spellDamage={mySpellDamage} cost={effectiveCost(state, viewer, card, byId, getCardDef, state.players[viewer].hand[index]?.costDelta ?? 0)} />}
       </button>
     );
+    const hitEl = (
+      <div
+        key={instanceId}
+        style={fanVars}
+        title={title}
+        className={cx(styles.handHit, hoverHand === index ? styles.handHitHot : '', index === 0 ? styles.handHitFirst : '', index === handCount - 1 ? styles.handHitLast : '')}
+        onMouseEnter={enterSlot}
+        onMouseLeave={leaveSlot}
+        onClick={toggleSelect}
+        onDoubleClick={doubleClick}
+        draggable={draggable}
+        onDragStart={dragStart}
+        onDragEnd={dragEnd}
+      />
+    );
+    return { cardEl, hitEl };
   };
 
   // The targeting line: from the selected card, minion or hero to the pointer (green over a legal target, else grey).
@@ -1747,7 +1790,15 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             ref={handRef}
             style={{ ['--hand-zoom' as string]: zoomNow, ['--hand-sink' as string]: `${handSink}px` }}
           >
-            {state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i, c.instanceId))}
+            {(() => {
+              const rendered = state.players[me].hand.map((c, i) => renderHandCard(byId.get(c.cardId), i, c.instanceId));
+              return (
+                <>
+                  {rendered.map((r) => r.cardEl)}
+                  <div className={styles.handHits}>{rendered.map((r) => r.hitEl)}</div>
+                </>
+              );
+            })()}
           </div>
           {a11y && (
           <div className={styles.controls}>

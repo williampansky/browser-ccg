@@ -57,6 +57,17 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lhrt: (v) => `${CLS('hand')}{--h-tilt:${v}}`,
   lhdp: (v) => `${CLS('hand')}{--h-dropk:${v}}`,
   lhdc: (v) => `${CLS('hand')}{--h-curve:${v}}`,
+  // Hover slot width as a % of the card spacing (100 = the slots just touch, less leaves gaps, more makes them overlap); 0 turns slots off.
+  lhsw: (v) =>
+    v <= 0
+      ? `${CLS('handSlot')}{pointer-events:auto !important}${CLS('handHits')}{display:none !important}`
+      : `${CLS('hand')}{--h-slot:${v / 100}}`,
+  // Edge slots reach out to the card's outer edge (0 = no, 1 = to the edge) and `lhsx` px further; the hovered slot grows `lhsh` px each side.
+  lhse: (v) => `${CLS('hand')}{--h-edge:${v}}`,
+  lhsx: (v) => `${CLS('hand')}{--h-edge-px:${v}px}`,
+  lhsh: (v) => `${CLS('hand')}{--h-hot-px:${v}px}`,
+  // Preview only: draw the slots.
+  lhspv: (v) => (v ? `${CLS('hand')}{--h-slot-show:rgba(255,60,60,0.18);--h-slot-outline:1px}` : ''),
   lhol: (v) => `${CLS('hand')}{--h-overlap:${v}px}`,
   lhov: (v) => `${CLS('hand')}{--h-hov:${v}}`,
   lhoy: (v) => `${CLS('hand')}{--h-lift:${-v}px}`,
@@ -349,15 +360,21 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lmdts: '0.9',
   lpoah: '68',
   lpoahg: '28',
-  lhol: '40',
-  lhrt: '1.65',
-  lhdp: '1.8',
+  lhol: '70',
+  lhrt: '1.25',
+  lhdp: '2',
   lhs: '46',
   lhoy: '120',
   lcx: '-252',
   lcs: '1.15',
   lcpeak: '1.35',
   lcy: '36',
+  lmdj: 'between',
+  lmdba: 'right',
+  lhdc: '0.85',
+  lhsh: '20',
+  lhse: '1',
+  lhsx: '20',
 };
 
 /**

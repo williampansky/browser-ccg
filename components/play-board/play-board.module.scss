@@ -953,9 +953,62 @@ $po-green: var(--po-c, #5fd16a);
   // The row itself must not catch clicks: the lifted cards reach up over the hero bar, which has to stay clickable.
   pointer-events: none;
 
+  // Hover slots: the pointer is tested against these columns, not the cards (which ignore it), so a card that is lifted and enlarged never
+  // blocks the cards beside it, and sweeping along the hand swaps the hovered card right away. A selected card is the exception: it is clicked
+  // on its own face to put it back.
   .handSlot {
+    pointer-events: none;
+  }
+
+  .handSlot.slotSelected,
+  .handSlot.slotHeld {
     pointer-events: auto;
   }
+}
+
+.handHits {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40; // above every card, so a slot is always reachable
+}
+
+// One slot per card: at the card's resting place (it ignores the hover lift, the parting and the draw-in), `--h-slot` x the card spacing wide,
+// from the top of the resting card to well below the window. The hovered card's slot reaches up to where its lifted card ends, so the pointer
+// can wander over the lifted card without losing it.
+.handHit {
+  --zoom: var(--hand-zoom, 1);
+  --drop: calc((10px + (var(--fan-drop, 10px) - 10px) * (1 - var(--h-curve, 0) + var(--h-curve, 0) * var(--fan-t, 0))) * var(--h-dropk, 1));
+  // The slot is --w wide (card spacing x --h-slot), centred on the card's resting place. The outermost slots can reach outward (--ext-l on the
+  // first, --ext-r on the last): --h-edge of the way to the card's outer edge (1 = the slot ends at the card's edge), plus --h-edge-px more.
+  // The hovered slot grows --h-hot-px on each side, so it is harder to leave sideways.
+  --w: calc((144px - var(--h-overlap, 20px)) * var(--zoom) * var(--h-slot, 1));
+  --ext: max(0px, calc(var(--h-edge, 0) * (72px * var(--zoom) - var(--w) / 2) + var(--h-edge-px, 0px) * var(--zoom)));
+  --hot: 0px;
+  position: absolute;
+  left: 50%;
+  top: calc(202px - 202px * var(--zoom) + (var(--drop) + var(--hand-sink)) * var(--zoom));
+  bottom: -400px;
+  width: calc(var(--w) + var(--ext-l, 0px) + var(--ext-r, 0px) + var(--hot) * 2);
+  translate: calc((var(--fan-x, 0px) + var(--fan-i, 0) * (20px - var(--h-overlap, 20px))) * var(--zoom) - var(--w) / 2 - var(--ext-l, 0px) - var(--hot)) 0;
+  pointer-events: auto;
+  cursor: pointer;
+  // lhspv: show the slots
+  background: var(--h-slot-show, transparent);
+  outline: var(--h-slot-outline, 0) solid rgba(255, 60, 60, 0.9);
+}
+
+.handHitFirst {
+  --ext-l: var(--ext);
+}
+
+.handHitLast {
+  --ext-r: var(--ext);
+}
+
+.handHitHot {
+  --hot: calc(var(--h-hot-px, 0px) * var(--zoom));
+  top: calc(101px + 101px * (1 - var(--zoom)) + (var(--h-lift, -170px) + var(--hand-sink)) * var(--zoom) - 101px * var(--h-hov, 1.5) * var(--zoom));
 }
 
 // Card types: a coloured top bar and type label so minions, spells, weapons and items read apart at a glance.

@@ -16,7 +16,7 @@ export const SECTION_KEYS: Record<string, string[]> = {
   minions: ['lm', 'lg', 'lml', 'lms', 'lmh', 'lmpv', 'lpsh', 'lpss', 'lpsm', 'lpsy'],
   shadows: SHADOW_KEYS,
   table: ['ls', 'lw', 'lfelt'],
-  hands: ['lhw0', 'lhw1', 'lhs', 'lsel', 'lpv', 'lhpv', 'lhrt', 'lhdp', 'lhdc', 'lhol', 'lhov', 'lhoy', 'lhot', 'lhom', 'lhpa', 'lhpb', 'lhpm', 'lhha', 'lhhs', 'lhfl', 'lhsm', 'lhst', 'lhdr'],
+  hands: ['lhw0', 'lhw1', 'lhs', 'lsel', 'lpv', 'lhpv', 'lhrt', 'lhdp', 'lhdc', 'lhsw', 'lhsh', 'lhse', 'lhsx', 'lhspv', 'lhol', 'lhov', 'lhoy', 'lhot', 'lhom', 'lhpa', 'lhpb', 'lhpm', 'lhha', 'lhhs', 'lhfl', 'lhsm', 'lhst', 'lhdr'],
   play: ['lpoc', 'lpoo', 'lpow', 'lpor', 'lpoi', 'lpoh', 'lpog', 'lpogw', 'lpos', 'lpoga', 'lpopv', 'lpoac', 'lpoahc', 'lpozc', 'lpozhc', 'lpogc', 'lpoge', 'lpoao', 'lpoai', 'lpoah', 'lpoahw', 'lpoahg', 'lpoat', 'lpozo', 'lpozi', 'lpozh', 'lpozhw', 'lpozhg', 'lpozt', 'lpogo', 'lpogb', 'lpogd', 'lpogs', 'lpogp', 'lpogq'],
   cast: ['lcx', 'lcy', 'lcs', 'lcms', 'lcpeak', 'lcglow', 'lcring', 'lcpv'],
   energy: ['les', 'lex', 'ley', 'leo', 'leg', 'legt', 'lecs', 'lecv', 'lect', 'lebr', 'lebb', 'lebg', 'lecr', 'lecb', 'lecn', 'lebpv'],

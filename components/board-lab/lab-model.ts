@@ -120,6 +120,10 @@ export const NUMS: Num[] = [
   { key: 'lhrt', label: 'Fan tilt (x, 0 = flat)', min: 0, max: 3, step: 0.05, css: CSS_FNS.lhrt, read: () => 1 },
   { key: 'lhdp', label: 'Fan drop (x, 0 = a straight row)', min: 0, max: 3, step: 0.05, css: CSS_FNS.lhdp, read: () => 1 },
   { key: 'lhdc', label: 'Fan curve (0 = straight V, 1 = round arc)', min: 0, max: 1.5, step: 0.05, css: CSS_FNS.lhdc, read: () => 0 },
+  { key: 'lhsh', label: 'Hovered slot: extra width each side (px, harder to leave)', min: 0, max: 80, css: CSS_FNS.lhsh, read: () => 0 },
+  { key: 'lhse', label: 'Edge slots reach to the card\'s outer edge (0 = no, 1 = yes)', min: 0, max: 1, step: 0.05, css: CSS_FNS.lhse, read: () => 0 },
+  { key: 'lhsx', label: 'Edge slots: reach further (px)', min: 0, max: 400, css: CSS_FNS.lhsx, read: () => 0 },
+  { key: 'lhsw', label: 'Hover slot width (% of card spacing; 0 = off, the whole card is the target)', min: 0, max: 150, step: 5, css: CSS_FNS.lhsw, read: () => 100 },
   { key: 'lhol', label: 'Card overlap (px at full size; minus = gaps)', min: -40, max: 120, css: CSS_FNS.lhol, read: () => 20 },
   // Hover: the card under the pointer, and how its neighbours part around it
   { key: 'lhov', label: 'Hover scale (x)', min: 1, max: 2.5, step: 0.05, css: CSS_FNS.lhov, read: () => 1.5 },

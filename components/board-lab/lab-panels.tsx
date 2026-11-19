@@ -104,6 +104,10 @@ export const HandsPanel = ({ q, setParams, sliders, count, pick }: PanelProps) =
     <label style={row}>
       Hold card number <input type="number" min={0} max={10} style={{ width: 50 }} value={one(q.lhpv)} onChange={(e) => setParams({ lhpv: e.target.value === '' || e.target.value === '0' ? null : e.target.value })} /> in its hover look (0 = off)
     </label>
+    {sliders(['lhsw', 'lhsh', 'lhse', 'lhsx'])}
+    <label style={row}>
+      <input type="checkbox" checked={'lhspv' in q} onChange={(e) => setParams({ lhspv: e.target.checked ? '1' : null })} /> Show the hover slots (red)
+    </label>
     {sliders(['lhov', 'lhoy', 'lhot', 'lhom', 'lhpa', 'lhpb', 'lhpm', 'lhha', 'lhhs', 'lhfl', 'lhsm'])}
     <div style={groupStyle}><b>Clicked card, settling and drawing</b></div>
     {sliders(['lsel', 'lhst', 'lhdr'])}
