@@ -34,6 +34,30 @@ const endTurns = (s: GameState, n: number): GameState => {
 };
 const foeHero = { kind: 'hero', player: '1' } as const;
 
+describe('spell damage on skills', () => {
+  const elder = minionCard('ELDER', { cost: 1, attack: 1, health: 1 });
+  const defs = (c: { id: string }) => (c.id === 'ELDER' ? { spellDamage: 1 } : undefined);
+  const cat = withHeroTokens(catalogOf(...Array.from(loadHsCards().byId.values()), grunt, elder));
+  const use = (s: GameState, n: number, target?: TargetRef) => {
+    const r = applyAction(s, { type: 'HeroSkill', skill: n, target }, { rng: createSeededRng(1), catalog: cat, defs: defs as never });
+    if ('error' in r) throw new Error(r.error);
+    return r.state;
+  };
+  it('a Spell Damage +1 minion makes Zeus\' 1 damage skill hit for 2, and it is gone with the minion', () => {
+    expect(use(game('ZEUS'), 0, foeHero).players['1'].health).toBe(29);
+    const withElder = putOnBoard(game('ZEUS'), '0', elder);
+    expect(use(withElder, 0, foeHero).players['1'].health).toBe(28);
+    expect(use(putOnBoard(game('ZEUS'), '1', elder), 0, foeHero).players['1'].health).toBe(29); // the enemy's does nothing for you
+  });
+  it('raises an area skill on every minion and leaves a heal alone', () => {
+    let s = putOnBoard(putOnBoard(game('ZEUS'), '0', elder), '1', grunt, { health: 9, maxHealth: 9 });
+    expect(use(s, 1).players['1'].board[0].health).toBe(9 - 4);
+    s = putOnBoard(game('SAGE'), '0', elder);
+    s = produce(s, (g) => void (g.players['0'].health = 10));
+    expect(use(s, 0, { kind: 'hero', player: '0' }).players['0'].health).toBe(13);
+  });
+});
+
 describe('the playable heroes', () => {
   it('are the five marked active, each with three skills', () => {
     expect(heroes().map((h) => h.id).sort()).toEqual(['EXILE', 'FORSAKEN_DRUID', 'SAGE', 'WARRIOR', 'ZEUS']);

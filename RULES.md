@@ -719,7 +719,8 @@ Five heroes are playable (the ones marked `active`): Zeus, Forsaken Druid, Exile
 three skills. Name, cost, cooldown and text come from `data/abilities.json`; what a skill does is code in `engine/heroes/skill-effects.ts`.
 
 - **Using a skill** is the action `HeroSkill { skill, target? }`. It costs energy from the same pool as cards. It is not a spell:
-  Spell Damage does not apply and "when you cast a spell" effects do not fire. It does not use up an attack. Any number of skills
+  "when you cast a spell" effects do not fire, but your minions' Spell Damage raises each damage hit of a skill (Zeus' three, Exile's
+  first, both Warrior damage skills), like a spell's; heals, armor, summons and buffs are unchanged (author's call, 2026-11-19). It does not use up an attack. Any number of skills
   may be used in a turn if they are ready and affordable. [A]
 - **Cooldown N** means the skill is ready again at the start of the owner's Nth turn after using it (1 = every turn, 2 = every
   other turn). A skill with no cooldown in the data is an **ultimate**: once per game. [A]

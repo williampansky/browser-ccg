@@ -2,6 +2,7 @@ import type { Effect, TargetFilter } from '../effects/types';
 import { addArmor, buff, damage, heal } from '../effects/primitives';
 import { allEnemyMinions, chosenTarget, enemyHero, friendlyOfRace } from '../effects/selectors';
 import { damageTarget } from '../rules/damage';
+import { withSpellPower } from '../rules/spell-power';
 import { summonMinion } from '../rules/summon';
 import { heroToken } from './tokens';
 
@@ -43,7 +44,7 @@ const resurrect =
 const hitChosen =
   (amount: (ctx: Parameters<Effect>[0]) => number): Effect =>
   (ctx) => {
-    for (const t of chosenTarget()(ctx)) damageTarget(ctx.g, t, amount(ctx), ctx.events);
+    for (const t of chosenTarget()(ctx)) damageTarget(ctx.g, t, withSpellPower('damage', amount(ctx), ctx.spellDamage), ctx.events);
   };
 
 /** Druid: back to its true form. Health is raised to 15 (never lowered) and the hero gets 5/2 claws (RULES Appendix D). */

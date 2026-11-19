@@ -2,6 +2,8 @@ import { produce } from 'immer';
 import { heroSkill } from '../heroes';
 import { ActionError, GameEvent, GameState, PlayerId, TargetRef } from '../state/types';
 import type { EngineContext } from './apply-action';
+import { getCardDef } from '../definitions';
+import { minionDef } from './minion';
 import { isLegalTarget, legalTargets } from './targeting';
 
 /** Is this skill off cooldown and (for a one-use ultimate) not yet used? Says nothing about energy or targets. */
@@ -14,8 +16,8 @@ export const skillReady = (state: GameState, player: PlayerId, skill: number): b
 
 /**
  * The active player uses one of their hero's skills: pays its energy, starts its cooldown (or spends a one-use ultimate)
- * and runs its effects. Deaths and triggers are settled by the caller. Skills are not spells: Spell Damage and
- * "when you cast a spell" effects do not apply to them.
+ * and runs its effects. Deaths and triggers are settled by the caller. Skills are not spells ("when you cast a spell"
+ * effects do not fire), but your minions' Spell Damage raises the damage a skill deals, as it does for a spell.
  */
 export const useHeroSkill = (
   state: GameState,
@@ -37,8 +39,10 @@ export const useHeroSkill = (
     if (def.cooldown === undefined) p.hero!.spent[skill] = true;
     else p.hero!.cooldowns[skill] = def.cooldown;
     events.push({ type: 'HeroSkillUsed', player: me, skill, ...(def.target && target ? { target } : {}) });
+    const defs = ctx.defs ?? getCardDef;
+    const spellDamage = p.board.reduce((sum, m) => sum + (minionDef(m, ctx.catalog, defs)?.spellDamage ?? 0), 0);
     for (const effect of def.effects) {
-      effect({ g, caster: me, target: def.target ? target : undefined, rng: ctx.rng, catalog: ctx.catalog, events });
+      effect({ g, caster: me, target: def.target ? target : undefined, rng: ctx.rng, catalog: ctx.catalog, events, spellDamage });
     }
   });
 };
