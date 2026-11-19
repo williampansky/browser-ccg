@@ -99,6 +99,8 @@ const heroText = (s: GameState, p: PlayerId) => {
   const hero = getHero(s.players[p].hero?.id);
   return hero ? ` as ${hero.name}` : '';
 };
+/** A deck's own name for the deck panel's heading; undefined for an unnamed deck (the generated "a random deck" names read as sentence text, not a title). */
+const namedDeck = (name?: string) => (name && !/^an? random /i.test(name) && name !== 'Unnamed' ? name : undefined);
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
 /** What a player is called on the board: your own name for Player 1, "Player 2" (and "(AI)" against the bot) for the other seat. */
 const playerLabel = (p: PlayerId, mode: Mode, myName: string) =>
@@ -374,6 +376,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const [log, setLog] = useState<string[][]>([]);
   /** Each player's deck list at the start, for the deck tracker on the right. */
   const [startDecks, setStartDecks] = useState<Record<PlayerId, string[]>>({ '0': [], '1': [] });
+  const [deckNames, setDeckNames] = useState<Record<PlayerId, string>>({ '0': '', '1': '' });
   const [selection, setSelection] = useState<Selection | null>(null);
   /** The card whose big view is open (right-click on a minion) */
   const [inspect, setInspect] = useState<Card | null>(null);
@@ -445,6 +448,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     rngRef.current = g.rng;
     setState(g.state);
     setStartDecks(g.decks);
+    setDeckNames(g.deckNames);
     const [a, b] = g.first === '0' ? ['Player 1', 'Player 2'] : ['Player 2', 'Player 1'];
     setLog([[`New game. **${a}** goes first; **${b}** starts with an extra card (__The Orb__).`, `**Player 1** plays **${g.deckNames['0']}**${heroText(g.state, '0')}; **Player 2** plays **${g.deckNames['1']}**${heroText(g.state, '1')}.`]]);
     setSelection(null);
@@ -1912,7 +1916,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
 
       <aside className={styles.deckView} ref={deckPanel}>
         <h2>
-          Deck <small>{state.players[me].deck.length} left</small>
+          {namedDeck(deckNames[me]) ?? 'Deck'} <small>{state.players[me].deck.length} left</small>
         </h2>
         <div className={styles.deckRows} style={deckRowVars(deckTune) as React.CSSProperties}>
           {deckRows(startDecks[me], state.players[me].deck.map((c) => c.cardId), byId).map((r) => (
