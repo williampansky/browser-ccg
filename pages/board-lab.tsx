@@ -22,6 +22,7 @@ const PlayBoard = dynamic(() => import('../components/play-board/PlayBoard').the
  *  - setup (the same debug params as /play): b0 b1 (board minion ids), turn (0 = player, 1 = enemy; applied live), p0 p1 (hand ids), w0 w1, e0 e1, h0 h1, first, herofig
  *  - layout (CSS overrides over the real stylesheet): lm minion height px, lg minion gap px, lml/lms clicked-minion lift px / scale, lmh aimed-at target scale, lmpv=1 previews it on your first minion, ls section gap px, lw table max width px,
  *    lhs hand sink px, lhw0 / lhw1 my hand / enemy hand card width px, lfw0 / lfw1 my / enemy hero figure width px, lfs hero figure side (left|right), lfx0/lfy0/lfx1/lfy1 hero figure X/Y offsets px,
+ *    lhrt/lhdp fan tilt/drop (x), lhol card overlap px, lhov/lhoy/lhot hover scale/lift px/tilt deg, lhom hover ms, lhpa/lhpb/lhpm parting px (adjacent / further out) and ms, lhha/lhhs/lhfl/lhsm hover halo opacity/swell, flash brightness, sheen ms, lhst settle ms, lhdr draw-in ms, lhpv=N holds card N in its hover look, hn0/hn1 cards dealt to each hand (setup, not baked),
  *    lsel clicked-card scale, lpv=1 previews it on the first card, lpan log/deck arrangement (swap|stackL|stackR), lsplit stacked log share %,
  *    lgw/ldw log/deck width px, les energy bar scale, lex/ley its X/Y offsets px, leo=h horizontal energy bar, lgx/lgy/ldx/ldy their X/Y offsets px, lfelt=0 hides the felt panel
  * Changing a setup param restarts the board (it is a fresh game each time, not a live one); layout knobs apply instantly.
@@ -73,6 +74,7 @@ const BoardLab = () => {
     castPreview: (one(q.lcpv) === '0' || one(q.lcpv) === '1' ? one(q.lcpv) : undefined) as '0' | '1' | undefined,
     blinkPreview: (one(q.lebpv) === 'spend' || one(q.lebpv) === 'red' ? one(q.lebpv) : undefined) as 'spend' | 'red' | undefined,
     overlayPreview: (['minion', 'minion-hot', 'spell', 'spell-hot'].includes(one(q.lpopv)) ? one(q.lpopv) : undefined) as 'minion' | 'minion-hot' | 'spell' | 'spell-hot' | undefined,
+    handHover: (() => { const n = parseInt(one(q.lhpv), 10); return Number.isNaN(n) || n < 1 ? undefined : n; })(),
     timerPct: (() => { const v = one(q.lmdtpv) || PLAY_LAYOUT.lmdtpv || ''; return v === '' || Number.isNaN(+v) ? 70 : Math.min(100, Math.max(0, +v)); })(),
     active: (one(q.turn) === '0' || one(q.turn) === '1' ? one(q.turn) : undefined) as '0' | '1' | undefined
   };

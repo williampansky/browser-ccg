@@ -29,6 +29,7 @@ import {
   Rng,
   TargetRef,
   effectiveCost,
+  MAX_HAND,
 } from '../../engine';
 import { gapIndex } from './board-position';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
@@ -50,8 +51,7 @@ import { HeroBar } from './HeroBar';
 import { HeroFigure, HeroRing } from './HeroVariants';
 import { parseRingTune } from './ring-tune';
 import { heroImage } from './hero-images';
-import { CardFlight } from './CardFlight';
-import { aimVector, FLIGHT_MS, IMPACT_MS, lunge, lungeBy, nudge, reducedMotion } from './motion';
+import { aimVector, IMPACT_MS, lunge, lungeBy, nudge, reducedMotion } from './motion';
 import { EnergyBar } from './EnergyBar';
 import { HeroSkills } from './HeroSkills';
 import { heroOptions, loadHeroChoices, resolveHero, saveHeroChoices, HeroChoice } from './hero-choice';
@@ -269,12 +269,17 @@ const targetOf = (a: Action): TargetRef | undefined =>
  * Debug URL params for /play (read on every new game): `?first=0|1` picks who goes first (Player 1 = 0),
  * `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand (in hand order),
  * `?b0=CORE_027,...` and `?b1=...` put ready minions on that player's board, `?w0=CORE_076` and `?w1=...` equip a weapon,
+ * `?hn0=9` and `?hn1=...` deal that player exactly that many cards (0-10, the rest come from or go back to the deck),
  * `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10), `?h0=ZEUS` and `?h1=...` pick a hero (or `none`).
  */
-const debugParams = (): { first?: PlayerId; hands: Record<PlayerId, string[]>; setup: DebugSetup; heroes: Record<PlayerId, string | null> } => {
+const debugParams = (): { first?: PlayerId; hands: Record<PlayerId, string[]>; handSize: Record<PlayerId, number | undefined>; setup: DebugSetup; heroes: Record<PlayerId, string | null> } => {
   const q = new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search);
   const list = (k: string) => (q.get(k) ?? '').split(',').map((x) => x.trim()).filter((id) => byId.has(id));
   const f = q.get('first');
+  const count = (k: string) => {
+    const n = parseInt(q.get(k) ?? '', 10);
+    return Number.isNaN(n) ? undefined : Math.min(MAX_HAND, Math.max(0, n));
+  };
   const weapon = (k: string) => list(k)[0];
   const energy = (k: string) => {
     const n = parseInt(q.get(k) ?? '', 10);
@@ -283,6 +288,7 @@ const debugParams = (): { first?: PlayerId; hands: Record<PlayerId, string[]>; s
   return {
     first: f === '0' || f === '1' ? f : undefined,
     hands: { '0': list('p0'), '1': list('p1') },
+    handSize: { '0': count('hn0'), '1': count('hn1') },
     heroes: { '0': q.get('h0'), '1': q.get('h1') },
     setup: {
       boards: { '0': list('b0'), '1': list('b1') },
@@ -325,6 +331,16 @@ const newGame = (vsAi: boolean, seed?: number): { state: GameState; rng: Rng; de
       });
     });
   });
+  // `?hn0=` / `?hn1=`: a hand of exactly that many cards, taken from the top of the deck or put back on it.
+  state = produce(state, (g) => {
+    (['0', '1'] as PlayerId[]).forEach((p) => {
+      const want = dbg.handSize[p];
+      if (want === undefined) return;
+      const me = g.players[p];
+      while (me.hand.length < want && me.deck.length > 0) me.hand.push(me.deck.shift()!);
+      while (me.hand.length > want) me.deck.unshift(me.hand.pop()!);
+    });
+  });
   state = applyDebugSetup(state, dbg.setup, byId);
   return { state, rng, decks, first, deckNames: { '0': p0.name, '1': p1.name } };
 };
@@ -349,6 +365,8 @@ export interface LabProps {
   /** Show the green play overlays without picking a card: the board zone and landing gap (a minion), or the cast area (a spell) */
   overlayPreview?: 'minion' | 'minion-hot' | 'spell' | 'spell-hot';
   blinkPreview?: 'spend' | 'red';
+  /** Hold this card of your hand (1 = leftmost) in its hover look, so the hover knobs can be tuned without the pointer */
+  handHover?: number;
 }
 const LAB_SEED = 20261114;
 
@@ -409,10 +427,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   // Minions that just died stay on the board as ghosts while their death plays, then the row closes up.
   const [ghosts, setGhosts] = useState<Ghost[]>([]);
   // A minion played from your hand: its card flies from the hand to the slot, and the minion's landing waits for it.
-  const [flight, setFlight] = useState<{ card: Card; instanceId: number; from: DOMRect } | null>(null);
-  const [flightTo, setFlightTo] = useState<DOMRect | null>(null);
-  const landDelay = useRef(new Map<number, number>());
-  /** When a freshly played minion has finished falling in (flight + landing), so a Stampede attack waits before it lunges. */
+  /** When a freshly played minion has finished landing, so a Stampede attack waits before it lunges. */
   const landedAt = useRef(new Map<number, number>());
   const [foeAim, setFoeAim] = useState<{ action: Action; from: string; to: TargetRef } | null>(null);
   const [hover, setHover] = useState<TargetRef | null>(null);
@@ -505,34 +520,20 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       (document.activeElement as HTMLElement | null)?.blur?.(); // keep no button "focused" after an action
       if (action.type === 'PlayCard') {
         const played = byId.get(state.players[state.activePlayer].hand[action.handIndex]?.cardId ?? '');
-        // Spells and items (potions, scrolls) get the cast popup; a Mystery goes face down, so it never does (that would show the card).
-        if ((played?.type === 'spell' || played?.type === 'item') && !getCardDef(played)?.mystery) {
+        // Every card played gets the cast popup (minions and weapons too); a Mystery goes face down, so it never does (that would show the card).
+        if (played && !getCardDef(played)?.mystery) {
           setCastFx({ card: played, owner: state.activePlayer, n: Date.now() });
         }
       }
       if (action.type === 'HeroSkill') {
-        // An ultimate (once per game: no cooldown) gets the cast popup, like a spell.
+        // Every hero skill gets the cast popup, like a spell.
         const heroId = state.players[state.activePlayer].hero?.id;
         const skill = heroSkill(heroId, action.skill);
-        if (heroId && skill && skill.cooldown === undefined) setCastFx({ card: skillCard(heroId, skill), owner: state.activePlayer, n: Date.now() });
-      }
-      if (action.type === 'PlayCard' && state.activePlayer === viewerRef.current) {
-        const card = byId.get(state.players[state.activePlayer].hand[action.handIndex]?.cardId ?? '');
-        const played = result.events.find((e) => e.type === 'MinionPlayed');
-        const handEl = nodes.current.get(`c${action.handIndex}`);
-        if (card?.type === 'minion' && played && played.type === 'MinionPlayed' && handEl && !reducedMotion()) {
-          landDelay.current.set(played.instanceId, FLIGHT_MS);
-          setFlight({ card, instanceId: played.instanceId, from: handEl.getBoundingClientRect() });
-          setTimeout(() => {
-            setFlight(null);
-            setFlightTo(null);
-            landDelay.current.delete(played.instanceId);
-          }, FLIGHT_MS + 60);
-        }
+        if (heroId && skill) setCastFx({ card: skillCard(heroId, skill), owner: state.activePlayer, n: Date.now() });
       }
       const summoned = result.events.find((e) => e.type === 'MinionPlayed');
       if (summoned && summoned.type === 'MinionPlayed') {
-        landedAt.current.set(summoned.instanceId, Date.now() + (landDelay.current.get(summoned.instanceId) ?? 0) + 520);
+        landedAt.current.set(summoned.instanceId, Date.now() + 520);
       }
       // Attacks are thrown at the target; a big hit jolts the table when it lands.
       if (action.type === 'Attack' || action.type === 'WeaponAttack') {
@@ -575,10 +576,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         setTimeout(() => setGhosts((old) => old.filter((g) => !fresh.includes(g))), DEATH_MS + IMPACT_MS + 50);
       }
       setState(result.state);
-      // Sounds wait for the picture's impact: the strike of an attack, or the landing of a minion that flew in from the hand.
+      // Sounds wait for the picture's impact: the strike of an attack.
       const isAttack = action.type === 'Attack' || action.type === 'WeaponAttack';
-      const flew = action.type === 'PlayCard' && landDelay.current.size > 0;
-      playSounds(soundsFor(result.events), reducedMotion() ? 0 : isAttack ? IMPACT_MS / 1000 : flew ? (FLIGHT_MS + 200) / 1000 : 0);
+      playSounds(soundsFor(result.events), reducedMotion() ? 0 : isAttack ? IMPACT_MS / 1000 : 0);
       setLog((old) => [...old, describeEvents(result.events, byId, state, result.state, modeRef.current === 'ai' ? '0' : null)].slice(-100));
     },
     [state]
@@ -620,13 +620,6 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [labKey, gameKey]);
-
-  // Once the new minion is on the board, measure where it is so the card knows where to land.
-  useEffect(() => {
-    if (!flight) return;
-    const el = nodes.current.get(`m${flight.instanceId}`);
-    if (el) setFlightTo(el.getBoundingClientRect());
-  }, [flight]);
 
   // The clock restarts whenever a turn begins (or a new game). It counts only on a human's turn.
   const timerApplies = !lab && timerOn && !!state && state.status === 'playing' && !aiToMove;
@@ -1118,11 +1111,6 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         card={card}
         m={m}
         nodeRef={track(`m${m.instanceId}`)}
-        style={
-          landDelay.current.has(m.instanceId)
-            ? ({ animationDelay: `${landDelay.current.get(m.instanceId)}ms`, ['--land-delay' as string]: `${landDelay.current.get(m.instanceId)}ms` } as React.CSSProperties)
-            : undefined
-        }
         quiet={!!selection && selection.kind !== 'hand'} // no tooltips while an attack or skill is being aimed
         onMouseEnter={() => setHover({ kind: 'minion', instanceId: m.instanceId })}
         onMouseLeave={() => setHover(null)}
@@ -1323,9 +1311,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           ['--fan-rot' as string]: `${fanRotation(index, handCount)}deg`,
           ['--fan-drop' as string]: `${fanDrop(index, handCount)}px`,
           ['--fan-x' as string]: `${fanX(index, handCount, HAND_CARD_WIDTH)}px`,
+          ['--fan-i' as string]: index - (handCount - 1) / 2,
         }}
         title={titleIf(a11y, playable ? card?.text : `Can't play now. ${card?.text ?? ''}`)}
-        className={cx(styles.handSlot, playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index || aimable.length > 0 ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : '')}
+        className={cx(styles.handSlot, lab?.handHover === index + 1 ? styles.slotHover : '', playable ? styles.slotReady : styles.slotDim, selected ? (heldHand === index || aimable.length > 0 ? styles.slotHeld : styles.slotSelected) : '', draggedHand === index ? styles.slotDragged : '')}
         onMouseEnter={() => !over && !document.body.classList.contains('dragging') && !selection && playCardHover()}
         onMouseLeave={cancelCardHover}
         onClick={() => !over && playable && setSelection(selected ? null : { kind: 'hand', index })}
@@ -1649,7 +1638,6 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           else playFromArea(e, 'table', true);
         }}
       >
-        {flight && flightTo && <CardFlight card={flight.card} from={flight.from} to={flightTo} width={HAND_CARD_WIDTH} />}
         <EnergyBar current={state.players[me].energy.current} total={state.players[me].energy.total} cost={lab?.blinkPreview ? (lab.blinkPreview === 'red' ? 99 : Math.min(3, state.players[me].energy.current)) : pendingCost} />
         {areaZone && <div className={cx(styles.castArea, areaHot || overlayPreview === 'spell-hot' ? styles.castAreaHot : '')} style={{ height: areaHeight }} />}
         <section className={cx(styles.side, styles.top)}>

@@ -58,6 +58,12 @@ export const RestartPanel = ({ q, setParams, sliders, count, pick }: PanelProps)
     <label style={row}>
       <input type="checkbox" checked={'herofig' in q} onChange={(e) => setParams({ herofig: e.target.checked ? '1' : null })} /> Hero figure UI
     </label>
+    {(['hn0', 'hn1'] as const).map((k) => (
+      <label key={k} style={row}>
+        {k === 'hn0' ? 'Cards in my hand' : 'Cards in their hand'}{' '}
+        <input type="number" min={0} max={10} placeholder="default" style={{ width: 70 }} value={one(q[k])} onChange={(e) => setParams({ [k]: e.target.value })} />
+      </label>
+    ))}
     <label style={row}>
       My hand ids <input style={{ width: '100%' }} placeholder="CORE_045,CORE_051" value={one(q.p0)} onChange={(e) => setParams({ p0: e.target.value })} />
     </label>
@@ -91,7 +97,16 @@ export const TablePanel = ({ q, setParams, sliders, count, pick }: PanelProps) =
 
 export const HandsPanel = ({ q, setParams, sliders, count, pick }: PanelProps) => (
   <>
-    {sliders(['lhw0', 'lhw1', 'lhs', 'lsel'])}
+    {sliders(['lhw0', 'lhw1', 'lhs'])}
+    <div style={groupStyle}><b>Fan</b></div>
+    {sliders(['lhrt', 'lhdp', 'lhol'])}
+    <div style={groupStyle}><b>Hover</b> (the card under the pointer)</div>
+    <label style={row}>
+      Hold card number <input type="number" min={0} max={10} style={{ width: 50 }} value={one(q.lhpv)} onChange={(e) => setParams({ lhpv: e.target.value === '' || e.target.value === '0' ? null : e.target.value })} /> in its hover look (0 = off)
+    </label>
+    {sliders(['lhov', 'lhoy', 'lhot', 'lhom', 'lhpa', 'lhpb', 'lhpm', 'lhha', 'lhhs', 'lhfl', 'lhsm'])}
+    <div style={groupStyle}><b>Clicked card, settling and drawing</b></div>
+    {sliders(['lsel', 'lhst', 'lhdr'])}
     <label style={row}>
       <input type="checkbox" checked={'lpv' in q} onChange={(e) => setParams({ lpv: e.target.checked ? '1' : null })} /> Preview clicked card (first card)
     </label>

@@ -116,6 +116,25 @@ export const NUMS: Num[] = [
   // A target under the pointer while aiming: 1 = no change (a ring only).
   { key: 'lmh', label: 'Target hover scale (x)', min: 0.8, max: SLIDER_MAX.lmh, step: 0.005, css: CSS_FNS.lmh, read: () => 1 },
   // The clicked (selected) hand card: /play scales it 2x (hand zoom on top) and lifts it so it stays on screen.
+  // Hand fan (tilt and drop as multiples of hsclone's numbers) and spacing
+  { key: 'lhrt', label: 'Fan tilt (x, 0 = flat)', min: 0, max: 3, step: 0.05, css: CSS_FNS.lhrt, read: () => 1 },
+  { key: 'lhdp', label: 'Fan drop (x, 0 = a straight row)', min: 0, max: 3, step: 0.05, css: CSS_FNS.lhdp, read: () => 1 },
+  { key: 'lhol', label: 'Card overlap (px at full size; minus = gaps)', min: -40, max: 120, css: CSS_FNS.lhol, read: () => 20 },
+  // Hover: the card under the pointer, and how its neighbours part around it
+  { key: 'lhov', label: 'Hover scale (x)', min: 1, max: 2.5, step: 0.05, css: CSS_FNS.lhov, read: () => 1.5 },
+  { key: 'lhoy', label: 'Hover lift (px at full size)', min: 0, max: 400, css: CSS_FNS.lhoy, read: () => 170 },
+  { key: 'lhot', label: 'Hover tilt (deg, 0 = upright)', min: -20, max: 20, step: 0.5, css: CSS_FNS.lhot, read: () => 0 },
+  { key: 'lhom', label: 'Hover lift speed (ms)', min: 0, max: 600, step: 10, css: CSS_FNS.lhom, read: () => 100 },
+  { key: 'lhpa', label: 'Parting: neighbours either side move (px, 0 = stay put)', min: 0, max: 120, css: CSS_FNS.lhpa, read: () => 0 },
+  { key: 'lhpb', label: 'Parting: all cards further out move (px)', min: 0, max: 120, css: CSS_FNS.lhpb, read: () => 0 },
+  { key: 'lhpm', label: 'Parting speed (ms)', min: 0, max: 1500, step: 10, css: CSS_FNS.lhpm, read: () => 800 },
+  { key: 'lhha', label: 'Hover halo opacity', min: 0, max: 1, step: 0.025, css: CSS_FNS.lhha, read: () => 0.625 },
+  { key: 'lhhs', label: 'Hover halo swell (x)', min: 1, max: 1.6, step: 0.01, css: CSS_FNS.lhhs, read: () => 1.15 },
+  { key: 'lhfl', label: 'Hover flash brightness (x, 1 = none)', min: 1, max: 3, step: 0.05, css: CSS_FNS.lhfl, read: () => 1.8 },
+  { key: 'lhsm', label: 'Halo and flash length (ms)', min: 50, max: 1000, step: 10, css: CSS_FNS.lhsm, read: () => 250 },
+  // Settling when cards move, and the draw-in
+  { key: 'lhst', label: 'Settle time when the hand changes (ms)', min: 0, max: 2000, step: 10, css: CSS_FNS.lhst, read: () => 800 },
+  { key: 'lhdr', label: 'Draw-in time (ms)', min: 0, max: 2000, step: 10, css: CSS_FNS.lhdr, read: () => 600 },
   { key: 'lsel', label: 'Clicked card scale (x)', min: 1, max: SLIDER_MAX.lsel, step: 0.05, css: CSS_FNS.lsel, read: () => 2 },
   // The log and deck panels. Their presets are in `panelCss`; these are size and offset.
   { key: 'lsplit', label: 'Stacked: log share of height (%)', min: 15, max: SLIDER_MAX.lsplit, css: CSS_FNS.lsplit, read: () => 50 },
@@ -200,9 +219,9 @@ NUMS.push(
   ...END_KNOBS.map((k) => ({ key: k.key, label: k.label, min: k.min, max: k.max, step: k.step, css: () => '', read: () => END_DEFAULTS[k.field] }))
 );
 
-export const SETUP_KEYS = ['b0', 'b1', 'p0', 'p1', 'w0', 'w1', 'e0', 'e1', 'h0', 'h1', 'first', 'herofig', 'herotype', 'turn'];
+export const SETUP_KEYS = ['b0', 'b1', 'p0', 'p1', 'hn0', 'hn1', 'w0', 'w1', 'e0', 'e1', 'h0', 'h1', 'first', 'herofig', 'herotype', 'turn'];
 /** The setup params that need a new game (heroes are chosen at deal time, hands are dealt). Boards and energy are applied live. */
-export const RESTART_KEYS = ['p0', 'p1', 'w0', 'w1', 'h0', 'h1', 'first', 'herofig', 'herotype'];
+export const RESTART_KEYS = ['p0', 'p1', 'hn0', 'hn1', 'w0', 'w1', 'h0', 'h1', 'first', 'herofig', 'herotype'];
 export const HEROES = ['', ...heroes().map((h) => h.id), 'none'];
 
 export const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? '';
