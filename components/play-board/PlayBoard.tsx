@@ -53,7 +53,7 @@ import { HeroFigure, HeroRing } from './HeroVariants';
 import { parseRingTune } from './ring-tune';
 import { DeckRowView } from './DeckRowView';
 import { deckRowVars, parseDeckTune } from './deck-row-tune';
-import { heroImage } from './hero-images';
+import { heroImage, skillCardArt } from './hero-images';
 import { aimVector, IMPACT_MS, lunge, lungeBy, nudge, reducedMotion } from './motion';
 import { EnergyBar } from './EnergyBar';
 import { HeroSkills } from './HeroSkills';
@@ -396,7 +396,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const [picker, setPicker] = useState<Record<PlayerId, DeckChoice> | null>(null);
   const [heroPicker, setHeroPicker] = useState<Record<PlayerId, HeroChoice>>({ '0': 'random', '1': 'random' });
   /** The spell just cast, shown briefly in the middle of the board. */
-  const [castFx, setCastFx] = useState<{ card: Card; owner: PlayerId; n: number } | null>(null);
+  const [castFx, setCastFx] = useState<{ card: Card; owner: PlayerId; n: number; art?: string } | null>(null);
   const [soundOn, setSoundOn] = useState(true);
   useEffect(() => setSoundOn(!isMuted()), []);
   /** Accessibility mode (one menu option for now): hover titles, a visible focus outline and explicit "Play" buttons after
@@ -540,7 +540,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         // Every hero skill gets the cast popup, like a spell.
         const heroId = state.players[state.activePlayer].hero?.id;
         const skill = heroSkill(heroId, action.skill);
-        if (heroId && skill) setCastFx({ card: skillCard(heroId, skill), owner: state.activePlayer, n: Date.now() });
+        if (heroId && skill) setCastFx({ card: skillCard(heroId, skill), owner: state.activePlayer, n: Date.now(), art: skillCardArt(heroId, skill.index) });
       }
       const summoned = result.events.find((e) => e.type === 'MinionPlayed');
       if (summoned && summoned.type === 'MinionPlayed') {
@@ -1549,7 +1549,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       {castFx && (
         <div ref={castRef} key={castFx.n} className={cx(styles.castFx, castFx.owner === me ? styles.castMine : styles.castFoe)}>
           <div className={styles.castSize}>
-            <CardFace card={castFx.card} width={190} />
+            <CardFace card={castFx.card} width={190} art={castFx.art} />
           </div>
         </div>
       )}

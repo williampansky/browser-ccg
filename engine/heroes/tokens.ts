@@ -59,7 +59,7 @@ export const withHeroTokens = (catalog: CardCatalog): Map<string, Card> => {
 };
 
 /** A hero skill drawn as a card (for the cast popup when an ultimate is used): a spell with the skill's name, cost and text. */
-export const skillCard = (heroId: string, skill: { index: number; name: string; cost: number; text: string }): Card => ({
+export const skillCard = (heroId: string, skill: { index: number; name: string; cost: number; text: string; rarity?: string }): Card => ({
   ...token(`HERO_SKILL_${heroId}_${skill.index}`, skill.name, 'minion', 0, 0, skill.text),
   type: 'spell',
   attack: undefined,
@@ -67,5 +67,5 @@ export const skillCard = (heroId: string, skill: { index: number; name: string; 
   race: undefined,
   raceName: undefined,
   cost: skill.cost,
-  rarity: 'MYTHIC',
+  rarity: skill.rarity ?? 'FREE',
 });

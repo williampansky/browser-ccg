@@ -4,6 +4,7 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-19
 
+- **Hero skill cast popup:** it no longer forces Mythic. The frame comes from a `rarity` column on the Airtable ABILITIES table (`COMMON`, `SUPERIOR`, `REMARKABLE`, `MYTHIC`, `FREE`; blank = `FREE`, steel with no gem; **add the single-select column by hand, then `npm run airtable`**: the pull now carries it into `data/abilities.json`). The art is `public/images/heroes/<HERO>/skill-<n>-card.jpg` (any shape, covers the card window), falling back to the round `skill-<n>.jpg`, then the placeholder. The deck panel heading now shows the deck's name too.
 - **Deck rows show the full card on hover:** resting the pointer on a deck entry for `hoverDelay` ms (deck lab, Row section, `d_hoverDelay`, 0-3000, default 600; bakes with `npm run deck`) pops up the full framed card, replacing the plain text tooltip. It opens on the side with room (a row in the left half of the window opens it to the right, one in the right half to the left). Once one is showing, moving to another row shows its card at once (250 ms grace after leaving); only the first one drifts in, subtly, from the deck's side (off with reduced motion). Also fixed: the `-DECK` strips ignored the row's size (the `background` shorthand only fitted the last of the stacked images), so they now cover the row.
 
 ## 2026-11-18

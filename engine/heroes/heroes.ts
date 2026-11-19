@@ -13,6 +13,8 @@ export interface HeroSkill {
   /** Own turns to wait after using it; `undefined` means it can be used once per game (an ultimate) */
   cooldown?: number;
   text: string;
+  /** Frame colour of its cast popup: the ability's `rarity` column in Airtable (`COMMON`, `MYTHIC`, ...); `FREE` (steel, no gem) when blank */
+  rarity: string;
   /** Set when the skill needs a target */
   target?: TargetFilter;
   effects: Effect[];
@@ -43,7 +45,7 @@ const display = (text: string): string =>
 
 const keyOf = (symbol: string): string => symbol.replace(/%/g, '').replace(/^HERO_/, '');
 
-type RawAbility = { name: string; hero: string; id: number | string; cost: number; cooldown?: number; text: string; ultimate?: boolean };
+type RawAbility = { name: string; hero: string; id: number | string; cost: number; cooldown?: number; text: string; ultimate?: boolean; rarity?: string };
 
 /** Heroes marked active in the data that also have skill code and all three abilities. */
 const build = (): HeroInfo[] => {
@@ -69,6 +71,7 @@ const build = (): HeroInfo[] => {
         // An ultimate is once per game whatever cooldown the data gives it (True Form has one by mistake).
         cooldown: !a.ultimate && a.cooldown && a.cooldown > 0 ? a.cooldown : undefined,
         text: display(a.text),
+        rarity: a.rarity?.replace(/%/g, '').replace(/^RARITY_/, '') || 'FREE',
         target: code[index].target,
         effects: code[index].effects,
       })),

@@ -72,7 +72,7 @@ const card = (f, isEntourage) =>
       name: a.name, playContext: P(a.playContext), type: P('TYPE_' + a.type), playType: a.playType, hero: P(a.heroSymbol),
       id: isNaN(a.id) ? a.id : Number(a.id), cost: a.cost, active: a.active, cooldown: a.cooldown, mechanics: a.mechanics && a.mechanics.map(P),
       text: a.text, numberPrimary: a.numberPrimary, numberSecondary: a.numberSecondary, numberRandom: a.numberRandom,
-      targetingArrowText: a.targetingText, entourage: a.entourage, ultimate: a.ultimate, description: a.description,
+      rarity: a.rarity ? P('RARITY_' + a.rarity) : undefined, targetingArrowText: a.targetingText, entourage: a.entourage, ultimate: a.ultimate, description: a.description,
     })),
     mechanics: t.MECHANICS.map((m) => drop({ symbol: P(m.symbol), description: m.description, shortDescription: m.shortDescription, name: m.name })),
     constants: t.CONSTANTS.map((c) => drop({ name: c.name, type: c.type, symbol: P(c.symbol), description: c.description })),

@@ -21,6 +21,8 @@ interface CardFaceProps {
   cost?: number;
   /** PROTOTYPE: draw the frame, gem, emblem and stat badges as inline SVG instead of the PNG files (see `vector-frame.tsx`). */
   vector?: boolean;
+  /** A CSS `background-image` for the art, instead of the card id's own files (for things that are not in `data/`, like hero skills). */
+  art?: string;
 }
 
 /**
@@ -28,7 +30,7 @@ interface CardFaceProps {
  * gem, name ribbon, text, type, rarity gem and attack/health badges are laid over it. Everything is positioned in the
  * frame's own 178 x 250 design units, scaled by the `--u` custom property (pixels per unit).
  */
-export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, vector = false }: CardFaceProps) => {
+export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, vector = false, art }: CardFaceProps) => {
   const stats = showsStats(card.type);
   const label = typeLabel(card);
   const race = raceLabel(card);
@@ -63,7 +65,7 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, v
   }, [html, width]);
   return (
     <div className={styles.face} style={{ ['--u' as string]: `${faceUnit(width)}px` }}>
-      <div className={styles.art} style={{ backgroundImage: artBackground(card.id) }} />
+      <div className={styles.art} style={{ backgroundImage: art ?? artBackground(card.id) }} />
       {vector ? (
         <>
           <VectorFrame className={styles.frame} color={look.color} />
