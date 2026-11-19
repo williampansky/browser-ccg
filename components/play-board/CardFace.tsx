@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import type { Card } from '../../engine';
 import { artBackground, faceUnit, fitScale, parseRichText, softenBreaks, textLines, withSpellDamageText, rarityStyle, raceLabel, showsStats, typeLabel } from './card-face-model';
+import { skillArtFor } from './hero-images';
 import fontSizeBasedOnCharacterLength from '../../utils/font-size-based-on-length';
 import styles from './card-face.module.scss';
 import { VectorEmblem, VectorFrame, VectorGem, VectorStat } from './vector-frame';
@@ -65,7 +66,7 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, v
   }, [html, width]);
   return (
     <div className={styles.face} style={{ ['--u' as string]: `${faceUnit(width)}px` }}>
-      <div className={styles.art} style={{ backgroundImage: art ?? artBackground(card.id) }} />
+      <div className={styles.art} style={{ backgroundImage: art ?? skillArtFor(card.id) ?? artBackground(card.id) }} />
       {vector ? (
         <>
           <VectorFrame className={styles.frame} color={look.color} />

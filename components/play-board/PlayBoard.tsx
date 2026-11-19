@@ -11,6 +11,7 @@ import {
   DEFAULT_TURN_SECONDS,
   getCardDef,
   getHero,
+  heroes,
   heroSkill,
   skillCard,
   withHeroTokens,
@@ -136,6 +137,11 @@ const tipByName = new Map(
     }: ${plain(c.text)}`,
   ])
 );
+/** Hero skills by name, as cards: so the log can show their tooltip and open their big view like any card's. */
+const skillCardByName = new Map(heroes().flatMap((h) => h.skills.map((s) => [s.name, skillCard(h.id, s)] as const)));
+skillCardByName.forEach((c, name) => tipByName.set(name, `${name} (${c.cost}) hero skill: ${plain(c.text)}`));
+/** A card (or hero skill) by the name the log prints. */
+const logCardByName = (name: string): Card | undefined => cards.find((c) => c.name === name) ?? skillCardByName.get(name);
 /** Instant tooltip (fixed-position, so scrolling panels can't clip it). `side` is which way it opens from the element. */
 /** How long the pointer must rest on a board minion before its tooltip shows (ms). */
 const MINION_TIP_DELAY_MS = 800;
@@ -185,10 +191,21 @@ const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right', quiet
 const HAND_CARD_WIDTH = 144;
 /** How many px of the tops of the cards in hand stay visible above the bottom edge of the window. */
 const HAND_PEEK = 110;
-const LogCard = ({ name }: { name: string }) => {
+/** A card name in the log: hover for its text, right-click for the collection's big view. */
+const LogCard = ({ name, onInspect }: { name: string; onInspect: (card: Card) => void }) => {
   const { handlers, node } = useTip(tipByName.get(name));
   return (
-    <strong className={styles.logCard} {...handlers}>
+    <strong
+      className={styles.logCard}
+      {...handlers}
+      onContextMenu={(e) => {
+        const card = logCardByName(name);
+        if (!card) return;
+        e.preventDefault();
+        handlers.onMouseLeave();
+        onInspect(card);
+      }}
+    >
       <em>{name}</em>
       {node}
     </strong>
@@ -238,7 +255,7 @@ const MinionTip = ({ card, m, className, onClick, children, nodeRef, quiet, ...r
     </button>
   );
 };
-const renderLogLine = (line: string, myName: string, colors: Record<'0' | '1', string>) =>
+const renderLogLine = (line: string, myName: string, colors: Record<'0' | '1', string>, onInspect: (card: Card) => void) =>
   line.split(/(\*\*.+?\*\*|__.+?__)/g).map((part, i) => {
     if (part.startsWith('**')) {
       const text = part.slice(2, -2);
@@ -251,7 +268,7 @@ const renderLogLine = (line: string, myName: string, colors: Record<'0' | '1', s
     if (part.startsWith('__')) {
       const name = part.slice(2, -2);
       return (
-        <LogCard key={i} name={name} />
+        <LogCard key={i} name={name} onInspect={onInspect} />
       );
     }
     return part;
@@ -1949,7 +1966,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           {log.map((lines, i) => (
             <div key={i} className={styles.logBatch}>
               {lines.map((l, j) => (
-                <div key={j}>{renderLogLine(l, profile.name, sideColors)}</div>
+                <div key={j}>{renderLogLine(l, profile.name, sideColors, setInspect)}</div>
               ))}
             </div>
           ))}
