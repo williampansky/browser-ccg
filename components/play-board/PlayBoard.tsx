@@ -51,12 +51,14 @@ import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveCh
 import { HeroBar } from './HeroBar';
 import { HeroFigure, HeroRing } from './HeroVariants';
 import { parseRingTune } from './ring-tune';
+import { DeckRowView } from './DeckRowView';
+import { deckRowVars, parseDeckTune } from './deck-row-tune';
 import { heroImage } from './hero-images';
 import { aimVector, IMPACT_MS, lunge, lungeBy, nudge, reducedMotion } from './motion';
 import { EnergyBar } from './EnergyBar';
 import { HeroSkills } from './HeroSkills';
 import { heroOptions, loadHeroChoices, resolveHero, saveHeroChoices, HeroChoice } from './hero-choice';
-import { deckRows } from './deck-rows';
+import { deckRows, type DeckRow } from './deck-rows';
 import { describeEvents, MYSTERY_HINT, mysteryCategory } from './describe-events';
 import { isMuted, playSounds, cancelCardHover, playCardHover, preloadSounds, setMuted, soundsFor, startHoldSound, stopHoldSound } from './sounds';
 import { targetLinePath, TargetLineStyle } from './target-line';
@@ -191,13 +193,12 @@ const LogCard = ({ name }: { name: string }) => {
   );
 };
 /** A deck-tracker row; its tooltip opens to the left because the panel is pinned to the right edge. */
-const DeckRow = ({ name, children, className }: { name: string; children: React.ReactNode; className: string }) => {
-  const { handlers, node } = useTip(tipByName.get(name), 'left');
+const DeckRowTip = ({ row }: { row: DeckRow }) => {
+  const { handlers, node } = useTip(tipByName.get(row.name), 'left');
   return (
-    <div className={className} {...handlers}>
-      {children}
+    <DeckRowView row={row} handlers={handlers}>
       {node}
-    </div>
+    </DeckRowView>
   );
 };
 interface Ghost {
@@ -415,9 +416,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   // The hero is drawn as the thin ring with orbiting sockets (its look: RING_DEFAULTS, over the `r_<field>` params the hero lab writes); ?herotype=figure brings back the figure card.
   const [heroType, setHeroType] = useState<'figure' | 'ring'>('ring');
   const [ringTune, setRingTune] = useState(() => parseRingTune(''));
+  // The deck panel's rows (the `-DECK` strip behind each name): DECK_DEFAULTS over the `d_<field>` params the deck lab writes.
+  const [deckTune, setDeckTune] = useState(() => parseDeckTune(''));
   useEffect(() => {
     setHeroType(new URLSearchParams(window.location.search).get('herotype') === 'figure' ? 'figure' : 'ring');
     setRingTune(parseRingTune(window.location.search));
+    setDeckTune(parseDeckTune(window.location.search));
   }, []);
   /** Turn timer: 60 s per turn (15 s with Cronus on a board), on by default; running out ends the turn. Local stand-in for a server clock. */
   const [timerOn, setTimerOnState] = useState(true);
@@ -1919,13 +1923,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         <h2>
           Deck <small>{state.players[me].deck.length} left</small>
         </h2>
-        <div className={styles.deckRows}>
+        <div className={styles.deckRows} style={deckRowVars(deckTune) as React.CSSProperties}>
           {deckRows(startDecks[me], state.players[me].deck.map((c) => c.cardId), byId).map((r) => (
-            <DeckRow key={r.id} name={r.name} className={cx(styles.deckRow, r.left === 0 ? styles.deckGone : '')}>
-              <span className={styles.deckCost}>{r.cost}</span>
-              <span className={styles.deckName}>{r.name}</span>
-              <span className={styles.deckCount}>{r.total > 1 ? `${r.left}/${r.total}` : r.left}</span>
-            </DeckRow>
+            <DeckRowTip key={r.id} row={r} />
           ))}
         </div>
       </aside>

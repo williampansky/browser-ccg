@@ -558,36 +558,80 @@ $po-green: var(--po-c, #5fd16a);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--dk-row-gap, 2px);
   scrollbar-width: thin;
   scrollbar-color: #3f4660 transparent;
 }
 
+// A deck row: the card's `-DECK` strip (--deck-art, set per row) under a shade that lets the name read. Every number is a `--dk-*` variable
+// from deck-row-tune.ts (the deck lab edits them); the fallbacks here are DECK_DEFAULTS.
 .deckRow {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  height: 1.9rem;
-  padding: 0 0.5rem 0 0.25rem;
-  background: #232734;
-  border-left: 3px solid #3b6fd4;
-  border-radius: 4px;
+  flex: none;
+  gap: var(--dk-gap, 8px);
+  height: var(--dk-h, 30px);
+  padding: 0 var(--dk-pr, 8px) 0 var(--dk-pl, 4px);
+  background: var(--dk-bg, #232734);
+  border-left: var(--dk-accent-w, 3px) solid var(--dk-accent, #3b6fd4);
+  border-radius: var(--dk-r, 4px);
+
+  // The strip, zoomed about the point it is centred on (zoom 1 = it just covers the row).
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--deck-art, none) var(--dk-ax, 50%) var(--dk-ay, 50%) / cover no-repeat;
+    transform: scale(var(--dk-zoom, 1));
+    transform-origin: var(--dk-ax, 50%) var(--dk-ay, 50%);
+    opacity: calc(var(--dk-art-o, 1) * var(--dk-art-on, 1));
+    // (Sass has its own saturate() / grayscale(), so these two are written as plain CSS.)
+    filter: brightness(var(--dk-art-b, 1)) #{'saturate(var(--dk-art-s, 1))'} blur(var(--dk-art-blur, 0px));
+  }
+
+  // The shade: strongest at the left (where the cost and name are), fading to --dk-sr by --dk-ss of the way across.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--dk-shade, #0b0d14) var(--dk-sl, 85%), transparent) 0%,
+      color-mix(in srgb, var(--dk-shade, #0b0d14) var(--dk-sr, 10%), transparent) var(--dk-ss, 70%),
+      color-mix(in srgb, var(--dk-shade, #0b0d14) var(--dk-sr, 10%), transparent) 100%
+    );
+    opacity: calc(var(--dk-art-on, 1));
+    transition: opacity 120ms;
+  }
+
+  &:hover::after {
+    opacity: calc(var(--dk-art-on, 1) * var(--dk-hover, 0.6));
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .deckGone {
-  opacity: 0.35;
+  opacity: var(--dk-gone-o, 0.35);
+  filter: #{'grayscale(var(--dk-gone-g, 0.6))'};
 }
 
 .deckCost {
-  width: 1.3rem;
-  height: 1.3rem;
+  display: var(--dk-cost-display, block);
+  width: var(--dk-cost-d, 21px);
+  height: var(--dk-cost-d, 21px);
   flex: none;
   border-radius: 50%;
-  background: #3b6fd4;
+  background: var(--dk-cost-c, #3b6fd4);
   text-align: center;
   font-weight: 700;
-  line-height: 1.3rem;
-  font-size: 0.75rem;
+  line-height: var(--dk-cost-d, 21px);
+  font-size: var(--dk-cost-f, 12px);
 }
 
 .deckName {
@@ -595,10 +639,17 @@ $po-green: var(--po-c, #5fd16a);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: var(--dk-name-f, 14px);
+  font-weight: var(--dk-name-w, 600);
+  color: var(--dk-name-c, #e8e8ee);
+  text-shadow: 0 1px var(--dk-name-sh, 3px) #000, 0 0 var(--dk-name-sh, 3px) #000;
 }
 
 .deckCount {
   font-weight: 700;
+  font-size: var(--dk-count-f, 13px);
+  color: var(--dk-count-c, #e8e8ee);
+  text-shadow: 0 1px 2px #000;
 }
 
 .modalBackdrop {

@@ -50,7 +50,7 @@ export const FACE_HEIGHT = 250;
 export const faceUnit = (width: number): number => width / FACE_WIDTH;
 
 /** `CORE_012` -> `/images/sets/SET_CORE/012-CARD.jpg`, `GAME_001` -> `/images/sets/SET_GAME/001-CARD.jpg`. */
-export const artUrl = (id?: string, kind: 'CARD' | 'MINION' = 'CARD'): string | undefined => {
+export const artUrl = (id?: string, kind: 'CARD' | 'MINION' | 'DECK' = 'CARD'): string | undefined => {
   const m = /^([A-Z]+)_(\w+)$/.exec(id ?? '');
   return m ? `/images/sets/SET_${m[1]}/${m[2]}-${kind}.jpg` : undefined;
 };
@@ -68,6 +68,16 @@ export const artBackground = (id?: string, ...fallbackIds: (string | undefined)[
     .map((x) => artUrl(x))
     .filter((u): u is string => !!u)
     .concat(PLACEHOLDER_ART)
+    .map((u) => `url(${u})`)
+    .join(', ');
+
+/**
+ * The `-DECK` strip (600 x 75) of a card as a CSS `background-image` for a deck row: the strip, then the card's `-CARD` art, then the placeholder,
+ * so a missing file falls through to the next layer.
+ */
+export const deckStripBackground = (id?: string): string =>
+  [artUrl(id, 'DECK'), artUrl(id, 'CARD'), PLACEHOLDER_ART]
+    .filter((u): u is string => !!u)
     .map((u) => `url(${u})`)
     .join(', ');
 
