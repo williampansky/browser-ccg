@@ -53,6 +53,7 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 0.75rem;
+  z-index: 0; // so the cast-area overlay (z-index -1) sits behind the board's contents, not behind the page
 }
 
 // The enemy is pinned to the top and you to the bottom; the boards sit between them, centred.
@@ -394,6 +395,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  z-index: -1;
 
   h2 {
     margin: 0 0 0.5rem;
@@ -402,6 +404,7 @@
 
 .logLines {
   flex: 1;
+  min-height: 0; // so it scrolls inside a panel of fixed height instead of growing past it
   overflow-y: auto;
   font-family: ui-monospace, monospace;
   font-size: 12px;
@@ -504,6 +507,31 @@ $po-green: var(--po-c, #5fd16a);
   }
 }
 
+.sideDivider {
+  // The drag bar between the log and the deck in the connected sidebar (shown by the board lab's "Connected sidebar" arrangement only).
+  display: none;
+  position: fixed;
+  z-index: 60;
+  align-items: center;
+  justify-content: center;
+  cursor: row-resize;
+  touch-action: none;
+  user-select: none;
+
+  i {
+    width: 44px;
+    height: 4px;
+    border-radius: 2px;
+    background: #5a6580;
+    transition: background 120ms, width 120ms;
+  }
+
+  &:hover i {
+    background: #9db4ff;
+    width: 64px;
+  }
+}
+
 .deckView {
   position: fixed;
   right: 1rem;
@@ -526,6 +554,7 @@ $po-green: var(--po-c, #5fd16a);
 
 .deckRows {
   flex: 1;
+  min-height: 0; // the deck scrolls when the sidebar gives it less room than its rows need
   overflow-y: auto;
   display: flex;
   flex-direction: column;

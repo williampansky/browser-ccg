@@ -33,6 +33,7 @@ import {
 } from '../../engine';
 import { gapIndex } from './board-position';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
+import { effectiveSidebarMode, saveSidebarMode, useSidebarMode } from './sidebar-mode';
 import { CardDetailOverlay } from '../card-detail/CardDetailOverlay';
 import { nudgeIntoViewport, useKeepTipsInViewport } from './viewport-nudge';
 import { formatClock, isTimerOn, secondsLeft, setTimerOn } from './turn-timer';
@@ -262,6 +263,8 @@ const renderLogLine = (line: string, myName: string, colors: Record<'0' | '1', s
     return part;
   });
 
+const SIDE_SPLIT_KEY = 'ccg.sideSplit.v1';
+
 /** How long the hover look stays after the pointer leaves a hover slot (ms), so crossing the gap to the next slot does not flicker. */
 const HOVER_RELEASE_MS = 70;
 
@@ -404,6 +407,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   /** Accessibility mode (one menu option for now): hover titles, a visible focus outline and explicit "Play" buttons after
    *  selecting a card. Off by default; saved. More settings will be split out of it later. */
   const [a11y, setA11y] = useState(false);
+  const sidebarChoice = useSidebarMode();
   useEffect(() => setA11y(isAccessible()), []);
   // Each hero is drawn as the Vol 14 figure card (components/play-board/HeroVariants.tsx); ?herofig=0 brings back the old bar.
   const [figUi, setFigUi] = useState(true);
@@ -756,6 +760,41 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   /** The hand card being dragged: hidden in the hand so only the drag image shows. */
   const [draggedHand, setDraggedHand] = useState<number | null>(null);
+  /** The connected sidebar's divider (the board lab's "Connected sidebar" arrangement): the log's share of the column's height, 0.12 to 0.88; null = the layout's own. */
+  const [sideDrag, setSideDrag] = useState<number | null>(null);
+  const sideDragRef = useRef<number | null>(null);
+  const logPanel = useRef<HTMLElement | null>(null);
+  const deckPanel = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const saved = parseFloat(window.localStorage.getItem(SIDE_SPLIT_KEY) ?? '');
+    if (!Number.isNaN(saved)) setSideDrag(Math.min(0.88, Math.max(0.12, saved)));
+  }, []);
+  const setSide = (f: number | null) => {
+    sideDragRef.current = f;
+    setSideDrag(f);
+  };
+  const dragDivider = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const el = e.currentTarget;
+    el.setPointerCapture(e.pointerId);
+    // The column runs from the top of the log to the bottom of the deck (its height can be set in the board lab), whatever the window is.
+    const top = logPanel.current?.getBoundingClientRect().top ?? 16;
+    const bottom = deckPanel.current?.getBoundingClientRect().bottom ?? window.innerHeight - 16;
+    const move = (ev: PointerEvent) => setSide(Math.min(0.88, Math.max(0.12, (ev.clientY - top) / Math.max(1, bottom - top))));
+    const up = () => {
+      el.removeEventListener('pointermove', move);
+      el.removeEventListener('pointerup', up);
+      el.removeEventListener('pointercancel', up);
+      if (sideDragRef.current !== null) window.localStorage.setItem(SIDE_SPLIT_KEY, String(sideDragRef.current));
+    };
+    el.addEventListener('pointermove', move);
+    el.addEventListener('pointerup', up);
+    el.addEventListener('pointercancel', up);
+  };
+  const resetDivider = () => {
+    setSide(null);
+    window.localStorage.removeItem(SIDE_SPLIT_KEY);
+  };
   /** The card whose hover slot the pointer is on (it lifts); let go a moment after the pointer leaves. */
   const [hoverHand, setHoverHand] = useState<number | null>(null);
   const hoverRelease = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1489,7 +1528,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const foeTo = foeToEl ? centerOf(foeToEl) : null;
 
   return (
-    <main className={cx(styles.page, a11y ? styles.a11y : '')}>
+    <main className={cx(styles.page, a11y ? styles.a11y : '')} style={sideDrag !== null ? ({ ['--side-drag' as string]: sideDrag } as React.CSSProperties) : undefined}>
       {hasSelection && lineFrom && <AimArrow from={lineFrom} hit={!!overTarget} />}
       {foeFrom && foeTo && (
         <svg className={styles.targetLine} aria-hidden="true">
@@ -1565,6 +1604,15 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               <Toggle label="Sound" checked={soundOn} onChange={(on) => { setMuted(!on); setSoundOn(on); }} />
               <Toggle label={`Turn timer (${turnLimit}s)`} checked={timerOn} onChange={(on) => { setTimerOn(on); setTimerOnState(on); }} />
               <Toggle label="Accessibility mode" checked={a11y} onChange={(on) => { setAccessible(on); setA11y(on); }} />
+              <SegmentedControl
+                label="Log and deck"
+                value={effectiveSidebarMode(sidebarChoice)}
+                onChange={saveSidebarMode}
+                options={[
+                  { label: 'Separate', title: 'two panels', value: 'separate' as const },
+                  { label: 'Connected', title: 'one sidebar with a bar to drag between them', value: 'connected' as const },
+                ]}
+              />
               <SegmentedControl
                 label="Opponent"
                 value={smartAi}
@@ -1867,7 +1915,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         </section>
       </div>
 
-      <aside className={styles.deckView}>
+      <aside className={styles.deckView} ref={deckPanel}>
         <h2>
           Deck <small>{state.players[me].deck.length} left</small>
         </h2>
@@ -1882,7 +1930,18 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         </div>
       </aside>
 
-      <aside className={styles.log}>
+      <div
+        className={styles.sideDivider}
+        role="separator"
+        aria-orientation="horizontal"
+        title="Drag to give the log or the deck more room; double-click to reset"
+        onPointerDown={dragDivider}
+        onDoubleClick={resetDivider}
+      >
+        <i />
+      </div>
+
+      <aside className={styles.log} ref={logPanel}>
         <h2>Log</h2>
         <div
           className={styles.logLines}

@@ -1,6 +1,6 @@
 import type { ParsedUrlQuery } from 'querystring';
 import type { ReactNode } from 'react';
-import { ENERGY_COLOURS, MID_KNOBS } from '../play-board/layout-css';
+import { ENERGY_COLOURS, MID_KNOBS, PLAY_LAYOUT } from '../play-board/layout-css';
 import { HEROES, SLIDER_MAX, one, row, wide } from './lab-model';
 
 export interface PanelProps {
@@ -258,14 +258,23 @@ export const LogDeckPanel = ({ q, setParams, sliders, count, pick }: PanelProps)
   <>
     <label style={row}>
       Arrangement{' '}
-      <select value={one(q.lpan) || 'default'} onChange={(e) => setParams({ lpan: e.target.value === 'default' ? null : e.target.value })}>
+      {/* "default" is written into the URL (not removed from it): with no lpan the lab falls back to the saved layout's arrangement. */}
+      <select value={one(q.lpan) || PLAY_LAYOUT.lpan || 'default'} onChange={(e) => setParams({ lpan: e.target.value })}>
         <option value="default">Log left, deck right</option>
         <option value="swap">Deck left, log right</option>
         <option value="stackL">Stacked on the left</option>
         <option value="stackR">Stacked on the right</option>
+        <option value="joinL">Connected sidebar on the left (drag the bar)</option>
+        <option value="joinR">Connected sidebar on the right (drag the bar)</option>
       </select>
     </label>
-    {sliders(['lsplit', 'lgw', 'ldw', 'lgx', 'lgy', 'ldx', 'ldy'])}
+    <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+      Connected: the log and deck share one column with a drag bar between them (double-click it to reset). The split you drag is remembered in this browser (until a player drags it, the log takes the saved starting share, 30%). One width, one height and one offset set the whole column (the "Log X / Y offset" sliders).
+    </small>
+    {/* Connected: one width for the whole column; separate: a width for each panel. */}
+    {['joinL', 'joinR'].includes(one(q.lpan) || PLAY_LAYOUT.lpan || '')
+      ? sliders(['lsbw', 'lsbh', 'lsbd', 'lgx', 'lgy'])
+      : sliders(['lsplit', 'lgw', 'ldw', 'lgx', 'lgy', 'ldx', 'ldy'])}
   </>
 );
 

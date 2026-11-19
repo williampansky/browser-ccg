@@ -171,6 +171,9 @@ export const NUMS: Num[] = [
   { key: 'lsel', label: 'Clicked card scale (x)', min: 1, max: SLIDER_MAX.lsel, step: 0.05, css: CSS_FNS.lsel, read: () => 2 },
   // The log and deck panels. Their presets are in `panelCss`; these are size and offset.
   { key: 'lsplit', label: 'Stacked: log share of height (%)', min: 15, max: SLIDER_MAX.lsplit, css: CSS_FNS.lsplit, read: () => 50 },
+  { key: 'lsbw', label: 'Connected sidebar: width (px)', min: 120, max: 700, css: CSS_FNS.lsbw, read: () => 242 },
+  { key: 'lsbh', label: 'Connected sidebar: total height (px)', min: 200, max: 1600, css: CSS_FNS.lsbh, read: () => (typeof window === 'undefined' ? undefined : Math.max(200, window.innerHeight - 32)) },
+  { key: 'lsbd', label: 'Connected sidebar: drag bar thickness (px)', min: 0, max: 40, css: CSS_FNS.lsbd, read: () => 12 },
   { key: 'lgw', label: 'Log width (px)', min: 120, max: SLIDER_MAX.lgw, css: CSS_FNS.lgw, read: () => px(cs('log')?.width) },
   { key: 'ldw', label: 'Deck width (px)', min: 120, max: SLIDER_MAX.ldw, css: CSS_FNS.ldw, read: () => px(cs('deckView')?.width) },
   { key: 'lgx', label: 'Log X offset (px)', min: -SLIDER_MAX.lgx, max: SLIDER_MAX.lgx, css: CSS_FNS.lgx, read: () => 0 },

@@ -86,6 +86,11 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lhfl: (v) => `${CLS('hand')}{--h-flash:${v}}`,
   lhsm: (v) => `${CLS('hand')}{--h-sheen-ms:${v}ms}`,
   lsplit: () => '',
+  // Connected sidebar: its width and the thickness of the drag bar between log and deck.
+  lsbw: (v) => `${CLS('page')}{--sb-w:${v}px}`,
+  lsbd: (v) => `${CLS('page')}{--sb-d:${v}px}`,
+  // Connected sidebar: the whole column's height (px); without it the column fills the window, 1rem in from the top and bottom.
+  lsbh: (v) => `${CLS('page')}{--sb-h:${v}px}`,
   lgw: (v) => `${CLS('log')}{width:${v}px !important}`,
   ldw: (v) => `${CLS('deckView')}{width:${v}px !important}`,
   lgx: (v) => `${CLS('log')}{--lab-x:${v}px}`,
@@ -283,11 +288,11 @@ const gapEasingCss = (one: (k: string) => string) => (GAP_EASINGS[one('lpoge')] 
 
 /** The layout /play uses: the lab's "wip" preset, layout knobs only (no setup params). A `?l...` param in the /play URL overrides one. */
 export const PLAY_LAYOUT: Record<string, string> = {
-  ldw: '242',
-  ldx: '15',
+  ldw: '310',
+  ldx: '0',
   les: '0.8',
-  lex: '-1281',
-  ley: '-64',
+  lex: '-1095',
+  ley: '-68',
   lecv: '0',
   lfw0: '235',
   lfw1: '235',
@@ -299,13 +304,13 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lry0: '138',
   lrx1: '-98',
   lry1: '12',
-  lgw: '242',
-  lgx: '15',
-  lgy: '9',
+  lgw: '260',
+  lgx: '2',
+  lgy: '-4',
   lhw0: '126',
   lmh: '1.025',
   lml: '1.5',
-  lpan: 'stackR',
+  lpan: 'default',
   ls: '8',
   lsel: '1.85',
   // Minion portrait scale inside the frame: hover (1 = none), selected, speed in ms, centre from the top in %
@@ -314,7 +319,7 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lpsm: '60',
   lpsy: '45',
   lsplit: '30',
-  lw: '1200',
+  lw: '1000',
   // Background: the paper texture on the play surface
   lbgb: '0',
   lbgd: '0.1',
@@ -402,6 +407,10 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lhol7: '48',
   lhol8: '56',
   lhol9: '64',
+  lhsd: '10',
+  lsbd: '18',
+  lsbw: '320',
+  lsbh: '840',
 };
 
 /**
@@ -431,8 +440,23 @@ export const buildLayoutCss = (q: Record<string, string | undefined>): string =>
   const split = Math.min(85, Math.max(15, +one('lsplit') || 50)) / 100;
   const stackSide = (left: boolean) =>
     `${left ? 'left:1rem !important;right:auto !important' : 'right:1rem !important;left:auto !important'}`;
+  // The connected sidebar: log over deck in one column on the left (`joinL`) or right (`joinR`), flush, with a drag bar between them. The split
+  // is the dragged one (--side-drag, set by the drag bar and remembered) or else `lsplit`.
+  const join = preset === 'joinL' || preset === 'joinR';
+  const cut = `var(--side-drag, ${split})`;
+  // One offset moves the whole column: the log's (`lgx` / `lgy`), shared by the deck and the drag bar so they never come apart.
+  const sbx = +one('lgx') || 0;
+  const sby = +one('lgy') || 0;
+  const col = 'var(--sb-h, calc(100vh - 2rem))';
+  const joinCss = join
+    ? `${CLS('log')}{${stackSide(preset === 'joinL')};top:1rem !important;bottom:auto !important;width:var(--sb-w,242px) !important;height:calc(${col} * ${cut} - var(--sb-d,12px) / 2) !important}` +
+      `${CLS('deckView')}{${stackSide(preset === 'joinL')};top:calc(1rem + ${col} * ${cut} + var(--sb-d,12px) / 2) !important;bottom:auto !important;height:calc(${col} * (1 - ${cut}) - var(--sb-d,12px) / 2) !important;width:var(--sb-w,242px) !important;--lab-x:${sbx}px !important;--lab-y:${sby}px !important}` +
+      `${CLS('sideDivider')}{display:flex !important;${stackSide(preset === 'joinL')};top:calc(1rem + ${col} * ${cut} - var(--sb-d,12px) / 2) !important;width:var(--sb-w,242px) !important;height:var(--sb-d,12px) !important;translate:${sbx}px ${sby}px !important}`
+    : '';
   const panelCss =
-    preset === 'swap'
+    join
+      ? joinCss
+      : preset === 'swap'
       ? `${CLS('log')}{left:auto !important;right:1rem !important}${CLS('deckView')}{right:auto !important;left:1rem !important}`
       : preset === 'stackL' || preset === 'stackR'
         ? `${CLS('log')}{${stackSide(preset === 'stackL')};top:1rem !important;bottom:auto !important;height:calc((100vh - 3rem) * ${split}) !important}` +
@@ -467,6 +491,8 @@ export const buildLayoutCss = (q: Record<string, string | undefined>): string =>
     selCss,
     ...Object.keys(CSS_FNS)
       .filter((k) => one(k) !== '' && !Number.isNaN(+one(k)))
+      // The connected sidebar has one width (`lsbw`); the separate log and deck widths would win over it (same weight, later), so they sit out.
+      .filter((k) => !(join && (k === 'lgw' || k === 'ldw')))
       .map((k) => CSS_FNS[k](+one(k))),
     one('lfs') === 'right' ? `${CLS('figSlot')}{left:auto !important;right:0.5rem !important}` : '',
     backgroundCss(one),

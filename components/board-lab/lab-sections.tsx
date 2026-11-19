@@ -20,7 +20,7 @@ export const SECTION_KEYS: Record<string, string[]> = {
   play: ['lpoc', 'lpoo', 'lpow', 'lpor', 'lpoi', 'lpoh', 'lpog', 'lpogw', 'lpos', 'lpoga', 'lpopv', 'lpoac', 'lpoahc', 'lpozc', 'lpozhc', 'lpogc', 'lpoge', 'lpoao', 'lpoai', 'lpoah', 'lpoahw', 'lpoahg', 'lpoat', 'lpozo', 'lpozi', 'lpozh', 'lpozhw', 'lpozhg', 'lpozt', 'lpogo', 'lpogb', 'lpogd', 'lpogs', 'lpogp', 'lpogq'],
   cast: ['lcx', 'lcy', 'lcs', 'lcms', 'lcpeak', 'lcglow', 'lcring', 'lcpv'],
   energy: ['les', 'lex', 'ley', 'leo', 'leg', 'legt', 'lecs', 'lecv', 'lect', 'lebr', 'lebb', 'lebg', 'lecr', 'lecb', 'lecn', 'lebpv'],
-  panels: ['lpan', 'lsplit', 'lgw', 'ldw', 'lgx', 'lgy', 'ldx', 'ldy'],
+  panels: ['lpan', 'lsplit', 'lsbw', 'lsbh', 'lsbd', 'lgw', 'ldw', 'lgx', 'lgy', 'ldx', 'ldy'],
   heroes: ['herotype', 'lfw0', 'lfw1', 'lfx0', 'lfy0', 'lfx1', 'lfy1', 'lrx0', 'lry0', 'lrx1', 'lry1', 'lfs'],
   'snd-cardPlay': slotKeys('cardPlay'),
   'snd-draw': slotKeys('draw'),
