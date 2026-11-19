@@ -508,7 +508,11 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   }, []);
   useEffect(() => {
     setDragging(false);
-    setHoverHand(null); // the card under the pointer may be a different one now
+    // the card under the pointer may be a different one now
+    underHand.current = null;
+    stopStepping();
+    hoverRef.current = null;
+    setHoverHand(null);
   }, [state]);
 
   const dispatch = useCallback(
@@ -755,6 +759,53 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   /** The card whose hover slot the pointer is on (it lifts); let go a moment after the pointer leaves. */
   const [hoverHand, setHoverHand] = useState<number | null>(null);
   const hoverRelease = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Hover pacing: `underHand` is the slot the pointer is on, `hoverRef` mirrors `hoverHand` for the timer, `stepTimer` is the pending next step and
+  // `lastHoverAt` when the hover last changed.
+  const underHand = useRef<number | null>(null);
+  const hoverRef = useRef<number | null>(null);
+  const stepTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastHoverAt = useRef(0);
+  const stopStepping = () => {
+    if (stepTimer.current) clearTimeout(stepTimer.current);
+    stepTimer.current = null;
+  };
+  const applyHover = (i: number | null) => {
+    if (hoverRef.current === i) return;
+    hoverRef.current = i;
+    lastHoverAt.current = Date.now();
+    setHoverHand(i);
+    if (i !== null && !selectionRef.current) playCardHover();
+  };
+  /** The pointer is on the slot of card `target`. With a pace set (the lab's `lhsd`, ms), the hover changes at most once per that long, one card
+   *  at a time, and keeps catching up toward the pointer: a fast sweep or a far jump fans across the cards instead of snapping. A hover that
+   *  has been still for that long moves at once, so a slow sweep is never held back. 0 (the default) follows the pointer straight away. */
+  const hoverTo = (target: number) => {
+    if (hoverRelease.current) clearTimeout(hoverRelease.current);
+    if (over || document.body.classList.contains('dragging')) return;
+    underHand.current = target;
+    const from = hoverRef.current;
+    const el = handRef.current;
+    const ms = el ? parseFloat(getComputedStyle(el).getPropertyValue('--h-step-ms')) : NaN;
+    if (from === null || Number.isNaN(ms) || ms <= 0) {
+      stopStepping();
+      applyHover(target);
+      return;
+    }
+    const step = () => {
+      stepTimer.current = null;
+      const h = hoverRef.current;
+      const u = underHand.current;
+      if (h === null || u === null || h === u) return;
+      applyHover(h + Math.sign(u - h));
+      if (hoverRef.current !== u) stepTimer.current = setTimeout(step, ms);
+    };
+    if (target === from) return stopStepping();
+    if (stepTimer.current) return; // a step is already on its way; it will see the new target
+    const wait = ms - (Date.now() - lastHoverAt.current);
+    if (wait <= 0) step();
+    else stepTimer.current = setTimeout(step, wait);
+  };
+  useEffect(() => stopStepping, []);
   // A card dragged to aim at a target stays in the hand (selected, with the arrow); it must not take a click's enlargement.
   const [heldHand, setHeldHand] = useState<number | null>(null);
   // A dragged card that gets played unmounts its own button (when it was the last one in the hand), so its dragend never
@@ -1335,6 +1386,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       e.dataTransfer.setData('text/plain', String(index)); // Firefox needs data to start a drag
       e.dataTransfer.effectAllowed = 'move';
       setDragging(true);
+      underHand.current = null;
+      stopStepping();
+      hoverRef.current = null;
       setHoverHand(null);
       // A card that aims at a target gets the arrow instead of a ghost (the ghost would cover the target); one that is
       // dropped on the board or play area has no arrow, so its ghost stays as the only drag feedback.
@@ -1373,18 +1427,13 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     // The hover slot: the pointer is tested against a slot (a column that never moves or grows), not the card, so a lifted, enlarged card
     // cannot block the cards beside it. The card takes the hover look from `hoverHand`; it lets go a moment after the pointer leaves, so
     // crossing a gap between slots does not flicker.
-    const enterSlot = () => {
-      if (hoverRelease.current) clearTimeout(hoverRelease.current);
-      if (over || document.body.classList.contains('dragging')) return;
-      setHoverHand((old) => {
-        if (old !== index && !selection) playCardHover();
-        return index;
-      });
-    };
+    const enterSlot = () => hoverTo(index);
     const leaveSlot = () => {
       if (hoverRelease.current) clearTimeout(hoverRelease.current);
       hoverRelease.current = setTimeout(() => {
-        setHoverHand(null);
+        underHand.current = null;
+        stopStepping();
+        applyHover(null);
         cancelCardHover();
       }, HOVER_RELEASE_MS);
     };
@@ -1788,6 +1837,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           <div
             className={cx(styles.row, styles.hand)}
             ref={handRef}
+            data-count={handCount}
             style={{ ['--hand-zoom' as string]: zoomNow, ['--hand-sink' as string]: `${handSink}px` }}
           >
             {(() => {

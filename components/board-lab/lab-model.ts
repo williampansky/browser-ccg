@@ -118,12 +118,40 @@ export const NUMS: Num[] = [
   // The clicked (selected) hand card: /play scales it 2x (hand zoom on top) and lifts it so it stays on screen.
   // Hand fan (tilt and drop as multiples of hsclone's numbers) and spacing
   { key: 'lhrt', label: 'Fan tilt (x, 0 = flat)', min: 0, max: 3, step: 0.05, css: CSS_FNS.lhrt, read: () => 1 },
+  ...Array.from({ length: 10 }, (_, i) => ({
+    key: `lhrt${i + 1}`,
+    label: `Fan tilt with exactly ${i + 1} card${i ? 's' : ''} (x)`,
+    min: 0,
+    max: 3,
+    step: 0.05,
+    css: CSS_FNS[`lhrt${i + 1}`],
+    // starts from the main tilt (kept in --h-tilt-base), so an untouched count looks like it does now
+    read: () => { const v = parseFloat(cs('hand')?.getPropertyValue('--h-tilt-base') ?? ''); return Number.isNaN(v) ? 1 : v; },
+  })),
+  ...Array.from({ length: 10 }, (_, i) => ({
+    key: `lhdp${i + 1}`,
+    label: `Fan drop with exactly ${i + 1} card${i ? 's' : ''} (x)`,
+    min: 0,
+    max: 3,
+    step: 0.05,
+    css: CSS_FNS[`lhdp${i + 1}`],
+    read: () => { const v = parseFloat(cs('hand')?.getPropertyValue('--h-dropk-base') ?? ''); return Number.isNaN(v) ? 1 : v; },
+  })),
   { key: 'lhdp', label: 'Fan drop (x, 0 = a straight row)', min: 0, max: 3, step: 0.05, css: CSS_FNS.lhdp, read: () => 1 },
   { key: 'lhdc', label: 'Fan curve (0 = straight V, 1 = round arc)', min: 0, max: 1.5, step: 0.05, css: CSS_FNS.lhdc, read: () => 0 },
   { key: 'lhsh', label: 'Hovered slot: extra width each side (px, harder to leave)', min: 0, max: 80, css: CSS_FNS.lhsh, read: () => 0 },
   { key: 'lhse', label: 'Edge slots reach to the card\'s outer edge (0 = no, 1 = yes)', min: 0, max: 1, step: 0.05, css: CSS_FNS.lhse, read: () => 0 },
   { key: 'lhsx', label: 'Edge slots: reach further (px)', min: 0, max: 400, css: CSS_FNS.lhsx, read: () => 0 },
   { key: 'lhsw', label: 'Hover slot width (% of card spacing; 0 = off, the whole card is the target)', min: 0, max: 150, step: 5, css: CSS_FNS.lhsw, read: () => 100 },
+  { key: 'lhsd', label: 'Hover pace: least ms between hover swaps (0 = follow the pointer at once); it trails the pointer one card at a time', min: 0, max: 200, step: 5, css: CSS_FNS.lhsd, read: () => 0 },
+  ...Array.from({ length: 10 }, (_, i) => ({
+    key: `lhol${i + 1}`,
+    label: `Card overlap with exactly ${i + 1} card${i ? 's' : ''} (px)`,
+    min: -40,
+    max: 120,
+    css: CSS_FNS[`lhol${i + 1}`],
+    read: () => { const v = parseFloat(cs('hand')?.getPropertyValue('--h-overlap-base') ?? ''); return Number.isNaN(v) ? 20 : v; },
+  })),
   { key: 'lhol', label: 'Card overlap (px at full size; minus = gaps)', min: -40, max: 120, css: CSS_FNS.lhol, read: () => 20 },
   // Hover: the card under the pointer, and how its neighbours part around it
   { key: 'lhov', label: 'Hover scale (x)', min: 1, max: 2.5, step: 0.05, css: CSS_FNS.lhov, read: () => 1.5 },

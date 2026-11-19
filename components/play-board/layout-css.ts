@@ -54,8 +54,9 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lmh: (v) => `${SLOT}{--aim-scale:${v}}`,
   lsel: () => '',
   // Hand look and feel: CSS variables on .hand (see the .handSlot block in play-board.module.scss for what each one does).
-  lhrt: (v) => `${CLS('hand')}{--h-tilt:${v}}`,
-  lhdp: (v) => `${CLS('hand')}{--h-dropk:${v}}`,
+  // `--h-tilt-base` is the same number kept apart, so the lab can show it as the starting point of the per-count sliders.
+  lhrt: (v) => `${CLS('hand')}{--h-tilt:${v};--h-tilt-base:${v}}`,
+  lhdp: (v) => `${CLS('hand')}{--h-dropk:${v};--h-dropk-base:${v}}`,
   lhdc: (v) => `${CLS('hand')}{--h-curve:${v}}`,
   // Hover slot width as a % of the card spacing (100 = the slots just touch, less leaves gaps, more makes them overlap); 0 turns slots off.
   lhsw: (v) =>
@@ -68,7 +69,9 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lhsh: (v) => `${CLS('hand')}{--h-hot-px:${v}px}`,
   // Preview only: draw the slots.
   lhspv: (v) => (v ? `${CLS('hand')}{--h-slot-show:rgba(255,60,60,0.18);--h-slot-outline:1px}` : ''),
-  lhol: (v) => `${CLS('hand')}{--h-overlap:${v}px}`,
+  lhol: (v) => `${CLS('hand')}{--h-overlap:${v}px;--h-overlap-base:${v}}`,
+  // How long the hover waits before stepping to the next card on its way to the card under the pointer (ms; 0 = jump straight there).
+  lhsd: (v) => `${CLS('hand')}{--h-step-ms:${v}}`,
   lhov: (v) => `${CLS('hand')}{--h-hov:${v}}`,
   lhoy: (v) => `${CLS('hand')}{--h-lift:${-v}px}`,
   lhot: (v) => `${CLS('hand')}{--h-hovrot:${v}deg}`,
@@ -200,6 +203,12 @@ export const MID_KNOBS: { key: string; label: string; min: number; max: number; 
   { key: 'lmdtr', label: 'Timer bar: corner radius (px)', min: 0, max: 30, def: 0, cssVar: '--mid-tr', unit: 'px' },
   { key: 'lmdtta', label: 'Timer bar: track opacity', min: 0, max: 1, step: 0.05, def: 0.25, cssVar: '--mid-tta', unit: '' },
 ];
+// Fan tilt for one hand size: `lhrt1` .. `lhrt10` (x) override the main tilt (`lhrt`) while the hand holds exactly that many cards.
+for (let n = 1; n <= 10; n++) CSS_FNS[`lhrt${n}`] = (v) => `${CLS('hand')}[data-count="${n}"]{--h-tilt:${v}}`;
+// And the card overlap (the spacing): `lhol1` .. `lhol10`.
+for (let n = 1; n <= 10; n++) CSS_FNS[`lhol${n}`] = (v) => `${CLS('hand')}[data-count="${n}"]{--h-overlap:${v}px}`;
+// The same for the fan drop: `lhdp1` .. `lhdp10` override the main drop (`lhdp`) for exactly that many cards.
+for (let n = 1; n <= 10; n++) CSS_FNS[`lhdp${n}`] = (v) => `${CLS('hand')}[data-count="${n}"]{--h-dropk:${v}}`;
 MID_KNOBS.forEach((k) => (CSS_FNS[k.key] = (v) => `${CLS('page')}{${k.cssVar}:${v}${k.unit}}`));
 /** The lab's preview for the timer bar: how full it is (%), since the lab has no turn clock. */
 export const MID_TIMER_PREVIEW_KEY = 'lmdtpv';
@@ -375,6 +384,24 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lhsh: '20',
   lhse: '1',
   lhsx: '20',
+  lhdp1: '0',
+  lhdp2: '0.4',
+  lhrt2: '0.2',
+  lhdp3: '0.75',
+  lhrt3: '0.55',
+  lhrt4: '0.85',
+  lhdp4: '1.25',
+  lhrt5: '1',
+  lhdp5: '1.5',
+  lhdp6: '1.75',
+  lhol2: '6',
+  lhol3: '12',
+  lhol4: '18',
+  lhol5: '22',
+  lhol6: '32',
+  lhol7: '48',
+  lhol8: '56',
+  lhol9: '64',
 };
 
 /**

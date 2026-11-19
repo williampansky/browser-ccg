@@ -16,7 +16,7 @@ export const SECTION_KEYS: Record<string, string[]> = {
   minions: ['lm', 'lg', 'lml', 'lms', 'lmh', 'lmpv', 'lpsh', 'lpss', 'lpsm', 'lpsy'],
   shadows: SHADOW_KEYS,
   table: ['ls', 'lw', 'lfelt'],
-  hands: ['lhw0', 'lhw1', 'lhs', 'lsel', 'lpv', 'lhpv', 'lhrt', 'lhdp', 'lhdc', 'lhsw', 'lhsh', 'lhse', 'lhsx', 'lhspv', 'lhol', 'lhov', 'lhoy', 'lhot', 'lhom', 'lhpa', 'lhpb', 'lhpm', 'lhha', 'lhhs', 'lhfl', 'lhsm', 'lhst', 'lhdr'],
+  hands: ['lhw0', 'lhw1', 'lhs', 'lsel', 'lpv', 'lhpv', 'lhrt', 'lhrt1', 'lhrt2', 'lhrt3', 'lhrt4', 'lhrt5', 'lhrt6', 'lhrt7', 'lhrt8', 'lhrt9', 'lhrt10', 'lhdp', 'lhdp1', 'lhdp2', 'lhdp3', 'lhdp4', 'lhdp5', 'lhdp6', 'lhdp7', 'lhdp8', 'lhdp9', 'lhdp10', 'lhdc', 'lhsw', 'lhsh', 'lhse', 'lhsx', 'lhsd', 'lhspv', 'lhol', 'lhol1', 'lhol2', 'lhol3', 'lhol4', 'lhol5', 'lhol6', 'lhol7', 'lhol8', 'lhol9', 'lhol10', 'lhov', 'lhoy', 'lhot', 'lhom', 'lhpa', 'lhpb', 'lhpm', 'lhha', 'lhhs', 'lhfl', 'lhsm', 'lhst', 'lhdr'],
   play: ['lpoc', 'lpoo', 'lpow', 'lpor', 'lpoi', 'lpoh', 'lpog', 'lpogw', 'lpos', 'lpoga', 'lpopv', 'lpoac', 'lpoahc', 'lpozc', 'lpozhc', 'lpogc', 'lpoge', 'lpoao', 'lpoai', 'lpoah', 'lpoahw', 'lpoahg', 'lpoat', 'lpozo', 'lpozi', 'lpozh', 'lpozhw', 'lpozhg', 'lpozt', 'lpogo', 'lpogb', 'lpogd', 'lpogs', 'lpogp', 'lpogq'],
   cast: ['lcx', 'lcy', 'lcs', 'lcms', 'lcpeak', 'lcglow', 'lcring', 'lcpv'],
   energy: ['les', 'lex', 'ley', 'leo', 'leg', 'legt', 'lecs', 'lecv', 'lect', 'lebr', 'lebb', 'lebg', 'lecr', 'lecb', 'lecn', 'lebpv'],

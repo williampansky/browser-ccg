@@ -100,11 +100,20 @@ export const HandsPanel = ({ q, setParams, sliders, count, pick }: PanelProps) =
     {sliders(['lhw0', 'lhw1', 'lhs'])}
     <div style={groupStyle}><b>Fan</b></div>
     {sliders(['lhrt', 'lhdp', 'lhdc', 'lhol'])}
+    <div style={groupStyle}><b>Fan tilt, drop and spacing by number of cards</b> (each one replaces the main value while the hand holds exactly that many)</div>
+    <label style={row}>
+      Cards in my hand now{' '}
+      <input type="number" min={0} max={10} placeholder="default" style={{ width: 70 }} value={one(q.hn0)} onChange={(e) => setParams({ hn0: e.target.value })} />
+      {' '}(restarts the board; plays and draws change it live)
+    </label>
+    {sliders(['lhrt1', 'lhrt2', 'lhrt3', 'lhrt4', 'lhrt5', 'lhrt6', 'lhrt7', 'lhrt8', 'lhrt9', 'lhrt10'])}
+    {sliders(['lhdp1', 'lhdp2', 'lhdp3', 'lhdp4', 'lhdp5', 'lhdp6', 'lhdp7', 'lhdp8', 'lhdp9', 'lhdp10'])}
+    {sliders(['lhol1', 'lhol2', 'lhol3', 'lhol4', 'lhol5', 'lhol6', 'lhol7', 'lhol8', 'lhol9', 'lhol10'])}
     <div style={groupStyle}><b>Hover</b> (the card under the pointer)</div>
     <label style={row}>
       Hold card number <input type="number" min={0} max={10} style={{ width: 50 }} value={one(q.lhpv)} onChange={(e) => setParams({ lhpv: e.target.value === '' || e.target.value === '0' ? null : e.target.value })} /> in its hover look (0 = off)
     </label>
-    {sliders(['lhsw', 'lhsh', 'lhse', 'lhsx'])}
+    {sliders(['lhsw', 'lhsh', 'lhse', 'lhsx', 'lhsd'])}
     <label style={row}>
       <input type="checkbox" checked={'lhspv' in q} onChange={(e) => setParams({ lhspv: e.target.checked ? '1' : null })} /> Show the hover slots (red)
     </label>
