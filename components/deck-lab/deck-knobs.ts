@@ -42,6 +42,7 @@ export const DECK_GROUPS: { title: string; open?: boolean; knobs: DeckKnob[]; fl
   {
     title: 'Row',
     knobs: [
+      { field: 'hoverDelay', label: 'Hover time before the full card pops up (ms)', min: 0, max: 3000, step: 50 },
       { field: 'rowH', label: 'Height (px)', min: 16, max: 80 },
       { field: 'rowGap', label: 'Gap between rows (px)', min: 0, max: 16 },
       { field: 'radius', label: 'Corner radius (px)', min: 0, max: 20 },

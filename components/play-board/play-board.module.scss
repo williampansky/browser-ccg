@@ -583,7 +583,12 @@ $po-green: var(--po-c, #5fd16a);
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--deck-art, none) var(--dk-ax, 50%) var(--dk-ay, 50%) / cover no-repeat;
+    // Longhand on purpose: --deck-art is several stacked images, and in the `background` shorthand the position / size / repeat
+    // would only reach the last layer (the placeholder), leaving the strip at its natural 600px, tiled.
+    background-image: var(--deck-art, none);
+    background-position: var(--dk-ax, 50%) var(--dk-ay, 50%);
+    background-size: cover;
+    background-repeat: no-repeat;
     transform: scale(var(--dk-zoom, 1));
     transform-origin: var(--dk-ax, 50%) var(--dk-ay, 50%);
     opacity: calc(var(--dk-art-o, 1) * var(--dk-art-on, 1));
@@ -614,6 +619,31 @@ $po-green: var(--po-c, #5fd16a);
     position: relative;
     z-index: 1;
   }
+}
+
+.deckCardPopup {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.6));
+  body:global(.dragging) & {
+    display: none;
+  }
+}
+
+// The first popup drifts in from the side the deck is on (a few px, so it reads as a hint, not a slide).
+@keyframes deckPopupInRight {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes deckPopupInLeft {
+  from { opacity: 0; transform: translateX(-14px); }
+  to { opacity: 1; transform: none; }
+}
+.deckPopupFromRight { animation: deckPopupInRight 180ms ease-out; }
+.deckPopupFromLeft { animation: deckPopupInLeft 180ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .deckPopupFromRight, .deckPopupFromLeft { animation: none; }
 }
 
 .deckGone {

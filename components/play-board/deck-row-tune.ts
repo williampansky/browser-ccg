@@ -28,6 +28,8 @@ export interface DeckTune {
   shadeStop: number;
   /** How much of the shade is left while the pointer is on the row (%, 100 = no change) */
   hoverShade: number;
+  /** How long the pointer rests on a row before the full card pops up (ms) */
+  hoverDelay: number;
   /** Cost gem: shown, diameter and number size (px) */
   costShow: boolean;
   costSize: number;
@@ -51,7 +53,7 @@ export interface DeckTune {
 
 export const DECK_DEFAULTS: DeckTune = {
   showArt: true,
-  rowH: 30,
+  rowH: 40,
   rowGap: 2,
   radius: 4,
   accentW: 3,
@@ -62,25 +64,26 @@ export const DECK_DEFAULTS: DeckTune = {
   artX: 50,
   artY: 50,
   artOpacity: 100,
-  artBright: 100,
+  artBright: 90,
   artSat: 100,
   artBlur: 0,
-  shadeLeft: 85,
-  shadeRight: 10,
+  shadeLeft: 100,
+  shadeRight: 15,
   shadeStop: 70,
-  hoverShade: 60,
+  hoverShade: 40,
+  hoverDelay: 600,
   costShow: true,
   costSize: 21,
   costFont: 12,
   nameFont: 14,
-  nameWeight: 600,
+  nameWeight: 900,
   nameShadow: 3,
   countFont: 13,
   goneOpacity: 35,
-  goneGrey: 60,
+  goneGrey: 80,
   rowColour: '232734',
   accentColour: '3b6fd4',
-  shadeColour: '0b0d14',
+  shadeColour: '091234',
   costColour: '3b6fd4',
   nameColour: 'e8e8ee',
   countColour: 'e8e8ee',

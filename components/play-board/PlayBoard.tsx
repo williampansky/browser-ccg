@@ -192,15 +192,6 @@ const LogCard = ({ name }: { name: string }) => {
     </strong>
   );
 };
-/** A deck-tracker row; its tooltip opens to the left because the panel is pinned to the right edge. */
-const DeckRowTip = ({ row }: { row: DeckRow }) => {
-  const { handlers, node } = useTip(tipByName.get(row.name), 'left');
-  return (
-    <DeckRowView row={row} handlers={handlers}>
-      {node}
-    </DeckRowView>
-  );
-};
 interface Ghost {
   key: number;
   owner: PlayerId;
@@ -1925,7 +1916,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         </h2>
         <div className={styles.deckRows} style={deckRowVars(deckTune) as React.CSSProperties}>
           {deckRows(startDecks[me], state.players[me].deck.map((c) => c.cardId), byId).map((r) => (
-            <DeckRowTip key={r.id} row={r} />
+            <DeckRowView key={r.id} row={r} card={byId.get(r.id)} hoverDelayMs={deckTune.hoverDelay} />
           ))}
         </div>
       </aside>

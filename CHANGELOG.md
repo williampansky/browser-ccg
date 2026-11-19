@@ -2,6 +2,10 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-19
+
+- **Deck rows show the full card on hover:** resting the pointer on a deck entry for `hoverDelay` ms (deck lab, Row section, `d_hoverDelay`, 0-3000, default 600; bakes with `npm run deck`) pops up the full framed card, replacing the plain text tooltip. It opens on the side with room (a row in the left half of the window opens it to the right, one in the right half to the left). Once one is showing, moving to another row shows its card at once (250 ms grace after leaving); only the first one drifts in, subtly, from the deck's side (off with reduced motion). Also fixed: the `-DECK` strips ignored the row's size (the `background` shorthand only fitted the last of the stacked images), so they now cover the row.
+
 ## 2026-11-18
 
 - **Deck lab and `-DECK` strips:** `/deck-lab` (dev only) edits how the deck panel's rows look, and the rows now show each card's `-DECK` strip (600 x 75; falls back to the `-CARD` art, then the placeholder) behind the cost gem, name and count, under a shade that lets the name read. Sections: the strip (zoom, where it is centred, opacity, brightness, saturation, blur), the shade (colour, strength left and right, how fast it changes, how much is left under the pointer), the row (height, gap, radius, accent bar, padding, colours), the cost gem, name and count, and a used-up card (opacity, greyness). Every value is a `d_<field>` URL param (`DeckTune` in `components/play-board/deck-row-tune.ts`); `/play` reads the same params over `DECK_DEFAULTS`, and `npm run deck -- "<lab url>"` bakes a lab URL into those defaults. The row is one shared component (`DeckRowView`), so the lab and `/play` cannot drift apart. `d_showArt=0` brings back the old plain rows.

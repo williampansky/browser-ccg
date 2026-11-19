@@ -35,6 +35,7 @@ const DeckLab = () => {
   const search = router.isReady ? router.asPath.split('?')[1] ?? '' : '';
   const tune = useMemo(() => parseDeckTune(search), [search]);
   const rows = useMemo(sampleRows, []);
+  const cardById = useMemo(() => loadHsCards().byId, []);
   const q1 = (k: string) => (Array.isArray(router.query[k]) ? router.query[k]?.[0] : (router.query[k] as string | undefined)) ?? '';
   const width = Math.min(700, Math.max(120, +q1('w') || 242));
   const setParams = (changes: Record<string, string | null>) => {
@@ -97,7 +98,7 @@ const DeckLab = () => {
           </h2>
           <div className={styles.deckRows} style={{ overflow: 'visible', flex: 'none' }}>
             {rows.map((r) => (
-              <DeckRowView key={r.id} row={r} />
+              <DeckRowView key={r.id} row={r} card={cardById.get(r.id)} hoverDelayMs={tune.hoverDelay} />
             ))}
           </div>
         </div>
