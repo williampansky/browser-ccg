@@ -68,7 +68,7 @@
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "Give a minion <strong>%BUBBLE%</strong>\n<small>Absorbs first damage</small>",
+    "text": "Give a minion <strong>%BUBBLE%</strong>\n<small>(Absorbs first damage)</small>",
     "mechanics": [
       "%TARGET%",
       "%BUBBLE%"
@@ -80,9 +80,9 @@
     "active": true,
     "flavor": "Bubbles pop when touched.",
     "howToEarn": "Provided to all players.",
-    "artistName": "kingkostas",
-    "artistUrl": "https://www.deviantart.com/kingkostas",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_088",
@@ -1325,7 +1325,7 @@
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "Deal %NUM1% damage;<br />\ndiscard a %RANDOM% card",
+    "text": "Deal %NUM1% damage; and %DISCARD_CARD% a %RANDOM% card",
     "mechanics": [
       "%TARGET%",
       "%DISCARD_CARD%",
@@ -1341,9 +1341,9 @@
     "active": true,
     "flavor": "Livin' that Necro Mage life.",
     "howToEarn": "Provided to all players.",
-    "artistName": "Kevin T. Chin",
-    "artistUrl": "https://www.artstation.com/kevinchinart",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_030",
@@ -1479,9 +1479,9 @@
     "active": true,
     "entourage": "CORE_064a",
     "howToEarn": "Provided to all players.",
-    "artistName": "Dean Spencer",
-    "artistUrl": "https://www.artstation.com/deanspencerart",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_052",
@@ -1758,9 +1758,9 @@
     "active": true,
     "flavor": "Remember kids, if you are going to fight an evil pyromancer, always wear your armor... it may not save your life but, at least you'll last longer...",
     "howToEarn": "Provided to all players.",
-    "artistName": "Viking-Heart",
-    "artistUrl": "https://www.deviantart.com/viking-heart",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_127",
@@ -2687,9 +2687,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Pavel Kolomeyets",
-    "artistUrl": "https://www.artstation.com/pav327",
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "description": "This also affects your own minions. This is different than Immolation (CORE_065) which only damages enemy minions, but costs an additional point to play."
   },
   {
@@ -2735,9 +2735,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Aaron Nakahara",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_026",
