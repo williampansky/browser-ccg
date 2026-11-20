@@ -75,13 +75,17 @@ export const expire =
     }
   };
 
-/** Summons the `index`-th token from the running card's entourage list (full board: nothing happens). */
+/**
+ * Summons a token from the running card's entourage list: the `index`-th one, or the one with that card id (use the id when the list also holds
+ * option cards, so reordering the list in Airtable cannot change which token is summoned). Full board: nothing happens.
+ */
 export const summonEntourage =
-  (index = 0): Effect =>
+  (which: number | string = 0): Effect =>
   (ctx) => {
     const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+    const index = typeof which === 'string' ? source?.entourage.indexOf(which) ?? -1 : which;
     const token = source && ctx.catalog.get(source.entourage[index]);
-    if (!token) throw new Error(`${ctx.sourceCardId} has no entourage token #${index} in the catalog`);
+    if (!token) throw new Error(`${ctx.sourceCardId} has no entourage token ${which} in the catalog`);
     summonMinion(ctx.g, ctx.caster, token, ctx.events, ctx.self);
   };
 
