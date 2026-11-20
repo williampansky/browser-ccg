@@ -96,17 +96,18 @@ describe('loadCards: normalisation', () => {
     expect(random.numbers.random).toBe(2);
   });
 
-  test('booleans: absent means false, except tokens which count as active', () => {
+  test('booleans: absent means false, for entourage cards too (the Airtable `active` flag is respected)', () => {
     const { byId } = loadCards(
       input({
         core: [spell({ id: 'CORE_901', active: true, elite: true, collectible: true })],
         prime: [spell({ id: 'PRIME_901' })],
-        entourage: [spell({ id: 'CORE_901a', isEntourage: true })],
+        entourage: [spell({ id: 'CORE_901a', isEntourage: true }), spell({ id: 'CORE_901b', isEntourage: true, active: true })],
       })
     );
     expect(byId.get('CORE_901')).toMatchObject({ active: true, elite: true, collectible: true, isToken: false });
     expect(byId.get('PRIME_901')).toMatchObject({ active: false, elite: false, collectible: false });
-    expect(byId.get('CORE_901a')).toMatchObject({ active: true, isToken: true });
+    expect(byId.get('CORE_901a')).toMatchObject({ active: false, isToken: true });
+    expect(byId.get('CORE_901b')).toMatchObject({ active: true, isToken: true });
   });
 
   test('substitutes number tokens and glossary names in text', () => {
@@ -206,9 +207,10 @@ describe('loadHsCards: the committed card data', () => {
     expect(bySource('core').every((c) => c.active && !c.isToken)).toBe(true);
   });
 
-  test('21 PRIME cards are inactive; every token counts as active', () => {
+  test('21 PRIME cards are inactive; a token is active only when its row says so (CORE_049a is not)', () => {
     expect(bySource('prime').filter((c) => !c.active)).toHaveLength(21);
-    expect(bySource('entourage').every((c) => c.active && c.isToken)).toBe(true);
+    expect(bySource('entourage').every((c) => c.isToken)).toBe(true);
+    expect(byId.get('CORE_049a')).toMatchObject({ isToken: true, active: false });
   });
 
   test('every minion has attack and health, including the NO_ATTACK ones', () => {

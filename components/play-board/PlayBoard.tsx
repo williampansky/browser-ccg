@@ -104,6 +104,8 @@ const heroText = (s: GameState, p: PlayerId) => {
 };
 /** A deck's own name for the deck panel's heading; undefined for an unnamed deck (the generated "a random deck" names read as sentence text, not a title). */
 const namedDeck = (name?: string) => (name && !/^an? random /i.test(name) && name !== 'Unnamed' ? name : undefined);
+/** A card only if its Airtable row is active; an inactive one is treated as missing (the choose dialog then shows a blank card). */
+const activeCard = (c?: Card): Card | undefined => (c?.active ? c : undefined);
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
 /** What a player is called on the board: your own name for Player 1, "Player 2" (and "(AI)" against the bot) for the other seat. */
 const playerLabel = (p: PlayerId, mode: Mode, myName: string) =>
@@ -1205,19 +1207,19 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   } else if (choiceModal) {
     chooseTitle = `${selectedCard?.name}: choose one`;
     // Options print as their own entourage card where one exists (CORE_051a, CORE_128b...).
-    chooseOptions = choiceOptions.map((c) => ({ card: byId.get(`${selectedCard?.id}${'abcdef'[c]}`), label: choiceLabel(c), caption: choiceLabel(c) }));
+    chooseOptions = choiceOptions.map((c) => ({ card: activeCard(byId.get(`${selectedCard?.id}${'abcdef'[c]}`)), label: choiceLabel(c), caption: choiceLabel(c) }));
     pickChooseOption = (i) => pickChoice(choiceOptions[i]);
   } else if (skillModal) {
     chooseTitle = `${skillPick?.name}: choose a minion to bring back`;
     chooseOptions = skillOptions.map((o) => ({
-      card: o.cardId ? byId.get(o.cardId) : undefined,
+      card: o.cardId ? activeCard(byId.get(o.cardId)) : undefined,
       label: o.label,
       caption: `${o.keyword === 'BUBBLE' ? 'with Bubble' : 'with Guard'}${o.from && o.from !== me ? ' · from the enemy' : ''}`
     }));
     pickChooseOption = pickSkillOption;
   } else if (lab?.choosePreview) {
     chooseTitle = `${previewCard?.name ?? 'Sample'}: choose one`;
-    chooseOptions = ['a', 'b'].map((k, c) => ({ card: byId.get(`${previewCard?.id}${k}`), label: `Option ${c + 1}`, caption: `Option ${c + 1}` }));
+    chooseOptions = ['a', 'b'].map((k, c) => ({ card: activeCard(byId.get(`${previewCard?.id}${k}`)), label: `Option ${c + 1}`, caption: `Option ${c + 1}` }));
   }
 
   // Drag and drop (the main way to play a card; clicking still works). Dragging selects the card, so the same drop zones,

@@ -272,8 +272,7 @@ function normaliseCard(
     entourage,
     isToken,
     elite: raw.elite === true,
-    // tokens have no `active` field at all; everything else is active only when explicitly true
-    active: isToken ? true : raw.active === true,
+    active: raw.active === true,
     collectible: raw.collectible === true,
   };
 

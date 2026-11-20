@@ -37,8 +37,8 @@ const { cards, byId } = loadHsCards();
 const corePool = playablePool(cards);
 const prime = primePool(cards);
 const pool = [...corePool, ...prime];
-/** Entourage cards (summoned and offered tokens). Shown only when the box is ticked; the Core/Prime set filter applies to them too (by the set in their id). */
-const tokenPool = Array.from(byId.values()).filter((c) => c.isToken && c.name);
+/** Entourage cards (summoned and offered tokens; an inactive row is left out). Shown only when the box is ticked; the Core/Prime set filter applies to them too (by the set in their id). */
+const tokenPool = Array.from(byId.values()).filter((c) => c.isToken && c.active && c.name);
 const effects = effectOptions(pool);
 const races = raceOptions(pool);
 

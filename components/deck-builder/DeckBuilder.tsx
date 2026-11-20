@@ -146,7 +146,7 @@ export const DeckBuilder = () => {
             {(() => {
               const c = byId.get(viewing)!;
               const why = whyNotAdd(deck, c);
-              const tokens = c.entourage.map((id) => byId.get(id)).filter((t): t is NonNullable<typeof t> => !!t);
+              const tokens = c.entourage.map((id) => byId.get(id)).filter((t): t is NonNullable<typeof t> => !!t && t.active);
               return (
                 <>
                   <div className={styles.detailMain}>

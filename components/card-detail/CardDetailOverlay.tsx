@@ -42,11 +42,11 @@ export const CardDetailOverlay = ({
    */
   const tokens = card.entourage
     .map(id => byId.get(id))
-    .filter((t): t is Card => !!t);
+    .filter((t): t is Card => !!t && t.active);
 
   /** For an entourage card: the cards that make or offer it (an entourage card has no tokens of its own to show). */
   const parents = useMemo(
-    () => (card.isToken ? Array.from(byId.values()).filter(c => !c.isToken && c.entourage.includes(card.id)) : []),
+    () => (card.isToken ? Array.from(byId.values()).filter(c => !c.isToken && c.active && c.entourage.includes(card.id)) : []),
     [card, byId]
   );
 
