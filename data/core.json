@@ -2186,13 +2186,13 @@
   },
   {
     "id": "CORE_055",
-    "name": "Surveying Drone",
+    "name": "X Marks the Spot",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "Draw the next 3 cards<br>\nfrom your deck; choose 1<br>\nand discard the others",
+    "text": "%DRAW_CARD% the next %NUM1% %CARD%s from your %DECK%; choose %NUM2% and %DISCARD_CARD% the others",
     "mechanics": [
       "%CHOOSE_ONE%",
       "%DRAW_CARD%",
@@ -2205,9 +2205,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Daniel Cheng",
-    "artistUrl": "https://www.artstation.com/danielcheng",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_072",

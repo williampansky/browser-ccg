@@ -123,7 +123,7 @@
     "symbol": "%DRAW_CARD%",
     "description": "Causes the player to draw one or more cards from their deck.",
     "shortDescription": "Draw 1 or more cards.",
-    "name": "Draw Card"
+    "name": "Draw"
   },
   {
     "symbol": "%ARMOR%",
@@ -210,6 +210,12 @@
     "name": "Heal"
   },
   {
+    "symbol": "%DECK%",
+    "description": "Your personal draw pile of playable cards you bring into each match. As the game progresses, you draw from it to fuel your hand and execute your strategy.",
+    "shortDescription": "Your personal draw pile of playable cards.",
+    "name": "Deck"
+  },
+  {
     "symbol": "%CHOOSE_ONE%",
     "description": "Gives the controlling player the ability to choose between two or more effects stated in the card.",
     "shortDescription": "Choose between 2 or more effects.",
@@ -220,6 +226,12 @@
     "description": "Changes the cost of relative card(s).",
     "shortDescription": "Changes card cost.",
     "name": "Change Cost"
+  },
+  {
+    "symbol": "%CARD%",
+    "description": "A single playable piece in your deck that carries its own resource cost and effect when played. You draw cards from your deck into your hand and play them onto the board or resolve their effects to build tempo and outmaneuver your opponent.",
+    "shortDescription": "A single playable piece in your deck with its own cost and effect.",
+    "name": "Card"
   },
   {
     "symbol": "%BOOLEAN%",
