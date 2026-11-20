@@ -419,6 +419,10 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lsbd: '18',
   lsbw: '320',
   lsbh: '840',
+  lcmw: '1.5',
+  lcmg: '24',
+  lcmglow: '14',
+  lcmc: '0',
 };
 
 /**
