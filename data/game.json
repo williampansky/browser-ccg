@@ -1,12 +1,12 @@
 [
   {
     "id": "GAME_001",
-    "name": "The Orb",
+    "name": "Flux Orb",
     "set": "%SET_001%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_NONE%",
     "cost": 0,
-    "text": "Gain 1 %ENERGY% for this turn only",
+    "text": "Gain 1 <strong>%ENERGY%</strong> for this turn only",
     "mechanics": [
       "%ENERGY%"
     ],
@@ -17,8 +17,8 @@
     "active": true,
     "howToEarn": "Start a match as the second player.",
     "howToEarnGolden": "Start match with a deck filled only with golden cards.",
-    "artistName": "kaleidoscope girl",
-    "artistUrl": "https://www.deviantart.com/kalos-eidos-skopein",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   }
 ]
