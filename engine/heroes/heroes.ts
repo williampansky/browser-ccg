@@ -3,7 +3,7 @@ import abilityData from '../../data/abilities.json';
 import mechanics from '../../data/mechanics.json';
 import constants from '../../data/constants.json';
 import type { TargetFilter, Effect } from '../effects/types';
-import { SKILL_CODE } from './skill-effects';
+import { SKILL_CODE, type SkillCode } from './skill-effects';
 
 export interface HeroSkill {
   /** 0, 1 or 2: the order on the hero bar (the ability's `id` minus one) */
@@ -17,6 +17,8 @@ export interface HeroSkill {
   rarity: string;
   /** Set when the skill needs a target */
   target?: TargetFilter;
+  /** Set when the skill is used by picking one of a list drawn from the game (see `SkillCode.options`) */
+  options?: SkillCode['options'];
   effects: Effect[];
 }
 
@@ -73,6 +75,7 @@ const build = (): HeroInfo[] => {
         text: display(a.text),
         rarity: a.rarity?.replace(/%/g, '').replace(/^RARITY_/, '') || 'FREE',
         target: code[index].target,
+        options: code[index].options,
         effects: code[index].effects,
       })),
     });

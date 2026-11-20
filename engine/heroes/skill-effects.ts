@@ -1,14 +1,19 @@
-import type { Effect, TargetFilter } from '../effects/types';
+import type { CardCatalog } from '../cards/types';
+import type { Effect, SkillOption, TargetFilter } from '../effects/types';
+import type { GameState, PlayerId } from '../state/types';
 import { addArmor, buff, damage, heal } from '../effects/primitives';
 import { allEnemyMinions, chosenTarget, enemyHero, friendlyOfRace } from '../effects/selectors';
 import { damageTarget } from '../rules/damage';
 import { withSpellPower } from '../rules/spell-power';
 import { summonMinion } from '../rules/summon';
+import { resurrectOptions } from './resurrect-offer';
 import { heroToken } from './tokens';
 
 /** What a skill does besides its numbers (those come from the ABILITIES table): who it may aim at, and the effects. */
 export interface SkillCode {
   target?: TargetFilter;
+  /** When set, the skill is used by picking one of these (listed fresh from the game state); with none to list it cannot be used */
+  options?: (state: GameState, player: PlayerId, catalog: CardCatalog) => SkillOption[];
   effects: Effect[];
 }
 
@@ -47,6 +52,24 @@ const hitChosen =
     for (const t of chosenTarget()(ctx)) damageTarget(ctx.g, t, withSpellPower('damage', amount(ctx), ctx.spellDamage), ctx.events);
   };
 
+/**
+ * Cleric: brings back the minion the player picked from `resurrectOptions`, with Guard or Bubble (fresh and without a warcry). It leaves
+ * the graveyard it came from, which for a stolen enemy minion is the enemy's. Nothing happens if the board is full.
+ */
+const resurrectPicked = (): Effect => (ctx) => {
+  const pick = resurrectOptions(ctx.g, ctx.caster, ctx.catalog)[ctx.choice ?? -1];
+  const id = pick?.cardId;
+  const card = id ? ctx.catalog.get(id) : undefined;
+  if (!pick || !id || !card || !pick.from) return;
+  const board = ctx.g.players[ctx.caster].board;
+  if (!summonMinion(ctx.g, ctx.caster, card, ctx.events)) return;
+  const minion = board[board.length - 1];
+  if (pick.keyword === 'GUARD') minion.keywords.guard = true;
+  else minion.keywords.bubble = true;
+  const grave = ctx.g.players[pick.from].graveyard ?? [];
+  grave.splice(grave.lastIndexOf(id), 1);
+};
+
 /** Druid: back to its true form. Health is raised to 15 (never lowered) and the hero gets 5/2 claws (RULES Appendix D). */
 const trueForm = (): Effect => (ctx) => {
   const p = ctx.g.players[ctx.caster];
@@ -70,7 +93,7 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
   ],
   SAGE: [
     { target: anyCharacter, effects: [heal(chosenTarget(), 3)] },
-    { effects: [resurrect(1)] },
+    { options: resurrectOptions, effects: [resurrectPicked()] },
     { effects: [resurrect(3)] },
   ],
   EXILE: [

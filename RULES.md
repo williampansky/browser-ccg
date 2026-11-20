@@ -730,7 +730,12 @@ three skills. Name, cost, cooldown and text come from `data/abilities.json`; wha
   - Druid's Spirit Animal is a random Spirit Wolf 3/2, Spirit Bear 2/5 Guard or Spirit Hawk 2/1 Rush; Eagle is 4/2 Rush.
   - Warrior's Smash! may aim at any minion, not heroes, and deals damage equal to current armor (armor is not spent).
   - Violent Strike deals 6 at 12 or less Health, else 4. Lightning Strike, Revitalize and Violent Strike may aim at any character.
-  - Resurrect brings back random non-token minions that died on your side (each once; they return fresh, with no warcry).
+  - The Cleric's **Resurrect** (skill 2) is picked from a list: two minions chosen at random from the last five non-token minions that died on
+    your side (different cards where possible), each as two options, **with Guard** or **with Bubble**. With a 15% chance one of the two is
+    instead the strongest (attack + health) of the enemy's last five dead, if it beats the weaker pick; it comes back on your side and
+    leaves their graveyard. It returns fresh, with no warcry; nothing is offered (and the skill cannot be used) when none of your minions has
+    died. The "random" choice is a function of the turn number and both graveyards (nothing extra is stored), so the offer is the same every time
+    you look at it in a turn and changes when something dies or the turn passes. Mass Resurrect (skill 3) is unchanged: 3 random dead minions. (author's call, 2026-11-20)
   - Vital Shot hits the enemy hero directly (Guard does not block it).
 - Token minions and weapons are in `engine/heroes/tokens.ts` (no art yet; the placeholder shows). A game with heroes needs a
   catalog from `withHeroTokens(...)`.

@@ -219,7 +219,7 @@
       "%RESURRECT%",
       "%RANDOM%"
     ],
-    "text": "%RESURRECT% a %RANDOM% dead friendly minion",
+    "text": "%RESURRECT% a recently dead friendly minion of your choice with %BULWARK% or %BUBBLE%",
     "numberPrimary": 6,
     "numberRandom": 1
   },

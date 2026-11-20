@@ -78,6 +78,11 @@ export const legalActions = (
   me.hero?.cooldowns.forEach((_, skill) => {
     const def = heroSkill(me.hero?.id, skill);
     if (!def || def.cost > me.energy.current || !skillReady(state, player, skill)) return;
+    if (def.options) {
+      // One action per option (nothing to offer means the skill can't be used).
+      def.options(state, player, catalog).forEach((_, choice) => actions.push({ type: 'HeroSkill', skill, choice }));
+      return;
+    }
     if (!def.target) {
       actions.push({ type: 'HeroSkill', skill });
       return;

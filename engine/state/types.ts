@@ -157,7 +157,7 @@ export type Action =
   | { type: 'Attack'; attackerId: number; target: TargetRef }
   | { type: 'WeaponAttack'; target: TargetRef }
   /** Uses one of the hero's skills (`skill` is 0, 1 or 2); `target` only for a targeted skill */
-  | { type: 'HeroSkill'; skill: number; target?: TargetRef };
+  | { type: 'HeroSkill'; skill: number; target?: TargetRef; choice?: number };
 
 export type ActionErrorCode =
   | 'GAME_OVER'

@@ -21,7 +21,7 @@ export const skillReady = (state: GameState, player: PlayerId, skill: number): b
  */
 export const useHeroSkill = (
   state: GameState,
-  { skill, target }: { skill: number; target?: TargetRef },
+  { skill, target, choice }: { skill: number; target?: TargetRef; choice?: number },
   ctx: EngineContext,
   events: GameEvent[]
 ): GameState | ActionError => {
@@ -31,6 +31,10 @@ export const useHeroSkill = (
   if (!hero || !def) return { error: 'BAD_SKILL' };
   if (!skillReady(state, me, skill)) return { error: 'SKILL_UNAVAILABLE' };
   if (def.cost > state.players[me].energy.current) return { error: 'CANT_AFFORD' };
+  if (def.options) {
+    const offered = def.options(state, me, ctx.catalog);
+    if (!Number.isInteger(choice) || choice === undefined || choice < 0 || choice >= offered.length) return { error: 'BAD_CHOICE' };
+  } else if (choice !== undefined) return { error: 'BAD_CHOICE' };
   if (def.target && !isLegalTarget(legalTargets(state, { kind: 'skill', skill }), target)) return { error: 'ILLEGAL_TARGET' };
 
   return produce(state, (g) => {
@@ -42,7 +46,7 @@ export const useHeroSkill = (
     const defs = ctx.defs ?? getCardDef;
     const spellDamage = p.board.reduce((sum, m) => sum + (minionDef(m, ctx.catalog, defs)?.spellDamage ?? 0), 0);
     for (const effect of def.effects) {
-      effect({ g, caster: me, target: def.target ? target : undefined, rng: ctx.rng, catalog: ctx.catalog, events, spellDamage });
+      effect({ g, caster: me, target: def.target ? target : undefined, rng: ctx.rng, catalog: ctx.catalog, events, spellDamage, choice });
     }
   });
 };

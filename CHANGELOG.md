@@ -5,6 +5,7 @@ What changed, newest first. Written from the git history; `git log` has the deta
 ## 2026-11-20
 
 - **Druid balance:** Forsaken Druid's Spirit Animal now costs 3 (was 2) with cooldown 3 (was 2) in `data/abilities.json`, from the hero sim (Druid 85% overall before, 67% after; the other heroes each gained 1 to 6 points). **Copy both numbers into Airtable** (ABILITIES, Druid skill 1), or the next `npm run airtable` puts the old ones back.
+- **Cleric Resurrect is a pick:** skill 2 now offers two minions drawn at random from the last five that died on your side, each with Guard or with Bubble (one dialog, up to four buttons; `engine/heroes/resurrect-offer.ts`), and a 15% chance one of them is the strongest of the enemy's last five dead (it leaves their graveyard). With nothing dead on your side the skill can't be used. The offer comes from the turn and both graveyards, so nothing extra is stored. New for skills in general: a skill can list `options` and the `HeroSkill` action takes a `choice`, like a "choose one" card. In the hero sim Sage went from 42% to 58% overall with the cost left at 6. **Copy the new skill text into Airtable** (ABILITIES, Cleric skill 2: `%RESURRECT% a recently dead friendly minion of your choice with %BULWARK% or %BUBBLE%`), or the next `npm run airtable` puts the old text back.
 
 ## 2026-11-19
 

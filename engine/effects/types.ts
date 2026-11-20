@@ -20,12 +20,26 @@ export interface EffectContext {
   spellDamage?: number;
   /** Extra healing from the caster's board for the spell being played (The Sorceress); set with `spellDamage` */
   spellHealing?: number;
+  /** Which of a hero skill's `options` the player picked (set only while a skill with options runs) */
+  choice?: number;
   /** The event that fired this trigger, if it is one */
   event?: GameEvent;
   /** Set while a Mystery reacts to an attack that is about to happen; effects may change `target` to redirect it */
   attack?: { attackerPlayer: PlayerId; attackerId?: number; target: TargetRef };
   /** Set while a Mystery reacts to a spell about to resolve; effects may change `target` to redirect it */
   cast?: { caster: PlayerId; cardId: string; target?: TargetRef };
+}
+
+/** One thing a hero skill can be used for, listed when the skill has `options` (the player picks one, like a "choose one" card). */
+export interface SkillOption {
+  /** What the option's button says */
+  label: string;
+  /** The card it shows (art, stats), if any */
+  cardId?: string;
+  /** Whose graveyard a card comes from (Resurrect) */
+  from?: PlayerId;
+  /** A keyword the card comes back with (Resurrect) */
+  keyword?: 'GUARD' | 'BUBBLE';
 }
 
 /** One step of a card's behaviour. Built from the primitives in `primitives.ts`. */

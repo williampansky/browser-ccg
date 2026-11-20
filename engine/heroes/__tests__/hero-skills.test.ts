@@ -6,7 +6,7 @@ import { legalActions } from '../../rules/legal-actions';
 import { createGame } from '../../state/create-game';
 import type { Action, GameState, TargetRef } from '../../state/types';
 import { catalogOf, minionCard, putOnBoard, setEnergy } from '../../testing/builders';
-import { getHero, heroes, withHeroTokens } from '..';
+import { getHero, heroes, heroSkill, withHeroTokens } from '..';
 
 const grunt = minionCard('GRUNT', { cost: 1, attack: 2, health: 3 });
 const catalog = withHeroTokens(catalogOf(...Array.from(loadHsCards().byId.values()), grunt));
@@ -165,12 +165,97 @@ describe('Cleric (SAGE)', () => {
     const s = produce(game('SAGE'), (g) => void (g.players['0'].health = 20));
     expect(skill(s, 0, { kind: 'hero', player: '0' }).state.players['0'].health).toBe(23);
   });
-  it('Resurrect brings back a dead friendly minion once, and nothing from an empty graveyard', () => {
-    expect(skill(game('SAGE'), 1).state.players['0'].board).toHaveLength(0);
-    const dead = produce(game('SAGE'), (g) => void (g.players['0'].graveyard = ['GRUNT']));
-    const r = skill(dead, 1).state;
-    expect(r.players['0'].board.map((m) => m.cardId)).toEqual(['GRUNT']);
-    expect(r.players['0'].graveyard).toEqual([]);
+  describe('Resurrect: pick a recently dead minion, back with Guard or Bubble', () => {
+    const named = (id: string, attack: number, health: number) => minionCard(id, { cost: 1, attack, health });
+    const minis = Array.from({ length: 8 }, (_, i) => named(`M${i + 1}`, 1, 1 + i));
+    const big = named('BIG', 6, 6);
+    const cat = withHeroTokens(catalogOf(...Array.from(loadHsCards().byId.values()), grunt, big, ...minis));
+    const withDead = (mine: string[], theirs: string[] = [], turn = 1) =>
+      produce(game('SAGE'), (g) => {
+        g.players['0'].graveyard = mine;
+        g.players['1'].graveyard = theirs;
+        g.turn = turn;
+      });
+    const offered = (s: GameState) =>
+      legalActions(s, '0', cat).flatMap((a) => (a.type === 'HeroSkill' && a.skill === 1 && a.choice !== undefined ? [a.choice] : []));
+    const useChoice = (s: GameState, choice: number) => {
+      const r = applyAction(s, { type: 'HeroSkill', skill: 1, choice }, { rng: createSeededRng(1), catalog: cat });
+      if ('error' in r) throw new Error(r.error);
+      return r.state;
+    };
+
+    it('cannot be used with nothing dead, even if the enemy has dead minions', () => {
+      expect(offered(withDead([]))).toEqual([]);
+      expect(offered(withDead([], ['BIG']))).toEqual([]);
+      expect(applyAction(withDead([]), { type: 'HeroSkill', skill: 1 }, { rng: createSeededRng(1), catalog: cat })).toEqual({ error: 'BAD_CHOICE' });
+    });
+    it('offers one minion as two options (Guard, Bubble) and brings it back with the one picked', () => {
+      const s = withDead(['GRUNT']);
+      expect(offered(s)).toEqual([0, 1]);
+      const guard = useChoice(s, 0).players['0'];
+      expect(guard.board.map((m) => [m.cardId, m.keywords.guard, !!m.keywords.bubble])).toEqual([['GRUNT', true, false]]);
+      expect(guard.graveyard).toEqual([]);
+      const bubble = useChoice(s, 1).players['0'];
+      expect(bubble.board.map((m) => [m.cardId, !!m.keywords.guard, m.keywords.bubble])).toEqual([['GRUNT', false, true]]);
+    });
+    it('offers two different minions from only the last five deaths', () => {
+      const dead = minis.map((m) => m.id); // M1 .. M8; the last five are M4 .. M8
+      for (let turn = 1; turn <= 60; turn++) {
+        const s = withDead(dead, [], turn);
+        const ids = offered(s).map((c) => skillOptionCard(s, c));
+        expect(new Set(ids).size).toBe(2);
+        ids.forEach((id) => expect(['M4', 'M5', 'M6', 'M7', 'M8']).toContain(id));
+      }
+    });
+    it('gives the same offer when asked twice and varies from turn to turn', () => {
+      const seen = new Set<string>();
+      for (let turn = 1; turn <= 60; turn++) {
+        const s = withDead(minis.map((m) => m.id), [], turn);
+        const a = offered(s).map((c) => skillOptionCard(s, c)).join();
+        expect(offered(s).map((c) => skillOptionCard(s, c)).join()).toBe(a);
+        seen.add(a);
+      }
+      expect(seen.size).toBeGreaterThan(3);
+    });
+    it('now and then offers the strongest of the enemy\'s recent dead instead, and takes it from their graveyard', () => {
+      let withEnemy = 0;
+      let stolen: GameState | undefined;
+      for (let turn = 1; turn <= 400; turn++) {
+        const s = withDead(['M1', 'M2', 'M3'], ['M5', 'BIG', 'M6'], turn);
+        const ids = offered(s).map((c) => skillOptionCard(s, c));
+        if (ids.includes('BIG')) {
+          withEnemy++;
+          stolen ??= s;
+        }
+        ids.forEach((id) => expect(['M1', 'M2', 'M3', 'BIG']).toContain(id)); // never a weaker enemy minion
+      }
+      expect(withEnemy).toBeGreaterThan(400 * 0.05);
+      expect(withEnemy).toBeLessThan(400 * 0.3);
+      const pickBig = offered(stolen!).find((c) => skillOptionCard(stolen!, c) === 'BIG')!;
+      const after = useChoice(stolen!, pickBig);
+      expect(after.players['0'].board.map((m) => m.cardId)).toEqual(['BIG']);
+      expect(after.players['1'].graveyard).toEqual(['M5', 'M6']);
+      expect(after.players['0'].graveyard).toHaveLength(3);
+    });
+    it('refuses a choice that was not offered, and a choice on a skill with no options', () => {
+      const s = withDead(['GRUNT']);
+      expect(err(s, { type: 'HeroSkill', skill: 1, choice: 2 })).toBe('BAD_CHOICE');
+      expect(err(s, { type: 'HeroSkill', skill: 1 })).toBe('BAD_CHOICE');
+      expect(err(game('SAGE'), { type: 'HeroSkill', skill: 0, choice: 0, target: { kind: 'hero', player: '0' } })).toBe('BAD_CHOICE');
+    });
+    it('does nothing (and keeps the graveyard) when the board is full', () => {
+      let s = withDead(['GRUNT']);
+      for (let i = 0; i < 7; i++) s = putOnBoard(s, '0', grunt);
+      const after = useChoice(s, 0).players['0'];
+      expect(after.board).toHaveLength(7);
+      expect(after.graveyard).toEqual(['GRUNT']);
+    });
+
+    /** The card a legal Resurrect choice would bring back (read off its label). */
+    const skillOptionCard = (s: GameState, choice: number): string => {
+      const opts = heroSkill('SAGE', 1)!.options!(s, '0', cat);
+      return opts[choice].cardId!;
+    };
   });
   it('Mass Resurrect returns up to 3 of them', () => {
     const s = produce(game('SAGE'), (g) => void (g.players['0'].graveyard = ['GRUNT', 'GRUNT', 'GRUNT', 'GRUNT']));

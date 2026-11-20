@@ -1063,7 +1063,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     if (over) return;
     const uses = actions.filter((a): a is Extract<Action, { type: 'HeroSkill' }> => a.type === 'HeroSkill' && a.skill === index);
     if (uses.length === 0) return;
-    if (uses.every((a) => !a.target)) dispatch(uses[0]);
+    if (uses.every((a) => !a.target) && uses[0].choice === undefined) dispatch(uses[0]);
+    else if (uses[0].choice !== undefined) setSelection(selection?.kind === 'skill' && selection.index === index ? null : { kind: 'skill', index }); // opens the options dialog
     else setSelection(selection?.kind === 'skill' && selection.index === index ? null : { kind: 'skill', index });
   };
   const clickHero = (owner: PlayerId) => {
@@ -1170,6 +1171,15 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   };
 
   // Surveying Drone: a dialog showing the cards you can keep, with their stats.
+  // A skill used by picking one of a list (the Cleric's Resurrect): one button per option, from the engine's own list.
+  const skillPick = selection?.kind === 'skill' ? heroSkill(state.players[me].hero?.id, selection.index) : undefined;
+  const skillOptions = skillPick?.options && selection?.kind === 'skill' ? skillPick.options(state, me, byId) : [];
+  const skillModal = skillOptions.length > 0 && selection?.kind === 'skill';
+  const pickSkillOption = (choice: number) => {
+    if (selection?.kind !== 'skill') return;
+    const use = actions.find((a) => a.type === 'HeroSkill' && a.skill === selection.index && a.choice === choice);
+    if (use) dispatch(use);
+  };
   const droneModal = selectedCard?.id === 'CORE_055' && choiceOptions.length > 0;
   // Every "choose one" card asks in a dialog first, however small the options are.
   const choiceModal = choiceOptions.length > 0 && !droneModal;
@@ -1738,6 +1748,33 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                     </span>
                     <span className={styles.text}>{top?.text}</span>
                     <span className={styles.modalPick}>{choiceLabel(c).split(':')[0]}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <Button onClick={() => setSelection(null)}>Cancel</Button>
+          </Panel>
+        </div>
+      )}
+      {skillModal && (
+        <div className={styles.modalBackdrop} data-ui-sfx onClick={() => setSelection(null)}>
+          <Panel className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <h3>{skillPick?.name}: choose a minion to bring back</h3>
+            <div className={styles.modalCards}>
+              {skillOptions.map((o, i) => {
+                const c = o.cardId ? byId.get(o.cardId) : undefined;
+                return (
+                  <button key={i} type="button" style={artStyle(c?.id)} className={cx(styles.modalCard, typeClass(c?.type), styles.art)} onClick={() => pickSkillOption(i)}>
+                    {c && <span className={styles.cost}>{c.cost}</span>}
+                    <span className={styles.name}>{c?.name ?? o.label}</span>
+                    {c && (
+                      <span className={styles.type}>
+                        {c.type} {c.attack}/{c.health}
+                        {o.from && o.from !== me ? ' · from the enemy' : ''}
+                      </span>
+                    )}
+                    {c && <span className={styles.text}>{plain(c.text)}</span>}
+                    <span className={styles.modalPick}>{o.keyword === 'BUBBLE' ? 'with Bubble' : 'with Guard'}</span>
                   </button>
                 );
               })}
