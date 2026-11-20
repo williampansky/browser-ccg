@@ -163,6 +163,14 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lcms: (v) => `${CLS('castFx')}{--cast-ms:${v}ms}`,
   lcpeak: (v) => `${CLS('castFx')}{--cast-peak:${v}}`,
   lcglow: (v) => `${CLS('castFx')}{--cast-glow:${v}px}`,
+  lcmw: (v) => `${CLS('chooseBackdrop')}{--choose-scale:${v}}`,
+  lcmg: (v) => `${CLS('chooseBackdrop')}{--choose-gap:${v}px}`,
+  lcmd: (v) => `${CLS('chooseBackdrop')}{background:rgba(0,0,0,${v}) !important}`,
+  lcmt: (v) => `${CLS('chooseBackdrop')}{--choose-title:${v}}`,
+  lcmhs: (v) => `${CLS('chooseBackdrop')}{--choose-hover:${v}}`,
+  lcmhl: (v) => `${CLS('chooseBackdrop')}{--choose-lift:${v}}`,
+  lcmglow: (v) => `${CLS('chooseBackdrop')}{--choose-glow:${v}px}`,
+  lcmc: (v) => (v ? '' : `${CLS('chooseCaption')}{display:none !important}`),
   lcring: (v) => (v ? '' : `${CLS('castFx')}::after{display:none !important}`),
 };
 

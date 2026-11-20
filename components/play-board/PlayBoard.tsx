@@ -36,6 +36,7 @@ import { gapIndex } from './board-position';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
 import { LogCardTrigger, saveLogCardTrigger, useLogCardTrigger } from './log-card-trigger';
 import { effectiveSidebarMode, saveSidebarMode, useSidebarMode } from './sidebar-mode';
+import { ChooseModal, ChooseOption } from './ChooseModal';
 import { CardDetailOverlay } from '../card-detail/CardDetailOverlay';
 import { nudgeIntoViewport, useKeepTipsInViewport } from './viewport-nudge';
 import { formatClock, isTimerOn, secondsLeft, setTimerOn } from './turn-timer';
@@ -387,6 +388,8 @@ export interface LabProps {
   blinkPreview?: 'spend' | 'red';
   /** Hold this card of your hand (1 = leftmost) in its hover look, so the hover knobs can be tuned without the pointer */
   handHover?: number;
+  /** Hold the pick dialog open with a sample "choose one" card, so its knobs (`lcm...`) can be tuned */
+  choosePreview?: boolean;
 }
 const LAB_SEED = 20261114;
 
@@ -1187,7 +1190,35 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const droneModal = selectedCard?.id === 'CORE_055' && choiceOptions.length > 0;
   // Every "choose one" card asks in a dialog first, however small the options are.
   const choiceModal = choiceOptions.length > 0 && !droneModal;
-  modalOpenRef.current = droneModal || choiceModal;
+  modalOpenRef.current = droneModal || choiceModal || skillModal;
+
+  // The pick dialog (ChooseModal): its title, and one real card per option (a blank NONE-rarity card when an option has none).
+  const topOfDeck = (c: number) => byId.get(state.players[me].deck[c]?.cardId ?? '');
+  const previewCard = byId.get('CORE_051'); // the lab's sample: a "choose one" card
+  let chooseTitle = '';
+  let chooseOptions: ChooseOption[] = [];
+  let pickChooseOption: (index: number) => void = () => undefined;
+  if (droneModal) {
+    chooseTitle = `${selectedCard?.name}: pick a card to keep on top`;
+    chooseOptions = choiceOptions.map((c) => ({ card: topOfDeck(c), label: 'Empty', caption: choiceLabel(c).split(':')[0] }));
+    pickChooseOption = (i) => pickChoice(choiceOptions[i]);
+  } else if (choiceModal) {
+    chooseTitle = `${selectedCard?.name}: choose one`;
+    // Options print as their own entourage card where one exists (CORE_051a, CORE_128b...).
+    chooseOptions = choiceOptions.map((c) => ({ card: byId.get(`${selectedCard?.id}${'abcdef'[c]}`), label: choiceLabel(c), caption: choiceLabel(c) }));
+    pickChooseOption = (i) => pickChoice(choiceOptions[i]);
+  } else if (skillModal) {
+    chooseTitle = `${skillPick?.name}: choose a minion to bring back`;
+    chooseOptions = skillOptions.map((o) => ({
+      card: o.cardId ? byId.get(o.cardId) : undefined,
+      label: o.label,
+      caption: `${o.keyword === 'BUBBLE' ? 'with Bubble' : 'with Guard'}${o.from && o.from !== me ? ' · from the enemy' : ''}`
+    }));
+    pickChooseOption = pickSkillOption;
+  } else if (lab?.choosePreview) {
+    chooseTitle = `${previewCard?.name ?? 'Sample'}: choose one`;
+    chooseOptions = ['a', 'b'].map((k, c) => ({ card: byId.get(`${previewCard?.id}${k}`), label: `Option ${c + 1}`, caption: `Option ${c + 1}` }));
+  }
 
   // Drag and drop (the main way to play a card; clicking still works). Dragging selects the card, so the same drop zones,
   // targets and arrow show as for a click; dropping plays it exactly as a click would.
@@ -1743,92 +1774,13 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           </Panel>
         </div>
       )}
-      {droneModal && (
-        <div className={styles.modalBackdrop} data-ui-sfx onClick={() => setSelection(null)}>
-          <Panel className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <h3>{selectedCard?.name}: pick a card to keep on top</h3>
-            <div className={styles.modalCards}>
-              {choiceOptions.map((c) => {
-                const top = byId.get(state.players[me].deck[c]?.cardId ?? '');
-                return (
-                  <button key={c} type="button" style={artStyle(top?.id)} className={cx(styles.modalCard, styles.art)} onClick={() => pickChoice(c)}>
-                    <span className={styles.cost}>{top?.cost}</span>
-                    <span className={styles.name}>{top?.name ?? 'Empty'}</span>
-                    <span className={styles.type}>
-                      {top?.type}
-                      {top?.type === 'minion' || top?.type === 'weapon' ? ` ${top?.attack}/${top?.health}` : ''}
-                      {top?.race && top.race !== 'NONE' ? ` · ${(top.raceName ?? top.race).toLowerCase()}` : ''}
-                    </span>
-                    <span className={styles.text}>{top?.text}</span>
-                    <span className={styles.modalPick}>{choiceLabel(c).split(':')[0]}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <Button onClick={() => setSelection(null)}>Cancel</Button>
-          </Panel>
-        </div>
-      )}
-      {skillModal && (
-        <div className={styles.modalBackdrop} data-ui-sfx onClick={() => setSelection(null)}>
-          <Panel className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <h3>{skillPick?.name}: choose a minion to bring back</h3>
-            <div className={styles.modalCards}>
-              {skillOptions.map((o, i) => {
-                const c = o.cardId ? byId.get(o.cardId) : undefined;
-                return (
-                  <button key={i} type="button" style={artStyle(c?.id)} className={cx(styles.modalCard, typeClass(c?.type), styles.art)} onClick={() => pickSkillOption(i)}>
-                    {c && <span className={styles.cost}>{c.cost}</span>}
-                    <span className={styles.name}>{c?.name ?? o.label}</span>
-                    {c && (
-                      <span className={styles.type}>
-                        {c.type} {c.attack}/{c.health}
-                        {o.from && o.from !== me ? ' · from the enemy' : ''}
-                      </span>
-                    )}
-                    {c && <span className={styles.text}>{plain(c.text)}</span>}
-                    <span className={styles.modalPick}>{o.keyword === 'BUBBLE' ? 'with Bubble' : 'with Guard'}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <Button onClick={() => setSelection(null)}>Cancel</Button>
-          </Panel>
-        </div>
-      )}
-      {choiceModal && (
-        <div className={styles.modalBackdrop} data-ui-sfx onClick={() => setSelection(null)}>
-          <Panel className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <h3>{selectedCard?.name}: choose one</h3>
-            <div className={styles.modalCards}>
-              {choiceOptions.map((c) => {
-                // Options print as their own entourage card where one exists (CORE_051a, CORE_128b...); else the card's own art.
-                const opt = byId.get(`${selectedCard?.id}${'abcdef'[c]}`);
-                return (
-                  <button
-                    key={c}
-                    type="button"
-                    style={artStyle(opt?.id ?? selectedCard?.id, selectedCard?.id)}
-                    className={cx(styles.modalCard, typeClass(opt?.type ?? selectedCard?.type), styles.art)}
-                    onClick={() => pickChoice(c)}
-                  >
-                    {opt && <span className={styles.cost}>{opt.cost}</span>}
-                    <span className={styles.name}>{opt?.name ?? choiceLabel(c)}</span>
-                    {opt && (
-                      <span className={styles.type}>
-                        {opt.type}
-                        {opt.type === 'minion' || opt.type === 'weapon' ? ` ${opt.attack}/${opt.health}` : ''}
-                      </span>
-                    )}
-                    {opt && <span className={styles.text}>{plain(opt.text)}</span>}
-                    <span className={styles.modalPick}>{choiceLabel(c)}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <Button onClick={() => setSelection(null)}>Cancel</Button>
-          </Panel>
-        </div>
+      {(droneModal || choiceModal || skillModal || lab?.choosePreview) && (
+        <ChooseModal
+          title={chooseTitle}
+          options={chooseOptions}
+          onPick={pickChooseOption}
+          onCancel={() => (lab?.choosePreview ? undefined : setSelection(null))}
+        />
       )}
       <div
         ref={tableRef}

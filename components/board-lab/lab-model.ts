@@ -239,7 +239,15 @@ export const NUMS: Num[] = [
   { key: 'lcms', label: 'Cast popup length (ms)', min: 400, max: 5000, step: 50, css: CSS_FNS.lcms, read: () => 1600 },
   { key: 'lcpeak', label: 'Cast popup slam size (x)', min: 1, max: 2.5, step: 0.05, css: CSS_FNS.lcpeak, read: () => 1.3 },
   { key: 'lcglow', label: 'Cast popup glow (px, 0 = none)', min: 0, max: 60, css: CSS_FNS.lcglow, read: () => 10 },
-  { key: 'lcring', label: 'Cast popup shockwave ring (1 = on, 0 = off)', min: 0, max: 1, css: CSS_FNS.lcring, read: () => 1 }
+  { key: 'lcring', label: 'Cast popup shockwave ring (1 = on, 0 = off)', min: 0, max: 1, css: CSS_FNS.lcring, read: () => 1 },
+  { key: 'lcmw', label: 'Choose dialog: card size (x)', min: 0.5, max: 2.5, step: 0.05, css: CSS_FNS.lcmw, read: () => 1 },
+  { key: 'lcmg', label: 'Choose dialog: gap between cards (px)', min: 0, max: 80, css: CSS_FNS.lcmg, read: () => 16 },
+  { key: 'lcmd', label: 'Choose dialog: backdrop darkness (0-1; unset = the theme\'s)', min: 0, max: 1, step: 0.05, css: CSS_FNS.lcmd, read: () => 0.6 },
+  { key: 'lcmt', label: 'Choose dialog: title size (x)', min: 0.6, max: 2.5, step: 0.05, css: CSS_FNS.lcmt, read: () => 1 },
+  { key: 'lcmhs', label: 'Choose dialog: hovered card scale (x)', min: 1, max: 1.3, step: 0.01, css: CSS_FNS.lcmhs, read: () => 1.04 },
+  { key: 'lcmhl', label: 'Choose dialog: hovered card lift (px)', min: 0, max: 40, css: CSS_FNS.lcmhl, read: () => 0 },
+  { key: 'lcmglow', label: 'Choose dialog: hovered card glow (px, 0 = none)', min: 0, max: 40, css: CSS_FNS.lcmglow, read: () => 10 },
+  { key: 'lcmc', label: 'Choose dialog: caption under each card (1 = show, 0 = hide)', min: 0, max: 1, css: CSS_FNS.lcmc, read: () => 1 }
 ];
 
 // The middle strip (built from MID_KNOBS) and the timer bar's preview fill.

@@ -213,6 +213,28 @@ export const CastPanel = ({ q, setParams, sliders }: PanelProps) => (
   </>
 );
 
+export const ChoosePanel = ({ q, setParams, sliders }: PanelProps) => (
+  <>
+    <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+      The dialog for "choose one" cards, Surveying Drone and the Cleric&apos;s Resurrect: each option is the real card (a blank steel card when it has none).
+      Turn the preview on to hold it open with a sample card while you tune.
+    </small>
+    {sliders(['lcmw', 'lcmg', 'lcmd', 'lcmt', 'lcmhs', 'lcmhl', 'lcmglow', 'lcmc'])}
+    <div style={row}>
+      Preview{' '}
+      {([['', 'Off'], ['1', 'Hold it open']] as const).map(([v, name]) => (
+        <button
+          key={v}
+          onClick={() => setParams({ lcmpv: v || null })}
+          style={{ marginRight: 4, padding: '3px 10px', borderRadius: 6, border: '1px solid #3a4052', cursor: 'pointer', color: '#fff', background: one(q.lcmpv) === v ? '#3d5afe' : '#232634' }}
+        >
+          {name}
+        </button>
+      ))}
+    </div>
+  </>
+);
+
 export const EnergyPanel = ({ q, setParams, sliders, count, pick }: PanelProps) => (
   <>
     <div style={row}>

@@ -24,6 +24,8 @@ interface CardFaceProps {
   vector?: boolean;
   /** A CSS `background-image` for the art, instead of the card id's own files (for things that are not in `data/`, like hero skills). */
   art?: string;
+  /** Leave the cost gem's number out (a stand-in card for a choice that costs nothing) */
+  hideCost?: boolean;
 }
 
 /**
@@ -31,7 +33,7 @@ interface CardFaceProps {
  * gem, name ribbon, text, type, rarity gem and attack/health badges are laid over it. Everything is positioned in the
  * frame's own 178 x 250 design units, scaled by the `--u` custom property (pixels per unit).
  */
-export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, vector = false, art }: CardFaceProps) => {
+export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, vector = false, art, hideCost = false }: CardFaceProps) => {
   const stats = showsStats(card.type);
   const label = typeLabel(card);
   const race = raceLabel(card);
@@ -82,7 +84,7 @@ export const CardFace = ({ card, width, attack, health, spellDamage = 0, cost, v
       <span
         className={`${styles.cost} ${styles.val} ${cost !== undefined && cost < card.cost ? styles.costLower : ''} ${cost !== undefined && cost > card.cost ? styles.costHigher : ''}`}
       >
-        {cost ?? card.cost}
+        {hideCost ? '' : cost ?? card.cost}
       </span>
       <span className={`${styles.type} ${styles.val}`}>{label}</span>
       {race && <span className={styles.race}>{race}</span>}

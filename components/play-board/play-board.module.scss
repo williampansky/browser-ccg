@@ -726,35 +726,54 @@ $po-green: var(--po-c, #5fd16a);
   gap: 0.75rem;
 }
 
-.modalCards {
-  display: flex;
-  gap: 1rem;
+// The pick dialog (ChooseModal): each option is a real card with a caption. Every number is a --choose-* variable set by the board lab's
+// "Choose dialog" knobs (lcm...); the fallbacks here are the saved look.
+.chooseBackdrop {
+  // (a hook for the lab's backdrop knob, `lcmd`)
+  position: fixed;
 }
 
-.modalCard {
-  position: relative;
+.chooseTitle {
+  font-size: calc(1.17em * var(--choose-title, 1));
+}
+
+.chooseCards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--choose-gap, 16px);
+}
+
+.chooseOption {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  width: 12rem;
-  min-height: 12rem;
-  padding: 0.6rem 0.6rem 0.6rem 2rem;
-  background: #2b3042;
-  border: 2px solid #5fd16a;
-  border-radius: 8px;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  background: none;
+  border: 0;
   color: inherit;
-  text-align: left;
-
-  &:hover {
-    // background-color, not the `background` shorthand: the shorthand resets size/position and blows the art up to natural size.
-    background-color: #6b7694;
-    box-shadow: 0 0 0 3px #3ddc84;
-  }
+  cursor: pointer;
+  font: inherit;
 }
 
-.modalPick {
-  margin-top: auto;
-  font-size: 0.75rem;
+.chooseFace {
+  display: block;
+  zoom: var(--choose-scale, 1); // the card is drawn at a fixed width and scaled, so its text and frame stay in proportion
+  border-radius: 8px;
+  transition: transform 140ms ease-out, filter 140ms ease-out;
+}
+
+.chooseOption:hover .chooseFace,
+.chooseOption:focus-visible .chooseFace {
+  transform: translateY(calc(var(--choose-lift, 0) * -1px)) scale(var(--choose-hover, 1.04));
+  filter: drop-shadow(0 0 var(--choose-glow, 10px) #3ddc84);
+}
+
+.chooseCaption {
+  max-width: calc(190px * var(--choose-scale, 1));
+  font-size: 0.8rem;
+  text-align: center;
   color: #5fd16a;
 }
 

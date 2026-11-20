@@ -19,6 +19,7 @@ export const SECTION_KEYS: Record<string, string[]> = {
   hands: ['lhw0', 'lhw1', 'lhs', 'lsel', 'lpv', 'lhpv', 'lhrt', 'lhrt1', 'lhrt2', 'lhrt3', 'lhrt4', 'lhrt5', 'lhrt6', 'lhrt7', 'lhrt8', 'lhrt9', 'lhrt10', 'lhdp', 'lhdp1', 'lhdp2', 'lhdp3', 'lhdp4', 'lhdp5', 'lhdp6', 'lhdp7', 'lhdp8', 'lhdp9', 'lhdp10', 'lhdc', 'lhsw', 'lhsh', 'lhse', 'lhsx', 'lhsd', 'lhspv', 'lhol', 'lhol1', 'lhol2', 'lhol3', 'lhol4', 'lhol5', 'lhol6', 'lhol7', 'lhol8', 'lhol9', 'lhol10', 'lhov', 'lhoy', 'lhot', 'lhom', 'lhpa', 'lhpb', 'lhpm', 'lhha', 'lhhs', 'lhfl', 'lhsm', 'lhst', 'lhdr'],
   play: ['lpoc', 'lpoo', 'lpow', 'lpor', 'lpoi', 'lpoh', 'lpog', 'lpogw', 'lpos', 'lpoga', 'lpopv', 'lpoac', 'lpoahc', 'lpozc', 'lpozhc', 'lpogc', 'lpoge', 'lpoao', 'lpoai', 'lpoah', 'lpoahw', 'lpoahg', 'lpoat', 'lpozo', 'lpozi', 'lpozh', 'lpozhw', 'lpozhg', 'lpozt', 'lpogo', 'lpogb', 'lpogd', 'lpogs', 'lpogp', 'lpogq'],
   cast: ['lcx', 'lcy', 'lcs', 'lcms', 'lcpeak', 'lcglow', 'lcring', 'lcpv'],
+  choose: ['lcmw', 'lcmg', 'lcmd', 'lcmt', 'lcmhs', 'lcmhl', 'lcmglow', 'lcmc', 'lcmpv'],
   energy: ['les', 'lex', 'ley', 'leo', 'leg', 'legt', 'lecs', 'lecv', 'lect', 'lebr', 'lebb', 'lebg', 'lecr', 'lecb', 'lecn', 'lebpv'],
   panels: ['lpan', 'lsplit', 'lsbw', 'lsbh', 'lsbd', 'lgw', 'ldw', 'lgx', 'lgy', 'ldx', 'ldy'],
   heroes: ['herotype', 'lfw0', 'lfw1', 'lfx0', 'lfy0', 'lfx1', 'lfy1', 'lrx0', 'lry0', 'lrx1', 'lry1', 'lfs'],
@@ -30,7 +31,7 @@ export const SECTION_KEYS: Record<string, string[]> = {
   background: ['lbgf', 'lbgt', 'lbgm', 'lbgs', 'lbgd', 'lbgb', 'lbgx', 'lbgy', 'lpgcb', 'lpgc1', 'lpgc2', 'lpgc3', 'lpgw', 'lpgm', 'lflc', 'lflgc', 'lflrc', 'lflt', 'lfla', 'lflra', 'lflw', 'lflr', 'lfli', 'lflo', 'lflx', 'lfly'],
 };
 
-export const SECTION_IDS = ['endgame', 'presets', 'board', 'restart', 'minions', 'table', 'middle', 'hands', 'play', 'cast', 'energy', 'panels', 'heroes', 'snd-cardPlay', 'snd-draw', 'snd-cardHover', 'snd-hold', 'snd-gap', 'background', 'shadows'];
+export const SECTION_IDS = ['endgame', 'presets', 'board', 'restart', 'minions', 'table', 'middle', 'hands', 'play', 'cast', 'choose', 'energy', 'panels', 'heroes', 'snd-cardPlay', 'snd-draw', 'snd-cardHover', 'snd-hold', 'snd-gap', 'background', 'shadows'];
 
 /** Which accordion sections are open (default: Presets and Board); remembered in localStorage. */
 export const useLabSections = () => {
@@ -124,7 +125,7 @@ export const LabSection = ({
 export const LAB_TABS: { id: string; label: string; sections: string[] }[] = [
   { id: 'setup', label: 'Setup', sections: ['presets', 'board', 'restart'] },
   { id: 'board', label: 'Board', sections: ['minions', 'shadows', 'table', 'middle', 'energy', 'background'] },
-  { id: 'hand', label: 'Hand', sections: ['hands', 'play', 'cast'] },
+  { id: 'hand', label: 'Hand', sections: ['hands', 'play', 'cast', 'choose'] },
   { id: 'panels', label: 'Log/deck', sections: ['panels'] },
   { id: 'heroes', label: 'Heroes', sections: ['heroes'] },
   { id: 'end', label: 'End game', sections: ['endgame'] },
