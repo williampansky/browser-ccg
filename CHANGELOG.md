@@ -4,6 +4,7 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-20
 
+- **Collection: Entourage follows the set filter:** with Entourage ticked, Core shows only Core entourage cards and Prime only Prime ones (they used to ignore the set filter). A token's set comes from its id (`CORE_...` / `PRIME_...`).
 - **Log card view on click:** Menu > Settings > "Card view from the log" (Right-click / Click; kept in this browser, `ccg.logCardTrigger.v1`) chooses whether a card or skill name in the log opens the big card view on a right-click (default) or a single left-click.
 - **Stampede icon fades:** the Stampede badge on a board minion is only useful the turn it came in, so from the next turn on it fades and shrinks away (about 1.4 s) and stays gone.
 - **Druid balance:** Forsaken Druid's Spirit Animal now costs 3 (was 2) with cooldown 3 (was 2) in `data/abilities.json`, from the hero sim (Druid 85% overall before, 67% after; the other heroes each gained 1 to 6 points). **Copy both numbers into Airtable** (ABILITIES, Druid skill 1), or the next `npm run airtable` puts the old ones back.

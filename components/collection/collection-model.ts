@@ -31,10 +31,13 @@ export const DEFAULT_FILTERS: CollectionFilters = { search: '', set: 'both', typ
 
 export const isFiltered = (f: CollectionFilters): boolean => (Object.keys(DEFAULT_FILTERS) as (keyof CollectionFilters)[]).some((k) => f[k] !== DEFAULT_FILTERS[k]);
 
+/** Which set a card belongs to for the set filter: an entourage card's own `source` is `entourage`, so it follows the set in its id (`CORE_051a` is Core). */
+export const setOf = (c: Card): string => (c.isToken ? c.id.split('_')[0].toLowerCase() : c.source);
+
 export const filterCards = (cards: readonly Card[], f: CollectionFilters): Card[] => {
   const q = f.search.trim().toLowerCase();
   return cards.filter((c) => {
-    if (f.set !== 'both' && c.source !== f.set) return false;
+    if (f.set !== 'both' && setOf(c) !== f.set) return false;
     if (f.type !== 'all' && c.type !== f.type) return false;
     if (f.cost !== 'all' && (f.cost === '7+' ? c.cost < 7 : c.cost !== Number(f.cost))) return false;
     if (f.rarity !== 'all' && c.rarity !== f.rarity) return false;

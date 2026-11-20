@@ -126,3 +126,16 @@ describe('URL params', () => {
     expect(fromQuery(toQuery(DEFAULT_FILTERS, 'cost', 'all', true))).toMatchObject({ tokens: true });
   });
 });
+
+describe('entourage cards and the set filter', () => {
+  const tokens = Array.from(loadHsCards().byId.values()).filter((c) => c.isToken && c.name);
+  it('follow the set in their id: Core shows only CORE tokens, Prime only PRIME ones', () => {
+    const core = filterCards(tokens, f({ set: 'core' }));
+    const prime = filterCards(tokens, f({ set: 'prime' }));
+    expect(core.length).toBeGreaterThan(0);
+    expect(prime.length).toBeGreaterThan(0);
+    expect(core.every((c) => c.id.startsWith('CORE_'))).toBe(true);
+    expect(prime.every((c) => c.id.startsWith('PRIME_'))).toBe(true);
+    expect(core.length + prime.length).toBe(filterCards(tokens, f({ set: 'both' })).length);
+  });
+});

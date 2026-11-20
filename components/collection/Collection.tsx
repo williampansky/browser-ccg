@@ -37,7 +37,7 @@ const { cards, byId } = loadHsCards();
 const corePool = playablePool(cards);
 const prime = primePool(cards);
 const pool = [...corePool, ...prime];
-/** Entourage cards (summoned and offered tokens). Shown only when the box is ticked; they ignore the Core/Prime set filter. */
+/** Entourage cards (summoned and offered tokens). Shown only when the box is ticked; the Core/Prime set filter applies to them too (by the set in their id). */
 const tokenPool = Array.from(byId.values()).filter((c) => c.isToken && c.name);
 const effects = effectOptions(pool);
 const races = raceOptions(pool);
@@ -82,7 +82,7 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
   };
 
 
-  const shown = useMemo(() => sortCards([...filterCards(pool, filters), ...(showTokens ? filterCards(tokenPool, { ...filters, set: 'both' }) : [])], sort).filter((c) => !debug || matchesArt(c, art, missing)), [filters, sort, art, showTokens, debug, missing]);
+  const shown = useMemo(() => sortCards([...filterCards(pool, filters), ...(showTokens ? filterCards(tokenPool, filters) : [])], sort).filter((c) => !debug || matchesArt(c, art, missing)), [filters, sort, art, showTokens, debug, missing]);
   const cardWidth = sizeOf(size).width;
   const open = viewing ? byId.get(viewing) : undefined;
 
