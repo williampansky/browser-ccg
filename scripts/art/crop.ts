@@ -53,7 +53,7 @@ export interface ArtName {
 /** `CORE_117.png` -> the card it is for; null for any other file name. */
 export const parseArtName = (file: string): ArtName | null => {
   const m = /^(CORE|PRIME|GAME)_(\d+[a-z]*)\.(png|jpe?g|webp|tiff?)$/i.exec(file);
-  return m ? { id: `${m[1].toUpperCase()}_${m[2]}`, set: m[1].toUpperCase(), num: m[2] } : null;
+  return m ? { id: `${m[1].toUpperCase()}_${m[2].toLowerCase()}`, set: m[1].toUpperCase(), num: m[2].toLowerCase() } : null;
 };
 
 export const outputPath = (name: ArtName, kind: ArtKind): string =>

@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { parseArtName } from '../../../scripts/art/crop';
 import { INBOX, findMaster } from '../../../scripts/art/master-file';
 import { devOnly } from '../../../scripts/art/dev-guard';
+import { canonicalCardId } from '../../../components/art-lab/lookup';
 
 export const config = { api: { bodyParser: false } };
 
@@ -12,7 +13,7 @@ const TYPES: Record<string, string> = { png: 'image/png', jpg: 'image/jpeg', jpe
 /** Art lab: GET ?id= sends the master picture from art-inbox/; POST ?id=&ext=png with the raw file as the body saves one there. Dev only. */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!devOnly(req, res)) return;
-  const id = String(req.query.id || '').toUpperCase();
+  const id = canonicalCardId(String(req.query.id || ''));
   if (!parseArtName(`${id}.png`)) return void res.status(400).json({ error: 'id must look like CORE_117' });
   try {
     if (req.method === 'GET') {

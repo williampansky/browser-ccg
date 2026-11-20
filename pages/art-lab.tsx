@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { ArtLab } from '../components/art-lab/ArtLab';
+import { canonicalCardId } from '../components/art-lab/lookup';
 import { CardLookup } from '../components/art-lab/CardLookup';
 import { AssetGrid } from '../components/art-lab/AssetGrid';
 import { Button } from '../components/ui';
@@ -9,7 +10,7 @@ const ArtLabPage = () => {
   const router = useRouter();
   const { query, isReady } = router;
   const assets = query.tab === 'assets';
-  const id = typeof query.id === 'string' ? query.id.toUpperCase() : '';
+  const id = typeof query.id === 'string' ? canonicalCardId(query.id) : '';
   if (!isReady) return null;
   if (!/^(CORE|PRIME|GAME)_\d+[a-z]*$/i.test(id))
     return (

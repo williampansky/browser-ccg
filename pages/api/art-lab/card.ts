@@ -6,6 +6,7 @@ import { findMaster } from '../../../scripts/art/master-file';
 import { FieldValue, readCard, readSchema, toUpdate, writeCard } from '../../../scripts/art/airtable-card';
 import { collectArtists } from '../../../scripts/art/artists';
 import { devOnly } from '../../../scripts/art/dev-guard';
+import { canonicalCardId } from '../../../components/art-lab/lookup';
 
 /** Artist names/URLs already used in data/*.json (cards and heroes), for the lab's suggestions. */
 const artistSuggestions = () => {
@@ -30,14 +31,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!devOnly(req, res)) return;
   try {
     if (req.method === 'GET') {
-      const id = String(req.query.id || '').toUpperCase();
+      const id = canonicalCardId(String(req.query.id || ''));
       const [schema, row] = await Promise.all([readSchema(), readCard(id)]);
       if (!row) return void res.status(404).json({ error: `No CARDS row with id ${id}` });
       return void res.status(200).json({ id, recordId: row.recordId, fields: row.fields, schema, hasMaster: !!findMaster(id), artists: artistSuggestions() });
     }
     if (req.method === 'POST') {
       const { id, fields, pull } = req.body as { id: string; fields: Record<string, FieldValue>; pull?: boolean };
-      const [schema, row] = await Promise.all([readSchema(), readCard(String(id).toUpperCase())]);
+      const [schema, row] = await Promise.all([readSchema(), readCard(canonicalCardId(String(id)))]);
       if (!row) return void res.status(404).json({ error: `No CARDS row with id ${id}` });
       const update = toUpdate(schema, fields);
       if (!Object.keys(update).length) return void res.status(200).json({ saved: [], pulled: false });

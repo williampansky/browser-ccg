@@ -18,6 +18,7 @@
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
+import { canonicalCardId } from '../../components/art-lab/lookup';
 import { ArtKind, DEFAULT_FOCUS, Focus, OUTPUTS, cropBox, outputPath, parseArtName } from './crop';
 
 const INBOX = 'art-inbox';
@@ -27,7 +28,7 @@ const QUALITY = 86;
 
 const args = process.argv.slice(2);
 const flags = new Set(args.filter((a) => a.startsWith('--')));
-const wanted = args.filter((a) => !a.startsWith('--')).map((a) => a.toUpperCase());
+const wanted = args.filter((a) => !a.startsWith('--')).map((a) => canonicalCardId(a));
 
 const loadFocus = (): Record<string, Partial<Focus>> => {
   try {
