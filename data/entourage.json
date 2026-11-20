@@ -273,7 +273,9 @@
     "targetingArrowText": "Deal %NUM1% damage",
     "collectible": false,
     "active": false,
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -519,7 +521,9 @@
     "targetingArrowText": "Deal %NUM1% damage",
     "collectible": false,
     "active": false,
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {

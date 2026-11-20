@@ -1447,7 +1447,7 @@
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "Obtain an empty<br />\n%ENERGY%",
+    "text": "Fill an empty<br />\n%ENERGY_CRYSTAL%",
     "mechanics": [
       "%ENERGY%"
     ],
@@ -1458,7 +1458,8 @@
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
-    "artStatus": "FINAL"
+    "artStatus": "FINAL",
+    "description": "When used, this increases your current maximum %ENERGY_CRYSTAL% count, up to a max of 10."
   },
   {
     "id": "CORE_064",
@@ -3074,9 +3075,9 @@
     "active": true,
     "entourage": "CORE_051a, CORE_051b",
     "howToEarn": "Provided to all players.",
-    "artistName": "Anirudh Molee",
-    "artistUrl": "https://www.deviantart.com/molee",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_018",
