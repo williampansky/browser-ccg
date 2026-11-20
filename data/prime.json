@@ -1471,7 +1471,7 @@
     "playType": "GLOBAL",
     "collectible": true,
     "active": true,
-    "entourage": "PRIME_111c",
+    "entourage": "PRIME_111a, PRIME_111c",
     "artistName": "Alexandra Malygina",
     "artistUrl": "https://fler.artstation.com/",
     "artStatus": "FPO"
