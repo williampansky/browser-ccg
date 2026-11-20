@@ -26,6 +26,10 @@ describe('statusBadges', () => {
     const kinds = statusBadges(base({}, { noAttack: true, doubleAttack: true, rush: true }), 5, false).map((b) => b.kind);
     expect(kinds).toEqual(['rush', 'onslaught', 'noAttack']);
   });
+  it('Stampede is marked to fade once the turn the minion came in is over', () => {
+    expect(statusBadges(base({ playedOnTurn: 5 }, { rush: true }), 5, false)).toEqual([{ kind: 'rush', label: 'Stampede', fades: false }]);
+    expect(statusBadges(base({ playedOnTurn: 5 }, { rush: true }), 6, false)[0].fades).toBe(true);
+  });
   it('Disabled shows through its owner\'s next turn only', () => {
     expect(statusBadges(base({ disabledOnTurn: 6 }), 5, false).map((b) => b.kind)).toEqual(['disabled']);
     expect(statusBadges(base({ disabledOnTurn: 5 }), 5, false).map((b) => b.kind)).toEqual(['disabled']);

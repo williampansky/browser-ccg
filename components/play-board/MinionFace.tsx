@@ -81,7 +81,9 @@ interface Props {
 
 export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
   const hurt = useHurtFlash(m.health);
-  const badges = statusBadges(m, turn, sick);
+  // Stampede only matters the turn the minion came in: after that its icon fades out, then stays gone.
+  const [rushGone, setRushGone] = useState(false);
+  const badges = statusBadges(m, turn, sick).filter((b) => !(b.kind === 'rush' && b.fades && rushGone));
   const attackTone = statTone(m.attack, card?.attack);
   const healthTone = isDamaged(m) ? 'down' : statTone(m.health, card?.health);
   return (
@@ -123,7 +125,8 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
           {badges.map(b => (
             <span
               key={b.kind}
-              className={cx(styles.badge, styles[`badge_${b.kind}`])}
+              className={cx(styles.badge, styles[`badge_${b.kind}`], b.fades ? styles.badgeFade : '')}
+              onAnimationEnd={b.fades ? () => setRushGone(true) : undefined}
               title={b.label}
               aria-label={b.label}
             >

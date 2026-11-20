@@ -4,15 +4,17 @@ import type { MinionInstance } from '../../engine';
 export interface StatusBadge {
   kind: 'rush' | 'onslaught' | 'disabled' | 'expiring' | 'asleep' | 'noAttack' | 'silenced';
   label: string;
+  /** The icon is only useful for a while and is fading out (Stampede after the turn the minion came in) */
+  fades?: boolean;
 }
 
 /**
  * The status icons a minion shows. Guard, Bubble and Concealed are NOT here: they change how the whole minion is drawn (a shield behind it,
- * a ring around it, a veil over it). `sick` is summoning sickness (it cannot attack yet); only the viewer's own minions show it.
+ * a ring around it, a veil over it). Stampede is only useful the turn the minion came in, so it is marked `fades` from the next turn on. `sick` is summoning sickness (it cannot attack yet); only the viewer's own minions show it.
  */
 export const statusBadges = (m: MinionInstance, turn: number, sick: boolean): StatusBadge[] => {
   const out: StatusBadge[] = [];
-  if (m.keywords.rush) out.push({ kind: 'rush', label: 'Stampede' });
+  if (m.keywords.rush) out.push({ kind: 'rush', label: 'Stampede', fades: m.playedOnTurn !== turn });
   if (m.keywords.doubleAttack) out.push({ kind: 'onslaught', label: 'Onslaught' });
   if (m.keywords.noAttack) out.push({ kind: 'noAttack', label: "Can't attack" });
   if (m.disabledOnTurn !== undefined && m.disabledOnTurn >= turn) out.push({ kind: 'disabled', label: 'Disabled' });

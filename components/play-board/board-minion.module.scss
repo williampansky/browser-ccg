@@ -190,6 +190,24 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
 }
 
+// A badge that has done its job (Stampede after the turn the minion came in): it fades and shrinks away, then MinionFace drops it.
+.badgeFade {
+  animation: badgeFadeOut 1100ms ease-in 250ms forwards;
+  pointer-events: none;
+}
+@keyframes badgeFadeOut {
+  to {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .badgeFade {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
+}
+
 .badge_rush { border-color: #ffd45e; color: #ffd45e; }
 .badge_onslaught { border-color: #ff9a5e; color: #ff9a5e; font-size: 0.72rem; font-weight: 700; }
 .badge_disabled { border-color: #ff6b6b; }
