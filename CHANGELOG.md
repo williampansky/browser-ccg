@@ -2,6 +2,10 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-20
+
+- **Druid balance:** Forsaken Druid's Spirit Animal now costs 3 (was 2) with cooldown 3 (was 2) in `data/abilities.json`, from the hero sim (Druid 85% overall before, 67% after; the other heroes each gained 1 to 6 points). **Copy both numbers into Airtable** (ABILITIES, Druid skill 1), or the next `npm run airtable` puts the old ones back.
+
 ## 2026-11-19
 
 - **Spell Damage raises hero skills:** your minions' Spell Damage now adds to each damage hit of a hero skill (Zeus' three, Exile's first, both Warrior damage skills), so a Spell Damage +1 minion turns Zeus' Lightning Strike from 1 into 2 while it is on the board. Heals, armor, summons and buffs are unchanged; skills still are not spells for "when you cast a spell" effects. `RULES.md` Appendix D updated (it used to say skills ignore Spell Damage).

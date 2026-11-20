@@ -334,9 +334,9 @@
     "playType": "GLOBAL",
     "hero": "%HERO_FORSAKEN_DRUID%",
     "id": 1,
-    "cost": 2,
+    "cost": 3,
     "active": true,
-    "cooldown": 2,
+    "cooldown": 3,
     "mechanics": [
       "%SUMMON%"
     ],
