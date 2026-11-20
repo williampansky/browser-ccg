@@ -34,6 +34,7 @@ import {
 } from '../../engine';
 import { gapIndex } from './board-position';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
+import { LogCardTrigger, saveLogCardTrigger, useLogCardTrigger } from './log-card-trigger';
 import { effectiveSidebarMode, saveSidebarMode, useSidebarMode } from './sidebar-mode';
 import { CardDetailOverlay } from '../card-detail/CardDetailOverlay';
 import { nudgeIntoViewport, useKeepTipsInViewport } from './viewport-nudge';
@@ -191,20 +192,22 @@ const useTip = (tip: string | undefined, side: 'left' | 'right' = 'right', quiet
 const HAND_CARD_WIDTH = 144;
 /** How many px of the tops of the cards in hand stay visible above the bottom edge of the window. */
 const HAND_PEEK = 110;
-/** A card name in the log: hover for its text, right-click for the collection's big view. */
-const LogCard = ({ name, onInspect }: { name: string; onInspect: (card: Card) => void }) => {
+/** A card name in the log: hover for its text; right-click (or a click, if the player chose that) for the collection's big view. */
+const LogCard = ({ name, onInspect, trigger }: { name: string; onInspect: (card: Card) => void; trigger: LogCardTrigger }) => {
   const { handlers, node } = useTip(tipByName.get(name));
+  const open = (e: React.MouseEvent) => {
+    const card = logCardByName(name);
+    if (!card) return;
+    e.preventDefault();
+    handlers.onMouseLeave();
+    onInspect(card);
+  };
   return (
     <strong
       className={styles.logCard}
       {...handlers}
-      onContextMenu={(e) => {
-        const card = logCardByName(name);
-        if (!card) return;
-        e.preventDefault();
-        handlers.onMouseLeave();
-        onInspect(card);
-      }}
+      onClick={trigger === 'click' ? open : undefined}
+      onContextMenu={trigger === 'rightClick' ? open : undefined}
     >
       <em>{name}</em>
       {node}
@@ -255,7 +258,7 @@ const MinionTip = ({ card, m, className, onClick, children, nodeRef, quiet, ...r
     </button>
   );
 };
-const renderLogLine = (line: string, myName: string, colors: Record<'0' | '1', string>, onInspect: (card: Card) => void) =>
+const renderLogLine = (line: string, myName: string, colors: Record<'0' | '1', string>, onInspect: (card: Card) => void, trigger: LogCardTrigger) =>
   line.split(/(\*\*.+?\*\*|__.+?__)/g).map((part, i) => {
     if (part.startsWith('**')) {
       const text = part.slice(2, -2);
@@ -268,7 +271,7 @@ const renderLogLine = (line: string, myName: string, colors: Record<'0' | '1', s
     if (part.startsWith('__')) {
       const name = part.slice(2, -2);
       return (
-        <LogCard key={i} name={name} onInspect={onInspect} />
+        <LogCard key={i} name={name} onInspect={onInspect} trigger={trigger} />
       );
     }
     return part;
@@ -420,6 +423,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
    *  selecting a card. Off by default; saved. More settings will be split out of it later. */
   const [a11y, setA11y] = useState(false);
   const sidebarChoice = useSidebarMode();
+  const logCardTrigger = useLogCardTrigger();
   useEffect(() => setA11y(isAccessible()), []);
   // Each hero is drawn as the Vol 14 figure card (components/play-board/HeroVariants.tsx); ?herofig=0 brings back the old bar.
   const [figUi, setFigUi] = useState(true);
@@ -1640,6 +1644,15 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                 ]}
               />
               <SegmentedControl
+                label="Card view from the log"
+                value={logCardTrigger}
+                onChange={saveLogCardTrigger}
+                options={[
+                  { label: 'Right-click', title: 'right-click a card name in the log', value: 'rightClick' as const },
+                  { label: 'Click', title: 'a single click on a card name in the log', value: 'click' as const },
+                ]}
+              />
+              <SegmentedControl
                 label="Opponent"
                 value={smartAi}
                 onChange={setSmartAi}
@@ -2003,7 +2016,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           {log.map((lines, i) => (
             <div key={i} className={styles.logBatch}>
               {lines.map((l, j) => (
-                <div key={j}>{renderLogLine(l, profile.name, sideColors, setInspect)}</div>
+                <div key={j}>{renderLogLine(l, profile.name, sideColors, setInspect, logCardTrigger)}</div>
               ))}
             </div>
           ))}
