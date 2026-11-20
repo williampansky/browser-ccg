@@ -363,6 +363,22 @@
   font-size: 0.85rem;
 }
 
+// An entourage card (or its parent) that can be clicked to view it: a plain button that looks like the tile.
+.tokenPick {
+  background: none;
+  border: 0;
+  padding: 4px;
+  border-radius: 8px;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--ui-row-hover, rgba(255, 255, 255, 0.08));
+  }
+}
+
 .artistCredit {
   border-top: 1px solid var(--ui-row-line);
   margin-top: 0.8rem;

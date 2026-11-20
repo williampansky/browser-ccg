@@ -4,6 +4,7 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-20
 
+- **Card overlay: parent of an entourage card, and click to swap:** viewing an entourage card now shows the card(s) that make or offer it, under "Made or offered by", where its own tokens would go. The related cards (a card's tokens, or an entourage card's parents) are buttons: click one to view it in the same overlay, click back to return. Clicking elsewhere still closes it.
 - **Collection: Entourage follows the set filter:** with Entourage ticked, Core shows only Core entourage cards and Prime only Prime ones (they used to ignore the set filter). A token's set comes from its id (`CORE_...` / `PRIME_...`).
 - **Log card view on click:** Menu > Settings > "Card view from the log" (Right-click / Click; kept in this browser, `ccg.logCardTrigger.v1`) chooses whether a card or skill name in the log opens the big card view on a right-click (default) or a single left-click.
 - **Stampede icon fades:** the Stampede badge on a board minion is only useful the turn it came in, so from the next turn on it fades and shrinks away (about 1.4 s) and stays gone.

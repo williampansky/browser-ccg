@@ -3,7 +3,7 @@ import { CardTokens } from './CardTokens';
 import { createPortal } from 'react-dom';
 import { TiltFace } from './TiltFace';
 import { useDetailCardWidth } from './detail-card-width';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import type { Card } from '../../engine';
 
@@ -22,7 +22,7 @@ import { ArtistCredit } from './ArtistCredit';
  * Drawn into <body> so no parent's stacking context can cover it.
  */
 export const CardDetailOverlay = ({
-  card,
+  card: opened,
   byId,
   onClose
 }: {
@@ -30,6 +30,9 @@ export const CardDetailOverlay = ({
   byId: Map<string, Card>;
   onClose: () => void;
 }) => {
+  // The card being shown starts as the one that was opened; clicking a related card (a token or its parent) swaps it.
+  const [card, setCard] = useState(opened);
+  useEffect(() => setCard(opened), [opened]);
   const [copied, setCopied] = useState<string | null>(null);
   const bigWidth = useDetailCardWidth();
 
@@ -40,6 +43,12 @@ export const CardDetailOverlay = ({
   const tokens = card.entourage
     .map(id => byId.get(id))
     .filter((t): t is Card => !!t);
+
+  /** For an entourage card: the cards that make or offer it (an entourage card has no tokens of its own to show). */
+  const parents = useMemo(
+    () => (card.isToken ? Array.from(byId.values()).filter(c => !c.isToken && c.entourage.includes(card.id)) : []),
+    [card, byId]
+  );
 
   /**
    * Copy the card's ID to the clipboard. The overlay is closed by clicking
@@ -106,7 +115,11 @@ export const CardDetailOverlay = ({
               </section>
             )}
 
-            {tokens?.length !== 0 && <CardTokens tokens={tokens} />}
+            {parents.length > 0 ? (
+              <CardTokens tokens={parents} heading="Made or offered by" onPick={setCard} />
+            ) : (
+              tokens.length > 0 && <CardTokens tokens={tokens} onPick={setCard} />
+            )}
 
             <p className={styles.closeHint}>
               Click anywhere or press Esc to close
