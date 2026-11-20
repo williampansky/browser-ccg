@@ -103,9 +103,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Imatcio Art",
-    "artistUrl": "https://www.artstation.com/imatcio",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_024",
@@ -133,7 +133,7 @@
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "Deal %NUM1% damage",
+    "text": "Deal %NUM1% damage to a target",
     "mechanics": [
       "%TARGET%",
       "%DAMAGE%"
@@ -145,9 +145,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Seiorai",
-    "artistUrl": "https://www.deviantart.com/seiorai",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_036",
@@ -395,24 +395,27 @@
   },
   {
     "id": "CORE_056",
-    "name": "Laser Sight",
+    "name": "Rot Draught",
     "set": "%SET_002%",
-    "type": "%TYPE_SPELL%",
+    "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "<strong>%DEBUFF%</strong> a minion's<br />\nHealth to 1",
+    "text": "<strong>%DEBUFF%</strong> a minion's Health to %NUM1%",
     "mechanics": [
       "%DEBUFF%",
       "%TARGET%"
     ],
+    "numberPrimary": 1,
     "playType": "TARGETED",
     "playContext": "%DEBUFF%",
     "targetingArrowText": "Set Health to 1",
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_095",
@@ -1248,7 +1251,7 @@
   },
   {
     "id": "CORE_105",
-    "name": "Distortion",
+    "name": "Disorient",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -1267,9 +1270,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Kim Jakobsson",
-    "artistUrl": "https://www.artstation.com/kimjakobsson",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_131",
@@ -1295,13 +1298,13 @@
   },
   {
     "id": "CORE_125",
-    "name": "Erratic Blitz",
+    "name": "Dagger Throw",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "Attack 2 %RANDOM% enemy<br />\nminions for %NUM% damage",
+    "text": "Attack 2 %RANDOM% enemy minions for %NUM% damage",
     "mechanics": [
       "%RANDOM%",
       "%DAMAGE%"
@@ -1313,9 +1316,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "benedickbana",
-    "artistUrl": "https://www.deviantart.com/benedickbana",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_116",
@@ -2335,7 +2338,7 @@
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "+2 Attack this turn<br />\nfor all friendles",
+    "text": "+%NUM1% Attack this turn for all friendlies",
     "mechanics": [
       "%BOON%",
       "%AOE%",
@@ -2347,9 +2350,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Seiorai",
-    "artistUrl": "https://www.deviantart.com/seiorai",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_085",
@@ -2404,13 +2407,13 @@
   },
   {
     "id": "CORE_097",
-    "name": "Arterial Cut",
+    "name": "Flash Hit",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 2,
-    "text": "Deal %NUM1% damage<br />\nand draw a card",
+    "text": "Deal %NUM1% damage and %DRAW_CARD% a %CARD%",
     "mechanics": [
       "%DRAW_CARD%",
       "%TARGET%",
@@ -2423,9 +2426,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Jaynorn Lin",
-    "artistUrl": "https://www.artstation.com/jaynorn",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_118",
@@ -2889,9 +2892,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Ari-Matti Toivonen",
-    "artistUrl": "https://www.artstation.com/wuggy",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_005",
