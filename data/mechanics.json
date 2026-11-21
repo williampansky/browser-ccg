@@ -138,6 +138,12 @@
     "name": "Discard"
   },
   {
+    "symbol": "%HEALTH%",
+    "description": "Your hero's Health pool tracks how much damage you can take before losing the match. Once an opponent's attacks or card effects reduce your Health to zero, the game ends immediately in defeat.",
+    "shortDescription": "How much damage you can take before losing the match.",
+    "name": "Health"
+  },
+  {
     "symbol": "%ADD_CARD%",
     "description": "Adds the specified card(s) to the player's hand.",
     "shortDescription": "Add card to player's hand.",
@@ -148,6 +154,12 @@
     "description": "Enables the minion to attack on the same turn that it is summoned.",
     "shortDescription": "Can attack immediately.",
     "name": "Stampede"
+  },
+  {
+    "symbol": "%HERO%",
+    "description": "Your main champion or avatar leading your side of the board and anchoring your strategy. They carry your health pool or core identity in the match, while your deck and minions support and execute your game plan.",
+    "shortDescription": "The avatar leading your side of the board.",
+    "name": "Hero"
   },
   {
     "symbol": "%SILENCE%",

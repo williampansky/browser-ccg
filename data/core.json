@@ -293,13 +293,13 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Scott Murphy",
-    "artistUrl": "http://www.murphyillustration.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_098",
-    "name": "Spin Chain",
+    "name": "Molten Cyclone",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -317,9 +317,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "lun jie",
-    "artistUrl": "https://www.artstation.com/lunjie",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_033",
@@ -435,7 +435,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_039",
@@ -931,7 +933,7 @@
   },
   {
     "id": "CORE_079",
-    "name": "Sunder",
+    "name": "Aether Vortex",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -948,9 +950,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "ThemeFinland",
-    "artistUrl": "https://www.deviantart.com/themefinland",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_010",
@@ -1373,7 +1375,7 @@
   },
   {
     "id": "CORE_057",
-    "name": "Call Reinforcements",
+    "name": "Banner Call",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -1389,7 +1391,9 @@
     "active": true,
     "entourage": "CORE_057a, CORE_057b, CORE_057c, CORE_057d",
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_099",
@@ -1522,9 +1526,9 @@
     "active": true,
     "entourage": "CORE_100a",
     "howToEarn": "Provided to all players.",
-    "artistName": "lun jie",
-    "artistUrl": "https://www.artstation.com/lunjie",
-    "artStatus": "FPO"
+    "artistName": "pasilan",
+    "artistUrl": "https://graphicriver.net/user/pasilan",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_080",
@@ -1811,7 +1815,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_046",
@@ -2082,7 +2088,9 @@
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_087",
@@ -2532,17 +2540,18 @@
     "cost": 4,
     "attack": 3,
     "health": 2,
-    "text": "Restore 2 HP prior<br />\nto every attack",
+    "text": "%HEAL% your %HERO% for %NUM1% %HEALTH% prior to every attack",
     "mechanics": [
       "%EVENT%",
       "%HEAL%"
     ],
+    "numberPrimary": 2,
     "collectible": true,
     "active": true,
     "howToEarn": "Provided to all players.",
-    "artistName": "Cristian Chihaia",
-    "artistUrl": "https://www.artstation.com/sickbrush",
-    "artStatus": "FPO"
+    "artistName": "pasilan",
+    "artistUrl": "https://graphicriver.net/user/pasilan",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_054",
