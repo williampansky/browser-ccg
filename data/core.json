@@ -204,7 +204,7 @@
   },
   {
     "id": "CORE_132",
-    "name": "Fisherman's Axe",
+    "name": "Dread Cleaver",
     "set": "%SET_002%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_FREE%",
@@ -215,11 +215,10 @@
     "targetingArrowText": "Attack for 5 damage",
     "collectible": true,
     "active": true,
-    "entourage": "CORE_132a",
     "howToEarn": "Provided to all players.",
-    "artistName": "Elodie Mondoloni",
-    "artistUrl": "https://www.artstation.com/elodiemondoloni",
-    "artStatus": "FPO"
+    "artistName": "pasilan",
+    "artistUrl": "https://graphicriver.net/user/pasilan",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_093",
@@ -740,7 +739,7 @@
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
     "cardClass": "0 %CLASS_NONE%",
-    "race": "%RACE_NONE%",
+    "race": "%RACE_CREATURE%",
     "cost": 2,
     "attack": 2,
     "health": 2,
@@ -1028,7 +1027,7 @@
   },
   {
     "id": "CORE_025",
-    "name": "Whiz Kid",
+    "name": "Warriorbot",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_FREE%",
@@ -1037,19 +1036,21 @@
     "cost": 4,
     "attack": 2,
     "health": 4,
-    "text": "%SUMMON% a 2/1 %RACE_ANDROID%",
+    "text": "%SUMMON% a %NUM1%/%NUM2% %RACE_ANDROID%",
     "mechanics": [
       "%ON_PLAY%",
       "%SUMMON%"
     ],
+    "numberPrimary": 2,
+    "numberSecondary": 1,
     "playContext": "%SUMMON%",
     "collectible": true,
     "active": true,
     "entourage": "CORE_025a",
     "howToEarn": "Provided to all players.",
-    "artistName": "Andhika Hafzy",
-    "artistUrl": "https://www.artstation.com/andhikahafzy",
-    "artStatus": "FPO"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_038",
@@ -2189,7 +2190,6 @@
     "targetingArrowText": "Attack for 3 damage",
     "collectible": true,
     "active": true,
-    "entourage": "CORE_128a, CORE_128b",
     "howToEarn": "Provided to all players.",
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",

@@ -216,7 +216,7 @@
   },
   {
     "id": "CORE_109a",
-    "name": "Hellbunny",
+    "name": "Mutation",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_NONE%",
@@ -231,9 +231,9 @@
     ],
     "collectible": false,
     "active": true,
-    "artistName": "https://www.artstation.com/noistromo",
-    "artistUrl": "https://www.artstation.com/noistromo",
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -327,7 +327,9 @@
     "health": 1,
     "collectible": false,
     "active": true,
-    "artStatus": "FPO",
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
