@@ -688,7 +688,7 @@
   box-shadow:
     0 0 0 2px var(--ring-c, #0b0d14),
     0 0 0 3px rgba(255, 255, 255, 0.18),
-    0 2px 8px rgba(0, 0, 0, 0.6);
+    0 2px 8px rgba(0, 0, 0, 1);
 }
 
 // Anything on the rim: anchored on the ring's centre, turned `--a`, pushed out to the radius (plus --rim-s / --rim-p), then turned back upright.
