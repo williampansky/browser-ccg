@@ -9,8 +9,8 @@ export const gameConfig: GameConfig = {
     cardsPerStartingHand: 3,
     cardsPerTurn: 1,
     maxNumberOfDecks: 10,
-    numberOfPlayers: 2,
-  },
+    numberOfPlayers: 2
+  }
 };
 
 export const sitePages: Pages = {
@@ -18,23 +18,28 @@ export const sitePages: Pages = {
     description: "The site's homepage.",
     name: 'Home',
     route: '/',
+    showInFooter: true,
     showInNav: true
   },
   apiList: {
     description: 'A frontend page listing items under the /api directory.',
     name: 'API List',
     route: '/api-list',
+    showInFooter: false,
+    showInNav: false
   },
   changelog: {
-    description: '',
+    description: 'A page listing all changes to the game and site.',
     name: 'Changelog',
     route: '/changelog',
+    showInFooter: false,
     showInNav: true
   },
   profile: {
-    description: '',
+    description: 'Your account profile and settings',
     name: 'Profile',
     route: '/profile',
+    showInFooter: true,
     showInNav: true
   },
   cards: {
@@ -43,13 +48,17 @@ export const sitePages: Pages = {
     route: '/cards',
     headline: 'All Cards',
     title: 'All Cards',
+    showInFooter: false,
+    showInNav: false
   },
   collection: {
-    description: '',
+    description: 'Your personal card collection',
     name: 'Cards',
     route: '/collection',
     headline: 'Your Collection',
     title: 'Collection',
+    showInFooter: true,
+    showInNav: true
   },
   heroes: {
     description: 'Heroes and their skills',
@@ -57,70 +66,82 @@ export const sitePages: Pages = {
     route: '/heroes',
     headline: 'Heroes',
     title: 'Heroes',
+    showInFooter: true,
+    showInNav: true
   },
   deckbuilder: {
-    description: '',
+    description: 'A page for building decks from your collection',
     name: 'Deck Builder',
     route: '/deckbuilder',
     headline: 'Deck Builder',
     title: 'Deck Builder',
+    showInFooter: false,
+    showInNav: true
   },
   faq: {
-    description: '',
+    description: 'A page for frequently asked questions',
     name: 'FAQ',
     route: '/faq',
+    showInFooter: false,
     showInNav: true
   },
   news: {
-    description: '',
+    description: 'Recent news and announcements about the game',
     name: 'News',
     route: '/news',
+    showInFooter: true,
     showInNav: true
   },
   play: {
-    description: '',
+    description: 'A page for playing the game',
     name: 'Play',
     route: '/play',
+    showInFooter: true,
+    showInNav: true
   },
   store: {
-    description: '',
+    description: 'A page for purchasing content for the game',
     name: 'Store',
     route: '/store',
-  },
+    showInFooter: true,
+    showInNav: true
+  }
 };
 
-export const footerButtons: Pages = {
-  home: {
-    icon: 'icon-uikit-home',
-    name: sitePages.home.name,
-    route: sitePages.home.route,
-  },
-  store: {
-    icon: 'icon-uikit-refresh',
-    name: sitePages.store.name,
-    route: sitePages.store.route,
-  },
-  collection: {
-    icon: 'icon-uikit-thumbnails',
-    name: sitePages.collection.name,
-    route: sitePages.collection.route,
-  },
-  play: {
-    icon: 'icon-uikit-play-circle',
-    name: sitePages.play.name,
-    route: sitePages.play.route,
-  },
-  news: {
-    icon: 'icon-uikit-rss',
-    name: sitePages.news.name,
-    route: sitePages.news.route,
-  },
-  profile: {
-    icon: 'icon-uikit-user',
-    name: sitePages.profile.name,
-    route: sitePages.profile.route,
-  },
-};
+/**
+ * Left-to-right order of the bottom nav; a page flagged `showInFooter`
+ * but not listed here goes at the end.
+ */
+const FOOTER_ORDER = [
+  'home',
+  'collection',
+  'heroes',
+  'play',
+  'store',
+  'news',
+  'profile'
+];
+
+/**
+ * The bottom nav: every page with `showInFooter`, in `FOOTER_ORDER`.
+ */
+export const footerButtons: Pages = Object.fromEntries(
+  Object.entries(sitePages)
+    .filter(([, page]) => page.showInFooter)
+    .sort(([a], [b]) => {
+      const rank = (k: string) => {
+        return FOOTER_ORDER.includes(k)
+          ? FOOTER_ORDER.indexOf(k)
+          : FOOTER_ORDER.length;
+      };
+
+      return rank(a) - rank(b);
+    })
+    .map(([key, page]) => [
+      key,
+      { name: page.name, route: page.route, description: page.description }
+    ])
+);
 
 export const siteConfig: SiteConfig = {
   shortName: 'BCG',
@@ -128,12 +149,12 @@ export const siteConfig: SiteConfig = {
   pages: sitePages,
   footerButtons: footerButtons,
   version: '0.0.1',
-  disableRightClick: true,
+  disableRightClick: true
 };
 
 const appConfig: AppConfig = {
   gameConfig: { ...gameConfig },
-  siteConfig: { ...siteConfig },
+  siteConfig: { ...siteConfig }
 };
 
 export default appConfig;

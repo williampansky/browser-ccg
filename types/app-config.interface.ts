@@ -43,6 +43,11 @@ export interface Page {
   icon?: string;
 
   /**
+   * Boolean to indicate if the item should render in the site footer.
+   */
+  showInFooter?: boolean;
+
+  /**
    * Boolean to indicate if the item should render in the site nav.
    */
   showInNav?: boolean;
