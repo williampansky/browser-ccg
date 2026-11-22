@@ -2421,9 +2421,11 @@
     "playContext": "%SET_VALUE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/fredo_bernardo",
-    "artistUrl": "https://www.artstation.com/fredo_bernardo",
-    "artStatus": "FPO"
+    "flavor": "\"True equilibrium is not stillness, but motion balanced against itself.\" — Mahatma Gandhi (paraphrase)",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
+    "description": "Can be used to either debuff a powerful enemy minion, or buff your own."
   },
   {
     "id": "PRIME_109",
@@ -3910,24 +3912,24 @@
   },
   {
     "id": "PRIME_171",
-    "name": "Coruscation",
+    "name": "Nullify",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "<strong>%SILENCE%</strong> a minion",
+    "text": "<strong>%SILENCE%</strong> a minion\n<small>(Remove its abilities)</small>",
     "mechanics": [
-      "%SILENCE%"
+      "%SILENCE%",
+      "%TARGET%"
     ],
     "playType": "TARGETED",
     "playContext": "%SILENCE%",
     "collectible": true,
     "active": true,
-    "flavor": "Once again the Elder Gods accompany me in yet another one of life's journeys. ",
-    "artistName": "https://www.artstation.com/ramzifirhad",
-    "artistUrl": "https://www.artstation.com/ramzifirhad",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_194",
