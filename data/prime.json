@@ -169,6 +169,30 @@
     "artStatus": "FPO"
   },
   {
+    "id": "PRIME_255",
+    "name": "Smash!",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_HERO_WARRIOR%",
+    "cost": 1,
+    "text": "Deal %NUM1% damage for each %ARMOR% you have<br />\n<small>(Cannot be used on heroes)</small>",
+    "mechanics": [
+      "%ARMOR%",
+      "%DAMAGE%",
+      "%TARGET%"
+    ],
+    "numberPrimary": 1,
+    "playContext": "%DAMAGE%",
+    "collectible": false,
+    "active": true,
+    "flavor": "Save and win.",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
+    "description": "Build up your %ARMOR% reserves and then deal massive damage to an enemy's minion"
+  },
+  {
     "id": "PRIME_162",
     "name": "Ready to Rumble",
     "set": "%SET_003%",

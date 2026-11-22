@@ -276,6 +276,8 @@ function normaliseCard(
     collectible: raw.collectible === true,
   };
 
+  const heroClass = stripPrefix(raw.cardClass, 'CLASS_HERO_');
+  if (heroClass && !heroClass.startsWith('CLASS_')) card.heroClass = heroClass;
   if (name) card.name = name;
   const attack = readNumber('attack');
   const health = readNumber('health');

@@ -86,7 +86,7 @@ export const resolveDeck = (
 };
 
 /** True if a deck fits the rules (30 cards at most); saved decks are cleaned on load, so this guards the rest. */
-export const deckIsLegal = (cards: string[], byId: ReadonlyMap<string, Card>): boolean => checkDeck(cards, byId).ok;
+export const deckIsLegal = (cards: string[], byId: ReadonlyMap<string, Card>, hero?: string): boolean => checkDeck(cards, byId, true, hero).ok;
 
 const KEY = 'ccg.newGame.v1';
 

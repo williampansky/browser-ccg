@@ -69,6 +69,8 @@ export interface Card {
   /** Absent in the data means inactive (except tokens, which have no such field and count as active). */
   active: boolean;
   collectible: boolean;
+  /** Hero key (`WARRIOR`) that alone may put this card in its deck; absent for a neutral card (`%CLASS_NONE%`). */
+  heroClass?: string;
   flavor?: string;
   /** The row's Airtable `description`: a note on rules edge cases, as plain text. Shown in the card detail window. */
   designNote?: string;

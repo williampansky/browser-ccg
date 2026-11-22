@@ -139,3 +139,17 @@ describe('entourage cards and the set filter', () => {
     expect(core.length + prime.length).toBe(filterCards(tokens, f({ set: 'both' })).length);
   });
 });
+
+describe('class filter', () => {
+  const withClass = [...cards, ...Array.from(loadHsCards().byId.values()).filter((c) => c.id === 'PRIME_255')];
+  it('Neutral hides class cards, a hero shows only its own', () => {
+    expect(filterCards(withClass, f({ hero: 'neutral' })).some((c) => c.heroClass)).toBe(false);
+    expect(filterCards(withClass, f({ hero: 'WARRIOR' })).map((c) => c.id)).toContain('PRIME_255');
+    expect(filterCards(withClass, f({ hero: 'ZEUS' }))).toHaveLength(0);
+  });
+  it('round-trips through the URL', () => {
+    const q = toQuery(f({ hero: 'WARRIOR' }), 'cost', 'all');
+    expect(q.class).toBe('WARRIOR');
+    expect(fromQuery(q).filters.hero).toBe('WARRIOR');
+  });
+});

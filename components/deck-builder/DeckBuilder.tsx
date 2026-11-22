@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { loadHsCards, MAX_DECK_SIZE, playablePool, primePool } from '../../engine';
+import { classPool, loadHsCards, MAX_DECK_SIZE, playablePool, primePool } from '../../engine';
 import { CardFace } from '../play-board/CardFace';
 import { useDetailCardWidth } from '../card-detail/detail-card-width';
 import { CardEffects } from '../card-detail/CardEffects';
 import { heroes } from '../../engine/heroes';
-import { addCard, blankDeck, countOf, curve, removeCard, SavedDeck, whyNotAdd } from './deck-model';
+import { addCard, blankDeck, cleanDeck, countOf, curve, removeCard, SavedDeck, whyNotAdd } from './deck-model';
 import { loadDecks, saveDecks } from './deck-storage';
 import { Button, LinkButton, SegmentedControl, Select, TextInput } from '../ui';
 import styles from './deck-builder.module.scss';
@@ -14,7 +14,8 @@ import cx from '../../utils/cx';
 const { cards, byId } = loadHsCards();
 const corePool = playablePool(cards);
 const prime = primePool(cards);
-const pool = [...corePool, ...prime].sort((a, b) => a.cost - b.cost || (a.name ?? '').localeCompare(b.name ?? ''));
+const classCards = classPool(cards);
+const pool = [...corePool, ...prime, ...classCards].sort((a, b) => a.cost - b.cost || (a.name ?? '').localeCompare(b.name ?? ''));
 const TYPES = ['all', 'minion', 'spell', 'weapon', 'item'] as const;
 const SETS = ['core', 'prime', 'both'] as const;
 const COSTS = ['all', '0', '1', '2', '3', '4', '5', '6', '7+'] as const;
@@ -56,13 +57,14 @@ export const DeckBuilder = () => {
   const shown = useMemo(
     () =>
       pool.filter((c) => {
+        if (c.heroClass && c.heroClass !== deck?.hero) return false; // class cards show only for a deck with that hero
         if (set !== 'both' && c.source !== set) return false;
         if (type !== 'all' && c.type !== type) return false;
         if (cost !== 'all' && (cost === '7+' ? c.cost < 7 : c.cost !== Number(cost))) return false;
         const q = search.trim().toLowerCase();
         return !q || (c.name ?? '').toLowerCase().includes(q) || c.text.toLowerCase().includes(q);
       }),
-    [set, type, cost, search],
+    [set, type, cost, search, deck?.hero],
   );
 
   if (!deck) return null;
@@ -209,7 +211,7 @@ export const DeckBuilder = () => {
         <Select
           className={styles.name}
           value={deck.hero ?? ''}
-          onChange={(e) => update({ ...deck, hero: e.target.value || undefined })}
+          onChange={(e) => update(cleanDeck({ ...deck, hero: e.target.value || undefined }, byId))}
           aria-label="Deck hero"
         >
           <option value="">Hero: any (pick at start)</option>

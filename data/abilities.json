@@ -29,7 +29,7 @@
     "mechanics": [
       "%SUMMON%"
     ],
-    "text": "Attack opponent for 2 damage",
+    "text": "%SUMMON% the %NUM1%/%NUM2% %RACE_CREATURE%",
     "numberPrimary": 8,
     "numberSecondary": 8,
     "ultimate": true
@@ -189,21 +189,23 @@
     "ultimate": true
   },
   {
-    "name": "Smash!",
-    "playContext": "%DAMAGE%",
+    "name": "Last Stand",
+    "playContext": "%SET_VALUE%",
     "type": "%TYPE_SPELL%",
-    "playType": "TARGETED",
+    "playType": "GLOBAL",
     "hero": "%HERO_WARRIOR%",
     "id": 3,
-    "cost": 1,
+    "cost": 6,
     "active": true,
     "mechanics": [
-      "%TARGET%",
-      "%DAMAGE%"
+      "%SET_VALUE%",
+      "%ARMOR%"
     ],
-    "text": "Deal 1 damage for each %ARMOR% you have",
+    "text": "Set your %HEALTH% to %NUM1% and gain %NUM2% %ARMOR%",
+    "numberPrimary": 15,
+    "numberSecondary": 10,
     "ultimate": true,
-    "description": "Ability only works on minions."
+    "description": "Use this as a comeback tool that is strongest when you're low."
   },
   {
     "name": "%RESURRECT%",

@@ -52,3 +52,18 @@ describe('deck hero', () => {
     expect(cleanDeck(deck, new Map()).hero).toBe('ZEUS');
   });
 });
+
+describe('class-restricted cards', () => {
+  const smash = { ...minionCard('PRIME_255'), heroClass: 'WARRIOR' };
+  const byId = catalogOf(smash);
+  it('only a deck with that hero can add one', () => {
+    expect(whyNotAdd(blankDeck(), smash)).toMatch(/warrior/);
+    expect(whyNotAdd({ ...blankDeck(), hero: 'ZEUS' }, smash)).toMatch(/warrior/);
+    expect(whyNotAdd({ ...blankDeck(), hero: 'WARRIOR' }, smash)).toBeUndefined();
+  });
+  it('switching to another hero drops them (cleanDeck)', () => {
+    const deck = { ...blankDeck(), hero: 'WARRIOR', cards: ['PRIME_255'] };
+    expect(cleanDeck(deck, byId).cards).toEqual(['PRIME_255']);
+    expect(cleanDeck({ ...deck, hero: 'ZEUS' }, byId).cards).toEqual([]);
+  });
+});

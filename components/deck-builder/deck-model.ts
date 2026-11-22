@@ -20,6 +20,7 @@ const sorted = (ids: string[], byId: ReadonlyMap<string, Card>): string[] =>
 
 /** Why a card cannot be added right now, or `undefined` if it can. */
 export const whyNotAdd = (deck: SavedDeck, card: Card): string | undefined => {
+  if (card.heroClass && deck.hero !== card.heroClass) return `Only a ${card.heroClass.toLowerCase()} deck can include this card (pick that hero).`;
   if (deck.cards.length >= MAX_DECK_SIZE) return `The deck is full (${MAX_DECK_SIZE} cards).`;
   if (countOf(deck, card.id) >= maxCopies(card)) {
     return maxCopies(card) === 1 ? 'Only one copy of a mythic card.' : `At most ${maxCopies(card)} copies of a card.`;

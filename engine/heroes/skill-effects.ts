@@ -18,7 +18,6 @@ export interface SkillCode {
 }
 
 const anyCharacter: TargetFilter = () => true;
-const anyMinion: TargetFilter = ({ candidate }) => candidate.kind === 'minion';
 
 const summonToken =
   (id: string): Effect =>
@@ -79,6 +78,14 @@ const trueForm = (): Effect => (ctx) => {
   ctx.events.push({ type: 'WeaponEquipped', player: ctx.caster, cardId: claws.id });
 };
 
+/** Warrior's Last Stand: Health is set to `health` (up, or down from a higher total) and the hero gains `armor`. */
+const lastStand =
+  (health: number, armor: number): Effect =>
+  (ctx) => {
+    ctx.g.players[ctx.caster].health = health;
+    addArmor(armor)(ctx);
+  };
+
 /** Skill code per hero key; entry `n` is that hero's ability with id `n + 1`. */
 export const SKILL_CODE: Record<string, SkillCode[]> = {
   ZEUS: [
@@ -89,7 +96,7 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
   WARRIOR: [
     { effects: [addArmor(2)] },
     { target: anyCharacter, effects: [hitChosen((ctx) => (ctx.g.players[ctx.caster].health <= 12 ? 6 : 4))] },
-    { target: anyMinion, effects: [hitChosen((ctx) => ctx.g.players[ctx.caster].armor)] },
+    { effects: [lastStand(15, 10)] },
   ],
   SAGE: [
     { target: anyCharacter, effects: [heal(chosenTarget(), 3)] },

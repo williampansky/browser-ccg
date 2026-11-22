@@ -25,9 +25,11 @@ export interface CollectionFilters {
   race: string;
   /** `all`, or a mechanic symbol (`RUSH`) */
   effect: string;
+  /** `all`, `neutral` (no class), or a hero key (`WARRIOR`) for the cards only that hero's deck may hold */
+  hero: string;
 }
 
-export const DEFAULT_FILTERS: CollectionFilters = { search: '', set: 'both', type: 'all', cost: 'all', rarity: 'all', race: 'all', effect: 'all' };
+export const DEFAULT_FILTERS: CollectionFilters = { search: '', set: 'both', type: 'all', cost: 'all', rarity: 'all', race: 'all', effect: 'all', hero: 'all' };
 
 export const isFiltered = (f: CollectionFilters): boolean => (Object.keys(DEFAULT_FILTERS) as (keyof CollectionFilters)[]).some((k) => f[k] !== DEFAULT_FILTERS[k]);
 
@@ -42,6 +44,7 @@ export const filterCards = (cards: readonly Card[], f: CollectionFilters): Card[
     if (f.cost !== 'all' && (f.cost === '7+' ? c.cost < 7 : c.cost !== Number(f.cost))) return false;
     if (f.rarity !== 'all' && c.rarity !== f.rarity) return false;
     if (f.race !== 'all' && !(c.type === 'minion' && c.race === f.race)) return false;
+    if (f.hero !== 'all' && (f.hero === 'neutral' ? !!c.heroClass : c.heroClass !== f.hero)) return false;
     if (f.effect !== 'all' && !effectsOf(c).some((e) => e.symbol === f.effect)) return false;
     return !q || (c.name ?? '').toLowerCase().includes(q) || c.text.toLowerCase().includes(q);
   });
@@ -64,7 +67,7 @@ export const matchesArt = (c: Card, mode: ArtFilter, missing: ReadonlySet<string
   return c.artStatus === mode.toUpperCase();
 };
 
-const PARAM = { search: 'q', set: 'set', type: 'type', cost: 'cost', rarity: 'rarity', race: 'race', effect: 'effect' } as const;
+const PARAM = { search: 'q', set: 'set', type: 'type', cost: 'cost', rarity: 'rarity', race: 'race', effect: 'effect', hero: 'class' } as const;
 const one = (v: string | string[] | undefined): string | undefined => (Array.isArray(v) ? v[0] : v);
 
 /** The filters as URL params: only those that differ from the default, so an unfiltered page has a clean URL. */
@@ -90,6 +93,7 @@ export const fromQuery = (query: Record<string, string | string[] | undefined>):
       rarity: text('rarity'),
       race: text('race'),
       effect: text('effect'),
+      hero: text('hero'),
     },
     sort: pick(one(query.sort), SORTS.map((s) => s.id), 'cost'),
     art: pick(one(query.art), ART_FILTERS.map((a) => a.id), 'all'),

@@ -16,7 +16,7 @@ export { getHero, heroes, heroSkill, HERO_TOKENS, skillCard, withHeroTokens } fr
 export type { HeroInfo, HeroSkill } from './heroes';
 export { skillReady } from './rules/hero-skill';
 export { legalActions } from './rules/legal-actions';
-export { buildDeck, isPlayable, needsBehaviour, playablePool, primePool } from './decks';
+export { buildDeck, classPool, isPlayable, needsBehaviour, playablePool, primePool } from './decks';
 export { chooseRandomAction } from './bots/random-bot';
 export { chooseGreedyAction, evaluate } from './bots/greedy-bot';
 export { checkDeck, maxCopies, MAX_DECK_SIZE } from './deck-rules';

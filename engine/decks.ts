@@ -19,16 +19,23 @@ export const needsBehaviour = (card: Card): boolean =>
 export const isPlayable = (card: Card, defs: DefLookup = getCardDef): boolean =>
   !needsBehaviour(card) || defs(card) !== undefined;
 
-/** Real, collectible-pool cards the engine fully supports right now. Grows as definitions are added. */
+/** Real, collectible-pool cards (class-restricted cards are left out: random and starter decks have no hero) the engine fully supports right now. Grows as definitions are added. */
 export const playablePool = (cards: Card[], defs: DefLookup = getCardDef): Card[] =>
-  cards.filter((c) => c.source === 'core' && !c.isToken && c.active && isPlayable(c, defs));
+  cards.filter((c) => c.source === 'core' && !c.isToken && !c.heroClass && c.active && isPlayable(c, defs));
 
 /**
  * PRIME cards the engine can play right now. Kept apart from `playablePool` (CORE): PRIME is opt-in, so CORE's balance and
  * the starter decks do not change. A card with no name is a placeholder in the data and is left out until it has one.
  */
 export const primePool = (cards: Card[], defs: DefLookup = getCardDef): Card[] =>
-  cards.filter((c) => c.source === 'prime' && !c.isToken && c.active && !!c.name && isPlayable(c, defs));
+  cards.filter((c) => c.source === 'prime' && !c.isToken && !c.heroClass && c.active && !!c.name && isPlayable(c, defs));
+
+/**
+ * Class-restricted cards (a `heroClass`, e.g. Warrior's Smash!) the engine can play. Kept out of every other pool: only the deck
+ * builder and the collection offer them, and the builder only to a deck with that hero.
+ */
+export const classPool = (cards: Card[], defs: DefLookup = getCardDef): Card[] =>
+  cards.filter((c) => (c.source === 'core' || c.source === 'prime') && !!c.heroClass && !c.isToken && c.active && !!c.name && isPlayable(c, defs));
 
 /** A random deck of `size` distinct cards from the pool (cycles if the pool is smaller). Never more than `MAX_DECK_SIZE`. */
 export const buildDeck = (pool: Card[], rng: Rng, size = MAX_DECK_SIZE): string[] => {

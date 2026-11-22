@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
-import { loadHsCards, playablePool, primePool } from '../../engine';
+import { classPool, heroes, loadHsCards, playablePool, primePool } from '../../engine';
 import { CardDetailOverlay } from '../card-detail/CardDetailOverlay';
 import { CollectionCard } from './CollectionCard';
 import {
@@ -36,7 +36,7 @@ import styles from '../deck-builder/deck-builder.module.scss';
 const { cards, byId } = loadHsCards();
 const corePool = playablePool(cards);
 const prime = primePool(cards);
-const pool = [...corePool, ...prime];
+const pool = [...corePool, ...prime, ...classPool(cards)];
 /** Entourage cards (summoned and offered tokens; an inactive row is left out). Shown only when the box is ticked; the Core/Prime set filter applies to them too (by the set in their id). */
 const tokenPool = Array.from(byId.values()).filter((c) => c.isToken && c.active && c.name);
 const effects = effectOptions(pool);
@@ -118,6 +118,15 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
             {races.map((r) => (
               <option key={r.value} value={r.value}>
                 {r.label}
+              </option>
+            ))}
+          </Select>
+          <Select value={filters.hero} onChange={(e) => set('hero', e.target.value)} aria-label="Class">
+            <option value="all">All classes</option>
+            <option value="neutral">Neutral</option>
+            {heroes().map((h) => (
+              <option key={h.id} value={h.id}>
+                {h.name} only
               </option>
             ))}
           </Select>

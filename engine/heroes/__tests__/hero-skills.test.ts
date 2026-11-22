@@ -149,14 +149,12 @@ describe('Warrior', () => {
     const edge = produce(game('WARRIOR'), (g) => void (g.players['0'].health = 13));
     expect(skill(edge, 1, foeHero).state.players['1'].health).toBe(26);
   });
-  it('Smash! deals damage equal to the Warrior\'s armor, to minions only', () => {
-    let s = putOnBoard(game('WARRIOR'), '1', grunt, { health: 6, maxHealth: 6 });
-    s = produce(s, (g) => void (g.players['0'].armor = 4));
-    const targets = legalActions(s, '0', catalog).flatMap((a) => (a.type === 'HeroSkill' && a.skill === 2 ? [a.target] : []));
-    expect(targets).toEqual([{ kind: 'minion', instanceId: s.players['1'].board[0].instanceId }]);
-    const r = skill(s, 2, targets[0]).state;
-    expect(r.players['1'].board[0].health).toBe(2);
-    expect(r.players['0'].armor).toBe(4);
+  it('Last Stand sets Health to 15 and gains 10 armor, with no target', () => {
+    const low = produce(game('WARRIOR'), (g) => void ((g.players['0'].health = 5), (g.players['0'].armor = 3)));
+    const r = skill(low, 2).state.players['0'];
+    expect([r.health, r.armor]).toEqual([15, 13]);
+    const high = skill(game('WARRIOR'), 2).state.players['0'];
+    expect([high.health, high.armor]).toEqual([15, 10]);
   });
 });
 

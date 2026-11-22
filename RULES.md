@@ -728,7 +728,8 @@ three skills. Name, cost, cooldown and text come from `data/abilities.json`; wha
   - Exile's ultimate "The Beast" summons an 8/8 (the data's text is a copy of Vital Shot; its numbers are 8 and 8).
   - Druid's True Form raises Health to 15 (never lowers it) and equips 5/2 claws (the data's numbers are 15 and 5).
   - Druid's Spirit Animal is a random Spirit Wolf 3/2, Spirit Bear 2/5 Guard or Spirit Hawk 2/1 Rush; Eagle is 4/2 Rush.
-  - Warrior's Smash! may aim at any minion, not heroes, and deals damage equal to current armor (armor is not spent).
+  - Warrior's ultimate is Last Stand (cost 6): it sets Health to 15 (even down from a higher total) and gains 10 armor; it needs no target
+    (the data says TARGETED, ignored). Smash! moved to the Warrior-only card PRIME_255 (any minion, damage = armor, armor not spent). (author's call, 2026-11-21)
   - Violent Strike deals 6 at 12 or less Health, else 4. Lightning Strike, Revitalize and Violent Strike may aim at any character.
   - The Cleric's **Resurrect** (skill 2) is picked from a list: two minions chosen at random from the last five non-token minions that died on
     your side (different cards where possible), each as two options, **with Guard** or **with Bubble**. With a 15% chance one of the two is
