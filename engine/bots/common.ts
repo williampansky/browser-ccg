@@ -64,6 +64,12 @@ export const isBadPlay = (state: GameState, a: Action, catalog: CardCatalog, def
   const result = applyAction(state, a, { rng: createSeededRng(1), catalog, defs });
   if ('error' in result) return false;
   if (a.target && isFriendly(state, a.target) && targetWorse(state, result.state, a.target)) return true;
+  // Silencing its own minion throws away the minion's card text and keywords, which the bot's scoring cannot see
+  // (a no-attack aura minion even looks better silenced, as its Attack starts to count). Only worth it to lift a Disable.
+  if (a.target && a.target.kind === 'minion' && isFriendly(state, a.target)) {
+    const [b, after] = [findMinion(state, a.target.instanceId), findMinion(result.state, a.target.instanceId)];
+    if (b && after?.silenced && !b.silenced && b.disabledOnTurn === undefined) return true;
+  }
   // Buffing or healing one of the opponent's characters helps the opponent.
   if (a.target && !isFriendly(state, a.target) && targetBetter(state, result.state, a.target)) return true;
   // A temporary weapon (Steel Gauntlet) is only worth playing if the hero can then swing it this turn.
