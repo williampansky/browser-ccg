@@ -57,6 +57,26 @@ describe('sanitizeText', () => {
   });
 });
 
+describe('loadCards: cards with no name', () => {
+  const unnamed = (id: string, extra: RawCard = {}): RawCard => spell({ id, name: undefined, ...extra });
+  const load = (prime: RawCard[], entourage: RawCard[] = []) =>
+    loadCards(input({ prime, entourage }), { strict: false });
+  test('an active card is named by its id, and the missing name is still reported', () => {
+    const { byId, issues } = load([unnamed('PRIME_900', { active: true })]);
+    expect(byId.get('PRIME_900')!.name).toBe('PRIME_900');
+    expect(issues.filter((i) => i.code === 'missing-name').map((i) => i.id)).toEqual(['PRIME_900']);
+  });
+  test('an inactive card and a token stay unnamed', () => {
+    const { byId } = load([unnamed('PRIME_901'), unnamed('PRIME_902', { active: true, isEntourage: true })], [unnamed('PRIME_903a', { active: true })]);
+    expect(byId.get('PRIME_901')!.name).toBeUndefined();
+    expect(byId.get('PRIME_902')!.name).toBeUndefined();
+    expect(byId.get('PRIME_903a')!.name).toBeUndefined();
+  });
+  test('a real name is never replaced', () => {
+    expect(load([spell({ id: 'PRIME_904', name: 'Real', active: true })]).byId.get('PRIME_904')!.name).toBe('Real');
+  });
+});
+
 describe('loadCards: normalisation', () => {
   test('strips symbols and lowercases playType', () => {
     const { byId } = loadCards(
@@ -265,8 +285,8 @@ describe('loadHsCards: the committed card data', () => {
     expect(issues.filter((i) => i.code === 'unresolved-entourage')).toHaveLength(12);
   });
 
-  test('27 cards have no name and 34 cards disagree about targeting (reported, not hidden)', () => {
-    expect(issues.filter((i) => i.code === 'missing-name')).toHaveLength(27);
+  test('56 cards have no name and 34 cards disagree about targeting (reported, not hidden)', () => {
+    expect(issues.filter((i) => i.code === 'missing-name')).toHaveLength(56);
     expect(issues.filter((i) => i.code === 'playtype-target-mismatch')).toHaveLength(34);
   });
 });

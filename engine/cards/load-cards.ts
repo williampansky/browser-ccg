@@ -230,6 +230,9 @@ function normaliseCard(
   // name
   let name = typeof raw.name === 'string' && raw.name.trim() ? raw.name.trim() : undefined;
   if (!name) report('warning', 'missing-name', id, 'has no name');
+  // An active card with no name in Airtable is shown and playable under its own id (`PRIME_168`); the data stays unnamed.
+  // Inactive cards and tokens stay unnamed, so the pools keep leaving them out.
+  if (!name && raw.active === true && source !== 'entourage' && raw.isEntourage !== true) name = id;
   // A few cards are named by a glossary symbol (e.g. `%BUBBLE%`); show the glossary's display name.
   if (name && /^%[A-Z0-9_]+%$/.test(name)) {
     const display = glossary.get(name);

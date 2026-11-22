@@ -49,7 +49,6 @@
   },
   {
     "id": "PRIME_168",
-    "name": "PRIME_168",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -93,7 +92,6 @@
   },
   {
     "id": "PRIME_110",
-    "name": "PRIME_110",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -238,7 +236,6 @@
   },
   {
     "id": "PRIME_103",
-    "name": "PRIME_103",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -577,7 +574,6 @@
   },
   {
     "id": "PRIME_131",
-    "name": "PRIME_131",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -710,7 +706,6 @@
   },
   {
     "id": "PRIME_139",
-    "name": "PRIME_139",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -730,7 +725,6 @@
   },
   {
     "id": "PRIME_235",
-    "name": "PRIME_235",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -1200,7 +1194,6 @@
   },
   {
     "id": "PRIME_065",
-    "name": "PRIME_065",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -1282,7 +1275,6 @@
   },
   {
     "id": "PRIME_222",
-    "name": "PRIME_222",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -1662,7 +1654,6 @@
   },
   {
     "id": "PRIME_177",
-    "name": "PRIME_177",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -1798,7 +1789,6 @@
   },
   {
     "id": "PRIME_135",
-    "name": "PRIME_135",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -1814,7 +1804,6 @@
   },
   {
     "id": "PRIME_243",
-    "name": "PRIME_243",
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -2092,7 +2081,6 @@
   },
   {
     "id": "PRIME_130",
-    "name": "PRIME_130",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -2197,7 +2185,6 @@
   },
   {
     "id": "PRIME_195",
-    "name": "PRIME_195",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -2247,7 +2234,6 @@
   },
   {
     "id": "PRIME_166",
-    "name": "PRIME_166",
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -2262,7 +2248,6 @@
   },
   {
     "id": "PRIME_145",
-    "name": "PRIME_145",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -2435,7 +2420,6 @@
   },
   {
     "id": "PRIME_109",
-    "name": "PRIME_109",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -2939,7 +2923,6 @@
   },
   {
     "id": "PRIME_099",
-    "name": "PRIME_099",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -3410,7 +3393,6 @@
   },
   {
     "id": "PRIME_207",
-    "name": "PRIME_207",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -3433,7 +3415,6 @@
   },
   {
     "id": "PRIME_212",
-    "name": "PRIME_212",
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -3455,7 +3436,6 @@
   },
   {
     "id": "PRIME_023",
-    "name": "PRIME_023",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -3474,7 +3454,6 @@
   },
   {
     "id": "PRIME_108",
-    "name": "PRIME_108",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -3827,7 +3806,6 @@
   },
   {
     "id": "PRIME_106",
-    "name": "PRIME_106",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -4503,7 +4481,6 @@
   },
   {
     "id": "PRIME_122",
-    "name": "PRIME_122",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -4666,7 +4643,6 @@
   },
   {
     "id": "PRIME_226",
-    "name": "PRIME_226",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -4792,7 +4768,6 @@
   },
   {
     "id": "PRIME_182",
-    "name": "PRIME_182",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -5049,7 +5024,6 @@
   },
   {
     "id": "PRIME_125",
-    "name": "PRIME_125",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -5200,7 +5174,6 @@
   },
   {
     "id": "PRIME_134",
-    "name": "PRIME_134",
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -5236,7 +5209,6 @@
   },
   {
     "id": "PRIME_153",
-    "name": "PRIME_153",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_MYTHIC%",
@@ -5302,7 +5274,6 @@
   },
   {
     "id": "PRIME_240",
-    "name": "PRIME_240",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
