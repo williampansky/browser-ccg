@@ -63,6 +63,7 @@ import { HeroSkills } from './HeroSkills';
 import { heroOptions, loadHeroChoices, resolveHero, saveHeroChoices, HeroChoice } from './hero-choice';
 import { deckRows, type DeckRow } from './deck-rows';
 import { describeEvents, MYSTERY_HINT, mysteryCategory } from './describe-events';
+import { BOOST_PREVIEW_DELAY_MS, boostedMinions } from './boost-preview';
 import { isMuted, playSounds, cancelCardHover, playCardHover, preloadSounds, setMuted, soundsFor, startHoldSound, stopHoldSound } from './sounds';
 import { targetLinePath, TargetLineStyle } from './target-line';
 import { startDragGhost, DragGhost } from './drag-ghost';
@@ -941,6 +942,21 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   // `legalActions` is empty when it is not that player's turn, which also locks the board during the AI's turn.
   const actions = useMemo(() => (state ? legalActions(state, viewer, byId) : []), [state, viewer]);
 
+  // After resting on a hand card for a moment, pulse the minions on the board that playing it would improve.
+  const [previewHand, setPreviewHand] = useState<number | null>(null);
+  useEffect(() => {
+    setPreviewHand(null);
+    if (hoverHand === null) return;
+    const t = setTimeout(() => setPreviewHand(hoverHand), BOOST_PREVIEW_DELAY_MS);
+    return () => clearTimeout(t);
+  }, [hoverHand]);
+  // A clicked (selected) or dragged hand card keeps the preview on, with no delay.
+  const previewIndex = selection?.kind === 'hand' ? selection.index : dragIndex ?? previewHand;
+  const boostIds = useMemo(
+    () => (state && previewIndex !== null ? boostedMinions(state, viewer, previewIndex, byId) : []),
+    [state, viewer, previewIndex]
+  );
+
   if (!state || !rngRef.current) return <main className={styles.page}>Loading...</main>;
 
   const me = viewer;
@@ -1286,6 +1302,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           minionStyles.slot,
           owner === me && canAttack(m) ? minionStyles.ready : '',
           selected ? minionStyles.selected : '',
+          owner === me && boostIds.includes(m.instanceId) ? minionStyles.boostPreview : '',
           aim ? minionStyles.aim : '',
           aim && hover?.kind === 'minion' && hover.instanceId === m.instanceId ? minionStyles.aimHover : '',
         )}

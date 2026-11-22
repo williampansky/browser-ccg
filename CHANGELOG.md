@@ -2,6 +2,11 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-22
+
+- **Boost preview on the board:** rest the pointer on a hand card for about a second (or click or drag it) and a light sheen sweeps over each of your minions it would improve, so you can tell whether Nute Sprite will find a Sprite before you play it. It plays the card on a throwaway copy of the game and compares your minions' Attack, Health and keywords, so it covers every aura and warcry with no per-card data. Cards that need a target are not previewed. `components/play-board/boost-preview.ts`; reduced motion shows a green ring only.
+- **Greedy bot never silences its own minion:** it could cast Nullify on a minion of its own, throwing away the minion's card text, which its scoring cannot see. `isBadPlay` now rejects a silence on a friendly minion unless that lifts a Disable.
+
 ## 2026-11-20
 
 - **PRIME_111 names its token by id:** Airtable's entourage list for Untamed Potential is now `PRIME_111a, PRIME_111c` (the option card `a` added before the 3/2 Werewolf `c`), which made "summon token #0" summon the spell. `summonEntourage` now also takes a card id, and PRIME_111 uses `'PRIME_111c'`, so reordering the list can't change what it summons.

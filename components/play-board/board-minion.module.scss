@@ -302,6 +302,30 @@
   box-shadow: 0 0 0 3px #ffd45e, 0 0 18px rgba(255, 212, 94, 0.7), 0 var(--sh-sel-y, 14px) var(--sh-sel-b, 18px) rgba(0, 0, 0, var(--sh-sel-a, 0));
 }
 
+// Hovering a hand card for a moment: a light band sweeps over the portrait of each minion it would improve (see boost-preview.ts).
+@keyframes boostSheen {
+  0% { transform: translateX(-130%) skewX(-20deg); }
+  55%, 100% { transform: translateX(230%) skewX(-20deg); }
+}
+.boostPreview .oval {
+  border-color: #7be08a;
+  box-shadow: 0 0 0 2px rgba(123, 224, 138, 0.6), 0 0 14px rgba(123, 224, 138, 0.55);
+}
+.boostPreview .oval::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  pointer-events: none;
+  animation: boostSheen 1500ms ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .boostPreview .oval::after { animation: none; opacity: 0; }
+}
+
 .aim { cursor: crosshair; }
 .aim .oval {
   border-color: #ff6b6b;
