@@ -50,8 +50,10 @@ export const weaponAttack = (
         if (counter > 0) damageHero(g, me, counter, events);
       }
     }
-    w.durability -= 1;
-    if (w.durability <= 0) {
+    // PRIME_243 wears down in Attack instead of Durability
+    if (def?.wearsAttack) w.attack -= 1;
+    else w.durability -= 1;
+    if (w.durability <= 0 || w.attack <= 0) {
       p.weapon = null;
       events.push({ type: 'WeaponBroke', player: me });
     }

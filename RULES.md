@@ -588,6 +588,9 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
   stops at the floor ("not less than 1") but never raises a card above its printed cost; never below 0. Only the owner's cards are affected.
   220 minions -2 (floor 1); 142 spells only, not items; 086 -1 per *other* card in hand; 085 -1 per minion on *either* board; 247 -1 per
   point of damage your hero has taken (armor does not count). 037 (Skelly, "your minions cost 3 more") is not built: it is tagged as a warcry.
+- **PRIME_243 Glacial Crescent** ("When used, lose 1 attack instead of 1 Durability"): every swing, at a minion or the hero, deals the weapon's
+  current Attack first, then costs it 1 Attack; Durability is never spent. It breaks when its Attack reaches 0, so a new 7/1 swings 7 times
+  (7 + 6 + ... + 1 damage). A buff to its Attack adds swings. (`wearsAttack` in `engine/definitions/define-card.ts`, applied in `weapon-attack.ts`.)
 - **Suppress (SILENCE)**: the minion loses its card's behaviour (triggers, auras, Spell Damage, cost changes, demise, conditional effects),
   all keywords (including Can't Attack) and any Disable. Its Attack, Health, damage and buffs stay. It is a one-way flag (`silenced`).
   Heroes cannot be Suppressed. 201 Suppresses first, then deals its 1 damage (so a demise does not fire).

@@ -128,6 +128,8 @@ export interface CardDef {
   auras?: Aura[];
   /** For weapons: runs before each hero attack with the weapon */
   beforeAttack?: Effect[];
+  /** For weapons: each attack costs 1 Attack instead of 1 Durability (it breaks when its Attack reaches 0) */
+  wearsAttack?: boolean;
   /**
    * "Choose one" cards: the player picks an option when playing (`PlayCard.choice`), and that option's
    * own `target` and `onPlay` apply instead of the card's. Options have a short `label` for the UI.
