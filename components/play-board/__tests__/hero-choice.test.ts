@@ -3,7 +3,7 @@ import { HERO_NONE, HERO_RANDOM, heroOptions, normalizeHeroChoice, resolveHero }
 
 describe('hero choice', () => {
   it('lists Random, the five heroes and No hero skills', () => {
-    expect(heroOptions().map((o) => o.value)).toEqual([HERO_RANDOM, 'ZEUS', 'FORSAKEN_DRUID', 'EXILE', 'WARRIOR', 'SAGE', HERO_NONE]);
+    expect(heroOptions().map((o) => o.value)).toEqual([HERO_RANDOM, 'ZEUS', 'WILDCALLER', 'EXILE', 'WARRIOR', 'SAGE', HERO_NONE]);
   });
   it('resolves a named hero, none, and random to a real hero', () => {
     const rng = createSeededRng(3);

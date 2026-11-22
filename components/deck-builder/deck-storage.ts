@@ -4,6 +4,9 @@ import { cleanDeck, SavedDeck } from './deck-model';
 
 const DECKS_KEY = 'ccg.decks.v1';
 
+/** Hero keys that were renamed, so a deck saved under the old key keeps its hero. */
+const RENAMED: Record<string, string> = { FORSAKEN_DRUID: 'WILDCALLER' };
+
 const read = (key: string): string | null => {
   try {
     return typeof window === 'undefined' ? null : window.localStorage.getItem(key);
@@ -28,7 +31,7 @@ export const loadDecks = (byId: ReadonlyMap<string, Card>): SavedDeck[] => {
     if (!Array.isArray(raw)) return [];
     return raw
       .filter((d) => d && typeof d.id === 'string' && Array.isArray(d.cards))
-      .map((d) => cleanDeck({ id: d.id, name: String(d.name ?? 'Deck'), cards: d.cards.filter((c: unknown) => typeof c === 'string'), ...(getHero(d.hero) ? { hero: d.hero } : {}) }, byId));
+      .map((d) => cleanDeck({ id: d.id, name: String(d.name ?? 'Deck'), cards: d.cards.filter((c: unknown) => typeof c === 'string'), ...(getHero(RENAMED[d.hero] ?? d.hero) ? { hero: RENAMED[d.hero] ?? d.hero } : {}) }, byId));
   } catch {
     return [];
   }

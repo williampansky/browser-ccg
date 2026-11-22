@@ -31,6 +31,18 @@ const summonRandomToken =
     summonMinion(ctx.g, ctx.caster, heroToken(ids[ctx.rng.int(ids.length)]), ctx.events);
   };
 
+/** Summons the hero token with `attack` / `health` added on top of its own numbers (nothing happens if the board is full). */
+const summonBuffed =
+  (id: string, attack: number, health: number): Effect =>
+  (ctx) => {
+    const board = ctx.g.players[ctx.caster].board;
+    if (!summonMinion(ctx.g, ctx.caster, heroToken(id), ctx.events)) return;
+    const m = board[board.length - 1];
+    m.attack += attack;
+    m.maxHealth += health;
+    m.health += health;
+  };
+
 /** Brings back up to `count` random dead friendly minions (each only once), fresh and without a warcry. */
 const resurrect =
   (count: number): Effect =>
@@ -69,15 +81,6 @@ const resurrectPicked = (): Effect => (ctx) => {
   grave.splice(grave.lastIndexOf(id), 1);
 };
 
-/** Druid: back to its true form. Health is raised to 15 (never lowered) and the hero gets 5/2 claws (RULES Appendix D). */
-const trueForm = (): Effect => (ctx) => {
-  const p = ctx.g.players[ctx.caster];
-  p.health = Math.max(p.health, 15);
-  const claws = heroToken('HERO_DRUID_CLAWS');
-  p.weapon = { instanceId: ctx.g.nextInstanceId++, cardId: claws.id, attack: claws.attack ?? 0, durability: claws.health ?? 0 };
-  ctx.events.push({ type: 'WeaponEquipped', player: ctx.caster, cardId: claws.id });
-};
-
 /** Warrior's Last Stand: Health is set to `health` (up, or down from a higher total) and the hero gains `armor`. */
 const lastStand =
   (health: number, armor: number): Effect =>
@@ -108,9 +111,10 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
     { effects: [summonToken('HERO_EXILE_EAGLE')] },
     { effects: [summonToken('HERO_EXILE_BEAST')] },
   ],
-  FORSAKEN_DRUID: [
+  WILDCALLER: [
     { effects: [summonRandomToken(['HERO_DRUID_WOLF', 'HERO_DRUID_BEAR', 'HERO_DRUID_HAWK'])] },
     { effects: [buff(friendlyOfRace('CREATURE'), 2, 2)] },
-    { effects: [trueForm()] },
+    // Ultimate (Stampede of the Wild): one of each Spirit Animal, each with +2/+2 (other Creatures are not buffed)
+    { effects: [summonBuffed('HERO_DRUID_WOLF', 2, 2), summonBuffed('HERO_DRUID_BEAR', 2, 2), summonBuffed('HERO_DRUID_HAWK', 2, 2)] },
   ],
 };

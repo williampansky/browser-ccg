@@ -60,7 +60,7 @@ describe('spell damage on skills', () => {
 
 describe('the playable heroes', () => {
   it('are the five marked active, each with three skills', () => {
-    expect(heroes().map((h) => h.id).sort()).toEqual(['EXILE', 'FORSAKEN_DRUID', 'SAGE', 'WARRIOR', 'ZEUS']);
+    expect(heroes().map((h) => h.id).sort()).toEqual(['EXILE', 'SAGE', 'WARRIOR', 'WILDCALLER', 'ZEUS']);
     for (const h of heroes()) expect(h.skills).toHaveLength(3);
   });
   it('take their skill numbers from the ability data', () => {
@@ -301,33 +301,38 @@ describe('Exile', () => {
   });
 });
 
-describe('Forsaken Druid', () => {
+describe('Wildcaller', () => {
   it('Spirit Animal summons one of its beasts', () => {
-    const m = skill(game('FORSAKEN_DRUID'), 0).state.players['0'].board;
+    const m = skill(game('WILDCALLER'), 0).state.players['0'].board;
     expect(m).toHaveLength(1);
     expect(m[0].cardId.startsWith('HERO_DRUID_')).toBe(true);
   });
   it('Savagery gives every friendly Creature +2/+2 and leaves other minions alone', () => {
-    let s = skill(game('FORSAKEN_DRUID'), 0).state;
+    let s = skill(game('WILDCALLER'), 0).state;
     s = putOnBoard(s, '0', grunt);
     const before = s.players['0'].board.map((m) => [m.attack, m.health]);
     const r = skill(setEnergy(s, '0', 10), 1).state.players['0'].board.map((m) => [m.attack, m.health]);
     expect(r[0]).toEqual([before[0][0] + 2, before[0][1] + 2]);
     expect(r[1]).toEqual(before[1]);
   });
-  it('True Form raises Health to 15 at least and equips claws', () => {
-    const low = produce(game('FORSAKEN_DRUID'), (g) => void (g.players['0'].health = 6));
-    const r = skill(low, 2).state.players['0'];
-    expect([r.health, r.weapon?.cardId, r.weapon?.attack]).toEqual([15, 'HERO_DRUID_CLAWS', 5]);
-    const high = skill(game('FORSAKEN_DRUID'), 2).state.players['0'];
-    expect(high.health).toBe(30);
+  it('the ultimate summons a wolf, a bear and a hawk, each with +2/+2, and leaves Creatures already on the board alone', () => {
+    let s = skill(game('WILDCALLER'), 0).state;
+    const first = s.players['0'].board[0];
+    s = setEnergy(s, '0', 10);
+    const board = skill(s, 2).state.players['0'].board;
+    expect(board).toHaveLength(4);
+    const by = (id: string) => board.find((m) => m.cardId === id && m.instanceId !== first.instanceId)!;
+    expect([by('HERO_DRUID_WOLF')?.attack, by('HERO_DRUID_WOLF')?.health]).toEqual([5, 4]);
+    expect([by('HERO_DRUID_BEAR')?.attack, by('HERO_DRUID_BEAR')?.health]).toEqual([4, 7]);
+    expect([by('HERO_DRUID_HAWK')?.attack, by('HERO_DRUID_HAWK')?.health]).toEqual([4, 3]);
+    expect(board.find((m) => m.instanceId === first.instanceId)!.attack).toBe(first.attack);
   });
 });
 
 describe('bots', () => {
   it('a random game with heroes plays to the end without an engine error', () => {
     const { chooseRandomAction } = require('../../bots/random-bot');
-    let s = game('SAGE', 'FORSAKEN_DRUID');
+    let s = game('SAGE', 'WILDCALLER');
     const rng = createSeededRng(7);
     for (let i = 0; i < 600 && s.status === 'playing'; i++) {
       const a = chooseRandomAction(s, catalog, rng);

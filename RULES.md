@@ -715,7 +715,7 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 
 ### Appendix D: Hero skills (2026-11-13; engine in `engine/heroes/`, ability numbers in the ABILITIES table)
 
-Five heroes are playable (the ones marked `active`): Zeus, Forsaken Druid, Exile, Warrior and the Cleric (`SAGE`). Each has
+Five heroes are playable (the ones marked `active`): Zeus, Wildcaller, Exile, Warrior and the Cleric (`SAGE`). Each has
 three skills. Name, cost, cooldown and text come from `data/abilities.json`; what a skill does is code in `engine/heroes/skill-effects.ts`.
 
 - **Using a skill** is the action `HeroSkill { skill, target? }`. It costs energy from the same pool as cards. It is not a spell:
@@ -726,7 +726,9 @@ three skills. Name, cost, cooldown and text come from `data/abilities.json`; wha
   other turn). A skill with no cooldown in the data is an **ultimate**: once per game. [A]
 - **Readings I had to choose (author to confirm):**
   - Exile's ultimate "The Beast" summons an 8/8 (the data's text is a copy of Vital Shot; its numbers are 8 and 8).
-  - Druid's True Form raises Health to 15 (never lowers it) and equips 5/2 claws (the data's numbers are 15 and 5).
+  - Wildcaller's ultimate, Stampede of the Wild (cost 8, once per game): summons a Spirit Wolf, Spirit Bear and Spirit Hawk, each with +2/+2 on top of its
+    own numbers (the new animals only; other Creatures are not buffed). It replaced True Form (Health to 15, 5/2 claws), whose idea became the Warrior's
+    Last Stand. Forsaken Druid was renamed Wildcaller (hero key `WILDCALLER`). (author's call, 2026-11-21)
   - Druid's Spirit Animal is a random Spirit Wolf 3/2, Spirit Bear 2/5 Guard or Spirit Hawk 2/1 Rush; Eagle is 4/2 Rush.
   - Warrior's ultimate is Last Stand (cost 6): it sets Health to 15 (even down from a higher total) and gains 10 armor; it needs no target
     (the data says TARGETED, ignored). Smash! moved to the Warrior-only card PRIME_255 (any minion, damage = armor, armor not spent). (author's call, 2026-11-21)

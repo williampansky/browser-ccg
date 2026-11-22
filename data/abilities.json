@@ -1,20 +1,20 @@
 [
   {
-    "name": "True Form",
-    "playContext": "%TRANSFORM%",
+    "name": "Stampede of the Wild",
+    "playContext": "%SUMMON%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_FORSAKEN_DRUID%",
+    "hero": "%HERO_WILDCALLER%",
     "id": 3,
-    "cost": 4,
+    "cost": 8,
     "active": true,
-    "cooldown": 2,
     "mechanics": [
-      "%TRANSFORM%"
+      "%SUMMON%",
+      "%BUFF%"
     ],
-    "text": "%TRANSFORM% your hero into its true self",
-    "numberPrimary": 15,
-    "numberSecondary": 5,
+    "text": "%SUMMON% one of each Spirit Animal with +%NUM1%/+%NUM2%",
+    "numberPrimary": 2,
+    "numberSecondary": 2,
     "ultimate": true
   },
   {
@@ -109,7 +109,7 @@
     "playContext": "%BUFF%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_FORSAKEN_DRUID%",
+    "hero": "%HERO_WILDCALLER%",
     "id": 2,
     "cost": 4,
     "active": true,
@@ -334,7 +334,7 @@
     "playContext": "%SUMMON%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_FORSAKEN_DRUID%",
+    "hero": "%HERO_WILDCALLER%",
     "id": 1,
     "cost": 3,
     "active": true,

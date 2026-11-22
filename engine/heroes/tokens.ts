@@ -42,7 +42,6 @@ export const HERO_TOKENS: Card[] = [
   token('HERO_DRUID_WOLF', 'Spirit Wolf', 'minion', 3, 2, ''),
   token('HERO_DRUID_BEAR', 'Spirit Bear', 'minion', 2, 5, 'Guard', ['BULWARK']),
   token('HERO_DRUID_HAWK', 'Spirit Hawk', 'minion', 2, 1, 'Stampede', ['RUSH']),
-  token('HERO_DRUID_CLAWS', 'True Claws', 'weapon', 5, 2, ''),
 ];
 
 export const heroToken = (id: string): Card => {

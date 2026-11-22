@@ -145,7 +145,7 @@ const HEROES = [
   ['EXILE', 'Exile'],
   ['SAGE', 'Sage'],
   ['WARRIOR', 'Warrior'],
-  ['FORSAKEN_DRUID', 'Forsaken Druid']
+  ['WILDCALLER', 'Wildcaller']
 ];
 
 /** PROTOTYPE page: the "bust" hero display with the real hero art (dev only, not linked). */

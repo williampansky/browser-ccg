@@ -22,8 +22,8 @@ One line: what it is and why it is interesting.
 ## Heroes
 
 ### The Lone Warden: companion druid (`idea`, 2026-11-13)
-A hero built around **one strong companion** (a Bear) instead of a swarm. Different from Forsaken Druid, which already has
-Spirit Animal and True Form, so if this ships, decide whether it replaces Forsaken Druid's identity or sits beside it.
+A hero built around **one strong companion** (a Bear) instead of a swarm. Different from Wildcaller, which already has
+Spirit Animal and True Form, so if this ships, decide whether it replaces Wildcaller's identity or sits beside it.
 
 Three skills (all numbers are first guesses):
 1. **Call the Bear** (cost 2, cooldown 1): summon a 2/4 Guard Bear. If you already have one, restore 3 Health to it and give it +1 Attack.

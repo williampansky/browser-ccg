@@ -23,7 +23,7 @@ export interface HeroSkill {
 }
 
 export interface HeroInfo {
-  /** `ZEUS`, `FORSAKEN_DRUID`, ... */
+  /** `ZEUS`, `WILDCALLER`, ... */
   id: string;
   name: string;
   shortDescription: string;
