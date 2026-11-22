@@ -5234,7 +5234,7 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_NONE%",
     "cost": 1,
-    "text": "%BUFF% a minion so<br>\nthat you draw a card<br>\nwhenever it attacks.",
+    "text": "%BUFF% a minion to %DRAW_CARD% a card whenever it attacks",
     "mechanics": [
       "%BUFF%",
       "%DRAW_CARD%",
@@ -5245,9 +5245,9 @@
     "playContext": "%BUFF%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/zachsharts",
-    "artistUrl": "https://www.artstation.com/zachsharts",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_113",
