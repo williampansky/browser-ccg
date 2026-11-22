@@ -91,9 +91,9 @@ describe('demise', () => {
   };
   it('PRIME_013 draws a card', () => expect(kill('PRIME_013').players['0'].hand.length).toBe(1));
   it('PRIME_004 deals 2 to the enemy hero', () => expect(kill('PRIME_004').players['1'].health).toBe(28));
-  it('PRIME_136 summons two 2/2 Creatures', () => {
+  it('PRIME_136 summons a 4/2 Creature', () => {
     const r = kill('PRIME_136');
-    expect(stats(r, '0')).toEqual([[2, 2], [2, 2]]);
+    expect(stats(r, '0')).toEqual([[4, 2]]);
     expect(realCard('PRIME_136a').race).toBe('CREATURE');
   });
   it('PRIME_019 summons a 2/1', () => expect(stats(kill('PRIME_019'), '0')).toEqual([[2, 1]]));

@@ -1154,17 +1154,19 @@
     "cost": 6,
     "attack": 6,
     "health": 5,
-    "text": "<strong>%ON_DEATH%:</strong> %SUMMON% two<br>\n2/2 %RACE_CREATURE%s",
+    "text": "<strong>%ON_DEATH%:</strong> %SUMMON% a<br>\n%NUM1%/%NUM2% %RACE_CREATURE%",
     "mechanics": [
       "%ON_DEATH%",
       "%SUMMON%"
     ],
+    "numberPrimary": 4,
+    "numberSecondary": 2,
     "collectible": true,
     "active": true,
     "entourage": "PRIME_136a",
-    "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_160",
