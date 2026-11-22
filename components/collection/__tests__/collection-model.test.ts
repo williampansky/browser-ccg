@@ -153,3 +153,16 @@ describe('class filter', () => {
     expect(fromQuery(q).filters.hero).toBe('WARRIOR');
   });
 });
+
+describe('search by id', () => {
+  it('finds a card by its full id, any case, or by the number part', () => {
+    expect(filterCards(cards, f({ search: 'CORE_076' })).map((c) => c.id)).toContain('CORE_076');
+    expect(filterCards(cards, f({ search: 'core_076' })).map((c) => c.id)).toContain('CORE_076');
+    expect(filterCards(cards, f({ search: '076' })).map((c) => c.id)).toContain('CORE_076');
+  });
+  it('finds a card that has no name in the data (named by its id)', () => {
+    const unnamed = cards.filter((c) => c.name === c.id);
+    expect(unnamed.length).toBeGreaterThan(0);
+    expect(filterCards(cards, f({ search: unnamed[0].id })).map((c) => c.id)).toContain(unnamed[0].id);
+  });
+});

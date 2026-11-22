@@ -90,7 +90,7 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
     <div className={styles.page}>
       <section className={styles.pool}>
         <div className={`${styles.filters} ui-controls`}>
-          <TextInput type="search" placeholder="Search name or text" aria-label="Search" value={filters.search} onChange={(e) => set('search', e.target.value)} />
+          <TextInput type="search" placeholder="Search name, id or text" aria-label="Search" value={filters.search} onChange={(e) => set('search', e.target.value)} />
           <Select value={filters.set} onChange={(e) => set('set', e.target.value as CollectionFilters['set'])} aria-label="Card set">
             {SETS.map((s) => (
               <option key={s} value={s}>

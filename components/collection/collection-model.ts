@@ -46,7 +46,7 @@ export const filterCards = (cards: readonly Card[], f: CollectionFilters): Card[
     if (f.race !== 'all' && !(c.type === 'minion' && c.race === f.race)) return false;
     if (f.hero !== 'all' && (f.hero === 'neutral' ? !!c.heroClass : c.heroClass !== f.hero)) return false;
     if (f.effect !== 'all' && !effectsOf(c).some((e) => e.symbol === f.effect)) return false;
-    return !q || (c.name ?? '').toLowerCase().includes(q) || c.text.toLowerCase().includes(q);
+    return !q || (c.name ?? '').toLowerCase().includes(q) || c.id.toLowerCase().includes(q) || c.text.toLowerCase().includes(q);
   });
 };
 
