@@ -39,7 +39,7 @@ earlier `hsclone` repo as the rules reference. Read these first:
   still expect the zone-game shape, and `utils/` reads
   `constants.json`/`mechanics.json` in the old shape, so they are stale until ROADMAP Milestone 4 switches them over.
 
-- **Hero skills** (`engine/heroes/`): 5 active heroes, 3 skills each; numbers from `data/abilities.json`, behaviour in `skill-effects.ts`,
+- **Hero skills** (`engine/heroes/`): 5 active heroes (Zeus, Wildcaller (was Forsaken Druid, key `WILDCALLER`), Exile, Warrior, Cleric), 3 skills each; ability `text` may use `%NUM1%`/`%NUM2%`, filled from `numberPrimary`/`numberSecondary`; numbers from `data/abilities.json`, behaviour in `skill-effects.ts`,
   tokens in `tokens.ts` (use `withHeroTokens(catalog)` for a game with heroes). `PlayerState.hero`, action `HeroSkill`, `/play` skill bar
   (`HeroSkills.tsx`), hero picker in New game (`hero-choice.ts`, `ccg.heroes.v1`), debug `?h0=ZEUS&h1=none`. Readings: `RULES.md` Appendix D.
 
@@ -65,9 +65,10 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   (`maxCopies`): 2 of any card, 1 if its rarity is `MYTHIC`; the deck builder enforces it, `createGame` does not.
 - **`/deckbuilder`** (`components/deck-builder/`) is the new builder on the engine's card model (the old page read the zone-game shape).
   Saved decks live in localStorage (`deck-storage.ts`).
-- **PRIME is opt-in** (`primePool` in `engine/decks.ts`: active, named, non-token PRIME cards the engine can already play; 201 of 254 so far, definitions in `engine/definitions/prime/`, readings in `RULES.md` Appendix C,
+- **PRIME is opt-in** (`primePool` in `engine/decks.ts`: active, named, non-token PRIME cards the engine can already play; 217 of 254 so far, definitions in `engine/definitions/prime/`, readings in `RULES.md` Appendix C,
   the rest need definitions). The deck builder has a Core / Prime / Both filter; the picker has "Random deck (Core + Prime)"; every other
-  random or starter deck stays CORE-only, so CORE's balance numbers are unchanged. Unnamed PRIME cards (51 in the data) are left out until Airtable names them.
+  random or starter deck stays CORE-only, so CORE's balance numbers are unchanged. **Placeholder names:** on 2026-11-21 the 29 *active* PRIME cards that had no name were named with their own id (`name` = `PRIME_168`, written to Airtable with the `_CLAUDE_CODE` pair, so the pull keeps them); 15 of them are playable, so they are now in `primePool`, in the deck builder and in the collection under that id, and `art-files.test.ts` expects `-CARD` art for them (PRIME_212 is the one exception, listed in the test; it shows the placeholder). Rename them in Airtable as they get real names. 21 inactive PRIME cards still have no name and are left out (`primePool` needs a name), and the loader reports them as `missing-name` warnings (27 with the entourage ones).
+- **Class-restricted cards** (first one: `PRIME_255` Smash!, Warrior only): the card's `cardClass` (`0 %CLASS_HERO_WARRIOR%`; the `0 ` is a constant prefix the pull writes, the loader strips it) becomes `Card.heroClass` (hero key, e.g. `WARRIOR`; absent for `%CLASS_NONE%`). `checkDeck(ids, byId, copyLimit, hero)` refuses a class card for any other hero; `createGame` does not check (it has no catalog). Every ordinary pool (`playablePool`, `primePool`, random and starter decks) skips class cards; `classPool` returns them, and only the deck builder (shown and addable only when the deck's hero matches; changing the hero drops cards that no longer fit) and `/collection` (a Class filter, URL `?class=`) offer them.
   PRIME art was copied from `react-ccg-deprecated` (`SET_003`, renamed `PRIME_061-CARD.jpg` -> `SET_PRIME/061-CARD.jpg`, checked card by card against the old data) on 2026-11-12: all but `PRIME_212` have a `-CARD` image, but its provenance is unchecked, like the rest. **A card with no art file shows `public/images/sets/PLACEHOLDER.jpg`**: `artBackground` (`card-face-model.ts`)
   stacks the card's art over it as CSS background layers, so a missing file (a 404 in the console is expected) falls through; framed cards and board minions both use it.
 - **Starter decks** (`engine/starter-decks.ts`): 12 CORE (`STARTER_DECKS`), 10 PRIME (`PRIME_STARTER_DECKS`) and 8 Core + Prime (`MIXED_STARTER_DECKS`), each a score over its pool; the picker lists all of them, and

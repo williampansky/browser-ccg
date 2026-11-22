@@ -265,8 +265,8 @@ describe('loadHsCards: the committed card data', () => {
     expect(issues.filter((i) => i.code === 'unresolved-entourage')).toHaveLength(12);
   });
 
-  test('56 cards have no name and 34 cards disagree about targeting (reported, not hidden)', () => {
-    expect(issues.filter((i) => i.code === 'missing-name')).toHaveLength(56);
+  test('27 cards have no name and 34 cards disagree about targeting (reported, not hidden)', () => {
+    expect(issues.filter((i) => i.code === 'missing-name')).toHaveLength(27);
     expect(issues.filter((i) => i.code === 'playtype-target-mismatch')).toHaveLength(34);
   });
 });

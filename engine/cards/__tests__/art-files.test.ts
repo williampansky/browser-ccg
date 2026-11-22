@@ -36,7 +36,9 @@ describe('SET_CORE art', () => {
 describe('SET_PRIME art', () => {
   it('every named, active PRIME card has -CARD art, and nothing in the folder belongs to no card', () => {
     const have = new Set(files('SET_PRIME'));
-    for (const c of (prime as { id: string; name?: string; active?: boolean }[]).filter((c) => c.name && c.active)) {
+    // PRIME_212 has no art yet (the board shows the placeholder); anything else missing is a mistake.
+    const noArtYet = ['PRIME_212'];
+    for (const c of (prime as { id: string; name?: string; active?: boolean }[]).filter((c) => c.name && c.active && !noArtYet.includes(c.id))) {
       expect([c.id, have.has(`${c.id.slice('PRIME_'.length)}-CARD.jpg`)]).toEqual([c.id, true]);
     }
     const known = new Set([...ids(prime as { id: string }[], 'PRIME_'), ...ids(entourage as { id: string }[], 'PRIME_')]);
