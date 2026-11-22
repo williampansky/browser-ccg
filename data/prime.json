@@ -1489,13 +1489,14 @@
     "text": "<strong>%CHOOSE_ONE%:</strong><br>\n+1/+1 to your %RACE_CREATURE%s;<br>\nor %SUMMON% a 3/2 that has %RUSH%",
     "mechanics": [
       "%CHOOSE_ONE%",
-      "%SET_VALUE%",
+      "%BUFF%",
       "%SUMMON%"
     ],
     "playType": "GLOBAL",
+    "playContext": "%CHOOSE_ONE%",
     "collectible": true,
     "active": true,
-    "entourage": "PRIME_111a, PRIME_111c",
+    "entourage": "PRIME_111a, PRIME_111b",
     "artistName": "Alexandra Malygina",
     "artistUrl": "https://fler.artstation.com/",
     "artStatus": "FPO"
