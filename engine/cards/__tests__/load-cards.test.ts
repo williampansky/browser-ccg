@@ -209,10 +209,10 @@ describe('loadHsCards: the committed card data', () => {
   const bySource = (source: string) => cards.filter((c) => c.source === source);
 
   test('loads without errors, with the expected record counts', () => {
-    expect(cards).toHaveLength(435);
+    expect(cards).toHaveLength(433);
     expect(bySource('core')).toHaveLength(132);
-    expect(bySource('prime')).toHaveLength(254);
-    expect(bySource('entourage')).toHaveLength(48);
+    expect(bySource('prime')).toHaveLength(255);
+    expect(bySource('entourage')).toHaveLength(45);
     expect(bySource('game')).toHaveLength(1);
     expect(issues.filter((i) => i.level === 'error')).toEqual([]);
   });
@@ -220,7 +220,7 @@ describe('loadHsCards: the committed card data', () => {
   test('CORE has the expected type split', () => {
     const core = bySource('core');
     const count = (type: string) => core.filter((c) => c.type === type).length;
-    expect([count('minion'), count('spell'), count('item'), count('weapon')]).toEqual([59, 52, 16, 5]);
+    expect([count('minion'), count('spell'), count('item'), count('weapon')]).toEqual([59, 51, 17, 5]);
   });
 
   test('every CORE card is active and none is a token', () => {
@@ -242,7 +242,7 @@ describe('loadHsCards: the committed card data', () => {
 
   test('every weapon has attack and durability (health)', () => {
     const weapons = cards.filter((c) => c.type === 'weapon');
-    expect(weapons).toHaveLength(21);
+    expect(weapons).toHaveLength(18);
     expect(weapons.every((c) => c.attack !== undefined && c.health !== undefined)).toBe(true);
   });
 
