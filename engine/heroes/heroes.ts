@@ -47,7 +47,7 @@ const display = (text: string): string =>
 
 const keyOf = (symbol: string): string => symbol.replace(/%/g, '').replace(/^HERO_/, '');
 
-type RawAbility = { name: string; hero: string; id: number | string; cost: number; cooldown?: number; text: string; ultimate?: boolean; rarity?: string };
+type RawAbility = { name: string; hero: string; id: number | string; cost: number; cooldown?: number; text: string; numberPrimary?: number; numberSecondary?: number; ultimate?: boolean; rarity?: string };
 
 /** Heroes marked active in the data that also have skill code and all three abilities. */
 const build = (): HeroInfo[] => {
@@ -72,7 +72,7 @@ const build = (): HeroInfo[] => {
         cost: a.cost,
         // An ultimate is once per game whatever cooldown the data gives it (True Form has one by mistake).
         cooldown: !a.ultimate && a.cooldown && a.cooldown > 0 ? a.cooldown : undefined,
-        text: display(a.text),
+        text: display(a.text.replace(/%NUM1%/g, String(a.numberPrimary ?? '')).replace(/%NUM2%/g, String(a.numberSecondary ?? ''))),
         rarity: a.rarity?.replace(/%/g, '').replace(/^RARITY_/, '') || 'FREE',
         target: code[index].target,
         options: code[index].options,

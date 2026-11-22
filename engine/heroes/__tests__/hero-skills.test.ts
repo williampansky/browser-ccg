@@ -138,6 +138,14 @@ describe('Zeus', () => {
   });
 });
 
+describe('skill text', () => {
+  it('fills in %NUM1% / %NUM2% from the ability numbers and leaves no raw symbol', () => {
+    expect(getHero('WARRIOR')!.skills[2].text).toBe('Set your Health to 15 and gain 10 Armor');
+    expect(getHero('EXILE')!.skills[2].text).toMatch(/8\/8/);
+    for (const h of heroes()) for (const sk of h.skills) expect(sk.text).not.toMatch(/%/);
+  });
+});
+
 describe('Warrior', () => {
   it('Armor gains 2 armor', () => {
     expect(skill(game('WARRIOR'), 0).state.players['0'].armor).toBe(2);
