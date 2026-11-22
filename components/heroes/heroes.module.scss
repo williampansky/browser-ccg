@@ -15,12 +15,13 @@
   flex-direction: column;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.75rem 0.5rem;
+  padding: 0 0 0.35rem 0;
   border: 1px solid var(--ui-tile-border);
   border-radius: 12px;
   background: var(--ui-tile-bg);
   color: inherit;
   cursor: pointer;
+  overflow: hidden;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s, border-color 0.25s;
 
   &:hover,
@@ -30,19 +31,30 @@
     box-shadow: 0 14px 24px -10px rgba(0, 0, 0, 0.85), 0 0 22px -4px var(--ui-tile-glow);
     outline: none;
   }
+
+  // &:hover .portrait,
+  // &:focus-visible .portrait {
+  //   transform: scale(1.1);
+  // }
+
+  // &:hover .name,
+  // &:focus-visible .name {
+  //   transform: scale(1.1);
+  // }
 }
 
 .portrait {
-  width: 150px;
-  height: 150px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid var(--ui-portrait-border);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .name {
   font-size: 1.1rem;
   font-weight: 700;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 1;
 }
 
 .arch {
@@ -57,7 +69,7 @@
   display: flex;
   overflow: auto;
   z-index: 200; // above the site's bottom nav (z-index 100)
-  padding: 32px;
+  padding: 2rem;
 }
 
 .detail {
@@ -65,7 +77,7 @@
   padding: 8px 20px;
   max-width: min(980px, 100%);
   display: flex;
-  gap: 32px;
+  gap: 2rem;
   align-items: flex-start;
   flex-wrap: wrap;
   cursor: default;
