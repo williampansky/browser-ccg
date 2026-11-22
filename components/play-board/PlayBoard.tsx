@@ -48,7 +48,7 @@ import { DEFAULT_PROFILE, foeTheme, loadProfile, logName, PlayerProfile, themeOf
 import { MinionFace } from './MinionFace';
 import { minionOvalHeight } from './minion-model';
 import minionStyles from './board-minion.module.scss';
-import { artBackground, artUrl, withSpellDamageText } from './card-face-model';
+import { artBackground, artUrl, PLACEHOLDER_ART, withSpellDamageText } from './card-face-model';
 import { loadDecks } from '../deck-builder/deck-storage';
 import { aiDeckChoice, DeckChoice, deckOptions, loadChoices, resolveDeck, saveChoices } from './deck-choice';
 import { HeroBar } from './HeroBar';
@@ -1359,7 +1359,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             name={hero.name}
             health={p.health}
             armor={p.armor}
-            weapon={weapon && p.weapon ? { name: weapon.name, image: /^(CORE|PRIME|GAME)_/.test(weapon.id) ? artUrl(weapon.id) : undefined, attack: p.weapon.attack, durability: p.weapon.durability, temporary: p.weapon.temporary } : undefined}
+            weapon={weapon && p.weapon ? { name: weapon.name, image: (/^(CORE|PRIME|GAME)_/.test(weapon.id) ? artUrl(weapon.id) : undefined) ?? PLACEHOLDER_ART, attack: p.weapon.attack, durability: p.weapon.durability, temporary: p.weapon.temporary } : undefined}
             team={owner === '0' ? 'green' : 'red'}
             active={owner === state.activePlayer && !over}
             rootRef={track(`h${owner}`)}

@@ -2,13 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import { heroImage } from './hero-images';
 import styles from './hero-variants.module.scss';
 import cx from '../../utils/cx';
-import { artBackground } from './card-face-model';
+import { artBackground, PLACEHOLDER_ART } from './card-face-model';
 import { IMPACT_MS, reducedMotion } from './motion';
 
 /**
  * PROTOTYPE hero displays 2 to 4 (option 1 is HeroBust): the standing figure, the big medallion and the hero as a framed card.
  * Dev preview only (pages/hero-lab.tsx); /play does not use them.
  */
+/** A weapon whose art file is missing (a 404) shows the placeholder instead of a broken image. */
+const weaponArtFallback = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  if (!e.currentTarget.src.endsWith(PLACEHOLDER_ART)) e.currentTarget.src = PLACEHOLDER_ART;
+};
+
 export interface HeroVariantProps {
   heroId: string;
   name: string;
@@ -76,7 +81,7 @@ export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & Fi
           className={cx(styles.figWeapon, p.weapon.image ? '' : styles.figWeaponBare, p.weapon.temporary ? styles.figWeaponTemp : '')}
           aria-label={`${p.weapon.name ?? 'Weapon'}: ${p.weapon.attack} attack, ${p.weapon.durability} durability${p.weapon.temporary ? ', this turn only' : ''}`}
         >
-          {p.weapon.image && <img src={p.weapon.image} alt="" draggable={false} />}
+          {p.weapon.image && <img src={p.weapon.image} alt="" draggable={false} onError={weaponArtFallback} />}
           <b className={styles.figWpnAtk}>{p.weapon.attack}</b>
           <b className={styles.figWpnDur}>{p.weapon.durability}</b>
         </div>
@@ -490,7 +495,7 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
         style={{ ['--a' as string]: `${r.weaponAngle}deg` }}
         aria-label={`${p.weapon.name ?? 'Weapon'}: ${p.weapon.attack} attack, ${p.weapon.durability} durability`}
       >
-        {p.weapon.image && <img src={p.weapon.image} alt="" draggable={false} />}
+        {p.weapon.image && <img src={p.weapon.image} alt="" draggable={false} onError={weaponArtFallback} />}
         <b className={cx(styles.ringStat, styles.ringAtk, styles.num)} style={{ translate: `${r.atkX}px ${r.atkY}px` }}>{p.weapon.attack}</b>
         <b className={cx(styles.ringStat, styles.ringDur, styles.num)} style={{ translate: `${r.durX}px ${r.durY}px` }}>{p.weapon.durability}</b>
       </div>
