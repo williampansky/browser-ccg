@@ -84,7 +84,8 @@ export const summonEntourage =
   (ctx) => {
     const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
     const index = typeof which === 'string' ? source?.entourage.indexOf(which) ?? -1 : which;
-    const token = source && ctx.catalog.get(source.entourage[index]);
+    // A token named by id may sit on one of the card's option cards (a Choose One's 'b' lists 'c'), not on the card itself
+    const token = typeof which === 'string' && index < 0 ? ctx.catalog.get(which) : source && ctx.catalog.get(source.entourage[index]);
     if (!token) throw new Error(`${ctx.sourceCardId} has no entourage token ${which} in the catalog`);
     summonMinion(ctx.g, ctx.caster, token, ctx.events, ctx.self);
   };
