@@ -1,7 +1,8 @@
 import { defineCard, on } from '../define-card';
-import { addArmor } from '../../effects/primitives';
+import { heal } from '../../effects/primitives';
+import { ownHero } from '../../effects/selectors';
 
-// PRIME_237 Spellsmith: "Gain 2 Armor whenever a friendly minion dies"
+// PRIME_237 Soulharvester: "Heal 2 HP whenever a friendly minion dies"
 export default defineCard('PRIME_237', (n) => ({
-  triggers: [on('MinionDied', { when: (e, c) => e.player === c.owner, do: [addArmor(n.primary)] })],
+  triggers: [on('MinionDied', { when: (e, c) => e.player === c.owner, do: [heal(ownHero(), n.primary)] })],
 }));

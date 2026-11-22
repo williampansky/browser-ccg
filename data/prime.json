@@ -833,7 +833,7 @@
   },
   {
     "id": "PRIME_237",
-    "name": "Spellsmith",
+    "name": "Soulharvester",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -842,18 +842,18 @@
     "cost": 2,
     "attack": 1,
     "health": 4,
-    "text": "Gain 2 %ARMOR% whenever<br>\na friendly minion dies",
+    "text": "%HEAL% your hero for %NUM1% %HEALTH% whenever a friendly minion dies",
     "mechanics": [
       "%EVENT%",
-      "%ARMOR%"
+      "%HEAL%"
     ],
     "numberPrimary": 2,
     "collectible": true,
     "active": true,
     "flavor": "He works hard for the money.",
-    "artistName": "https://www.artstation.com/castaguer",
-    "artistUrl": "https://www.artstation.com/castaguer",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_127",

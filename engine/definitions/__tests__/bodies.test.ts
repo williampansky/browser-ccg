@@ -65,11 +65,13 @@ describe('while on the board', () => {
     expect(stats(r, '0').map((x) => x[1])).toEqual([5, 8, 6]);
     expect(r.players['0'].health).toBe(21);
   });
-  it('237 Spellsmith gives 2 Armor whenever a friendly minion dies (not an enemy one)', () => {
-    const mine = produce(setup('CORE_043', { mine: [[1, 4, 'PRIME_237'], [1, 1]] }), (g) => void (g.players['0'].board[1].health = 0));
-    expect(play(mine).state.players['0'].armor).toBe(2);
-    const theirs = produce(setup('CORE_043', { mine: [[1, 4, 'PRIME_237']], theirs: [[1, 1]] }), (g) => void (g.players['1'].board[0].health = 0));
-    expect(play(theirs).state.players['0'].armor).toBe(0);
+  it('PRIME_237 heals your hero 2 whenever a friendly minion dies (not an enemy one), and gives no Armor', () => {
+    const wound = (s: GameState) => produce(s, (g) => void (g.players['0'].health = 20));
+    const mine = produce(wound(setup('CORE_043', { mine: [[1, 4, 'PRIME_237'], [1, 1]] })), (g) => void (g.players['0'].board[1].health = 0));
+    const after = play(mine).state;
+    expect([after.players['0'].health, after.players['0'].armor]).toEqual([22, 0]);
+    const theirs = produce(wound(setup('CORE_043', { mine: [[1, 4, 'PRIME_237']], theirs: [[1, 1]] })), (g) => void (g.players['1'].board[0].health = 0));
+    expect(play(theirs).state.players['0'].health).toBe(20);
   });
   it('239 Desert Rider gains +1 Attack this turn when an ENEMY minion takes damage', () => {
     const s = setup('CORE_125', { mine: [[2, 4, 'PRIME_239']], theirs: [[1, 9], [1, 9]] }); // 2 damage to each of two enemy minions
