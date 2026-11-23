@@ -1,14 +1,9 @@
 import { getHero } from '../../engine/heroes';
+import { currentHeroKey } from '../../engine/heroes/classes';
 import type { Card } from '../../engine';
 import { cleanDeck, SavedDeck } from './deck-model';
 
 const DECKS_KEY = 'ccg.decks.v1';
-
-/**
- * Hero keys that were renamed, so a deck saved under the old key keeps its
- * hero.
- */
-const RENAMED: Record<string, string> = { FORSAKEN_DRUID: 'WILDCALLER' };
 
 const read = (key: string): string | null => {
   try {
@@ -45,8 +40,8 @@ export const loadDecks = (byId: ReadonlyMap<string, Card>): SavedDeck[] => {
             id: d.id,
             name: String(d.name ?? 'Deck'),
             cards: d.cards.filter((c: unknown) => typeof c === 'string'),
-            ...(getHero(RENAMED[d.hero] ?? d.hero)
-              ? { hero: RENAMED[d.hero] ?? d.hero }
+            ...(getHero(currentHeroKey(d.hero))
+              ? { hero: currentHeroKey(d.hero) }
               : {}),
           },
           byId,

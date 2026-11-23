@@ -99,6 +99,7 @@ import { parseRingTune } from './ring-tune';
 import { DeckRowView } from './DeckRowView';
 import { deckRowVars, parseDeckTune } from './deck-row-tune';
 import { heroImage, skillCardArt } from './hero-images';
+import { currentHeroKey } from '../../engine/heroes/classes';
 import {
   aimVector,
   IMPACT_MS,
@@ -500,6 +501,10 @@ const targetOf = (a: Action): TargetRef | undefined =>
     ? a.target
     : undefined;
 
+/** A `?h0=` value in its current form (an old hero key is its class key). */
+const heroParam = (value: string | null): string | null =>
+  value ? currentHeroKey(value) : value;
+
 /**
  * Debug URL params for /play (read on every new game): `?first=0|1` picks who
  * goes first (Player 1 = 0),
@@ -510,7 +515,7 @@ const targetOf = (a: Action): TargetRef | undefined =>
  * `?hn0=9` and `?hn1=...` deal that player exactly that many cards (0-10, the
  * rest come from or go back to the deck),
  * `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10),
- * `?h0=ZEUS` and `?h1=...` pick a hero (or `none`).
+ * `?h0=WIZARD` and `?h1=...` pick a hero by class (or `none`).
  */
 const debugParams = (): {
   first?: PlayerId;
@@ -541,7 +546,7 @@ const debugParams = (): {
     first: f === '0' || f === '1' ? f : undefined,
     hands: { '0': list('p0'), '1': list('p1') },
     handSize: { '0': count('hn0'), '1': count('hn1') },
-    heroes: { '0': q.get('h0'), '1': q.get('h1') },
+    heroes: { '0': heroParam(q.get('h0')), '1': heroParam(q.get('h1')) },
     setup: {
       boards: { '0': list('b0'), '1': list('b1') },
       weapons: { '0': weapon('w0'), '1': weapon('w1') },

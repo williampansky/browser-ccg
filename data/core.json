@@ -208,7 +208,7 @@
     "cost": 5,
     "attack": 4,
     "health": 4,
-    "text": "<strong>%NO_ATTACK%</strong>, <strong>%BULWARK%</strong>, <strong>%ON_DEATH%:</strong> deal %NUM% damage to everyone",
+    "text": "<strong>%NO_ATTACK%</strong>, <strong>%BULWARK%</strong>, <strong>%ON_DEATH%:</strong> deal %NUM1% damage to everyone",
     "mechanics": [
       "%NO_ATTACK%",
       "%BULWARK%",

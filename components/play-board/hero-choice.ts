@@ -1,8 +1,9 @@
 import { heroes, Rng } from '../../engine';
+import { currentHeroKey } from '../../engine/heroes/classes';
 
 /**
  * `'random'`, `'none'` (no hero skills, the old game) or a hero key such as
- * `ZEUS`.
+ * `WIZARD`.
  */
 export type HeroChoice = string;
 export const HERO_RANDOM: HeroChoice = 'random';
@@ -25,11 +26,17 @@ export const heroOptions = (): HeroOption[] => [
   { value: HERO_NONE, label: 'No hero skills' },
 ];
 
-/** A valid choice: anything unknown becomes Random. */
-export const normalizeHeroChoice = (choice: unknown): HeroChoice =>
-  typeof choice === 'string' && heroOptions().some((o) => o.value === choice)
-    ? choice
+/**
+ * A valid choice: an old hero key becomes its class key; anything unknown
+ * becomes Random.
+ */
+export const normalizeHeroChoice = (choice: unknown): HeroChoice => {
+  const key = typeof choice === 'string' ? currentHeroKey(choice) : undefined;
+
+  return heroOptions().some((option) => option.value === key)
+    ? (key as HeroChoice)
     : HERO_RANDOM;
+};
 
 /**
  * The hero key a choice stands for (`undefined` for none; Random draws from

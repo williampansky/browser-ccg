@@ -4,10 +4,9 @@
     "playContext": "%SUMMON%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_WILDCALLER%",
+    "class": "%CLASS_WARDEN%",
     "id": 3,
     "cost": 8,
-    "active": true,
     "mechanics": [
       "%SUMMON%",
       "%BUFF%"
@@ -22,10 +21,9 @@
     "playContext": "%SUMMON%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_EXILE%",
+    "class": "%CLASS_RANGER%",
     "id": 3,
     "cost": 9,
-    "active": true,
     "mechanics": [
       "%SUMMON%"
     ],
@@ -39,10 +37,9 @@
     "playContext": "%RESURRECT%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_SAGE%",
+    "class": "%CLASS_CLERIC%",
     "id": 3,
     "cost": 10,
-    "active": true,
     "mechanics": [
       "%RESURRECT%",
       "%RANDOM%"
@@ -53,11 +50,10 @@
     "ultimate": true
   },
   {
-    "name": "Command Army",
     "playContext": "%SUMMON%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_ATLAS%",
+    "class": "%CLASS_CRUSADER%",
     "id": 3,
     "cost": 6,
     "mechanics": [
@@ -71,14 +67,28 @@
     "ultimate": true
   },
   {
+    "name": "%SUMMON%",
+    "playContext": "%SUMMON%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "class": "%CLASS_MYSTIC%",
+    "id": 1,
+    "cost": 2,
+    "cooldown": 1,
+    "mechanics": [
+      "%SUMMON%",
+      "%RANDOM%"
+    ],
+    "text": "%SUMMON% a %RANDOM% class-specific minion"
+  },
+  {
     "name": "%SUMMON% %RACE_CREATURE%",
     "playContext": "%SUMMON%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_EXILE%",
+    "class": "%CLASS_RANGER%",
     "id": 2,
     "cost": 5,
-    "active": true,
     "cooldown": 2,
     "mechanics": [
       "%SUMMON%"
@@ -92,7 +102,7 @@
     "playContext": "%WEAPON%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_ASAR%",
+    "class": "%CLASS_ASSASSIN%",
     "id": 2,
     "cost": 5,
     "cooldown": 2,
@@ -105,14 +115,28 @@
     "numberPrimary": 1
   },
   {
+    "name": "%SUMMON% Spirit Animal",
+    "playContext": "%SUMMON%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "class": "%CLASS_WARDEN%",
+    "id": 1,
+    "cost": 2,
+    "active": true,
+    "cooldown": 1,
+    "mechanics": [
+      "%SUMMON%"
+    ],
+    "text": "%SUMMON% a %RANDOM% hero-specific %RACE_CREATURE% minion"
+  },
+  {
     "name": "Savagery",
     "playContext": "%BUFF%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_WILDCALLER%",
+    "class": "%CLASS_WARDEN%",
     "id": 2,
     "cost": 4,
-    "active": true,
     "cooldown": 2,
     "mechanics": [
       "%BUFF%",
@@ -123,28 +147,11 @@
     "numberSecondary": 2
   },
   {
-    "name": "Poisoned Blade",
-    "playContext": "%DAMAGE%",
-    "type": "%TYPE_WEAPON%",
-    "playType": "TARGETED",
-    "hero": "%HERO_ATLAS%",
-    "id": 1,
-    "cost": 1,
-    "cooldown": 1,
-    "mechanics": [
-      "%TARGET%",
-      "%DAMAGE%",
-      "%POISON%"
-    ],
-    "text": "Deal 1 damage now, and 1 damage at the start of your next turn",
-    "numberPrimary": 1
-  },
-  {
     "name": "Master's Blade",
     "playContext": "%WEAPON%",
     "type": "%TYPE_WEAPON%",
     "playType": "GLOBAL",
-    "hero": "%HERO_ASAR%",
+    "class": "%CLASS_ASSASSIN%",
     "id": 3,
     "cost": 6,
     "text": "Equip a 5/2 dagger; take no damage when attacking with this weapon",
@@ -158,7 +165,7 @@
     "playContext": "%WEAPON%",
     "type": "%TYPE_WEAPON%",
     "playType": "GLOBAL",
-    "hero": "%HERO_ASAR%",
+    "class": "%CLASS_ASSASSIN%",
     "id": 1,
     "cost": 2,
     "cooldown": 1,
@@ -175,10 +182,9 @@
     "playContext": "%DAMAGE%",
     "type": "%TYPE_SPELL%",
     "playType": "TARGETED",
-    "hero": "%HERO_ZEUS%",
+    "class": "%CLASS_WIZARD%",
     "id": 3,
     "cost": 10,
-    "active": true,
     "mechanics": [
       "%TARGET%",
       "%DAMAGE%"
@@ -193,10 +199,9 @@
     "playContext": "%SET_VALUE%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_WARRIOR%",
+    "class": "%CLASS_FIGHTER%",
     "id": 3,
     "cost": 6,
-    "active": true,
     "mechanics": [
       "%SET_VALUE%",
       "%ARMOR%"
@@ -208,14 +213,29 @@
     "description": "Use this as a comeback tool that is strongest when you're low."
   },
   {
+    "name": "Vital Shot",
+    "playContext": "%DAMAGE%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "class": "%CLASS_RANGER%",
+    "id": 1,
+    "cost": 2,
+    "active": true,
+    "cooldown": 1,
+    "mechanics": [
+      "%DAMAGE%"
+    ],
+    "text": "Attack opponent for %NUM1% damage",
+    "numberPrimary": 2
+  },
+  {
     "name": "%RESURRECT%",
     "playContext": "%RESURRECT%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_SAGE%",
+    "class": "%CLASS_CLERIC%",
     "id": 2,
     "cost": 6,
-    "active": true,
     "cooldown": 2,
     "mechanics": [
       "%RESURRECT%",
@@ -230,7 +250,7 @@
     "playContext": "%ARMOR%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_WARRIOR%",
+    "class": "%CLASS_FIGHTER%",
     "id": 1,
     "cost": 2,
     "active": true,
@@ -243,29 +263,10 @@
     "numberPrimary": 2
   },
   {
-    "name": "Lightning Strike",
-    "playContext": "%DAMAGE%",
-    "type": "%TYPE_SPELL%",
-    "playType": "TARGETED",
-    "hero": "%HERO_ZEUS%",
-    "id": 1,
-    "cost": 2,
-    "active": true,
-    "cooldown": 1,
-    "mechanics": [
-      "%TARGET%",
-      "%DAMAGE%"
-    ],
-    "text": "Deal 1 damage",
-    "numberPrimary": 1,
-    "targetingArrowText": "Deal 1 damage"
-  },
-  {
-    "name": "Sulfuric Cloud",
     "playContext": "%DAMAGE%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_ATLAS%",
+    "class": "%CLASS_CRUSADER%",
     "id": 2,
     "cost": 4,
     "cooldown": 2,
@@ -278,14 +279,29 @@
     "numberPrimary": 1
   },
   {
+    "name": "%DRAW_CARD% %CARD%",
+    "playContext": "%DAMAGE%",
+    "type": "%TYPE_SPELL%",
+    "playType": "GLOBAL",
+    "class": "%CLASS_NECROMANCER%",
+    "id": 1,
+    "cost": 2,
+    "cooldown": 1,
+    "mechanics": [
+      "%DAMAGE%",
+      "%DRAW_CARD%"
+    ],
+    "text": "Take %NUM1% damage and %DRAW_CARD% a %CARD%",
+    "numberPrimary": 2
+  },
+  {
     "name": "Rain Lightning",
     "playContext": "%DAMAGE%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_ZEUS%",
+    "class": "%CLASS_WIZARD%",
     "id": 2,
     "cost": 6,
-    "active": true,
     "cooldown": 3,
     "mechanics": [
       "%AOE%",
@@ -300,7 +316,7 @@
     "playContext": "%HEAL%",
     "type": "%TYPE_SPELL%",
     "playType": "TARGETED",
-    "hero": "%HERO_SAGE%",
+    "class": "%CLASS_CLERIC%",
     "id": 1,
     "cost": 2,
     "active": true,
@@ -314,45 +330,47 @@
     "targetingArrowText": "Heal 3 Health"
   },
   {
-    "name": "Vital Shot",
-    "playContext": "%DAMAGE%",
+    "name": "%SUMMON%",
+    "playContext": "%SUMMON%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
-    "hero": "%HERO_EXILE%",
+    "class": "%CLASS_CRUSADER%",
+    "id": 1,
+    "cost": 2,
+    "cooldown": 1,
+    "mechanics": [
+      "%SUMMON%"
+    ],
+    "text": "%SUMMON% a %NUM1%/%NUM2% minion",
+    "numberPrimary": 1,
+    "numberSecondary": 1
+  },
+  {
+    "name": "Lightning Strike",
+    "playContext": "%DAMAGE%",
+    "type": "%TYPE_SPELL%",
+    "playType": "TARGETED",
+    "class": "%CLASS_WIZARD%",
     "id": 1,
     "cost": 2,
     "active": true,
     "cooldown": 1,
     "mechanics": [
+      "%TARGET%",
       "%DAMAGE%"
     ],
-    "text": "Attack opponent for 2 damage",
-    "numberPrimary": 2
-  },
-  {
-    "name": "%SUMMON% Spirit Animal",
-    "playContext": "%SUMMON%",
-    "type": "%TYPE_SPELL%",
-    "playType": "GLOBAL",
-    "hero": "%HERO_WILDCALLER%",
-    "id": 1,
-    "cost": 3,
-    "active": true,
-    "cooldown": 3,
-    "mechanics": [
-      "%SUMMON%"
-    ],
-    "text": "%SUMMON% a %RANDOM% hero-specific %RACE_CREATURE% minion"
+    "text": "Deal 1 damage",
+    "numberPrimary": 1,
+    "targetingArrowText": "Deal 1 damage"
   },
   {
     "name": "Violent Strike",
     "playContext": "%DAMAGE%",
     "type": "%TYPE_SPELL%",
     "playType": "TARGETED",
-    "hero": "%HERO_WARRIOR%",
+    "class": "%CLASS_FIGHTER%",
     "id": 2,
     "cost": 4,
-    "active": true,
     "cooldown": 2,
     "mechanics": [
       "%TARGET%",

@@ -15,7 +15,7 @@ import { resurrectOptions } from './resurrect-offer';
 import { heroToken } from './tokens';
 
 /**
- * What a skill does besides its numbers (those come from the ABILITIES table):
+ * What a skill does besides its numbers (those come from the SKILLS table):
  * who it may aim at, and the effects.
  */
 export interface SkillCode {
@@ -129,15 +129,17 @@ const lastStand =
   };
 
 /**
- * Skill code per hero key; entry `n` is that hero's ability with id `n + 1`.
+ * Skill code per class key; entry `n` is that class's skill with id `n + 1`.
+ * Skills 2 and 3 are shelved (inactive in the SKILLS table) until the
+ * launch-style game is done, so they are kept here but not offered.
  */
 export const SKILL_CODE: Record<string, SkillCode[]> = {
-  ZEUS: [
+  WIZARD: [
     { target: anyCharacter, effects: [damage(chosenTarget(), 1)] },
     { effects: [damage(allEnemyMinions(), 3)] },
     { target: anyCharacter, effects: [damage(chosenTarget(), 10)] },
   ],
-  WARRIOR: [
+  FIGHTER: [
     { effects: [addArmor(2)] },
     {
       target: anyCharacter,
@@ -147,17 +149,17 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
     },
     { effects: [lastStand(15, 10)] },
   ],
-  SAGE: [
+  CLERIC: [
     { target: anyCharacter, effects: [heal(chosenTarget(), 3)] },
     { options: resurrectOptions, effects: [resurrectPicked()] },
     { effects: [resurrect(3)] },
   ],
-  EXILE: [
+  RANGER: [
     { effects: [damage(enemyHero(), 2)] },
     { effects: [summonToken('HERO_EXILE_EAGLE')] },
     { effects: [summonToken('HERO_EXILE_BEAST')] },
   ],
-  WILDCALLER: [
+  WARDEN: [
     {
       effects: [
         summonRandomToken([

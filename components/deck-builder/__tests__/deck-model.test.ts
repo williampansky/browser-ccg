@@ -63,26 +63,26 @@ describe('deck model', () => {
 
 describe('deck hero', () => {
   it('cleanDeck keeps the deck hero', () => {
-    const deck = { id: 'd', name: 'D', cards: [], hero: 'ZEUS' };
-    expect(cleanDeck(deck, new Map()).hero).toBe('ZEUS');
+    const deck = { id: 'd', name: 'D', cards: [], hero: 'WIZARD' };
+    expect(cleanDeck(deck, new Map()).hero).toBe('WIZARD');
   });
 });
 
 describe('class-restricted cards', () => {
-  const smash = { ...minionCard('PRIME_255'), heroClass: 'WARRIOR' };
+  const smash = { ...minionCard('PRIME_255'), heroClass: 'FIGHTER' };
   const byId = catalogOf(smash);
   it('only a deck with that hero can add one', () => {
-    expect(whyNotAdd(blankDeck(), smash)).toMatch(/warrior/);
-    expect(whyNotAdd({ ...blankDeck(), hero: 'ZEUS' }, smash)).toMatch(
-      /warrior/,
+    expect(whyNotAdd(blankDeck(), smash)).toMatch(/fighter/);
+    expect(whyNotAdd({ ...blankDeck(), hero: 'WIZARD' }, smash)).toMatch(
+      /fighter/,
     );
     expect(
-      whyNotAdd({ ...blankDeck(), hero: 'WARRIOR' }, smash),
+      whyNotAdd({ ...blankDeck(), hero: 'FIGHTER' }, smash),
     ).toBeUndefined();
   });
   it('switching to another hero drops them (cleanDeck)', () => {
-    const deck = { ...blankDeck(), hero: 'WARRIOR', cards: ['PRIME_255'] };
+    const deck = { ...blankDeck(), hero: 'FIGHTER', cards: ['PRIME_255'] };
     expect(cleanDeck(deck, byId).cards).toEqual(['PRIME_255']);
-    expect(cleanDeck({ ...deck, hero: 'ZEUS' }, byId).cards).toEqual([]);
+    expect(cleanDeck({ ...deck, hero: 'WIZARD' }, byId).cards).toEqual([]);
   });
 });
