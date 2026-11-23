@@ -47,7 +47,7 @@ them. Starts only after 1a is approved.
 - [~] Port the core `hsclone` rules to TypeScript (slices 1-6 done; slice 7 is the bot invariant suite): turn order, energy (+1 per turn, cap 10), draw,
       play minion/spell/weapon, minion vs minion and minion vs hero attacks, damage and death,
       Guard (only Guards may be attacked), summoning sickness, win/loss at 0 hero health
-- [ ] Port `hsclone`'s unit tests as the starting suite (moves, state, spells, boons/buffs)
+- [~] Port `hsclone`'s unit tests as the starting suite (moves, state, spells, boons/buffs)
 - [ ] Avoid `hsclone`'s known problems: the `killMinion` "disallowed move" client errors, an extra
       card drawn per turn, a tic-tac-toe leftover AI, stale test fixtures, and debug settings left on
 
@@ -60,7 +60,7 @@ Done when: a scripted two-player game plays from start to a winner inside a test
 - [x] Interaction as in `hsclone`: click a card to select, click a slot or target to play it; valid
       targets highlighted; attackers glow. Drag and drop is now the main way (hand to board/target/play area,
       minion or hero onto an enemy), with click kept as the fallback; arrows for both players
-- [ ] Hot-seat/two-tab play via boardgame.io `Local`, with no hard-coded hosts or ports
+- [x] Hot-seat/two-tab play via boardgame.io `Local`, with no hard-coded hosts or ports
 - [x] Card art on the board (hand, board, previews, overlays) via CSS backgrounds; the old `Card`/`Minion`
       renderers are not used by `/play`
 - [x] Port the card art from `hsclone`'s `public/` dir: all 132 CORE cards and the entourage cards that have
@@ -95,7 +95,7 @@ simulator first.
 
 - [ ] Choose the first-release pool from the current 69 cards, the old CORE 132 and the old PRIME 254
       (see `PREVIOUS-VERSIONS.md`); Bulwark/Guard, Armor and similar cards are core again
-- [ ] Switch the site pages from the deleted zone-game JSON to the new pool (`data/`)
+- [x] Switch the site pages from the deleted zone-game JSON to the new pool (`data/`)
 - [ ] Naming and text pass (duplicate names, typos, "Attack" vs "Deal" wording; see `CARD-AUDIT.md`)
 - [ ] Art match pass (mismatched art listed in `CARD-AUDIT.md` section 5)
 - [ ] Art provenance table: card, artist, source, licence, status; replace temporary art
