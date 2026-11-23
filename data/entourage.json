@@ -57,6 +57,26 @@
     "isEntourage": true
   },
   {
+    "id": "GAME_007",
+    "name": "Gale Totem",
+    "set": "%SET_001%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_NONE%",
+    "cost": 0,
+    "attack": 0,
+    "health": 2,
+    "text": "+%NUM1% %SPELL_DAMAGE%",
+    "mechanics": [
+      "%SPELL_DAMAGE%"
+    ],
+    "numberPrimary": 1,
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "PRIME_252a",
     "name": "Ruin",
     "set": "%SET_003%",
@@ -350,6 +370,21 @@
     "isEntourage": true
   },
   {
+    "id": "GAME_002",
+    "name": "Recruit",
+    "set": "%SET_001%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_NONE%",
+    "cost": 0,
+    "attack": 1,
+    "health": 1,
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "CORE_128a",
     "name": "Crude Sword",
     "set": "%SET_002%",
@@ -365,6 +400,21 @@
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
     "artStatus": "FINAL",
+    "isEntourage": true
+  },
+  {
+    "id": "GAME_004",
+    "name": "Ember Totem",
+    "set": "%SET_001%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_NONE%",
+    "cost": 0,
+    "attack": 1,
+    "health": 1,
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -521,6 +571,25 @@
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
     "artStatus": "FINAL",
+    "isEntourage": true
+  },
+  {
+    "id": "GAME_005",
+    "name": "Stone Totem",
+    "set": "%SET_001%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_NONE%",
+    "cost": 0,
+    "attack": 0,
+    "health": 2,
+    "text": "<strong>%BULWARK%</strong>",
+    "mechanics": [
+      "%BULWARK%"
+    ],
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
@@ -783,6 +852,27 @@
     "isEntourage": true
   },
   {
+    "id": "GAME_006",
+    "name": "Spring Totem",
+    "set": "%SET_001%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_NONE%",
+    "cost": 0,
+    "attack": 0,
+    "health": 2,
+    "text": "At the end of your turn, heal your minions %NUM1%",
+    "mechanics": [
+      "%HEAL%",
+      "%ON_END%"
+    ],
+    "numberPrimary": 1,
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "PRIME_254a",
     "name": "Despair",
     "set": "%SET_003%",
@@ -797,6 +887,21 @@
     "elite": true,
     "artistName": "Daniel Kamarudin",
     "artistUrl": "https://www.artstation.com/danielkamarudin",
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
+    "id": "GAME_003",
+    "name": "Dagger",
+    "set": "%SET_001%",
+    "type": "%TYPE_WEAPON%",
+    "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_NONE%",
+    "cost": 0,
+    "attack": 1,
+    "health": 2,
+    "collectible": false,
+    "active": true,
     "artStatus": "FPO",
     "isEntourage": true
   },

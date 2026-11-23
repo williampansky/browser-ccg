@@ -346,7 +346,7 @@ describe('Crusader', () => {
     const board = skill(game('CRUSADER'), 0).state.players['0'].board;
 
     expect(board).toHaveLength(1);
-    expect(board[0].cardId).toBe('HERO_CRUSADER_RECRUIT');
+    expect(board[0].cardId).toBe('GAME_002');
     expect([board[0].attack, board[0].health]).toEqual([1, 1]);
   });
   it('does nothing but still costs energy when the board is full', () => {
@@ -361,12 +361,7 @@ describe('Crusader', () => {
 });
 
 describe('Mystic', () => {
-  const totems = [
-    'HERO_MYSTIC_EMBER',
-    'HERO_MYSTIC_STONE',
-    'HERO_MYSTIC_SPRING',
-    'HERO_MYSTIC_GALE',
-  ];
+  const totems = ['GAME_004', 'GAME_005', 'GAME_006', 'GAME_007'];
   const boardOf = (s: GameState) =>
     s.players['0'].board.map((minion) => minion.cardId);
   const callTotems = (times: number, seed = 1): GameState => {
@@ -403,25 +398,21 @@ describe('Mystic', () => {
     expect(boardOf(s)).toHaveLength(4);
   });
   it('Stone Totem has Guard, Ember Totem is a plain 1/1', () => {
-    const stone = putOnBoard(
-      game('MYSTIC'),
-      '0',
-      catalog.get('HERO_MYSTIC_STONE')!,
-    );
-    const ember = catalog.get('HERO_MYSTIC_EMBER')!;
+    const stone = putOnBoard(game('MYSTIC'), '0', catalog.get('GAME_005')!);
+    const ember = catalog.get('GAME_004')!;
 
     expect(stone.players['0'].board[0].keywords.guard).toBe(true);
     expect([ember.attack, ember.health]).toEqual([1, 1]);
   });
   it('Spring Totem heals your minions 1 at the end of your turn', () => {
-    let s = putOnBoard(game('MYSTIC'), '0', catalog.get('HERO_MYSTIC_SPRING')!);
+    let s = putOnBoard(game('MYSTIC'), '0', catalog.get('GAME_006')!);
 
     s = putOnBoard(s, '0', grunt, { health: 1, maxHealth: 3 });
     s = act(s, { type: 'EndTurn' }).state;
     expect(s.players['0'].board[1].health).toBe(2);
   });
   it('Gale Totem adds +1 Spell Damage to your skills', () => {
-    const s = putOnBoard(game('WIZARD'), '0', catalog.get('HERO_MYSTIC_GALE')!);
+    const s = putOnBoard(game('WIZARD'), '0', catalog.get('GAME_007')!);
 
     expect(skill(s, 0, foeHero).state.players['1'].health).toBe(28);
   });
@@ -435,7 +426,7 @@ describe('Assassin', () => {
     const after = skill(game('ASSASSIN'), 0).state.players['0'];
 
     expect(after.weapon).toMatchObject({
-      cardId: 'HERO_ASSASSIN_DAGGER',
+      cardId: 'GAME_003',
       attack: 1,
       durability: 2,
     });
@@ -451,9 +442,7 @@ describe('Assassin', () => {
       };
     });
 
-    expect(skill(armed, 0).state.players['0'].weapon?.cardId).toBe(
-      'HERO_ASSASSIN_DAGGER',
-    );
+    expect(skill(armed, 0).state.players['0'].weapon?.cardId).toBe('GAME_003');
   });
   it('lets the hero attack with it straight away, wearing it down', () => {
     const armed = skill(game('ASSASSIN'), 0).state;

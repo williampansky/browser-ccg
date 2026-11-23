@@ -1,4 +1,4 @@
-import type { CardCatalog } from '../cards/types';
+import type { Card, CardCatalog } from '../cards/types';
 import type { Effect, SkillOption, TargetFilter } from '../effects/types';
 import type { GameState, PlayerId } from '../state/types';
 import { addArmor, buff, damage, draw, heal } from '../effects/primitives';
@@ -29,7 +29,11 @@ export interface SkillCode {
     player: PlayerId,
     catalog: CardCatalog,
   ) => SkillOption[];
-  effects: Effect[];
+  /**
+   * The effects, or a function of the skill's entourage card ids (the
+   * `entourage` column of the SKILLS table) for a skill whose tokens are data
+   */
+  effects: Effect[] | ((tokenIds: string[]) => Effect[]);
 }
 
 const anyCharacter: TargetFilter = () => true;
@@ -66,33 +70,46 @@ const summonBuffed =
     m.health += health;
   };
 
-/** The Mystic's totems; a call never repeats one already on the board. */
-const MYSTIC_TOTEMS = [
-  'HERO_MYSTIC_EMBER',
-  'HERO_MYSTIC_STONE',
-  'HERO_MYSTIC_SPRING',
-  'HERO_MYSTIC_GALE',
-];
+/** A token from the card data (an entourage card of the skill). */
+const tokenCard = (ctx: Parameters<Effect>[0], id: string): Card => {
+  const card = ctx.catalog.get(id);
 
-const summonTotem: Effect = (ctx) => {
-  const onBoard = new Set(ctx.g.players[ctx.caster].board.map((m) => m.cardId));
-  const free = MYSTIC_TOTEMS.filter((id) => !onBoard.has(id));
+  if (!card) throw new Error(`hero skill token ${id} is not in the catalog`);
 
-  if (free.length === 0) return;
-
-  summonMinion(
-    ctx.g,
-    ctx.caster,
-    heroToken(free[ctx.rng.int(free.length)]),
-    ctx.events,
-  );
+  return card;
 };
 
-/** Equips the hero token weapon `id`, replacing any weapon. */
-const equipToken =
+/** Summons the skill's entourage minion `id`. */
+const summonEntourage =
   (id: string): Effect =>
   (ctx) => {
-    const card = heroToken(id);
+    summonMinion(ctx.g, ctx.caster, tokenCard(ctx, id), ctx.events);
+  };
+
+/**
+ * Summons one of the skill's entourage minions at random, never one that is
+ * already on the board; nothing happens once they are all out.
+ */
+const summonUnseen =
+  (ids: string[]): Effect =>
+  (ctx) => {
+    const onBoard = new Set(
+      ctx.g.players[ctx.caster].board.map((m) => m.cardId),
+    );
+    const free = ids.filter((id) => !onBoard.has(id));
+
+    if (free.length === 0) return;
+
+    const pick = free[ctx.rng.int(free.length)];
+
+    summonMinion(ctx.g, ctx.caster, tokenCard(ctx, pick), ctx.events);
+  };
+
+/** Equips the skill's entourage weapon `id`, replacing any weapon. */
+const equipEntourage =
+  (id: string): Effect =>
+  (ctx) => {
+    const card = tokenCard(ctx, id);
 
     ctx.g.players[ctx.caster].weapon = {
       instanceId: ctx.g.nextInstanceId++,
@@ -239,7 +256,7 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
   NECROMANCER: [
     { effects: [hurtSelf(BLOOD_PACT_DAMAGE), draw(BLOOD_PACT_CARDS)] },
   ],
-  CRUSADER: [{ effects: [summonToken('HERO_CRUSADER_RECRUIT')] }],
-  MYSTIC: [{ effects: [summonTotem] }],
-  ASSASSIN: [{ effects: [equipToken('HERO_ASSASSIN_DAGGER')] }],
+  CRUSADER: [{ effects: ([recruit]) => [summonEntourage(recruit)] }],
+  MYSTIC: [{ effects: (totems) => [summonUnseen(totems)] }],
+  ASSASSIN: [{ effects: ([dagger]) => [equipEntourage(dagger)] }],
 };

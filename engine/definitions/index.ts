@@ -1,7 +1,7 @@
 import type { Card } from '../cards/types';
 import { CardDef, Definition, numbersOf } from './define-card';
-import heroMysticGale from './hero/hero-mystic-gale';
-import heroMysticSpring from './hero/hero-mystic-spring';
+import game006 from './game/game-006';
+import game007 from './game/game-007';
 import core006 from './core/core-006';
 import core016 from './core/core-016';
 import core036 from './core/core-036';
@@ -230,8 +230,8 @@ const all: Definition[] = [
   core107,
   core114,
   core129,
-  heroMysticGale,
-  heroMysticSpring,
+  game006,
+  game007,
 ];
 
 const byId = new Map(all.map((d) => [d.id, d]));

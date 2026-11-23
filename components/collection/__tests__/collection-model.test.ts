@@ -203,7 +203,10 @@ describe('entourage cards and the set filter', () => {
     expect(prime.length).toBeGreaterThan(0);
     expect(core.every((c) => c.id.startsWith('CORE_'))).toBe(true);
     expect(prime.every((c) => c.id.startsWith('PRIME_'))).toBe(true);
-    expect(core.length + prime.length).toBe(
+    const gameTokens = tokens.filter((c) => c.id.startsWith('GAME_'));
+
+    expect(gameTokens.length).toBeGreaterThan(0);
+    expect(core.length + prime.length + gameTokens.length).toBe(
       filterCards(tokens, f({ set: 'both' })).length,
     );
   });

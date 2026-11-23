@@ -76,6 +76,7 @@ type RawSkill = {
   ultimate?: boolean;
   rarity?: string;
   active?: boolean;
+  entourage?: string;
 };
 
 type RawHero = {
@@ -131,6 +132,10 @@ const build = (): HeroInfo[] => {
       artistUrl: hero.artistUrl,
       skills: skills.map((skill, index) => {
         const { target, options, effects } = codeFor(code, skill)!;
+        const tokenIds = (skill.entourage ?? '')
+          .split(',')
+          .map((id) => id.trim())
+          .filter(Boolean);
 
         return {
           index,
@@ -151,7 +156,7 @@ const build = (): HeroInfo[] => {
             skill.rarity?.replace(/%/g, '').replace(/^RARITY_/, '') || 'FREE',
           target,
           options,
-          effects,
+          effects: typeof effects === 'function' ? effects(tokenIds) : effects,
         };
       }),
     });

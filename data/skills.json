@@ -80,7 +80,8 @@
       "%SUMMON%",
       "%RANDOM%"
     ],
-    "text": "%SUMMON% a %RANDOM% class-specific minion"
+    "text": "%SUMMON% a %RANDOM% class-specific minion",
+    "entourage": "GAME_004,GAME_005,GAME_006,GAME_007"
   },
   {
     "name": "%SUMMON% %RACE_CREATURE%",
@@ -177,7 +178,7 @@
     "text": "Equip a 1/2 dagger",
     "numberPrimary": 1,
     "numberSecondary": 2,
-    "entourage": "GAME_00X"
+    "entourage": "GAME_003"
   },
   {
     "name": "Lightning Blast",
@@ -347,7 +348,8 @@
     ],
     "text": "%SUMMON% a %NUM1%/%NUM2% minion",
     "numberPrimary": 1,
-    "numberSecondary": 1
+    "numberSecondary": 1,
+    "entourage": "GAME_002"
   },
   {
     "name": "Lightning Strike",

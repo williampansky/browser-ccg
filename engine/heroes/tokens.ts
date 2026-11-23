@@ -38,42 +38,12 @@ const token = (
   collectible: false,
 });
 
-/** A token with no race, so a race synergy ("your Creatures ...") skips it. */
-const raceless = (card: Card): Card => ({
-  ...card,
-  race: undefined,
-  raceName: undefined,
-});
-
 export const HERO_TOKENS: Card[] = [
   token('HERO_EXILE_EAGLE', 'Eagle', 'minion', 4, 2, 'Stampede', ['RUSH']),
   token('HERO_EXILE_BEAST', 'The Beast', 'minion', 8, 8, ''),
   token('HERO_DRUID_WOLF', 'Spirit Wolf', 'minion', 3, 2, ''),
   token('HERO_DRUID_BEAR', 'Spirit Bear', 'minion', 2, 5, 'Guard', ['BULWARK']),
   token('HERO_DRUID_HAWK', 'Spirit Hawk', 'minion', 2, 1, 'Stampede', ['RUSH']),
-  raceless(token('HERO_CRUSADER_RECRUIT', 'Recruit', 'minion', 1, 1, '')),
-  raceless(token('HERO_MYSTIC_EMBER', 'Ember Totem', 'minion', 1, 1, '')),
-  raceless(
-    token('HERO_MYSTIC_STONE', 'Stone Totem', 'minion', 0, 2, 'Guard', [
-      'BULWARK',
-    ]),
-  ),
-  raceless(
-    token(
-      'HERO_MYSTIC_SPRING',
-      'Spring Totem',
-      'minion',
-      0,
-      2,
-      'At the end of your turn, heal your minions 1',
-    ),
-  ),
-  raceless(
-    token('HERO_MYSTIC_GALE', 'Gale Totem', 'minion', 0, 2, '+1 Spell Damage', [
-      'SPELL_DAMAGE',
-    ]),
-  ),
-  token('HERO_ASSASSIN_DAGGER', 'Dagger', 'weapon', 1, 2, ''),
 ];
 
 export const heroToken = (id: string): Card => {
