@@ -9,7 +9,11 @@ export default defineCard('PRIME_043', (n) => ({
       when: (e, c) =>
         e.target.kind === 'hero'
           ? e.target.player === c.owner
-          : c.state.players[c.owner].board.some((m) => e.target.kind === 'minion' && m.instanceId === e.target.instanceId),
+          : c.state.players[c.owner].board.some(
+              (m) =>
+                e.target.kind === 'minion' &&
+                m.instanceId === e.target.instanceId,
+            ),
       do: [buff(self(), n.primary, n.primary)],
     }),
   ],

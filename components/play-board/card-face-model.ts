@@ -9,8 +9,14 @@
  *   REMARKABLE purple
  *   MYTHIC     red
  */
-export const FRAME_COLORS = ['STEEL', 'GREEN', 'BLUE', 'PURPLE', 'RED'] as const;
-export type FrameColor = typeof FRAME_COLORS[number];
+export const FRAME_COLORS = [
+  'STEEL',
+  'GREEN',
+  'BLUE',
+  'PURPLE',
+  'RED',
+] as const;
+export type FrameColor = (typeof FRAME_COLORS)[number];
 
 export interface RarityStyle {
   color: FrameColor;
@@ -27,7 +33,8 @@ export const RARITY_STYLE: Record<string, RarityStyle> = {
 };
 
 /** The look of a rarity; `NONE`, missing and unknown rarities look like a Free card (steel frame, no gem). */
-export const rarityStyle = (rarity?: string): RarityStyle => RARITY_STYLE[rarity ?? ''] ?? RARITY_STYLE.FREE;
+export const rarityStyle = (rarity?: string): RarityStyle =>
+  RARITY_STYLE[rarity ?? ''] ?? RARITY_STYLE.FREE;
 
 /**
  * The banner under the top edge: always the card's TYPE ("minion", "spell", ...). hsclone showed a minion's race there instead
@@ -37,11 +44,18 @@ export const rarityStyle = (rarity?: string): RarityStyle => RARITY_STYLE[rarity
 export const typeLabel = (card: { type: string }): string => card.type;
 
 /** A minion's race ("Creature", "Sprite", ...) for its tag at the bottom of the art, or undefined when it has none (or is not a minion). */
-export const raceLabel = (card: { type: string; race?: string; raceName?: string }): string | undefined =>
-  card.type === 'minion' && card.race && card.race !== 'NONE' ? card.raceName ?? card.race : undefined;
+export const raceLabel = (card: {
+  type: string;
+  race?: string;
+  raceName?: string;
+}): string | undefined =>
+  card.type === 'minion' && card.race && card.race !== 'NONE'
+    ? (card.raceName ?? card.race)
+    : undefined;
 
 /** Minions and weapons show an attack and a health/durability badge; spells and items don't. */
-export const showsStats = (type: string): boolean => type === 'minion' || type === 'weapon';
+export const showsStats = (type: string): boolean =>
+  type === 'minion' || type === 'weapon';
 
 /** Design size of a card face; everything inside is laid out in these units and scaled to the real width. */
 export const FACE_WIDTH = 178;
@@ -50,7 +64,10 @@ export const FACE_HEIGHT = 250;
 export const faceUnit = (width: number): number => width / FACE_WIDTH;
 
 /** `CORE_012` -> `/images/sets/SET_CORE/012-CARD.jpg`, `GAME_001` -> `/images/sets/SET_GAME/001-CARD.jpg`. */
-export const artUrl = (id?: string, kind: 'CARD' | 'MINION' | 'DECK' = 'CARD'): string | undefined => {
+export const artUrl = (
+  id?: string,
+  kind: 'CARD' | 'MINION' | 'DECK' = 'CARD',
+): string | undefined => {
   const m = /^([A-Z]+)_(\w+)$/.exec(id ?? '');
   return m ? `/images/sets/SET_${m[1]}/${m[2]}-${kind}.jpg` : undefined;
 };
@@ -62,7 +79,10 @@ export const PLACEHOLDER_ART = '/images/sets/PLACEHOLDER.jpg';
  * A CSS `background-image` for a card: its art, then any `fallbackIds`' art, then the placeholder as the last layer. Layers
  * stack, so a layer whose file is missing (404) shows the next one down; no check for the file is needed.
  */
-export const artBackground = (id?: string, ...fallbackIds: (string | undefined)[]): string =>
+export const artBackground = (
+  id?: string,
+  ...fallbackIds: (string | undefined)[]
+): string =>
   [id, ...fallbackIds]
     .filter((x, i, all) => x !== undefined && all.indexOf(x) === i)
     .map((x) => artUrl(x))
@@ -81,7 +101,9 @@ export const deckStripBackground = (id?: string): string =>
     .map((u) => `url(${u})`)
     .join(', ');
 
-export type RichPart = { kind: 'text' | 'strong' | 'em' | 'small' | 'boost'; text: string } | { kind: 'br' };
+export type RichPart =
+  | { kind: 'text' | 'strong' | 'em' | 'small' | 'boost'; text: string }
+  | { kind: 'br' };
 
 /** Splits card text (`<br>`, `<strong>`, `<em>`, `<small>` only; see `sanitizeRichText`) into parts to render. */
 export const parseRichText = (html: string): RichPart[] => {
@@ -90,7 +112,8 @@ export const parseRichText = (html: string): RichPart[] => {
   for (const tok of html.split(/(<\/?(?:strong|em|small|boost)>|<br>)/)) {
     if (!tok) continue;
     if (tok === '<br>') parts.push({ kind: 'br' });
-    else if (/^<(strong|em|small|boost)>$/.test(tok)) style = tok.slice(1, -1) as typeof style;
+    else if (/^<(strong|em|small|boost)>$/.test(tok))
+      style = tok.slice(1, -1) as typeof style;
     else if (/^<\/(strong|em|small|boost)>$/.test(tok)) style = 'text';
     else parts.push({ kind: style, text: tok });
   }
@@ -98,14 +121,16 @@ export const parseRichText = (html: string): RichPart[] => {
 };
 
 /** Groups parsed parts into lines, splitting at each break (a line is drawn as its own block so its wrapping is balanced alone). */
-export const textLines = (parts: RichPart[]): Exclude<RichPart, { kind: 'br' }>[][] =>
+export const textLines = (
+  parts: RichPart[],
+): Exclude<RichPart, { kind: 'br' }>[][] =>
   parts.reduce<Exclude<RichPart, { kind: 'br' }>[][]>(
     (lines, part) => {
       if (part.kind === 'br') lines.push([]);
       else lines[lines.length - 1].push(part);
       return lines;
     },
-    [[]]
+    [[]],
   );
 
 /**
@@ -119,7 +144,10 @@ export const softenBreaks = (html: string): string =>
     if (i === 0) return next;
     const before = out.trimEnd();
     const visibleEnd = before.replace(/<[^>]+>\s*$/, '').trimEnd();
-    const hard = /<\/(strong|small)>$/.test(before) || /[.:;!?]$/.test(visibleEnd) || /^\s*<(strong|small)>/.test(next);
+    const hard =
+      /<\/(strong|small)>$/.test(before) ||
+      /[.:;!?]$/.test(visibleEnd) ||
+      /^\s*<(strong|small)>/.test(next);
     return before + (hard ? '<br>' : ' ') + next.trimStart();
   }, '');
 
@@ -128,14 +156,27 @@ export const softenBreaks = (html: string): string =>
  * the new number wrapped in `<boost>` so the face can colour it. No bonus, no change.
  */
 export const withSpellDamageText = (html: string, bonus: number): string =>
-  bonus > 0 ? html.replace(/(\d+)(?= damage)/g, (_m, n: string) => `<boost>${Number(n) + bonus}</boost>`) : html;
+  bonus > 0
+    ? html.replace(
+        /(\d+)(?= damage)/g,
+        (_m, n: string) => `<boost>${Number(n) + bonus}</boost>`,
+      )
+    : html;
 
 /**
  * The largest text scale (1, then down in `step`s to `min`) at which `fits` is true; `min` if none fits. Used to shrink a
  * card's description until it sits inside its box (hsclone only scaled the name; its text was written with line breaks to fit).
  */
-export const fitScale = (fits: (scale: number) => boolean, min = 0.55, step = 0.05): number => {
-  for (let scale = 1; scale > min + 1e-9; scale = Math.round((scale - step) * 1000) / 1000) {
+export const fitScale = (
+  fits: (scale: number) => boolean,
+  min = 0.55,
+  step = 0.05,
+): number => {
+  for (
+    let scale = 1;
+    scale > min + 1e-9;
+    scale = Math.round((scale - step) * 1000) / 1000
+  ) {
     if (fits(scale)) return scale;
   }
   return min;

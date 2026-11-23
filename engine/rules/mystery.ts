@@ -18,9 +18,11 @@ const react = (
   ctx: EngineContext,
   events: GameEvent[],
   owner: PlayerId,
-  match: (def: NonNullable<ReturnType<DefLookup>>['mystery'] & object) => boolean,
+  match: (
+    def: NonNullable<ReturnType<DefLookup>>['mystery'] & object,
+  ) => boolean,
   reaction: Reaction,
-  fx: Partial<EffectContext> = {}
+  fx: Partial<EffectContext> = {},
 ): boolean => {
   const my = g.players[owner].mystery;
   if (!my || g.activePlayer === owner) return false;
@@ -28,11 +30,28 @@ const react = (
   const card = ctx.catalog.get(my.cardId);
   const def = card && defs(card)?.mystery;
   if (!def || !match(def)) return false;
-  if (!def.when({ state: g as GameState, catalog: ctx.catalog, owner, ...reaction })) return false;
+  if (
+    !def.when({
+      state: g as GameState,
+      catalog: ctx.catalog,
+      owner,
+      ...reaction,
+    })
+  )
+    return false;
   g.players[owner].mystery = null;
   events.push({ type: 'MysteryRevealed', player: owner, cardId: my.cardId });
   for (const effect of def.do) {
-    effect({ g, caster: owner, rng: ctx.rng, catalog: ctx.catalog, events, sourceCardId: my.cardId, ...reaction, ...fx });
+    effect({
+      g,
+      caster: owner,
+      rng: ctx.rng,
+      catalog: ctx.catalog,
+      events,
+      sourceCardId: my.cardId,
+      ...reaction,
+      ...fx,
+    });
   }
   return true;
 };
@@ -42,11 +61,19 @@ export const mysteryBeforeAttack = (
   g: Draft<GameState>,
   ctx: EngineContext,
   events: GameEvent[],
-  attack: NonNullable<EffectContext['attack']>
+  attack: NonNullable<EffectContext['attack']>,
 ): NonNullable<EffectContext['attack']>['target'] => {
   const owner = opponentOf(attack.attackerPlayer);
   const info = { ...attack };
-  react(g, ctx, events, owner, (d) => d.hook === 'attack', { attack: info }, { attack: info });
+  react(
+    g,
+    ctx,
+    events,
+    owner,
+    (d) => d.hook === 'attack',
+    { attack: info },
+    { attack: info },
+  );
   return info.target;
 };
 
@@ -55,17 +82,38 @@ export const mysteryBeforeSpell = (
   g: Draft<GameState>,
   ctx: EngineContext,
   events: GameEvent[],
-  cast: NonNullable<EffectContext['cast']>
+  cast: NonNullable<EffectContext['cast']>,
 ): NonNullable<EffectContext['cast']>['target'] => {
   const owner = opponentOf(cast.caster);
   const info = { ...cast };
-  react(g, ctx, events, owner, (d) => d.hook === 'spell', { cast: info }, { cast: info });
+  react(
+    g,
+    ctx,
+    events,
+    owner,
+    (d) => d.hook === 'spell',
+    { cast: info },
+    { cast: info },
+  );
   return info.target;
 };
 
 /** After an event: every Mystery waiting on that event type may react (called by `settle`). */
-export const mysteriesOnEvent = (g: Draft<GameState>, ctx: EngineContext, events: GameEvent[], event: GameEvent): void => {
+export const mysteriesOnEvent = (
+  g: Draft<GameState>,
+  ctx: EngineContext,
+  events: GameEvent[],
+  event: GameEvent,
+): void => {
   for (const owner of ['0', '1'] as PlayerId[]) {
-    react(g, ctx, events, owner, (d) => d.event === event.type, { event }, { event });
+    react(
+      g,
+      ctx,
+      events,
+      owner,
+      (d) => d.event === event.type,
+      { event },
+      { event },
+    );
   }
 };

@@ -1,4 +1,8 @@
-export type AttributionRule = { match: string | string[]; artist: string; url?: string };
+export type AttributionRule = {
+  match: string | string[];
+  artist: string;
+  url?: string;
+};
 
 const matches = (pattern: string, file: string) => {
   try {
@@ -11,6 +15,6 @@ const matches = (pattern: string, file: string) => {
 /** The first rule with any regex matching the path (case-insensitive); a bad regex never matches. */
 export const findAttribution = (
   file: string,
-  rules: AttributionRule[]
+  rules: AttributionRule[],
 ): AttributionRule | undefined =>
-  rules.find(r => [r.match].flat().some(p => matches(p, file)));
+  rules.find((r) => [r.match].flat().some((p) => matches(p, file)));

@@ -17,13 +17,15 @@ export const effectiveCost = (
   catalog: CardCatalog,
   defs: DefLookup = getCardDef,
   /** A cost change carried by this particular copy of the card (`CardInstance.costDelta`) */
-  copyDelta = 0
+  copyDelta = 0,
 ): number => {
   const me = state.players[player];
   if (defs(card)?.mystery && me.mysteryFreeOnTurn === state.turn) return 0;
   if (card.type === 'spell' && me.freeSpellsOnTurn === state.turn) return 0;
-  let delta = (defs(card)?.ownCost?.({ state, owner: player }) ?? 0) + copyDelta;
-  if (card.type === 'spell' && me.spellDiscount?.turn === state.turn) delta -= me.spellDiscount.amount;
+  let delta =
+    (defs(card)?.ownCost?.({ state, owner: player }) ?? 0) + copyDelta;
+  if (card.type === 'spell' && me.spellDiscount?.turn === state.turn)
+    delta -= me.spellDiscount.amount;
   let floor = 0;
   for (const m of state.players[player].board) {
     for (const mod of minionDef(m, catalog, defs)?.costMods ?? []) {
@@ -33,5 +35,10 @@ export const effectiveCost = (
     }
   }
   if (delta === 0) return card.cost;
-  return Math.max(0, delta < 0 ? Math.max(card.cost + delta, Math.min(card.cost, floor)) : card.cost + delta);
+  return Math.max(
+    0,
+    delta < 0
+      ? Math.max(card.cost + delta, Math.min(card.cost, floor))
+      : card.cost + delta,
+  );
 };

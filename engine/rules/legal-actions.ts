@@ -19,7 +19,7 @@ export const legalActions = (
   state: GameState,
   player: PlayerId,
   catalog: CardCatalog,
-  defs: DefLookup = getCardDef
+  defs: DefLookup = getCardDef,
 ): Action[] => {
   if (state.status === 'over' || state.activePlayer !== player) return [];
   const me = state.players[player];
@@ -27,7 +27,12 @@ export const legalActions = (
 
   me.hand.forEach((inHand, handIndex) => {
     const card = catalog.get(inHand.cardId);
-    if (!card || effectiveCost(state, player, card, catalog, defs, inHand.costDelta ?? 0) > me.energy.current) return;
+    if (
+      !card ||
+      effectiveCost(state, player, card, catalog, defs, inHand.costDelta ?? 0) >
+        me.energy.current
+    )
+      return;
     const def = defs(card);
     if (!def && needsBehaviour(card)) return;
     if (card.type === 'spell' || card.type === 'item') {
@@ -41,12 +46,20 @@ export const legalActions = (
         ? def.choices.map((c, choice) => ({ choice, needsTarget: !!c.target }))
         : [{ choice: undefined, needsTarget: !!def.target }];
       for (const { choice, needsTarget } of options) {
-        const base: Action = choice === undefined ? { type: 'PlayCard', handIndex } : { type: 'PlayCard', handIndex, choice };
+        const base: Action =
+          choice === undefined
+            ? { type: 'PlayCard', handIndex }
+            : { type: 'PlayCard', handIndex, choice };
         if (!needsTarget) {
           actions.push(base);
           continue;
         }
-        for (const target of legalTargets(state, { kind: 'card', handIndex, choice }, catalog, defs)) {
+        for (const target of legalTargets(
+          state,
+          { kind: 'card', handIndex, choice },
+          catalog,
+          defs,
+        )) {
           actions.push({ ...base, target });
         }
       }
@@ -60,10 +73,19 @@ export const legalActions = (
         ? def.choices.map((c, choice) => ({ choice, needsTarget: !!c.target }))
         : [{ choice: undefined, needsTarget: !!def?.target }];
       for (const { choice, needsTarget } of options) {
-        const targets = needsTarget ? legalTargets(state, { kind: 'card', handIndex, choice }, catalog, defs) : [];
+        const targets = needsTarget
+          ? legalTargets(
+              state,
+              { kind: 'card', handIndex, choice },
+              catalog,
+              defs,
+            )
+          : [];
         for (const boardIndex of positions) {
           const base: Action =
-            choice === undefined ? { type: 'PlayCard', handIndex, boardIndex } : { type: 'PlayCard', handIndex, boardIndex, choice };
+            choice === undefined
+              ? { type: 'PlayCard', handIndex, boardIndex }
+              : { type: 'PlayCard', handIndex, boardIndex, choice };
           if (targets.length === 0) actions.push(base);
           for (const target of targets) actions.push({ ...base, target });
         }
@@ -71,28 +93,52 @@ export const legalActions = (
     }
   });
 
-  if (me.weapon && me.weapon.attack >= 1 && me.weaponAttacksThisTurn < 1 && me.heroDisabledOnTurn !== state.turn) {
-    for (const target of legalTargets(state, { kind: 'weapon' })) actions.push({ type: 'WeaponAttack', target });
+  if (
+    me.weapon &&
+    me.weapon.attack >= 1 &&
+    me.weaponAttacksThisTurn < 1 &&
+    me.heroDisabledOnTurn !== state.turn
+  ) {
+    for (const target of legalTargets(state, { kind: 'weapon' }))
+      actions.push({ type: 'WeaponAttack', target });
   }
 
   me.hero?.cooldowns.forEach((_, skill) => {
     const def = heroSkill(me.hero?.id, skill);
-    if (!def || def.cost > me.energy.current || !skillReady(state, player, skill)) return;
+    if (
+      !def ||
+      def.cost > me.energy.current ||
+      !skillReady(state, player, skill)
+    )
+      return;
     if (def.options) {
       // One action per option (nothing to offer means the skill can't be used).
-      def.options(state, player, catalog).forEach((_, choice) => actions.push({ type: 'HeroSkill', skill, choice }));
+      def
+        .options(state, player, catalog)
+        .forEach((_, choice) =>
+          actions.push({ type: 'HeroSkill', skill, choice }),
+        );
       return;
     }
     if (!def.target) {
       actions.push({ type: 'HeroSkill', skill });
       return;
     }
-    for (const target of legalTargets(state, { kind: 'skill', skill }, catalog, defs)) actions.push({ type: 'HeroSkill', skill, target });
+    for (const target of legalTargets(
+      state,
+      { kind: 'skill', skill },
+      catalog,
+      defs,
+    ))
+      actions.push({ type: 'HeroSkill', skill, target });
   });
 
   for (const m of me.board) {
     if (cantAttack(m, state.turn)) continue;
-    for (const target of legalTargets(state, { kind: 'attack', attackerId: m.instanceId })) {
+    for (const target of legalTargets(state, {
+      kind: 'attack',
+      attackerId: m.instanceId,
+    })) {
       actions.push({ type: 'Attack', attackerId: m.instanceId, target });
     }
   }

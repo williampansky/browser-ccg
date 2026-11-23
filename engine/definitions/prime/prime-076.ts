@@ -6,7 +6,8 @@ import { self } from '../../effects/selectors';
 export default defineCard('PRIME_076', () => ({
   triggers: [
     on('CardPlayed', {
-      when: (e, c) => e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
+      when: (e, c) =>
+        e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
       do: [buff(self(), 2, 2)],
     }),
   ],

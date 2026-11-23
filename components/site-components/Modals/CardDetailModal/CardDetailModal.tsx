@@ -19,31 +19,29 @@ export const CardDetailModal = ({
       )}
       onClick={onModalDismiss}
     >
-      <div className='modal__inner'>
+      <div className="modal__inner">
         {data && (
-          <div className='inner__content'>
+          <div className="inner__content">
             {data?.flavorText && (
-              <div className='content__flavor'>
+              <div className="content__flavor">
                 <blockquote>"{data?.flavorText}"</blockquote>
               </div>
             )}
 
-            <div className='content__card'>
+            <div className="content__card">
               <CardComponent {...data} canPlay={true} />
-              
+
               {data?.type === 'MINION' && (
-                <div className='content__minion'>
+                <div className="content__minion">
                   <Minion {...data} />
                 </div>
               )}
             </div>
 
             {data?.artistName && (
-              <div className='content__artist'>
-                <p className='text__value'>
-                  {data?.artistName}
-                </p>
-                <p className='text__value'>
+              <div className="content__artist">
+                <p className="text__value">{data?.artistName}</p>
+                <p className="text__value">
                   {data?.artistUrl && <small>{data?.artistUrl}</small>}
                 </p>
               </div>

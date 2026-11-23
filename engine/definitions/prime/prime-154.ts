@@ -7,7 +7,10 @@ export default defineCard('PRIME_154', (n) => {
   return {
     triggers: [
       on('CardPlayed', { when: (e, c) => e.player === c.owner, do: gift }),
-      on('MinionPlayed', { when: (e, c) => e.player === c.owner && e.instanceId !== c.selfId, do: gift }),
+      on('MinionPlayed', {
+        when: (e, c) => e.player === c.owner && e.instanceId !== c.selfId,
+        do: gift,
+      }),
       on('WeaponEquipped', { when: (e, c) => e.player === c.owner, do: gift }),
     ],
   };

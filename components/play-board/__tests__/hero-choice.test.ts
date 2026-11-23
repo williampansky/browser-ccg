@@ -1,15 +1,31 @@
 import { createSeededRng } from '../../../engine';
-import { HERO_NONE, HERO_RANDOM, heroOptions, normalizeHeroChoice, resolveHero } from '../hero-choice';
+import {
+  HERO_NONE,
+  HERO_RANDOM,
+  heroOptions,
+  normalizeHeroChoice,
+  resolveHero,
+} from '../hero-choice';
 
 describe('hero choice', () => {
   it('lists Random, the five heroes and No hero skills', () => {
-    expect(heroOptions().map((o) => o.value)).toEqual([HERO_RANDOM, 'ZEUS', 'WILDCALLER', 'EXILE', 'WARRIOR', 'SAGE', HERO_NONE]);
+    expect(heroOptions().map((o) => o.value)).toEqual([
+      HERO_RANDOM,
+      'ZEUS',
+      'WILDCALLER',
+      'EXILE',
+      'WARRIOR',
+      'SAGE',
+      HERO_NONE,
+    ]);
   });
   it('resolves a named hero, none, and random to a real hero', () => {
     const rng = createSeededRng(3);
     expect(resolveHero('WARRIOR', rng)).toBe('WARRIOR');
     expect(resolveHero(HERO_NONE, rng)).toBeUndefined();
-    const seen = new Set(Array.from({ length: 60 }, () => resolveHero(HERO_RANDOM, rng)));
+    const seen = new Set(
+      Array.from({ length: 60 }, () => resolveHero(HERO_RANDOM, rng)),
+    );
     expect(seen.size).toBe(5);
   });
   it('turns anything unknown into Random', () => {

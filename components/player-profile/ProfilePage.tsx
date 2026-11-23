@@ -1,7 +1,15 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ProfileEditor } from './ProfileEditor';
-import { DEFAULT_PROFILE, foeTheme, loadProfile, normalizeProfile, PlayerProfile, saveProfile, themeOf } from './profile';
+import {
+  DEFAULT_PROFILE,
+  foeTheme,
+  loadProfile,
+  normalizeProfile,
+  PlayerProfile,
+  saveProfile,
+  themeOf,
+} from './profile';
 import { UiThemePicker } from '../ui-theme/UiThemePicker';
 import styles from './profile-page.module.scss';
 
@@ -29,15 +37,32 @@ export const ProfilePage = () => {
         <UiThemePicker />
       </section>
       <section className={styles.preview} aria-label="Preview">
-        <span className={styles.side} style={{ ['--side' as string]: themeOf(profile.theme).color } as React.CSSProperties}>
+        <span
+          className={styles.side}
+          style={
+            {
+              ['--side' as string]: themeOf(profile.theme).color,
+            } as React.CSSProperties
+          }
+        >
           {profile.name}
         </span>
         <span className={styles.vs}>vs</span>
-        <span className={styles.side} style={{ ['--side' as string]: foeTheme(profile.theme).color } as React.CSSProperties}>
+        <span
+          className={styles.side}
+          style={
+            {
+              ['--side' as string]: foeTheme(profile.theme).color,
+            } as React.CSSProperties
+          }
+        >
           Opponent
         </span>
       </section>
-      <p className={styles.note}>Saved in this browser only. The name and color show on the hero bar, the turn banner and the log in a game.</p>
+      <p className={styles.note}>
+        Saved in this browser only. The name and color show on the hero bar, the
+        turn banner and the log in a game.
+      </p>
       <Link href="/play">
         <a className={styles.play}>Play</a>
       </Link>

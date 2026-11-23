@@ -4,6 +4,15 @@ import { allMinions } from '../../effects/selectors';
 
 // PRIME_253 Famine and Fear: "Set ALL other minions' Health to 1. On Death: Summon Fear" (not itself: it is a 10/10)
 export default defineCard('PRIME_253', (n) => ({
-  onPlay: [(ctx) => setHealth((c) => allMinions()(c).filter((t) => t.kind === 'minion' && t.instanceId !== ctx.self), n.primary)(ctx)],
+  onPlay: [
+    (ctx) =>
+      setHealth(
+        (c) =>
+          allMinions()(c).filter(
+            (t) => t.kind === 'minion' && t.instanceId !== ctx.self,
+          ),
+        n.primary,
+      )(ctx),
+  ],
   onDeath: [summonEntourage()],
 }));

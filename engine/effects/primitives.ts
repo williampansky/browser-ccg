@@ -21,7 +21,9 @@ export const damage =
 export const heal =
   (select: Selector, amount: number): Effect =>
   (ctx) => {
-    const total = withSpellPower('heal', amount, ctx.spellDamage) + (amount > 0 ? ctx.spellHealing ?? 0 : 0);
+    const total =
+      withSpellPower('heal', amount, ctx.spellDamage) +
+      (amount > 0 ? (ctx.spellHealing ?? 0) : 0);
     for (const t of select(ctx)) healTarget(ctx.g, t, total, ctx.events);
   };
 
@@ -52,7 +54,8 @@ const minionsOf = (ctx: Parameters<Effect>[0], select: Selector) =>
 export const grantKeyword =
   (select: Selector, keyword: keyof MinionKeywords): Effect =>
   (ctx) => {
-    for (const { minion } of minionsOf(ctx, select)) minion.keywords[keyword] = true;
+    for (const { minion } of minionsOf(ctx, select))
+      minion.keywords[keyword] = true;
   };
 
 /** Disable: the minion cannot attack during its owner's next turn (RULES Q17). */
@@ -60,10 +63,14 @@ export const disable =
   (select: Selector): Effect =>
   (ctx) => {
     // Turns alternate, so the owner's next turn is the next turn, or the one after if it is theirs now.
-    const until = (owner: string) => (ctx.g.activePlayer === owner ? ctx.g.turn + 2 : ctx.g.turn + 1);
-    for (const { owner, minion } of minionsOf(ctx, select)) minion.disabledOnTurn = until(owner);
+    const until = (owner: string) =>
+      ctx.g.activePlayer === owner ? ctx.g.turn + 2 : ctx.g.turn + 1;
+    for (const { owner, minion } of minionsOf(ctx, select))
+      minion.disabledOnTurn = until(owner);
     // A disabled hero cannot attack with its weapon.
-    for (const t of select(ctx)) if (t.kind === 'hero') ctx.g.players[t.player].heroDisabledOnTurn = until(t.player);
+    for (const t of select(ctx))
+      if (t.kind === 'hero')
+        ctx.g.players[t.player].heroDisabledOnTurn = until(t.player);
   };
 
 /** Expiration: the minion dies at the start of the caster's next turn (RULES Q18, provisional). */
@@ -71,7 +78,8 @@ export const expire =
   (select: Selector): Effect =>
   (ctx) => {
     for (const { minion } of minionsOf(ctx, select)) {
-      minion.expiresOnTurn = ctx.g.activePlayer === ctx.caster ? ctx.g.turn + 2 : ctx.g.turn + 1;
+      minion.expiresOnTurn =
+        ctx.g.activePlayer === ctx.caster ? ctx.g.turn + 2 : ctx.g.turn + 1;
     }
   };
 
@@ -82,11 +90,22 @@ export const expire =
 export const summonEntourage =
   (which: number | string = 0): Effect =>
   (ctx) => {
-    const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
-    const index = typeof which === 'string' ? source?.entourage.indexOf(which) ?? -1 : which;
+    const source = ctx.sourceCardId
+      ? ctx.catalog.get(ctx.sourceCardId)
+      : undefined;
+    const index =
+      typeof which === 'string'
+        ? (source?.entourage.indexOf(which) ?? -1)
+        : which;
     // A token named by id may sit on one of the card's option cards (a Choose One's 'b' lists 'c'), not on the card itself
-    const token = typeof which === 'string' && index < 0 ? ctx.catalog.get(which) : source && ctx.catalog.get(source.entourage[index]);
-    if (!token) throw new Error(`${ctx.sourceCardId} has no entourage token ${which} in the catalog`);
+    const token =
+      typeof which === 'string' && index < 0
+        ? ctx.catalog.get(which)
+        : source && ctx.catalog.get(source.entourage[index]);
+    if (!token)
+      throw new Error(
+        `${ctx.sourceCardId} has no entourage token ${which} in the catalog`,
+      );
     summonMinion(ctx.g, ctx.caster, token, ctx.events, ctx.self);
   };
 
@@ -137,10 +156,15 @@ export const gainEnergySlot =
 
 /** Summons one token chosen at random from the running card's entourage list. */
 export const summonRandomEntourage = (): Effect => (ctx) => {
-  const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+  const source = ctx.sourceCardId
+    ? ctx.catalog.get(ctx.sourceCardId)
+    : undefined;
   const id = source && ctx.rng.shuffle([...source.entourage])[0];
   const token = id && ctx.catalog.get(id);
-  if (!token) throw new Error(`${ctx.sourceCardId} has no entourage tokens in the catalog`);
+  if (!token)
+    throw new Error(
+      `${ctx.sourceCardId} has no entourage tokens in the catalog`,
+    );
   summonMinion(ctx.g, ctx.caster, token, ctx.events, ctx.self);
 };
 
@@ -155,7 +179,8 @@ export const destroy =
 export const setAttack =
   (select: Selector, value: number): Effect =>
   (ctx) => {
-    for (const { minion } of minionsOf(ctx, select)) minion.attack = value + minion.auraAttack + minion.tempAttack;
+    for (const { minion } of minionsOf(ctx, select))
+      minion.attack = value + minion.auraAttack + minion.tempAttack;
   };
 
 /** Sets current and maximum health to an exact value. */
@@ -182,7 +207,8 @@ export const doubleHealth =
 export const healToFull =
   (select: Selector): Effect =>
   (ctx) => {
-    for (const { minion } of minionsOf(ctx, select)) minion.health = minion.maxHealth;
+    for (const { minion } of minionsOf(ctx, select))
+      minion.health = minion.maxHealth;
   };
 
 /**
@@ -192,13 +218,23 @@ export const healToFull =
 export const transformInto =
   (select: Selector, index = 0): Effect =>
   (ctx) => {
-    const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+    const source = ctx.sourceCardId
+      ? ctx.catalog.get(ctx.sourceCardId)
+      : undefined;
     const token = source && ctx.catalog.get(source.entourage[index]);
-    if (!token) throw new Error(`${ctx.sourceCardId} has no entourage token #${index} in the catalog`);
+    if (!token)
+      throw new Error(
+        `${ctx.sourceCardId} has no entourage token #${index} in the catalog`,
+      );
     for (const { owner, minion } of minionsOf(ctx, select)) {
       const board = ctx.g.players[owner].board;
       const slot = board.findIndex((m) => m.instanceId === minion.instanceId);
-      board[slot] = createMinion(token, ctx.g.nextInstanceId++, ctx.g.turn, ctx.g.nextPlaySeq++);
+      board[slot] = createMinion(
+        token,
+        ctx.g.nextInstanceId++,
+        ctx.g.turn,
+        ctx.g.nextPlaySeq++,
+      );
     }
   };
 
@@ -211,7 +247,10 @@ export const steal =
       const mine = ctx.g.players[ctx.caster].board;
       if (owner === ctx.caster || mine.length >= 7) continue;
       const theirs = ctx.g.players[foe].board;
-      theirs.splice(theirs.findIndex((m) => m.instanceId === minion.instanceId), 1);
+      theirs.splice(
+        theirs.findIndex((m) => m.instanceId === minion.instanceId),
+        1,
+      );
       minion.playedOnTurn = ctx.g.turn; // summoning sickness under the new owner
       minion.attacksThisTurn = 0;
       delete minion.disabledOnTurn;
@@ -226,7 +265,11 @@ export const discardRandom =
     const hand = ctx.g.players[ctx.caster].hand;
     for (let i = 0; i < count && hand.length > 0; i++) {
       const [gone] = hand.splice(ctx.rng.shuffle(hand.map((_, k) => k))[0], 1);
-      ctx.events.push({ type: 'Discarded', player: ctx.caster, instanceId: gone.instanceId });
+      ctx.events.push({
+        type: 'Discarded',
+        player: ctx.caster,
+        instanceId: gone.instanceId,
+      });
     }
   };
 
@@ -247,7 +290,14 @@ export const damageWithLifesteal =
     damage(select, amount)(ctx);
     const dealt = ctx.events
       .slice(before)
-      .reduce((sum, e) => sum + (e.type === 'MinionDamaged' || e.type === 'HeroDamaged' ? e.amount : 0), 0);
+      .reduce(
+        (sum, e) =>
+          sum +
+          (e.type === 'MinionDamaged' || e.type === 'HeroDamaged'
+            ? e.amount
+            : 0),
+        0,
+      );
     if (dealt > 0) heal(ownHeroRef, dealt)(ctx);
   };
 const ownHeroRef: Selector = (ctx) => [{ kind: 'hero', player: ctx.caster }];
@@ -256,7 +306,11 @@ const ownHeroRef: Selector = (ctx) => [{ kind: 'hero', player: ctx.caster }];
 export const drawIfDead =
   (select: Selector): Effect =>
   (ctx) => {
-    const dead = select(ctx).some((t) => t.kind === 'minion' && (findMinion(ctx.g, t.instanceId)?.minion.health ?? 0) <= 0);
+    const dead = select(ctx).some(
+      (t) =>
+        t.kind === 'minion' &&
+        (findMinion(ctx.g, t.instanceId)?.minion.health ?? 0) <= 0,
+    );
     if (dead) draw(1)(ctx);
   };
 
@@ -264,15 +318,24 @@ export const drawIfDead =
 export const buffPerOtherFriendly =
   (attack: number, health: number): Effect =>
   (ctx) => {
-    const others = ctx.g.players[ctx.caster].board.filter((m) => m.instanceId !== ctx.self).length;
-    buff((c) => (c.self === undefined ? [] : [{ kind: 'minion', instanceId: c.self }]), attack * others, health * others)(ctx);
+    const others = ctx.g.players[ctx.caster].board.filter(
+      (m) => m.instanceId !== ctx.self,
+    ).length;
+    buff(
+      (c) =>
+        c.self === undefined ? [] : [{ kind: 'minion', instanceId: c.self }],
+      attack * others,
+      health * others,
+    )(ctx);
   };
 
 /** Sacrifices (destroys) the chosen friendly minion and heals the caster's hero. */
 export const sacrificeFor =
   (select: Selector, healAmount: number): Effect =>
   (ctx) => {
-    const victims = minionsOf(ctx, select).filter((x) => x.owner === ctx.caster);
+    const victims = minionsOf(ctx, select).filter(
+      (x) => x.owner === ctx.caster,
+    );
     if (victims.length === 0) return;
     destroy(select)(ctx);
     heal(ownHeroRef, healAmount)(ctx);
@@ -290,13 +353,26 @@ export const keepFromTop =
     const seen = p.deck.splice(0, look);
     if (seen.length === 0) return;
     const [kept] = seen.splice(Math.min(keep, seen.length - 1), 1);
-    for (const gone of seen) ctx.events.push({ type: 'Discarded', player: ctx.caster, instanceId: gone.instanceId });
+    for (const gone of seen)
+      ctx.events.push({
+        type: 'Discarded',
+        player: ctx.caster,
+        instanceId: gone.instanceId,
+      });
     if (p.hand.length >= MAX_HAND) {
-      ctx.events.push({ type: 'Burned', player: ctx.caster, instanceId: kept.instanceId });
+      ctx.events.push({
+        type: 'Burned',
+        player: ctx.caster,
+        instanceId: kept.instanceId,
+      });
       return;
     }
     p.hand.push(kept);
-    ctx.events.push({ type: 'Drew', player: ctx.caster, instanceId: kept.instanceId });
+    ctx.events.push({
+      type: 'Drew',
+      player: ctx.caster,
+      instanceId: kept.instanceId,
+    });
   };
 
 /** "+N Attack this turn": raises attack now and takes it back when the turn ends. */
@@ -313,7 +389,9 @@ export const buffThisTurn =
 export const equipWeapon =
   (opts: { temporary?: boolean } = {}): Effect =>
   (ctx) => {
-    const card = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+    const card = ctx.sourceCardId
+      ? ctx.catalog.get(ctx.sourceCardId)
+      : undefined;
     if (!card) throw new Error('equipWeapon needs a running card');
     ctx.g.players[ctx.caster].weapon = {
       instanceId: ctx.g.nextInstanceId++,
@@ -322,7 +400,11 @@ export const equipWeapon =
       durability: card.health ?? 0,
       ...(opts.temporary ? { temporary: true } : {}),
     };
-    ctx.events.push({ type: 'WeaponEquipped', player: ctx.caster, cardId: card.id });
+    ctx.events.push({
+      type: 'WeaponEquipped',
+      player: ctx.caster,
+      cardId: card.id,
+    });
   };
 
 /** Adds a copy of a random card the opponent has played to the caster's hand (burned if the hand is full). */
@@ -349,7 +431,14 @@ export const silence =
   (ctx) => {
     for (const { minion } of minionsOf(ctx, select)) {
       minion.silenced = true;
-      minion.keywords = { guard: false, rush: false, bubble: false, doubleAttack: false, hidden: false, noAttack: false };
+      minion.keywords = {
+        guard: false,
+        rush: false,
+        bubble: false,
+        doubleAttack: false,
+        hidden: false,
+        noAttack: false,
+      };
       minion.auraRush = false;
       delete minion.disabledOnTurn;
     }
@@ -372,21 +461,24 @@ export const swapAttackAndHealth =
 export const setAttackToHealth =
   (select: Selector): Effect =>
   (ctx) => {
-    for (const { minion } of minionsOf(ctx, select)) minion.attack = minion.health + minion.auraAttack + minion.tempAttack;
+    for (const { minion } of minionsOf(ctx, select))
+      minion.attack = minion.health + minion.auraAttack + minion.tempAttack;
   };
 
 /** Doubles each minion's current Attack (the extra stays after the turn, like a buff). */
 export const doubleAttackStat =
   (select: Selector): Effect =>
   (ctx) => {
-    for (const { minion } of minionsOf(ctx, select)) minion.attack += minion.attack;
+    for (const { minion } of minionsOf(ctx, select))
+      minion.attack += minion.attack;
   };
 
 /** Sets a hero's health to an exact value (it may go up or down; armor is untouched). */
 export const setHeroHealth =
   (select: Selector, value: number): Effect =>
   (ctx) => {
-    for (const t of select(ctx)) if (t.kind === 'hero') ctx.g.players[t.player].health = value;
+    for (const t of select(ctx))
+      if (t.kind === 'hero') ctx.g.players[t.player].health = value;
   };
 
 /** Runs `make(ctx)` to build the effect from the live game state (for amounts that depend on it, like armor or hand size). */
@@ -399,7 +491,8 @@ export const computed =
 export const reduceAttack =
   (select: Selector, amount: number): Effect =>
   (ctx) => {
-    for (const { minion } of minionsOf(ctx, select)) minion.attack = Math.max(0, minion.attack - amount);
+    for (const { minion } of minionsOf(ctx, select))
+      minion.attack = Math.max(0, minion.attack - amount);
   };
 
 /** Halves each minion's current and maximum Health, rounded up. */
@@ -408,13 +501,20 @@ export const halveHealth =
   (ctx) => {
     for (const { minion } of minionsOf(ctx, select)) {
       minion.health = Math.ceil(minion.health / 2);
-      minion.maxHealth = Math.max(minion.health, Math.ceil(minion.maxHealth / 2));
+      minion.maxHealth = Math.max(
+        minion.health,
+        Math.ceil(minion.maxHealth / 2),
+      );
     }
   };
 
 /** Adds a card to the caster's hand (burned if full). `costDelta` follows that copy ("costs 1 less" is -1). */
 export const addCardToHand =
-  (cardId: string | ((ctx: Parameters<Effect>[0]) => string | undefined), costDelta = 0, forOpponent = false): Effect =>
+  (
+    cardId: string | ((ctx: Parameters<Effect>[0]) => string | undefined),
+    costDelta = 0,
+    forOpponent = false,
+  ): Effect =>
   (ctx) => {
     const id = typeof cardId === 'function' ? cardId(ctx) : cardId;
     if (!id) return;
@@ -425,7 +525,11 @@ export const addCardToHand =
       ctx.events.push({ type: 'Burned', player: who, instanceId });
       return;
     }
-    p.hand.push({ instanceId, cardId: id, ...(costDelta ? { costDelta } : {}) });
+    p.hand.push({
+      instanceId,
+      cardId: id,
+      ...(costDelta ? { costDelta } : {}),
+    });
     ctx.events.push({ type: 'CardObtained', player: who, instanceId });
   };
 
@@ -446,7 +550,10 @@ export const redirectCastToCasterMinion = (): Effect => (ctx) => {
   if (!ctx.cast?.target) return;
   const mine = ctx.g.players[ctx.cast.caster].board;
   if (mine.length === 0) return;
-  ctx.cast.target = { kind: 'minion', instanceId: ctx.rng.shuffle([...mine])[0].instanceId };
+  ctx.cast.target = {
+    kind: 'minion',
+    instanceId: ctx.rng.shuffle([...mine])[0].instanceId,
+  };
 };
 
 /** Every Concealed minion loses Concealed and takes 1 damage. */
@@ -455,7 +562,12 @@ export const revealHidden = (): Effect => (ctx) => {
     for (const m of ctx.g.players[owner].board) {
       if (!m.keywords.hidden) continue;
       m.keywords.hidden = false;
-      damageTarget(ctx.g, { kind: 'minion', instanceId: m.instanceId }, 1, ctx.events);
+      damageTarget(
+        ctx.g,
+        { kind: 'minion', instanceId: m.instanceId },
+        1,
+        ctx.events,
+      );
     }
   }
 };
@@ -466,7 +578,11 @@ export const destroyEnemyMystery =
   (ctx) => {
     const foe = ctx.g.players[opponentOf(ctx.caster)];
     if (!foe.mystery) return;
-    ctx.events.push({ type: 'MysteryRevealed', player: opponentOf(ctx.caster), cardId: foe.mystery.cardId });
+    ctx.events.push({
+      type: 'MysteryRevealed',
+      player: opponentOf(ctx.caster),
+      cardId: foe.mystery.cardId,
+    });
     foe.mystery = null;
     for (const effect of then) effect(ctx);
   };
@@ -488,18 +604,26 @@ export const drawDiscounted =
     draw(count)(ctx);
     for (const e of ctx.events.slice(before)) {
       if (e.type !== 'Drew') continue;
-      const card = ctx.g.players[ctx.caster].hand.find((c) => c.instanceId === e.instanceId);
+      const card = ctx.g.players[ctx.caster].hand.find(
+        (c) => c.instanceId === e.instanceId,
+      );
       if (card) card.costDelta = (card.costDelta ?? 0) + delta;
     }
   };
 
 /** Disables only the selected minions that pass `test`. */
 export const disableWhere =
-  (select: Selector, test: (m: { health: number; attack: number }) => boolean): Effect =>
+  (
+    select: Selector,
+    test: (m: { health: number; attack: number }) => boolean,
+  ): Effect =>
   (ctx) => {
     const passing = minionsOf(ctx, select)
       .filter(({ minion }) => test(minion))
-      .map(({ minion }) => ({ kind: 'minion' as const, instanceId: minion.instanceId }));
+      .map(({ minion }) => ({
+        kind: 'minion' as const,
+        instanceId: minion.instanceId,
+      }));
     disable(() => passing)(ctx);
   };
 
@@ -515,7 +639,11 @@ export const returnToHand =
       const p = ctx.g.players[owner];
       p.board = p.board.filter((m) => m.instanceId !== minion.instanceId);
       if (p.hand.length >= MAX_HAND) {
-        ctx.events.push({ type: 'Burned', player: owner, instanceId: minion.instanceId });
+        ctx.events.push({
+          type: 'Burned',
+          player: owner,
+          instanceId: minion.instanceId,
+        });
         continue;
       }
       p.hand.push({
@@ -524,7 +652,11 @@ export const returnToHand =
         ...(costDelta ? { costDelta } : {}),
         ...(rush ? { rushOnPlay: true } : {}),
       });
-      ctx.events.push({ type: 'CardObtained', player: owner, instanceId: minion.instanceId });
+      ctx.events.push({
+        type: 'CardObtained',
+        player: owner,
+        instanceId: minion.instanceId,
+      });
     }
   };
 
@@ -534,7 +666,8 @@ export const halveAttack =
   (ctx) => {
     for (const { minion } of minionsOf(ctx, select)) {
       const base = minion.attack - minion.auraAttack - minion.tempAttack;
-      minion.attack = Math.floor(base / 2) + minion.auraAttack + minion.tempAttack;
+      minion.attack =
+        Math.floor(base / 2) + minion.auraAttack + minion.tempAttack;
     }
   };
 
@@ -561,10 +694,16 @@ export const tradeWeakestForStrongest = (): Effect => (ctx) => {
 export const summonEntourageForOpponent =
   (index = 0, count = 1): Effect =>
   (ctx) => {
-    const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+    const source = ctx.sourceCardId
+      ? ctx.catalog.get(ctx.sourceCardId)
+      : undefined;
     const token = source && ctx.catalog.get(source.entourage[index]);
-    if (!token) throw new Error(`${ctx.sourceCardId} has no entourage token #${index} in the catalog`);
-    for (let i = 0; i < count; i++) summonMinion(ctx.g, opponentOf(ctx.caster), token, ctx.events);
+    if (!token)
+      throw new Error(
+        `${ctx.sourceCardId} has no entourage token #${index} in the catalog`,
+      );
+    for (let i = 0; i < count; i++)
+      summonMinion(ctx.g, opponentOf(ctx.caster), token, ctx.events);
   };
 
 /** The opponent gains `amount` empty energy slots (capped at 10). */
@@ -590,13 +729,24 @@ export const drawMinionsFromDeck =
   (ctx) => {
     const p = ctx.g.players[ctx.caster];
     for (let n = 0; n < count; n++) {
-      const i = p.deck.findIndex((c) => ctx.catalog.get(c.cardId)?.type === 'minion');
+      const i = p.deck.findIndex(
+        (c) => ctx.catalog.get(c.cardId)?.type === 'minion',
+      );
       if (i < 0) return;
       const [card] = p.deck.splice(i, 1);
-      if (p.hand.length >= MAX_HAND) ctx.events.push({ type: 'Burned', player: ctx.caster, instanceId: card.instanceId });
+      if (p.hand.length >= MAX_HAND)
+        ctx.events.push({
+          type: 'Burned',
+          player: ctx.caster,
+          instanceId: card.instanceId,
+        });
       else {
         p.hand.push(card);
-        ctx.events.push({ type: 'Drew', player: ctx.caster, instanceId: card.instanceId });
+        ctx.events.push({
+          type: 'Drew',
+          player: ctx.caster,
+          instanceId: card.instanceId,
+        });
       }
     }
   };
@@ -610,12 +760,28 @@ export const destroyRandomNumberOfAll = (): Effect => (ctx) => {
 
 /** Two random enemy minions fight: each deals its Attack to the other (no Guard, no triggers beyond the damage). */
 export const forceFight = (): Effect => (ctx) => {
-  const picks = ctx.rng.shuffle(ctx.g.players[opponentOf(ctx.caster)].board.filter((m) => !m.keywords.hidden)).slice(0, 2);
+  const picks = ctx.rng
+    .shuffle(
+      ctx.g.players[opponentOf(ctx.caster)].board.filter(
+        (m) => !m.keywords.hidden,
+      ),
+    )
+    .slice(0, 2);
   if (picks.length < 2) return;
   const [a, b] = picks;
   const [aAtk, bAtk] = [a.attack, b.attack];
-  damageTarget(ctx.g, { kind: 'minion', instanceId: b.instanceId }, aAtk, ctx.events);
-  damageTarget(ctx.g, { kind: 'minion', instanceId: a.instanceId }, bAtk, ctx.events);
+  damageTarget(
+    ctx.g,
+    { kind: 'minion', instanceId: b.instanceId },
+    aAtk,
+    ctx.events,
+  );
+  damageTarget(
+    ctx.g,
+    { kind: 'minion', instanceId: a.instanceId },
+    bAtk,
+    ctx.events,
+  );
 };
 
 /** `count` times: 1 damage to a random character (hero or minion, either side). */
@@ -626,10 +792,17 @@ export const scatterDamage =
       const all: Parameters<typeof damageTarget>[1][] = [
         { kind: 'hero', player: '0' },
         { kind: 'hero', player: '1' },
-        ...[...ctx.g.players['0'].board, ...ctx.g.players['1'].board].filter((m) => m.health > 0).map((m) => ({ kind: 'minion' as const, instanceId: m.instanceId })),
+        ...[...ctx.g.players['0'].board, ...ctx.g.players['1'].board]
+          .filter((m) => m.health > 0)
+          .map((m) => ({ kind: 'minion' as const, instanceId: m.instanceId })),
       ];
       const pick = all[ctx.rng.int(all.length)];
-      damageTarget(ctx.g, pick, withSpellPower('damage', 1, ctx.spellDamage), ctx.events);
+      damageTarget(
+        ctx.g,
+        pick,
+        withSpellPower('damage', 1, ctx.spellDamage),
+        ctx.events,
+      );
     }
   };
 
@@ -665,7 +838,11 @@ export const copyPlayedSpellToOtherHand = (): Effect => (ctx) => {
  * (negative is less). With no card to pick, nothing happens.
  */
 export const addRandomCardToHand =
-  (where: (c: Card) => boolean = () => true, count = 1, costDelta = 0): Effect =>
+  (
+    where: (c: Card) => boolean = () => true,
+    count = 1,
+    costDelta = 0,
+  ): Effect =>
   (ctx) => {
     for (let i = 0; i < count; i++) {
       const pool = cardPool(ctx.catalog, where);
@@ -681,14 +858,24 @@ export const summonRandomCard =
   (ctx) => {
     const pool = cardPool(ctx.catalog, (c) => c.type === 'minion' && where(c));
     if (pool.length === 0) return;
-    summonMinion(ctx.g, ctx.caster, pool[ctx.rng.int(pool.length)], ctx.events, ctx.self);
+    summonMinion(
+      ctx.g,
+      ctx.caster,
+      pool[ctx.rng.int(pool.length)],
+      ctx.events,
+      ctx.self,
+    );
   };
 
 /** Runs `then` if the selected minion is at 0 health (use right after damaging it). */
 export const ifDead =
   (select: Selector, then: Effect): Effect =>
   (ctx) => {
-    const dead = select(ctx).some((t) => t.kind === 'minion' && (findMinion(ctx.g, t.instanceId)?.minion.health ?? 0) <= 0);
+    const dead = select(ctx).some(
+      (t) =>
+        t.kind === 'minion' &&
+        (findMinion(ctx.g, t.instanceId)?.minion.health ?? 0) <= 0,
+    );
     if (dead) then(ctx);
   };
 
@@ -716,7 +903,10 @@ export const loanMinion =
       const mine = ctx.g.players[ctx.caster].board;
       if (owner === ctx.caster || mine.length >= 7) continue;
       const theirs = ctx.g.players[owner].board;
-      theirs.splice(theirs.findIndex((m) => m.instanceId === minion.instanceId), 1);
+      theirs.splice(
+        theirs.findIndex((m) => m.instanceId === minion.instanceId),
+        1,
+      );
       minion.loan = { from: owner, returnOnTurn: ctx.g.turn + (turns - 1) * 2 };
       minion.playedOnTurn = canAttack ? ctx.g.turn - 1 : ctx.g.turn;
       minion.attacksThisTurn = 0;
@@ -729,7 +919,8 @@ export const loanMinion =
 export const becomeCopyOf =
   (select: Selector): Effect =>
   (ctx) => {
-    const me = ctx.self !== undefined ? findMinion(ctx.g, ctx.self)?.minion : undefined;
+    const me =
+      ctx.self !== undefined ? findMinion(ctx.g, ctx.self)?.minion : undefined;
     const [src] = minionsOf(ctx, select);
     if (!me || !src) return;
     const t = src.minion;
@@ -771,20 +962,32 @@ export const summonCopyOf =
 
 /** Every minion except the running one attacks a random character on the other side (a minion fights back; a hero does not), in play order. */
 export const forceAllAttack = (): Effect => (ctx) => {
-  const order = [...ctx.g.players['0'].board.map((m) => ({ owner: '0' as const, m })), ...ctx.g.players['1'].board.map((m) => ({ owner: '1' as const, m }))].sort(
-    (a, b) => a.m.playSeq - b.m.playSeq
-  );
+  const order = [
+    ...ctx.g.players['0'].board.map((m) => ({ owner: '0' as const, m })),
+    ...ctx.g.players['1'].board.map((m) => ({ owner: '1' as const, m })),
+  ].sort((a, b) => a.m.playSeq - b.m.playSeq);
   for (const { owner, m } of order) {
     if (m.instanceId === ctx.self || m.health <= 0) continue;
     const foe = opponentOf(owner);
     const targets: Parameters<typeof damageTarget>[1][] = [
       { kind: 'hero', player: foe },
-      ...ctx.g.players[foe].board.filter((x) => x.health > 0).map((x) => ({ kind: 'minion' as const, instanceId: x.instanceId })),
+      ...ctx.g.players[foe].board
+        .filter((x) => x.health > 0)
+        .map((x) => ({ kind: 'minion' as const, instanceId: x.instanceId })),
     ];
     const t = targets[ctx.rng.int(targets.length)];
-    const counter = t.kind === 'minion' ? findMinion(ctx.g, t.instanceId)?.minion.attack ?? 0 : 0;
+    const counter =
+      t.kind === 'minion'
+        ? (findMinion(ctx.g, t.instanceId)?.minion.attack ?? 0)
+        : 0;
     damageTarget(ctx.g, t, m.attack, ctx.events);
-    if (counter > 0) damageTarget(ctx.g, { kind: 'minion', instanceId: m.instanceId }, counter, ctx.events);
+    if (counter > 0)
+      damageTarget(
+        ctx.g,
+        { kind: 'minion', instanceId: m.instanceId },
+        counter,
+        ctx.events,
+      );
   }
 };
 
@@ -809,7 +1012,8 @@ export const grantImmune =
 export const grantDrawOnAttack =
   (select: Selector): Effect =>
   (ctx) => {
-    for (const { minion } of minionsOf(ctx, select)) minion.drawsOnAttack = true;
+    for (const { minion } of minionsOf(ctx, select))
+      minion.drawsOnAttack = true;
   };
 
 /** The caster's next spell this turn costs `amount` less. */
@@ -833,30 +1037,51 @@ export const healthFloorThisTurn = (): Effect => (ctx) => {
 export const equipTokenWeapon =
   (index = 0): Effect =>
   (ctx) => {
-    const source = ctx.sourceCardId ? ctx.catalog.get(ctx.sourceCardId) : undefined;
+    const source = ctx.sourceCardId
+      ? ctx.catalog.get(ctx.sourceCardId)
+      : undefined;
     const token = source && ctx.catalog.get(source.entourage[index]);
-    if (!token) throw new Error(`${ctx.sourceCardId} has no entourage weapon #${index} in the catalog`);
+    if (!token)
+      throw new Error(
+        `${ctx.sourceCardId} has no entourage weapon #${index} in the catalog`,
+      );
     ctx.g.players[ctx.caster].weapon = {
       instanceId: ctx.g.nextInstanceId++,
       cardId: token.id,
       attack: token.attack ?? 0,
       durability: token.health ?? 0,
     };
-    ctx.events.push({ type: 'WeaponEquipped', player: ctx.caster, cardId: token.id });
+    ctx.events.push({
+      type: 'WeaponEquipped',
+      player: ctx.caster,
+      cardId: token.id,
+    });
   };
 
 /** The running minion swaps places with a random minion card from its owner's hand (which goes onto the board in its slot; this card goes to the hand). */
 export const swapSelfWithHandMinion = (): Effect => (ctx) => {
   const p = ctx.g.players[ctx.caster];
   const slot = p.board.findIndex((m) => m.instanceId === ctx.self);
-  const options = p.hand.filter((c) => ctx.catalog.get(c.cardId)?.type === 'minion');
+  const options = p.hand.filter(
+    (c) => ctx.catalog.get(c.cardId)?.type === 'minion',
+  );
   if (slot < 0 || options.length === 0) return;
   const pick = ctx.rng.shuffle([...options])[0];
   const card = ctx.catalog.get(pick.cardId)!;
   const old = p.board[slot];
   p.hand = p.hand.filter((c) => c.instanceId !== pick.instanceId);
   p.hand.push({ instanceId: old.instanceId, cardId: old.cardId });
-  const fresh = createMinion(card, pick.instanceId, ctx.g.turn, ctx.g.nextPlaySeq++);
+  const fresh = createMinion(
+    card,
+    pick.instanceId,
+    ctx.g.turn,
+    ctx.g.nextPlaySeq++,
+  );
   p.board[slot] = fresh;
-  ctx.events.push({ type: 'MinionSummoned', player: ctx.caster, instanceId: fresh.instanceId, cardId: card.id });
+  ctx.events.push({
+    type: 'MinionSummoned',
+    player: ctx.caster,
+    instanceId: fresh.instanceId,
+    cardId: card.id,
+  });
 };

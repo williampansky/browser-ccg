@@ -20,18 +20,32 @@ const flag = (name: string, fallback: string): string => {
   return i >= 0 && argv[i + 1] ? argv[i + 1] : fallback;
 };
 
-const src = argv.find((a, i) => !a.startsWith('--') && !argv[i - 1]?.startsWith('--'));
+const src = argv.find(
+  (a, i) => !a.startsWith('--') && !argv[i - 1]?.startsWith('--'),
+);
 if (!src || !fs.existsSync(src) || !fs.statSync(src).isDirectory()) {
-  console.error('Usage: npm run upscale -- <folder> [--out <folder>] [--model digital-art-4x] [--size 1000]');
+  console.error(
+    'Usage: npm run upscale -- <folder> [--out <folder>] [--model digital-art-4x] [--size 1000]',
+  );
   process.exit(1);
 }
 const out = flag('out', `${path.resolve(src).replace(/[\/]+$/, '')}-upscaled`);
 const model = flag('model', 'digital-art-4x');
 const size = Number(flag('size', '1000'));
-const toolDir = process.env.REALESRGAN_DIR || path.join(os.homedir(), 'tools/realesrgan/realesrgan-ncnn-vulkan-v0.2.0-macos');
+const toolDir =
+  process.env.REALESRGAN_DIR ||
+  path.join(
+    os.homedir(),
+    'tools/realesrgan/realesrgan-ncnn-vulkan-v0.2.0-macos',
+  );
 const bin = path.join(toolDir, 'realesrgan-ncnn-vulkan');
-if (!fs.existsSync(bin) || !fs.existsSync(path.join(toolDir, 'models', `${model}.param`))) {
-  console.error(`Real-ESRGAN not found: need ${bin} and models/${model}.param (set REALESRGAN_DIR).`);
+if (
+  !fs.existsSync(bin) ||
+  !fs.existsSync(path.join(toolDir, 'models', `${model}.param`))
+) {
+  console.error(
+    `Real-ESRGAN not found: need ${bin} and models/${model}.param (set REALESRGAN_DIR).`,
+  );
   process.exit(1);
 }
 
@@ -41,7 +55,10 @@ const sharp: typeof import('sharp').default = eval('require')('sharp');
 
 const run = async () => {
   fs.mkdirSync(out, { recursive: true });
-  const files = fs.readdirSync(src).filter((f) => /\.(png|jpe?g)$/i.test(f)).sort();
+  const files = fs
+    .readdirSync(src)
+    .filter((f) => /\.(png|jpe?g)$/i.test(f))
+    .sort();
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'upscale-'));
   let done = 0;
   for (const file of files) {
@@ -52,13 +69,35 @@ const run = async () => {
     let pass = 0;
     while (width < size) {
       const next = path.join(tmp, `${pass++}-${path.parse(file).name}.png`);
-      execFileSync(bin, ['-i', current, '-o', next, '-n', model, '-s', '4', '-m', path.join(toolDir, 'models'), '-f', 'png'], { stdio: 'ignore' });
+      execFileSync(
+        bin,
+        [
+          '-i',
+          current,
+          '-o',
+          next,
+          '-n',
+          model,
+          '-s',
+          '4',
+          '-m',
+          path.join(toolDir, 'models'),
+          '-f',
+          'png',
+        ],
+        { stdio: 'ignore' },
+      );
       current = next;
       width *= 4;
     }
-    await sharp(current).resize(size, size, { kernel: 'lanczos3' }).png().toFile(target);
+    await sharp(current)
+      .resize(size, size, { kernel: 'lanczos3' })
+      .png()
+      .toFile(target);
     done++;
-    console.log(`${done}/${files.length} ${file} (${pass} pass${pass === 1 ? '' : 'es'})`);
+    console.log(
+      `${done}/${files.length} ${file} (${pass} pass${pass === 1 ? '' : 'es'})`,
+    );
   }
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`Done: ${out}`);

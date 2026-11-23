@@ -1,13 +1,21 @@
 import { produce } from 'immer';
 import { effectiveCost } from '../../rules/cost';
 import { legalActions } from '../../rules/legal-actions';
-import { catalog, failCode, play, realCard, run, setup } from '../../testing/real-cards';
+import {
+  catalog,
+  failCode,
+  play,
+  realCard,
+  run,
+  setup,
+} from '../../testing/real-cards';
 import { setEnergy } from '../../testing/builders';
 import type { GameState } from '../../state/types';
 
 // Cost changes: effectiveCost is what the engine charges, what legalActions allows, and what the UI shows.
 
-const cost = (s: GameState, id: string) => effectiveCost(s, '0', realCard(id), catalog);
+const cost = (s: GameState, id: string) =>
+  effectiveCost(s, '0', realCard(id), catalog);
 const withEnergy = (s: GameState, n: number) => setEnergy(s, '0', n);
 
 describe('PRIME_220 Ancient Portal: minions cost 2 less, not below 1', () => {
@@ -27,7 +35,9 @@ describe('PRIME_220 Ancient Portal: minions cost 2 less, not below 1', () => {
     const poor = withEnergy(base, 3);
     expect(failCode(poor)).toBeUndefined();
     expect(play(poor).state.players['0'].energy.current).toBe(0);
-    expect(legalActions(poor, '0', catalog).some((a) => a.type === 'PlayCard')).toBe(true);
+    expect(
+      legalActions(poor, '0', catalog).some((a) => a.type === 'PlayCard'),
+    ).toBe(true);
     expect(failCode(withEnergy(base, 2))).toBe('CANT_AFFORD');
     const without = withEnergy(setup('PRIME_034'), 3);
     expect(failCode(without)).toBe('CANT_AFFORD');
@@ -38,13 +48,22 @@ describe('PRIME_142 Demon Sorcerer: spells cost 1 less', () => {
   it('only spells, and not below 0', () => {
     const s = setup('CORE_043', { mine: [[0, 2, 'PRIME_142']] });
     expect(realCard('CORE_043').type).toBe('spell');
-    expect(cost(s, 'CORE_043')).toBe(Math.max(0, realCard('CORE_043').cost - 1));
+    expect(cost(s, 'CORE_043')).toBe(
+      Math.max(0, realCard('CORE_043').cost - 1),
+    );
     expect(cost(s, 'CORE_094')).toBe(realCard('CORE_094').cost); // an item
     expect(cost(s, 'PRIME_034')).toBe(5);
   });
   it('two of them stack', () => {
-    const s = setup('CORE_043', { mine: [[0, 2, 'PRIME_142'], [0, 2, 'PRIME_142']] });
-    const spell = Array.from(catalog.values()).find((c) => c.type === 'spell' && c.cost === 4)!;
+    const s = setup('CORE_043', {
+      mine: [
+        [0, 2, 'PRIME_142'],
+        [0, 2, 'PRIME_142'],
+      ],
+    });
+    const spell = Array.from(catalog.values()).find(
+      (c) => c.type === 'spell' && c.cost === 4,
+    )!;
     expect(effectiveCost(s, '0', spell, catalog)).toBe(2);
   });
 });

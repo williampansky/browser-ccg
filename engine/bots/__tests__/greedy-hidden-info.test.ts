@@ -5,8 +5,13 @@ import { chooseGreedyAction } from '../greedy-bot';
 
 /** Player 0 sets PRIME_148, then it is Player 1's turn with a ready 5/5 and nothing to play (so the only question is the attack). */
 const armed = (): GameState => {
-  const s = endTurn(play(setup('PRIME_148', { theirs: [[5, 5]], heroHp: { '0': 20 } })).state);
-  return { ...s, players: { ...s.players, '1': { ...s.players['1'], hand: [] } } };
+  const s = endTurn(
+    play(setup('PRIME_148', { theirs: [[5, 5]], heroHp: { '0': 20 } })).state,
+  );
+  return {
+    ...s,
+    players: { ...s.players, '1': { ...s.players['1'], hand: [] } },
+  };
 };
 
 // The bot must not see through the human's face-down Mystery: it cannot know what it will do, so a Mystery must neither
@@ -21,7 +26,15 @@ describe('greedy bot and a face-down Mystery', () => {
   });
   it('makes the same choice with and without the Mystery', () => {
     const withIt = armed();
-    const without = { ...withIt, players: { ...withIt.players, '0': { ...withIt.players['0'], mystery: null } } };
-    expect(chooseGreedyAction(withIt, catalog, createSeededRng(1))).toEqual(chooseGreedyAction(without, catalog, createSeededRng(1)));
+    const without = {
+      ...withIt,
+      players: {
+        ...withIt.players,
+        '0': { ...withIt.players['0'], mystery: null },
+      },
+    };
+    expect(chooseGreedyAction(withIt, catalog, createSeededRng(1))).toEqual(
+      chooseGreedyAction(without, catalog, createSeededRng(1)),
+    );
   });
 });

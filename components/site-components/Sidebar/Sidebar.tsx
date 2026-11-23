@@ -46,7 +46,7 @@ export const Sidebar = ({
       )}
     >
       {active && !activeDeck && decks && (
-        <ul className='decks__grid'>
+        <ul className="decks__grid">
           {Object.keys(decks)
             .map((i) => decks[i])
             .map((d: Deck, i) => {
@@ -61,27 +61,28 @@ export const Sidebar = ({
       )}
 
       {active && activeDeck && (
-        <div className='deckbuilder__deck'>
-          <div className='deckbuilder__deck-info'>
+        <div className="deckbuilder__deck">
+          <div className="deckbuilder__deck-info">
             <div>
               <button onClickCapture={onBackFromDeckClick}>Back</button>
             </div>
             <div>
               <input
-                name='name'
+                name="name"
                 defaultValue={decks[activeDeck]?.name}
-                type='text'
+                type="text"
                 onChangeCapture={onDeckNameChange}
               />
             </div>
             <div>
-              {getDeckbuilderDeckLength(decks[activeDeck]?.cards)}/{gameConfig.numerics.cardsPerDeck}
+              {getDeckbuilderDeckLength(decks[activeDeck]?.cards)}/
+              {gameConfig.numerics.cardsPerDeck}
             </div>
             <div>
               <button onClickCapture={onDeckDeleteClick}>Delete</button>
             </div>
           </div>
-          <ul className='deckbuilder__deck-grid'>
+          <ul className="deckbuilder__deck-grid">
             {decks[activeDeck]?.cards.map((card: Card, i: number) => {
               return (
                 <div
@@ -89,26 +90,26 @@ export const Sidebar = ({
                   data-key={card?.key}
                   onClick={() => handleRemoveCardClick(card, activeDeck)}
                 >
-                  <div className='deck__item' data-rarity={card?.rarity}>
-                    <div className='item__cost text__value text__value--shadow'>
+                  <div className="deck__item" data-rarity={card?.rarity}>
+                    <div className="item__cost text__value text__value--shadow">
                       <span>{card?.baseCost}</span>
-                      <Image layout='intrinsic' src={energyImg} />
+                      <Image layout="intrinsic" src={energyImg} />
                     </div>
 
-                    <div className='item__info'>
-                      <div className='item__name bccg-text-truncate text__value text__value--shadow'>
+                    <div className="item__info">
+                      <div className="item__name bccg-text-truncate text__value text__value--shadow">
                         {card?.name}
                       </div>
                     </div>
 
                     {card?.amount === 2 && (
-                      <div className='item__amount text__value text__value--shadow'>
+                      <div className="item__amount text__value text__value--shadow">
                         2
                       </div>
                     )}
 
                     <Image
-                      layout='fill'
+                      layout="fill"
                       src={`/images/sets/SET_CORE/${card?.id}-DECK.jpg`}
                     />
                   </div>

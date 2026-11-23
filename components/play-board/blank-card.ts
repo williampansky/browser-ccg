@@ -21,5 +21,5 @@ export const blankCard = (name: string, text = ''): Card => ({
   isToken: true,
   elite: false,
   active: true,
-  collectible: false
+  collectible: false,
 });

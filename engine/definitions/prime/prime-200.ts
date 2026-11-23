@@ -6,7 +6,10 @@ import { self } from '../../effects/selectors';
 export default defineCard('PRIME_200', () => ({
   triggers: [
     on('TurnEnded', {
-      when: (e, c) => e.player === c.owner && (c.state.players[c.owner].board.find((m) => m.instanceId === c.selfId)?.attacksThisTurn ?? 0) >= 2,
+      when: (e, c) =>
+        e.player === c.owner &&
+        (c.state.players[c.owner].board.find((m) => m.instanceId === c.selfId)
+          ?.attacksThisTurn ?? 0) >= 2,
       do: [destroy(self())],
     }),
   ],

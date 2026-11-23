@@ -15,7 +15,13 @@ export type DragGhost = {
 
 const clamp = (v: number, m: number) => Math.max(-m, Math.min(m, v));
 
-export const startDragGhost = (source: HTMLElement, width: number, height: number, x: number, y: number): DragGhost => {
+export const startDragGhost = (
+  source: HTMLElement,
+  width: number,
+  height: number,
+  x: number,
+  y: number,
+): DragGhost => {
   const el = source.cloneNode(true) as HTMLElement;
   el.removeAttribute('id');
   el.style.cssText = [

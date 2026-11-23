@@ -12,7 +12,8 @@
   background: var(--ui-panel-bg);
   border: var(--ui-panel-border-w) solid var(--ui-panel-border);
   border-radius: var(--ui-panel-radius);
-  border-image: var(--ui-panel-art) var(--ui-panel-slice) fill / var(--ui-panel-art-w) stretch;
+  border-image: var(--ui-panel-art) var(--ui-panel-slice) fill /
+    var(--ui-panel-art-w) stretch;
   box-shadow: var(--ui-panel-shadow);
   font-family: var(--ui-font);
 
@@ -53,7 +54,8 @@
   background: var(--ui-btn-bg);
   border: var(--ui-btn-border-w) solid var(--ui-btn-border);
   border-radius: var(--ui-btn-radius);
-  border-image: var(--ui-btn-art) var(--ui-btn-slice) fill / var(--ui-btn-art-w) stretch;
+  border-image: var(--ui-btn-art) var(--ui-btn-slice) fill / var(--ui-btn-art-w)
+    stretch;
 
   &:hover:not(:disabled),
   &:focus-visible {
@@ -117,7 +119,9 @@ a.ui-btn {
     flex: none;
     width: var(--ui-toggle-w);
     height: var(--ui-toggle-h);
-    background: var(--ui-toggle-art) center / 100% 100% no-repeat, var(--ui-toggle-track);
+    background:
+      var(--ui-toggle-art) center / 100% 100% no-repeat,
+      var(--ui-toggle-track);
     border-radius: 999px;
 
     &::before {
@@ -125,7 +129,9 @@ a.ui-btn {
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      background: var(--ui-toggle-art-on) center / 100% 100% no-repeat, var(--ui-toggle-on);
+      background:
+        var(--ui-toggle-art-on) center / 100% 100% no-repeat,
+        var(--ui-toggle-on);
       opacity: 0;
       transition: opacity 0.2s;
     }
@@ -137,10 +143,15 @@ a.ui-btn {
       width: var(--ui-toggle-knob-size);
       height: var(--ui-toggle-knob-size);
       border-radius: 50%;
-      background: var(--ui-toggle-knob-art) center / 100% 100% no-repeat, var(--ui-toggle-thumb);
+      background:
+        var(--ui-toggle-knob-art) center / 100% 100% no-repeat,
+        var(--ui-toggle-thumb);
       transform: translateX(0);
       // A slight overshoot, so it settles like a physical switch. A knob picture (kit themes) swaps halfway along; a plain thumb fades.
-      transition: transform 0.22s cubic-bezier(0.3, 1.35, 0.5, 1), background-color 0.2s, background-image 0.02s 0.09s;
+      transition:
+        transform 0.22s cubic-bezier(0.3, 1.35, 0.5, 1),
+        background-color 0.2s,
+        background-image 0.02s 0.09s;
     }
   }
   &[aria-checked='true'] i {
@@ -149,7 +160,9 @@ a.ui-btn {
     }
     &::after {
       transform: translateX(var(--ui-toggle-travel));
-      background: var(--ui-toggle-knob-art-on) center / 100% 100% no-repeat, var(--ui-toggle-on-thumb);
+      background:
+        var(--ui-toggle-knob-art-on) center / 100% 100% no-repeat,
+        var(--ui-toggle-on-thumb);
     }
   }
   &:focus-visible {
@@ -219,11 +232,28 @@ select.ui-field {
   appearance: none;
   -webkit-appearance: none;
   padding-right: 1.9rem;
-  background-image: linear-gradient(to top right, transparent calc(50% - 0.8px), currentColor calc(50% - 0.8px), currentColor calc(50% + 0.8px), transparent calc(50% + 0.8px)),
-    linear-gradient(to top left, transparent calc(50% - 0.8px), currentColor calc(50% - 0.8px), currentColor calc(50% + 0.8px), transparent calc(50% + 0.8px));
-  background-size: 6px 6px, 6px 6px;
+  background-image:
+    linear-gradient(
+      to top right,
+      transparent calc(50% - 0.8px),
+      currentColor calc(50% - 0.8px),
+      currentColor calc(50% + 0.8px),
+      transparent calc(50% + 0.8px)
+    ),
+    linear-gradient(
+      to top left,
+      transparent calc(50% - 0.8px),
+      currentColor calc(50% - 0.8px),
+      currentColor calc(50% + 0.8px),
+      transparent calc(50% + 0.8px)
+    );
+  background-size:
+    6px 6px,
+    6px 6px;
   background-repeat: no-repeat;
-  background-position: right calc(0.65rem + 5px) center, right 0.65rem center;
+  background-position:
+    right calc(0.65rem + 5px) center,
+    right 0.65rem center;
   cursor: pointer;
 }
 
@@ -241,8 +271,10 @@ select.ui-field {
   margin-left: 0.4rem;
   cursor: pointer;
   background-color: var(--ui-text-dim);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 1.5l7 7M8.5 1.5l-7 7' stroke='%23000' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 1.5l7 7M8.5 1.5l-7 7' stroke='%23000' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 1.5l7 7M8.5 1.5l-7 7' stroke='%23000' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 1.5l7 7M8.5 1.5l-7 7' stroke='%23000' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")
+    center / contain no-repeat;
 }
 .ui-field[type='search']::-webkit-search-cancel-button:hover {
   background-color: var(--ui-text);
@@ -271,15 +303,21 @@ select.ui-field {
     flex: none;
     width: var(--ui-check-size);
     height: var(--ui-check-size);
-    background: var(--ui-check-art) center / 100% 100% no-repeat, var(--ui-field-bg);
+    background:
+      var(--ui-check-art) center / 100% 100% no-repeat,
+      var(--ui-field-bg);
     border: 1px solid var(--ui-field-border);
     border-radius: 4px;
     position: relative;
     display: grid;
-    color: var(--ui-primary-text); // the tick (an AnimatedIcon) takes this colour
+    color: var(
+      --ui-primary-text
+    ); // the tick (an AnimatedIcon) takes this colour
   }
   input:checked + i {
-    background: var(--ui-check-art-on) center / 100% 100% no-repeat, var(--ui-seg-on-bg);
+    background:
+      var(--ui-check-art-on) center / 100% 100% no-repeat,
+      var(--ui-seg-on-bg);
     border-color: var(--ui-seg-on-border);
   }
   input:focus-visible + i {

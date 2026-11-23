@@ -1,4 +1,9 @@
-import { energyPips, healthFraction, healthTone, pipsToSpend } from '../hero-bar-model';
+import {
+  energyPips,
+  healthFraction,
+  healthTone,
+  pipsToSpend,
+} from '../hero-bar-model';
 
 describe('energyPips', () => {
   it('always shows ten slots', () => {
@@ -7,7 +12,16 @@ describe('energyPips', () => {
   });
   it('shows available, spent and locked slots in that order', () => {
     expect(energyPips(2, 4)).toEqual([
-      'ready', 'ready', 'spent', 'spent', 'locked', 'locked', 'locked', 'locked', 'locked', 'locked',
+      'ready',
+      'ready',
+      'spent',
+      'spent',
+      'locked',
+      'locked',
+      'locked',
+      'locked',
+      'locked',
+      'locked',
     ]);
   });
   it('shows a full turn start as all ready', () => {
@@ -44,7 +58,9 @@ describe('healthFraction and healthTone', () => {
 
 describe('pipsToSpend', () => {
   const idx = (cur: number, total: number, cost: number) =>
-    pipsToSpend(energyPips(cur, total), cost).flatMap((on, i) => (on ? [i] : []));
+    pipsToSpend(energyPips(cur, total), cost).flatMap((on, i) =>
+      on ? [i] : [],
+    );
   it('marks the topmost available slots, as many as the cost', () => {
     expect(idx(5, 7, 2)).toEqual([3, 4]);
   });

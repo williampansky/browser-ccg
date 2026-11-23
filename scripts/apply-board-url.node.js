@@ -12,7 +12,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const FILE = path.join(__dirname, '..', 'components', 'play-board', 'layout-css.ts');
+const FILE = path.join(
+  __dirname,
+  '..',
+  'components',
+  'play-board',
+  'layout-css.ts',
+);
 const args = process.argv.slice(2);
 const dry = args.includes('--dry');
 const input = args.find((a) => !a.startsWith('--'));
@@ -22,7 +28,10 @@ if (!input) {
 }
 
 // A bare query ("a=1&b=2") is not a URL; give it a base and a `?`.
-const params = new URL(input.includes('?') || !input.includes('=') ? input : `?${input}`, 'http://localhost').searchParams;
+const params = new URL(
+  input.includes('?') || !input.includes('=') ? input : `?${input}`,
+  'http://localhost',
+).searchParams;
 
 const src = fs.readFileSync(FILE, 'utf8');
 const start = src.indexOf('export const PLAY_LAYOUT');
@@ -71,5 +80,7 @@ if (!changes.length) {
   console.log('Already matches PLAY_LAYOUT, nothing to change.');
   process.exit(0);
 }
-console.log((dry ? 'Would change:\n  ' : 'Changed:\n  ') + changes.join('\n  '));
+console.log(
+  (dry ? 'Would change:\n  ' : 'Changed:\n  ') + changes.join('\n  '),
+);
 if (!dry) fs.writeFileSync(FILE, src.slice(0, start) + block + src.slice(end));

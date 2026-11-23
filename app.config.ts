@@ -5,7 +5,7 @@ export const gameConfig: GameConfig = {
     core: 137,
     prime: 255,
     entourage: 45,
-    game: 1
+    game: 1,
   },
   numerics: {
     actionPointsPerTurn: 1,
@@ -15,8 +15,8 @@ export const gameConfig: GameConfig = {
     cardsPerStartingHand: 3,
     cardsPerTurn: 1,
     maxNumberOfDecks: 10,
-    numberOfPlayers: 2
-  }
+    numberOfPlayers: 2,
+  },
 };
 
 export const sitePages: Pages = {
@@ -25,28 +25,28 @@ export const sitePages: Pages = {
     name: 'Home',
     route: '/',
     showInFooter: true,
-    showInNav: true
+    showInNav: true,
   },
   apiList: {
     description: 'A frontend page listing items under the /api directory.',
     name: 'API List',
     route: '/api-list',
     showInFooter: false,
-    showInNav: false
+    showInNav: false,
   },
   changelog: {
     description: 'A page listing all changes to the game and site.',
     name: 'Changelog',
     route: '/changelog',
     showInFooter: false,
-    showInNav: true
+    showInNav: true,
   },
   profile: {
     description: 'Your account profile and settings',
     name: 'Profile',
     route: '/profile',
     showInFooter: true,
-    showInNav: true
+    showInNav: true,
   },
   cards: {
     description: 'All cards in the game',
@@ -55,7 +55,7 @@ export const sitePages: Pages = {
     headline: 'All Cards',
     title: 'All Cards',
     showInFooter: false,
-    showInNav: false
+    showInNav: false,
   },
   collection: {
     description: 'Your personal card collection',
@@ -64,7 +64,7 @@ export const sitePages: Pages = {
     headline: 'Your Collection',
     title: 'Collection',
     showInFooter: true,
-    showInNav: true
+    showInNav: true,
   },
   heroes: {
     description: 'Heroes and their skills',
@@ -73,7 +73,7 @@ export const sitePages: Pages = {
     headline: 'Heroes',
     title: 'Heroes',
     showInFooter: true,
-    showInNav: true
+    showInNav: true,
   },
   deckbuilder: {
     description: 'A page for building decks from your collection',
@@ -82,36 +82,36 @@ export const sitePages: Pages = {
     headline: 'Deck Builder',
     title: 'Deck Builder',
     showInFooter: false,
-    showInNav: true
+    showInNav: true,
   },
   faq: {
     description: 'A page for frequently asked questions',
     name: 'FAQ',
     route: '/faq',
     showInFooter: false,
-    showInNav: true
+    showInNav: true,
   },
   news: {
     description: 'Recent news and announcements about the game',
     name: 'News',
     route: '/news',
     showInFooter: true,
-    showInNav: true
+    showInNav: true,
   },
   play: {
     description: 'A page for playing the game',
     name: 'Play',
     route: '/play',
     showInFooter: true,
-    showInNav: true
+    showInNav: true,
   },
   store: {
     description: 'A page for purchasing content for the game',
     name: 'Store',
     route: '/store',
     showInFooter: true,
-    showInNav: true
-  }
+    showInNav: true,
+  },
 };
 
 /**
@@ -125,7 +125,7 @@ const FOOTER_ORDER = [
   'play',
   'store',
   'news',
-  'profile'
+  'profile',
 ];
 
 /**
@@ -145,8 +145,8 @@ export const footerButtons: Pages = Object.fromEntries(
     })
     .map(([key, page]) => [
       key,
-      { name: page.name, route: page.route, description: page.description }
-    ])
+      { name: page.name, route: page.route, description: page.description },
+    ]),
 );
 
 export const siteConfig: SiteConfig = {
@@ -155,12 +155,12 @@ export const siteConfig: SiteConfig = {
   pages: sitePages,
   footerButtons: footerButtons,
   version: '0.0.1',
-  disableRightClick: true
+  disableRightClick: true,
 };
 
 const appConfig: AppConfig = {
   gameConfig: { ...gameConfig },
-  siteConfig: { ...siteConfig }
+  siteConfig: { ...siteConfig },
 };
 
 export default appConfig;

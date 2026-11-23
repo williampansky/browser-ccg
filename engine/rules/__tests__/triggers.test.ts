@@ -1,11 +1,22 @@
 import { createGame } from '../../state/create-game';
 import { applyAction } from '../apply-action';
 import { createSeededRng } from '../../rng';
-import { catalogOf, minionCard, putInHand, putOnBoard, setEnergy, spellCard } from '../../testing/builders';
+import {
+  catalogOf,
+  minionCard,
+  putInHand,
+  putOnBoard,
+  setEnergy,
+  spellCard,
+} from '../../testing/builders';
 import { on } from '../../definitions/define-card';
 import type { CardDef } from '../../definitions/define-card';
 import { damage, draw, gainEnergy } from '../../effects/primitives';
-import { allMinions, enemyHero, allEnemyMinions } from '../../effects/selectors';
+import {
+  allMinions,
+  enemyHero,
+  allEnemyMinions,
+} from '../../effects/selectors';
 import type { Card } from '../../cards/types';
 import type { Action, GameEvent, GameState } from '../../state/types';
 
@@ -15,7 +26,12 @@ const testDefs: Record<string, CardDef> = {
   T_DEATHDRAW: { onDeath: [draw(1)] },
   T_DYER: { onDeath: [damage(allEnemyMinions(), 9)] },
   T_ENDPING: {
-    triggers: [on('TurnEnded', { when: (e, c) => e.player === c.owner, do: [damage(enemyHero(), 1)] })],
+    triggers: [
+      on('TurnEnded', {
+        when: (e, c) => e.player === c.owner,
+        do: [damage(enemyHero(), 1)],
+      }),
+    ],
   },
   T_LOOP: { triggers: [on('EnergyGained', { do: [gainEnergy(1)] })] },
   T_ORB: { onPlay: [gainEnergy(1)] },
@@ -30,16 +46,23 @@ const catalog = catalogOf(
   minionCard('T_ENDPING', { attack: 1, health: 3 }),
   minionCard('T_LOOP', { attack: 1, health: 3 }),
   spellCard('T_BOOM', 1),
-  spellCard('T_ORB', 0)
+  spellCard('T_ORB', 0),
 );
 
 const fresh = (): GameState =>
   createGame(
-    { decks: { '0': Array(30).fill('T_PLAIN'), '1': Array(30).fill('T_PLAIN') }, firstPlayer: '0' },
-    createSeededRng(1)
+    {
+      decks: { '0': Array(30).fill('T_PLAIN'), '1': Array(30).fill('T_PLAIN') },
+      firstPlayer: '0',
+    },
+    createSeededRng(1),
   );
-const run = (s: GameState, a: Action) => applyAction(s, a, { rng: createSeededRng(1), catalog, defs });
-const act = (s: GameState, a: Action): { state: GameState; events: GameEvent[] } => {
+const run = (s: GameState, a: Action) =>
+  applyAction(s, a, { rng: createSeededRng(1), catalog, defs });
+const act = (
+  s: GameState,
+  a: Action,
+): { state: GameState; events: GameEvent[] } => {
   const r = run(s, a);
   if ('error' in r) throw new Error(`unexpected ${r.error}`);
   return r;
@@ -51,7 +74,8 @@ const withHand = (...ids: string[]): GameState => {
   return setEnergy(s, '0', 10);
 };
 const card = (id: string) => catalog.get(id) as Card;
-const died = (events: GameEvent[]) => events.filter((e) => e.type === 'MinionDied');
+const died = (events: GameEvent[]) =>
+  events.filter((e) => e.type === 'MinionDied');
 
 describe('death order (RULES Q15)', () => {
   it('removes dead minions in play order, across both boards, not by side or position', () => {
@@ -59,9 +83,15 @@ describe('death order (RULES Q15)', () => {
     s = putOnBoard(s, '1', plain); // seq 1
     s = putOnBoard(s, '0', plain); // seq 2
     s = putOnBoard(s, '1', plain); // seq 3
-    const idBySeq = [s.players['1'].board[0], s.players['0'].board[0], s.players['1'].board[1]].map((m) => m.instanceId);
+    const idBySeq = [
+      s.players['1'].board[0],
+      s.players['0'].board[0],
+      s.players['1'].board[1],
+    ].map((m) => m.instanceId);
     const { state, events } = act(s, { type: 'PlayCard', handIndex: 0 });
-    expect(died(events).map((e) => (e as { instanceId: number }).instanceId)).toEqual(idBySeq);
+    expect(
+      died(events).map((e) => (e as { instanceId: number }).instanceId),
+    ).toEqual(idBySeq);
     expect(state.players['0'].board).toHaveLength(0);
     expect(state.players['1'].board).toHaveLength(0);
   });
@@ -73,7 +103,9 @@ describe('death order (RULES Q15)', () => {
     s = act(s, { type: 'PlayCard', handIndex: 1, boardIndex: 0 }).state; // new minion at the left
     const second = s.players['0'].board[0].instanceId;
     const { events } = act(s, { type: 'PlayCard', handIndex: 0 });
-    expect(died(events).map((e) => (e as { instanceId: number }).instanceId)).toEqual([first, second]);
+    expect(
+      died(events).map((e) => (e as { instanceId: number }).instanceId),
+    ).toEqual([first, second]);
   });
 });
 
@@ -98,7 +130,11 @@ describe('death effects', () => {
     s = putOnBoard(s, '1', minionCard('T_PLAIN', { attack: 1, health: 9 }));
     const dyer = s.players['0'].board[0].instanceId;
     const victim = s.players['1'].board[0].instanceId;
-    const { state, events } = act(s, { type: 'Attack', attackerId: dyer, target: { kind: 'minion', instanceId: victim } });
+    const { state, events } = act(s, {
+      type: 'Attack',
+      attackerId: dyer,
+      target: { kind: 'minion', instanceId: victim },
+    });
     // The dyer (1 health) trades with the victim; its death effect then deals 9 to every enemy minion.
     expect(state.players['0'].board).toHaveLength(0);
     expect(state.players['1'].board).toHaveLength(0);
@@ -121,7 +157,10 @@ describe('triggers', () => {
   });
   it('an end-of-turn effect can win the game before the next turn begins', () => {
     let s = putOnBoard(fresh(), '0', card('T_ENDPING'));
-    s = { ...s, players: { ...s.players, '1': { ...s.players['1'], health: 1 } } };
+    s = {
+      ...s,
+      players: { ...s.players, '1': { ...s.players['1'], health: 1 } },
+    };
     const { state, events } = act(s, { type: 'EndTurn' });
     expect(state).toMatchObject({ status: 'over', winner: '0', turn: 1 });
     expect(events.some((e) => e.type === 'TurnStarted')).toBe(false);
@@ -133,7 +172,9 @@ describe('triggers', () => {
   it('endless trigger chains stop with TRIGGER_LOOP and leave the input alone', () => {
     let s = putOnBoard(withHand('T_ORB'), '0', card('T_LOOP'));
     const snap = JSON.stringify(s);
-    expect(run(s, { type: 'PlayCard', handIndex: 0 })).toEqual({ error: 'TRIGGER_LOOP' });
+    expect(run(s, { type: 'PlayCard', handIndex: 0 })).toEqual({
+      error: 'TRIGGER_LOOP',
+    });
     expect(JSON.stringify(s)).toBe(snap);
   });
 });

@@ -4,7 +4,13 @@ import type { Rng } from '../rng';
 import { createSeededRng } from '../rng';
 import { applyAction } from '../rules/apply-action';
 import { legalActions } from '../rules/legal-actions';
-import type { Action, GameState, MinionInstance, PlayerId, PlayerState } from '../state/types';
+import type {
+  Action,
+  GameState,
+  MinionInstance,
+  PlayerId,
+  PlayerState,
+} from '../state/types';
 import { isBadPlay } from './common';
 
 /** The numbers the bot's judgement is built from. Tuned with `npm run sim` (see `engine/sim/`). */
@@ -25,7 +31,17 @@ export interface GreedyWeights {
   overcharge: number;
 }
 
-export const DEFAULT_WEIGHTS: GreedyWeights = { card: 1.5, lifeLow: 2, lifeMid: 1, lifeHigh: 0.5, guard: 1.5, bubble: 1.5, weapon: 0.8, mystery: 3, overcharge: 1.5 };
+export const DEFAULT_WEIGHTS: GreedyWeights = {
+  card: 1.5,
+  lifeLow: 2,
+  lifeMid: 1,
+  lifeHigh: 0.5,
+  guard: 1.5,
+  bubble: 1.5,
+  weapon: 0.8,
+  mystery: 3,
+  overcharge: 1.5,
+};
 
 /** An action must beat standing still by this much, or the bot ends its turn instead. */
 const MIN_GAIN = 0.01;
@@ -48,7 +64,9 @@ const minionValue = (m: MinionInstance, w: GreedyWeights): number => {
 };
 
 const sideValue = (p: PlayerState, w: GreedyWeights): number => {
-  const weapon = p.weapon ? p.weapon.attack * p.weapon.durability * w.weapon : 0;
+  const weapon = p.weapon
+    ? p.weapon.attack * p.weapon.durability * w.weapon
+    : 0;
   return (
     lifeValue(p.health + p.armor, w) +
     p.board.reduce((sum, m) => sum + minionValue(m, w), 0) +
@@ -62,8 +80,13 @@ const sideValue = (p: PlayerState, w: GreedyWeights): number => {
 const WIN = 1e6;
 
 /** How good `state` looks for `me`: their side's value minus the opponent's. Winning or losing outweighs everything. */
-export const evaluate = (state: GameState, me: PlayerId, w: GreedyWeights = DEFAULT_WEIGHTS): number => {
-  if (state.status === 'over') return state.winner === me ? WIN : state.winner === 'draw' ? 0 : -WIN;
+export const evaluate = (
+  state: GameState,
+  me: PlayerId,
+  w: GreedyWeights = DEFAULT_WEIGHTS,
+): number => {
+  if (state.status === 'over')
+    return state.winner === me ? WIN : state.winner === 'draw' ? 0 : -WIN;
   const foe: PlayerId = me === '0' ? '1' : '0';
   return sideValue(state.players[me], w) - sideValue(state.players[foe], w);
 };
@@ -80,7 +103,7 @@ export const chooseGreedyActionWith = (
   state: GameState,
   catalog: CardCatalog,
   rng: Rng,
-  defs?: DefLookup
+  defs?: DefLookup,
 ): Action => {
   const me = state.activePlayer;
   const actions = legalActions(state, me, catalog, defs);
@@ -88,7 +111,13 @@ export const chooseGreedyActionWith = (
   // state would let it see what the Mystery does and avoid exactly the attacks that would trigger it.
   const foe: PlayerId = me === '0' ? '1' : '0';
   const seen: GameState = state.players[foe].mystery
-    ? { ...state, players: { ...state.players, [foe]: { ...state.players[foe], mystery: null } } }
+    ? {
+        ...state,
+        players: {
+          ...state.players,
+          [foe]: { ...state.players[foe], mystery: null },
+        },
+      }
     : state;
   const score = (a: Action): number => {
     const r = applyAction(seen, a, { rng: createSeededRng(1), catalog, defs });
@@ -106,13 +135,22 @@ export const chooseGreedyActionWith = (
   };
 
   if (state.players[me].weapon?.temporary) {
-    const swing = best(actions.filter((a) => a.type === 'WeaponAttack'), -Infinity);
+    const swing = best(
+      actions.filter((a) => a.type === 'WeaponAttack'),
+      -Infinity,
+    );
     if (swing) return swing;
   }
-  const moves = actions.filter((a) => a.type !== 'EndTurn' && !isBadPlay(state, a, catalog, defs));
+  const moves = actions.filter(
+    (a) => a.type !== 'EndTurn' && !isBadPlay(state, a, catalog, defs),
+  );
   return best(moves, evaluate(seen, me, w) + MIN_GAIN) ?? { type: 'EndTurn' };
 };
 
 /** The bot with the default weights. */
-export const chooseGreedyAction = (state: GameState, catalog: CardCatalog, rng: Rng, defs?: DefLookup): Action =>
-  chooseGreedyActionWith(DEFAULT_WEIGHTS, state, catalog, rng, defs);
+export const chooseGreedyAction = (
+  state: GameState,
+  catalog: CardCatalog,
+  rng: Rng,
+  defs?: DefLookup,
+): Action => chooseGreedyActionWith(DEFAULT_WEIGHTS, state, catalog, rng, defs);

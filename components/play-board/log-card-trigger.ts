@@ -10,7 +10,9 @@ const EVENT = 'ccg-log-card-trigger';
 
 export const loadLogCardTrigger = (): LogCardTrigger => {
   try {
-    return window.localStorage.getItem(KEY) === 'click' ? 'click' : 'rightClick';
+    return window.localStorage.getItem(KEY) === 'click'
+      ? 'click'
+      : 'rightClick';
   } catch {
     return 'rightClick';
   }

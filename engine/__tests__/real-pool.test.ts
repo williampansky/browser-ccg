@@ -1,11 +1,23 @@
 import { loadHsCards } from '../cards/load-hs-cards';
-import { buildDeck, isPlayable, needsBehaviour, playablePool, primePool } from '../decks';
+import {
+  buildDeck,
+  isPlayable,
+  needsBehaviour,
+  playablePool,
+  primePool,
+} from '../decks';
 import { getCardDef } from '../definitions';
 import { createGame } from '../state/create-game';
 import { applyAction } from '../rules/apply-action';
 import { legalActions } from '../rules/legal-actions';
 import { createSeededRng } from '../rng';
-import { catalogOf, minionCard, putInHand, setEnergy, weaponCard } from '../testing/builders';
+import {
+  catalogOf,
+  minionCard,
+  putInHand,
+  setEnergy,
+  weaponCard,
+} from '../testing/builders';
 import type { GameState, PlayerId } from '../state/types';
 import { MAX_BOARD, MAX_HAND } from '../state/types';
 
@@ -16,11 +28,23 @@ describe('needsBehaviour / isPlayable', () => {
   it('spells and items always need behaviour; keyword-only minions and weapons do not', () => {
     expect(needsBehaviour({ ...minionCard('X'), type: 'spell' })).toBe(true);
     expect(needsBehaviour({ ...minionCard('X'), type: 'item' })).toBe(true);
-    expect(needsBehaviour(minionCard('X', { mechanics: ['BULWARK', 'RUSH'] }))).toBe(false);
+    expect(
+      needsBehaviour(minionCard('X', { mechanics: ['BULWARK', 'RUSH'] })),
+    ).toBe(false);
     expect(needsBehaviour(weaponCard('W'))).toBe(false);
   });
   it('minions with any effect mechanic (On Play, event, death, aura, spell damage, ...) need behaviour', () => {
-    for (const m of ['ON_PLAY', 'EVENT', 'ON_DEATH', 'ON_END', 'COMBO', 'BOON', 'SPELL_DAMAGE', 'BUFF', 'LIFESTEAL']) {
+    for (const m of [
+      'ON_PLAY',
+      'EVENT',
+      'ON_DEATH',
+      'ON_END',
+      'COMBO',
+      'BOON',
+      'SPELL_DAMAGE',
+      'BUFF',
+      'LIFESTEAL',
+    ]) {
       expect(needsBehaviour(minionCard('X', { mechanics: [m] }))).toBe(true);
     }
   });
@@ -33,20 +57,40 @@ describe('needsBehaviour / isPlayable', () => {
 });
 
 describe('an On Play minion with no definition is refused, never silently played as vanilla', () => {
-  const onPlayMinion = minionCard('CORE_999', { cost: 1, mechanics: ['ON_PLAY'] });
+  const onPlayMinion = minionCard('CORE_999', {
+    cost: 1,
+    mechanics: ['ON_PLAY'],
+  });
   const catalog = catalogOf(onPlayMinion, minionCard('GRUNT'));
   const start = (): GameState => {
-    let s = createGame({ decks: { '0': Array(30).fill('GRUNT'), '1': Array(30).fill('GRUNT') }, firstPlayer: '0' }, createSeededRng(1));
-    s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [] } } };
+    let s = createGame(
+      {
+        decks: { '0': Array(30).fill('GRUNT'), '1': Array(30).fill('GRUNT') },
+        firstPlayer: '0',
+      },
+      createSeededRng(1),
+    );
+    s = {
+      ...s,
+      players: { ...s.players, '0': { ...s.players['0'], hand: [] } },
+    };
     return setEnergy(putInHand(s, '0', 'CORE_999'), '0', 5);
   };
   it('applyAction returns UNSUPPORTED_CARD', () => {
-    expect(applyAction(start(), { type: 'PlayCard', handIndex: 0 }, { rng: createSeededRng(1), catalog })).toEqual({
+    expect(
+      applyAction(
+        start(),
+        { type: 'PlayCard', handIndex: 0 },
+        { rng: createSeededRng(1), catalog },
+      ),
+    ).toEqual({
       error: 'UNSUPPORTED_CARD',
     });
   });
   it('legalActions does not offer it', () => {
-    expect(legalActions(start(), '0', catalog).filter((a) => a.type === 'PlayCard')).toEqual([]);
+    expect(
+      legalActions(start(), '0', catalog).filter((a) => a.type === 'PlayCard'),
+    ).toEqual([]);
   });
 });
 
@@ -61,7 +105,14 @@ describe('the real CORE pool', () => {
     }
   });
   it('no card in the pool has a mechanic the engine would silently ignore', () => {
-    const keywordOnly = ['BULWARK', 'RUSH', 'BUBBLE', 'NO_ATTACK', 'DOUBLE_ATTACK', 'HIDDEN'];
+    const keywordOnly = [
+      'BULWARK',
+      'RUSH',
+      'BUBBLE',
+      'NO_ATTACK',
+      'DOUBLE_ATTACK',
+      'HIDDEN',
+    ];
     for (const c of pool.filter((x) => !getCardDef(x))) {
       expect(c.type === 'minion' || c.type === 'weapon').toBe(true);
       expect(c.mechanics.filter((m) => !keywordOnly.includes(m))).toEqual([]);
@@ -99,16 +150,22 @@ describe('the real CORE pool', () => {
           firstPlayer: '0',
           secondPlayerBonusCard: 'GAME_001',
         },
-        rng
+        rng,
       );
       let steps = 0;
       while (s.status === 'playing') {
         if (++steps > 4000) throw new Error(`seed ${seed} did not finish`);
         const actions = legalActions(s, s.activePlayer, byId);
         const active = actions.filter((a) => a.type !== 'EndTurn');
-        const pick = active.length > 0 && rng.int(4) > 0 ? active[rng.int(active.length)] : actions[rng.int(actions.length)];
+        const pick =
+          active.length > 0 && rng.int(4) > 0
+            ? active[rng.int(active.length)]
+            : actions[rng.int(actions.length)];
         const r = applyAction(s, pick, { rng, catalog: byId });
-        if ('error' in r) throw new Error(`seed ${seed}: ${JSON.stringify(pick)} -> ${r.error}`);
+        if ('error' in r)
+          throw new Error(
+            `seed ${seed}: ${JSON.stringify(pick)} -> ${r.error}`,
+          );
         s = r.state;
         invariants(s);
       }
@@ -131,7 +188,9 @@ describe('the PRIME pool (opt-in, kept apart from CORE)', () => {
     }
   });
   it('leaves out an unnamed card and an inactive card even if its stats need no code', () => {
-    const plain = cards.find((c) => c.source === 'prime' && !needsBehaviour(c) && c.active && c.name)!;
+    const plain = cards.find(
+      (c) => c.source === 'prime' && !needsBehaviour(c) && c.active && c.name,
+    )!;
     expect(primePool([plain])).toHaveLength(1);
     expect(primePool([{ ...plain, name: undefined }])).toHaveLength(0);
     expect(primePool([{ ...plain, active: false }])).toHaveLength(0);
@@ -141,15 +200,27 @@ describe('the PRIME pool (opt-in, kept apart from CORE)', () => {
     const mixed = [...prime, ...pool.slice(0, 10)];
     for (let seed = 1; seed <= 60; seed++) {
       const rng = createSeededRng(seed);
-      let s = createGame({ decks: { '0': buildDeck(mixed, rng), '1': buildDeck(prime, rng) }, firstPlayer: '0' }, rng);
+      let s = createGame(
+        {
+          decks: { '0': buildDeck(mixed, rng), '1': buildDeck(prime, rng) },
+          firstPlayer: '0',
+        },
+        rng,
+      );
       let steps = 0;
       while (s.status === 'playing') {
         if (++steps > 4000) throw new Error(`seed ${seed} did not finish`);
         const actions = legalActions(s, s.activePlayer, byId);
         const active = actions.filter((a) => a.type !== 'EndTurn');
-        const pick = active.length > 0 && rng.int(4) > 0 ? active[rng.int(active.length)] : actions[rng.int(actions.length)];
+        const pick =
+          active.length > 0 && rng.int(4) > 0
+            ? active[rng.int(active.length)]
+            : actions[rng.int(actions.length)];
         const r = applyAction(s, pick, { rng, catalog: byId });
-        if ('error' in r) throw new Error(`seed ${seed}: ${JSON.stringify(pick)} -> ${r.error}`);
+        if ('error' in r)
+          throw new Error(
+            `seed ${seed}: ${JSON.stringify(pick)} -> ${r.error}`,
+          );
         s = r.state;
       }
       expect(s.winner).not.toBeNull();

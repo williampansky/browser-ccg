@@ -8,7 +8,15 @@ export default defineCard('PRIME_215', (n) => ({
   triggers: [
     on('TurnEnded', {
       when: (e, c) => e.player === c.owner,
-      do: [computed((ctx) => buff(randomFriendlyMinions(1, (m) => m.instanceId !== ctx.self), 0, n.primary))],
+      do: [
+        computed((ctx) =>
+          buff(
+            randomFriendlyMinions(1, (m) => m.instanceId !== ctx.self),
+            0,
+            n.primary,
+          ),
+        ),
+      ],
     }),
   ],
 }));

@@ -11,11 +11,7 @@ interface DeckSlotProps {
 export const DeckSlot = ({ filled = false, cardBack }: DeckSlotProps) => {
   return (
     <div className={cx('deck__slot')}>
-      {filled ? (
-        <div>!</div>
-      ) : (
-        <div>+</div>
-      )}
+      {filled ? <div>!</div> : <div>+</div>}
     </div>
   );
 };

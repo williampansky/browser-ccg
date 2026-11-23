@@ -9,9 +9,15 @@ export default defineCard('PRIME_032', () => ({
   target: enemyMinion(),
   onPlay: [
     computed((ctx) => {
-      const m = ctx.target?.kind === 'minion' ? findMinion(ctx.g, ctx.target.instanceId)?.minion : undefined;
+      const m =
+        ctx.target?.kind === 'minion'
+          ? findMinion(ctx.g, ctx.target.instanceId)?.minion
+          : undefined;
       const mech = (m && ctx.catalog.get(m.cardId)?.mechanics) ?? [];
-      const had = !!m && !m.silenced && (mech.includes('ON_PLAY') || mech.includes('ON_DEATH'));
+      const had =
+        !!m &&
+        !m.silenced &&
+        (mech.includes('ON_PLAY') || mech.includes('ON_DEATH'));
       return (c) => {
         silence(chosenTarget())(c);
         if (had) draw(1)(c);

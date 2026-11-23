@@ -1,7 +1,14 @@
 import { produce } from 'immer';
 import { isPlayable } from '../../decks';
 import { cardPool } from '../../rules/card-pool';
-import { catalog, mref, play, run, setup, stats } from '../../testing/real-cards';
+import {
+  catalog,
+  mref,
+  play,
+  run,
+  setup,
+  stats,
+} from '../../testing/real-cards';
 import type { Action, GameState } from '../../state/types';
 
 // "Add / summon a random card": the pool is every playable CORE or PRIME card, narrowed by the card's own condition.
@@ -11,13 +18,22 @@ const withSeed = (s: GameState, seed: number) => {
   if ('error' in r) throw new Error(r.error);
   return r.state;
 };
-const handCards = (s: GameState) => s.players['0'].hand.map((c) => catalog.get(c.cardId)!);
+const handCards = (s: GameState) =>
+  s.players['0'].hand.map((c) => catalog.get(c.cardId)!);
 
 describe('the pool', () => {
   it('holds only real, playable, non-token cards, in a stable order', () => {
     const pool = cardPool(catalog);
     expect(pool.length).toBeGreaterThan(250);
-    expect(pool.every((c) => !c.isToken && !!c.name && isPlayable(c) && (c.source === 'core' || c.source === 'prime'))).toBe(true);
+    expect(
+      pool.every(
+        (c) =>
+          !c.isToken &&
+          !!c.name &&
+          isPlayable(c) &&
+          (c.source === 'core' || c.source === 'prime'),
+      ),
+    ).toBe(true);
     expect(pool.map((c) => c.id)).toEqual(pool.map((c) => c.id).sort());
   });
 });
@@ -43,7 +59,16 @@ describe('add a random card', () => {
     }
   });
   it('a full hand burns the card', () => {
-    const s = produce(setup('PRIME_186'), (g) => void (g.players['0'].hand.push(...Array.from({ length: 9 }, (_, i) => ({ instanceId: 8000 + i, cardId: 'CORE_043' })))));
+    const s = produce(
+      setup('PRIME_186'),
+      (g) =>
+        void g.players['0'].hand.push(
+          ...Array.from({ length: 9 }, (_, i) => ({
+            instanceId: 8000 + i,
+            cardId: 'CORE_043',
+          })),
+        ),
+    );
     const r = withSeed(s, 1);
     expect(r.players['0'].hand.length).toBe(10);
   });
@@ -62,11 +87,16 @@ describe('add a random card', () => {
 describe('summon a random card', () => {
   it('084 Serene Valley leaves a Creature when it dies', () => {
     for (let seed = 1; seed <= 10; seed++) {
-      const died = produce(setup('CORE_043', { mine: [[2, 5, 'PRIME_084']] }), (g) => void (g.players['0'].board[0].health = 0));
+      const died = produce(
+        setup('CORE_043', { mine: [[2, 5, 'PRIME_084']] }),
+        (g) => void (g.players['0'].board[0].health = 0),
+      );
       const r = withSeed(died, seed);
       // (the Creature that arrives may react to the spell that was cast just before: Spider King summons a Spider)
       expect(r.players['0'].board.length).toBeGreaterThanOrEqual(1);
-      expect(catalog.get(r.players['0'].board[0].cardId)!.race).toBe('CREATURE');
+      expect(catalog.get(r.players['0'].board[0].cardId)!.race).toBe(
+        'CREATURE',
+      );
     }
   });
   it('227 Zap deals 2 and summons a 4-6 cost Undead only if the minion dies', () => {

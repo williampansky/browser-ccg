@@ -43,16 +43,21 @@ export const useSidebarMode = (): SidebarMode | null => {
   return mode;
 };
 
-const isJoin = (lpan: string | undefined) => lpan === 'joinL' || lpan === 'joinR';
+const isJoin = (lpan: string | undefined) =>
+  lpan === 'joinL' || lpan === 'joinR';
 
 /** What the menu should show: the player's choice, else what the saved layout does. */
-export const effectiveSidebarMode = (mode: SidebarMode | null): SidebarMode => mode ?? (isJoin(PLAY_LAYOUT.lpan) ? 'connected' : 'separate');
+export const effectiveSidebarMode = (mode: SidebarMode | null): SidebarMode =>
+  mode ?? (isJoin(PLAY_LAYOUT.lpan) ? 'connected' : 'separate');
 
 /**
  * The `lpan` /play should use: the saved one, changed to match the player's choice. Connected goes on the side the saved layout already
  * stacks or joins on (the right unless it says left); separate undoes a saved connected one into the matching stacked arrangement.
  */
-export const lpanFor = (saved: string | undefined, mode: SidebarMode | null): string | undefined => {
+export const lpanFor = (
+  saved: string | undefined,
+  mode: SidebarMode | null,
+): string | undefined => {
   const left = saved === 'stackL' || saved === 'joinL';
   if (mode === 'connected') return left ? 'joinL' : 'joinR';
   if (mode === 'separate' && isJoin(saved)) return left ? 'stackL' : 'stackR';

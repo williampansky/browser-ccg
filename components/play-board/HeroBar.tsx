@@ -10,7 +10,10 @@ export interface HeroBarWeapon {
   durability: number;
 }
 
-interface HeroBarProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className'> {
+interface HeroBarProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'children' | 'className'
+> {
   name: string;
   /** What the avatar shows when the player has no hero portrait: "1", "2" or "AI". */
   emblem: string;
@@ -83,13 +86,19 @@ export const HeroBar = ({
   const fraction = healthFraction(health);
   const tone = healthTone(fraction);
   const tt = (text: string) => (showTitles ? text : undefined);
-  const weaponText = weapon ? `${weapon.name} ${weapon.attack}/${weapon.durability}` : 'no weapon';
+  const weaponText = weapon
+    ? `${weapon.name} ${weapon.attack}/${weapon.durability}`
+    : 'no weapon';
   return (
     <button
       type="button"
       aria-label={`${name}: ${health} health, ${armor} armor, energy ${energy.current} of ${energy.total}, ${deck} cards in deck, ${hand} in hand, ${weaponText}`}
       {...rest}
-      style={accent ? ({ ['--team' as string]: accent } as React.CSSProperties) : undefined}
+      style={
+        accent
+          ? ({ ['--team' as string]: accent } as React.CSSProperties)
+          : undefined
+      }
       className={cx(
         styles.bar,
         styles[team],
@@ -106,14 +115,26 @@ export const HeroBar = ({
         style={{ ['--fill' as string]: `${Math.round(fraction * 360)}deg` }}
       >
         <span className={styles.face}>
-          {portrait ? <img className={styles.portrait} src={portrait} alt="" draggable={false} /> : emblem}
+          {portrait ? (
+            <img
+              className={styles.portrait}
+              src={portrait}
+              alt=""
+              draggable={false}
+            />
+          ) : (
+            emblem
+          )}
         </span>
         <FloatDelta value={health} />
         <span className={styles.hp} title={tt(`${health} health`)}>
           {health}
         </span>
         {armor > 0 && (
-          <span className={styles.armor} title={tt(`${armor} armor (absorbs attack damage)`)}>
+          <span
+            className={styles.armor}
+            title={tt(`${armor} armor (absorbs attack damage)`)}
+          >
             {armor}
           </span>
         )}
@@ -124,7 +145,10 @@ export const HeroBar = ({
           <strong>{name}</strong>
           {turnTag && <em className={styles.turn}>{turnTag}</em>}
         </span>
-        <span className={styles.energy} title={tt(`Energy: ${energy.current} available of ${energy.total}`)}>
+        <span
+          className={styles.energy}
+          title={tt(`Energy: ${energy.current} available of ${energy.total}`)}
+        >
           <span className={styles.pips}>
             {energyPips(energy.current, energy.total).map((p, i) => (
               <i key={i} className={styles[p]} />
@@ -132,13 +156,33 @@ export const HeroBar = ({
           </span>
           <span className={styles.energyText}>
             {energy.current}/{energy.total}
-            {overcharge > 0 && <em title={tt(`Overcharge: ${overcharge} energy locked next turn`)}> 🔒{overcharge}</em>}
+            {overcharge > 0 && (
+              <em
+                title={tt(`Overcharge: ${overcharge} energy locked next turn`)}
+              >
+                {' '}
+                🔒{overcharge}
+              </em>
+            )}
           </span>
         </span>
         {mystery && (
-          <span className={styles.mystery} title={tt('A face-down Mystery: it reacts on the opponent\'s turn')}>
+          <span
+            className={styles.mystery}
+            title={tt("A face-down Mystery: it reacts on the opponent's turn")}
+          >
             ? {mystery}
-            {mysteryTip && <span data-tip="" className={cx(styles.mysteryTip, mysteryTipBelow ? styles.mysteryTipBelow : '')}>{mysteryTip}</span>}
+            {mysteryTip && (
+              <span
+                data-tip=""
+                className={cx(
+                  styles.mysteryTip,
+                  mysteryTipBelow ? styles.mysteryTipBelow : '',
+                )}
+              >
+                {mysteryTip}
+              </span>
+            )}
           </span>
         )}
         <span className={styles.counts}>
@@ -154,8 +198,17 @@ export const HeroBar = ({
       </span>
 
       <span
-        className={cx(styles.weapon, weapon ? '' : styles.noWeapon, weapon && canAct ? (selected ? styles.weaponSelected : styles.weaponReady) : '')}
-        title={tt(weapon ? weaponText : 'No weapon equipped')}>
+        className={cx(
+          styles.weapon,
+          weapon ? '' : styles.noWeapon,
+          weapon && canAct
+            ? selected
+              ? styles.weaponSelected
+              : styles.weaponReady
+            : '',
+        )}
+        title={tt(weapon ? weaponText : 'No weapon equipped')}
+      >
         {weapon ? (
           <>
             <span className={styles.weaponName}>{weapon.name}</span>
@@ -163,7 +216,9 @@ export const HeroBar = ({
               <b className={styles.atk}>{weapon.attack}</b>
               <b className={styles.dur}>{weapon.durability}</b>
             </span>
-            {weaponDisabled && <span className={styles.disabled}>Disabled</span>}
+            {weaponDisabled && (
+              <span className={styles.disabled}>Disabled</span>
+            )}
           </>
         ) : (
           <span className={styles.weaponName}>No weapon</span>

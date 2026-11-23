@@ -12,7 +12,7 @@ const useAddressBarSize = (): number => {
     if (typeof document !== 'undefined') {
       setAddressBarSize(
         parseFloat(getComputedStyle(document.documentElement).perspective) -
-          document.documentElement.clientHeight
+          document.documentElement.clientHeight,
       );
     }
   }, []);

@@ -28,7 +28,8 @@ export const MinionImage = ({
   isHidden = false,
   isDestroyed = false,
 }: ReactMinionImageProps) => {
-  const source = src || src === '' ? src?.replace('CARD', 'MINION') : PLACEHOLDER;
+  const source =
+    src || src === '' ? src?.replace('CARD', 'MINION') : PLACEHOLDER;
   const [err, setErr] = useState<boolean>(false);
 
   return (
@@ -38,23 +39,23 @@ export const MinionImage = ({
         styles[rarity],
         isDestroyed ? styles['is-destroyed'] : '',
       )}
-      data-component='MinionImage'
+      data-component="MinionImage"
     >
       {fpoArt && <div className={styles['fpo']}>FPO</div>}
 
       {isHidden && (
         <div
-          className='hidden__clouds'
+          className="hidden__clouds"
           style={{ backgroundImage: `url('/images/mechanics/HIDDEN.png')` }}
         />
       )}
 
       <Image
         alt={name}
-        layout='fill'
+        layout="fill"
         onError={() => setErr(true)}
         priority
-        role='presentation'
+        role="presentation"
         src={!err ? source : PLACEHOLDER}
       />
     </div>

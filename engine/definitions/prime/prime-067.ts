@@ -2,4 +2,6 @@ import { defineCard } from '../define-card';
 import { stealEnemyMystery } from '../../effects/primitives';
 
 // PRIME_067 Android Infiltrator, On Play effect: "Take the enemy's Mystery" (it stays face down; destroyed instead if you already have one)
-export default defineCard('PRIME_067', () => ({ onPlay: [stealEnemyMystery()] }));
+export default defineCard('PRIME_067', () => ({
+  onPlay: [stealEnemyMystery()],
+}));

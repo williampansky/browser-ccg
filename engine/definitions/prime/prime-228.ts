@@ -11,5 +11,17 @@ const bothDraw: Effect = (ctx) => {
 
 // PRIME_228 The Sorcerer's Stone (6): "Destroy all minions with 4 or more Attack, then both players draw a card"
 export default defineCard('PRIME_228', () => ({
-  onPlay: [(ctx) => destroy((c) => allMinions()(c).filter((t) => t.kind === 'minion' && [...c.g.players['0'].board, ...c.g.players['1'].board].find((m) => m.instanceId === t.instanceId)!.attack >= 4))(ctx), bothDraw],
+  onPlay: [
+    (ctx) =>
+      destroy((c) =>
+        allMinions()(c).filter(
+          (t) =>
+            t.kind === 'minion' &&
+            [...c.g.players['0'].board, ...c.g.players['1'].board].find(
+              (m) => m.instanceId === t.instanceId,
+            )!.attack >= 4,
+        ),
+      )(ctx),
+    bothDraw,
+  ],
 }));

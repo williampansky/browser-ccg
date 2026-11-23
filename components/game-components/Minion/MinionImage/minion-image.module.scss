@@ -1,4 +1,3 @@
-
 .wrapper {
   $useFullBorder: true;
   $borderRadius: #{var(--minion-border-radius)};
@@ -21,7 +20,11 @@
 
   .fpo {
     position: absolute;
-    top: 0; right: 0; bottom: 0; left: 0; z-index: 1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
     width: 100%;
     height: 100%;
     display: flex;
@@ -53,28 +56,28 @@
       border-right-color: var(--color-rarity-COMMON);
       border-bottom-color: rgb(99, 229, 103);
     }
-    
+
     &.SUPERIOR {
       border-top-color: #c7edff;
       border-left-color: var(--color-rarity-SUPERIOR);
       border-right-color: var(--color-rarity-SUPERIOR);
       border-bottom-color: #2885b1;
     }
-    
+
     &.REMARKABLE {
       border-top-color: #c8a0ff;
       border-left-color: var(--color-rarity-REMARKABLE);
       border-right-color: var(--color-rarity-REMARKABLE);
       border-bottom-color: #7f37e4;
     }
-    
+
     &.MYTHIC {
       border-top-color: #ffb8a5;
       border-left-color: var(--color-rarity-MYTHIC);
       border-right-color: var(--color-rarity-MYTHIC);
       border-bottom-color: #af3d1f;
     }
-    
+
     &.GOLDEN {
       border-top-color: #fff897;
       border-left-color: var(--color-rarity-GOLDEN);

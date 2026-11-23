@@ -26,15 +26,12 @@ export const CardHealth = ({
         isIncreased ? styles['card__health--buffed'] : '',
         isReduced ? styles['card__health--debuffed'] : '',
       )}
-      data-component='CardHealth'
+      data-component="CardHealth"
     >
-      <div
-        className='text__value text__value--shadow'
-        data-value={current}
-      >
+      <div className="text__value text__value--shadow" data-value={current}>
         {current}
       </div>
-      <Image src={BADGE_POWER} layout='fill' />
+      <Image src={BADGE_POWER} layout="fill" />
     </div>
   );
 };

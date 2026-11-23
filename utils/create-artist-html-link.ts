@@ -1,6 +1,6 @@
 const createArtistHtmlLink = (
   name?: string,
-  url?: string
+  url?: string,
 ): string | undefined => {
   if (!name || !url) return undefined;
   if (!name && url) return url;

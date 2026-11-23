@@ -4,4 +4,7 @@ import { chosenTarget } from '../../effects/selectors';
 import { anyCharacter } from '../../effects/filters';
 
 // PRIME_038 Insectoid Chomper, On Play effect: "Disable a character"
-export default defineCard('PRIME_038', () => ({ target: anyCharacter(), onPlay: [disable(chosenTarget())] }));
+export default defineCard('PRIME_038', () => ({
+  target: anyCharacter(),
+  onPlay: [disable(chosenTarget())],
+}));

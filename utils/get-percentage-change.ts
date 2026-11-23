@@ -1,4 +1,4 @@
-import { subtract } from "mathjs";
+import { subtract } from 'mathjs';
 
 /**
  * Returns the percentange change between 2 numbers.
@@ -6,7 +6,7 @@ import { subtract } from "mathjs";
  */
 export default function getPercentageChange(
   oldNumber: number,
-  newNumber: number
+  newNumber: number,
 ) {
   const decreaseValue = subtract(oldNumber, newNumber);
   return (decreaseValue / oldNumber) * 100;

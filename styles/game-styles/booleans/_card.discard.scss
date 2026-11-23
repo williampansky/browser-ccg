@@ -1,5 +1,6 @@
 &.handslot--discarded {
-  animation: discardCardAnimation 1800ms var(--animation-transition-cubic) forwards;
+  animation: discardCardAnimation 1800ms var(--animation-transition-cubic)
+    forwards;
 
   [data-component='Card']:before {
     display: none;

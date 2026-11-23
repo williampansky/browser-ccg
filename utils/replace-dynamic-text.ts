@@ -5,7 +5,7 @@ export default function replaceDynamicText(
   stringToParse: string,
   valuetoReplace1: number,
   valuetoReplace2: number,
-  valuetoReplace3: number
+  valuetoReplace3: number,
 ) {
   const val1 = valuetoReplace1.toString();
   const val2 = valuetoReplace2.toString();

@@ -19,20 +19,20 @@ export const CardTypeBadge = ({
   return race && type ? (
     <div
       className={styles['card__type__image__wrapper']}
-      data-component='CardType'
+      data-component="CardType"
     >
       <div className={styles['card__type__image__icon__wrapper']}>
         <img
           alt={`${typeIconAlt} Icon`}
           className={styles['card__type__image']}
-          role='presentation'
+          role="presentation"
           src={src}
         />
       </div>
       <img
-        alt=''
+        alt=""
         className={styles['card__type__image__badge']}
-        role='presentation'
+        role="presentation"
         src={badgeImgSrc}
       />
     </div>

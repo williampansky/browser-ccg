@@ -5,8 +5,20 @@ import type { Card } from '../cards/types';
 import { applyAction } from '../rules/apply-action';
 import { createGame } from '../state/create-game';
 import { createSeededRng } from '../rng';
-import type { Action, GameEvent, GameState, PlayerId, TargetRef } from '../state/types';
-import { catalogOf, minionCard, putInHand, putOnBoard, setEnergy } from './builders';
+import type {
+  Action,
+  GameEvent,
+  GameState,
+  PlayerId,
+  TargetRef,
+} from '../state/types';
+import {
+  catalogOf,
+  minionCard,
+  putInHand,
+  putOnBoard,
+  setEnergy,
+} from './builders';
 
 const { byId } = loadHsCards();
 const grunt = minionCard('GRUNT', { cost: 1, attack: 2, health: 3 });
@@ -32,16 +44,26 @@ export interface Scenario {
 /** P0 to move with `cardId` in hand (index 0), 10 energy, and the given boards. Deck: 30 grunts. */
 export const setup = (cardId: string, sc: Scenario = {}): GameState => {
   let s = createGame(
-    { decks: { '0': Array(30).fill('GRUNT'), '1': Array(30).fill('GRUNT') }, firstPlayer: '0' },
-    createSeededRng(1)
+    {
+      decks: { '0': Array(30).fill('GRUNT'), '1': Array(30).fill('GRUNT') },
+      firstPlayer: '0',
+    },
+    createSeededRng(1),
   );
   s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [] } } };
   s = putInHand(s, '0', cardId);
   for (const id of sc.hand ?? []) s = putInHand(s, '0', id);
   s = setEnergy(s, '0', 10);
-  for (const [player, spec] of [['0', sc.mine], ['1', sc.theirs]] as const) {
+  for (const [player, spec] of [
+    ['0', sc.mine],
+    ['1', sc.theirs],
+  ] as const) {
     for (const [attack, health, cardId] of spec ?? []) {
-      s = putOnBoard(s, player, cardId ? realCard(cardId) : grunt, { attack, health, maxHealth: health });
+      s = putOnBoard(s, player, cardId ? realCard(cardId) : grunt, {
+        attack,
+        health,
+        maxHealth: health,
+      });
     }
   }
   return produce(s, (g) => {
@@ -56,7 +78,11 @@ export const run = (s: GameState, a: Action, seed = 1) =>
   applyAction(s, a, { rng: createSeededRng(seed), catalog });
 
 /** Plays hand slot 0 (optionally aimed); throws on an engine error. */
-export const play = (s: GameState, target?: TargetRef, seed = 1): { state: GameState; events: GameEvent[] } => {
+export const play = (
+  s: GameState,
+  target?: TargetRef,
+  seed = 1,
+): { state: GameState; events: GameEvent[] } => {
   const r = run(s, { type: 'PlayCard', handIndex: 0, target }, seed);
   if ('error' in r) throw new Error(`unexpected ${r.error}`);
   return r;
@@ -67,16 +93,23 @@ export const failCode = (s: GameState, target?: TargetRef) => {
   return 'error' in r ? r.error : undefined;
 };
 
-export const minion = (s: GameState, player: PlayerId, i: number) => s.players[player].board[i];
+export const minion = (s: GameState, player: PlayerId, i: number) =>
+  s.players[player].board[i];
 export const mref = (s: GameState, player: PlayerId, i: number): TargetRef => ({
   kind: 'minion',
   instanceId: s.players[player].board[i].instanceId,
 });
 export const hero = (player: PlayerId): TargetRef => ({ kind: 'hero', player });
-export const stats = (s: GameState, player: PlayerId) => s.players[player].board.map((m) => [m.attack, m.health]);
+export const stats = (s: GameState, player: PlayerId) =>
+  s.players[player].board.map((m) => [m.attack, m.health]);
 
 /** Sets a minion's current health (below its max) to make it "damaged". */
-export const hurt = (s: GameState, player: PlayerId, i: number, health: number): GameState =>
+export const hurt = (
+  s: GameState,
+  player: PlayerId,
+  i: number,
+  health: number,
+): GameState =>
   produce(s, (g) => {
     g.players[player].board[i].health = health;
   });
@@ -84,7 +117,12 @@ export const hurt = (s: GameState, player: PlayerId, i: number, health: number):
 /** Gives a player a weapon. */
 export const withWeapon = (s: GameState, player: PlayerId): GameState =>
   produce(s, (g) => {
-    g.players[player].weapon = { instanceId: 9999, cardId: 'GRUNT', attack: 2, durability: 2 };
+    g.players[player].weapon = {
+      instanceId: 9999,
+      cardId: 'GRUNT',
+      attack: 2,
+      durability: 2,
+    };
   });
 
 /** Plays hand slot 0, then every legal option is not needed here: returns the legal targets for it. */

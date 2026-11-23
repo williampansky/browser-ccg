@@ -5,7 +5,7 @@ import { GiCardPick, GiCrossedSwords } from 'react-icons/gi';
 import {
   RiHome4Fill,
   RiPlayCircleFill,
-  RiAccountCircleFill
+  RiAccountCircleFill,
 } from 'react-icons/ri';
 import { siteConfig } from '../../../app.config';
 const { footerButtons } = siteConfig;

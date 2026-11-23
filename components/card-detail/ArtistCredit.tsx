@@ -5,7 +5,7 @@ import styles from '../deck-builder/deck-builder.module.scss';
  */
 export const ArtistCredit = ({
   artistName,
-  artistUrl
+  artistUrl,
 }: {
   artistName: string;
   artistUrl?: string;
@@ -17,7 +17,7 @@ export const ArtistCredit = ({
         {artistUrl ? (
           <a
             href={artistUrl}
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             rel="noreferrer"
             target="_blank"
             title="Click to open the artist's page in a new tab"

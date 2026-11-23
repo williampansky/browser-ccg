@@ -26,6 +26,6 @@ export function loadHsCards(options?: LoadCardsOptions): LoadCardsResult {
       mechanics: mechanics as unknown as RawGlossaryEntry[],
       constants: constants as unknown as RawGlossaryEntry[],
     },
-    options
+    options,
   );
 }

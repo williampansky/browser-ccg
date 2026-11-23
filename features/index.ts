@@ -13,5 +13,5 @@ export {
   newDeck,
   removeCard,
   deleteDeck,
-  setDeckName
+  setDeckName,
 } from './decks';

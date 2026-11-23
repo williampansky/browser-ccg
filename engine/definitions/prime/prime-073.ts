@@ -5,7 +5,8 @@ import { draw } from '../../effects/primitives';
 export default defineCard('PRIME_073', (n) => ({
   triggers: [
     on('CardPlayed', {
-      when: (e, c) => e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
+      when: (e, c) =>
+        e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
       do: [draw(n.primary)],
     }),
   ],

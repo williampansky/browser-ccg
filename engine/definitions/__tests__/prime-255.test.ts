@@ -2,17 +2,33 @@ import { produce } from 'immer';
 import { checkDeck } from '../../deck-rules';
 import { isPlayable, playablePool, primePool } from '../../decks';
 import { loadHsCards } from '../../cards/load-hs-cards';
-import { catalog, failCode, hero, mref, play, realCard, setup } from '../../testing/real-cards';
+import {
+  catalog,
+  failCode,
+  hero,
+  mref,
+  play,
+  realCard,
+  setup,
+} from '../../testing/real-cards';
 
 // PRIME_255: Warrior-only COMMON spell, "Deal 1 damage for each Armor you have (cannot be used on heroes)".
 
-const withArmor = (armor: number, sc = { theirs: [[2, 6]] as [number, number][] }) =>
+const withArmor = (
+  armor: number,
+  sc = { theirs: [[2, 6]] as [number, number][] },
+) =>
   produce(setup('PRIME_255', sc), (g) => void (g.players['0'].armor = armor));
 
 describe('PRIME_255', () => {
   it('is a COMMON, 1 cost spell restricted to the WARRIOR class', () => {
     const c = realCard('PRIME_255');
-    expect([c.rarity, c.cost, c.type, c.heroClass]).toEqual(['COMMON', 1, 'spell', 'WARRIOR']);
+    expect([c.rarity, c.cost, c.type, c.heroClass]).toEqual([
+      'COMMON',
+      1,
+      'spell',
+      'WARRIOR',
+    ]);
     expect(isPlayable(c)).toBe(true);
   });
   it('deals damage equal to your Armor to a minion, without spending the Armor', () => {

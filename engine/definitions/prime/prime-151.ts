@@ -9,8 +9,13 @@ export default defineCard('PRIME_151', (n) => ({
   target: anyMinion(),
   onPlay: [
     computed((ctx) => {
-      const m = ctx.target?.kind === 'minion' ? findMinion(ctx.g, ctx.target.instanceId)?.minion : undefined;
-      return m?.disabledOnTurn !== undefined && m.disabledOnTurn >= ctx.g.turn ? draw(1) : () => undefined;
+      const m =
+        ctx.target?.kind === 'minion'
+          ? findMinion(ctx.g, ctx.target.instanceId)?.minion
+          : undefined;
+      return m?.disabledOnTurn !== undefined && m.disabledOnTurn >= ctx.g.turn
+        ? draw(1)
+        : () => undefined;
     }),
     damage(chosenTarget(), n.primary),
   ],

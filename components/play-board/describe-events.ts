@@ -1,7 +1,19 @@
 import { getCardDef, heroSkill } from '../../engine';
-import type { CardCatalog, GameEvent, GameState, MinionInstance, TargetRef } from '../../engine';
+import type {
+  CardCatalog,
+  GameEvent,
+  GameState,
+  MinionInstance,
+  TargetRef,
+} from '../../engine';
 
-export const MYSTERY_CATEGORY_LABEL = { attack: 'Attack', spell: 'Spell', minion: 'Minion', damage: 'Damage', death: 'Death' } as const;
+export const MYSTERY_CATEGORY_LABEL = {
+  attack: 'Attack',
+  spell: 'Spell',
+  minion: 'Minion',
+  damage: 'Damage',
+  death: 'Death',
+} as const;
 
 /** What the opponent is told about a face-down Mystery: its category only. */
 /** What a face-down Mystery of this category will react to, as told to the player it is set against. */
@@ -13,18 +25,27 @@ export const MYSTERY_HINT = {
   death: 'Reacts when one of its minions dies.',
 } as const;
 
-export const mysteryCategory = (cardId: string, catalog: CardCatalog): string => {
+export const mysteryCategory = (
+  cardId: string,
+  catalog: CardCatalog,
+): string => {
   const c = catalog.get(cardId);
   const cat = c && getCardDef(c)?.mystery?.category;
   return cat ? MYSTERY_CATEGORY_LABEL[cat] : '?';
 };
 
 /** Finds a card name for an instance id, looking in every state given (an instance may have died). */
-export const nameOfInstance = (id: number, catalog: CardCatalog, ...states: GameState[]): string => {
+export const nameOfInstance = (
+  id: number,
+  catalog: CardCatalog,
+  ...states: GameState[]
+): string => {
   for (const s of states) {
     for (const p of ['0', '1'] as const) {
       const pl = s.players[p];
-      const found = [...pl.board, ...pl.hand, ...pl.deck].find((x) => x.instanceId === id);
+      const found = [...pl.board, ...pl.hand, ...pl.deck].find(
+        (x) => x.instanceId === id,
+      );
       if (found) return catalog.get(found.cardId)?.name ?? found.cardId;
     }
   }
@@ -42,18 +63,20 @@ export const describeEvents = (
   before: GameState,
   after: GameState,
   /** Whose face-down Mystery cards may be named in the log (the human player's, against the AI); null names nobody's, as in hot-seat */
-  reveal: '0' | '1' | null = null
+  reveal: '0' | '1' | null = null,
 ): string[] => {
   const name = (id: number) => card(nameOfInstance(id, catalog, before, after));
   const cardName = (id: string) => card(catalog.get(id)?.name ?? id);
-  const target = (t: TargetRef) => (t.kind === 'hero' ? `${who(t.player)}'s hero` : name(t.instanceId));
+  const target = (t: TargetRef) =>
+    t.kind === 'hero' ? `${who(t.player)}'s hero` : name(t.instanceId);
   /** " (+1 Spell Damage)" when the caster had Spell Damage and the spell deals damage or heals (the card's own text shows the base numbers). */
   const spellDamageNote = (player: '0' | '1', cardId: string): string => {
     const c = catalog.get(cardId);
-    if (!c || c.type !== 'spell' || !/damage|heal|restore/i.test(c.text)) return '';
+    if (!c || c.type !== 'spell' || !/damage|heal|restore/i.test(c.text))
+      return '';
     const bonus = before.players[player].board.reduce((sum, m) => {
       const mc = catalog.get(m.cardId);
-      return sum + (m.silenced || !mc ? 0 : getCardDef(mc)?.spellDamage ?? 0);
+      return sum + (m.silenced || !mc ? 0 : (getCardDef(mc)?.spellDamage ?? 0));
     }, 0);
     return bonus > 0 ? ` (+${bonus} Spell Damage)` : '';
   };
@@ -64,34 +87,44 @@ export const describeEvents = (
         lines.push(`--- Turn ${e.turn}: ${who(e.player)} ---`);
         break;
       case 'MinionPlayed':
-        lines.push(`${who(e.player)} plays ${name(e.instanceId)}${e.target ? ` (On Play on ${target(e.target)})` : ''}`);
+        lines.push(
+          `${who(e.player)} plays ${name(e.instanceId)}${e.target ? ` (On Play on ${target(e.target)})` : ''}`,
+        );
         break;
       case 'CardPlayed':
         if (e.mystery) {
           lines.push(
             e.player === reveal
               ? `${who(e.player)} sets a Mystery: ${cardName(e.cardId)} (${mysteryCategory(e.cardId, catalog)})`
-              : `${who(e.player)} sets a Mystery (${mysteryCategory(e.cardId, catalog)})`
+              : `${who(e.player)} sets a Mystery (${mysteryCategory(e.cardId, catalog)})`,
           );
           break;
         }
         lines.push(
-          `${who(e.player)} casts ${cardName(e.cardId)}${e.target ? ` on ${target(e.target)}` : ''}${spellDamageNote(e.player, e.cardId)}`
+          `${who(e.player)} casts ${cardName(e.cardId)}${e.target ? ` on ${target(e.target)}` : ''}${spellDamageNote(e.player, e.cardId)}`,
         );
         break;
       case 'HeroSkillUsed': {
         const skill = heroSkill(after.players[e.player].hero?.id, e.skill);
-        lines.push(`${who(e.player)} uses ${card(skill?.name ?? 'a hero skill')}${e.target ? ` on ${target(e.target)}` : ''}`);
+        lines.push(
+          `${who(e.player)} uses ${card(skill?.name ?? 'a hero skill')}${e.target ? ` on ${target(e.target)}` : ''}`,
+        );
         break;
       }
       case 'MysteryRevealed':
-        lines.push(`${who(e.player)}'s Mystery is revealed: ${cardName(e.cardId)}`);
+        lines.push(
+          `${who(e.player)}'s Mystery is revealed: ${cardName(e.cardId)}`,
+        );
         break;
       case 'WeaponEquipped':
         lines.push(`${who(e.player)} equips ${cardName(e.cardId)}`);
         break;
       case 'MinionSummoned':
-        if (!events.some((x) => x.type === 'MinionPlayed' && x.instanceId === e.instanceId)) {
+        if (
+          !events.some(
+            (x) => x.type === 'MinionPlayed' && x.instanceId === e.instanceId,
+          )
+        ) {
           lines.push(`${cardName(e.cardId)} is summoned for ${who(e.player)}`);
         }
         break;
@@ -156,27 +189,59 @@ const KEYWORD_NAMES: Record<keyof MinionInstance['keywords'], string> = {
 };
 
 /** Lines for minions that changed between two states in ways no event reports. Aura attack is ignored. */
-export const describeChanges = (before: GameState, after: GameState, catalog: CardCatalog): string[] => {
+export const describeChanges = (
+  before: GameState,
+  after: GameState,
+  catalog: CardCatalog,
+): string[] => {
   const lines: string[] = [];
   for (const p of ['0', '1'] as const) {
     for (const now of after.players[p].board) {
-      const was = before.players[p].board.find((m) => m.instanceId === now.instanceId);
+      const was = before.players[p].board.find(
+        (m) => m.instanceId === now.instanceId,
+      );
       if (!was) continue;
       const parts: string[] = [];
       const atk = now.attack - now.auraAttack - (was.attack - was.auraAttack);
       const hp = now.maxHealth - was.maxHealth;
-      if (atk !== 0 || hp !== 0) parts.push(`${atk >= 0 ? '+' : ''}${atk}/${hp >= 0 ? '+' : ''}${hp} (now ${now.attack}/${now.health})`);
-      for (const k of Object.keys(KEYWORD_NAMES) as (keyof typeof KEYWORD_NAMES)[]) {
-        if (now.keywords[k] && !was.keywords[k] && !(k === 'rush' && now.auraRush)) parts.push(`gains ${KEYWORD_NAMES[k]}`);
-        if (!now.keywords[k] && was.keywords[k] && k !== 'hidden' && k !== 'bubble') parts.push(`loses ${KEYWORD_NAMES[k]}`);
+      if (atk !== 0 || hp !== 0)
+        parts.push(
+          `${atk >= 0 ? '+' : ''}${atk}/${hp >= 0 ? '+' : ''}${hp} (now ${now.attack}/${now.health})`,
+        );
+      for (const k of Object.keys(
+        KEYWORD_NAMES,
+      ) as (keyof typeof KEYWORD_NAMES)[]) {
+        if (
+          now.keywords[k] &&
+          !was.keywords[k] &&
+          !(k === 'rush' && now.auraRush)
+        )
+          parts.push(`gains ${KEYWORD_NAMES[k]}`);
+        if (
+          !now.keywords[k] &&
+          was.keywords[k] &&
+          k !== 'hidden' &&
+          k !== 'bubble'
+        )
+          parts.push(`loses ${KEYWORD_NAMES[k]}`);
       }
-      if (now.disabledOnTurn !== undefined && now.disabledOnTurn !== was.disabledOnTurn) parts.push('is Disabled');
+      if (
+        now.disabledOnTurn !== undefined &&
+        now.disabledOnTurn !== was.disabledOnTurn
+      )
+        parts.push('is Disabled');
       if (parts.length > 0) {
-        lines.push(`  ${card(catalog.get(now.cardId)?.name ?? now.cardId)}: ${parts.join(', ')}`);
+        lines.push(
+          `  ${card(catalog.get(now.cardId)?.name ?? now.cardId)}: ${parts.join(', ')}`,
+        );
       }
     }
-    const [h0, h1] = [before.players[p].heroDisabledOnTurn, after.players[p].heroDisabledOnTurn];
-    if (h1 !== undefined && h1 !== h0) lines.push(`  ${who(p)}'s hero is Disabled`);
+    const [h0, h1] = [
+      before.players[p].heroDisabledOnTurn,
+      after.players[p].heroDisabledOnTurn,
+    ];
+    if (h1 !== undefined && h1 !== h0)
+      lines.push(`  ${who(p)}'s hero is Disabled`);
   }
   return lines;
 };

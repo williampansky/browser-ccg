@@ -4,11 +4,18 @@ import { createSeededRng } from '../../rng';
 import type { Card } from '../../cards/types';
 import type { GameState, PlayerId } from '../../state/types';
 
-const deckOf = (n: number, prefix = 'C') => Array.from({ length: n }, (_, i) => `${prefix}${i}`);
+const deckOf = (n: number, prefix = 'C') =>
+  Array.from({ length: n }, (_, i) => `${prefix}${i}`);
 const rng = () => createSeededRng(1);
 const ctx = () => ({ rng: rng(), catalog: new Map<string, Card>() });
 const newGame = (deckSize = 30, first: PlayerId = '0') =>
-  createGame({ decks: { '0': deckOf(deckSize, 'A'), '1': deckOf(deckSize, 'B') }, firstPlayer: first }, rng());
+  createGame(
+    {
+      decks: { '0': deckOf(deckSize, 'A'), '1': deckOf(deckSize, 'B') },
+      firstPlayer: first,
+    },
+    rng(),
+  );
 
 const end = (s: GameState): GameState => {
   const res = applyAction(s, { type: 'EndTurn' }, ctx());
@@ -37,8 +44,11 @@ describe('setup', () => {
   it('is deterministic for the same seed and different for another', () => {
     expect(newGame()).toEqual(newGame());
     const other = createGame(
-      { decks: { '0': deckOf(30, 'A'), '1': deckOf(30, 'B') }, firstPlayer: '0' },
-      createSeededRng(2)
+      {
+        decks: { '0': deckOf(30, 'A'), '1': deckOf(30, 'B') },
+        firstPlayer: '0',
+      },
+      createSeededRng(2),
     );
     expect(other.players['0'].hand).not.toEqual(newGame().players['0'].hand);
   });
@@ -78,7 +88,13 @@ describe('EndTurn', () => {
   });
   it('refills current energy to total each turn', () => {
     let g = newGame();
-    g = { ...g, players: { ...g.players, '0': { ...g.players['0'], energy: { current: 0, total: 1 } } } };
+    g = {
+      ...g,
+      players: {
+        ...g.players,
+        '0': { ...g.players['0'], energy: { current: 0, total: 1 } },
+      },
+    };
     g = end(end(g));
     expect(g.players['0'].energy).toEqual({ current: 2, total: 2 });
   });
@@ -97,7 +113,11 @@ describe('draw', () => {
       ...g,
       players: {
         ...g.players,
-        '1': { ...g.players['1'], hand: [...hand, ...extra, ...[]].slice(0, 10), deck: g.players['1'].deck.slice(6) },
+        '1': {
+          ...g.players['1'],
+          hand: [...hand, ...extra, ...[]].slice(0, 10),
+          deck: g.players['1'].deck.slice(6),
+        },
       },
     };
     const deckBefore = g.players['1'].deck.length;
@@ -110,7 +130,10 @@ describe('draw', () => {
 describe('fatigue', () => {
   const emptyDeckGame = () => {
     const g = newGame();
-    return { ...g, players: { ...g.players, '1': { ...g.players['1'], deck: [] } } } as GameState;
+    return {
+      ...g,
+      players: { ...g.players, '1': { ...g.players['1'], deck: [] } },
+    } as GameState;
   };
   it('deals escalating 1, 2, 3 damage on empty-deck draws', () => {
     let g = emptyDeckGame();
@@ -123,14 +146,21 @@ describe('fatigue', () => {
   });
   it('is absorbed by armor first', () => {
     let g = emptyDeckGame();
-    g = { ...g, players: { ...g.players, '1': { ...g.players['1'], armor: 5 } } };
+    g = {
+      ...g,
+      players: { ...g.players, '1': { ...g.players['1'], armor: 5 } },
+    };
     g = end(g);
     expect(g.players['1']).toMatchObject({ armor: 4, health: 30 });
   });
 });
 
 describe('winning', () => {
-  const lowHealth = (p: PlayerId, health: number, g = newGame()): GameState => ({
+  const lowHealth = (
+    p: PlayerId,
+    health: number,
+    g = newGame(),
+  ): GameState => ({
     ...g,
     players: { ...g.players, [p]: { ...g.players[p], health, deck: [] } },
   });
@@ -152,7 +182,11 @@ describe('winning', () => {
   });
   it('rejects every action after the game is over', () => {
     const over = end(lowHealth('1', 1));
-    expect(applyAction(over, { type: 'EndTurn' }, ctx())).toEqual({ error: 'GAME_OVER' });
-    expect(applyAction(over, { type: 'Concede' }, ctx())).toEqual({ error: 'GAME_OVER' });
+    expect(applyAction(over, { type: 'EndTurn' }, ctx())).toEqual({
+      error: 'GAME_OVER',
+    });
+    expect(applyAction(over, { type: 'Concede' }, ctx())).toEqual({
+      error: 'GAME_OVER',
+    });
   });
 });

@@ -24,18 +24,35 @@ export const playGame = (
   catalog: CardCatalog,
   seed: number,
   /** Hero key per player (e.g. `ZEUS`); the catalog must then come from `withHeroTokens` */
-  heroes?: Partial<Record<PlayerId, string>>
+  heroes?: Partial<Record<PlayerId, string>>,
 ): GameResult => {
   const rng = createSeededRng(seed);
   const heroSetup = heroes && (heroes['0'] || heroes['1']) ? { heroes } : {};
-  let s = createGame({ decks, firstPlayer: '0', secondPlayerBonusCard: 'GAME_001', ...heroSetup }, rng);
+  let s = createGame(
+    {
+      decks,
+      firstPlayer: '0',
+      secondPlayerBonusCard: 'GAME_001',
+      ...heroSetup,
+    },
+    rng,
+  );
   for (let steps = 0; s.status === 'playing'; steps++) {
-    if (steps > STEP_LIMIT) throw new Error(`game with seed ${seed} did not finish`);
-    const r = applyAction(s, bots[s.activePlayer](s, catalog, rng), { rng, catalog });
-    if ('error' in r) throw new Error(`illegal bot action (seed ${seed}): ${r.error}`);
+    if (steps > STEP_LIMIT)
+      throw new Error(`game with seed ${seed} did not finish`);
+    const r = applyAction(s, bots[s.activePlayer](s, catalog, rng), {
+      rng,
+      catalog,
+    });
+    if ('error' in r)
+      throw new Error(`illegal bot action (seed ${seed}): ${r.error}`);
     s = r.state;
   }
-  return { winner: s.winner as PlayerId | 'draw', turns: s.turn, played: s.played };
+  return {
+    winner: s.winner as PlayerId | 'draw',
+    turns: s.turn,
+    played: s.played,
+  };
 };
 
 export interface Contestant {
@@ -62,7 +79,7 @@ export const playMatchup = (
   games: number,
   catalog: CardCatalog,
   seedBase = 1,
-  onGame?: (result: GameResult, seats: Record<PlayerId, Contestant>) => void
+  onGame?: (result: GameResult, seats: Record<PlayerId, Contestant>) => void,
 ): MatchupResult => {
   let aWins = 0;
   let turns = 0;
@@ -74,7 +91,7 @@ export const playMatchup = (
       { '0': sides['0'].bot, '1': sides['1'].bot },
       catalog,
       seedBase + i,
-      { '0': sides['0'].hero, '1': sides['1'].hero }
+      { '0': sides['0'].hero, '1': sides['1'].hero },
     );
     turns += r.turns;
     onGame?.(r, sides);
@@ -92,7 +109,11 @@ export interface CardStat {
 }
 
 /** Plays the contestants against each other (every pair, alternating seats) and tallies per-card results. */
-export const runTournament = (contestants: Contestant[], gamesPerPair: number, catalog: CardCatalog) => {
+export const runTournament = (
+  contestants: Contestant[],
+  gamesPerPair: number,
+  catalog: CardCatalog,
+) => {
   const matchups: MatchupResult[] = [];
   const cardStats = new Map<string, CardStat>();
   const tally = (r: GameResult) => {
@@ -108,7 +129,16 @@ export const runTournament = (contestants: Contestant[], gamesPerPair: number, c
   for (let i = 0; i < contestants.length; i++) {
     for (let j = i + 1; j < contestants.length; j++) {
       const seed = 1 + (i * contestants.length + j) * 1000;
-      matchups.push(playMatchup(contestants[i], contestants[j], gamesPerPair, catalog, seed, (r) => tally(r)));
+      matchups.push(
+        playMatchup(
+          contestants[i],
+          contestants[j],
+          gamesPerPair,
+          catalog,
+          seed,
+          (r) => tally(r),
+        ),
+      );
     }
   }
   return { matchups, cardStats: Array.from(cardStats.values()) };
@@ -117,15 +147,23 @@ export const runTournament = (contestants: Contestant[], gamesPerPair: number, c
 const pct = (x: number) => `${(x * 100).toFixed(0)}%`;
 
 /** A text grid: each cell is the row contestant's win rate against the column contestant. */
-export const formatWinTable = (names: string[], matchups: MatchupResult[]): string => {
+export const formatWinTable = (
+  names: string[],
+  matchups: MatchupResult[],
+): string => {
   const rate = (row: string, col: string): string => {
     if (row === col) return '-';
-    const m = matchups.find((x) => (x.a === row && x.b === col) || (x.a === col && x.b === row));
+    const m = matchups.find(
+      (x) => (x.a === row && x.b === col) || (x.a === col && x.b === row),
+    );
     if (!m) return '?';
     return pct((m.a === row ? m.aWins : m.games - m.aWins) / m.games);
   };
   const width = Math.max(...names.map((n) => n.length), 4) + 2;
   const head = ''.padEnd(width) + names.map((n) => n.padEnd(width)).join('');
-  const rows = names.map((r) => r.padEnd(width) + names.map((c) => rate(r, c).padEnd(width)).join(''));
+  const rows = names.map(
+    (r) =>
+      r.padEnd(width) + names.map((c) => rate(r, c).padEnd(width)).join(''),
+  );
   return [head, ...rows].join('\n');
 };

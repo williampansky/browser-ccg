@@ -1,8 +1,7 @@
-
 /**
  * Enum values for the `G.lastMoveMade` state
  */
- export enum LastMoveMade {
+export enum LastMoveMade {
   aiPlayCard = 'aiPlayCard',
   AiSetDone = 'aiSetDone',
   AttackMinion = 'attackMinion',

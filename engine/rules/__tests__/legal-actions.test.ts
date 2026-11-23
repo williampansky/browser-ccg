@@ -2,22 +2,68 @@ import { createGame } from '../../state/create-game';
 import { applyAction } from '../apply-action';
 import { legalActions } from '../legal-actions';
 import { createSeededRng } from '../../rng';
-import { catalogOf, minionCard, putInHand, putOnBoard, setEnergy, spellCard, weaponCard } from '../../testing/builders';
+import {
+  catalogOf,
+  minionCard,
+  putInHand,
+  putOnBoard,
+  setEnergy,
+  spellCard,
+  weaponCard,
+} from '../../testing/builders';
 import type { Action, GameState, PlayerId } from '../../state/types';
 import { MAX_BOARD, MAX_HAND } from '../../state/types';
 
 const grunt = minionCard('GRUNT', { cost: 2, attack: 2, health: 3 });
-const wall = minionCard('WALL', { cost: 1, attack: 1, health: 4, mechanics: ['BULWARK'] });
-const ghost = minionCard('GHOST', { cost: 1, attack: 2, health: 3, mechanics: ['HIDDEN'] });
-const rusher = minionCard('RUSHER', { cost: 1, attack: 3, health: 1, mechanics: ['RUSH'] });
-const spitter = { ...minionCard('CORE_001', { cost: 1 }), numbers: { primary: 1 } };
-const sprite = { ...minionCard('CORE_012', { cost: 2, race: 'SPRITE' }), entourage: ['CORE_012a'] };
-const token = { ...minionCard('CORE_012a', { attack: 1, health: 1 }), isToken: true };
+const wall = minionCard('WALL', {
+  cost: 1,
+  attack: 1,
+  health: 4,
+  mechanics: ['BULWARK'],
+});
+const ghost = minionCard('GHOST', {
+  cost: 1,
+  attack: 2,
+  health: 3,
+  mechanics: ['HIDDEN'],
+});
+const rusher = minionCard('RUSHER', {
+  cost: 1,
+  attack: 3,
+  health: 1,
+  mechanics: ['RUSH'],
+});
+const spitter = {
+  ...minionCard('CORE_001', { cost: 1 }),
+  numbers: { primary: 1 },
+};
+const sprite = {
+  ...minionCard('CORE_012', { cost: 2, race: 'SPRITE' }),
+  entourage: ['CORE_012a'],
+};
+const token = {
+  ...minionCard('CORE_012a', { attack: 1, health: 1 }),
+  isToken: true,
+};
 const shaman = minionCard('CORE_013', { cost: 2 });
-const witch = { ...minionCard('CORE_021', { cost: 3, attack: 3, health: 2 }), numbers: { primary: 1, secondary: 1 } };
-const killer = { ...minionCard('CORE_035', { cost: 5, attack: 4, health: 4 }), numbers: { primary: 3 } };
-const raptor = minionCard('CORE_061', { cost: 5, attack: 3, health: 2, race: 'CREATURE' });
-const ward = { ...minionCard('CORE_085', { cost: 1, attack: 1, health: 3 }), numbers: { primary: 1 } };
+const witch = {
+  ...minionCard('CORE_021', { cost: 3, attack: 3, health: 2 }),
+  numbers: { primary: 1, secondary: 1 },
+};
+const killer = {
+  ...minionCard('CORE_035', { cost: 5, attack: 4, health: 4 }),
+  numbers: { primary: 3 },
+};
+const raptor = minionCard('CORE_061', {
+  cost: 5,
+  attack: 3,
+  health: 2,
+  race: 'CREATURE',
+});
+const ward = {
+  ...minionCard('CORE_085', { cost: 1, attack: 1, health: 3 }),
+  numbers: { primary: 1 },
+};
 const ice = minionCard('CORE_071', { cost: 4, attack: 3, health: 6 });
 const zap = spellCard('CORE_044', 1, { primary: 2 });
 const sweep = spellCard('CORE_065', 2, { primary: 1 });
@@ -26,60 +72,122 @@ const burn = spellCard('CORE_095', 1, { primary: 3 });
 const study = spellCard('CORE_102', 3, { primary: 4 });
 const mace = weaponCard('CORE_076', { cost: 1, attack: 1, durability: 4 });
 const axe = weaponCard('CORE_128', { cost: 3, attack: 3, durability: 2 });
-const shield = { ...spellCard('CORE_129', 3, { primary: 5 }), type: 'item' as const };
-const sharpen = { ...spellCard('CORE_094', 1, { primary: 2, secondary: 0 }), type: 'item' as const };
-const cards = [grunt, wall, ghost, rusher, spitter, sprite, token, shaman, witch, killer, raptor, ward, ice, zap, sweep, fireballs, burn, study, mace, axe, shield, sharpen];
+const shield = {
+  ...spellCard('CORE_129', 3, { primary: 5 }),
+  type: 'item' as const,
+};
+const sharpen = {
+  ...spellCard('CORE_094', 1, { primary: 2, secondary: 0 }),
+  type: 'item' as const,
+};
+const cards = [
+  grunt,
+  wall,
+  ghost,
+  rusher,
+  spitter,
+  sprite,
+  token,
+  shaman,
+  witch,
+  killer,
+  raptor,
+  ward,
+  ice,
+  zap,
+  sweep,
+  fireballs,
+  burn,
+  study,
+  mace,
+  axe,
+  shield,
+  sharpen,
+];
 const catalog = catalogOf(...cards);
 const deckIds = cards.filter((c) => !c.isToken).map((c) => c.id);
 
 const game = (seed: number): GameState => {
   const rng = createSeededRng(seed);
-  const deck = () => rng.shuffle(Array.from({ length: 30 }, (_, i) => deckIds[i % deckIds.length]));
-  return createGame({ decks: { '0': deck(), '1': deck() }, firstPlayer: '0' }, rng);
+  const deck = () =>
+    rng.shuffle(
+      Array.from({ length: 30 }, (_, i) => deckIds[i % deckIds.length]),
+    );
+  return createGame(
+    { decks: { '0': deck(), '1': deck() }, firstPlayer: '0' },
+    rng,
+  );
 };
-const apply = (s: GameState, a: Action, seed = 1) => applyAction(s, a, { rng: createSeededRng(seed), catalog });
+const apply = (s: GameState, a: Action, seed = 1) =>
+  applyAction(s, a, { rng: createSeededRng(seed), catalog });
 
 describe('legalActions', () => {
   it('is only for the active player and only while the game is on', () => {
     const s = game(1);
     expect(legalActions(s, '1', catalog)).toEqual([]);
     expect(legalActions(s, '0', catalog)).toContainEqual({ type: 'EndTurn' });
-    expect(legalActions({ ...s, status: 'over', winner: '0' }, '0', catalog)).toEqual([]);
+    expect(
+      legalActions({ ...s, status: 'over', winner: '0' }, '0', catalog),
+    ).toEqual([]);
   });
   it('offers only affordable cards', () => {
     let s = game(1);
-    s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [] } } };
+    s = {
+      ...s,
+      players: { ...s.players, '0': { ...s.players['0'], hand: [] } },
+    };
     s = putInHand(putInHand(s, '0', 'GRUNT'), '0', 'WALL');
     s = setEnergy(s, '0', 1);
-    const plays = legalActions(s, '0', catalog).filter((a) => a.type === 'PlayCard');
-    expect(plays.every((a) => a.type === 'PlayCard' && a.handIndex === 1)).toBe(true);
+    const plays = legalActions(s, '0', catalog).filter(
+      (a) => a.type === 'PlayCard',
+    );
+    expect(plays.every((a) => a.type === 'PlayCard' && a.handIndex === 1)).toBe(
+      true,
+    );
     expect(plays.length).toBeGreaterThan(0);
   });
   it('offers one action per legal target for targeted spells, and none for a spell with no definition', () => {
     let s = game(1);
-    s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [] } } };
+    s = {
+      ...s,
+      players: { ...s.players, '0': { ...s.players['0'], hand: [] } },
+    };
     s = setEnergy(putInHand(s, '0', 'CORE_044'), '0', 5);
     s = putOnBoard(s, '1', grunt);
-    const targets = legalActions(s, '0', catalog).filter((a) => a.type === 'PlayCard');
+    const targets = legalActions(s, '0', catalog).filter(
+      (a) => a.type === 'PlayCard',
+    );
     expect(targets).toHaveLength(3); // both heroes and the enemy minion
   });
   it('offers an On Play minion with each target, or untargeted when none exists', () => {
     let s = game(1);
-    s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [] } } };
+    s = {
+      ...s,
+      players: { ...s.players, '0': { ...s.players['0'], hand: [] } },
+    };
     s = setEnergy(putInHand(s, '0', 'CORE_021'), '0', 5); // buff a minion
-    expect(legalActions(s, '0', catalog).filter((a) => a.type === 'PlayCard')).toEqual([
-      { type: 'PlayCard', handIndex: 0, boardIndex: 0 },
-    ]);
+    expect(
+      legalActions(s, '0', catalog).filter((a) => a.type === 'PlayCard'),
+    ).toEqual([{ type: 'PlayCard', handIndex: 0, boardIndex: 0 }]);
     s = putOnBoard(s, '1', grunt);
-    const withTarget = legalActions(s, '0', catalog).filter((a) => a.type === 'PlayCard');
-    expect(withTarget.every((a) => a.type === 'PlayCard' && a.target)).toBe(true);
+    const withTarget = legalActions(s, '0', catalog).filter(
+      (a) => a.type === 'PlayCard',
+    );
+    expect(withTarget.every((a) => a.type === 'PlayCard' && a.target)).toBe(
+      true,
+    );
   });
   it('offers no minion plays on a full board', () => {
     let s = game(1);
-    s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [] } } };
+    s = {
+      ...s,
+      players: { ...s.players, '0': { ...s.players['0'], hand: [] } },
+    };
     s = setEnergy(putInHand(s, '0', 'GRUNT'), '0', 5);
     for (let i = 0; i < MAX_BOARD; i++) s = putOnBoard(s, '0', grunt);
-    expect(legalActions(s, '0', catalog).filter((a) => a.type === 'PlayCard')).toEqual([]);
+    expect(
+      legalActions(s, '0', catalog).filter((a) => a.type === 'PlayCard'),
+    ).toEqual([]);
   });
   it('offers attacks only for minions that can attack, at legal targets', () => {
     let s = game(1);
@@ -87,9 +195,18 @@ describe('legalActions', () => {
     s = putOnBoard(s, '0', grunt, { attacksThisTurn: 1 });
     s = putOnBoard(s, '1', wall);
     s = putOnBoard(s, '1', ghost);
-    const attacks = legalActions(s, '0', catalog).filter((a) => a.type === 'Attack');
+    const attacks = legalActions(s, '0', catalog).filter(
+      (a) => a.type === 'Attack',
+    );
     expect(attacks).toEqual([
-      { type: 'Attack', attackerId: s.players['0'].board[0].instanceId, target: { kind: 'minion', instanceId: s.players['1'].board[0].instanceId } },
+      {
+        type: 'Attack',
+        attackerId: s.players['0'].board[0].instanceId,
+        target: {
+          kind: 'minion',
+          instanceId: s.players['1'].board[0].instanceId,
+        },
+      },
     ]);
   });
   it('every action it lists is accepted by applyAction', () => {
@@ -100,7 +217,10 @@ describe('legalActions', () => {
         const actions = legalActions(s, s.activePlayer, catalog);
         for (const a of actions) {
           const r = apply(s, a, seed);
-          if ('error' in r) throw new Error(`seed ${seed}: ${JSON.stringify(a)} rejected with ${r.error}`);
+          if ('error' in r)
+            throw new Error(
+              `seed ${seed}: ${JSON.stringify(a)} rejected with ${r.error}`,
+            );
         }
         const pick = actions[rng.int(actions.length)];
         const r = apply(s, pick, seed);
@@ -141,9 +261,15 @@ describe('random play', () => {
         const actions = legalActions(s, s.activePlayer, catalog);
         // bias toward doing something so games are not just fatigue
         const active = actions.filter((a) => a.type !== 'EndTurn');
-        const pick = active.length > 0 && rng.int(4) > 0 ? active[rng.int(active.length)] : actions[rng.int(actions.length)];
+        const pick =
+          active.length > 0 && rng.int(4) > 0
+            ? active[rng.int(active.length)]
+            : actions[rng.int(actions.length)];
         const r = apply(s, pick, seed + steps);
-        if ('error' in r) throw new Error(`seed ${seed}: ${JSON.stringify(pick)} -> ${r.error}`);
+        if ('error' in r)
+          throw new Error(
+            `seed ${seed}: ${JSON.stringify(pick)} -> ${r.error}`,
+          );
         s = r.state;
         invariants(s);
       }

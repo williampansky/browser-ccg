@@ -7,7 +7,14 @@ export default defineCard('PRIME_146', () => ({
     category: 'spell',
     event: 'CardPlayed',
     when: ({ event, owner, catalog }) =>
-      event?.type === 'CardPlayed' && event.player !== owner && !event.mystery && catalog.get(event.cardId)?.type === 'spell',
-    do: [addCardToHand((ctx) => (ctx.event?.type === 'CardPlayed' ? ctx.event.cardId : undefined))],
+      event?.type === 'CardPlayed' &&
+      event.player !== owner &&
+      !event.mystery &&
+      catalog.get(event.cardId)?.type === 'spell',
+    do: [
+      addCardToHand((ctx) =>
+        ctx.event?.type === 'CardPlayed' ? ctx.event.cardId : undefined,
+      ),
+    ],
   },
 }));

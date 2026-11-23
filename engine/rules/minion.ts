@@ -7,7 +7,7 @@ import type { MinionInstance, MinionKeywords } from '../state/types';
 export const minionDef = (
   minion: MinionInstance,
   catalog: CardCatalog,
-  defs: DefLookup = getCardDef
+  defs: DefLookup = getCardDef,
 ): CardDef | undefined => {
   if (minion.silenced) return undefined;
   const card = catalog.get(minion.cardId);
@@ -15,11 +15,17 @@ export const minionDef = (
 };
 
 /** Builds a fresh minion from its card. Keyword flags come from the card's mechanics. */
-export const createMinion = (card: Card, instanceId: number, turn: number, playSeq: number): MinionInstance => {
+export const createMinion = (
+  card: Card,
+  instanceId: number,
+  turn: number,
+  playSeq: number,
+): MinionInstance => {
   const has = (symbol: string): boolean => card.mechanics.includes(symbol);
   const health = card.health ?? 0;
   const conditional = getCardDef(card)?.conditionalKeywords ?? [];
-  const printed = (k: keyof MinionKeywords, symbol: string): boolean => has(symbol) && !conditional.includes(k);
+  const printed = (k: keyof MinionKeywords, symbol: string): boolean =>
+    has(symbol) && !conditional.includes(k);
   return {
     instanceId,
     cardId: card.id,

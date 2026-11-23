@@ -11,10 +11,16 @@
 const fs = require('fs');
 const path = require('path');
 
-const FILE = path.join(__dirname, '..', 'components', 'play-board', 'HeroVariants.tsx');
+const FILE = path.join(
+  __dirname,
+  '..',
+  'components',
+  'play-board',
+  'HeroVariants.tsx',
+);
 const args = process.argv.slice(2);
 const dry = args.includes('--dry');
-const input = args.find(a => !a.startsWith('--'));
+const input = args.find((a) => !a.startsWith('--'));
 if (!input) {
   console.error('Usage: npm run ring -- [--dry] "<hero-lab url>"');
   process.exit(1);
@@ -23,7 +29,10 @@ if (!input) {
 let params;
 try {
   // A bare query ("r_d=140&r_w=3") is not a URL; give it a `?`.
-  params = new URL(input.includes('?') || !input.includes('=') ? input : `?${input}`, 'http://localhost').searchParams;
+  params = new URL(
+    input.includes('?') || !input.includes('=') ? input : `?${input}`,
+    'http://localhost',
+  ).searchParams;
 } catch (e) {
   console.error(`Not a valid URL: ${input}`);
   process.exit(1);
@@ -47,17 +56,29 @@ for (const [key, raw] of params) {
   const field = key.slice(2);
   const re = new RegExp(`^(\\s+${field}:\\s*)(.+?)(,?)$`, 'm');
   const m = block.match(re);
-  if (!m) { errors.push(`${key}: no such field in RING_DEFAULTS`); continue; }
+  if (!m) {
+    errors.push(`${key}: no such field in RING_DEFAULTS`);
+    continue;
+  }
   const old = m[2];
   let next;
   if (old === 'true' || old === 'false') {
-    if (raw !== '0' && raw !== '1') { errors.push(`${key}: expected 0 or 1, got "${raw}"`); continue; }
+    if (raw !== '0' && raw !== '1') {
+      errors.push(`${key}: expected 0 or 1, got "${raw}"`);
+      continue;
+    }
     next = raw === '1' ? 'true' : 'false';
   } else if (/^'/.test(old)) {
-    if (!/^[0-9a-f]{6}$/i.test(raw)) { errors.push(`${key}: expected a 6-digit hex colour, got "${raw}"`); continue; }
+    if (!/^[0-9a-f]{6}$/i.test(raw)) {
+      errors.push(`${key}: expected a 6-digit hex colour, got "${raw}"`);
+      continue;
+    }
     next = `'${raw.toLowerCase()}'`;
   } else {
-    if (raw === '' || Number.isNaN(+raw)) { errors.push(`${key}: expected a number, got "${raw}"`); continue; }
+    if (raw === '' || Number.isNaN(+raw)) {
+      errors.push(`${key}: expected a number, got "${raw}"`);
+      continue;
+    }
     next = String(+raw);
   }
   if (next !== old) changes.push(`${field}: ${old} -> ${next}`);
@@ -76,5 +97,7 @@ if (!changes.length) {
   console.log('Already matches RING_DEFAULTS, nothing to change.');
   process.exit(0);
 }
-console.log((dry ? 'Would change:\n  ' : 'Changed:\n  ') + changes.join('\n  '));
+console.log(
+  (dry ? 'Would change:\n  ' : 'Changed:\n  ') + changes.join('\n  '),
+);
 if (!dry) fs.writeFileSync(FILE, src.slice(0, start) + block + src.slice(end));

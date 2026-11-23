@@ -1,9 +1,7 @@
 /**
  * Returns a single `card.mechanics` object pertaining to the provided param.
  */
-const getMechanicObject = (symbol: string, json: object[]) => {
-
-};
+const getMechanicObject = (symbol: string, json: object[]) => {};
 
 const getCardMechanics = (arr: string[]) => {};
 

@@ -12,7 +12,12 @@ interface MinionOpts {
   race?: string;
 }
 
-const baseCard = (id: string, type: Card['type'], cost: number, mechanics: string[]): Card => ({
+const baseCard = (
+  id: string,
+  type: Card['type'],
+  cost: number,
+  mechanics: string[],
+): Card => ({
   id,
   source: 'core',
   name: id,
@@ -39,21 +44,33 @@ export const minionCard = (id: string, o: MinionOpts = {}): Card => ({
   race: o.race,
 });
 
-export const weaponCard = (id: string, o: { cost?: number; attack?: number; durability?: number } = {}): Card => ({
+export const weaponCard = (
+  id: string,
+  o: { cost?: number; attack?: number; durability?: number } = {},
+): Card => ({
   ...baseCard(id, 'weapon', o.cost ?? 1, []),
   attack: o.attack ?? 1,
   health: o.durability ?? 1,
 });
 
-export const spellCard = (id: string, cost = 1, numbers: CardNumbers = {}): Card => ({
+export const spellCard = (
+  id: string,
+  cost = 1,
+  numbers: CardNumbers = {},
+): Card => ({
   ...baseCard(id, 'spell', cost, []),
   numbers,
 });
 
-export const catalogOf = (...cards: Card[]): CardCatalog => new Map(cards.map((c) => [c.id, c]));
+export const catalogOf = (...cards: Card[]): CardCatalog =>
+  new Map(cards.map((c) => [c.id, c]));
 
 /** Appends a card to a player's hand. */
-export const putInHand = (state: GameState, player: PlayerId, cardId: string): GameState =>
+export const putInHand = (
+  state: GameState,
+  player: PlayerId,
+  cardId: string,
+): GameState =>
   produce(state, (g) => {
     g.players[player].hand.push({ instanceId: g.nextInstanceId++, cardId });
   });
@@ -63,14 +80,19 @@ export const putOnBoard = (
   state: GameState,
   player: PlayerId,
   card: Card,
-  patch: Partial<MinionInstance> = {}
+  patch: Partial<MinionInstance> = {},
 ): GameState =>
   produce(state, (g) => {
     const m = createMinion(card, g.nextInstanceId++, 0, g.nextPlaySeq++);
     g.players[player].board.push({ ...m, ...patch });
   });
 
-export const setEnergy = (state: GameState, player: PlayerId, current: number, total = current): GameState =>
+export const setEnergy = (
+  state: GameState,
+  player: PlayerId,
+  current: number,
+  total = current,
+): GameState =>
   produce(state, (g) => {
     g.players[player].energy = { current, total };
   });

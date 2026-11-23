@@ -23,8 +23,17 @@
   inset: 0;
   z-index: -2;
   background:
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, var(--bg-weave, 0.018)) 0 2px, transparent 2px 7px),
-    radial-gradient(ellipse at 50% 42%, var(--bg-c1, #24454a) 0%, var(--bg-c2, #162a31) var(--bg-mid, 52%), var(--bg-c3, #0a1015) 100%);
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, var(--bg-weave, 0.018)) 0 2px,
+      transparent 2px 7px
+    ),
+    radial-gradient(
+      ellipse at 50% 42%,
+      var(--bg-c1, #24454a) 0%,
+      var(--bg-c2, #162a31) var(--bg-mid, 52%),
+      var(--bg-c3, #0a1015) 100%
+    );
   pointer-events: none;
 }
 
@@ -35,11 +44,30 @@
   inset: calc(var(--felt-y, 8px) * -1) calc(var(--felt-x, 16px) * -1);
   z-index: -2;
   border-radius: var(--felt-r, 22px);
-  border: var(--felt-rw, 2px) solid color-mix(in srgb, var(--felt-rim, #fff) calc(var(--felt-rim-a, 0.09) * 100%), transparent);
+  border: var(--felt-rw, 2px) solid
+    color-mix(
+      in srgb,
+      var(--felt-rim, #fff) calc(var(--felt-rim-a, 0.09) * 100%),
+      transparent
+    );
   background:
-    radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--felt-glow, #509696) calc(var(--felt-glow-a, 0.16) * 100%), transparent), transparent 70%),
-    color-mix(in srgb, var(--felt-tint, #081216) calc(var(--felt-tint-a, 0.35) * 100%), transparent);
-  box-shadow: inset 0 0 60px rgba(0, 0, 0, var(--felt-in, 0.45)), 0 0 40px rgba(0, 0, 0, var(--felt-out, 0.35));
+    radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(
+        in srgb,
+        var(--felt-glow, #509696) calc(var(--felt-glow-a, 0.16) * 100%),
+        transparent
+      ),
+      transparent 70%
+    ),
+    color-mix(
+      in srgb,
+      var(--felt-tint, #081216) calc(var(--felt-tint-a, 0.35) * 100%),
+      transparent
+    );
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, var(--felt-in, 0.45)),
+    0 0 40px rgba(0, 0, 0, var(--felt-out, 0.35));
   pointer-events: none;
 }
 
@@ -97,8 +125,18 @@
   justify-content: var(--mid-j, flex-start);
   min-height: var(--mid-h, 0px);
   padding: var(--mid-p, 8px) var(--mid-px, 12px);
-  border-top: calc(var(--mid-lw, 1px) * var(--mid-lt, 1)) solid color-mix(in srgb, var(--mid-lc, #afa18c) calc(var(--mid-la, 1) * 100%), transparent);
-  border-bottom: calc(var(--mid-lw, 1px) * var(--mid-lb, 1)) solid color-mix(in srgb, var(--mid-lc, #afa18c) calc(var(--mid-la, 1) * 100%), transparent);
+  border-top: calc(var(--mid-lw, 1px) * var(--mid-lt, 1)) solid
+    color-mix(
+      in srgb,
+      var(--mid-lc, #afa18c) calc(var(--mid-la, 1) * 100%),
+      transparent
+    );
+  border-bottom: calc(var(--mid-lw, 1px) * var(--mid-lb, 1)) solid
+    color-mix(
+      in srgb,
+      var(--mid-lc, #afa18c) calc(var(--mid-la, 1) * 100%),
+      transparent
+    );
   transform: translate(0, -10px);
 }
 
@@ -114,7 +152,8 @@
   position: var(--mid-tpp, static);
   left: 50%;
   top: 50%;
-  translate: calc(var(--mid-tpsx, 0px) + var(--mid-tdx, 0px)) calc(var(--mid-tpsy, 0px) + var(--mid-tdy, 0px));
+  translate: calc(var(--mid-tpsx, 0px) + var(--mid-tdx, 0px))
+    calc(var(--mid-tpsy, 0px) + var(--mid-tdy, 0px));
 }
 
 // The turn timer as a bar across the strip (or the whole window): drains as the turn clock runs down, a second colour for the last 10 s.
@@ -127,7 +166,11 @@
   height: calc(var(--mid-th, 4px) * var(--mid-tb, 1));
   translate: -50% var(--mid-ty, 0px);
   border-radius: var(--mid-tr, 0px);
-  background: color-mix(in srgb, var(--mid-ttc, #000) calc(var(--mid-tta, 0.25) * 100%), transparent);
+  background: color-mix(
+    in srgb,
+    var(--mid-ttc, #000) calc(var(--mid-tta, 0.25) * 100%),
+    transparent
+  );
   overflow: hidden;
   pointer-events: none;
   z-index: 1;
@@ -152,7 +195,6 @@
 .error {
   color: #ff7b7b;
 }
-
 
 .name {
   font-weight: 600;
@@ -179,15 +221,32 @@
   // --h-overlap is how much neighbours overlap (px at full size; --fan-x was worked out with 20), --h-part is how far a hovered card's
   // neighbours slide away (set below), --h-settle / --h-draw the times of the settle and the draw-in.
   --zoom: var(--hand-zoom, 1);
-  --x: calc((var(--fan-x, 0px) + var(--fan-i, 0) * (20px - var(--h-overlap, 20px)) + var(--part, 0px)) * var(--zoom));
+  --x: calc(
+    (
+        var(--fan-x, 0px) + var(--fan-i, 0) * (20px - var(--h-overlap, 20px)) +
+          var(--part, 0px)
+      ) *
+      var(--zoom)
+  );
   --y-comp: calc(101px * (1 - var(--zoom)));
   --rot: calc(var(--fan-rot, 0deg) * var(--h-tilt, 1));
   // --fan-t is 0 for the middle card and 1 for the ends; --h-curve blends the straight V of the drop (0) into a round arc (1) that stays flat
   // in the middle and falls away faster toward the ends (the drop above 10px is scaled by (1 - curve) + curve * t).
-  --drop: calc((10px + (var(--fan-drop, 10px) - 10px) * (1 - var(--h-curve, 0) + var(--h-curve, 0) * var(--fan-t, 0))) * var(--h-dropk, 1));
-  transform: translate(var(--x), calc(var(--y-comp) + (var(--drop) + var(--hand-sink)) * var(--zoom)))
+  --drop: calc(
+    (
+        10px + (var(--fan-drop, 10px) - 10px) *
+          (1 - var(--h-curve, 0) + var(--h-curve, 0) * var(--fan-t, 0))
+      ) *
+      var(--h-dropk, 1)
+  );
+  transform: translate(
+      var(--x),
+      calc(var(--y-comp) + (var(--drop) + var(--hand-sink)) * var(--zoom))
+    )
     rotate(var(--rot)) scale(var(--zoom));
-  transition: transform var(--h-settle, 800ms) cubic-bezier(0.19, 1, 0.22, 1), filter 0.15s;
+  transition:
+    transform var(--h-settle, 800ms) cubic-bezier(0.19, 1, 0.22, 1),
+    filter 0.15s;
   animation: drawCard var(--h-draw, 600ms) cubic-bezier(0.19, 1, 0.22, 1);
 
   // An invisible strip below the card: the lifted card moves up, so without it the pointer would fall off its lower edge.
@@ -206,9 +265,16 @@
 .handSlot:hover,
 .handSlot.slotHover {
   z-index: 10;
-  transform: translate(var(--x), calc(var(--y-comp) + (var(--h-lift, -170px) + var(--hand-sink)) * var(--zoom))) rotate(var(--h-hovrot, 0deg))
-    scale(calc(var(--h-hov, 1.5) * var(--zoom)));
-  transition: transform var(--h-hov-ms, 100ms) cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.15s;
+  transform: translate(
+      var(--x),
+      calc(
+        var(--y-comp) + (var(--h-lift, -170px) + var(--hand-sink)) * var(--zoom)
+      )
+    )
+    rotate(var(--h-hovrot, 0deg)) scale(calc(var(--h-hov, 1.5) * var(--zoom)));
+  transition:
+    transform var(--h-hov-ms, 100ms) cubic-bezier(0.25, 0.8, 0.25, 1),
+    filter 0.15s;
 }
 
 // Parting: the neighbours of the hovered card slide away from it, the adjacent ones by --h-part1 and the rest by --h-part2 (px at
@@ -289,7 +355,14 @@
 // The green "you can play this" overlays (hand glow, cast area, board zone, landing gap) read the board lab's "Play overlays" knobs:
 // --po-c colour, --po-w outline width, --po-r radius, --po-op overall opacity (0-1), --po-idle / --po-hot / --po-gap fill strength (%, unitless), --po-glow hand glow, --po-gapw gap width.
 .slotReady {
-  filter: drop-shadow(0 0 var(--po-glow, 5px) color-mix(in srgb, var(--po-c, #5fd16a) calc(var(--po-op, 1) * 100%), transparent));
+  filter: drop-shadow(
+    0 0 var(--po-glow, 5px)
+      color-mix(
+        in srgb,
+        var(--po-c, #5fd16a) calc(var(--po-op, 1) * 100%),
+        transparent
+      )
+  );
 }
 
 .slotDim {
@@ -312,9 +385,16 @@
 .handSlot.slotHeld:hover {
   filter: drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e);
   z-index: 10;
-  transform: translate(var(--x), calc(var(--y-comp) + (var(--h-lift, -170px) + var(--hand-sink)) * var(--zoom))) rotate(var(--h-hovrot, 0deg))
-    scale(calc(var(--h-hov, 1.5) * var(--zoom)));
-  transition: transform var(--h-hov-ms, 100ms) cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.15s;
+  transform: translate(
+      var(--x),
+      calc(
+        var(--y-comp) + (var(--h-lift, -170px) + var(--hand-sink)) * var(--zoom)
+      )
+    )
+    rotate(var(--h-hovrot, 0deg)) scale(calc(var(--h-hov, 1.5) * var(--zoom)));
+  transition:
+    transform var(--h-hov-ms, 100ms) cubic-bezier(0.25, 0.8, 0.25, 1),
+    filter 0.15s;
 }
 
 // Doubled class so it outranks `.handSlot:hover`: a selected card keeps its size and glow while the pointer is on it.
@@ -323,8 +403,11 @@
 .handSlot.slotSelected:hover {
   filter: drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e);
   z-index: 20;
-  transform: translate(var(--x), calc(var(--y-comp) + (-225px + var(--hand-sink)) * var(--zoom))) rotate(0deg)
-    scale(calc(2 * var(--zoom)));
+  transform: translate(
+      var(--x),
+      calc(var(--y-comp) + (-225px + var(--hand-sink)) * var(--zoom))
+    )
+    rotate(0deg) scale(calc(2 * var(--zoom)));
 }
 
 .cost {
@@ -457,7 +540,11 @@
 // each falling back to the shared knob. Set by the board lab's "Play overlays" section: --po-{a,z,g}c colour, -o opacity, -i idle fill, -h hover fill,
 // -hc hover colour, -hw hover outline width, -hg hover glow, -t hover fade ms (fills are unitless %).
 @function po-mix($colour, $opacity, $fill: 100) {
-  @return color-mix(in srgb, #{$colour} calc(#{$fill} * #{$opacity} * 1%), transparent);
+  @return color-mix(
+    in srgb,
+    #{$colour} calc(#{$fill} * #{$opacity} * 1%),
+    transparent
+  );
 }
 $po-green: var(--po-c, #5fd16a);
 
@@ -475,7 +562,10 @@ $po-green: var(--po-c, #5fd16a);
   background: po-mix($c, $o, var(--po-ai, var(--po-idle, 6)));
   pointer-events: none;
   z-index: -1;
-  transition: background var(--po-at, 100ms), outline-color var(--po-at, 100ms), box-shadow var(--po-at, 100ms);
+  transition:
+    background var(--po-at, 100ms),
+    outline-color var(--po-at, 100ms),
+    box-shadow var(--po-at, 100ms);
 }
 
 .castAreaHot {
@@ -497,7 +587,10 @@ $po-green: var(--po-c, #5fd16a);
   outline-offset: 2px;
   background: po-mix($c, $o, var(--po-zi, var(--po-idle, 6)));
   cursor: pointer;
-  transition: background var(--po-zt, 0ms), outline-color var(--po-zt, 0ms), box-shadow var(--po-zt, 0ms);
+  transition:
+    background var(--po-zt, 0ms),
+    outline-color var(--po-zt, 0ms),
+    box-shadow var(--po-zt, 0ms);
 
   &:hover,
   &.zoneHot {
@@ -526,7 +619,9 @@ $po-green: var(--po-c, #5fd16a);
     height: 4px;
     border-radius: 2px;
     background: #5a6580;
-    transition: background 120ms, width 120ms;
+    transition:
+      background 120ms,
+      width 120ms;
   }
 
   &:hover i {
@@ -596,7 +691,8 @@ $po-green: var(--po-c, #5fd16a);
     transform-origin: var(--dk-ax, 50%) var(--dk-ay, 50%);
     opacity: calc(var(--dk-art-o, 1) * var(--dk-art-on, 1));
     // (Sass has its own saturate() / grayscale(), so these two are written as plain CSS.)
-    filter: brightness(var(--dk-art-b, 1)) #{'saturate(var(--dk-art-s, 1))'} blur(var(--dk-art-blur, 0px));
+    filter: brightness(var(--dk-art-b, 1)) #{'saturate(var(--dk-art-s, 1))'}
+      blur(var(--dk-art-blur, 0px));
   }
 
   // The shade: strongest at the left (where the cost and name are), fading to --dk-sr by --dk-ss of the way across.
@@ -606,9 +702,24 @@ $po-green: var(--po-c, #5fd16a);
     inset: 0;
     background: linear-gradient(
       90deg,
-      color-mix(in srgb, var(--dk-shade, #0b0d14) var(--dk-sl, 85%), transparent) 0%,
-      color-mix(in srgb, var(--dk-shade, #0b0d14) var(--dk-sr, 10%), transparent) var(--dk-ss, 70%),
-      color-mix(in srgb, var(--dk-shade, #0b0d14) var(--dk-sr, 10%), transparent) 100%
+      color-mix(
+          in srgb,
+          var(--dk-shade, #0b0d14) var(--dk-sl, 85%),
+          transparent
+        )
+        0%,
+      color-mix(
+          in srgb,
+          var(--dk-shade, #0b0d14) var(--dk-sr, 10%),
+          transparent
+        )
+        var(--dk-ss, 70%),
+      color-mix(
+          in srgb,
+          var(--dk-shade, #0b0d14) var(--dk-sr, 10%),
+          transparent
+        )
+        100%
     );
     opacity: calc(var(--dk-art-on, 1));
     transition: opacity 120ms;
@@ -636,17 +747,36 @@ $po-green: var(--po-c, #5fd16a);
 
 // The first popup drifts in from the side the deck is on (a few px, so it reads as a hint, not a slide).
 @keyframes deckPopupInRight {
-  from { opacity: 0; transform: translateX(14px); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 @keyframes deckPopupInLeft {
-  from { opacity: 0; transform: translateX(-14px); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
-.deckPopupFromRight { animation: deckPopupInRight 180ms ease-out; }
-.deckPopupFromLeft { animation: deckPopupInLeft 180ms ease-out; }
+.deckPopupFromRight {
+  animation: deckPopupInRight 180ms ease-out;
+}
+.deckPopupFromLeft {
+  animation: deckPopupInLeft 180ms ease-out;
+}
 @media (prefers-reduced-motion: reduce) {
-  .deckPopupFromRight, .deckPopupFromLeft { animation: none; }
+  .deckPopupFromRight,
+  .deckPopupFromLeft {
+    animation: none;
+  }
 }
 
 .deckGone {
@@ -675,7 +805,9 @@ $po-green: var(--po-c, #5fd16a);
   font-size: var(--dk-name-f, 14px);
   font-weight: var(--dk-name-w, 600);
   color: var(--dk-name-c, #e8e8ee);
-  text-shadow: 0 1px var(--dk-name-sh, 3px) #000, 0 0 var(--dk-name-sh, 3px) #000;
+  text-shadow:
+    0 1px var(--dk-name-sh, 3px) #000,
+    0 0 var(--dk-name-sh, 3px) #000;
 }
 
 .deckCount {
@@ -762,14 +894,20 @@ $po-green: var(--po-c, #5fd16a);
 
 .chooseFace {
   display: block;
-  zoom: var(--choose-scale, 1); // the card is drawn at a fixed width and scaled, so its text and frame stay in proportion
+  zoom: var(
+    --choose-scale,
+    1
+  ); // the card is drawn at a fixed width and scaled, so its text and frame stay in proportion
   border-radius: 8px;
-  transition: transform 140ms ease-out, filter 140ms ease-out;
+  transition:
+    transform 140ms ease-out,
+    filter 140ms ease-out;
 }
 
 .chooseOption:hover .chooseFace,
 .chooseOption:focus-visible .chooseFace {
-  transform: translateY(calc(var(--choose-lift, 0) * -1px)) scale(var(--choose-hover, 1.04));
+  transform: translateY(calc(var(--choose-lift, 0) * -1px))
+    scale(var(--choose-hover, 1.04));
   filter: drop-shadow(0 0 var(--choose-glow, 10px) #3ddc84);
 }
 
@@ -787,7 +925,8 @@ $po-green: var(--po-c, #5fd16a);
   position: var(--mid-bpp, static);
   left: 50%;
   top: 50%;
-  translate: calc(var(--mid-bpsx, 0px) + var(--mid-bdx, 0px)) calc(var(--mid-bpsy, 0px) + var(--mid-bdy, 0px));
+  translate: calc(var(--mid-bpsx, 0px) + var(--mid-bdx, 0px))
+    calc(var(--mid-bpsy, 0px) + var(--mid-bdy, 0px));
   padding: var(--mid-by, 8px) var(--mid-bx, 19px);
   border-radius: var(--mid-br, 6px);
   border: 1px solid var(--mid-bb, #5a8cf0);
@@ -855,9 +994,12 @@ $po-green: var(--po-c, #5fd16a);
   width: var(--po-gapw, 4rem);
   align-self: stretch;
   border-radius: var(--po-r, 8px);
-  border: var(--po-gb-w, var(--po-w, 2px)) var(--po-style, dashed) po-mix($c, $o);
+  border: var(--po-gb-w, var(--po-w, 2px)) var(--po-style, dashed)
+    po-mix($c, $o);
   background: po-mix($c, $o, var(--po-gap, 25));
-  animation: gapOpen var(--po-gd, 120ms) var(--po-ge, ease-out), gapPulse var(--po-gp, 0s) ease-in-out infinite alternate;
+  animation:
+    gapOpen var(--po-gd, 120ms) var(--po-ge, ease-out),
+    gapPulse var(--po-gp, 0s) ease-in-out infinite alternate;
 }
 
 @keyframes gapOpen {
@@ -901,7 +1043,8 @@ $po-green: var(--po-c, #5fd16a);
   border: 2px solid #0008;
   background: #2b3042 url('/images/backs/default.png') center / cover no-repeat;
   // Fanned the opposite way to your hand: the middle hangs lowest, the ends tilt and rise (--back-rot, --back-rise from the board).
-  transform: translateY(calc(-6.6rem - var(--back-rise, 0px))) rotate(var(--back-rot, 0deg));
+  transform: translateY(calc(-6.6rem - var(--back-rise, 0px)))
+    rotate(var(--back-rot, 0deg));
   transition: transform 0.15s;
 }
 
@@ -952,7 +1095,9 @@ $po-green: var(--po-c, #5fd16a);
   background-size: cover;
   background-position: center;
   background-blend-mode: multiply;
-  text-shadow: 0 1px 3px #000, 0 0 2px #000;
+  text-shadow:
+    0 1px 3px #000,
+    0 0 2px #000;
   background-color: #555b70;
 }
 
@@ -988,7 +1133,9 @@ $po-green: var(--po-c, #5fd16a);
 .castFx {
   position: fixed;
   // The board lab's "Played-card overlay" section sets --cast-x / -y (offset), --cast-size, --cast-ms, --cast-peak and --cast-glow.
-  left: calc(22rem + var(--cast-x, 0px)); // between the log (ends at 21rem) and the board
+  left: calc(
+    22rem + var(--cast-x, 0px)
+  ); // between the log (ends at 21rem) and the board
   top: calc(45% + var(--cast-y, 0px));
   z-index: 35;
   pointer-events: none;
@@ -1110,19 +1257,39 @@ $po-green: var(--po-c, #5fd16a);
 // can wander over the lifted card without losing it.
 .handHit {
   --zoom: var(--hand-zoom, 1);
-  --drop: calc((10px + (var(--fan-drop, 10px) - 10px) * (1 - var(--h-curve, 0) + var(--h-curve, 0) * var(--fan-t, 0))) * var(--h-dropk, 1));
+  --drop: calc(
+    (
+        10px + (var(--fan-drop, 10px) - 10px) *
+          (1 - var(--h-curve, 0) + var(--h-curve, 0) * var(--fan-t, 0))
+      ) *
+      var(--h-dropk, 1)
+  );
   // The slot is --w wide (card spacing x --h-slot), centred on the card's resting place. The outermost slots can reach outward (--ext-l on the
   // first, --ext-r on the last): --h-edge of the way to the card's outer edge (1 = the slot ends at the card's edge), plus --h-edge-px more.
   // The hovered slot grows --h-hot-px on each side, so it is harder to leave sideways.
   --w: calc((144px - var(--h-overlap, 20px)) * var(--zoom) * var(--h-slot, 1));
-  --ext: max(0px, calc(var(--h-edge, 0) * (72px * var(--zoom) - var(--w) / 2) + var(--h-edge-px, 0px) * var(--zoom)));
+  --ext: max(
+    0px,
+    calc(
+      var(--h-edge, 0) * (72px * var(--zoom) - var(--w) / 2) +
+        var(--h-edge-px, 0px) * var(--zoom)
+    )
+  );
   --hot: 0px;
   position: absolute;
   left: 50%;
-  top: calc(202px - 202px * var(--zoom) + (var(--drop) + var(--hand-sink)) * var(--zoom));
+  top: calc(
+    202px - 202px * var(--zoom) + (var(--drop) + var(--hand-sink)) * var(--zoom)
+  );
   bottom: -400px;
-  width: calc(var(--w) + var(--ext-l, 0px) + var(--ext-r, 0px) + var(--hot) * 2);
-  translate: calc((var(--fan-x, 0px) + var(--fan-i, 0) * (20px - var(--h-overlap, 20px))) * var(--zoom) - var(--w) / 2 - var(--ext-l, 0px) - var(--hot)) 0;
+  width: calc(
+    var(--w) + var(--ext-l, 0px) + var(--ext-r, 0px) + var(--hot) * 2
+  );
+  translate: calc(
+      (var(--fan-x, 0px) + var(--fan-i, 0) * (20px - var(--h-overlap, 20px))) *
+        var(--zoom) - var(--w) / 2 - var(--ext-l, 0px) - var(--hot)
+    )
+    0;
   pointer-events: auto;
   cursor: pointer;
   // lhspv: show the slots
@@ -1140,7 +1307,11 @@ $po-green: var(--po-c, #5fd16a);
 
 .handHitHot {
   --hot: calc(var(--h-hot-px, 0px) * var(--zoom));
-  top: calc(101px + 101px * (1 - var(--zoom)) + (var(--h-lift, -170px) + var(--hand-sink)) * var(--zoom) - 101px * var(--h-hov, 1.5) * var(--zoom));
+  top: calc(
+    101px + 101px * (1 - var(--zoom)) +
+      (var(--h-lift, -170px) + var(--hand-sink)) * var(--zoom) - 101px *
+      var(--h-hov, 1.5) * var(--zoom)
+  );
 }
 
 // Card types: a coloured top bar and type label so minions, spells, weapons and items read apart at a glance.
@@ -1154,10 +1325,18 @@ $po-green: var(--po-c, #5fd16a);
     filter: brightness(1.35);
   }
 }
-.type_minion { @include accent(#4a90e2); }
-.type_spell { @include accent(#a35de0); }
-.type_weapon { @include accent(#e8903a); }
-.type_item { @include accent(#2fb8a6); }
+.type_minion {
+  @include accent(#4a90e2);
+}
+.type_spell {
+  @include accent(#a35de0);
+}
+.type_weapon {
+  @include accent(#e8903a);
+}
+.type_item {
+  @include accent(#2fb8a6);
+}
 
 // Accessibility mode: a clear keyboard focus outline on every control (the default outline is easy to lose on this dark board).
 .a11y {

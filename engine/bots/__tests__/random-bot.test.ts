@@ -5,19 +5,36 @@ import { createGame } from '../../state/create-game';
 import { createSeededRng } from '../../rng';
 import { loadHsCards } from '../../cards/load-hs-cards';
 import { buildDeck, playablePool } from '../../decks';
-import { catalogOf, minionCard, putInHand, putOnBoard, setEnergy } from '../../testing/builders';
+import {
+  catalogOf,
+  minionCard,
+  putInHand,
+  putOnBoard,
+  setEnergy,
+} from '../../testing/builders';
 import type { GameState } from '../../state/types';
 
 const grunt = minionCard('GRUNT', { cost: 2, attack: 2, health: 3 });
 const catalog = catalogOf(grunt);
 const start = (): GameState =>
-  createGame({ decks: { '0': Array(30).fill('GRUNT'), '1': Array(30).fill('GRUNT') }, firstPlayer: '0' }, createSeededRng(1));
+  createGame(
+    {
+      decks: { '0': Array(30).fill('GRUNT'), '1': Array(30).fill('GRUNT') },
+      firstPlayer: '0',
+    },
+    createSeededRng(1),
+  );
 
 describe('random bot', () => {
   it('ends the turn when there is nothing else to do', () => {
     let s = start();
-    s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [] } } };
-    expect(chooseRandomAction(s, catalog, createSeededRng(1))).toEqual({ type: 'EndTurn' });
+    s = {
+      ...s,
+      players: { ...s.players, '0': { ...s.players['0'], hand: [] } },
+    };
+    expect(chooseRandomAction(s, catalog, createSeededRng(1))).toEqual({
+      type: 'EndTurn',
+    });
   });
   it('always chooses a legal action, and is reproducible for a seed', () => {
     let s = setEnergy(putInHand(start(), '0', 'GRUNT'), '0', 5);
@@ -32,7 +49,10 @@ describe('random bot', () => {
   it('usually acts rather than passing, but does sometimes pass', () => {
     let s = setEnergy(putInHand(start(), '0', 'GRUNT'), '0', 5);
     s = putOnBoard(s, '0', grunt);
-    const picks = Array.from({ length: 200 }, (_, i) => chooseRandomAction(s, catalog, createSeededRng(i + 1)).type);
+    const picks = Array.from(
+      { length: 200 },
+      (_, i) => chooseRandomAction(s, catalog, createSeededRng(i + 1)).type,
+    );
     const passes = picks.filter((t) => t === 'EndTurn').length;
     expect(passes).toBeGreaterThan(0);
     expect(passes).toBeLessThan(100);
@@ -43,12 +63,19 @@ describe('random bot', () => {
     for (let seed = 1; seed <= 10; seed++) {
       const rng = createSeededRng(seed);
       let s = createGame(
-        { decks: { '0': buildDeck(pool, rng), '1': buildDeck(pool, rng) }, firstPlayer: '0', secondPlayerBonusCard: 'GAME_001' },
-        rng
+        {
+          decks: { '0': buildDeck(pool, rng), '1': buildDeck(pool, rng) },
+          firstPlayer: '0',
+          secondPlayerBonusCard: 'GAME_001',
+        },
+        rng,
       );
       for (let steps = 0; s.status === 'playing'; steps++) {
         if (steps > 4000) throw new Error(`seed ${seed} did not finish`);
-        const r = applyAction(s, chooseRandomAction(s, byId, rng), { rng, catalog: byId });
+        const r = applyAction(s, chooseRandomAction(s, byId, rng), {
+          rng,
+          catalog: byId,
+        });
         if ('error' in r) throw new Error(r.error);
         s = r.state;
       }
@@ -63,7 +90,8 @@ describe('random bot', () => {
     let s = setEnergy(putInHand(start(), '0', 'CORE_016'), '0', 5); // CORE_016: deal 1 damage to any character
     s = putOnBoard(s, '0', real);
     const friendly = new Set(['h0', `m${s.players['0'].board[0].instanceId}`]);
-    const key = (t: any) => (t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`);
+    const key = (t: any) =>
+      t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`;
     let sawEnemyAim = false;
     for (let seed = 1; seed <= 200; seed++) {
       const a: any = chooseRandomAction(s, cat, createSeededRng(seed));
@@ -79,17 +107,28 @@ describe('random bot', () => {
     const cat = new Map(byId);
     cat.set('GRUNT', grunt);
     const types = (s: GameState) =>
-      Array.from({ length: 200 }, (_, i) => chooseRandomAction(s, cat, createSeededRng(i + 1))).map((a) => a.type);
+      Array.from({ length: 200 }, (_, i) =>
+        chooseRandomAction(s, cat, createSeededRng(i + 1)),
+      ).map((a) => a.type);
     const onlyHand = (s: GameState): GameState => ({
       ...s,
-      players: { ...s.players, '0': { ...s.players['0'], hand: s.players['0'].hand.slice(-1) } },
+      players: {
+        ...s.players,
+        '0': { ...s.players['0'], hand: s.players['0'].hand.slice(-1) },
+      },
     });
     // CORE_111 gives your minions +3 Attack: with no minions it is wasted, with one it is fine.
-    const wrath = onlyHand(setEnergy(putInHand(start(), '0', 'CORE_111'), '0', 5));
+    const wrath = onlyHand(
+      setEnergy(putInHand(start(), '0', 'CORE_111'), '0', 5),
+    );
     expect(types(wrath)).not.toContain('PlayCard');
     expect(types(putOnBoard(wrath, '0', grunt))).toContain('PlayCard');
     // CORE_096 with only its own minion on the board has no good target.
-    const kick = putOnBoard(onlyHand(setEnergy(putInHand(start(), '0', 'CORE_096'), '0', 5)), '0', grunt);
+    const kick = putOnBoard(
+      onlyHand(setEnergy(putInHand(start(), '0', 'CORE_096'), '0', 5)),
+      '0',
+      grunt,
+    );
     expect(types(kick)).not.toContain('PlayCard');
   });
   it('does not buff an enemy minion (CORE_073, CORE_086) when that is the only target', () => {
@@ -97,10 +136,22 @@ describe('random bot', () => {
     const cat = new Map(byId);
     cat.set('GRUNT', grunt);
     const types = (s: GameState) =>
-      Array.from({ length: 100 }, (_, i) => chooseRandomAction(s, cat, createSeededRng(i + 1))).map((a) => a.type);
+      Array.from({ length: 100 }, (_, i) =>
+        chooseRandomAction(s, cat, createSeededRng(i + 1)),
+      ).map((a) => a.type);
     for (const id of ['CORE_073', 'CORE_086']) {
-      let s = putOnBoard(setEnergy(putInHand(start(), '0', id), '0', 5), '1', grunt);
-      s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: s.players['0'].hand.slice(-1) } } };
+      let s = putOnBoard(
+        setEnergy(putInHand(start(), '0', id), '0', 5),
+        '1',
+        grunt,
+      );
+      s = {
+        ...s,
+        players: {
+          ...s.players,
+          '0': { ...s.players['0'], hand: s.players['0'].hand.slice(-1) },
+        },
+      };
       expect(types(s)).not.toContain('PlayCard');
       // with a friendly minion to buff, it does play it
       expect(types(putOnBoard(s, '0', grunt))).toContain('PlayCard');
@@ -111,13 +162,43 @@ describe('random bot', () => {
     const cat = new Map(byId);
     cat.set('GRUNT', grunt);
     const types = (s: GameState) =>
-      Array.from({ length: 100 }, (_, i) => chooseRandomAction(s, cat, createSeededRng(i + 1))).map((a) => a.type);
+      Array.from({ length: 100 }, (_, i) =>
+        chooseRandomAction(s, cat, createSeededRng(i + 1)),
+      ).map((a) => a.type);
     let s = setEnergy(putInHand(start(), '0', 'CORE_127'), '0', 5);
-    s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: s.players['0'].hand.slice(-1) } } };
+    s = {
+      ...s,
+      players: {
+        ...s.players,
+        '0': { ...s.players['0'], hand: s.players['0'].hand.slice(-1) },
+      },
+    };
     expect(types(s)).toContain('PlayCard');
-    const disabled = { ...s, players: { ...s.players, '0': { ...s.players['0'], heroDisabledOnTurn: s.turn } } };
+    const disabled = {
+      ...s,
+      players: {
+        ...s.players,
+        '0': { ...s.players['0'], heroDisabledOnTurn: s.turn },
+      },
+    };
     expect(types(disabled)).not.toContain('PlayCard');
-    const armed = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [], weapon: { instanceId: 9999, cardId: 'CORE_127', attack: 4, durability: 1, temporary: true } } } };
+    const armed = {
+      ...s,
+      players: {
+        ...s.players,
+        '0': {
+          ...s.players['0'],
+          hand: [],
+          weapon: {
+            instanceId: 9999,
+            cardId: 'CORE_127',
+            attack: 4,
+            durability: 1,
+            temporary: true,
+          },
+        },
+      },
+    };
     expect(new Set(types(armed))).toEqual(new Set(['WeaponAttack']));
   });
 });

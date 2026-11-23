@@ -19,9 +19,13 @@ export class TriggerLoopError extends Error {
 
 const MAX_STEPS = 1000;
 
-const boardsInPlayOrder = (g: GameState): { owner: PlayerId; minion: MinionInstance }[] =>
+const boardsInPlayOrder = (
+  g: GameState,
+): { owner: PlayerId; minion: MinionInstance }[] =>
   (['0', '1'] as PlayerId[])
-    .flatMap((owner) => g.players[owner].board.map((minion) => ({ owner, minion })))
+    .flatMap((owner) =>
+      g.players[owner].board.map((minion) => ({ owner, minion })),
+    )
     .sort((a, b) => a.minion.playSeq - b.minion.playSeq);
 
 /**
@@ -33,7 +37,12 @@ const boardsInPlayOrder = (g: GameState): { owner: PlayerId; minion: MinionInsta
  * Finally check for game over. `from` is the index of the first event this call should react to.
  * Call inside `produce`.
  */
-export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEvent[], from = 0): void => {
+export const settle = (
+  g: Draft<GameState>,
+  ctx: EngineContext,
+  events: GameEvent[],
+  from = 0,
+): void => {
   const defs: DefLookup = ctx.defs ?? getCardDef;
   let cursor = from;
   for (let steps = 0; ; steps++) {
@@ -49,21 +58,43 @@ export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEven
     if (dead.length > 0) {
       g.deaths = (g.deaths ?? 0) + dead.length;
       for (const { owner } of dead) {
-        g.players[owner].board = g.players[owner].board.filter((m) => m.health > 0);
+        g.players[owner].board = g.players[owner].board.filter(
+          (m) => m.health > 0,
+        );
       }
       for (const { owner, minion } of dead) {
-        if (!ctx.catalog.get(minion.cardId)?.isToken) (g.players[owner].graveyard ??= []).push(minion.cardId);
-        events.push({ type: 'MinionDied', player: owner, instanceId: minion.instanceId, cardId: minion.cardId });
+        if (!ctx.catalog.get(minion.cardId)?.isToken)
+          (g.players[owner].graveyard ??= []).push(minion.cardId);
+        events.push({
+          type: 'MinionDied',
+          player: owner,
+          instanceId: minion.instanceId,
+          cardId: minion.cardId,
+        });
       }
       for (const { owner, minion } of dead) {
         const def = minionDef(minion, ctx.catalog, defs);
         for (const effect of def?.onDeath ?? []) {
-          effect({ g, caster: owner, self: minion.instanceId, rng: ctx.rng, catalog: ctx.catalog, events, sourceCardId: minion.cardId });
+          effect({
+            g,
+            caster: owner,
+            self: minion.instanceId,
+            rng: ctx.rng,
+            catalog: ctx.catalog,
+            events,
+            sourceCardId: minion.cardId,
+          });
         }
         // On Death effects given by a spell (Haranna's Curse): a random minion of that race and cost, for the owner.
         for (const ds of minion.deathSummons ?? []) {
-          const pool = cardPool(ctx.catalog, (c) => c.type === 'minion' && c.race === ds.race && c.cost === ds.cost, defs);
-          if (pool.length > 0) summonMinion(g, owner, pool[ctx.rng.int(pool.length)], events);
+          const pool = cardPool(
+            ctx.catalog,
+            (c) =>
+              c.type === 'minion' && c.race === ds.race && c.cost === ds.cost,
+            defs,
+          );
+          if (pool.length > 0)
+            summonMinion(g, owner, pool[ctx.rng.int(pool.length)], events);
         }
       }
       continue;
@@ -76,9 +107,27 @@ export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEven
         const def = minionDef(minion, ctx.catalog, defs);
         for (const trigger of def?.triggers ?? []) {
           if (trigger.event !== event.type) continue;
-          if (trigger.when && !trigger.when(event, { state: g, catalog: ctx.catalog, owner, selfId: minion.instanceId })) continue;
+          if (
+            trigger.when &&
+            !trigger.when(event, {
+              state: g,
+              catalog: ctx.catalog,
+              owner,
+              selfId: minion.instanceId,
+            })
+          )
+            continue;
           for (const effect of trigger.do) {
-            effect({ g, caster: owner, self: minion.instanceId, event, rng: ctx.rng, catalog: ctx.catalog, events, sourceCardId: minion.cardId });
+            effect({
+              g,
+              caster: owner,
+              self: minion.instanceId,
+              event,
+              rng: ctx.rng,
+              catalog: ctx.catalog,
+              events,
+              sourceCardId: minion.cardId,
+            });
           }
         }
       }

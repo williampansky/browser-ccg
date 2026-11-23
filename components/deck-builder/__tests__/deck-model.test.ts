@@ -1,7 +1,16 @@
-import { addCard, blankDeck, cleanDeck, curve, removeCard, whyNotAdd } from '../deck-model';
+import {
+  addCard,
+  blankDeck,
+  cleanDeck,
+  curve,
+  removeCard,
+  whyNotAdd,
+} from '../deck-model';
 import { catalogOf, minionCard } from '../../../engine/testing/builders';
 
-const cards = Array.from({ length: 40 }, (_, i) => minionCard(`CORE_${String(i).padStart(3, '0')}`, { cost: i % 9 }));
+const cards = Array.from({ length: 40 }, (_, i) =>
+  minionCard(`CORE_${String(i).padStart(3, '0')}`, { cost: i % 9 }),
+);
 const legend = { ...minionCard('CORE_900'), rarity: 'MYTHIC' };
 const byId = catalogOf(...cards, legend);
 
@@ -35,9 +44,15 @@ describe('deck model', () => {
     expect(removeCard(d, 'CORE_999')).toBe(d);
   });
   it('cleanDeck drops unknown cards and anything over the limits', () => {
-    const d = cleanDeck({ id: 'x', name: 'x', cards: ['NOPE', ...Array(35).fill('CORE_001')] }, byId);
+    const d = cleanDeck(
+      { id: 'x', name: 'x', cards: ['NOPE', ...Array(35).fill('CORE_001')] },
+      byId,
+    );
     expect(d.cards).toEqual(['CORE_001', 'CORE_001']);
-    const big = cleanDeck({ id: 'x', name: 'x', cards: cards.flatMap((c) => [c.id, c.id]) }, byId);
+    const big = cleanDeck(
+      { id: 'x', name: 'x', cards: cards.flatMap((c) => [c.id, c.id]) },
+      byId,
+    );
     expect(big.cards).toHaveLength(30);
   });
   it('curve buckets by cost with 7+ together', () => {
@@ -58,8 +73,12 @@ describe('class-restricted cards', () => {
   const byId = catalogOf(smash);
   it('only a deck with that hero can add one', () => {
     expect(whyNotAdd(blankDeck(), smash)).toMatch(/warrior/);
-    expect(whyNotAdd({ ...blankDeck(), hero: 'ZEUS' }, smash)).toMatch(/warrior/);
-    expect(whyNotAdd({ ...blankDeck(), hero: 'WARRIOR' }, smash)).toBeUndefined();
+    expect(whyNotAdd({ ...blankDeck(), hero: 'ZEUS' }, smash)).toMatch(
+      /warrior/,
+    );
+    expect(
+      whyNotAdd({ ...blankDeck(), hero: 'WARRIOR' }, smash),
+    ).toBeUndefined();
   });
   it('switching to another hero drops them (cleanDeck)', () => {
     const deck = { ...blankDeck(), hero: 'WARRIOR', cards: ['PRIME_255'] };

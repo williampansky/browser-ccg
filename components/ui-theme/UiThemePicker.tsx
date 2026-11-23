@@ -8,7 +8,11 @@ export const UiThemePicker = ({ blurb = true }: { blurb?: boolean }) => {
   return (
     <label className="ui-field-row">
       <span>Interface theme</span>
-      <Select value={id} onChange={(e) => setId(e.target.value)} aria-label="Interface theme">
+      <Select
+        value={id}
+        onChange={(e) => setId(e.target.value)}
+        aria-label="Interface theme"
+      >
         {UI_THEMES.map((t) => (
           <option key={t.id} value={t.id}>
             {t.label}

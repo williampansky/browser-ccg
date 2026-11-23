@@ -7,7 +7,7 @@ interface Props {
 }
 
 const initialState: Props = {
-  discardedCard: undefined
+  discardedCard: undefined,
 };
 
 export const popupOverlaysSlice = createSlice({

@@ -108,7 +108,7 @@ export enum CardMechanicsContext {
   Heal = Mechanics.Heal,
   None = Mechanics.None,
   SetValue = Mechanics.SetValue,
-  Summon = Mechanics.Summon
+  Summon = Mechanics.Summon,
 }
 
 /**

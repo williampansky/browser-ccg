@@ -7,7 +7,10 @@ export default defineCard('PRIME_127', () => ({
   mystery: {
     category: 'attack',
     hook: 'attack',
-    when: ({ attack, owner }) => attack?.attackerId !== undefined && attack.target.kind === 'hero' && attack.target.player === owner,
+    when: ({ attack, owner }) =>
+      attack?.attackerId !== undefined &&
+      attack.target.kind === 'hero' &&
+      attack.target.player === owner,
     do: [disable(attackerMinion()), reduceAttack(attackerMinion(), 2)],
   },
 }));

@@ -11,7 +11,8 @@ export interface CardEffect {
 }
 
 const glossary = new Map<string, RawGlossaryEntry>();
-for (const m of mechanics as unknown as RawGlossaryEntry[]) glossary.set(String(m.symbol).replace(/%/g, ''), m);
+for (const m of mechanics as unknown as RawGlossaryEntry[])
+  glossary.set(String(m.symbol).replace(/%/g, ''), m);
 
 /**
  * The effects a card has, for the card detail window: exactly the entries in its Airtable `mechanics` array, in that order, each with the
@@ -24,8 +25,12 @@ export const effectsOf = (card: Card): CardEffect[] => {
     const symbol = tag.replace(/%/g, '');
     const entry = glossary.get(symbol);
     if (!entry || out.some((e) => e.symbol === symbol)) continue;
-    const description = typeof entry.description === 'string' ? entry.description.replace(/\{X\}/g, 'X') : '';
-    if (entry.name && description) out.push({ symbol, name: String(entry.name), description });
+    const description =
+      typeof entry.description === 'string'
+        ? entry.description.replace(/\{X\}/g, 'X')
+        : '';
+    if (entry.name && description)
+      out.push({ symbol, name: String(entry.name), description });
   }
   return out;
 };

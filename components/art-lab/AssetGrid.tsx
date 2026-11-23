@@ -8,7 +8,7 @@ const url = (f: string) => `/api/art-lab/assets?file=${encodeURIComponent(f)}`;
 const Credit = ({
   file,
   rules,
-  color
+  color,
 }: {
   file: string;
   rules: AttributionRule[];
@@ -25,7 +25,7 @@ const Credit = ({
               href={hit.url}
               target="_blank"
               rel="noreferrer"
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               {hit.artist}
             </a>
@@ -70,8 +70,8 @@ export const AssetGrid = () => {
 
   useEffect(() => {
     fetch('/api/art-lab/assets')
-      .then(r => r.json())
-      .then(d => {
+      .then((r) => r.json())
+      .then((d) => {
         setFiles(d.files ?? []);
         setExists(!!d.exists);
         setRules(d.rules ?? []);
@@ -88,7 +88,7 @@ export const AssetGrid = () => {
 
   const shown = useMemo(
     () =>
-      (files ?? []).filter(f => {
+      (files ?? []).filter((f) => {
         const needle = q.trim().toLowerCase();
         return (
           f.toLowerCase().includes(needle) ||
@@ -97,7 +97,7 @@ export const AssetGrid = () => {
             .includes(needle)
         );
       }),
-    [files, q, rules]
+    [files, q, rules],
   );
 
   if (!files) {
@@ -116,15 +116,12 @@ export const AssetGrid = () => {
 
   return (
     <div>
-      <section
-        className="ui-controls"
-        style={{ marginBottom: 12 }}
-      >
+      <section className="ui-controls" style={{ marginBottom: 12 }}>
         <TextInput
           aria-label="Filter by file name"
           placeholder="Filter by name or artist"
           value={q}
-          onChange={e => setQ(e.target.value)}
+          onChange={(e) => setQ(e.target.value)}
           style={{ width: 240 }}
         />
         <label style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
@@ -134,7 +131,7 @@ export const AssetGrid = () => {
             min={80}
             max={400}
             value={size}
-            onChange={e => setSize(+e.target.value)}
+            onChange={(e) => setSize(+e.target.value)}
           />
         </label>
         <span style={{ opacity: 0.7 }}>
@@ -146,10 +143,10 @@ export const AssetGrid = () => {
         style={{
           display: 'grid',
           gridTemplateColumns: `repeat(auto-fill, minmax(${size}px, 1fr))`,
-          gap: 24
+          gap: 24,
         }}
       >
-        {shown.map(f => (
+        {shown.map((f) => (
           <figure key={f} style={{ margin: 0 }}>
             <button
               onClick={() => setOpen(f)}
@@ -157,7 +154,7 @@ export const AssetGrid = () => {
                 all: 'unset',
                 cursor: 'zoom-in',
                 display: 'block',
-                width: '100%'
+                width: '100%',
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -170,7 +167,7 @@ export const AssetGrid = () => {
                   aspectRatio: '1',
                   objectFit: 'contain',
                   background: 'rgba(128,128,128,.15)',
-                  borderRadius: 4
+                  borderRadius: 4,
                 }}
               />
             </button>
@@ -179,9 +176,9 @@ export const AssetGrid = () => {
                 fontSize: 12,
                 opacity: 0.75,
                 wordBreak: 'break-word',
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
-              onClick={e => onAssetNameClick(e, f)}
+              onClick={(e) => onAssetNameClick(e, f)}
             >
               {copied === f ? 'Copied!' : f}
             </figcaption>
@@ -203,7 +200,7 @@ export const AssetGrid = () => {
             justifyContent: 'center',
             zIndex: 1000,
             cursor: 'zoom-out',
-            gap: 8
+            gap: 8,
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -213,7 +210,7 @@ export const AssetGrid = () => {
             style={{
               maxWidth: '92vw',
               maxHeight: '88vh',
-              objectFit: 'contain'
+              objectFit: 'contain',
             }}
           />
           <span style={{ color: '#fff' }}>{open}</span>

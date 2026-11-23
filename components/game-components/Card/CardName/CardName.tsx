@@ -10,7 +10,7 @@ export const CardName = ({ formatter, name }: CardNameProps): ReactElement => {
   return (
     <div className={styles['card__name']}>
       <div
-        className='text__value'
+        className="text__value"
         style={{
           fontSize: `${formatter(name)}em`,
         }}

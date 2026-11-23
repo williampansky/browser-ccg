@@ -15,10 +15,15 @@ interface EnergyBarProps {
  */
 export const EnergyBar = ({ current, total, cost }: EnergyBarProps) => {
   const pips = energyPips(current, total);
-  const spend = cost === undefined ? pips.map(() => false) : pipsToSpend(pips, cost);
+  const spend =
+    cost === undefined ? pips.map(() => false) : pipsToSpend(pips, cost);
   const short = cost !== undefined && cost > current;
   return (
-    <div className={styles.bar} role="img" aria-label={`Energy ${current} of ${total}`}>
+    <div
+      className={styles.bar}
+      role="img"
+      aria-label={`Energy ${current} of ${total}`}
+    >
       <b className={styles.count}>
         {current}
         <small>/{total}</small>
@@ -28,7 +33,11 @@ export const EnergyBar = ({ current, total, cost }: EnergyBarProps) => {
           .map((p, i) => (
             <i
               key={i}
-              className={cx(styles.orb, styles[p], spend[i] ? (short ? styles.blinkRed : styles.blink) : '')}
+              className={cx(
+                styles.orb,
+                styles[p],
+                spend[i] ? (short ? styles.blinkRed : styles.blink) : '',
+              )}
             />
           ))
           .reverse()}

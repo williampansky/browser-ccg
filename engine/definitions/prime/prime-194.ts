@@ -13,7 +13,9 @@ export default defineCard('PRIME_194', () => ({
   onPlay: [
     computed((ctx) => {
       const w = ctx.g.players[ctx.caster].weapon;
-      return w ? (c) => (damage(allEnemies(), w.attack)(c), destroyOwnWeapon(c)) : () => undefined;
+      return w
+        ? (c) => (damage(allEnemies(), w.attack)(c), destroyOwnWeapon(c))
+        : () => undefined;
     }),
   ],
 }));

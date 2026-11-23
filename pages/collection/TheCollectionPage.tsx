@@ -2,7 +2,11 @@ import { Layout } from '../../components/site-components';
 import { Collection } from '../../components/collection/Collection';
 import { siteConfig } from '../../app.config';
 
-export default function TheCollectionPage({ missingArt }: { missingArt: string[] }) {
+export default function TheCollectionPage({
+  missingArt,
+}: {
+  missingArt: string[];
+}) {
   const page = siteConfig.pages.collection;
   return (
     <Layout title={page.title} description={page.description}>
@@ -16,7 +20,8 @@ export const getStaticProps = async () => {
   const { existsSync } = await import('fs');
   const { join } = await import('path');
   const { loadHsCards } = await import('../../engine');
-  const { artUrl } = await import('../../components/play-board/card-face-model');
+  const { artUrl } =
+    await import('../../components/play-board/card-face-model');
   const missingArt = loadHsCards()
     .cards.filter((c) => {
       const url = artUrl(c.id);

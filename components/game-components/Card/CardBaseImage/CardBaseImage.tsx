@@ -22,15 +22,15 @@ export const CardBaseImage = ({
     return rarity
       ? `/images/cards/fronts/${rarity}.png`
       : '/images/cards/fronts/NONE.png';
-  }
+  };
 
   return (
     <Image
       alt={rarity}
       className={styles['component']}
-      layout='fill'
+      layout="fill"
       priority
-      role='presentation'
+      role="presentation"
       src={src()}
     />
   );

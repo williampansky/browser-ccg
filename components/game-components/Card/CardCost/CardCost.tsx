@@ -23,10 +23,10 @@ export const CardCost = ({
         isIncreased ? styles['cost--increased'] : '',
         isReduced ? styles['cost--decreased'] : '',
       )}
-      data-component='CardCost'
+      data-component="CardCost"
     >
-      <div className='text__value text__value--shadow'>{current}</div>
-      <Image src={BADGE_COST} layout='fill' />
+      <div className="text__value text__value--shadow">{current}</div>
+      <Image src={BADGE_COST} layout="fill" />
     </div>
   );
 };

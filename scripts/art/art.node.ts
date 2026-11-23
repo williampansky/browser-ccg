@@ -19,7 +19,15 @@ import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 import { canonicalCardId } from '../../components/art-lab/lookup';
-import { ArtKind, DEFAULT_FOCUS, Focus, OUTPUTS, cropBox, outputPath, parseArtName } from './crop';
+import {
+  ArtKind,
+  DEFAULT_FOCUS,
+  Focus,
+  OUTPUTS,
+  cropBox,
+  outputPath,
+  parseArtName,
+} from './crop';
 
 const INBOX = 'art-inbox';
 const DONE = path.join(INBOX, 'done');
@@ -28,7 +36,9 @@ const QUALITY = 86;
 
 const args = process.argv.slice(2);
 const flags = new Set(args.filter((a) => a.startsWith('--')));
-const wanted = args.filter((a) => !a.startsWith('--')).map((a) => canonicalCardId(a));
+const wanted = args
+  .filter((a) => !a.startsWith('--'))
+  .map((a) => canonicalCardId(a));
 
 const loadFocus = (): Record<string, Partial<Focus>> => {
   try {
@@ -41,21 +51,39 @@ const loadFocus = (): Record<string, Partial<Focus>> => {
 const run = async () => {
   if (!fs.existsSync(INBOX)) {
     fs.mkdirSync(INBOX, { recursive: true });
-    console.log(`Made ${INBOX}/. Put a master picture in it named by card id (CORE_117.png), then run this again.`);
+    console.log(
+      `Made ${INBOX}/. Put a master picture in it named by card id (CORE_117.png), then run this again.`,
+    );
     return;
   }
   const focusData = loadFocus();
-  const pool = [INBOX, ...(wanted.length && fs.existsSync(DONE) ? [DONE] : [])].flatMap((dir) =>
-    fs.readdirSync(dir).map((f) => ({ dir, file: f }))
-  );
+  const pool = [
+    INBOX,
+    ...(wanted.length && fs.existsSync(DONE) ? [DONE] : []),
+  ].flatMap((dir) => fs.readdirSync(dir).map((f) => ({ dir, file: f })));
   const jobs = pool.flatMap(({ dir, file }) => {
     const name = parseArtName(file);
-    return name && (!wanted.length || wanted.includes(name.id)) ? [{ dir, file, name }] : [];
+    return name && (!wanted.length || wanted.includes(name.id))
+      ? [{ dir, file, name }]
+      : [];
   });
-  const skipped = fs.readdirSync(INBOX).filter((f) => fs.statSync(path.join(INBOX, f)).isFile() && !f.startsWith('.') && !parseArtName(f));
-  skipped.forEach((f) => console.log(`skipped ${f}: not named like CORE_117.png`));
+  const skipped = fs
+    .readdirSync(INBOX)
+    .filter(
+      (f) =>
+        fs.statSync(path.join(INBOX, f)).isFile() &&
+        !f.startsWith('.') &&
+        !parseArtName(f),
+    );
+  skipped.forEach((f) =>
+    console.log(`skipped ${f}: not named like CORE_117.png`),
+  );
   if (!jobs.length) {
-    console.log(wanted.length ? `Nothing in ${INBOX}/ matches ${wanted.join(', ')}.` : `Nothing to do: ${INBOX}/ has no masters.`);
+    console.log(
+      wanted.length
+        ? `Nothing in ${INBOX}/ matches ${wanted.join(', ')}.`
+        : `Nothing to do: ${INBOX}/ has no masters.`,
+    );
     return;
   }
 
@@ -70,19 +98,36 @@ const run = async () => {
     const { width = 0, height = 0 } = meta;
     const focus: Focus = { ...DEFAULT_FOCUS, ...focusData[name.id] };
     const kinds: ArtKind[] = ['card', 'deck'];
-    if (flags.has('--minion') || fs.existsSync(outputPath(name, 'minion'))) kinds.push('minion');
-    const note = width !== height ? ` (master is ${width}x${height}, not square: cut by focus)` : '';
+    if (flags.has('--minion') || fs.existsSync(outputPath(name, 'minion')))
+      kinds.push('minion');
+    const note =
+      width !== height
+        ? ` (master is ${width}x${height}, not square: cut by focus)`
+        : '';
     for (const kind of kinds) {
       const out = OUTPUTS[kind];
       // The card keeps the whole picture, so it ignores zoom; the strip and the portrait use the card's focus point and zoom.
-      const box = cropBox(width, height, out.width / out.height, kind === 'card' ? { ...focus, zoom: 1 } : focus);
+      const box = cropBox(
+        width,
+        height,
+        out.width / out.height,
+        kind === 'card' ? { ...focus, zoom: 1 } : focus,
+      );
       const file = outputPath(name, kind);
       if (flags.has('--dry')) {
-        console.log(`${name.id}: would write ${file} from ${JSON.stringify(box)}${note}`);
+        console.log(
+          `${name.id}: would write ${file} from ${JSON.stringify(box)}${note}`,
+        );
         continue;
       }
-      await sharp(src).extract(box).resize(out.width, out.height).jpeg({ quality: QUALITY, mozjpeg: true }).toFile(file);
-      console.log(`${name.id}: wrote ${file} (${Math.round(fs.statSync(file).size / 1024)} KB)${kind === 'card' ? note : ''}`);
+      await sharp(src)
+        .extract(box)
+        .resize(out.width, out.height)
+        .jpeg({ quality: QUALITY, mozjpeg: true })
+        .toFile(file);
+      console.log(
+        `${name.id}: wrote ${file} (${Math.round(fs.statSync(file).size / 1024)} KB)${kind === 'card' ? note : ''}`,
+      );
     }
     if (!flags.has('--dry') && !flags.has('--keep') && dir === INBOX) {
       fs.mkdirSync(DONE, { recursive: true });

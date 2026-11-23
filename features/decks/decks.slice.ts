@@ -6,7 +6,9 @@ import type { Card, CardId, Deck, Decks } from '../../types';
 import { gameConfig } from '../../app.config';
 import { getDeckbuilderDeckLength } from '../../utils';
 
-const { numerics: { cardsPerDeck } } = gameConfig;
+const {
+  numerics: { cardsPerDeck },
+} = gameConfig;
 
 declare type DeckSlot = number;
 interface AddCard {
@@ -26,9 +28,9 @@ const blankDeckItem = (idx: number): Deck => {
   return {
     name: '',
     cards: [],
-    deckSlot: idx
-  }
-}
+    deckSlot: idx,
+  };
+};
 
 const blankDecksObj: Decks = {
   1: blankDeckItem(1),
@@ -40,7 +42,7 @@ const blankDecksObj: Decks = {
   7: blankDeckItem(7),
   8: blankDeckItem(8),
   9: blankDeckItem(9),
-  10: blankDeckItem(10)
+  10: blankDeckItem(10),
 };
 
 function sortArray(arr: Card[]) {
@@ -59,7 +61,7 @@ const getInitialState = () => {
   }
 
   return blankDecksObj;
-}
+};
 
 export const decksSlice = createSlice({
   name: 'decks',
@@ -102,18 +104,28 @@ export const decksSlice = createSlice({
       state[deckSlot] = {
         ...blankDeckItem(deckSlot),
         name: `Deck Slot ${deckSlot}`,
-        uuid: uuid()
+        uuid: uuid(),
       };
     },
     removeCard(state, { payload }: PayloadAction<RemoveCard>) {
       const { deckSlot, cardId } = payload;
-      if (state[deckSlot].cards.find((c: Card) => c.id === cardId && c.amount === 1)) {
-        const newArray = state[deckSlot].cards.filter((c: Card) => c.id !== cardId);
+      if (
+        state[deckSlot].cards.find(
+          (c: Card) => c.id === cardId && c.amount === 1,
+        )
+      ) {
+        const newArray = state[deckSlot].cards.filter(
+          (c: Card) => c.id !== cardId,
+        );
         state[deckSlot].cards = sortArray([...newArray]);
       } else {
-        const cardObj = state[deckSlot].cards.find((c: Card) => c.id === cardId);
+        const cardObj = state[deckSlot].cards.find(
+          (c: Card) => c.id === cardId,
+        );
         const newCardObj = { ...cardObj, amount: 1 };
-        const newArray = state[deckSlot].cards.filter((c: Card) => c.id !== cardId);
+        const newArray = state[deckSlot].cards.filter(
+          (c: Card) => c.id !== cardId,
+        );
         state[deckSlot].cards = sortArray([...newArray, newCardObj]);
       }
     },

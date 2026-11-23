@@ -7,7 +7,7 @@ import replaceAllConstants from './replace-all-constants';
 const getImageFlairSrc = (
   id?: string,
   set?: string,
-  key: string = 'CARD'
+  key: string = 'CARD',
 ): string => {
   return set && id
     ? `/images/sets/${replaceAllConstants(set, 'value')}/${id}-${key}.jpg`

@@ -13,24 +13,45 @@ export const findMinion = (state: GameState, id: number) => {
   return undefined;
 };
 const isFriendly = (state: GameState, t: TargetRef): boolean =>
-  t.kind === 'hero' ? t.player === state.activePlayer : state.players[state.activePlayer].board.some((m) => m.instanceId === t.instanceId);
+  t.kind === 'hero'
+    ? t.player === state.activePlayer
+    : state.players[state.activePlayer].board.some(
+        (m) => m.instanceId === t.instanceId,
+      );
 
 /** True when `after` is worse for the target than `before`: less health, less attack, a lost keyword, newly disabled, or dead. */
-const targetWorse = (before: GameState, after: GameState, t: TargetRef): boolean => {
+const targetWorse = (
+  before: GameState,
+  after: GameState,
+  t: TargetRef,
+): boolean => {
   if (t.kind === 'hero') {
     const [b, a] = [before.players[t.player], after.players[t.player]];
-    return a.health + a.armor < b.health + b.armor || (a.heroDisabledOnTurn !== b.heroDisabledOnTurn && a.heroDisabledOnTurn !== undefined);
+    return (
+      a.health + a.armor < b.health + b.armor ||
+      (a.heroDisabledOnTurn !== b.heroDisabledOnTurn &&
+        a.heroDisabledOnTurn !== undefined)
+    );
   }
   const b = findMinion(before, t.instanceId);
   const a = findMinion(after, t.instanceId);
   if (!b || !a) return !a; // gone: it died
-  const lostKeyword = (Object.keys(b.keywords) as (keyof typeof b.keywords)[]).some((k) => b.keywords[k] && !a.keywords[k]);
-  const newlyDisabled = a.disabledOnTurn !== undefined && a.disabledOnTurn !== b.disabledOnTurn;
-  return a.health < b.health || a.attack < b.attack || lostKeyword || newlyDisabled;
+  const lostKeyword = (
+    Object.keys(b.keywords) as (keyof typeof b.keywords)[]
+  ).some((k) => b.keywords[k] && !a.keywords[k]);
+  const newlyDisabled =
+    a.disabledOnTurn !== undefined && a.disabledOnTurn !== b.disabledOnTurn;
+  return (
+    a.health < b.health || a.attack < b.attack || lostKeyword || newlyDisabled
+  );
 };
 
 /** True when `after` is strictly better for the target than `before` (more health or attack, or a gained keyword) and not worse in any way. */
-const targetBetter = (before: GameState, after: GameState, t: TargetRef): boolean => {
+const targetBetter = (
+  before: GameState,
+  after: GameState,
+  t: TargetRef,
+): boolean => {
   if (targetWorse(before, after, t)) return false;
   if (t.kind === 'hero') {
     const [b, a] = [before.players[t.player], after.players[t.player]];
@@ -39,7 +60,9 @@ const targetBetter = (before: GameState, after: GameState, t: TargetRef): boolea
   const b = findMinion(before, t.instanceId);
   const a = findMinion(after, t.instanceId);
   if (!b || !a) return false;
-  const gainedKeyword = (Object.keys(a.keywords) as (keyof typeof a.keywords)[]).some((k) => a.keywords[k] && !b.keywords[k]);
+  const gainedKeyword = (
+    Object.keys(a.keywords) as (keyof typeof a.keywords)[]
+  ).some((k) => a.keywords[k] && !b.keywords[k]);
   return a.health > b.health || a.attack > b.attack || gainedKeyword;
 };
 
@@ -50,8 +73,22 @@ const snapshot = (s: GameState, handDelta: { player: PlayerId; by: number }) =>
       const pl = s.players[p];
       const hand = pl.hand.length + (handDelta.player === p ? handDelta.by : 0);
       // Includes the lasting flags a card can set (a face-down Mystery, a spell discount, a Health floor, free spells), so those plays are not "nothing".
-      return [pl.board, pl.health, pl.armor, pl.weapon, pl.deck.length, hand, pl.energy.total, pl.heroDisabledOnTurn, pl.mystery, pl.spellDiscount, pl.mysteryFreeOnTurn, pl.healthFloorOnTurn, pl.freeSpellsOnTurn];
-    })
+      return [
+        pl.board,
+        pl.health,
+        pl.armor,
+        pl.weapon,
+        pl.deck.length,
+        hand,
+        pl.energy.total,
+        pl.heroDisabledOnTurn,
+        pl.mystery,
+        pl.spellDiscount,
+        pl.mysteryFreeOnTurn,
+        pl.healthFloorOnTurn,
+        pl.freeSpellsOnTurn,
+      ];
+    }),
   );
 
 /**
@@ -59,27 +96,61 @@ const snapshot = (s: GameState, handDelta: { player: PlayerId; by: number }) =>
  * own character (a damage spell or Disable on its own minion) or buffs an enemy one, or a spell or item that changes nothing
  * (a weapon buff with no weapon). It plays the action on a copy with a throwaway rng and compares.
  */
-export const isBadPlay = (state: GameState, a: Action, catalog: CardCatalog, defs?: DefLookup): boolean => {
+export const isBadPlay = (
+  state: GameState,
+  a: Action,
+  catalog: CardCatalog,
+  defs?: DefLookup,
+): boolean => {
   if (a.type !== 'PlayCard') return false;
-  const result = applyAction(state, a, { rng: createSeededRng(1), catalog, defs });
+  const result = applyAction(state, a, {
+    rng: createSeededRng(1),
+    catalog,
+    defs,
+  });
   if ('error' in result) return false;
-  if (a.target && isFriendly(state, a.target) && targetWorse(state, result.state, a.target)) return true;
+  if (
+    a.target &&
+    isFriendly(state, a.target) &&
+    targetWorse(state, result.state, a.target)
+  )
+    return true;
   // Silencing its own minion throws away the minion's card text and keywords, which the bot's scoring cannot see
   // (a no-attack aura minion even looks better silenced, as its Attack starts to count). Only worth it to lift a Disable.
   if (a.target && a.target.kind === 'minion' && isFriendly(state, a.target)) {
-    const [b, after] = [findMinion(state, a.target.instanceId), findMinion(result.state, a.target.instanceId)];
-    if (b && after?.silenced && !b.silenced && b.disabledOnTurn === undefined) return true;
+    const [b, after] = [
+      findMinion(state, a.target.instanceId),
+      findMinion(result.state, a.target.instanceId),
+    ];
+    if (b && after?.silenced && !b.silenced && b.disabledOnTurn === undefined)
+      return true;
   }
   // Buffing or healing one of the opponent's characters helps the opponent.
-  if (a.target && !isFriendly(state, a.target) && targetBetter(state, result.state, a.target)) return true;
+  if (
+    a.target &&
+    !isFriendly(state, a.target) &&
+    targetBetter(state, result.state, a.target)
+  )
+    return true;
   // A temporary weapon (Steel Gauntlet) is only worth playing if the hero can then swing it this turn.
   const me = state.activePlayer;
   const weapon = result.state.players[me].weapon;
-  if (weapon?.temporary && !legalActions(result.state, me, catalog, defs).some((x) => x.type === 'WeaponAttack')) return true;
-  const played = catalog.get(state.players[state.activePlayer].hand[a.handIndex]?.cardId ?? '');
+  if (
+    weapon?.temporary &&
+    !legalActions(result.state, me, catalog, defs).some(
+      (x) => x.type === 'WeaponAttack',
+    )
+  )
+    return true;
+  const played = catalog.get(
+    state.players[state.activePlayer].hand[a.handIndex]?.cardId ?? '',
+  );
   if (played && played.type !== 'minion') {
     // The played card leaves the hand, so the "before" hand is counted one card shorter.
-    return snapshot(state, { player: me, by: -1 }) === snapshot(result.state, { player: me, by: 0 });
+    return (
+      snapshot(state, { player: me, by: -1 }) ===
+      snapshot(result.state, { player: me, by: 0 })
+    );
   }
   return false;
 };

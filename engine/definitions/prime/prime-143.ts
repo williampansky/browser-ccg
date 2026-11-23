@@ -6,10 +6,15 @@ export default defineCard('PRIME_143', () => ({
   mystery: {
     category: 'attack',
     hook: 'attack',
-    when: ({ attack, owner }) => attack?.attackerId !== undefined && attack.target.kind === 'hero' && attack.target.player === owner,
+    when: ({ attack, owner }) =>
+      attack?.attackerId !== undefined &&
+      attack.target.kind === 'hero' &&
+      attack.target.player === owner,
     do: [
       computed((ctx) => {
-        const a = ctx.g.players[ctx.attack!.attackerPlayer].board.find((m) => m.instanceId === ctx.attack!.attackerId);
+        const a = ctx.g.players[ctx.attack!.attackerPlayer].board.find(
+          (m) => m.instanceId === ctx.attack!.attackerId,
+        );
         return addArmor(Math.max(4, 2 * (a?.attack ?? 0)));
       }),
     ],

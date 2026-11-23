@@ -7,7 +7,13 @@ export default defineCard('PRIME_115', () => ({
   // The data tags the keywords, but the card only grants them.
   conditionalKeywords: ['guard', 'rush'],
   choices: [
-    { label: 'Gain Rush and +1 Attack', onPlay: [grantKeyword(self(), 'rush'), buff(self(), 1, 0)] },
-    { label: '+3 Health and Guard', onPlay: [buff(self(), 0, 3), grantKeyword(self(), 'guard')] },
+    {
+      label: 'Gain Rush and +1 Attack',
+      onPlay: [grantKeyword(self(), 'rush'), buff(self(), 1, 0)],
+    },
+    {
+      label: '+3 Health and Guard',
+      onPlay: [buff(self(), 0, 3), grantKeyword(self(), 'guard')],
+    },
   ],
 }));

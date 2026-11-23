@@ -6,7 +6,9 @@ const KEY = 'ccg-turn-timer';
 
 export const isTimerOn = (): boolean => {
   try {
-    return typeof window === 'undefined' || window.localStorage.getItem(KEY) !== '0';
+    return (
+      typeof window === 'undefined' || window.localStorage.getItem(KEY) !== '0'
+    );
   } catch {
     return true;
   }
@@ -21,8 +23,12 @@ export const setTimerOn = (on: boolean): void => {
 };
 
 /** Whole seconds left (rounded up, so "0:01" shows until the very end), never below 0. */
-export const secondsLeft = (startedAt: number, now: number, limitSeconds: number): number =>
-  Math.max(0, Math.ceil(limitSeconds - (now - startedAt) / 1000));
+export const secondsLeft = (
+  startedAt: number,
+  now: number,
+  limitSeconds: number,
+): number => Math.max(0, Math.ceil(limitSeconds - (now - startedAt) / 1000));
 
 /** 75 -> "1:15", 9 -> "0:09". */
-export const formatClock = (seconds: number): string => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+export const formatClock = (seconds: number): string =>
+  `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;

@@ -30,7 +30,10 @@
   font: inherit;
   font-size: 0.85rem;
   cursor: default;
-  transition: box-shadow 0.15s, border-color 0.15s, opacity 0.15s;
+  transition:
+    box-shadow 0.15s,
+    border-color 0.15s,
+    opacity 0.15s;
 
   &.ready {
     border-color: #4aa3ff;

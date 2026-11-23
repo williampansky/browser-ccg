@@ -18,7 +18,19 @@ $classic: (
   'ui-link': #8aa4ff,
   'ui-link-page': #8cc8ff,
   'ui-focus': #8aa4ff,
-  'ui-font': (-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif),
+  'ui-font': (
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif,
+  ),
   'ui-font-heading': inherit,
   'ui-heading-transform': uppercase,
   'ui-heading-spacing': 0.04em,
@@ -88,8 +100,10 @@ $classic: (
   'ui-toggle-on-thumb': #ffffff,
   'ui-toggle-knob-size': calc(var(--ui-toggle-h) - 0.3rem),
   'ui-toggle-knob-inset': 0.15rem,
-  'ui-toggle-art': none, // the off track
-  'ui-toggle-art-on': none, // the on track (fades in over the off one)
+  'ui-toggle-art': none,
+  // the off track
+  'ui-toggle-art-on': none,
+  // the on track (fades in over the off one)
   'ui-toggle-knob-art': none,
   'ui-toggle-knob-art-on': none,
   // the one height every control in a form row shares (`ui-controls`), so a button appearing never changes the row's height
@@ -113,7 +127,7 @@ $classic: (
   'ui-nav-text': #aab0c8,
   'ui-nav-hover-text': #ffffff,
   'ui-nav-hover-bg': #262a38,
-  'ui-nav-accent': var(--color-rarity-MYTHIC)
+  'ui-nav-accent': var(--color-rarity-MYTHIC),
 );
 
 @function art($theme, $file) {
@@ -160,8 +174,13 @@ $classic: (
     'ui-control-h': 2.5rem,
     'ui-check-size': 1.25rem,
     'ui-check-art': art($t, 'checkbox_off'),
-    'ui-check-art-on': art($t, 'checkbox_off'), // the tick is the animated icon, not the kit's drawn one
-    'ui-font-heading': (Georgia, 'Times New Roman', serif),
+    'ui-check-art-on': art($t, 'checkbox_off'),
+    // the tick is the animated icon, not the kit's drawn one
+    'ui-font-heading': (
+      Georgia,
+      'Times New Roman',
+      serif,
+    ),
     'ui-heading-spacing': 0.08em
   );
 }
@@ -225,7 +244,7 @@ $classic: (
         'ui-nav-text': #b9a982,
         'ui-nav-hover-bg': #241e2e,
         'ui-nav-hover-text': #f3d69a,
-        'ui-nav-accent': #e6c079
+        'ui-nav-accent': #e6c079,
       )
     )
   );
@@ -278,7 +297,7 @@ $classic: (
         'ui-nav-text': #9db4c9,
         'ui-nav-hover-bg': #1c2736,
         'ui-nav-hover-text': #e6f4ff,
-        'ui-nav-accent': #9fd0f5
+        'ui-nav-accent': #9fd0f5,
       )
     )
   );

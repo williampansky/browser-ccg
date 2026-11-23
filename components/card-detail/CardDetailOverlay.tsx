@@ -24,7 +24,7 @@ import { ArtistCredit } from './ArtistCredit';
 export const CardDetailOverlay = ({
   card: opened,
   byId,
-  onClose
+  onClose,
 }: {
   card: Card;
   byId: Map<string, Card>;
@@ -41,13 +41,18 @@ export const CardDetailOverlay = ({
    * from the byId map, which can happen if a token is in a set that isn't loaded.
    */
   const tokens = card.entourage
-    .map(id => byId.get(id))
+    .map((id) => byId.get(id))
     .filter((t): t is Card => !!t && t.active);
 
   /** For an entourage card: the cards that make or offer it (an entourage card has no tokens of its own to show). */
   const parents = useMemo(
-    () => (card.isToken ? Array.from(byId.values()).filter(c => !c.isToken && c.active && c.entourage.includes(card.id)) : []),
-    [card, byId]
+    () =>
+      card.isToken
+        ? Array.from(byId.values()).filter(
+            (c) => !c.isToken && c.active && c.entourage.includes(card.id),
+          )
+        : [],
+    [card, byId],
   );
 
   /**
@@ -62,8 +67,8 @@ export const CardDetailOverlay = ({
     navigator.clipboard?.writeText(card.id).then(() => {
       setCopied(card.id);
       window.setTimeout(
-        () => setCopied(id => (id === card.id ? null : id)),
-        1200
+        () => setCopied((id) => (id === card.id ? null : id)),
+        1200,
       );
     });
   };
@@ -116,9 +121,15 @@ export const CardDetailOverlay = ({
             )}
 
             {parents.length > 0 ? (
-              <CardTokens tokens={parents} heading="Made or offered by" onPick={setCard} />
+              <CardTokens
+                tokens={parents}
+                heading="Made or offered by"
+                onPick={setCard}
+              />
             ) : (
-              tokens.length > 0 && <CardTokens tokens={tokens} onPick={setCard} />
+              tokens.length > 0 && (
+                <CardTokens tokens={tokens} onPick={setCard} />
+              )
             )}
 
             <p className={styles.closeHint}>

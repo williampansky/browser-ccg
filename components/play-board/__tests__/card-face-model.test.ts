@@ -1,4 +1,18 @@
-import { artBackground, artUrl, minionArtBackground, PLACEHOLDER_ART, FACE_HEIGHT, FACE_WIDTH, faceUnit, fitScale, RARITY_STYLE, rarityStyle, raceLabel, showsStats, typeLabel } from '../card-face-model';
+import {
+  artBackground,
+  artUrl,
+  minionArtBackground,
+  PLACEHOLDER_ART,
+  FACE_HEIGHT,
+  FACE_WIDTH,
+  faceUnit,
+  fitScale,
+  RARITY_STYLE,
+  rarityStyle,
+  raceLabel,
+  showsStats,
+  typeLabel,
+} from '../card-face-model';
 
 describe('rarityStyle', () => {
   it('Free is a steel frame with no gem; Common green, Superior blue, Remarkable purple, Mythic red', () => {
@@ -9,7 +23,8 @@ describe('rarityStyle', () => {
     expect(rarityStyle('MYTHIC')).toEqual({ color: 'RED', gem: true });
   });
   it('falls back to the Free look for NONE, unknown and missing rarities', () => {
-    for (const r of ['NONE', 'LEGENDARY', '', undefined]) expect(rarityStyle(r)).toEqual({ color: 'STEEL', gem: false });
+    for (const r of ['NONE', 'LEGENDARY', '', undefined])
+      expect(rarityStyle(r)).toEqual({ color: 'STEEL', gem: false });
   });
   it('every colour has a frame image and every gem has an image, and no two rarities share a colour', () => {
     const fs = require('fs');
@@ -18,15 +33,26 @@ describe('rarityStyle', () => {
     const styles = Object.values(RARITY_STYLE);
     expect(new Set(styles.map((s) => s.color)).size).toBe(styles.length);
     for (const s of styles) {
-      expect(fs.existsSync(path.join(root, 'frames', `${s.color}.png`))).toBe(true);
-      if (s.gem) expect(fs.existsSync(path.join(root, 'ui', `gem-${s.color}.png`))).toBe(true);
+      expect(fs.existsSync(path.join(root, 'frames', `${s.color}.png`))).toBe(
+        true,
+      );
+      if (s.gem)
+        expect(fs.existsSync(path.join(root, 'ui', `gem-${s.color}.png`))).toBe(
+          true,
+        );
     }
   });
   it('every rarity in the card data has a style of its own (not the fallback by accident)', () => {
     const rarities = new Set(
-      [...require('../../../data/core.json'), ...require('../../../data/prime.json')].map((c: { rarity?: string }) => (c.rarity ?? '').replace(/%|RARITY_/g, ''))
+      [
+        ...require('../../../data/core.json'),
+        ...require('../../../data/prime.json'),
+      ].map((c: { rarity?: string }) =>
+        (c.rarity ?? '').replace(/%|RARITY_/g, ''),
+      ),
     );
-    for (const r of Array.from(rarities)) expect(Object.keys(RARITY_STYLE)).toContain(r);
+    for (const r of Array.from(rarities))
+      expect(Object.keys(RARITY_STYLE)).toContain(r);
   });
 });
 
@@ -37,9 +63,11 @@ describe('typeLabel and raceLabel', () => {
     expect(typeLabel({ type: 'weapon' })).toBe('weapon');
     expect(typeLabel({ type: 'item' })).toBe('item');
   });
-  it('a minion\'s race goes on its own tag, by its display name where there is one', () => {
+  it("a minion's race goes on its own tag, by its display name where there is one", () => {
     expect(raceLabel({ type: 'minion', race: 'SPRITE' })).toBe('SPRITE');
-    expect(raceLabel({ type: 'minion', race: 'ELEMENT', raceName: 'Primordial' })).toBe('Primordial');
+    expect(
+      raceLabel({ type: 'minion', race: 'ELEMENT', raceName: 'Primordial' }),
+    ).toBe('Primordial');
   });
   it('no tag for a race of NONE, a missing race, or a card that is not a minion', () => {
     expect(raceLabel({ type: 'minion', race: 'NONE' })).toBeUndefined();
@@ -95,22 +123,32 @@ describe('fitScale', () => {
 
 describe('artBackground', () => {
   it('puts the card art over the placeholder, so a missing file shows the placeholder', () => {
-    expect(artBackground('CORE_012')).toBe(`url(/images/sets/SET_CORE/012-CARD.jpg), url(${PLACEHOLDER_ART})`);
-    expect(artBackground('PRIME_010')).toBe(`url(/images/sets/SET_PRIME/010-CARD.jpg), url(${PLACEHOLDER_ART})`);
+    expect(artBackground('CORE_012')).toBe(
+      `url(/images/sets/SET_CORE/012-CARD.jpg), url(${PLACEHOLDER_ART})`,
+    );
+    expect(artBackground('PRIME_010')).toBe(
+      `url(/images/sets/SET_PRIME/010-CARD.jpg), url(${PLACEHOLDER_ART})`,
+    );
   });
   it('is just the placeholder for a missing or malformed id', () => {
     expect(artBackground(undefined)).toBe(`url(${PLACEHOLDER_ART})`);
     expect(artBackground('nonsense')).toBe(`url(${PLACEHOLDER_ART})`);
   });
   it('layers fallback cards between the card and the placeholder, without repeats', () => {
-    expect(artBackground('CORE_001', 'CORE_002')).toBe(`url(/images/sets/SET_CORE/001-CARD.jpg), url(/images/sets/SET_CORE/002-CARD.jpg), url(${PLACEHOLDER_ART})`);
-    expect(artBackground('CORE_001', 'CORE_001', undefined)).toBe(`url(/images/sets/SET_CORE/001-CARD.jpg), url(${PLACEHOLDER_ART})`);
+    expect(artBackground('CORE_001', 'CORE_002')).toBe(
+      `url(/images/sets/SET_CORE/001-CARD.jpg), url(/images/sets/SET_CORE/002-CARD.jpg), url(${PLACEHOLDER_ART})`,
+    );
+    expect(artBackground('CORE_001', 'CORE_001', undefined)).toBe(
+      `url(/images/sets/SET_CORE/001-CARD.jpg), url(${PLACEHOLDER_ART})`,
+    );
   });
 });
 
 describe('minionArtBackground', () => {
   it('layers the -MINION image, then the -CARD art, then the placeholder', () => {
-    expect(minionArtBackground('CORE_012a')).toBe(`url(/images/sets/SET_CORE/012a-MINION.jpg), url(/images/sets/SET_CORE/012a-CARD.jpg), url(${PLACEHOLDER_ART})`);
+    expect(minionArtBackground('CORE_012a')).toBe(
+      `url(/images/sets/SET_CORE/012a-MINION.jpg), url(/images/sets/SET_CORE/012a-CARD.jpg), url(${PLACEHOLDER_ART})`,
+    );
     expect(minionArtBackground(undefined)).toBe(`url(${PLACEHOLDER_ART})`);
   });
 });

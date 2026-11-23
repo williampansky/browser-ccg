@@ -16,7 +16,9 @@
   z-index: -1;
   overflow: hidden;
   padding: 0;
-  @media (min-width: 960px) { padding: 50px 30px; }
+  @media (min-width: 960px) {
+    padding: 50px 30px;
+  }
   background: rgba(0, 0, 0, 0.875);
   opacity: 0;
   transition: opacity 150ms linear;
@@ -62,13 +64,13 @@
   //   align-items: center;
   //   justify-content: center;
 
-    @media (min-width: 640px) {
-      flex-direction: row;
-    }
+  @media (min-width: 640px) {
+    flex-direction: row;
+  }
 
-    @media (min-width: 960px) {
-      margin-left: 100px;
-    }
+  @media (min-width: 960px) {
+    margin-left: 100px;
+  }
   // }
 }
 
@@ -76,9 +78,9 @@
   --card-cost-font-size: 1.5rem;
   --card-power-font-size: 1.5rem;
 
-  div[data-component="CardCost"],
-  div[data-component="CardHealth"],
-  div[data-component="CardPower"] {
+  div[data-component='CardCost'],
+  div[data-component='CardHealth'],
+  div[data-component='CardPower'] {
     width: 50px !important;
     height: 50px !important;
   }
@@ -93,7 +95,7 @@
     margin-bottom: 0;
   }
 
-  & > div[data-component="Card"] {
+  & > div[data-component='Card'] {
     box-shadow: 0 0 15px 10px rgba(0, 0, 0, 0.625);
     transform: scale(1);
     z-index: 1;
@@ -115,7 +117,7 @@
   bottom: -4%;
   left: -15%;
 
-  & > div[data-component="Card"] {
+  & > div[data-component='Card'] {
     transform: rotate(-10deg) scale(0.95);
 
     @media (min-width: 960px) {
@@ -141,9 +143,15 @@
   max-width: 80vw;
   margin-left: auto;
   margin-right: auto;
-  @media (min-width: 640px) { margin-left: 2rem; }
-  @media (min-width: 960px) { margin-left: 100px; }
-  @media (min-width: 1200px) { margin-left: 150px; }
+  @media (min-width: 640px) {
+    margin-left: 2rem;
+  }
+  @media (min-width: 960px) {
+    margin-left: 100px;
+  }
+  @media (min-width: 1200px) {
+    margin-left: 150px;
+  }
 
   .info__name {
     color: white;
@@ -210,7 +218,10 @@
 
 .card-detail__modal .modal__key {
   position: absolute;
-  top: 0; right: auto; bottom: auto; left: 0;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
   margin: 2px;
   font-size: 10px;
   line-height: 1;

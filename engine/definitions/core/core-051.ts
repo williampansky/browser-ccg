@@ -7,7 +7,11 @@ import { anyCharacter } from '../../effects/filters';
 // (hsclone never drew the card; the printed text wins)
 export default defineCard('CORE_051', (n) => ({
   choices: [
-    { label: `Deal ${n.primary} damage`, target: anyCharacter(), onPlay: [damage(chosenTarget(), n.primary)] },
+    {
+      label: `Deal ${n.primary} damage`,
+      target: anyCharacter(),
+      onPlay: [damage(chosenTarget(), n.primary)],
+    },
     {
       label: `Deal ${n.secondary} damage and draw a card`,
       target: anyCharacter(),

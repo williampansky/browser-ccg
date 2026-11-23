@@ -1,6 +1,14 @@
 import { produce } from 'immer';
 import { getCardDef } from '..';
-import { failCode, hero, mref, play, realCard, setup, stats } from '../../testing/real-cards';
+import {
+  failCode,
+  hero,
+  mref,
+  play,
+  realCard,
+  setup,
+  stats,
+} from '../../testing/real-cards';
 
 // CORE_156: summon a copy of a chosen enemy minion (for the caster).
 describe('CORE_156', () => {
@@ -8,9 +16,15 @@ describe('CORE_156', () => {
     expect(getCardDef(realCard('CORE_156'))).toBeDefined();
   });
   it('puts a copy of the enemy minion on your board, with its current stats, and leaves the original', () => {
-    const s = setup('CORE_156', { mine: [[1, 1]], theirs: [[3, 5, 'CORE_062']] });
+    const s = setup('CORE_156', {
+      mine: [[1, 1]],
+      theirs: [[3, 5, 'CORE_062']],
+    });
     const r = play(s, mref(s, '1', 0)).state;
-    expect(stats(r, '0')).toEqual([[1, 1], [3, 5]]);
+    expect(stats(r, '0')).toEqual([
+      [1, 1],
+      [3, 5],
+    ]);
     expect(r.players['0'].board[1].cardId).toBe('CORE_062');
     expect(stats(r, '1')).toEqual([[3, 5]]);
   });
@@ -35,7 +49,10 @@ describe('CORE_156', () => {
     expect(failCode(s, hero('1'))).toBe('ILLEGAL_TARGET');
   });
   it('with a full board the spell resolves and nothing is summoned', () => {
-    const s = setup('CORE_156', { mine: Array(7).fill([1, 1]), theirs: [[3, 5]] });
+    const s = setup('CORE_156', {
+      mine: Array(7).fill([1, 1]),
+      theirs: [[3, 5]],
+    });
     const r = play(s, mref(s, '1', 0)).state;
     expect(r.players['0'].board).toHaveLength(7);
   });

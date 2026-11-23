@@ -8,4 +8,6 @@ const bothHeroes: Selector = () => [
 ];
 
 // PRIME_105 Nightmare, On Play effect: "Set both heroes' Health to 18"
-export default defineCard('PRIME_105', (n) => ({ onPlay: [setHeroHealth(bothHeroes, n.primary)] }));
+export default defineCard('PRIME_105', (n) => ({
+  onPlay: [setHeroHealth(bothHeroes, n.primary)],
+}));

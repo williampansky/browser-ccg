@@ -21,7 +21,7 @@ export class CardDataError extends Error {
     const errors = issues.filter((i) => i.level === 'error');
     super(
       `Card data has ${errors.length} error(s):\n` +
-        errors.map((i) => `  [${i.code}] ${i.id}: ${i.message}`).join('\n')
+        errors.map((i) => `  [${i.code}] ${i.id}: ${i.message}`).join('\n'),
     );
     this.name = 'CardDataError';
     this.issues = issues;
@@ -78,7 +78,10 @@ export function sanitizeText(html: string): string {
 export function sanitizeRichText(html: string): string {
   return html
     .replace(/<br\s*\/?\s*>/gi, '\u0000')
-    .replace(/<(\/?)(strong|em|small)\s*>/gi, (_m, close: string, tag: string) => `<${close}${tag.toLowerCase()}>`)
+    .replace(
+      /<(\/?)(strong|em|small)\s*>/gi,
+      (_m, close: string, tag: string) => `<${close}${tag.toLowerCase()}>`,
+    )
     .replace(/<(?!\/?(?:strong|em|small)>)[^>]*>/g, '')
     .replace(/\s+/g, ' ')
     .replace(/ ?\u0000 ?/g, '<br>')
@@ -87,7 +90,7 @@ export function sanitizeRichText(html: string): string {
 
 export function loadCards(
   input: LoadCardsInput,
-  options: LoadCardsOptions = {}
+  options: LoadCardsOptions = {},
 ): LoadCardsResult {
   const { strict = true } = options;
   const issues: CardIssue[] = [];
@@ -98,14 +101,15 @@ export function loadCards(
   /** symbol (with percent signs) -> display name, for rendering text */
   const glossary = new Map<string, string>();
   [...input.mechanics, ...input.constants].forEach((entry) => {
-    if (entry.symbol && entry.name) glossary.set(entry.symbol, String(entry.name));
+    if (entry.symbol && entry.name)
+      glossary.set(entry.symbol, String(entry.name));
   });
 
   const report = (
     level: CardIssue['level'],
     code: CardIssueCode,
     id: string,
-    message: string
+    message: string,
   ) => issues.push({ level, code, id, message });
 
   const cards: Card[] = [];
@@ -120,7 +124,13 @@ export function loadCards(
 
   for (const [source, records] of sources) {
     for (const raw of records) {
-      const card = normaliseCard(raw, source, mechanicSymbols, glossary, report);
+      const card = normaliseCard(
+        raw,
+        source,
+        mechanicSymbols,
+        glossary,
+        report,
+      );
       if (!card) continue;
 
       if (byId.has(card.id)) {
@@ -146,7 +156,7 @@ type Report = (
   level: CardIssue['level'],
   code: CardIssueCode,
   id: string,
-  message: string
+  message: string,
 ) => void;
 
 function normaliseCard(
@@ -154,11 +164,16 @@ function normaliseCard(
   source: CardSource,
   mechanicSymbols: Map<string, RawGlossaryEntry>,
   glossary: Map<string, string>,
-  report: Report
+  report: Report,
 ): Card | undefined {
   const id = typeof raw.id === 'string' && raw.id ? raw.id : undefined;
   if (!id) {
-    report('error', 'missing-field', '(unknown)', `a ${source} record has no id`);
+    report(
+      'error',
+      'missing-field',
+      '(unknown)',
+      `a ${source} record has no id`,
+    );
     return undefined;
   }
 
@@ -166,7 +181,12 @@ function normaliseCard(
   const typeKey = stripPrefix(raw.type, 'TYPE_');
   const type = typeKey ? TYPES[typeKey] : undefined;
   if (!type) {
-    report('error', 'unknown-type', id, `unrecognised type ${JSON.stringify(raw.type)}`);
+    report(
+      'error',
+      'unknown-type',
+      id,
+      `unrecognised type ${JSON.stringify(raw.type)}`,
+    );
     return undefined;
   }
 
@@ -176,7 +196,12 @@ function normaliseCard(
     if (value === undefined || value === null || value === '') return undefined;
     const n = Number(value);
     if (!Number.isFinite(n)) {
-      report('error', 'bad-number', id, `${field} is not a number: ${JSON.stringify(value)}`);
+      report(
+        'error',
+        'bad-number',
+        id,
+        `${field} is not a number: ${JSON.stringify(value)}`,
+      );
       return undefined;
     }
     return n;
@@ -191,7 +216,12 @@ function normaliseCard(
   const rng = readNumber('numberRNG');
   const random = readNumber('numberRandom');
   if (rng !== undefined && random !== undefined) {
-    report('error', 'numbers-conflict', id, 'has both numberRNG and numberRandom');
+    report(
+      'error',
+      'numbers-conflict',
+      id,
+      'has both numberRNG and numberRandom',
+    );
   }
 
   const numbers: CardNumbers = {};
@@ -209,7 +239,12 @@ function normaliseCard(
   const rawMechanics = Array.isArray(raw.mechanics) ? raw.mechanics : [];
   for (const symbol of rawMechanics) {
     if (typeof symbol !== 'string' || !mechanicSymbols.has(symbol)) {
-      report('error', 'unknown-mechanic', id, `mechanic ${JSON.stringify(symbol)} is not defined`);
+      report(
+        'error',
+        'unknown-mechanic',
+        id,
+        `mechanic ${JSON.stringify(symbol)} is not defined`,
+      );
       continue;
     }
     const stripped = stripSymbol(symbol);
@@ -217,36 +252,72 @@ function normaliseCard(
   }
 
   // targeting: playType is the source of truth; %TARGET% is only a hint
-  const playTypeRaw = typeof raw.playType === 'string' ? raw.playType.toUpperCase() : undefined;
+  const playTypeRaw =
+    typeof raw.playType === 'string' ? raw.playType.toUpperCase() : undefined;
   const playType: PlayType | undefined =
-    playTypeRaw === 'TARGETED' ? 'targeted' : playTypeRaw === 'GLOBAL' ? 'global' : undefined;
+    playTypeRaw === 'TARGETED'
+      ? 'targeted'
+      : playTypeRaw === 'GLOBAL'
+        ? 'global'
+        : undefined;
   const hasTargetMechanic = mechanics.includes('TARGET');
   if (playType === 'targeted' && !hasTargetMechanic) {
-    report('warning', 'playtype-target-mismatch', id, 'playType is TARGETED but mechanics has no TARGET');
+    report(
+      'warning',
+      'playtype-target-mismatch',
+      id,
+      'playType is TARGETED but mechanics has no TARGET',
+    );
   } else if (playType === 'global' && hasTargetMechanic) {
-    report('warning', 'playtype-target-mismatch', id, 'playType is GLOBAL but mechanics has TARGET');
+    report(
+      'warning',
+      'playtype-target-mismatch',
+      id,
+      'playType is GLOBAL but mechanics has TARGET',
+    );
   }
 
   // name
-  let name = typeof raw.name === 'string' && raw.name.trim() ? raw.name.trim() : undefined;
+  let name =
+    typeof raw.name === 'string' && raw.name.trim()
+      ? raw.name.trim()
+      : undefined;
   if (!name) report('warning', 'missing-name', id, 'has no name');
   // An active card with no name in Airtable is shown and playable under its own id (`PRIME_168`); the data stays unnamed.
   // Inactive cards and tokens stay unnamed, so the pools keep leaving them out.
-  if (!name && raw.active === true && source !== 'entourage' && raw.isEntourage !== true) name = id;
+  if (
+    !name &&
+    raw.active === true &&
+    source !== 'entourage' &&
+    raw.isEntourage !== true
+  )
+    name = id;
   // A few cards are named by a glossary symbol (e.g. `%BUBBLE%`); show the glossary's display name.
   if (name && /^%[A-Z0-9_]+%$/.test(name)) {
     const display = glossary.get(name);
     if (display) name = display;
-    else report('warning', 'unknown-text-token', id, `name ${name} is not in the glossary`);
+    else
+      report(
+        'warning',
+        'unknown-text-token',
+        id,
+        `name ${name} is not in the glossary`,
+      );
   }
 
   // text
-  const textTemplate = typeof raw.text === 'string' ? sanitizeText(raw.text) : '';
+  const textTemplate =
+    typeof raw.text === 'string' ? sanitizeText(raw.text) : '';
   const text = renderText(textTemplate, numbers, glossary, (code, message) =>
-    report('warning', code, id, message)
+    report('warning', code, id, message),
   );
 
-  const richText = renderText(typeof raw.text === 'string' ? sanitizeRichText(raw.text) : '', numbers, glossary, () => {});
+  const richText = renderText(
+    typeof raw.text === 'string' ? sanitizeRichText(raw.text) : '',
+    numbers,
+    glossary,
+    () => {},
+  );
 
   // entourage: a comma-separated string of ids; resolved later
   const entourage =
@@ -287,7 +358,12 @@ function normaliseCard(
   if (attack !== undefined) card.attack = attack;
   if (health !== undefined) card.health = health;
   if (type === 'minion' && (attack === undefined || health === undefined)) {
-    report('warning', 'missing-field', id, 'minion is missing attack or health');
+    report(
+      'warning',
+      'missing-field',
+      id,
+      'minion is missing attack or health',
+    );
   }
   const race = stripPrefix(raw.race, 'RACE_');
   if (race) {
@@ -297,18 +373,27 @@ function normaliseCard(
   if (playType) card.playType = playType;
   const playContext = stripSymbol(raw.playContext);
   if (playContext) card.playContext = playContext;
-  if (typeof raw.flavor === 'string' && raw.flavor) card.flavor = sanitizeText(raw.flavor);
+  if (typeof raw.flavor === 'string' && raw.flavor)
+    card.flavor = sanitizeText(raw.flavor);
   if (typeof raw.description === 'string' && raw.description) {
     // The rules note, shown in the card detail window: plain text, with the glossary names put in for any %SYMBOL%.
-    card.designNote = renderText(sanitizeText(raw.description), numbers, glossary, () => {});
+    card.designNote = renderText(
+      sanitizeText(raw.description),
+      numbers,
+      glossary,
+      () => {},
+    );
   }
   if (typeof raw.targetingArrowText === 'string' && raw.targetingArrowText) {
     card.targetingArrowText = raw.targetingArrowText;
   }
   // artistName sometimes holds a URL in PRIME; keep what is there, do not guess
-  if (typeof raw.artistName === 'string' && raw.artistName) card.artistName = raw.artistName;
-  if (typeof raw.artistUrl === 'string' && raw.artistUrl) card.artistUrl = raw.artistUrl;
-  if (typeof raw.artStatus === 'string' && raw.artStatus.trim()) card.artStatus = raw.artStatus.trim().toUpperCase();
+  if (typeof raw.artistName === 'string' && raw.artistName)
+    card.artistName = raw.artistName;
+  if (typeof raw.artistUrl === 'string' && raw.artistUrl)
+    card.artistUrl = raw.artistUrl;
+  if (typeof raw.artStatus === 'string' && raw.artStatus.trim())
+    card.artStatus = raw.artStatus.trim().toUpperCase();
 
   return card;
 }
@@ -321,12 +406,15 @@ function renderText(
   template: string,
   numbers: CardNumbers,
   glossary: Map<string, string>,
-  report: (code: CardIssueCode, message: string) => void
+  report: (code: CardIssueCode, message: string) => void,
 ): string {
   return template.replace(/%([A-Z0-9_]+)%/g, (token, name: string) => {
     if (name === 'NUM' || name === 'NUM1') {
       if (numbers.primary === undefined) {
-        report('text-number-missing', `${token} used but there is no numberPrimary`);
+        report(
+          'text-number-missing',
+          `${token} used but there is no numberPrimary`,
+        );
         return token;
       }
       return String(numbers.primary);
@@ -334,7 +422,10 @@ function renderText(
 
     if (name === 'NUM2') {
       if (numbers.secondary === undefined) {
-        report('text-number-missing', `${token} used but there is no numberSecondary`);
+        report(
+          'text-number-missing',
+          `${token} used but there is no numberSecondary`,
+        );
         return token;
       }
       return String(numbers.secondary);
@@ -351,13 +442,19 @@ function renderText(
 function resolveEntourage(
   cards: Card[],
   byId: Map<string, Card>,
-  report: Report
+  report: Report,
 ): void {
   for (const card of cards) {
     const resolved: string[] = [];
     for (const ref of card.entourage) {
       if (byId.has(ref)) resolved.push(ref);
-      else report('warning', 'unresolved-entourage', card.id, `entourage ${ref} does not exist`);
+      else
+        report(
+          'warning',
+          'unresolved-entourage',
+          card.id,
+          `entourage ${ref} does not exist`,
+        );
     }
     card.entourage = resolved;
   }

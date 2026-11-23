@@ -5,7 +5,8 @@
  * gives hsclone's numbers for a full hand. The divisor is clamped to 1 (hsclone divided by 0 for one card).
  */
 
-const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
+const clamp = (n: number, min: number, max: number) =>
+  Math.min(max, Math.max(min, n));
 
 /** Rotation in degrees of the card at `index` in a hand of `count` cards (0 = leftmost). */
 export const fanRotation = (index: number, count: number): number => {
@@ -15,7 +16,9 @@ export const fanRotation = (index: number, count: number): number => {
 
 /** How far down (px, at full card size) the card sits: the ends drop, the middle stays high. */
 export const fanDrop = (index: number, count: number): number => {
-  const raw = Math.abs(((index - (count - 1) / 2) / Math.max(count - 1, 1)) * 80);
+  const raw = Math.abs(
+    ((index - (count - 1) / 2) / Math.max(count - 1, 1)) * 80,
+  );
   return clamp(raw, 10, 60);
 };
 
@@ -30,7 +33,8 @@ export const HAND_OVERLAP = 20;
  * Horizontal position of the card at `index`, px at full size, measured from the middle of the hand. Cards are placed with
  * transforms (not flex layout) so that adding or removing a card slides the others to their new places instead of jumping.
  */
-export const fanX = (index: number, count: number, cardWidth = 144): number => (index - (count - 1) / 2) * (cardWidth - HAND_OVERLAP);
+export const fanX = (index: number, count: number, cardWidth = 144): number =>
+  (index - (count - 1) / 2) * (cardWidth - HAND_OVERLAP);
 
 /** How far the hand row is wider than the board column it sits in (a 10px bleed on each side, see `.hand` in the SCSS). */
 export const HAND_BLEED = 20;
@@ -43,7 +47,11 @@ export const HAND_LIFT_SCALE = 1.5;
  * Room is kept at both ends for the hovered card: it grows to 1.5x, so an end card pokes out `cardWidth / 4` past its slot,
  * and without that room it landed on top of the log panel (or the deck panel on the right) from 8 cards on (playtest, 2026-11-12).
  */
-export const handZoom = (width: number, count: number, cardWidth: number): number => {
+export const handZoom = (
+  width: number,
+  count: number,
+  cardWidth: number,
+): number => {
   if (width <= 0 || count <= 0) return 1;
   const lift = (cardWidth * (HAND_LIFT_SCALE - 1)) / 2;
   const needed = count * cardWidth - (count - 1) * HAND_OVERLAP + 2 * lift;
@@ -62,7 +70,12 @@ const MAX_VISIBLE_SINK = 100;
  * is `rowBottom - cardHeight * zoom`, not the row's top. Capped at 100px on screen; negative on a short window, where the
  * cards must rise instead so they never vanish offscreen.
  */
-export const handSink = (windowHeight: number, rowBottom: number, zoom: number, peek: number): number => {
+export const handSink = (
+  windowHeight: number,
+  rowBottom: number,
+  zoom: number,
+  peek: number,
+): number => {
   const cardsTop = rowBottom - HAND_CARD_HEIGHT * zoom;
   const wanted = (windowHeight - peek - cardsTop) / zoom;
   return Math.round(Math.min(MAX_VISIBLE_SINK / zoom, Math.max(-120, wanted)));

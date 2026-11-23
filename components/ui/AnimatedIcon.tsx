@@ -26,7 +26,10 @@ const unionBox = (frames: HTMLImageElement[]): Loaded['box'] => {
   probe.width = w;
   probe.height = h;
   const ctx = probe.getContext('2d', { willReadFrequently: true });
-  let x0 = w, y0 = h, x1 = -1, y1 = -1;
+  let x0 = w,
+    y0 = h,
+    x1 = -1,
+    y1 = -1;
   if (ctx) {
     for (const img of frames) {
       ctx.clearRect(0, 0, w, h);
@@ -44,22 +47,39 @@ const unionBox = (frames: HTMLImageElement[]): Loaded['box'] => {
       }
     }
   }
-  return x1 < 0 ? { x: 0, y: 0, w, h } : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+  return x1 < 0
+    ? { x: 0, y: 0, w, h }
+    : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
 };
 
 /** Fetches and decodes every frame of an icon once, and works out where the shape sits. */
 export const preloadIcon = (id: string): Promise<Loaded> => {
   const def = animatedIconOf(id);
-  if (!def || typeof Image === 'undefined') return Promise.resolve({ frames: [], box: { x: 0, y: 0, w: 1, h: 1 }, fill: 1 });
+  if (!def || typeof Image === 'undefined')
+    return Promise.resolve({
+      frames: [],
+      box: { x: 0, y: 0, w: 1, h: 1 },
+      fill: 1,
+    });
   let p = decoded.get(id);
   if (!p) {
     p = Promise.all(
       Array.from({ length: def.frames }, (_, i) => {
         const img = new Image();
         img.src = frameUrl(id, i);
-        return (img.decode ? img.decode().catch(() => undefined) : new Promise((r) => (img.onload = img.onerror = () => r(undefined)))).then(() => img);
-      })
-    ).then((frames) => ({ frames, box: unionBox(def.spinner ? frames : frames.slice(-1)), fill: def.spinner ? 1 : 0.74 }));
+        return (
+          img.decode
+            ? img.decode().catch(() => undefined)
+            : new Promise(
+                (r) => (img.onload = img.onerror = () => r(undefined)),
+              )
+        ).then(() => img);
+      }),
+    ).then((frames) => ({
+      frames,
+      box: unionBox(def.spinner ? frames : frames.slice(-1)),
+      fill: def.spinner ? 1 : 0.74,
+    }));
     decoded.set(id, p);
   }
   return p;
@@ -89,7 +109,16 @@ type Props = {
 };
 
 /** An animated icon in the current text colour. Honors `prefers-reduced-motion` (no animation, just the resting frame). */
-export const AnimatedIcon = ({ name, size = 20, on, hideWhenOff, rest = 1, loop, className, style }: Props) => {
+export const AnimatedIcon = ({
+  name,
+  size = 20,
+  on,
+  hideWhenOff,
+  rest = 1,
+  loop,
+  className,
+  style,
+}: Props) => {
   const ref = useRef<HTMLCanvasElement>(null);
   const frameRef = useRef<number | null>(null); // the frame on screen (null: nothing drawn yet)
   const imgs = useRef<HTMLImageElement[]>([]);
@@ -110,8 +139,14 @@ export const AnimatedIcon = ({ name, size = 20, on, hideWhenOff, rest = 1, loop,
     // The sizing box is the same for every frame, so nothing jumps; it is centred and fitted (never stretched) to a share of the square. Parts of
     // a frame that fall outside it (overshoot, a spin) still draw, up to the edge of the canvas.
     const b = box.current;
-    const k = (Math.min(SIZE / b.w, SIZE / b.h) * fill.current * 0.98) || 1;
-    ctx.drawImage(img, SIZE / 2 - (b.x + b.w / 2) * k, SIZE / 2 - (b.y + b.h / 2) * k, img.naturalWidth * k, img.naturalHeight * k);
+    const k = Math.min(SIZE / b.w, SIZE / b.h) * fill.current * 0.98 || 1;
+    ctx.drawImage(
+      img,
+      SIZE / 2 - (b.x + b.w / 2) * k,
+      SIZE / 2 - (b.y + b.h / 2) * k,
+      img.naturalWidth * k,
+      img.naturalHeight * k,
+    );
     ctx.globalCompositeOperation = 'source-in';
     ctx.fillStyle = getComputedStyle(c).color;
     ctx.fillRect(0, 0, SIZE, SIZE);
@@ -125,15 +160,21 @@ export const AnimatedIcon = ({ name, size = 20, on, hideWhenOff, rest = 1, loop,
 
   // Redraw in the new colour when the interface theme changes under a resting icon.
   useEffect(() => {
-    const mo = new MutationObserver(() => frameRef.current !== null && draw(frameRef.current));
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-ui-theme'] });
+    const mo = new MutationObserver(
+      () => frameRef.current !== null && draw(frameRef.current),
+    );
+    mo.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-ui-theme'],
+    });
     return () => mo.disconnect();
   }, []);
 
   useEffect(() => {
     if (!def) return;
     const c = ref.current;
-    const reduced = !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const reduced = !!window.matchMedia?.('(prefers-reduced-motion: reduce)')
+      .matches;
     const first = !mounted.current;
     mounted.current = true;
     let raf = 0;

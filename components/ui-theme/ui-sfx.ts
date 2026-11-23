@@ -5,7 +5,16 @@ import { uiThemeOf } from './ui-themes';
  * Menu sounds that come from the interface theme's sound folder (`public/sounds/<theme.sfx>/ui_<name>.ogg`). Separate from the board's
  * synthesised game sounds in `play-board/sounds.ts`, but they share its mute switch. A theme with no `sfx` folder is silent.
  */
-export type UiSound = 'click' | 'toggleOn' | 'toggleOff' | 'open' | 'close' | 'confirm' | 'cancel' | 'error' | 'select';
+export type UiSound =
+  | 'click'
+  | 'toggleOn'
+  | 'toggleOff'
+  | 'open'
+  | 'close'
+  | 'confirm'
+  | 'cancel'
+  | 'error'
+  | 'select';
 
 const FILE: Record<UiSound, string> = {
   click: 'ui_click',
@@ -22,9 +31,11 @@ const FILE: Record<UiSound, string> = {
 const VOLUME = 0.15;
 const cache = new Map<string, HTMLAudioElement>();
 
-export const uiSoundUrl = (folder: string, sound: UiSound) => `/sounds/${folder}/${FILE[sound]}.ogg`;
+export const uiSoundUrl = (folder: string, sound: UiSound) =>
+  `/sounds/${folder}/${FILE[sound]}.ogg`;
 
-const currentThemeId = () => document.documentElement.getAttribute('data-ui-theme');
+const currentThemeId = () =>
+  document.documentElement.getAttribute('data-ui-theme');
 
 export const playUiSound = (sound: UiSound): void => {
   if (typeof window === 'undefined' || isMuted()) return;
@@ -49,12 +60,18 @@ export const playUiSound = (sound: UiSound): void => {
  */
 export const installUiSfx = (): (() => void) => {
   const onClick = (e: MouseEvent) => {
-    const el = (e.target as Element | null)?.closest?.('button, a[href], [role="switch"], [role="radio"]');
+    const el = (e.target as Element | null)?.closest?.(
+      'button, a[href], [role="switch"], [role="radio"]',
+    );
     if (!el || !el.closest('[data-ui-sfx]')) return;
-    if (el instanceof HTMLButtonElement && el.disabled) return playUiSound('error');
+    if (el instanceof HTMLButtonElement && el.disabled)
+      return playUiSound('error');
     const role = el.getAttribute('role');
     // The click runs before React re-renders, so aria-checked still holds the old value.
-    if (role === 'switch') return playUiSound(el.getAttribute('aria-checked') === 'true' ? 'toggleOff' : 'toggleOn');
+    if (role === 'switch')
+      return playUiSound(
+        el.getAttribute('aria-checked') === 'true' ? 'toggleOff' : 'toggleOn',
+      );
     if (role === 'radio') return playUiSound('select');
     playUiSound('click');
   };

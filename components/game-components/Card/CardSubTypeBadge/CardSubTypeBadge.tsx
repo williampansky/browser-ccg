@@ -20,20 +20,20 @@ export const CardSubTypeBadge = ({
   return race !== 'NONE' && race !== undefined ? (
     <div
       className={styles['card__subtype__image__wrapper']}
-      data-component='CardSubType'
+      data-component="CardSubType"
     >
       <div className={styles['card__subtype__image__icon__wrapper']}>
         <img
           alt={`${race} Icon`}
           className={styles['card__subtype__image']}
-          role='presentation'
+          role="presentation"
           src={src}
         />
       </div>
       <img
-        alt=''
+        alt=""
         className={styles['card__subtype__image__badge']}
-        role='presentation'
+        role="presentation"
         src={badgeImgSrc}
       />
     </div>

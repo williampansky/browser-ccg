@@ -74,7 +74,7 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
 
   const formattedCardText = useCallback(() => {
     return replaceAllConstants(
-      formatCardText(text, numberPrimary, numberSecondary, numberRNG, 0)
+      formatCardText(text, numberPrimary, numberSecondary, numberRNG, 0),
     );
   }, [text, numberPrimary, numberSecondary, numberRNG, 0]);
 
@@ -85,7 +85,7 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
         elite ? styles['elite'] : '',
         !canPlay ? styles['cant-play'] : '',
       )}
-      data-component='Card'
+      data-component="Card"
       id={uuid}
     >
       <CardCost

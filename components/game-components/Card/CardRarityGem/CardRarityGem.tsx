@@ -17,7 +17,7 @@ export const CardRarityGem = ({
       alt={`${gemImgAlt} Gem`}
       className={styles[`card__rarity__gem`]}
       data-rarity={rarity}
-      role='presentation'
+      role="presentation"
       src={gemImgSrc}
     />
   ) : null;

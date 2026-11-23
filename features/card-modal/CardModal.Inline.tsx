@@ -10,7 +10,7 @@ export const CardModal = (): ReactElement | null => {
   const dispatch = useDispatch();
   const onClick = () => dispatch(hideCardModal(null));
   const cardModalData = useSelector(
-    ({ cardModal }: RootState) => cardModal
+    ({ cardModal }: RootState) => cardModal,
   ) as ICardModal;
 
   return cardModalData ? (

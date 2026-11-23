@@ -6,7 +6,9 @@ const KEY = 'ccg-a11y';
 
 export const isAccessible = (): boolean => {
   try {
-    return typeof window !== 'undefined' && window.localStorage.getItem(KEY) === '1';
+    return (
+      typeof window !== 'undefined' && window.localStorage.getItem(KEY) === '1'
+    );
   } catch {
     return false;
   }
@@ -21,4 +23,7 @@ export const setAccessible = (on: boolean): void => {
 };
 
 /** A `title` that only exists in accessibility mode: `undefined` leaves the attribute off. */
-export const titleIf = (on: boolean, text: string | undefined): string | undefined => (on ? text : undefined);
+export const titleIf = (
+  on: boolean,
+  text: string | undefined,
+): string | undefined => (on ? text : undefined);

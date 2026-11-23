@@ -11,5 +11,8 @@ const loseHalfArmor: Effect = (ctx) => {
 };
 export default defineCard('PRIME_241', () => ({
   target: anyMinion(),
-  onPlay: [computed((ctx) => damage(chosenTarget(), ctx.g.players[ctx.caster].armor)), loseHalfArmor],
+  onPlay: [
+    computed((ctx) => damage(chosenTarget(), ctx.g.players[ctx.caster].armor)),
+    loseHalfArmor,
+  ],
 }));

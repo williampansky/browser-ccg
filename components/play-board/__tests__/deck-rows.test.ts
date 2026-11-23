@@ -16,7 +16,9 @@ describe('deckRows', () => {
     ]);
   });
   it('lists a card shuffled in mid-game with its current copies as the total', () => {
-    expect(deckRows(['B'], ['B', 'A'], catalog).map((r) => [r.id, r.total, r.left])).toEqual([
+    expect(
+      deckRows(['B'], ['B', 'A'], catalog).map((r) => [r.id, r.total, r.left]),
+    ).toEqual([
       ['B', 1, 1],
       ['A', 1, 1],
     ]);

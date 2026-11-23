@@ -14,7 +14,7 @@ const jsonDatabase = {
  */
 const replaceAllConstants = (
   stringToParse: string,
-  keyToUse: 'name' | 'value' = 'name'
+  keyToUse: 'name' | 'value' = 'name',
 ) => {
   // eject if no param or param is undefined
   if (!stringToParse || typeof stringToParse === undefined) return '';
@@ -22,7 +22,7 @@ const replaceAllConstants = (
   // used json to match the replacement by keyToUse
   return stringToParse.replace(
     /%(.*?)%/g,
-    (x) => jsonDatabase[x] && jsonDatabase[x][keyToUse]
+    (x) => jsonDatabase[x] && jsonDatabase[x][keyToUse],
   );
 };
 

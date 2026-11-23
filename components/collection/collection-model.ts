@@ -16,9 +16,9 @@ export const RARITIES = [
 
 export interface CollectionFilters {
   search: string;
-  set: typeof SETS[number];
-  type: typeof TYPES[number];
-  cost: typeof COSTS[number];
+  set: (typeof SETS)[number];
+  type: (typeof TYPES)[number];
+  cost: (typeof COSTS)[number];
   /** `all`, or a rarity id */
   rarity: string;
   /** `all`, or a race id (`CREATURE`); minions only */
@@ -29,24 +29,55 @@ export interface CollectionFilters {
   hero: string;
 }
 
-export const DEFAULT_FILTERS: CollectionFilters = { search: '', set: 'both', type: 'all', cost: 'all', rarity: 'all', race: 'all', effect: 'all', hero: 'all' };
+export const DEFAULT_FILTERS: CollectionFilters = {
+  search: '',
+  set: 'both',
+  type: 'all',
+  cost: 'all',
+  rarity: 'all',
+  race: 'all',
+  effect: 'all',
+  hero: 'all',
+};
 
-export const isFiltered = (f: CollectionFilters): boolean => (Object.keys(DEFAULT_FILTERS) as (keyof CollectionFilters)[]).some((k) => f[k] !== DEFAULT_FILTERS[k]);
+export const isFiltered = (f: CollectionFilters): boolean =>
+  (Object.keys(DEFAULT_FILTERS) as (keyof CollectionFilters)[]).some(
+    (k) => f[k] !== DEFAULT_FILTERS[k],
+  );
 
 /** Which set a card belongs to for the set filter: an entourage card's own `source` is `entourage`, so it follows the set in its id (`CORE_051a` is Core). */
-export const setOf = (c: Card): string => (c.isToken ? c.id.split('_')[0].toLowerCase() : c.source);
+export const setOf = (c: Card): string =>
+  c.isToken ? c.id.split('_')[0].toLowerCase() : c.source;
 
-export const filterCards = (cards: readonly Card[], f: CollectionFilters): Card[] => {
+export const filterCards = (
+  cards: readonly Card[],
+  f: CollectionFilters,
+): Card[] => {
   const q = f.search.trim().toLowerCase();
   return cards.filter((c) => {
     if (f.set !== 'both' && setOf(c) !== f.set) return false;
     if (f.type !== 'all' && c.type !== f.type) return false;
-    if (f.cost !== 'all' && (f.cost === '7+' ? c.cost < 7 : c.cost !== Number(f.cost))) return false;
+    if (
+      f.cost !== 'all' &&
+      (f.cost === '7+' ? c.cost < 7 : c.cost !== Number(f.cost))
+    )
+      return false;
     if (f.rarity !== 'all' && c.rarity !== f.rarity) return false;
-    if (f.race !== 'all' && !(c.type === 'minion' && c.race === f.race)) return false;
-    if (f.hero !== 'all' && (f.hero === 'neutral' ? !!c.heroClass : c.heroClass !== f.hero)) return false;
-    if (f.effect !== 'all' && !effectsOf(c).some((e) => e.symbol === f.effect)) return false;
-    return !q || (c.name ?? '').toLowerCase().includes(q) || c.id.toLowerCase().includes(q) || c.text.toLowerCase().includes(q);
+    if (f.race !== 'all' && !(c.type === 'minion' && c.race === f.race))
+      return false;
+    if (
+      f.hero !== 'all' &&
+      (f.hero === 'neutral' ? !!c.heroClass : c.heroClass !== f.hero)
+    )
+      return false;
+    if (f.effect !== 'all' && !effectsOf(c).some((e) => e.symbol === f.effect))
+      return false;
+    return (
+      !q ||
+      (c.name ?? '').toLowerCase().includes(q) ||
+      c.id.toLowerCase().includes(q) ||
+      c.text.toLowerCase().includes(q)
+    );
   });
 };
 
@@ -58,22 +89,42 @@ export const ART_FILTERS = [
   { id: 'untracked', label: 'No art status' },
   { id: 'final', label: 'Final art' },
 ] as const;
-export type ArtFilter = typeof ART_FILTERS[number]['id'];
+export type ArtFilter = (typeof ART_FILTERS)[number]['id'];
 
-export const matchesArt = (c: Card, mode: ArtFilter, missing: ReadonlySet<string>): boolean => {
+export const matchesArt = (
+  c: Card,
+  mode: ArtFilter,
+  missing: ReadonlySet<string>,
+): boolean => {
   if (mode === 'all') return true;
   if (mode === 'missing') return missing.has(c.id);
   if (mode === 'untracked') return !c.artStatus;
   return c.artStatus === mode.toUpperCase();
 };
 
-const PARAM = { search: 'q', set: 'set', type: 'type', cost: 'cost', rarity: 'rarity', race: 'race', effect: 'effect', hero: 'class' } as const;
-const one = (v: string | string[] | undefined): string | undefined => (Array.isArray(v) ? v[0] : v);
+const PARAM = {
+  search: 'q',
+  set: 'set',
+  type: 'type',
+  cost: 'cost',
+  rarity: 'rarity',
+  race: 'race',
+  effect: 'effect',
+  hero: 'class',
+} as const;
+const one = (v: string | string[] | undefined): string | undefined =>
+  Array.isArray(v) ? v[0] : v;
 
 /** The filters as URL params: only those that differ from the default, so an unfiltered page has a clean URL. */
-export const toQuery = (f: CollectionFilters, sort: SortKey, art: ArtFilter, tokens = false): Record<string, string> => {
+export const toQuery = (
+  f: CollectionFilters,
+  sort: SortKey,
+  art: ArtFilter,
+  tokens = false,
+): Record<string, string> => {
   const q: Record<string, string> = {};
-  for (const k of Object.keys(PARAM) as (keyof typeof PARAM)[]) if (f[k] !== DEFAULT_FILTERS[k]) q[PARAM[k]] = f[k];
+  for (const k of Object.keys(PARAM) as (keyof typeof PARAM)[])
+    if (f[k] !== DEFAULT_FILTERS[k]) q[PARAM[k]] = f[k];
   if (sort !== 'cost') q.sort = sort;
   if (art !== 'all') q.art = art;
   if (tokens) q.tokens = '1';
@@ -81,9 +132,22 @@ export const toQuery = (f: CollectionFilters, sort: SortKey, art: ArtFilter, tok
 };
 
 /** The reverse; a value that is not valid for its filter (a hand-edited URL) falls back to the default. */
-export const fromQuery = (query: Record<string, string | string[] | undefined>): { filters: CollectionFilters; sort: SortKey; art: ArtFilter; tokens: boolean } => {
-  const pick = <T extends string>(v: string | undefined, allowed: readonly T[], fallback: T): T => (allowed as readonly string[]).includes(v ?? '') ? (v as T) : fallback;
-  const text = (k: keyof typeof PARAM) => one(query[PARAM[k]]) ?? DEFAULT_FILTERS[k];
+export const fromQuery = (
+  query: Record<string, string | string[] | undefined>,
+): {
+  filters: CollectionFilters;
+  sort: SortKey;
+  art: ArtFilter;
+  tokens: boolean;
+} => {
+  const pick = <T extends string>(
+    v: string | undefined,
+    allowed: readonly T[],
+    fallback: T,
+  ): T =>
+    (allowed as readonly string[]).includes(v ?? '') ? (v as T) : fallback;
+  const text = (k: keyof typeof PARAM) =>
+    one(query[PARAM[k]]) ?? DEFAULT_FILTERS[k];
   return {
     filters: {
       search: text('search'),
@@ -95,8 +159,16 @@ export const fromQuery = (query: Record<string, string | string[] | undefined>):
       effect: text('effect'),
       hero: text('hero'),
     },
-    sort: pick(one(query.sort), SORTS.map((s) => s.id), 'cost'),
-    art: pick(one(query.art), ART_FILTERS.map((a) => a.id), 'all'),
+    sort: pick(
+      one(query.sort),
+      SORTS.map((s) => s.id),
+      'cost',
+    ),
+    art: pick(
+      one(query.art),
+      ART_FILTERS.map((a) => a.id),
+      'all',
+    ),
     tokens: one(query.tokens) === '1',
   };
 };
@@ -109,15 +181,22 @@ export interface Option {
 /** Every effect some card has, once each, by display name. */
 export const effectOptions = (cards: readonly Card[]): Option[] => {
   const seen = new Map<string, string>();
-  for (const c of cards) for (const e of effectsOf(c)) seen.set(e.symbol, e.name);
-  return Array.from(seen, ([value, label]) => ({ value, label })).sort((a, b) => a.label.localeCompare(b.label));
+  for (const c of cards)
+    for (const e of effectsOf(c)) seen.set(e.symbol, e.name);
+  return Array.from(seen, ([value, label]) => ({ value, label })).sort((a, b) =>
+    a.label.localeCompare(b.label),
+  );
 };
 
 /** Every minion race in the pool, once each, by display name. */
 export const raceOptions = (cards: readonly Card[]): Option[] => {
   const seen = new Map<string, string>();
-  for (const c of cards) if (c.type === 'minion' && c.race && c.race !== 'NONE') seen.set(c.race, c.raceName ?? c.race);
-  return Array.from(seen, ([value, label]) => ({ value, label })).sort((a, b) => a.label.localeCompare(b.label));
+  for (const c of cards)
+    if (c.type === 'minion' && c.race && c.race !== 'NONE')
+      seen.set(c.race, c.raceName ?? c.race);
+  return Array.from(seen, ([value, label]) => ({ value, label })).sort((a, b) =>
+    a.label.localeCompare(b.label),
+  );
 };
 
 export const SORTS = [
@@ -127,7 +206,7 @@ export const SORTS = [
   { id: 'attack', label: 'Attack' },
   { id: 'health', label: 'Health' },
 ] as const;
-export type SortKey = typeof SORTS[number]['id'];
+export type SortKey = (typeof SORTS)[number]['id'];
 
 const byName = (a: Card, b: Card) => (a.name ?? '').localeCompare(b.name ?? '');
 
@@ -140,11 +219,15 @@ export const sortCards = (cards: readonly Card[], key: SortKey): Card[] => {
     if (key === 'rarity') return rank(a) - rank(b);
     if (key === 'attack' || key === 'health') {
       const [x, y] = [stat(a), stat(b)];
-      return x === undefined || y === undefined ? (x === undefined ? 1 : 0) - (y === undefined ? 1 : 0) : y - x;
+      return x === undefined || y === undefined
+        ? (x === undefined ? 1 : 0) - (y === undefined ? 1 : 0)
+        : y - x;
     }
     return a.cost - b.cost;
   };
-  return [...cards].sort((a, b) => primary(a, b) || a.cost - b.cost || byName(a, b));
+  return [...cards].sort(
+    (a, b) => primary(a, b) || a.cost - b.cost || byName(a, b),
+  );
 };
 
 /** Card widths for the grid, in px. */
@@ -154,16 +237,18 @@ export const SIZES = [
   { id: 'large', label: 'L', width: 210 },
   { id: 'xlarge', label: 'XL', width: 280 },
 ] as const;
-export type SizeId = typeof SIZES[number]['id'];
+export type SizeId = (typeof SIZES)[number]['id'];
 
-export const sizeOf = (id: unknown) => SIZES.find((s) => s.id === id) ?? SIZES[1];
+export const sizeOf = (id: unknown) =>
+  SIZES.find((s) => s.id === id) ?? SIZES[1];
 
 const KEY = 'ccg.collection.v1';
 
 /** The grid size chosen last time in this browser (medium when there is none, or the stored value is junk). */
 export const loadSize = (): SizeId => {
   try {
-    return sizeOf(JSON.parse(window.localStorage.getItem(KEY) ?? '{}')?.size).id;
+    return sizeOf(JSON.parse(window.localStorage.getItem(KEY) ?? '{}')?.size)
+      .id;
   } catch {
     return 'medium';
   }

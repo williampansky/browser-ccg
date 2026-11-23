@@ -5,7 +5,8 @@ import { summonEntourage } from '../../effects/primitives';
 export default defineCard('PRIME_069', () => ({
   triggers: [
     on('CardPlayed', {
-      when: (e, c) => e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
+      when: (e, c) =>
+        e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
       do: [summonEntourage()],
     }),
   ],

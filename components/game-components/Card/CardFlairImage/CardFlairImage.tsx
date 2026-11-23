@@ -20,10 +20,10 @@ export const CardFlairImage = ({ name, src, fpoArt }: CardFlairImageProps) => {
       <Image
         alt={name}
         className={styles['image']}
-        layout='fill'
+        layout="fill"
         onError={() => setErr(true)}
         priority
-        role='presentation'
+        role="presentation"
         src={!err ? source : PLACEHOLDER}
       />
     </div>

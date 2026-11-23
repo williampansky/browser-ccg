@@ -47,12 +47,22 @@ $bonus: var(--en-bonus, #ffd45e);
 }
 
 .ready {
-  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, #{$energy} 40%, white) 0, $energy 45%, color-mix(in srgb, #{$energy} 60%, black) 100%);
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in srgb, #{$energy} 40%, white) 0,
+    $energy 45%,
+    color-mix(in srgb, #{$energy} 60%, black) 100%
+  );
   box-shadow: 0 0 var(--en-glow, 8px) $energy;
 }
 
 .bonus {
-  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, #{$bonus} 40%, white) 0, $bonus 45%, color-mix(in srgb, #{$bonus} 60%, black) 100%);
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in srgb, #{$bonus} 40%, white) 0,
+    $bonus 45%,
+    color-mix(in srgb, #{$bonus} 60%, black) 100%
+  );
   box-shadow: 0 0 var(--en-glow, 8px) $bonus;
 }
 

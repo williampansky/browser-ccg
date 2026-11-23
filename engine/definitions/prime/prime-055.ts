@@ -6,7 +6,8 @@ import { allEnemyMinions } from '../../effects/selectors';
 export default defineCard('PRIME_055', (n) => ({
   triggers: [
     on('CardPlayed', {
-      when: (e, c) => e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
+      when: (e, c) =>
+        e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
       do: [damage(allEnemyMinions(), n.primary)],
     }),
   ],

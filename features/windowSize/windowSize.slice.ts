@@ -20,7 +20,7 @@ export const windowSizeSlice = createSlice({
       }: PayloadAction<{
         width?: number;
         height?: number;
-      }>
+      }>,
     ) => {
       const { height, width } = payload;
       state.height = height;

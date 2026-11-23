@@ -19,11 +19,25 @@
 }
 
 @keyframes minionLand {
-  0% { transform: translateY(-110px) scale(1.35); opacity: 0; animation-timing-function: cubic-bezier(0.55, 0, 1, 0.6); }
-  38% { transform: translateY(0) scale(1.02); opacity: 1; }
-  52% { transform: translateY(0) scale(1.1, 0.88); animation-timing-function: ease-out; }
-  72% { transform: translateY(-4px) scale(0.97, 1.04); }
-  100% { transform: translateY(0) scale(1); }
+  0% {
+    transform: translateY(-110px) scale(1.35);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.6);
+  }
+  38% {
+    transform: translateY(0) scale(1.02);
+    opacity: 1;
+  }
+  52% {
+    transform: translateY(0) scale(1.1, 0.88);
+    animation-timing-function: ease-out;
+  }
+  72% {
+    transform: translateY(-4px) scale(0.97, 1.04);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
 }
 
 // The ring of dust that spreads from where it lands.
@@ -42,8 +56,14 @@
 }
 
 @keyframes dustRing {
-  0% { transform: translateX(-50%) scale(0.3); opacity: 0.9; }
-  100% { transform: translateX(-50%) scale(1.5, 1.2); opacity: 0; }
+  0% {
+    transform: translateX(-50%) scale(0.3);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(-50%) scale(1.5, 1.2);
+    opacity: 0;
+  }
 }
 
 // A minion that has died: a flash and a swell as it takes the hit, then it drops, spins and greys out as it fades, and the
@@ -60,11 +80,33 @@
 }
 
 @keyframes minionDie {
-  0% { transform: scale(1); filter: none; opacity: 1; width: calc(var(--m-w) + 1.6rem); animation-timing-function: ease-out; }
-  12% { transform: scale(1.14); filter: brightness(2.2) saturate(0.3); }
-  30% { transform: translateY(2px) scale(1.04) rotate(-3deg); filter: brightness(1.2) grayscale(0.6); animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5); }
-  75% { transform: translateY(46px) scale(0.55) rotate(14deg); filter: grayscale(1) brightness(0.5); opacity: 0; width: calc(var(--m-w) + 1.6rem); }
-  100% { transform: translateY(46px) scale(0.55) rotate(14deg); opacity: 0; width: 0; }
+  0% {
+    transform: scale(1);
+    filter: none;
+    opacity: 1;
+    width: calc(var(--m-w) + 1.6rem);
+    animation-timing-function: ease-out;
+  }
+  12% {
+    transform: scale(1.14);
+    filter: brightness(2.2) saturate(0.3);
+  }
+  30% {
+    transform: translateY(2px) scale(1.04) rotate(-3deg);
+    filter: brightness(1.2) grayscale(0.6);
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+  }
+  75% {
+    transform: translateY(46px) scale(0.55) rotate(14deg);
+    filter: grayscale(1) brightness(0.5);
+    opacity: 0;
+    width: calc(var(--m-w) + 1.6rem);
+  }
+  100% {
+    transform: translateY(46px) scale(0.55) rotate(14deg);
+    opacity: 0;
+    width: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -88,8 +130,14 @@
   background: #191919;
   border: 2px solid rgba(220, 226, 240, 0.55);
   // The dark drop shadow is a variable per state (--sh-def-*, --sh-rdy-*, --sh-sel-*, --sh-aim-*, --sh-hov-*: y offset, blur, alpha) that the board lab tunes.
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.9), 0 var(--sh-def-y, 3px) var(--sh-def-b, 12px) rgba(0, 0, 0, var(--sh-def-a, 0.55)), inset 0 0 0 2px rgba(0, 0, 0, 0.35);
-  transition: box-shadow 200ms, filter 200ms;
+  box-shadow:
+    0 0 2px rgba(0, 0, 0, 0.9),
+    0 var(--sh-def-y, 3px) var(--sh-def-b, 12px)
+      rgba(0, 0, 0, var(--sh-def-a, 0.55)),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.35);
+  transition:
+    box-shadow 200ms,
+    filter 200ms;
   z-index: 1;
 }
 
@@ -157,8 +205,15 @@
   transform: translateX(-50%);
   border-radius: 50%;
   border: 2px solid rgba(160, 235, 255, 0.85);
-  background: radial-gradient(ellipse at 30% 22%, rgba(255, 255, 255, 0.45), rgba(120, 220, 255, 0.12) 45%, rgba(120, 220, 255, 0.05) 70%);
-  box-shadow: 0 0 10px rgba(120, 220, 255, 0.55), inset 0 0 12px rgba(120, 220, 255, 0.35);
+  background: radial-gradient(
+    ellipse at 30% 22%,
+    rgba(255, 255, 255, 0.45),
+    rgba(120, 220, 255, 0.12) 45%,
+    rgba(120, 220, 255, 0.05) 70%
+  );
+  box-shadow:
+    0 0 10px rgba(120, 220, 255, 0.55),
+    inset 0 0 12px rgba(120, 220, 255, 0.35);
   z-index: 2;
   pointer-events: none;
 }
@@ -208,13 +263,35 @@
   }
 }
 
-.badge_rush { border-color: #ffd45e; color: #ffd45e; }
-.badge_onslaught { border-color: #ff9a5e; color: #ff9a5e; font-size: 0.72rem; font-weight: 700; }
-.badge_disabled { border-color: #ff6b6b; }
-.badge_expiring { border-color: #c79bff; }
-.badge_noAttack { border-color: #aab; color: #aab; }
-.badge_silenced { border-color: #a0e4ff; color: #a0e4ff; }
-.badge_asleep { border-color: #6f7ca8; color: #9db0ff; font-style: italic; }
+.badge_rush {
+  border-color: #ffd45e;
+  color: #ffd45e;
+}
+.badge_onslaught {
+  border-color: #ff9a5e;
+  color: #ff9a5e;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.badge_disabled {
+  border-color: #ff6b6b;
+}
+.badge_expiring {
+  border-color: #c79bff;
+}
+.badge_noAttack {
+  border-color: #aab;
+  color: #aab;
+}
+.badge_silenced {
+  border-color: #a0e4ff;
+  color: #a0e4ff;
+}
+.badge_asleep {
+  border-color: #6f7ca8;
+  color: #9db0ff;
+  font-style: italic;
+}
 
 // Attack (sword) bottom left, Health (shield) bottom right, the PNG badges the framed cards use.
 .stat {
@@ -259,12 +336,22 @@
   translate: var(--nudge-x, 0px) var(--nudge-y, 0.125rem);
 }
 // The numerals sit on the art's visual centre, not the box's: the sword badge's disc is lower than its box centre.
-.attack b { top: 0.2625rem; left: 0.125rem; } // 4.2px, 2px
-.health b { top: 0.05rem; left: -0.03125rem; } // 0.8px, -0.5px
+.attack b {
+  top: 0.2625rem;
+  left: 0.125rem;
+} // 4.2px, 2px
+.health b {
+  top: 0.05rem;
+  left: -0.03125rem;
+} // 0.8px, -0.5px
 
 // Compared with the printed card: buffed green, a damaged or weakened stat orange-red.
-.tone_up b { color: #7dff8a; }
-.tone_down b { color: #ff6a2a; }
+.tone_up b {
+  color: #7dff8a;
+}
+.tone_down b {
+  color: #ff6a2a;
+}
 
 // The minion's name is not shown on the board (opacity, not display: the text stays for screen readers). The minion lab's "Show the name"
 // (lcshow=1) turns it back on.
@@ -282,34 +369,54 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: #d7dbe8;
-  text-shadow: 0 1px 2px #000, 0 0 3px #000;
+  text-shadow:
+    0 1px 2px #000,
+    0 0 3px #000;
   pointer-events: none;
 }
 
 // States of the button around it.
 .ready .oval {
   border-color: #5fd16a;
-  box-shadow: 0 0 0 2px rgba(95, 209, 106, 0.5), 0 0 14px rgba(95, 209, 106, 0.55), 0 var(--sh-rdy-y, 3px) var(--sh-rdy-b, 12px) rgba(0, 0, 0, var(--sh-rdy-a, 0.55));
+  box-shadow:
+    0 0 0 2px rgba(95, 209, 106, 0.5),
+    0 0 14px rgba(95, 209, 106, 0.55),
+    0 var(--sh-rdy-y, 3px) var(--sh-rdy-b, 12px)
+      rgba(0, 0, 0, var(--sh-rdy-a, 0.55));
 }
-.ready { cursor: pointer; }
+.ready {
+  cursor: pointer;
+}
 
 // A clicked (or dragged) minion lifts off the board and grows a little. --sel-lift / --sel-scale are the defaults the board lab tunes.
 .selected {
-  transform: translateY(calc(var(--sel-lift, 14px) * -1)) scale(var(--sel-scale, 1.08));
+  transform: translateY(calc(var(--sel-lift, 14px) * -1))
+    scale(var(--sel-scale, 1.08));
 }
 .selected .oval {
   border-color: #ffd45e;
-  box-shadow: 0 0 0 3px #ffd45e, 0 0 18px rgba(255, 212, 94, 0.7), 0 var(--sh-sel-y, 14px) var(--sh-sel-b, 18px) rgba(0, 0, 0, var(--sh-sel-a, 0));
+  box-shadow:
+    0 0 0 3px #ffd45e,
+    0 0 18px rgba(255, 212, 94, 0.7),
+    0 var(--sh-sel-y, 14px) var(--sh-sel-b, 18px)
+      rgba(0, 0, 0, var(--sh-sel-a, 0));
 }
 
 // Hovering a hand card for a moment: a light band sweeps over the portrait of each minion it would improve (see boost-preview.ts).
 @keyframes boostSheen {
-  0% { transform: translateX(-130%) skewX(-20deg); }
-  55%, 100% { transform: translateX(230%) skewX(-20deg); }
+  0% {
+    transform: translateX(-130%) skewX(-20deg);
+  }
+  55%,
+  100% {
+    transform: translateX(230%) skewX(-20deg);
+  }
 }
 .boostPreview .oval {
   border-color: #7be08a;
-  box-shadow: 0 0 0 2px rgba(123, 224, 138, 0.6), 0 0 14px rgba(123, 224, 138, 0.55);
+  box-shadow:
+    0 0 0 2px rgba(123, 224, 138, 0.6),
+    0 0 14px rgba(123, 224, 138, 0.55);
 }
 .boostPreview .oval::after {
   content: '';
@@ -318,18 +425,32 @@
   bottom: 0;
   left: 0;
   width: 45%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
   pointer-events: none;
   animation: boostSheen 1500ms ease-in-out infinite;
 }
 @media (prefers-reduced-motion: reduce) {
-  .boostPreview .oval::after { animation: none; opacity: 0; }
+  .boostPreview .oval::after {
+    animation: none;
+    opacity: 0;
+  }
 }
 
-.aim { cursor: crosshair; }
+.aim {
+  cursor: crosshair;
+}
 .aim .oval {
   border-color: #ff6b6b;
-  box-shadow: 0 0 0 2px #ff6b6b, 0 0 16px rgba(255, 107, 107, 0.65), 0 var(--sh-aim-y, 3px) var(--sh-aim-b, 12px) rgba(0, 0, 0, var(--sh-aim-a, 0));
+  box-shadow:
+    0 0 0 2px #ff6b6b,
+    0 0 16px rgba(255, 107, 107, 0.65),
+    0 var(--sh-aim-y, 3px) var(--sh-aim-b, 12px)
+      rgba(0, 0, 0, var(--sh-aim-a, 0));
 }
 // A target under the pointer while aiming: ring only. (It used to scale 1.1x, but the landing animation hid that; the lift belongs to your own selection.)
 // --aim-scale is 1 unless the board lab changes it.
@@ -338,7 +459,11 @@
 }
 .aimHover .oval {
   border-color: #3ddc84;
-  box-shadow: 0 0 0 3px #3ddc84, 0 0 20px rgba(61, 220, 132, 0.8), 0 var(--sh-hov-y, 3px) var(--sh-hov-b, 12px) rgba(0, 0, 0, var(--sh-hov-a, 0));
+  box-shadow:
+    0 0 0 3px #3ddc84,
+    0 0 20px rgba(61, 220, 132, 0.8),
+    0 var(--sh-hov-y, 3px) var(--sh-hov-b, 12px)
+      rgba(0, 0, 0, var(--sh-hov-a, 0));
 }
 
 // hsclone's "was attacked": a short shake when Health drops.
@@ -348,11 +473,22 @@
 }
 
 @keyframes minionShake {
-  0%, 100% { transform: translateX(-50%); }
-  15% { transform: translateX(calc(-50% - 7px)) rotate(-2deg); }
-  35% { transform: translateX(calc(-50% + 6px)) rotate(1.5deg); }
-  55% { transform: translateX(calc(-50% - 4px)); }
-  75% { transform: translateX(calc(-50% + 2px)); }
+  0%,
+  100% {
+    transform: translateX(-50%);
+  }
+  15% {
+    transform: translateX(calc(-50% - 7px)) rotate(-2deg);
+  }
+  35% {
+    transform: translateX(calc(-50% + 6px)) rotate(1.5deg);
+  }
+  55% {
+    transform: translateX(calc(-50% - 4px));
+  }
+  75% {
+    transform: translateX(calc(-50% + 2px));
+  }
 }
 
 // The aimed action would kill this minion: a skull over the middle of the oval (a stand-in for real art).
@@ -365,6 +501,9 @@
   font-size: calc(var(--m-h, 128px) * 0.5);
   line-height: 1;
   color: #fff;
-  text-shadow: 0 0 6px #000, 0 0 14px #c01818, 0 3px 4px rgba(0, 0, 0, 0.9);
+  text-shadow:
+    0 0 6px #000,
+    0 0 14px #c01818,
+    0 3px 4px rgba(0, 0, 0, 0.9);
   pointer-events: none;
 }

@@ -7,7 +7,9 @@ export default defineCard('PRIME_231', (n) => ({
   onPlay: [
     computed((ctx) => {
       const me = ctx.g.players[ctx.caster];
-      const injured = me.board.filter((m) => m.health < m.maxHealth).length + (me.health < MAX_HEALTH ? 1 : 0);
+      const injured =
+        me.board.filter((m) => m.health < m.maxHealth).length +
+        (me.health < MAX_HEALTH ? 1 : 0);
       return draw(injured * n.primary);
     }),
   ],

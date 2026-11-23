@@ -14,17 +14,37 @@ const ArtLabPage = () => {
   if (!isReady) return null;
   if (!/^(CORE|PRIME|GAME)_\d+[a-z]*$/i.test(id))
     return (
-      <main style={{ height: '100vh', overflowY: 'auto', padding: '20px 24px 96px' }}>
+      <main
+        style={{
+          height: '100vh',
+          overflowY: 'auto',
+          padding: '20px 24px 96px',
+        }}
+      >
         <h1>Art lab</h1>
         <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-          <Button variant={assets ? undefined : 'primary'} onClick={() => router.push({ pathname: '/art-lab' })}>Cards</Button>
-          <Button variant={assets ? 'primary' : undefined} onClick={() => router.push({ pathname: '/art-lab', query: { tab: 'assets' } })}>Assets</Button>
+          <Button
+            variant={assets ? undefined : 'primary'}
+            onClick={() => router.push({ pathname: '/art-lab' })}
+          >
+            Cards
+          </Button>
+          <Button
+            variant={assets ? 'primary' : undefined}
+            onClick={() =>
+              router.push({ pathname: '/art-lab', query: { tab: 'assets' } })
+            }
+          >
+            Assets
+          </Button>
         </div>
         {assets ? (
           <AssetGrid />
         ) : (
           <>
-            <p style={{ opacity: 0.7 }}>Find a card by id or name to edit its art and its Airtable row.</p>
+            <p style={{ opacity: 0.7 }}>
+              Find a card by id or name to edit its art and its Airtable row.
+            </p>
             <CardLookup />
           </>
         )}

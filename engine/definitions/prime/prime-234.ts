@@ -10,7 +10,10 @@ export default defineCard('PRIME_234', (n) => ({
   onPlay: [
     damage(chosenTarget(), n.primary),
     computed((ctx) => {
-      const m = ctx.target?.kind === 'minion' ? findMinion(ctx.g, ctx.target.instanceId)?.minion : undefined;
+      const m =
+        ctx.target?.kind === 'minion'
+          ? findMinion(ctx.g, ctx.target.instanceId)?.minion
+          : undefined;
       return m && m.health > 0 ? draw(1) : () => undefined;
     }),
   ],

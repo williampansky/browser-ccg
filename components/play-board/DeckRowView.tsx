@@ -22,25 +22,52 @@ const isWarm = () => Date.now() < warmUntil;
  * Its look is the `--dk-*` variables of whatever holds it (`deckRowVars`). Resting the pointer on it for `hoverDelayMs` pops up the full
  * card, on the side of the row that has room: a row in the left half of the window opens it to the right, one in the right half to the left.
  */
-export const DeckRowView = ({ row, card, hoverDelayMs = 600 }: { row: DeckRow; card?: Card; hoverDelayMs?: number }) => {
-  const [pos, setPos] = useState<{ x: number; y: number; left: boolean; fresh: boolean } | null>(null);
+export const DeckRowView = ({
+  row,
+  card,
+  hoverDelayMs = 600,
+}: {
+  row: DeckRow;
+  card?: Card;
+  hoverDelayMs?: number;
+}) => {
+  const [pos, setPos] = useState<{
+    x: number;
+    y: number;
+    left: boolean;
+    fresh: boolean;
+  } | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => () => clearTimeout(timer.current), []);
   // A row that goes away with its popup open (the card was drawn) must not leave the shared state warm for good.
   const open = useRef(false);
   open.current = !!pos;
-  useEffect(() => () => {
-    if (open.current) warmUntil = Date.now() + WARM_GRACE_MS;
-  }, []);
+  useEffect(
+    () => () => {
+      if (open.current) warmUntil = Date.now() + WARM_GRACE_MS;
+    },
+    [],
+  );
   const cardH = POPUP_WIDTH * 1.4;
 
   const show = (el: HTMLElement) => {
     const r = el.getBoundingClientRect(); // measured when it shows, so a scrolled panel is right
     const left = r.left + r.width / 2 > window.innerWidth / 2;
-    const y = Math.max(8, Math.min(r.top + r.height / 2 - cardH / 2, window.innerHeight - cardH - 8));
+    const y = Math.max(
+      8,
+      Math.min(
+        r.top + r.height / 2 - cardH / 2,
+        window.innerHeight - cardH - 8,
+      ),
+    );
     const fresh = !isWarm(); // only the first popup fades in; rows crossed afterwards swap at once
     warmUntil = Infinity; // a popup is open: the next row shows at once
-    setPos({ x: left ? r.left - POPUP_GAP - POPUP_WIDTH : r.right + POPUP_GAP, y, left, fresh });
+    setPos({
+      x: left ? r.left - POPUP_GAP - POPUP_WIDTH : r.right + POPUP_GAP,
+      y,
+      left,
+      fresh,
+    });
   };
 
   return (
@@ -61,16 +88,25 @@ export const DeckRowView = ({ row, card, hoverDelayMs = 600 }: { row: DeckRow; c
     >
       <span className={styles.deckCost}>{row.cost}</span>
       <span className={styles.deckName}>{row.name}</span>
-      <span className={styles.deckCount}>{row.total > 1 ? `${row.left}/${row.total}` : row.left}</span>
+      <span className={styles.deckCount}>
+        {row.total > 1 ? `${row.left}/${row.total}` : row.left}
+      </span>
       {pos && card && typeof document !== 'undefined'
         ? createPortal(
             <div
-              className={cx(styles.deckCardPopup, pos.fresh ? (pos.left ? styles.deckPopupFromRight : styles.deckPopupFromLeft) : '')}
+              className={cx(
+                styles.deckCardPopup,
+                pos.fresh
+                  ? pos.left
+                    ? styles.deckPopupFromRight
+                    : styles.deckPopupFromLeft
+                  : '',
+              )}
               style={{ left: pos.x, top: pos.y, width: POPUP_WIDTH }}
             >
               <CardFace card={card} width={POPUP_WIDTH} />
             </div>,
-            document.body
+            document.body,
           )
         : null}
     </div>

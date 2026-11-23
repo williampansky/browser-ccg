@@ -7,7 +7,8 @@ export default defineCard('PRIME_142', () => ({
   costMods: [{ affects: (card) => card.type === 'spell', delta: -1 }],
   triggers: [
     on('CardPlayed', {
-      when: (e, c) => e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
+      when: (e, c) =>
+        e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
       do: [damage(ownHero(), 1)],
     }),
   ],

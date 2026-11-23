@@ -13,13 +13,13 @@ export const CardModal = (): ReactElement | null => {
   const dispatch = useDispatch();
   const onClick = () => dispatch(hideCardModal(null));
   const cardModalData = useSelector(
-    ({ cardModal }: RootState) => cardModal
+    ({ cardModal }: RootState) => cardModal,
   ) as ICardModal;
 
   return (
     <div
       className={styles['component']}
-      data-component='CardModal'
+      data-component="CardModal"
       onClick={onClick}
       style={{
         height: '100%',
@@ -42,15 +42,19 @@ export const CardModal = (): ReactElement | null => {
       }}
     >
       {window?.location?.href?.includes('localhost') && (
-        <div style={{
-          position: 'absolute',
-          top: 2,
-          right: 'auto',
-          bottom: 'auto',
-          left: 2,
-          fontSize: 10,
-          lineHeight: 1
-        }}>{cardModalData?.key}</div>
+        <div
+          style={{
+            position: 'absolute',
+            top: 2,
+            right: 'auto',
+            bottom: 'auto',
+            left: 2,
+            fontSize: 10,
+            lineHeight: 1,
+          }}
+        >
+          {cardModalData?.key}
+        </div>
       )}
       <div
         style={{

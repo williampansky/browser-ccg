@@ -4,7 +4,7 @@ import type { GameOver } from '../../types/g.interface';
 
 const initialState: GameOver = {
   draw: undefined,
-  winner: undefined
+  winner: undefined,
 };
 
 export const gameOverSlice = createSlice({

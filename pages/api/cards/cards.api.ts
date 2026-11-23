@@ -8,7 +8,16 @@ import { loadHsCards } from '../../../engine';
 export default (_req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { cards } = loadHsCards();
-    res.status(200).json(cards.filter((c) => !c.isToken && c.active).sort((a, b) => a.cost - b.cost || (a.name ?? '').localeCompare(b.name ?? '')));
+    res
+      .status(200)
+      .json(
+        cards
+          .filter((c) => !c.isToken && c.active)
+          .sort(
+            (a, b) =>
+              a.cost - b.cost || (a.name ?? '').localeCompare(b.name ?? ''),
+          ),
+      );
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ statusCode: 500, message: err?.message });

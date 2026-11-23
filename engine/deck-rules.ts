@@ -4,7 +4,8 @@ import type { Card } from './cards/types';
 export const MAX_DECK_SIZE = 30;
 
 /** How many copies of one card a deck may hold: one for a MYTHIC card, otherwise two. */
-export const maxCopies = (card: Pick<Card, 'rarity'>): number => (card.rarity === 'MYTHIC' ? 1 : 2);
+export const maxCopies = (card: Pick<Card, 'rarity'>): number =>
+  card.rarity === 'MYTHIC' ? 1 : 2;
 
 export interface DeckCheck {
   ok: boolean;
@@ -21,17 +22,26 @@ export const checkDeck = (
   ids: string[],
   byId: ReadonlyMap<string, Card>,
   copyLimit = true,
-  hero?: string
+  hero?: string,
 ): DeckCheck => {
   const errors: string[] = [];
-  if (ids.length > MAX_DECK_SIZE) errors.push(`A deck holds at most ${MAX_DECK_SIZE} cards (this one has ${ids.length}).`);
+  if (ids.length > MAX_DECK_SIZE)
+    errors.push(
+      `A deck holds at most ${MAX_DECK_SIZE} cards (this one has ${ids.length}).`,
+    );
   const counts = new Map<string, number>();
   ids.forEach((id) => counts.set(id, (counts.get(id) ?? 0) + 1));
   counts.forEach((n, id) => {
     const card = byId.get(id);
     if (!card) errors.push(`Unknown card ${id}.`);
-    else if (card.heroClass && hero !== card.heroClass) errors.push(`${card.name ?? id}: only a ${card.heroClass} deck may include this card.`);
-    else if (copyLimit && n > maxCopies(card)) errors.push(`${card.name ?? id}: at most ${maxCopies(card)} copies (this deck has ${n}).`);
+    else if (card.heroClass && hero !== card.heroClass)
+      errors.push(
+        `${card.name ?? id}: only a ${card.heroClass} deck may include this card.`,
+      );
+    else if (copyLimit && n > maxCopies(card))
+      errors.push(
+        `${card.name ?? id}: at most ${maxCopies(card)} copies (this deck has ${n}).`,
+      );
   });
   return { ok: errors.length === 0, errors };
 };

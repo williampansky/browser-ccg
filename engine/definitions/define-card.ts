@@ -1,6 +1,13 @@
 import type { Card, CardCatalog, CardNumbers } from '../cards/types';
 import type { Effect, TargetFilter } from '../effects/types';
-import type { GameEvent, GameEventType, GameState, MinionInstance, PlayerId, TargetRef } from '../state/types';
+import type {
+  GameEvent,
+  GameEventType,
+  GameState,
+  MinionInstance,
+  PlayerId,
+  TargetRef,
+} from '../state/types';
 
 /** What a trigger's `when` condition can look at. */
 export interface TriggerInfo {
@@ -22,7 +29,10 @@ export interface Trigger {
 /** Builds a trigger with the event type narrowed in `when`. */
 export const on = <K extends GameEventType>(
   event: K,
-  opts: { when?: (e: Extract<GameEvent, { type: K }>, c: TriggerInfo) => boolean; do: Effect[] }
+  opts: {
+    when?: (e: Extract<GameEvent, { type: K }>, c: TriggerInfo) => boolean;
+    do: Effect[];
+  },
 ): Trigger => ({
   event,
   when: opts.when as Trigger['when'],
@@ -85,7 +95,8 @@ export interface MysteryCheck {
   cast?: { caster: PlayerId; cardId: string; target?: TargetRef };
 }
 
-export type MysteryCategory = 'attack' | 'spell' | 'minion' | 'damage' | 'death';
+export type MysteryCategory =
+  'attack' | 'spell' | 'minion' | 'damage' | 'death';
 
 export interface MysteryDef {
   /** What the opponent is told about a face-down Mystery */
@@ -115,7 +126,12 @@ export interface CardDef {
    * Conditions on the minion itself, rechecked after every step. `base` is its Attack without any aura or condition
    * (so "Attack always equals Health" can be `health - base`).
    */
-  selfAura?: (c: { minion: MinionInstance; state: GameState; owner: PlayerId; base: number }) => SelfAura;
+  selfAura?: (c: {
+    minion: MinionInstance;
+    state: GameState;
+    owner: PlayerId;
+    base: number;
+  }) => SelfAura;
   /** Cost changes this minion gives its owner's cards in hand while it is on the board */
   costMods?: CostMod[];
   /** A change to this card's own cost while it is in hand ("costs 1 less for each ..."). Negative is cheaper */
@@ -158,7 +174,10 @@ export interface Definition {
   create: (n: Numbers) => CardDef;
 }
 
-export const defineCard = (id: string, create: (n: Numbers) => CardDef): Definition => ({ id, create });
+export const defineCard = (
+  id: string,
+  create: (n: Numbers) => CardDef,
+): Definition => ({ id, create });
 
 /**
  * The only place that reads raw number fields (RULES Q23 is provisional, so what each field means
@@ -167,7 +186,10 @@ export const defineCard = (id: string, create: (n: Numbers) => CardDef): Definit
 export const numbersOf = (id: string, raw: CardNumbers): Numbers => {
   const need = (name: keyof CardNumbers) => {
     const v = raw[name];
-    if (v === undefined) throw new Error(`${id} has no ${name} number but its definition needs it`);
+    if (v === undefined)
+      throw new Error(
+        `${id} has no ${name} number but its definition needs it`,
+      );
     return v;
   };
   return {

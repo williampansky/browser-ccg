@@ -5,7 +5,7 @@ import db from '../data/mechanics.json';
  */
 const getMechanicDescription = (
   key: string,
-  json: Record<string, any> = db
+  json: Record<string, any> = db,
 ): string | undefined => {
   return json[key] && json[key].description ? json[key].description : undefined;
 };

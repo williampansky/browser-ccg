@@ -1,17 +1,56 @@
 import { legalActions } from '../../rules/legal-actions';
-import { catalog, endTurn, failCode, hero, hurt, minion, mref, play, realCard, run, setup, stats, withWeapon } from '../../testing/real-cards';
+import {
+  catalog,
+  endTurn,
+  failCode,
+  hero,
+  hurt,
+  minion,
+  mref,
+  play,
+  realCard,
+  run,
+  setup,
+  stats,
+  withWeapon,
+} from '../../testing/real-cards';
 import type { Action, GameState } from '../../state/types';
 
 // Mysteries: placed face down, react on the OPPONENT's turn only, one at a time. Player 0 sets the Mystery; player 1 acts.
 
-const ids = ['143', '127', '148', '126', '157', '152', '146', '159', '129', '158', '156', '132', '067', '250', '149', '045'];
+const ids = [
+  '143',
+  '127',
+  '148',
+  '126',
+  '157',
+  '152',
+  '146',
+  '159',
+  '129',
+  '158',
+  '156',
+  '132',
+  '067',
+  '250',
+  '149',
+  '045',
+];
 it.each(ids)('PRIME_%s is defined', (n) => {
   const s = setup(`PRIME_${n}`, { theirs: [[1, 3]] });
-  expect(legalActions(s, '0', catalog).some((a) => a.type === 'PlayCard' && a.handIndex === 0)).toBe(true);
+  expect(
+    legalActions(s, '0', catalog).some(
+      (a) => a.type === 'PlayCard' && a.handIndex === 0,
+    ),
+  ).toBe(true);
 });
 
 /** P0 plays `id` (a Mystery) with `mine` on the board, ends the turn, and it is P1's turn with `theirs` on the board. */
-const armed = (id: string, opts: Parameters<typeof setup>[1] = {}, weaponForMe = false): GameState => {
+const armed = (
+  id: string,
+  opts: Parameters<typeof setup>[1] = {},
+  weaponForMe = false,
+): GameState => {
   let s = setup(id, opts);
   if (weaponForMe) s = withWeapon(s, '0');
   return endTurn(play(s).state);
@@ -21,7 +60,12 @@ const act = (s: GameState, a: Action) => {
   if ('error' in r) throw new Error(r.error);
   return r.state;
 };
-const attackHero = (s: GameState, i = 0) => act(s, { type: 'Attack', attackerId: s.players['1'].board[i].instanceId, target: hero('0') });
+const attackHero = (s: GameState, i = 0) =>
+  act(s, {
+    type: 'Attack',
+    attackerId: s.players['1'].board[i].instanceId,
+    target: hero('0'),
+  });
 
 describe('placing a Mystery', () => {
   it('goes face down in your slot, takes no board space, and is not "played" for history', () => {
@@ -33,20 +77,30 @@ describe('placing a Mystery', () => {
   it('only one at a time: a second Mystery cannot be played, and legalActions does not offer it', () => {
     const s = play(setup('PRIME_143', { hand: ['PRIME_127'] })).state;
     expect(failCode(s)).toBe('MYSTERY_ACTIVE');
-    expect(legalActions(s, '0', catalog).some((a) => a.type === 'PlayCard')).toBe(false);
+    expect(
+      legalActions(s, '0', catalog).some((a) => a.type === 'PlayCard'),
+    ).toBe(false);
   });
-  it('does not react on its owner\'s own turn', () => {
+  it("does not react on its owner's own turn", () => {
     // P0 sets Resurrection, then on the same turn attacks with a 1-Health minion into a 5/5 and loses it.
-    const s = play(setup('PRIME_158', { mine: [[1, 1, 'PRIME_062']], theirs: [[5, 5]] })).state;
-    const r = act(s, { type: 'Attack', attackerId: s.players['0'].board[0].instanceId, target: mref(s, '1', 0) });
+    const s = play(
+      setup('PRIME_158', { mine: [[1, 1, 'PRIME_062']], theirs: [[5, 5]] }),
+    ).state;
+    const r = act(s, {
+      type: 'Attack',
+      attackerId: s.players['0'].board[0].instanceId,
+      target: mref(s, '1', 0),
+    });
     expect(r.players['0'].board).toHaveLength(0);
     expect(r.players['0'].mystery?.cardId).toBe('PRIME_158'); // still face down, nothing returned
-    expect(r.players['0'].hand.some((c) => c.cardId === 'PRIME_062')).toBe(false);
+    expect(r.players['0'].hand.some((c) => c.cardId === 'PRIME_062')).toBe(
+      false,
+    );
   });
 });
 
 describe('reacting to attacks (before the damage)', () => {
-  it('PRIME_143 gives Armor equal to twice the attacker\'s Attack (min 4)', () => {
+  it("PRIME_143 gives Armor equal to twice the attacker's Attack (min 4)", () => {
     let s = armed('PRIME_143', { theirs: [[3, 5]] });
     s = attackHero(s);
     expect(s.players['0'].armor).toBe(3); // 6 Armor gained, then the 3-Attack hit took 3 of it
@@ -81,9 +135,13 @@ describe('reacting to attacks (before the damage)', () => {
   it('PRIME_157 summons two Guard Mice and the attack hits one of them', () => {
     const s = attackHero(armed('PRIME_157', { theirs: [[3, 5]] }));
     expect(s.players['0'].health).toBe(30);
-    expect(s.players['0'].board.map((m) => m.keywords.guard)).toEqual([true, true].slice(0, s.players['0'].board.length));
+    expect(s.players['0'].board.map((m) => m.keywords.guard)).toEqual(
+      [true, true].slice(0, s.players['0'].board.length),
+    );
     expect(s.players['0'].board.length).toBeGreaterThanOrEqual(1);
-    expect(s.players['0'].board.some((m) => m.health < 1 || m.health === 1)).toBe(true);
+    expect(
+      s.players['0'].board.some((m) => m.health < 1 || m.health === 1),
+    ).toBe(true);
   });
   it('PRIME_157 also reacts to a hero weapon attack', () => {
     let s = armed('PRIME_157', { theirs: [[1, 5]] });
@@ -95,25 +153,63 @@ describe('reacting to attacks (before the damage)', () => {
 });
 
 describe('reacting to spells', () => {
-  it('PRIME_152 sends a targeted spell to one of the caster\'s own minions', () => {
+  it("PRIME_152 sends a targeted spell to one of the caster's own minions", () => {
     let s = armed('PRIME_152', { mine: [[1, 5]], theirs: [[1, 9]] });
     expect(realCard('CORE_093').type).toBe('spell'); // 3 damage to an unhurt minion
-    s = { ...s, players: { ...s.players, '1': { ...s.players['1'], hand: [{ instanceId: 777, cardId: 'CORE_093' }], energy: { current: 10, total: 10 } } } };
-    const r = act(s, { type: 'PlayCard', handIndex: 0, target: mref(s, '0', 0) });
+    s = {
+      ...s,
+      players: {
+        ...s.players,
+        '1': {
+          ...s.players['1'],
+          hand: [{ instanceId: 777, cardId: 'CORE_093' }],
+          energy: { current: 10, total: 10 },
+        },
+      },
+    };
+    const r = act(s, {
+      type: 'PlayCard',
+      handIndex: 0,
+      target: mref(s, '0', 0),
+    });
     expect(stats(r, '0')).toEqual([[1, 5]]); // not hit
     expect(stats(r, '1')).toEqual([[1, 6]]); // hit itself
     expect(r.players['0'].mystery).toBeNull();
   });
   it('PRIME_152 does nothing if the caster has no minion to redirect to', () => {
     let s = armed('PRIME_152', { mine: [[1, 5]] });
-    s = { ...s, players: { ...s.players, '1': { ...s.players['1'], hand: [{ instanceId: 777, cardId: 'CORE_093' }], energy: { current: 10, total: 10 } } } };
-    const r = act(s, { type: 'PlayCard', handIndex: 0, target: mref(s, '0', 0) });
+    s = {
+      ...s,
+      players: {
+        ...s.players,
+        '1': {
+          ...s.players['1'],
+          hand: [{ instanceId: 777, cardId: 'CORE_093' }],
+          energy: { current: 10, total: 10 },
+        },
+      },
+    };
+    const r = act(s, {
+      type: 'PlayCard',
+      handIndex: 0,
+      target: mref(s, '0', 0),
+    });
     expect(stats(r, '0')).toEqual([[1, 2]]);
   });
   it('PRIME_146 copies the enemy spell into your hand, and the spell still resolves', () => {
     let s = armed('PRIME_146');
     const handBefore = s.players['0'].hand.length;
-    s = { ...s, players: { ...s.players, '1': { ...s.players['1'], hand: [{ instanceId: 778, cardId: 'CORE_043' }], energy: { current: 10, total: 10 } } } };
+    s = {
+      ...s,
+      players: {
+        ...s.players,
+        '1': {
+          ...s.players['1'],
+          hand: [{ instanceId: 778, cardId: 'CORE_043' }],
+          energy: { current: 10, total: 10 },
+        },
+      },
+    };
     const r = act(s, { type: 'PlayCard', handIndex: 0 });
     expect(r.players['0'].hand.map((c) => c.cardId)).toContain('CORE_043');
     expect(r.players['0'].hand).toHaveLength(handBefore + 1);
@@ -121,7 +217,17 @@ describe('reacting to spells', () => {
   });
   it('PRIME_146 ignores items, minions, and a Mystery placed by the enemy', () => {
     let s = armed('PRIME_146');
-    s = { ...s, players: { ...s.players, '1': { ...s.players['1'], hand: [{ instanceId: 779, cardId: 'PRIME_143' }], energy: { current: 10, total: 10 } } } };
+    s = {
+      ...s,
+      players: {
+        ...s.players,
+        '1': {
+          ...s.players['1'],
+          hand: [{ instanceId: 779, cardId: 'PRIME_143' }],
+          energy: { current: 10, total: 10 },
+        },
+      },
+    };
     const r = act(s, { type: 'PlayCard', handIndex: 0 });
     expect(r.players['0'].mystery?.cardId).toBe('PRIME_146');
   });
@@ -129,7 +235,17 @@ describe('reacting to spells', () => {
 
 describe('reacting to minions, damage and deaths', () => {
   const p1Plays = (s: GameState, cardId: string): GameState => {
-    const t = { ...s, players: { ...s.players, '1': { ...s.players['1'], hand: [{ instanceId: 780, cardId }], energy: { current: 10, total: 10 } } } };
+    const t = {
+      ...s,
+      players: {
+        ...s.players,
+        '1': {
+          ...s.players['1'],
+          hand: [{ instanceId: 780, cardId }],
+          energy: { current: 10, total: 10 },
+        },
+      },
+    };
     return act(t, { type: 'PlayCard', handIndex: 0 });
   };
   it('PRIME_159 halves the Health (rounded up) and Disables the minion', () => {
@@ -138,7 +254,7 @@ describe('reacting to minions, damage and deaths', () => {
     expect([m.attack, m.health]).toEqual([4, 3]);
     expect(m.disabledOnTurn).toBeDefined();
   });
-  it('PRIME_129 deals damage equal to the minion\'s Cost', () => {
+  it("PRIME_129 deals damage equal to the minion's Cost", () => {
     const r = p1Plays(armed('PRIME_129'), 'PRIME_074'); // cost 6, 4/5
     expect(r.players['1'].board).toHaveLength(0); // 6 damage kills a 5-Health minion
     const small = p1Plays(armed('PRIME_129'), 'PRIME_033'); // cost 5, 3/6 Guard
@@ -150,13 +266,22 @@ describe('reacting to minions, damage and deaths', () => {
     s = attackHero(s);
     expect(s.players['0'].health).toBe(19); // 20 - 6 + 5
     expect(s.players['0'].hand.length).toBe(hand + 1);
-    const small = attackHero(armed('PRIME_156', { theirs: [[4, 6]], heroHp: { '0': 20 } }));
+    const small = attackHero(
+      armed('PRIME_156', { theirs: [[4, 6]], heroHp: { '0': 20 } }),
+    );
     expect(small.players['0'].mystery?.cardId).toBe('PRIME_156');
   });
   it('PRIME_158 returns a dying minion of yours to your hand, one cheaper (never a token)', () => {
-    let s = setup('PRIME_158', { mine: [[1, 1, 'PRIME_062']], theirs: [[5, 5]] });
+    let s = setup('PRIME_158', {
+      mine: [[1, 1, 'PRIME_062']],
+      theirs: [[5, 5]],
+    });
     s = endTurn(play(s).state);
-    const r = act(s, { type: 'Attack', attackerId: s.players['1'].board[0].instanceId, target: mref(s, '0', 0) });
+    const r = act(s, {
+      type: 'Attack',
+      attackerId: s.players['1'].board[0].instanceId,
+      target: mref(s, '0', 0),
+    });
     const back = r.players['0'].hand.find((c) => c.cardId === 'PRIME_062');
     expect(back?.costDelta).toBe(-1);
     expect(r.players['0'].mystery).toBeNull();
@@ -177,7 +302,17 @@ describe('Mystery payoffs and removal', () => {
   it('PRIME_132 reveals Concealed minions (1 damage) and destroys the enemy Mystery, drawing only then', () => {
     const s0 = armed('PRIME_143', { theirs: [[2, 3, 'PRIME_007']] });
     // P1 to act: give P1 the spell
-    const t = { ...s0, players: { ...s0.players, '1': { ...s0.players['1'], hand: [{ instanceId: 790, cardId: 'PRIME_132' }], energy: { current: 10, total: 10 } } } };
+    const t = {
+      ...s0,
+      players: {
+        ...s0.players,
+        '1': {
+          ...s0.players['1'],
+          hand: [{ instanceId: 790, cardId: 'PRIME_132' }],
+          energy: { current: 10, total: 10 },
+        },
+      },
+    };
     const hand = t.players['1'].hand.length;
     const r = act(t, { type: 'PlayCard', handIndex: 0 });
     expect(r.players['0'].mystery).toBeNull();
@@ -187,7 +322,17 @@ describe('Mystery payoffs and removal', () => {
   });
   it('PRIME_067 takes the enemy Mystery for you', () => {
     let s = armed('PRIME_143');
-    s = { ...s, players: { ...s.players, '1': { ...s.players['1'], hand: [{ instanceId: 791, cardId: 'PRIME_067' }], energy: { current: 10, total: 10 } } } };
+    s = {
+      ...s,
+      players: {
+        ...s.players,
+        '1': {
+          ...s.players['1'],
+          hand: [{ instanceId: 791, cardId: 'PRIME_067' }],
+          energy: { current: 10, total: 10 },
+        },
+      },
+    };
     const r = act(s, { type: 'PlayCard', handIndex: 0 });
     expect(r.players['0'].mystery).toBeNull();
     expect(r.players['1'].mystery?.cardId).toBe('PRIME_143');

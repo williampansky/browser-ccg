@@ -16,7 +16,7 @@ export const CardPower = ({
   currentPower,
   elite = false,
   isIncreased = false,
-  isReduced = false
+  isReduced = false,
 }: CardPowerProps) => {
   return (
     <div
@@ -26,15 +26,15 @@ export const CardPower = ({
         isIncreased ? styles['card__power--buffed'] : '',
         isReduced ? styles['card__power--debuffed'] : '',
       )}
-      data-component='CardPower'
+      data-component="CardPower"
     >
       <div
-        className='text__value text__value--shadow'
+        className="text__value text__value--shadow"
         data-value={currentPower}
       >
         {currentPower}
       </div>
-      <Image src={BADGE_POWER} layout='fill' />
+      <Image src={BADGE_POWER} layout="fill" />
     </div>
   );
 };

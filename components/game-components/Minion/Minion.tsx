@@ -60,7 +60,7 @@ export const Minion = ({ isSelected = false, ...card }: ReactMinionProps) => {
         styles['minion'],
         booleans?.isHidden ? 'minion--is-hidden' : '',
       )}
-      data-component='Minion'
+      data-component="Minion"
       id={uuid}
     >
       {/* <MinionCost

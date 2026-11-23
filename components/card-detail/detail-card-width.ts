@@ -16,14 +16,21 @@ export const detailCardWidth = (viewW: number, viewH: number): number => {
   const byHeight = (viewH - PAD_V) * (FACE_WIDTH / FACE_HEIGHT);
   const roomW = viewW - PAD_H;
   const byWidth = viewW < SIDE_BY_SIDE_FROM ? roomW : roomW - TEXT_COLUMN;
-  return Math.round(Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, byHeight, byWidth)));
+  return Math.round(
+    Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, byHeight, byWidth)),
+  );
 };
 
 /** `detailCardWidth` for the current window, kept up to date on resize. */
 export const useDetailCardWidth = (): number => {
-  const [width, setWidth] = useState(() => (typeof window === 'undefined' ? 420 : detailCardWidth(window.innerWidth, window.innerHeight)));
+  const [width, setWidth] = useState(() =>
+    typeof window === 'undefined'
+      ? 420
+      : detailCardWidth(window.innerWidth, window.innerHeight),
+  );
   useEffect(() => {
-    const update = () => setWidth(detailCardWidth(window.innerWidth, window.innerHeight));
+    const update = () =>
+      setWidth(detailCardWidth(window.innerWidth, window.innerHeight));
     update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);

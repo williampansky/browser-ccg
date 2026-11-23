@@ -8,7 +8,7 @@ function getHost(req: any) {
   if (host.startsWith('localhost')) {
     return `http://${host}`;
   }
-  
+
   return `https://${host}`;
 }
 

@@ -9,12 +9,19 @@ export default defineCard('PRIME_113', (n) => ({
     {
       label: `+${n.primary} Attack and Rush`,
       target: friendlyMinion(),
-      onPlay: [buff(chosenTarget(), n.primary, 0), grantKeyword(chosenTarget(), 'rush')],
+      onPlay: [
+        buff(chosenTarget(), n.primary, 0),
+        grantKeyword(chosenTarget(), 'rush'),
+      ],
     },
     {
       label: `+${n.primary} Health, Guard and heal your hero ${n.primary}`,
       target: friendlyMinion(),
-      onPlay: [buff(chosenTarget(), 0, n.primary), grantKeyword(chosenTarget(), 'guard'), heal(ownHero(), n.primary)],
+      onPlay: [
+        buff(chosenTarget(), 0, n.primary),
+        grantKeyword(chosenTarget(), 'guard'),
+        heal(ownHero(), n.primary),
+      ],
     },
   ],
 }));

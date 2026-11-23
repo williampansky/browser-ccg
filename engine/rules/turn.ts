@@ -31,7 +31,9 @@ export const endTurnCleanup = (g: Draft<GameState>, player: PlayerId): void => {
     for (const m of [...g.players[p].board]) {
       if (!m.loan || m.loan.returnOnTurn > g.turn) continue;
       const home = m.loan.from;
-      g.players[p].board = g.players[p].board.filter((x) => x.instanceId !== m.instanceId);
+      g.players[p].board = g.players[p].board.filter(
+        (x) => x.instanceId !== m.instanceId,
+      );
       delete m.loan;
       if (g.players[home].board.length < 7) {
         m.attacksThisTurn = 0;
@@ -42,24 +44,36 @@ export const endTurnCleanup = (g: Draft<GameState>, player: PlayerId): void => {
 };
 
 /** Starts `player`'s turn: turn +1, energy total +1 (cap 10) and refill, minions ready, then draw one card. */
-export const startTurn = (state: GameState, player: PlayerId, events: GameEvent[]): GameState =>
+export const startTurn = (
+  state: GameState,
+  player: PlayerId,
+  events: GameEvent[],
+): GameState =>
   produce(state, (g) => {
     g.turn += 1;
     g.activePlayer = player;
     const energy = g.players[player].energy;
     energy.total = Math.min(MAX_ENERGY, energy.total + 1);
     // Overcharge from last turn keeps that much of the refill locked.
-    energy.current = Math.max(0, energy.total - (g.players[player].overcharge ?? 0));
+    energy.current = Math.max(
+      0,
+      energy.total - (g.players[player].overcharge ?? 0),
+    );
     delete g.players[player].overcharge;
     for (const m of g.players[player].board) m.attacksThisTurn = 0;
     const hero = g.players[player].hero;
     if (hero) hero.cooldowns = hero.cooldowns.map((c) => Math.max(0, c - 1));
-    g.players[player].plays = { now: 0, prev: g.players[player].plays?.now ?? 0 };
+    g.players[player].plays = {
+      now: 0,
+      prev: g.players[player].plays?.now ?? 0,
+    };
     g.players[player].weaponAttacksThisTurn = 0;
     events.push({ type: 'TurnStarted', player, turn: g.turn });
     // Expiration: marked minions on either board are brought to 0 health now; `settle` removes them.
     for (const p of ['0', '1'] as const) {
-      for (const m of g.players[p].board) if (m.expiresOnTurn !== undefined && m.expiresOnTurn <= g.turn) m.health = 0;
+      for (const m of g.players[p].board)
+        if (m.expiresOnTurn !== undefined && m.expiresOnTurn <= g.turn)
+          m.health = 0;
     }
     drawCard(g, player, events);
   });

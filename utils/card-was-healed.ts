@@ -8,7 +8,7 @@ const cardWasHealed = (card: Card) => {
   if (gte(length, 2)) {
     return gt(
       healthStream[length - 1]?.currentHealth,
-      healthStream[length - 2]?.currentHealth
+      healthStream[length - 2]?.currentHealth,
     );
   }
 

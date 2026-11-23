@@ -7,7 +7,7 @@ export const TIP_ATTR = 'data-tip';
 export const viewportShift = (
   rect: { left: number; top: number; right: number; bottom: number },
   viewport: { width: number; height: number },
-  margin = 8
+  margin = 8,
 ): { dx: number; dy: number } => {
   const axis = (lo: number, hi: number, size: number) => {
     if (hi - lo > size - 2 * margin) return -lo + margin; // too big: pin its start
@@ -15,7 +15,10 @@ export const viewportShift = (
     if (hi > size - margin) return size - margin - hi;
     return 0;
   };
-  return { dx: axis(rect.left, rect.right, viewport.width), dy: axis(rect.top, rect.bottom, viewport.height) };
+  return {
+    dx: axis(rect.left, rect.right, viewport.width),
+    dy: axis(rect.top, rect.bottom, viewport.height),
+  };
 };
 
 /**
@@ -26,7 +29,14 @@ export const nudgeIntoViewport = (el: HTMLElement, margin = 8): void => {
   el.style.translate = '';
   const r = el.getBoundingClientRect();
   if (r.width === 0 && r.height === 0) return;
-  const { dx, dy } = viewportShift(r, { width: document.documentElement.clientWidth, height: document.documentElement.clientHeight }, margin);
+  const { dx, dy } = viewportShift(
+    r,
+    {
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight,
+    },
+    margin,
+  );
   if (dx || dy) el.style.translate = `${Math.round(dx)}px ${Math.round(dy)}px`;
 };
 
@@ -40,7 +50,11 @@ export const useKeepTipsInViewport = (): void => {
     const run = () => {
       cancelAnimationFrame(frame);
       // After the browser has applied the :hover styles that reveal the tip.
-      frame = requestAnimationFrame(() => document.querySelectorAll<HTMLElement>(`[${TIP_ATTR}]`).forEach((el) => nudgeIntoViewport(el)));
+      frame = requestAnimationFrame(() =>
+        document
+          .querySelectorAll<HTMLElement>(`[${TIP_ATTR}]`)
+          .forEach((el) => nudgeIntoViewport(el)),
+      );
     };
     document.addEventListener('mouseover', run);
     document.addEventListener('focusin', run);

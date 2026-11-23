@@ -7,10 +7,16 @@ import { findMinion } from '../../rules/lookup';
 export default defineCard('PRIME_141', (n) => ({
   triggers: [
     on('CardPlayed', {
-      when: (e, c) => e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
+      when: (e, c) =>
+        e.player === c.owner && c.catalog.get(e.cardId)?.type === 'spell',
       do: [
         buffThisTurn(self(), n.primary),
-        computed((ctx) => ((ctx.self !== undefined && (findMinion(ctx.g, ctx.self)?.minion.attack ?? 0) >= 4) ? draw(1) : () => undefined)),
+        computed((ctx) =>
+          ctx.self !== undefined &&
+          (findMinion(ctx.g, ctx.self)?.minion.attack ?? 0) >= 4
+            ? draw(1)
+            : () => undefined,
+        ),
       ],
     }),
   ],

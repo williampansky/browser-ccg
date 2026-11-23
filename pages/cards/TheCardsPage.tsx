@@ -29,17 +29,17 @@ export default function TheCardsPage() {
 
   return (
     <Layout title={page.title} description={page.description}>
-      <div className='collection__page'>
+      <div className="collection__page">
         <Container>
-          <div className='page__header'>
+          <div className="page__header">
             <h1>{page.headline}</h1>
           </div>
-          <div className='grid'>
+          <div className="grid">
             {cards?.map((c: Card) => {
               return c ? (
                 <div
                   key={c.uuid}
-                  className='grid-item'
+                  className="grid-item"
                   onClickCapture={inspectCard(c)}
                 >
                   <CardComponent {...c} canPlay={true} />

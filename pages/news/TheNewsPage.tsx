@@ -9,5 +9,11 @@ export async function getStaticProps() {
 }
 
 export default function TheNewsPage({ html }: { html: string }) {
-  return <MarkdownPage title={page.name} description={page.description} html={html} />;
+  return (
+    <MarkdownPage
+      title={page.name}
+      description={page.description}
+      html={html}
+    />
+  );
 }

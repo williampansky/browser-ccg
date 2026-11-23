@@ -9,7 +9,10 @@ export default defineCard('PRIME_223', () => ({
   target: friendlyMinion(),
   onPlay: [
     computed((ctx) => {
-      const m = ctx.target?.kind === 'minion' ? findMinion(ctx.g, ctx.target.instanceId)?.minion : undefined;
+      const m =
+        ctx.target?.kind === 'minion'
+          ? findMinion(ctx.g, ctx.target.instanceId)?.minion
+          : undefined;
       return damage(allEnemyMinions(), m?.attack ?? 0);
     }),
     destroy(chosenTarget()),

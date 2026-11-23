@@ -7,7 +7,10 @@ export default defineCard('PRIME_156', () => ({
   mystery: {
     category: 'damage',
     event: 'HeroDamaged',
-    when: ({ event, owner }) => event?.type === 'HeroDamaged' && event.player === owner && event.amount >= 5,
+    when: ({ event, owner }) =>
+      event?.type === 'HeroDamaged' &&
+      event.player === owner &&
+      event.amount >= 5,
     do: [heal(ownHero(), 5), draw(1)],
   },
 }));

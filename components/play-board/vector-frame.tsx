@@ -54,19 +54,41 @@ const Defs = ({ r }: { r: Rarity }) => {
         <feGaussianBlur stdDeviation="1.6" />
       </filter>
       <filter id={id(r, 'grain')} x="0" y="0" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="n" />
-        <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.35  0 0 0 0 0.25  0 0 0 0 0.1  0 0 0 0.35 0" />
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.9"
+          numOctaves="2"
+          seed="3"
+          result="n"
+        />
+        <feColorMatrix
+          in="n"
+          type="matrix"
+          values="0 0 0 0 0.35  0 0 0 0 0.25  0 0 0 0 0.1  0 0 0 0.35 0"
+        />
       </filter>
     </defs>
   );
 };
 
 /** The frame: a steel slab with a window for the art, rarity trim, a ribbon for the name and a parchment text area. */
-export const VectorFrame = ({ color: rarity, className }: { color: Rarity; className?: string }) => {
+export const VectorFrame = ({
+  color: rarity,
+  className,
+}: {
+  color: Rarity;
+  className?: string;
+}) => {
   const p = PALETTE[rarity];
   const win = 'M12 27 H169 V162 H12 Z';
   return (
-    <svg className={className} viewBox="0 0 178 250" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <svg
+      className={className}
+      viewBox="0 0 178 250"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      focusable="false"
+    >
       <Defs r={rarity} />
       {/* steel slab with the art window cut out */}
       <path
@@ -75,9 +97,36 @@ export const VectorFrame = ({ color: rarity, className }: { color: Rarity; class
         d={`M10 0 H168 Q178 0 178 10 V240 Q178 250 168 250 H10 Q0 250 0 240 V10 Q0 0 10 0 Z ${win}`}
       />
       {/* glowing rarity trim: the outer edge, and the window edge */}
-      <rect x="2.5" y="2.5" width="173" height="245" rx="8" fill="none" stroke={p.trim} strokeWidth="2.4" filter={`url(#${id(rarity, 'glow')})`} opacity="0.9" />
-      <rect x="2.5" y="2.5" width="173" height="245" rx="8" fill="none" stroke={p.light} strokeWidth="0.7" opacity="0.8" />
-      <path d={win} fill="none" stroke={p.trim} strokeWidth="2.2" filter={`url(#${id(rarity, 'glow')})`} />
+      <rect
+        x="2.5"
+        y="2.5"
+        width="173"
+        height="245"
+        rx="8"
+        fill="none"
+        stroke={p.trim}
+        strokeWidth="2.4"
+        filter={`url(#${id(rarity, 'glow')})`}
+        opacity="0.9"
+      />
+      <rect
+        x="2.5"
+        y="2.5"
+        width="173"
+        height="245"
+        rx="8"
+        fill="none"
+        stroke={p.light}
+        strokeWidth="0.7"
+        opacity="0.8"
+      />
+      <path
+        d={win}
+        fill="none"
+        stroke={p.trim}
+        strokeWidth="2.2"
+        filter={`url(#${id(rarity, 'glow')})`}
+      />
       <path d={win} fill="none" stroke="#0a0c10" strokeWidth="1" />
       {/* corner studs */}
       {[
@@ -87,12 +136,29 @@ export const VectorFrame = ({ color: rarity, className }: { color: Rarity; class
         [169, 241],
       ].map(([x, y]) => (
         <g key={`${x}-${y}`}>
-          <circle cx={x} cy={y} r="4.2" fill="#0d1015" stroke={p.trim} strokeWidth="0.8" />
+          <circle
+            cx={x}
+            cy={y}
+            r="4.2"
+            fill="#0d1015"
+            stroke={p.trim}
+            strokeWidth="0.8"
+          />
           <circle cx={x} cy={y} r="1.8" fill={p.light} />
         </g>
       ))}
       {/* title plate for the type label */}
-      <rect x="36" y="13" width="106" height="11" rx="5.5" fill="#080a0e" opacity="0.88" stroke={p.trim} strokeWidth="0.6" />
+      <rect
+        x="36"
+        y="13"
+        width="106"
+        height="11"
+        rx="5.5"
+        fill="#080a0e"
+        opacity="0.88"
+        stroke={p.trim}
+        strokeWidth="0.6"
+      />
       {/* name ribbon */}
       <path
         d="M3 165 L15 160 H163 L175 165 L169 172.5 L175 180 L163 185 H15 L3 180 L9 172.5 Z"
@@ -100,26 +166,67 @@ export const VectorFrame = ({ color: rarity, className }: { color: Rarity; class
         stroke="#05070a"
         strokeWidth="0.9"
       />
-      <path d="M15 161.5 H163" stroke={p.light} strokeWidth="0.8" opacity="0.8" />
+      <path
+        d="M15 161.5 H163"
+        stroke={p.light}
+        strokeWidth="0.8"
+        opacity="0.8"
+      />
       {/* parchment */}
-      <path d="M7 187 H171 V238 Q171 243 166 243 H12 Q7 243 7 238 Z" fill={`url(#${id(rarity, 'paper')})`} stroke="#05070a" strokeWidth="0.9" />
-      <rect x="7" y="187" width="164" height="56" fill="#fff" filter={`url(#${id(rarity, 'grain')})`} opacity="0.55" />
+      <path
+        d="M7 187 H171 V238 Q171 243 166 243 H12 Q7 243 7 238 Z"
+        fill={`url(#${id(rarity, 'paper')})`}
+        stroke="#05070a"
+        strokeWidth="0.9"
+      />
+      <rect
+        x="7"
+        y="187"
+        width="164"
+        height="56"
+        fill="#fff"
+        filter={`url(#${id(rarity, 'grain')})`}
+        opacity="0.55"
+      />
       <path d="M7 187 H171" stroke="#fff" strokeWidth="0.8" opacity="0.5" />
       {/* cost socket, top left */}
-      <circle cx="19" cy="19" r="14.5" fill="#0a0c10" stroke={p.trim} strokeWidth="1.4" />
+      <circle
+        cx="19"
+        cy="19"
+        r="14.5"
+        fill="#0a0c10"
+        stroke={p.trim}
+        strokeWidth="1.4"
+      />
       <circle cx="19" cy="19" r="11.5" fill={`url(#${id(rarity, 'gem')})`} />
     </svg>
   );
 };
 
 /** The rarity gem set into the top edge. */
-export const VectorGem = ({ color: rarity, className }: { color: Rarity; className?: string }) => {
+export const VectorGem = ({
+  color: rarity,
+  className,
+}: {
+  color: Rarity;
+  className?: string;
+}) => {
   const p = PALETTE[rarity];
   return (
-    <svg className={className} viewBox="0 0 22 30" aria-hidden="true" focusable="false">
+    <svg
+      className={className}
+      viewBox="0 0 22 30"
+      aria-hidden="true"
+      focusable="false"
+    >
       <Defs r={rarity} />
       <polygon points="11,0 22,15 11,30 0,15" fill="#0a0c10" />
-      <polygon points="11,3 19,15 11,27 3,15" fill={`url(#${id(rarity, 'gem')})`} stroke={p.light} strokeWidth="0.6" />
+      <polygon
+        points="11,3 19,15 11,27 3,15"
+        fill={`url(#${id(rarity, 'gem')})`}
+        stroke={p.light}
+        strokeWidth="0.6"
+      />
       <polygon points="11,3 15,15 11,27 7,15" fill="#fff" opacity="0.22" />
     </svg>
   );
@@ -134,21 +241,59 @@ const GLYPH: Record<string, string> = {
 };
 
 /** The round type emblem beside the ribbon (the type icon on a dark disc). */
-export const VectorEmblem = ({ color: rarity, type, className }: { color: Rarity; type: string; className?: string }) => {
+export const VectorEmblem = ({
+  color: rarity,
+  type,
+  className,
+}: {
+  color: Rarity;
+  type: string;
+  className?: string;
+}) => {
   const p = PALETTE[rarity];
   return (
-    <svg className={className} viewBox="0 0 50 50" aria-hidden="true" focusable="false">
+    <svg
+      className={className}
+      viewBox="0 0 50 50"
+      aria-hidden="true"
+      focusable="false"
+    >
       <Defs r={rarity} />
-      <circle cx="25" cy="25" r="23" fill="#0a0c10" stroke={p.trim} strokeWidth="2" />
-      <circle cx="25" cy="25" r="18.5" fill={`url(#${id(rarity, 'metal')})`} stroke="#05070a" strokeWidth="1" />
+      <circle
+        cx="25"
+        cy="25"
+        r="23"
+        fill="#0a0c10"
+        stroke={p.trim}
+        strokeWidth="2"
+      />
+      <circle
+        cx="25"
+        cy="25"
+        r="18.5"
+        fill={`url(#${id(rarity, 'metal')})`}
+        stroke="#05070a"
+        strokeWidth="1"
+      />
       <g transform="translate(13 13)">
-        <path d={GLYPH[type] ?? GLYPH.item} fill={p.light} stroke={p.dark} strokeWidth="0.8" />
+        <path
+          d={GLYPH[type] ?? GLYPH.item}
+          fill={p.light}
+          stroke={p.dark}
+          strokeWidth="0.8"
+        />
       </g>
     </svg>
   );
 };
 
-const star = (cx: number, cy: number, outer: number, inner: number, points: number): string =>
+const star = (
+  cx: number,
+  cy: number,
+  outer: number,
+  inner: number,
+  points: number,
+): string =>
   Array.from({ length: points * 2 }, (_, i) => {
     const a = (Math.PI * i) / points - Math.PI / 2;
     const r = i % 2 === 0 ? outer : inner;
@@ -156,8 +301,19 @@ const star = (cx: number, cy: number, outer: number, inner: number, points: numb
   }).join(' ');
 
 /** The attack badge (a gold burst) and the health badge (a red shield). */
-export const VectorStat = ({ kind, className }: { kind: 'attack' | 'health'; className?: string }) => (
-  <svg className={className} viewBox="0 0 50 50" aria-hidden="true" focusable="false">
+export const VectorStat = ({
+  kind,
+  className,
+}: {
+  kind: 'attack' | 'health';
+  className?: string;
+}) => (
+  <svg
+    className={className}
+    viewBox="0 0 50 50"
+    aria-hidden="true"
+    focusable="false"
+  >
     <defs>
       <radialGradient id="vf-stat-attack" cx="0.4" cy="0.35" r="0.75">
         <stop offset="0" stopColor="#ffe9a8" />
@@ -173,12 +329,27 @@ export const VectorStat = ({ kind, className }: { kind: 'attack' | 'health'; cla
     {kind === 'attack' ? (
       <>
         <polygon points={star(25, 25, 24, 17.5, 10)} fill="#0a0c10" />
-        <circle cx="25" cy="25" r="16" fill="url(#vf-stat-attack)" stroke="#3a1f02" strokeWidth="1.4" />
+        <circle
+          cx="25"
+          cy="25"
+          r="16"
+          fill="url(#vf-stat-attack)"
+          stroke="#3a1f02"
+          strokeWidth="1.4"
+        />
       </>
     ) : (
       <>
-        <path d="M25 1.5 L45 8 V25 Q45 40 25 48.5 Q5 40 5 25 V8 Z" fill="#0a0c10" />
-        <path d="M25 5 L41 10.5 V25 Q41 37 25 44.5 Q9 37 9 25 V10.5 Z" fill="url(#vf-stat-health)" stroke="#3a0505" strokeWidth="1.2" />
+        <path
+          d="M25 1.5 L45 8 V25 Q45 40 25 48.5 Q5 40 5 25 V8 Z"
+          fill="#0a0c10"
+        />
+        <path
+          d="M25 5 L41 10.5 V25 Q41 37 25 44.5 Q9 37 9 25 V10.5 Z"
+          fill="url(#vf-stat-health)"
+          stroke="#3a0505"
+          strokeWidth="1.2"
+        />
       </>
     )}
   </svg>

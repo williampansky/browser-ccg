@@ -1,5 +1,12 @@
 import { produce } from 'immer';
-import { ActionError, GameEvent, GameState, MinionInstance, PlayerId, TargetRef } from '../state/types';
+import {
+  ActionError,
+  GameEvent,
+  GameState,
+  MinionInstance,
+  PlayerId,
+  TargetRef,
+} from '../state/types';
 import { damageHero, damageMinion } from './damage';
 import { drawCard } from './draw';
 import { getCardDef } from '../definitions';
@@ -17,34 +24,56 @@ export const cantAttack = (m: MinionInstance, turn: number): boolean => {
 };
 
 /** Does `source` carry Touch of Death that works on `victim`? (Suppressed minions lose it.) */
-const touchOfDeath = (source: MinionInstance, victim: MinionInstance, ctx: EngineContext): boolean => {
+const touchOfDeath = (
+  source: MinionInstance,
+  victim: MinionInstance,
+  ctx: EngineContext,
+): boolean => {
   const def = minionDef(source, ctx.catalog, ctx.defs ?? getCardDef);
   if (!def?.poison) return false;
-  return def.poison.vs === undefined || ctx.catalog.get(victim.cardId)?.race === def.poison.vs;
+  return (
+    def.poison.vs === undefined ||
+    ctx.catalog.get(victim.cardId)?.race === def.poison.vs
+  );
 };
 
 export const attack = (
   state: GameState,
   args: { attackerId: number; target: TargetRef },
   events: GameEvent[],
-  ctx?: EngineContext
+  ctx?: EngineContext,
 ): GameState | ActionError => {
   const me = state.activePlayer;
   const foe: PlayerId = me === '0' ? '1' : '0';
-  const attacker = state.players[me].board.find((m) => m.instanceId === args.attackerId);
+  const attacker = state.players[me].board.find(
+    (m) => m.instanceId === args.attackerId,
+  );
   if (!attacker) return { error: 'UNKNOWN_ATTACKER' };
   if (cantAttack(attacker, state.turn)) return { error: 'MINION_CANT_ATTACK' };
-  if (!isLegalTarget(legalTargets(state, { kind: 'attack', attackerId: args.attackerId }), args.target)) {
+  if (
+    !isLegalTarget(
+      legalTargets(state, { kind: 'attack', attackerId: args.attackerId }),
+      args.target,
+    )
+  ) {
     return { error: 'ILLEGAL_TARGET' };
   }
 
   return produce(state, (g) => {
-    const a = g.players[me].board.find((m) => m.instanceId === args.attackerId)!;
+    const a = g.players[me].board.find(
+      (m) => m.instanceId === args.attackerId,
+    )!;
     a.attacksThisTurn += 1;
     a.keywords.hidden = false; // attacking reveals a hidden minion
     if (a.drawsOnAttack) drawCard(g, me, events);
     // The defender's Mystery may react first, and may redirect the attack or even kill the attacker.
-    const target = ctx ? mysteryBeforeAttack(g, ctx, events, { attackerPlayer: me, attackerId: a.instanceId, target: args.target }) : args.target;
+    const target = ctx
+      ? mysteryBeforeAttack(g, ctx, events, {
+          attackerPlayer: me,
+          attackerId: a.instanceId,
+          target: args.target,
+        })
+      : args.target;
     events.push({ type: 'MinionAttacked', attackerId: a.instanceId, target });
     if (a.health <= 0) return;
     if (target.kind === 'hero') {

@@ -11,5 +11,11 @@ export async function getStaticProps() {
 }
 
 export default function HomePage({ html }: { html: string }) {
-  return <MarkdownPage title={home.name} description={home.description} html={html} />;
+  return (
+    <MarkdownPage
+      title={home.name}
+      description={home.description}
+      html={html}
+    />
+  );
 }

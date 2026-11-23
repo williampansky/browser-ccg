@@ -3,7 +3,14 @@ import type { Rng } from '../rng';
 import { MAX_DECK_SIZE } from '../deck-rules';
 import { getHero } from '../heroes';
 import { startTurn } from '../rules/turn';
-import { CardInstance, GameSetup, GameState, MAX_HEALTH, PlayerId, PlayerState } from './types';
+import {
+  CardInstance,
+  GameSetup,
+  GameState,
+  MAX_HEALTH,
+  PlayerId,
+  PlayerState,
+} from './types';
 
 const FIRST_PLAYER_HAND = 3;
 const SECOND_PLAYER_HAND = 4;
@@ -29,26 +36,33 @@ export const createGame = (setup: GameSetup, rng: Rng): GameState => {
     const hero = setup.heroes?.[p];
     if (hero && !getHero(hero)) throw new Error(`Unknown hero ${hero}`);
     if (setup.decks[p].length > MAX_DECK_SIZE) {
-      throw new Error(`Player ${Number(p) + 1}'s deck has ${setup.decks[p].length} cards; the most allowed is ${MAX_DECK_SIZE}.`);
+      throw new Error(
+        `Player ${Number(p) + 1}'s deck has ${setup.decks[p].length} cards; the most allowed is ${MAX_DECK_SIZE}.`,
+      );
     }
   });
   let nextInstanceId = 1;
   const build = (cardIds: string[]): CardInstance[] =>
-    rng.shuffle(cardIds).map((cardId) => ({ instanceId: nextInstanceId++, cardId }));
+    rng
+      .shuffle(cardIds)
+      .map((cardId) => ({ instanceId: nextInstanceId++, cardId }));
 
   const first: PlayerId = setup.firstPlayer;
   const second: PlayerId = first === '0' ? '1' : '0';
-  const decks = { [first]: build(setup.decks[first]), [second]: build(setup.decks[second]) };
+  const decks = {
+    [first]: build(setup.decks[first]),
+    [second]: build(setup.decks[second]),
+  };
 
   const initial: GameState = {
     turn: 0,
     activePlayer: second, // startTurn flips to the other player, so turn 1 belongs to `first`
     status: 'playing',
     winner: null,
-    players: { [first]: emptyPlayer(decks[first]), [second]: emptyPlayer(decks[second]) } as Record<
-      PlayerId,
-      PlayerState
-    >,
+    players: {
+      [first]: emptyPlayer(decks[first]),
+      [second]: emptyPlayer(decks[second]),
+    } as Record<PlayerId, PlayerState>,
     nextInstanceId,
     nextPlaySeq: 1,
     played: { '0': [], '1': [] },
@@ -59,12 +73,22 @@ export const createGame = (setup: GameSetup, rng: Rng): GameState => {
       const id = setup.heroes?.[p];
       if (!id) continue;
       const skills = getHero(id)!.skills.length;
-      g.players[p].hero = { id, cooldowns: Array(skills).fill(0), spent: Array(skills).fill(false) };
+      g.players[p].hero = {
+        id,
+        cooldowns: Array(skills).fill(0),
+        spent: Array(skills).fill(false),
+      };
     }
     g.players[first].hand = g.players[first].deck.splice(0, FIRST_PLAYER_HAND);
-    g.players[second].hand = g.players[second].deck.splice(0, SECOND_PLAYER_HAND);
+    g.players[second].hand = g.players[second].deck.splice(
+      0,
+      SECOND_PLAYER_HAND,
+    );
     if (setup.secondPlayerBonusCard) {
-      g.players[second].hand.push({ instanceId: g.nextInstanceId++, cardId: setup.secondPlayerBonusCard });
+      g.players[second].hand.push({
+        instanceId: g.nextInstanceId++,
+        cardId: setup.secondPlayerBonusCard,
+      });
     }
   });
   return startTurn(dealt, first, []);

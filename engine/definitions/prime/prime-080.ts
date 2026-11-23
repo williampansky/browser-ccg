@@ -6,7 +6,10 @@ import { eventMinion } from '../../effects/selectors';
 export default defineCard('PRIME_080', () => ({
   triggers: [
     on('MinionSummoned', {
-      when: (e, c) => e.player === c.owner && e.instanceId !== c.selfId && c.catalog.get(e.cardId)?.race === 'SPRITE',
+      when: (e, c) =>
+        e.player === c.owner &&
+        e.instanceId !== c.selfId &&
+        c.catalog.get(e.cardId)?.race === 'SPRITE',
       do: [buffThisTurn(eventMinion(), 2), grantKeyword(eventMinion(), 'rush')],
     }),
   ],

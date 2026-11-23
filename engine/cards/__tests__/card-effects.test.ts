@@ -5,8 +5,10 @@ const { byId } = loadHsCards();
 const symbols = (id: string) => effectsOf(byId.get(id)!).map((e) => e.symbol);
 
 describe('effectsOf', () => {
-  it('lists exactly the card\'s mechanics array, in its order (CORE_007)', () => {
-    expect(symbols('CORE_007')).toEqual(byId.get('CORE_007')!.mechanics.map((m) => m.replace(/%/g, '')));
+  it("lists exactly the card's mechanics array, in its order (CORE_007)", () => {
+    expect(symbols('CORE_007')).toEqual(
+      byId.get('CORE_007')!.mechanics.map((m) => m.replace(/%/g, '')),
+    );
   });
 
   it('hides no tag: bookkeeping ones are listed too (CORE_123 is tagged TARGET)', () => {

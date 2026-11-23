@@ -6,11 +6,17 @@ import { friendlyMinion } from '../../effects/filters';
 // PRIME_123 Maven of Renewed Spirit, Select One: "Draw 2 cards and take 2 damage; or heal your hero 5 and give a friendly minion Bubble"
 export default defineCard('PRIME_123', (n) => ({
   choices: [
-    { label: 'Draw 2 cards and take 2 damage', onPlay: [draw(2), damage(ownHero(), 2)] },
+    {
+      label: 'Draw 2 cards and take 2 damage',
+      onPlay: [draw(2), damage(ownHero(), 2)],
+    },
     {
       label: `Heal ${n.primary} and give a friendly minion Bubble`,
       target: friendlyMinion(),
-      onPlay: [heal(ownHero(), n.primary), grantKeyword(chosenTarget(), 'bubble')],
+      onPlay: [
+        heal(ownHero(), n.primary),
+        grantKeyword(chosenTarget(), 'bubble'),
+      ],
     },
   ],
 }));

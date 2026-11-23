@@ -7,7 +7,8 @@ export default defineCard('PRIME_159', () => ({
   mystery: {
     category: 'minion',
     event: 'MinionPlayed',
-    when: ({ event, owner }) => event?.type === 'MinionPlayed' && event.player !== owner,
+    when: ({ event, owner }) =>
+      event?.type === 'MinionPlayed' && event.player !== owner,
     do: [halveHealth(eventMinion()), disable(eventMinion())],
   },
 }));

@@ -11,7 +11,11 @@ describe('CORE_133', () => {
     let s = setup('CORE_101', { mine: [[2, 1, 'CORE_133']] });
     const [mine, theirs] = [s.players['0'].health, s.players['1'].health];
     s = produce(s, (g) => void (g.players['0'].energy.current = 10));
-    const r = run(s, { type: 'PlayCard', handIndex: 0, target: mref(s, '0', 0) });
+    const r = run(s, {
+      type: 'PlayCard',
+      handIndex: 0,
+      target: mref(s, '0', 0),
+    });
     if ('error' in r) throw new Error(r.error);
     expect(r.state.players['0'].board).toHaveLength(0);
     expect(r.state.players['1'].health).toBe(theirs - 2);

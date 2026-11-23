@@ -10,8 +10,12 @@ describe('findMaster for an entourage card', () => {
   it('finds CORE_020a whether the id or the file is spelled with a capital A', () => {
     fs.mkdirSync(path.join(root, 'art-inbox'));
     fs.writeFileSync(path.join(root, 'art-inbox/CORE_020a.png'), 'x');
-    expect(findMaster('CORE_020a', root)).toBe(path.join(root, 'art-inbox/CORE_020a.png'));
-    expect(findMaster('CORE_020A', root)).toBe(path.join(root, 'art-inbox/CORE_020a.png'));
+    expect(findMaster('CORE_020a', root)).toBe(
+      path.join(root, 'art-inbox/CORE_020a.png'),
+    );
+    expect(findMaster('CORE_020A', root)).toBe(
+      path.join(root, 'art-inbox/CORE_020a.png'),
+    );
   });
 });
 

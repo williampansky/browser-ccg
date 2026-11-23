@@ -10,33 +10,70 @@ import { AnimatedIcon } from './AnimatedIcon';
  * Not for the cards, minions or heroes: those have their own look.
  */
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'danger' };
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: 'primary' | 'danger';
+};
 
 /** A button. `type` defaults to "button" (never submits a form by accident). */
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ variant, className, type = 'button', ...rest }, ref) => (
-  <button ref={ref} type={type} className={cx('ui-btn', variant && `ui-btn--${variant}`, className)} {...rest} />
-));
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ variant, className, type = 'button', ...rest }, ref) => (
+    <button
+      ref={ref}
+      type={type}
+      className={cx('ui-btn', variant && `ui-btn--${variant}`, className)}
+      {...rest}
+    />
+  ),
+);
 Button.displayName = 'Button';
 
 /** A link that looks like a button (`href` is an internal route). */
-export const LinkButton = ({ href, variant, className, children, ...rest }: { href: string; variant?: 'primary' | 'danger' } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>) => (
+export const LinkButton = ({
+  href,
+  variant,
+  className,
+  children,
+  ...rest
+}: { href: string; variant?: 'primary' | 'danger' } & Omit<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  'href'
+>) => (
   <Link href={href}>
-    <a className={cx('ui-btn', variant && `ui-btn--${variant}`, className)} {...rest}>
+    <a
+      className={cx('ui-btn', variant && `ui-btn--${variant}`, className)}
+      {...rest}
+    >
       {children}
     </a>
   </Link>
 );
 
 /** A drop-down. Always pass `aria-label` (or wrap it in a label) so it has a name. */
-export const Select = ({ className, ...rest }: React.SelectHTMLAttributes<HTMLSelectElement>) => <select className={cx('ui-field', className)} {...rest} />;
+export const Select = ({
+  className,
+  ...rest
+}: React.SelectHTMLAttributes<HTMLSelectElement>) => (
+  <select className={cx('ui-field', className)} {...rest} />
+);
 
 /** A text or search box. */
-export const TextInput = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(({ className, type = 'text', ...rest }, ref) => (
-  <input ref={ref} type={type} className={cx('ui-field', className)} {...rest} />
+export const TextInput = React.forwardRef<
+  HTMLInputElement,
+  React.InputHTMLAttributes<HTMLInputElement>
+>(({ className, type = 'text', ...rest }, ref) => (
+  <input
+    ref={ref}
+    type={type}
+    className={cx('ui-field', className)}
+    {...rest}
+  />
 ));
 TextInput.displayName = 'TextInput';
 
-type CheckboxProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'checked'> & {
+type CheckboxProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'type' | 'onChange' | 'checked'
+> & {
   checked: boolean;
   /** Called with the new value. */
   onChange: (checked: boolean) => void;
@@ -45,20 +82,60 @@ type CheckboxProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 
 };
 
 /** A labelled checkbox: `<Checkbox checked onChange>Label</Checkbox>`. */
-export const Checkbox = ({ checked, onChange, children, title, className, ...rest }: CheckboxProps) => (
-  <label className={cx('ui-check', rest.disabled && 'ui-check--disabled', className)} title={title}>
-    <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} {...rest} />
+export const Checkbox = ({
+  checked,
+  onChange,
+  children,
+  title,
+  className,
+  ...rest
+}: CheckboxProps) => (
+  <label
+    className={cx('ui-check', rest.disabled && 'ui-check--disabled', className)}
+    title={title}
+  >
+    <input
+      type="checkbox"
+      checked={checked}
+      onChange={(e) => onChange(e.target.checked)}
+      {...rest}
+    />
     <i aria-hidden="true">
       {/* The tick is the cross-into-checkmark animation: it is drawn in on check and fades on uncheck, so the starting cross never shows while unchecked. */}
-      <AnimatedIcon name="cross-into-checkmark" on={checked} hideWhenOff size={0} style={{ width: '100%', height: '100%' }} />
+      <AnimatedIcon
+        name="cross-into-checkmark"
+        on={checked}
+        hideWhenOff
+        size={0}
+        style={{ width: '100%', height: '100%' }}
+      />
     </i>
     {children !== undefined && <span>{children}</span>}
   </label>
 );
 
 /** A switch row: the label on the left, the switch on the right. */
-export const Toggle = ({ label, checked, onChange, className, disabled }: { label: React.ReactNode; checked: boolean; onChange: (on: boolean) => void; className?: string; disabled?: boolean }) => (
-  <button type="button" role="switch" aria-checked={checked} disabled={disabled} className={cx('ui-toggle', className)} onClick={() => onChange(!checked)}>
+export const Toggle = ({
+  label,
+  checked,
+  onChange,
+  className,
+  disabled,
+}: {
+  label: React.ReactNode;
+  checked: boolean;
+  onChange: (on: boolean) => void;
+  className?: string;
+  disabled?: boolean;
+}) => (
+  <button
+    type="button"
+    role="switch"
+    aria-checked={checked}
+    disabled={disabled}
+    className={cx('ui-toggle', className)}
+    onClick={() => onChange(!checked)}
+  >
     <span>{label}</span>
     <i aria-hidden="true" />
   </button>
@@ -96,10 +173,22 @@ export function SegmentedControl<T extends string | number | boolean>({
   disabled?: boolean;
 }) {
   return (
-    <div className={cx('ui-seg', chips && 'ui-seg--chips', className)} role="radiogroup" aria-label={ariaLabel ?? label}>
+    <div
+      className={cx('ui-seg', chips && 'ui-seg--chips', className)}
+      role="radiogroup"
+      aria-label={ariaLabel ?? label}
+    >
       {label && <span>{label}</span>}
       {options.map((o) => (
-        <button key={String(o.value)} type="button" role="radio" aria-checked={o.value === value} title={o.title} disabled={disabled || o.disabled} onClick={() => onChange(o.value)}>
+        <button
+          key={String(o.value)}
+          type="button"
+          role="radio"
+          aria-checked={o.value === value}
+          title={o.title}
+          disabled={disabled || o.disabled}
+          onClick={() => onChange(o.value)}
+        >
           {o.label}
         </button>
       ))}
@@ -108,10 +197,18 @@ export function SegmentedControl<T extends string | number | boolean>({
 }
 
 /** A titled box (menus, dialogs). Layout (width, padding, gap) comes from `className`; the look from the theme. */
-export const Panel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...rest }, ref) => (
+export const Panel = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...rest }, ref) => (
   <div ref={ref} className={cx('ui-panel', className)} {...rest} />
 ));
 Panel.displayName = 'Panel';
 
 /** A quieter box inside a panel (a settings group). */
-export const Group = ({ className, ...rest }: React.HTMLAttributes<HTMLElement>) => <section className={cx('ui-group', className)} {...rest} />;
+export const Group = ({
+  className,
+  ...rest
+}: React.HTMLAttributes<HTMLElement>) => (
+  <section className={cx('ui-group', className)} {...rest} />
+);

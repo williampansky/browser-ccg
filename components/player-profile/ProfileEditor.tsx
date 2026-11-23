@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { cleanName, MAX_NAME_LENGTH, normalizeProfile, PlayerProfile, THEMES } from './profile';
+import {
+  cleanName,
+  MAX_NAME_LENGTH,
+  normalizeProfile,
+  PlayerProfile,
+  THEMES,
+} from './profile';
 import { TextInput } from '../ui';
 import styles from './profile-editor.module.scss';
 import cx from '../../utils/cx';
@@ -34,7 +40,11 @@ export const ProfileEditor = ({ profile, onChange }: Props) => {
       </label>
       <div className={styles.field}>
         <span id="profile-theme-label">Your color</span>
-        <div className={styles.swatches} role="radiogroup" aria-labelledby="profile-theme-label">
+        <div
+          className={styles.swatches}
+          role="radiogroup"
+          aria-labelledby="profile-theme-label"
+        >
           {THEMES.map((t) => (
             <button
               key={t.id}
@@ -43,9 +53,14 @@ export const ProfileEditor = ({ profile, onChange }: Props) => {
               aria-checked={profile.theme === t.id}
               aria-label={t.label}
               title={t.label}
-              className={cx(styles.swatch, profile.theme === t.id ? styles.on : '')}
+              className={cx(
+                styles.swatch,
+                profile.theme === t.id ? styles.on : '',
+              )}
               style={{ ['--swatch' as string]: t.color } as React.CSSProperties}
-              onClick={() => onChange(normalizeProfile({ ...profile, theme: t.id }))}
+              onClick={() =>
+                onChange(normalizeProfile({ ...profile, theme: t.id }))
+              }
             />
           ))}
         </div>

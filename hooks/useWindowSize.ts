@@ -32,10 +32,12 @@ export default function useWindowSize() {
       });
 
       // Set window width/height to redux store
-      dispatch(setWindowSizeToStore({
-        height: window.innerHeight,
-        width: window.innerWidth,
-      }));
+      dispatch(
+        setWindowSizeToStore({
+          height: window.innerHeight,
+          width: window.innerWidth,
+        }),
+      );
     }
 
     // Add event listener

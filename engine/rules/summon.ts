@@ -13,14 +13,27 @@ export const summonMinion = (
   owner: PlayerId,
   card: Card,
   events: GameEvent[],
-  besideId?: number
+  besideId?: number,
 ): boolean => {
   const board = g.players[owner].board;
   if (board.length >= MAX_BOARD) return false;
-  const beside = besideId === undefined ? -1 : board.findIndex((m) => m.instanceId === besideId);
+  const beside =
+    besideId === undefined
+      ? -1
+      : board.findIndex((m) => m.instanceId === besideId);
   const index = beside >= 0 ? beside + 1 : board.length;
-  const minion = createMinion(card, g.nextInstanceId++, g.turn, g.nextPlaySeq++);
+  const minion = createMinion(
+    card,
+    g.nextInstanceId++,
+    g.turn,
+    g.nextPlaySeq++,
+  );
   board.splice(index, 0, minion);
-  events.push({ type: 'MinionSummoned', player: owner, instanceId: minion.instanceId, cardId: card.id });
+  events.push({
+    type: 'MinionSummoned',
+    player: owner,
+    instanceId: minion.instanceId,
+    cardId: card.id,
+  });
   return true;
 };

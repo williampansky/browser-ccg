@@ -10,17 +10,27 @@ export interface DeckRow {
   left: number;
 }
 
-const count = (ids: string[]) => ids.reduce((m, id) => m.set(id, (m.get(id) ?? 0) + 1), new Map<string, number>());
+const count = (ids: string[]) =>
+  ids.reduce(
+    (m, id) => m.set(id, (m.get(id) ?? 0) + 1),
+    new Map<string, number>(),
+  );
 
 /**
  * One row per distinct card in a deck, like a third-party Hearthstone tracker: how many copies the deck
  * started with and how many are still in it. Sorted by cost, then name. A card that is only in the
  * deck now (shuffled in mid-game) counts its current copies as its total.
  */
-export const deckRows = (startIds: string[], remainingIds: string[], catalog: CardCatalog): DeckRow[] => {
+export const deckRows = (
+  startIds: string[],
+  remainingIds: string[],
+  catalog: CardCatalog,
+): DeckRow[] => {
   const start = count(startIds);
   const left = count(remainingIds);
-  const ids = Array.from(new Set(Array.from(start.keys()).concat(Array.from(left.keys()))));
+  const ids = Array.from(
+    new Set(Array.from(start.keys()).concat(Array.from(left.keys()))),
+  );
   return ids
     .map((id) => ({
       id,

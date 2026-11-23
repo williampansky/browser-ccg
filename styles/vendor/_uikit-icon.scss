@@ -17,7 +17,7 @@
   line-height: 0;
 
   & > * {
-    transform: translate(0,0);
+    transform: translate(0, 0);
   }
 
   &:not(.bccg-preserve) [fill*='#']:not(.bccg-preserve) {
@@ -30,12 +30,12 @@
 }
 
 button.bccg-icon:not(:disabled) {
-  cursor: pointer
+  cursor: pointer;
 }
 
 .bccg-icon::-moz-focus-inner {
   border: 0;
-  padding: 0
+  padding: 0;
 }
 
 svg {

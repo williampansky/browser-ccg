@@ -27,23 +27,38 @@ export const ChooseModal = ({
   title,
   options,
   onPick,
-  onCancel
+  onCancel,
 }: {
   title: string;
   options: ChooseOption[];
   onPick: (index: number) => void;
   onCancel: () => void;
 }) => (
-  <div className={`${styles.modalBackdrop} ${styles.chooseBackdrop}`} data-ui-sfx onClick={onCancel}>
-    <Panel className={styles.modal} onClick={e => e.stopPropagation()}>
+  <div
+    className={`${styles.modalBackdrop} ${styles.chooseBackdrop}`}
+    data-ui-sfx
+    onClick={onCancel}
+  >
+    <Panel className={styles.modal} onClick={(e) => e.stopPropagation()}>
       <h3 className={styles.chooseTitle}>{title}</h3>
       <div className={styles.chooseCards}>
         {options.map((o, i) => (
-          <button key={i} type="button" className={styles.chooseOption} onClick={() => onPick(i)}>
+          <button
+            key={i}
+            type="button"
+            className={styles.chooseOption}
+            onClick={() => onPick(i)}
+          >
             <span className={styles.chooseFace}>
-              <CardFace card={o.card ?? blankCard(o.label)} width={CHOOSE_CARD_WIDTH} hideCost={!o.card} />
+              <CardFace
+                card={o.card ?? blankCard(o.label)}
+                width={CHOOSE_CARD_WIDTH}
+                hideCost={!o.card}
+              />
             </span>
-            {o.caption && <span className={styles.chooseCaption}>{o.caption}</span>}
+            {o.caption && (
+              <span className={styles.chooseCaption}>{o.caption}</span>
+            )}
           </button>
         ))}
       </div>

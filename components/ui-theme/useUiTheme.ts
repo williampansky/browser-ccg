@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
-import { CHANGE_EVENT, DEFAULT_UI_THEME, loadUiTheme, setUiTheme } from './ui-themes';
+import {
+  CHANGE_EVENT,
+  DEFAULT_UI_THEME,
+  loadUiTheme,
+  setUiTheme,
+} from './ui-themes';
 
 /** The current interface theme id and a setter; every user of the hook follows a change made anywhere on the page. */
 export const useUiTheme = (): [string, (id: string) => void] => {

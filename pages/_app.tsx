@@ -54,7 +54,7 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (siteConfig.disableRightClick) {
       document.addEventListener('contextmenu', (event) =>
-        event.preventDefault()
+        event.preventDefault(),
       );
     }
   }, []);

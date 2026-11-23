@@ -1,17 +1,29 @@
 import { produce } from 'immer';
 import { heroSkill } from '../heroes';
-import { ActionError, GameEvent, GameState, PlayerId, TargetRef } from '../state/types';
+import {
+  ActionError,
+  GameEvent,
+  GameState,
+  PlayerId,
+  TargetRef,
+} from '../state/types';
 import type { EngineContext } from './apply-action';
 import { getCardDef } from '../definitions';
 import { minionDef } from './minion';
 import { isLegalTarget, legalTargets } from './targeting';
 
 /** Is this skill off cooldown and (for a one-use ultimate) not yet used? Says nothing about energy or targets. */
-export const skillReady = (state: GameState, player: PlayerId, skill: number): boolean => {
+export const skillReady = (
+  state: GameState,
+  player: PlayerId,
+  skill: number,
+): boolean => {
   const hero = state.players[player].hero;
   const def = heroSkill(hero?.id, skill);
   if (!hero || !def) return false;
-  return def.cooldown === undefined ? !hero.spent[skill] : (hero.cooldowns[skill] ?? 0) <= 0;
+  return def.cooldown === undefined
+    ? !hero.spent[skill]
+    : (hero.cooldowns[skill] ?? 0) <= 0;
 };
 
 /**
@@ -21,32 +33,64 @@ export const skillReady = (state: GameState, player: PlayerId, skill: number): b
  */
 export const useHeroSkill = (
   state: GameState,
-  { skill, target, choice }: { skill: number; target?: TargetRef; choice?: number },
+  {
+    skill,
+    target,
+    choice,
+  }: { skill: number; target?: TargetRef; choice?: number },
   ctx: EngineContext,
-  events: GameEvent[]
+  events: GameEvent[],
 ): GameState | ActionError => {
   const me = state.activePlayer;
   const hero = state.players[me].hero;
   const def = heroSkill(hero?.id, skill);
   if (!hero || !def) return { error: 'BAD_SKILL' };
   if (!skillReady(state, me, skill)) return { error: 'SKILL_UNAVAILABLE' };
-  if (def.cost > state.players[me].energy.current) return { error: 'CANT_AFFORD' };
+  if (def.cost > state.players[me].energy.current)
+    return { error: 'CANT_AFFORD' };
   if (def.options) {
     const offered = def.options(state, me, ctx.catalog);
-    if (!Number.isInteger(choice) || choice === undefined || choice < 0 || choice >= offered.length) return { error: 'BAD_CHOICE' };
+    if (
+      !Number.isInteger(choice) ||
+      choice === undefined ||
+      choice < 0 ||
+      choice >= offered.length
+    )
+      return { error: 'BAD_CHOICE' };
   } else if (choice !== undefined) return { error: 'BAD_CHOICE' };
-  if (def.target && !isLegalTarget(legalTargets(state, { kind: 'skill', skill }), target)) return { error: 'ILLEGAL_TARGET' };
+  if (
+    def.target &&
+    !isLegalTarget(legalTargets(state, { kind: 'skill', skill }), target)
+  )
+    return { error: 'ILLEGAL_TARGET' };
 
   return produce(state, (g) => {
     const p = g.players[me];
     p.energy.current -= def.cost;
     if (def.cooldown === undefined) p.hero!.spent[skill] = true;
     else p.hero!.cooldowns[skill] = def.cooldown;
-    events.push({ type: 'HeroSkillUsed', player: me, skill, ...(def.target && target ? { target } : {}) });
+    events.push({
+      type: 'HeroSkillUsed',
+      player: me,
+      skill,
+      ...(def.target && target ? { target } : {}),
+    });
     const defs = ctx.defs ?? getCardDef;
-    const spellDamage = p.board.reduce((sum, m) => sum + (minionDef(m, ctx.catalog, defs)?.spellDamage ?? 0), 0);
+    const spellDamage = p.board.reduce(
+      (sum, m) => sum + (minionDef(m, ctx.catalog, defs)?.spellDamage ?? 0),
+      0,
+    );
     for (const effect of def.effects) {
-      effect({ g, caster: me, target: def.target ? target : undefined, rng: ctx.rng, catalog: ctx.catalog, events, spellDamage, choice });
+      effect({
+        g,
+        caster: me,
+        target: def.target ? target : undefined,
+        rng: ctx.rng,
+        catalog: ctx.catalog,
+        events,
+        spellDamage,
+        choice,
+      });
     }
   });
 };

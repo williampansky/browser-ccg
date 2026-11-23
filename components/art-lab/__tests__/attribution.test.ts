@@ -5,7 +5,7 @@ describe('findAttribution', () => {
     { match: '^kenney/', artist: 'A' },
     { match: 'sword.*\\.png$', artist: 'B' },
     { match: '(', artist: 'bad' },
-    { match: '.', artist: 'C' }
+    { match: '.', artist: 'C' },
   ];
 
   it('first match wins, case-insensitive', () => {

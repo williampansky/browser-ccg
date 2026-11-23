@@ -8,6 +8,11 @@ export default defineCard('PRIME_227', (n) => ({
   target: anyMinion(),
   onPlay: [
     damage(chosenTarget(), n.primary),
-    ifDead(chosenTarget(), summonRandomCard((c) => c.race === 'DEMONIC' && c.cost >= 4 && c.cost <= 6)),
+    ifDead(
+      chosenTarget(),
+      summonRandomCard(
+        (c) => c.race === 'DEMONIC' && c.cost >= 4 && c.cost <= 6,
+      ),
+    ),
   ],
 }));

@@ -1,7 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
-import { Button, Checkbox, SegmentedControl, Select, TextInput, Toggle } from '..';
+import {
+  Button,
+  Checkbox,
+  SegmentedControl,
+  Select,
+  TextInput,
+  Toggle,
+} from '..';
 
 let root: HTMLDivElement;
 beforeEach(() => {
@@ -12,8 +19,10 @@ afterEach(() => {
   ReactDOM.unmountComponentAtNode(root);
   root.remove();
 });
-const render = (el: React.ReactElement) => act(() => void ReactDOM.render(el, root));
-const click = (el: Element) => act(() => void el.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+const render = (el: React.ReactElement) =>
+  act(() => void ReactDOM.render(el, root));
+const click = (el: Element) =>
+  act(() => void el.dispatchEvent(new MouseEvent('click', { bubbles: true })));
 
 describe('shared interface controls', () => {
   it('Button defaults to type=button and carries the variant class', () => {
@@ -28,7 +37,7 @@ describe('shared interface controls', () => {
       <>
         <Select aria-label="s" className="x" />
         <TextInput aria-label="t" type="search" />
-      </>
+      </>,
     );
     expect(root.querySelector('select')!.className).toBe('ui-field x');
     expect(root.querySelector('input')!.className).toBe('ui-field');
@@ -37,7 +46,11 @@ describe('shared interface controls', () => {
 
   it('Checkbox reports the new value', () => {
     const seen: boolean[] = [];
-    render(<Checkbox checked={false} onChange={(c) => seen.push(c)}>Entourage</Checkbox>);
+    render(
+      <Checkbox checked={false} onChange={(c) => seen.push(c)}>
+        Entourage
+      </Checkbox>,
+    );
     click(root.querySelector('input')!);
     expect(seen).toEqual([true]);
     expect(root.textContent).toBe('Entourage');
@@ -55,14 +68,29 @@ describe('shared interface controls', () => {
   it('SegmentedControl marks the chosen option, picks by value (not string) and skips disabled ones', () => {
     const seen: unknown[] = [];
     render(
-      <SegmentedControl label="Opponent" value={true} onChange={(v) => seen.push(v)} options={[{ label: 'Greedy', value: true }, { label: 'Random', value: false }, { label: 'Off', value: true, disabled: true }]} />
+      <SegmentedControl
+        label="Opponent"
+        value={true}
+        onChange={(v) => seen.push(v)}
+        options={[
+          { label: 'Greedy', value: true },
+          { label: 'Random', value: false },
+          { label: 'Off', value: true, disabled: true },
+        ]}
+      />,
     );
     const radios = Array.from(root.querySelectorAll('[role=radio]'));
-    expect(radios.map((r) => r.getAttribute('aria-checked'))).toEqual(['true', 'false', 'true']);
+    expect(radios.map((r) => r.getAttribute('aria-checked'))).toEqual([
+      'true',
+      'false',
+      'true',
+    ]);
     click(radios[1]);
     click(radios[2]); // disabled: no event
     expect(seen).toEqual([false]);
-    expect(root.querySelector('[role=radiogroup]')!.getAttribute('aria-label')).toBe('Opponent');
+    expect(
+      root.querySelector('[role=radiogroup]')!.getAttribute('aria-label'),
+    ).toBe('Opponent');
   });
 });
 
@@ -70,7 +98,13 @@ describe('themed screens use the shared controls', () => {
   // Raw form controls in these files would skip the interface theme; build them from components/ui instead.
   const fs = require('fs') as typeof import('fs');
   const path = require('path') as typeof import('path');
-  const files = ['collection/Collection.tsx', 'deck-builder/DeckBuilder.tsx', 'player-profile/ProfileEditor.tsx', 'ui-theme/UiThemePicker.tsx', 'ui-theme/ThemeSample.tsx'];
+  const files = [
+    'collection/Collection.tsx',
+    'deck-builder/DeckBuilder.tsx',
+    'player-profile/ProfileEditor.tsx',
+    'ui-theme/UiThemePicker.tsx',
+    'ui-theme/ThemeSample.tsx',
+  ];
   it.each(files)('%s has no raw <select>, <input> or <textarea>', (f) => {
     const src = fs.readFileSync(path.join(__dirname, '../..', f), 'utf8');
     expect(src).not.toMatch(/<(select|input|textarea)\b/);
@@ -84,8 +118,17 @@ describe('animated icons', () => {
   const { ANIMATED_ICONS, frameUrl } = require('../animated-icons');
   it('every icon has all of its numbered frames on disk', () => {
     for (const i of ANIMATED_ICONS as { id: string; frames: number }[]) {
-      for (let f = 0; f < i.frames; f++) expect(fs.existsSync(path.join(__dirname, '../../../public', frameUrl(i.id, f)))).toBe(true);
-      expect(fs.existsSync(path.join(__dirname, '../../../public', frameUrl(i.id, i.frames)))).toBe(false); // and no extra frames the registry misses
+      for (let f = 0; f < i.frames; f++)
+        expect(
+          fs.existsSync(
+            path.join(__dirname, '../../../public', frameUrl(i.id, f)),
+          ),
+        ).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(__dirname, '../../../public', frameUrl(i.id, i.frames)),
+        ),
+      ).toBe(false); // and no extra frames the registry misses
     }
   });
 });

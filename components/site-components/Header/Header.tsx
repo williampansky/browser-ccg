@@ -15,11 +15,11 @@ export const Header = () => {
     e.preventDefault();
     e.target.blur();
     setActive(!active);
-  }
+  };
 
   return (
     <header className={cx('site__header', active ? 'active' : '')}>
-      <div className='text__value'>{siteConfig.longName}</div>
+      <div className="text__value">{siteConfig.longName}</div>
       <button onClick={onClick}>
         <img
           src={active ? closeIcon : menuIcon}
@@ -30,7 +30,7 @@ export const Header = () => {
       </button>
       <Nav />
 
-      <div className='semver'>
+      <div className="semver">
         <code>{`v${siteConfig.version}`}</code>
       </div>
     </header>

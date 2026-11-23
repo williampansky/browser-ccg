@@ -19,9 +19,7 @@ export const MinionCost = ({
       data-component="MinionCost"
       data-value={cost}
     >
-      <div
-        className={cx(styles['text'], elite ? styles['elite'] : '')}
-      >
+      <div className={cx(styles['text'], elite ? styles['elite'] : '')}>
         <div className="text__value">{cost}</div>
       </div>
       {elite ? (

@@ -8,11 +8,15 @@ describe('targetLinePath', () => {
     expect(targetLinePath(A, B, 'straight')).toBe('M 0 100 L 200 100');
   });
   it('curve is a quadratic bezier from A to B', () => {
-    expect(targetLinePath(A, B, 'curve')).toMatch(/^M 0 100 Q [\d.-]+ [\d.-]+ 200 100$/);
+    expect(targetLinePath(A, B, 'curve')).toMatch(
+      /^M 0 100 Q [\d.-]+ [\d.-]+ 200 100$/,
+    );
   });
   it('the curve bows upward (smaller y), whichever way the line points', () => {
     const control = (from: typeof A, to: typeof B) => {
-      const m = targetLinePath(from, to, 'curve').match(/Q ([\d.-]+) ([\d.-]+)/)!;
+      const m = targetLinePath(from, to, 'curve').match(
+        /Q ([\d.-]+) ([\d.-]+)/,
+      )!;
       return { x: Number(m[1]), y: Number(m[2]) };
     };
     expect(control(A, B).y).toBeLessThan(100);

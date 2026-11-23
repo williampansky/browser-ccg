@@ -6,5 +6,8 @@ import { adjacentToSelf } from '../../effects/selectors';
 export default defineCard('PRIME_066', (n) => ({
   // The data tags the keyword, but the card only grants it.
   conditionalKeywords: ['guard'],
-  onPlay: [buff(adjacentToSelf(), n.primary, n.primary), grantKeyword(adjacentToSelf(), 'guard')],
+  onPlay: [
+    buff(adjacentToSelf(), n.primary, n.primary),
+    grantKeyword(adjacentToSelf(), 'guard'),
+  ],
 }));

@@ -4,11 +4,16 @@ import type { HeroInfo } from '../../engine/heroes';
 import { heroImage } from '../play-board/hero-images';
 import styles from './heroes.module.scss';
 
-const ARCHETYPES: Record<string, string> = { MELEE: 'Melee', RANGED: 'Ranged', HYBRID: 'Hybrid' };
+const ARCHETYPES: Record<string, string> = {
+  MELEE: 'Melee',
+  RANGED: 'Ranged',
+  HYBRID: 'Hybrid',
+};
 const isPlaceholder = (text: string) => /lorem ipsum/i.test(text);
 
 /** Everything a hero's skill row shows. Cooldown is undefined for an ultimate (once per game). */
-export const skillMeta = (cost: number, cooldown?: number) => `${cost} energy · ${cooldown ? `cooldown ${cooldown}` : 'once per game'}`;
+export const skillMeta = (cost: number, cooldown?: number) =>
+  `${cost} energy · ${cooldown ? `cooldown ${cooldown}` : 'once per game'}`;
 
 /** A grid of the playable heroes; click one for its portrait, story and skills. */
 export const Heroes = () => {
@@ -27,10 +32,22 @@ export const Heroes = () => {
     <div className={styles.page}>
       <div className={styles.grid}>
         {list.map((h) => (
-          <button key={h.id} type="button" className={styles.tile} onClick={() => setViewing(h.id)} aria-label={h.name}>
-            <img src={heroImage(h.id, 'avatar')} alt="" className={styles.portrait} />
+          <button
+            key={h.id}
+            type="button"
+            className={styles.tile}
+            onClick={() => setViewing(h.id)}
+            aria-label={h.name}
+          >
+            <img
+              src={heroImage(h.id, 'avatar')}
+              alt=""
+              className={styles.portrait}
+            />
             <span className={styles.name}>{h.name}</span>
-            <span className={styles.arch}>{ARCHETYPES[h.archetype] ?? h.archetype}</span>
+            <span className={styles.arch}>
+              {ARCHETYPES[h.archetype] ?? h.archetype}
+            </span>
           </button>
         ))}
       </div>
@@ -39,18 +56,35 @@ export const Heroes = () => {
   );
 };
 
-const HeroDetail = ({ hero, onClose }: { hero: HeroInfo; onClose: () => void }) => (
+const HeroDetail = ({
+  hero,
+  onClose,
+}: {
+  hero: HeroInfo;
+  onClose: () => void;
+}) => (
   <div className={styles.backdrop} onClick={onClose}>
     <div className={styles.detail} role="dialog" aria-label={hero.name}>
-      <img src={heroImage(hero.id, 'avatar')} alt="" className={styles.bigPortrait} />
+      <img
+        src={heroImage(hero.id, 'avatar')}
+        alt=""
+        className={styles.bigPortrait}
+      />
       <div className={styles.text}>
         <h2>{hero.name}</h2>
-        <p className={styles.meta}>{ARCHETYPES[hero.archetype] ?? hero.archetype} hero</p>
-        {hero.shortDescription && !isPlaceholder(hero.shortDescription) && <p className={styles.blurb}>{hero.shortDescription}</p>}
+        <p className={styles.meta}>
+          {ARCHETYPES[hero.archetype] ?? hero.archetype} hero
+        </p>
+        {hero.shortDescription && !isPlaceholder(hero.shortDescription) && (
+          <p className={styles.blurb}>{hero.shortDescription}</p>
+        )}
         <h3>Skills</h3>
         <ul className={styles.skills}>
           {hero.skills.map((s) => (
-            <li key={s.index} className={s.cooldown === undefined ? styles.ultimate : ''}>
+            <li
+              key={s.index}
+              className={s.cooldown === undefined ? styles.ultimate : ''}
+            >
               <img src={heroImage(hero.id, `skill-${s.index + 1}`)} alt="" />
               <div>
                 <strong>{s.name}</strong>
@@ -60,10 +94,27 @@ const HeroDetail = ({ hero, onClose }: { hero: HeroInfo; onClose: () => void }) 
             </li>
           ))}
         </ul>
-        {hero.lore && <div className={styles.lore} dangerouslySetInnerHTML={{ __html: hero.lore }} />}
+        {hero.lore && (
+          <div
+            className={styles.lore}
+            dangerouslySetInnerHTML={{ __html: hero.lore }}
+          />
+        )}
         {hero.artistName && (
           <p className={styles.credit}>
-            Art: {hero.artistUrl ? <a href={hero.artistUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>{hero.artistName}</a> : hero.artistName}
+            Art:{' '}
+            {hero.artistUrl ? (
+              <a
+                href={hero.artistUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {hero.artistName}
+              </a>
+            ) : (
+              hero.artistName
+            )}
           </p>
         )}
         <p className={styles.closeHint}>Click anywhere or press Esc to close</p>

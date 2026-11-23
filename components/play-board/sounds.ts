@@ -4,7 +4,18 @@ import type { GameEvent } from '../../engine';
  * The sound effects the board can play. Deliberately few and quiet: a soft thud for a minion, a faint chime for a spell, a low thump
  * for damage. Add a name here, to `SOUND_OF` and to `RECIPES` to extend.
  */
-export type SoundName = 'cardPlay' | 'draw' | 'cardHover' | 'minion' | 'spell' | 'weapon' | 'hit' | 'heal' | 'death' | 'turn' | 'gameOver';
+export type SoundName =
+  | 'cardPlay'
+  | 'draw'
+  | 'cardHover'
+  | 'minion'
+  | 'spell'
+  | 'weapon'
+  | 'hit'
+  | 'heal'
+  | 'death'
+  | 'turn'
+  | 'gameOver';
 
 // Attacking and gaining Armor make no sound of their own: the hit that follows an attack is the sound, and a quiet board is easier to listen to.
 const SOUND_OF: Partial<Record<GameEvent['type'], SoundName>> = {
@@ -32,7 +43,11 @@ export const MAX_SOUNDS_PER_ACTION = 3;
  */
 export const soundsFor = (events: GameEvent[]): SoundName[] => {
   // Putting a card down from the hand is its own sound, ahead of what the card then does (a minion's landing, a spell's chime).
-  const out: SoundName[] = events.some((e) => e.type === 'MinionPlayed' || e.type === 'CardPlayed') ? ['cardPlay'] : [];
+  const out: SoundName[] = events.some(
+    (e) => e.type === 'MinionPlayed' || e.type === 'CardPlayed',
+  )
+    ? ['cardPlay']
+    : [];
   for (const e of events) {
     const s = SOUND_OF[e.type];
     if (s && !out.includes(s)) out.push(s);
@@ -45,7 +60,12 @@ export const soundsFor = (events: GameEvent[]): SoundName[] => {
     rest.length <= MAX_SOUNDS_PER_ACTION
       ? rest
       : rest.includes('gameOver')
-        ? [...rest.filter((n) => n !== 'gameOver').slice(0, MAX_SOUNDS_PER_ACTION - 1), 'gameOver']
+        ? [
+            ...rest
+              .filter((n) => n !== 'gameOver')
+              .slice(0, MAX_SOUNDS_PER_ACTION - 1),
+            'gameOver',
+          ]
         : rest.slice(0, MAX_SOUNDS_PER_ACTION);
   return out.filter((n) => isCardSound(n) || kept.includes(n));
 };
@@ -54,18 +74,46 @@ export const soundsFor = (events: GameEvent[]): SoundName[] => {
 // Soft shapes only (sine and triangle, a gentle fade-in, a low-pass filter), a small pitch movement and a low volume.
 
 /** `thump` is the loudness of a short burst of low-passed noise laid under the tone: the body of a heavy impact. */
-type Recipe = { wave: OscillatorType; from: number; to: number; ms: number; gain: number; thump?: number };
+type Recipe = {
+  wave: OscillatorType;
+  from: number;
+  to: number;
+  ms: number;
+  gain: number;
+  thump?: number;
+};
 const RECIPES: Record<SoundName, Recipe> = {
   // Quiet stand-ins used only until (or if) the samples below load.
   cardPlay: { wave: 'triangle', from: 220, to: 160, ms: 80, gain: 0.04 },
   draw: { wave: 'sine', from: 600, to: 500, ms: 60, gain: 0.02 },
   cardHover: { wave: 'sine', from: 900, to: 700, ms: 30, gain: 0.012 },
-  minion: { wave: 'triangle', from: 150, to: 70, ms: 170, gain: 0.09, thump: 0.12 },
+  minion: {
+    wave: 'triangle',
+    from: 150,
+    to: 70,
+    ms: 170,
+    gain: 0.09,
+    thump: 0.12,
+  },
   spell: { wave: 'sine', from: 523, to: 659, ms: 200, gain: 0.045 },
   weapon: { wave: 'triangle', from: 330, to: 300, ms: 90, gain: 0.045 },
-  hit: { wave: 'triangle', from: 130, to: 55, ms: 160, gain: 0.09, thump: 0.16 },
+  hit: {
+    wave: 'triangle',
+    from: 130,
+    to: 55,
+    ms: 160,
+    gain: 0.09,
+    thump: 0.16,
+  },
   heal: { wave: 'sine', from: 392, to: 494, ms: 180, gain: 0.04 },
-  death: { wave: 'triangle', from: 100, to: 45, ms: 300, gain: 0.085, thump: 0.1 },
+  death: {
+    wave: 'triangle',
+    from: 100,
+    to: 45,
+    ms: 300,
+    gain: 0.085,
+    thump: 0.1,
+  },
   turn: { wave: 'sine', from: 440, to: 440, ms: 80, gain: 0.025 },
   gameOver: { wave: 'sine', from: 392, to: 294, ms: 500, gain: 0.055 },
 };
@@ -74,11 +122,30 @@ const RECIPES: Record<SoundName, Recipe> = {
  * Recorded sounds (CC0, Kenney's Casino Audio via OpenGameArt): a variant is picked at random each time, with a little pitch
  * variation, so repeats do not sound identical. A sound with no entry here (or whose files fail to load) uses its tone above.
  */
-const SAMPLES: Partial<Record<SoundName, { files: string[]; gain: number; jitter?: number; maxMs?: number }>> = {
-  cardPlay: { files: ['/sounds/cards/card-slide-7.ogg'], gain: 0.15, jitter: 0.07 },
-  draw: { files: [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `/sounds/cards/card-slide-${n}.ogg`), gain: 0.3 },
+const SAMPLES: Partial<
+  Record<
+    SoundName,
+    { files: string[]; gain: number; jitter?: number; maxMs?: number }
+  >
+> = {
+  cardPlay: {
+    files: ['/sounds/cards/card-slide-7.ogg'],
+    gain: 0.15,
+    jitter: 0.07,
+  },
+  draw: {
+    files: [1, 2, 3, 4, 5, 6, 7, 8].map(
+      (n) => `/sounds/cards/card-slide-${n}.ogg`,
+    ),
+    gain: 0.3,
+  },
   // Fanning across the hand: one short slide, quiet, with wide pitch variation so a sweep over several cards does not repeat itself.
-  cardHover: { files: ['/sounds/cards/card-slide-5.ogg'], gain: 0.15, jitter: 0.03, maxMs: 150 },
+  cardHover: {
+    files: ['/sounds/cards/card-slide-5.ogg'],
+    gain: 0.15,
+    jitter: 0.03,
+    maxMs: 150,
+  },
 };
 const PITCH_JITTER = 0.06;
 
@@ -93,7 +160,10 @@ export interface SoundTuning {
 export type TunableSound = 'cardPlay' | 'draw' | 'cardHover' | 'hold';
 const tuning: Partial<Record<TunableSound, SoundTuning>> = {};
 let hoverGapOverride: number | undefined;
-export const setSoundTuning = (name: TunableSound, t: SoundTuning | undefined) => {
+export const setSoundTuning = (
+  name: TunableSound,
+  t: SoundTuning | undefined,
+) => {
   if (t) tuning[name] = t;
   else delete tuning[name];
   if (name === 'hold' && hold) hold.gain.gain.value = t?.gain ?? HOLD_GAIN; // live while the loop plays
@@ -102,10 +172,17 @@ export const setHoverGapMs = (ms: number | undefined) => {
   hoverGapOverride = ms;
 };
 /** What a tunable sound uses when nothing is overridden (files, gain, pitch variation), for the lab's sliders. */
-export const soundDefaults = (name: TunableSound): { files: string[]; gain: number; jitter: number; maxMs?: number } =>
+export const soundDefaults = (
+  name: TunableSound,
+): { files: string[]; gain: number; jitter: number; maxMs?: number } =>
   name === 'hold'
     ? { files: [HOLD_FILE], gain: HOLD_GAIN, jitter: 0 }
-    : { files: SAMPLES[name]!.files, gain: SAMPLES[name]!.gain, jitter: SAMPLES[name]!.jitter ?? PITCH_JITTER, maxMs: SAMPLES[name]!.maxMs };
+    : {
+        files: SAMPLES[name]!.files,
+        gain: SAMPLES[name]!.gain,
+        jitter: SAMPLES[name]!.jitter ?? PITCH_JITTER,
+        maxMs: SAMPLES[name]!.maxMs,
+      };
 
 /**
  * The sound while a card is held (clicked, or being dragged): a soft magical shimmer (CC0, "Magic Fireflies" by ienba, freesound.org),
@@ -125,7 +202,10 @@ const decoded = new Map<string, AudioBuffer>();
 const fetchFile = (url: string) => {
   let p = rawFiles.get(url);
   if (!p) {
-    p = fetch(url).then((r) => (r.ok ? r.arrayBuffer() : null), () => null);
+    p = fetch(url).then(
+      (r) => (r.ok ? r.arrayBuffer() : null),
+      () => null,
+    );
     rawFiles.set(url, p);
   }
   return p;
@@ -136,13 +216,19 @@ const fetchFile = (url: string) => {
  */
 export const preloadSounds = () => {
   if (typeof window === 'undefined') return;
-  const files = [...Object.values(SAMPLES).flatMap((s) => s?.files ?? []), HOLD_FILE];
+  const files = [
+    ...Object.values(SAMPLES).flatMap((s) => s?.files ?? []),
+    HOLD_FILE,
+  ];
   files.forEach((f) => void fetchFile(f));
   // Decoding needs an audio context; a suspended one (no click yet) can still decode.
   const c = audioContext();
   if (c) files.forEach((f) => void decode(c, f));
 };
-const decode = async (c: AudioContext, url: string): Promise<AudioBuffer | null> => {
+const decode = async (
+  c: AudioContext,
+  url: string,
+): Promise<AudioBuffer | null> => {
   const hit = decoded.get(url);
   if (hit) return hit;
   const raw = await fetchFile(url);
@@ -169,7 +255,8 @@ const playSample = (c: AudioContext, name: SoundName, at: number): boolean => {
   }
   const src = c.createBufferSource();
   src.buffer = buf;
-  src.playbackRate.value = 1 + (Math.random() * 2 - 1) * (t?.jitter ?? sample.jitter ?? PITCH_JITTER);
+  src.playbackRate.value =
+    1 + (Math.random() * 2 - 1) * (t?.jitter ?? sample.jitter ?? PITCH_JITTER);
   const g = c.createGain();
   g.gain.value = t?.gain ?? sample.gain;
   src.connect(g).connect(c.destination);
@@ -193,7 +280,9 @@ const GAP_S = 0.12;
 
 const MUTE_KEY = 'ccg-muted';
 let ctx: AudioContext | null = null;
-let muted = typeof window !== 'undefined' && window.localStorage?.getItem(MUTE_KEY) === '1';
+let muted =
+  typeof window !== 'undefined' &&
+  window.localStorage?.getItem(MUTE_KEY) === '1';
 
 export const isMuted = () => muted;
 export const setMuted = (m: boolean) => {
@@ -209,7 +298,10 @@ export const setMuted = (m: boolean) => {
 /** Plays the sounds, one after another `GAP_S` apart so an action's sounds do not stack into one blur; `delayS` waits for the animation's impact. */
 export const playSounds = (names: SoundName[], delayS = 0) => {
   if (muted || typeof window === 'undefined') return;
-  const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  const AC =
+    window.AudioContext ??
+    (window as unknown as { webkitAudioContext?: typeof AudioContext })
+      .webkitAudioContext;
   if (!AC) return;
   ctx = ctx ?? new AC();
   if (ctx.state === 'suspended') void ctx.resume();
@@ -239,7 +331,8 @@ export const playSounds = (names: SoundName[], delayS = 0) => {
       const len = Math.floor(c.sampleRate * 0.09);
       const buf = c.createBuffer(1, len, c.sampleRate);
       const data = buf.getChannelData(0);
-      for (let k = 0; k < len; k++) data[k] = (Math.random() * 2 - 1) * (1 - k / len);
+      for (let k = 0; k < len; k++)
+        data[k] = (Math.random() * 2 - 1) * (1 - k / len);
       const src = c.createBufferSource();
       src.buffer = buf;
       const lp = c.createBiquadFilter();
@@ -257,7 +350,10 @@ export const playSounds = (names: SoundName[], delayS = 0) => {
 
 const audioContext = (): AudioContext | null => {
   if (typeof window === 'undefined') return null;
-  const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  const AC =
+    window.AudioContext ??
+    (window as unknown as { webkitAudioContext?: typeof AudioContext })
+      .webkitAudioContext;
   if (!AC) return null;
   ctx = ctx ?? new AC();
   if (ctx.state === 'suspended') void ctx.resume();
@@ -277,7 +373,10 @@ export const startHoldSound = () => {
     src.loop = true;
     const gain = c.createGain();
     gain.gain.setValueAtTime(0.0001, c.currentTime);
-    gain.gain.exponentialRampToValueAtTime(tuning.hold?.gain ?? HOLD_GAIN, c.currentTime + HOLD_FADE_IN_S);
+    gain.gain.exponentialRampToValueAtTime(
+      tuning.hold?.gain ?? HOLD_GAIN,
+      c.currentTime + HOLD_FADE_IN_S,
+    );
     src.connect(gain).connect(c.destination);
     src.start(0, Math.random() * buf.duration); // from a random point, so it does not always open the same way
     hold = { src, gain };
@@ -335,9 +434,13 @@ export const previewSound = (name: TunableSound) => {
   } else {
     // Decode the file first, so a newly picked one plays as itself and not as the fallback tone.
     const c = audioContext();
-    const files = tuning[name]?.file ? [tuning[name]!.file!] : soundDefaults(name).files;
+    const files = tuning[name]?.file
+      ? [tuning[name]!.file!]
+      : soundDefaults(name).files;
     if (!c) return;
-    void Promise.all(files.map((f) => decode(c, f))).then(() => playSounds([name]));
+    void Promise.all(files.map((f) => decode(c, f))).then(() =>
+      playSounds([name]),
+    );
   }
 };
 

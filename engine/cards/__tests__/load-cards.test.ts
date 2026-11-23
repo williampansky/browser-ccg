@@ -1,4 +1,9 @@
-import { CardDataError, loadCards, sanitizeText, stripSymbol } from '../load-cards';
+import {
+  CardDataError,
+  loadCards,
+  sanitizeText,
+  stripSymbol,
+} from '../load-cards';
 import { gameConfig } from '../../../app.config';
 import mechanics from '../../../data/mechanics.json';
 import { loadHsCards } from '../load-hs-cards';
@@ -55,27 +60,42 @@ describe('sanitizeText', () => {
   });
 
   test('removes other tags and collapses whitespace and newlines', () => {
-    expect(sanitizeText('<strong>%BULWARK%</strong>\n  text<small>x</small>')).toBe('%BULWARK% textx');
+    expect(
+      sanitizeText('<strong>%BULWARK%</strong>\n  text<small>x</small>'),
+    ).toBe('%BULWARK% textx');
   });
 });
 
 describe('loadCards: cards with no name', () => {
-  const unnamed = (id: string, extra: RawCard = {}): RawCard => spell({ id, name: undefined, ...extra });
+  const unnamed = (id: string, extra: RawCard = {}): RawCard =>
+    spell({ id, name: undefined, ...extra });
   const load = (prime: RawCard[], entourage: RawCard[] = []) =>
     loadCards(input({ prime, entourage }), { strict: false });
   test('an active card is named by its id, and the missing name is still reported', () => {
     const { byId, issues } = load([unnamed('PRIME_900', { active: true })]);
     expect(byId.get('PRIME_900')!.name).toBe('PRIME_900');
-    expect(issues.filter((i) => i.code === 'missing-name').map((i) => i.id)).toEqual(['PRIME_900']);
+    expect(
+      issues.filter((i) => i.code === 'missing-name').map((i) => i.id),
+    ).toEqual(['PRIME_900']);
   });
   test('an inactive card and a token stay unnamed', () => {
-    const { byId } = load([unnamed('PRIME_901'), unnamed('PRIME_902', { active: true, isEntourage: true })], [unnamed('PRIME_903a', { active: true })]);
+    const { byId } = load(
+      [
+        unnamed('PRIME_901'),
+        unnamed('PRIME_902', { active: true, isEntourage: true }),
+      ],
+      [unnamed('PRIME_903a', { active: true })],
+    );
     expect(byId.get('PRIME_901')!.name).toBeUndefined();
     expect(byId.get('PRIME_902')!.name).toBeUndefined();
     expect(byId.get('PRIME_903a')!.name).toBeUndefined();
   });
   test('a real name is never replaced', () => {
-    expect(load([spell({ id: 'PRIME_904', name: 'Real', active: true })]).byId.get('PRIME_904')!.name).toBe('Real');
+    expect(
+      load([spell({ id: 'PRIME_904', name: 'Real', active: true })]).byId.get(
+        'PRIME_904',
+      )!.name,
+    ).toBe('Real');
   });
 });
 
@@ -91,7 +111,7 @@ describe('loadCards: normalisation', () => {
             cardClass: '0 %CLASS_NONE%',
           }),
         ],
-      })
+      }),
     );
     const card = byId.get('CORE_900')!;
     expect(card.type).toBe('spell');
@@ -103,7 +123,9 @@ describe('loadCards: normalisation', () => {
   });
 
   test('keeps 0 as a real number and leaves absent numbers absent', () => {
-    const { byId } = loadCards(input({ core: [spell({ numberPrimary: 0, numberSecondary: 2 })] }));
+    const { byId } = loadCards(
+      input({ core: [spell({ numberPrimary: 0, numberSecondary: 2 })] }),
+    );
     const { numbers } = byId.get('CORE_900')!;
     expect(numbers.primary).toBe(0);
     expect(numbers.secondary).toBe(2);
@@ -112,8 +134,12 @@ describe('loadCards: normalisation', () => {
   });
 
   test('numberRNG and numberRandom both become numbers.random', () => {
-    const rng = loadCards(input({ core: [spell({ numberRNG: 3 })] })).byId.get('CORE_900')!;
-    const random = loadCards(input({ prime: [spell({ numberRandom: 2 })] })).byId.get('CORE_900')!;
+    const rng = loadCards(input({ core: [spell({ numberRNG: 3 })] })).byId.get(
+      'CORE_900',
+    )!;
+    const random = loadCards(
+      input({ prime: [spell({ numberRandom: 2 })] }),
+    ).byId.get('CORE_900')!;
     expect(rng.numbers.random).toBe(3);
     expect(random.numbers.random).toBe(2);
   });
@@ -121,15 +147,40 @@ describe('loadCards: normalisation', () => {
   test('booleans: absent means false, for entourage cards too (the Airtable `active` flag is respected)', () => {
     const { byId } = loadCards(
       input({
-        core: [spell({ id: 'CORE_901', active: true, elite: true, collectible: true })],
+        core: [
+          spell({
+            id: 'CORE_901',
+            active: true,
+            elite: true,
+            collectible: true,
+          }),
+        ],
         prime: [spell({ id: 'PRIME_901' })],
-        entourage: [spell({ id: 'CORE_901a', isEntourage: true }), spell({ id: 'CORE_901b', isEntourage: true, active: true })],
-      })
+        entourage: [
+          spell({ id: 'CORE_901a', isEntourage: true }),
+          spell({ id: 'CORE_901b', isEntourage: true, active: true }),
+        ],
+      }),
     );
-    expect(byId.get('CORE_901')).toMatchObject({ active: true, elite: true, collectible: true, isToken: false });
-    expect(byId.get('PRIME_901')).toMatchObject({ active: false, elite: false, collectible: false });
-    expect(byId.get('CORE_901a')).toMatchObject({ active: false, isToken: true });
-    expect(byId.get('CORE_901b')).toMatchObject({ active: true, isToken: true });
+    expect(byId.get('CORE_901')).toMatchObject({
+      active: true,
+      elite: true,
+      collectible: true,
+      isToken: false,
+    });
+    expect(byId.get('PRIME_901')).toMatchObject({
+      active: false,
+      elite: false,
+      collectible: false,
+    });
+    expect(byId.get('CORE_901a')).toMatchObject({
+      active: false,
+      isToken: true,
+    });
+    expect(byId.get('CORE_901b')).toMatchObject({
+      active: true,
+      isToken: true,
+    });
   });
 
   test('substitutes number tokens and glossary names in text', () => {
@@ -142,15 +193,19 @@ describe('loadCards: normalisation', () => {
             numberSecondary: 1,
           }),
         ],
-      })
+      }),
     );
     const card = byId.get('CORE_900')!;
-    expect(card.textTemplate).toBe('%BULWARK% Deal %NUM% to %NUM2% %RACE_SPRITE%s');
+    expect(card.textTemplate).toBe(
+      '%BULWARK% Deal %NUM% to %NUM2% %RACE_SPRITE%s',
+    );
     expect(card.text).toBe('Guard Deal 4 to 1 Sprites');
   });
 
   test('%NUM1% reads numberPrimary', () => {
-    const { byId } = loadCards(input({ core: [spell({ text: 'Deal %NUM1%', numberPrimary: 7 })] }));
+    const { byId } = loadCards(
+      input({ core: [spell({ text: 'Deal %NUM1%', numberPrimary: 7 })] }),
+    );
     expect(byId.get('CORE_900')!.text).toBe('Deal 7');
   });
 
@@ -159,7 +214,7 @@ describe('loadCards: normalisation', () => {
       input({
         prime: [spell({ id: 'PRIME_112', entourage: 'PRIME112a, PRIME_999' })],
         entourage: [spell({ id: 'PRIME_112a', isEntourage: true })],
-      })
+      }),
     );
     expect(byId.get('PRIME_112')!.entourage).toEqual(['PRIME_112a']);
     const unresolved = issues.filter((i) => i.code === 'unresolved-entourage');
@@ -169,34 +224,60 @@ describe('loadCards: normalisation', () => {
 
   test('reports (not hides) a missing name and a playType/TARGET mismatch', () => {
     const { issues } = loadCards(
-      input({ core: [spell({ name: undefined, playType: 'TARGETED', mechanics: ['%DAMAGE%'] })] })
+      input({
+        core: [
+          spell({
+            name: undefined,
+            playType: 'TARGETED',
+            mechanics: ['%DAMAGE%'],
+          }),
+        ],
+      }),
     );
-    expect(issues.map((i) => i.code).sort()).toEqual(['missing-name', 'playtype-target-mismatch']);
+    expect(issues.map((i) => i.code).sort()).toEqual([
+      'missing-name',
+      'playtype-target-mismatch',
+    ]);
     expect(issues.every((i) => i.level === 'warning')).toBe(true);
   });
 });
 
 describe('loadCards: fails loudly', () => {
   test('an unknown mechanic symbol throws', () => {
-    expect(() => loadCards(input({ core: [spell({ mechanics: ['%NOT_A_MECHANIC%'] })] }))).toThrow(CardDataError);
+    expect(() =>
+      loadCards(input({ core: [spell({ mechanics: ['%NOT_A_MECHANIC%'] })] })),
+    ).toThrow(CardDataError);
   });
 
   test('a duplicate id throws', () => {
-    expect(() => loadCards(input({ core: [spell(), spell()] }))).toThrow(/duplicate-id/);
+    expect(() => loadCards(input({ core: [spell(), spell()] }))).toThrow(
+      /duplicate-id/,
+    );
   });
 
   test('an unknown type, a missing cost, and a non-numeric number all throw', () => {
-    expect(() => loadCards(input({ core: [spell({ type: '%TYPE_WIZARD%' })] }))).toThrow(/unknown-type/);
-    expect(() => loadCards(input({ core: [spell({ cost: undefined })] }))).toThrow(/missing-field/);
-    expect(() => loadCards(input({ core: [spell({ numberPrimary: 'lots' })] }))).toThrow(/bad-number/);
+    expect(() =>
+      loadCards(input({ core: [spell({ type: '%TYPE_WIZARD%' })] })),
+    ).toThrow(/unknown-type/);
+    expect(() =>
+      loadCards(input({ core: [spell({ cost: undefined })] })),
+    ).toThrow(/missing-field/);
+    expect(() =>
+      loadCards(input({ core: [spell({ numberPrimary: 'lots' })] })),
+    ).toThrow(/bad-number/);
   });
 
   test('both numberRNG and numberRandom is an error', () => {
-    expect(() => loadCards(input({ core: [spell({ numberRNG: 1, numberRandom: 1 })] }))).toThrow(/numbers-conflict/);
+    expect(() =>
+      loadCards(input({ core: [spell({ numberRNG: 1, numberRandom: 1 })] })),
+    ).toThrow(/numbers-conflict/);
   });
 
   test('strict: false returns the issues instead of throwing', () => {
-    const result = loadCards(input({ core: [spell({ mechanics: ['%NOPE%'] })] }), { strict: false });
+    const result = loadCards(
+      input({ core: [spell({ mechanics: ['%NOPE%'] })] }),
+      { strict: false },
+    );
     expect(result.issues.some((i) => i.code === 'unknown-mechanic')).toBe(true);
   });
 });
@@ -225,26 +306,38 @@ describe('loadHsCards: the committed card data', () => {
   });
 
   test('some PRIME cards are inactive; a token is active only when its row says so (CORE_049a is not)', () => {
-    expect(bySource('prime').filter((c) => !c.active).length).toBeGreaterThan(0);
+    expect(bySource('prime').filter((c) => !c.active).length).toBeGreaterThan(
+      0,
+    );
     expect(bySource('entourage').every((c) => c.isToken)).toBe(true);
-    expect(byId.get('CORE_049a')).toMatchObject({ isToken: true, active: false });
+    expect(byId.get('CORE_049a')).toMatchObject({
+      isToken: true,
+      active: false,
+    });
   });
 
   test('every minion has attack and health, including the NO_ATTACK ones', () => {
     const minions = cards.filter((c) => c.type === 'minion');
     expect(minions.length).toBeGreaterThan(0);
-    expect(minions.every((c) => c.attack !== undefined && c.health !== undefined)).toBe(true);
+    expect(
+      minions.every((c) => c.attack !== undefined && c.health !== undefined),
+    ).toBe(true);
     expect(byId.get('PRIME_014')).toMatchObject({ attack: 4, health: 2 });
   });
 
   test('every weapon has attack and durability (health)', () => {
     const weapons = cards.filter((c) => c.type === 'weapon');
     expect(weapons.length).toBeGreaterThan(0);
-    expect(weapons.every((c) => c.attack !== undefined && c.health !== undefined)).toBe(true);
+    expect(
+      weapons.every((c) => c.attack !== undefined && c.health !== undefined),
+    ).toBe(true);
   });
 
   test('0 is preserved: CORE_006 has numberPrimary 0 and numberSecondary 2', () => {
-    expect(byId.get('CORE_006')!.numbers).toMatchObject({ primary: 0, secondary: 2 });
+    expect(byId.get('CORE_006')!.numbers).toMatchObject({
+      primary: 0,
+      secondary: 2,
+    });
   });
 
   test('a known card renders correctly (CORE_063)', () => {
@@ -258,9 +351,14 @@ describe('loadHsCards: the committed card data', () => {
     expect(card.text).toBe('Deal 1 damage to three Random enemies');
   });
 
-  test('the glossary supplies the game\'s own display names (from data/mechanics.json, so an Airtable rename follows)', () => {
-    const nameOf = (symbol: string) => (mechanics as { symbol: string; name: string }[]).find((m) => m.symbol === symbol)!.name;
-    const guard = cards.find((c) => c.mechanics.includes('BULWARK') && c.textTemplate === '%BULWARK%')!;
+  test("the glossary supplies the game's own display names (from data/mechanics.json, so an Airtable rename follows)", () => {
+    const nameOf = (symbol: string) =>
+      (mechanics as { symbol: string; name: string }[]).find(
+        (m) => m.symbol === symbol,
+      )!.name;
+    const guard = cards.find(
+      (c) => c.mechanics.includes('BULWARK') && c.textTemplate === '%BULWARK%',
+    )!;
     expect(guard.text).toBe(nameOf('%BULWARK%'));
     expect(cards.some((c) => c.text.includes(nameOf('%RUSH%')))).toBe(true);
     expect(cards.some((c) => c.text.includes(nameOf('%ON_PLAY%')))).toBe(true);
@@ -280,31 +378,50 @@ describe('loadHsCards: the committed card data', () => {
 
   test('the PRIME112a typo is fixed; the other dangling entourage references are counted', () => {
     expect(byId.get('PRIME_112')!.entourage).toContain('PRIME_112a');
-    expect(issues.filter((i) => i.code === 'unresolved-entourage').length).toBeGreaterThan(0);
+    expect(
+      issues.filter((i) => i.code === 'unresolved-entourage').length,
+    ).toBeGreaterThan(0);
   });
 
   test('unnamed cards and targeting disagreements are reported, not hidden', () => {
-    expect(issues.filter((i) => i.code === 'missing-name').length).toBeGreaterThan(0);
-    expect(issues.filter((i) => i.code === 'playtype-target-mismatch').length).toBeGreaterThan(0);
+    expect(
+      issues.filter((i) => i.code === 'missing-name').length,
+    ).toBeGreaterThan(0);
+    expect(
+      issues.filter((i) => i.code === 'playtype-target-mismatch').length,
+    ).toBeGreaterThan(0);
   });
 });
 
 describe('loadHsCards: game cards', () => {
   it('includes The Orb (GAME_001), the second player bonus spell', () => {
     const orb = loadHsCards().byId.get('GAME_001');
-    expect(orb).toMatchObject({ source: 'game', type: 'spell', cost: 0, playType: 'global', numbers: { primary: 1 } });
+    expect(orb).toMatchObject({
+      source: 'game',
+      type: 'spell',
+      cost: 0,
+      playType: 'global',
+      numbers: { primary: 1 },
+    });
   });
 });
 
 describe('card names that are glossary tokens', () => {
   it('are replaced by the glossary display name', () => {
-    const { byId } = loadCards(input({ core: [spell({ id: 'CORE_901', name: '%DAMAGE%' })] }));
+    const { byId } = loadCards(
+      input({ core: [spell({ id: 'CORE_901', name: '%DAMAGE%' })] }),
+    );
     expect(byId.get('CORE_901')?.name).toBe('Damage');
   });
   it('are left alone (and reported) when the glossary does not know them', () => {
-    const r = loadCards(input({ core: [spell({ id: 'CORE_902', name: '%NOPE%' })] }), { strict: false });
+    const r = loadCards(
+      input({ core: [spell({ id: 'CORE_902', name: '%NOPE%' })] }),
+      { strict: false },
+    );
     expect(r.byId.get('CORE_902')?.name).toBe('%NOPE%');
-    expect(r.issues).toContainEqual(expect.objectContaining({ code: 'unknown-text-token', id: 'CORE_902' }));
+    expect(r.issues).toContainEqual(
+      expect.objectContaining({ code: 'unknown-text-token', id: 'CORE_902' }),
+    );
   });
   it('real data: no card is left with a percent token in its name', () => {
     for (const c of loadHsCards().cards) expect(c.name ?? '').not.toMatch(/%/);

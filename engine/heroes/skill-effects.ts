@@ -2,7 +2,12 @@ import type { CardCatalog } from '../cards/types';
 import type { Effect, SkillOption, TargetFilter } from '../effects/types';
 import type { GameState, PlayerId } from '../state/types';
 import { addArmor, buff, damage, heal } from '../effects/primitives';
-import { allEnemyMinions, chosenTarget, enemyHero, friendlyOfRace } from '../effects/selectors';
+import {
+  allEnemyMinions,
+  chosenTarget,
+  enemyHero,
+  friendlyOfRace,
+} from '../effects/selectors';
 import { damageTarget } from '../rules/damage';
 import { withSpellPower } from '../rules/spell-power';
 import { summonMinion } from '../rules/summon';
@@ -13,7 +18,11 @@ import { heroToken } from './tokens';
 export interface SkillCode {
   target?: TargetFilter;
   /** When set, the skill is used by picking one of these (listed fresh from the game state); with none to list it cannot be used */
-  options?: (state: GameState, player: PlayerId, catalog: CardCatalog) => SkillOption[];
+  options?: (
+    state: GameState,
+    player: PlayerId,
+    catalog: CardCatalog,
+  ) => SkillOption[];
   effects: Effect[];
 }
 
@@ -28,7 +37,12 @@ const summonToken =
 const summonRandomToken =
   (ids: string[]): Effect =>
   (ctx) => {
-    summonMinion(ctx.g, ctx.caster, heroToken(ids[ctx.rng.int(ids.length)]), ctx.events);
+    summonMinion(
+      ctx.g,
+      ctx.caster,
+      heroToken(ids[ctx.rng.int(ids.length)]),
+      ctx.events,
+    );
   };
 
 /** Summons the hero token with `attack` / `health` added on top of its own numbers (nothing happens if the board is full). */
@@ -60,7 +74,13 @@ const resurrect =
 const hitChosen =
   (amount: (ctx: Parameters<Effect>[0]) => number): Effect =>
   (ctx) => {
-    for (const t of chosenTarget()(ctx)) damageTarget(ctx.g, t, withSpellPower('damage', amount(ctx), ctx.spellDamage), ctx.events);
+    for (const t of chosenTarget()(ctx))
+      damageTarget(
+        ctx.g,
+        t,
+        withSpellPower('damage', amount(ctx), ctx.spellDamage),
+        ctx.events,
+      );
   };
 
 /**
@@ -68,7 +88,9 @@ const hitChosen =
  * the graveyard it came from, which for a stolen enemy minion is the enemy's. Nothing happens if the board is full.
  */
 const resurrectPicked = (): Effect => (ctx) => {
-  const pick = resurrectOptions(ctx.g, ctx.caster, ctx.catalog)[ctx.choice ?? -1];
+  const pick = resurrectOptions(ctx.g, ctx.caster, ctx.catalog)[
+    ctx.choice ?? -1
+  ];
   const id = pick?.cardId;
   const card = id ? ctx.catalog.get(id) : undefined;
   if (!pick || !id || !card || !pick.from) return;
@@ -98,7 +120,12 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
   ],
   WARRIOR: [
     { effects: [addArmor(2)] },
-    { target: anyCharacter, effects: [hitChosen((ctx) => (ctx.g.players[ctx.caster].health <= 12 ? 6 : 4))] },
+    {
+      target: anyCharacter,
+      effects: [
+        hitChosen((ctx) => (ctx.g.players[ctx.caster].health <= 12 ? 6 : 4)),
+      ],
+    },
     { effects: [lastStand(15, 10)] },
   ],
   SAGE: [
@@ -112,9 +139,23 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
     { effects: [summonToken('HERO_EXILE_BEAST')] },
   ],
   WILDCALLER: [
-    { effects: [summonRandomToken(['HERO_DRUID_WOLF', 'HERO_DRUID_BEAR', 'HERO_DRUID_HAWK'])] },
+    {
+      effects: [
+        summonRandomToken([
+          'HERO_DRUID_WOLF',
+          'HERO_DRUID_BEAR',
+          'HERO_DRUID_HAWK',
+        ]),
+      ],
+    },
     { effects: [buff(friendlyOfRace('CREATURE'), 2, 2)] },
     // Ultimate (Stampede of the Wild): one of each Spirit Animal, each with +2/+2 (other Creatures are not buffed)
-    { effects: [summonBuffed('HERO_DRUID_WOLF', 2, 2), summonBuffed('HERO_DRUID_BEAR', 2, 2), summonBuffed('HERO_DRUID_HAWK', 2, 2)] },
+    {
+      effects: [
+        summonBuffed('HERO_DRUID_WOLF', 2, 2),
+        summonBuffed('HERO_DRUID_BEAR', 2, 2),
+        summonBuffed('HERO_DRUID_HAWK', 2, 2),
+      ],
+    },
   ],
 };

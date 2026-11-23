@@ -54,14 +54,23 @@ export const ScrollToTop = ({
   return visible ? (
     <button
       className={cx(styles['component'], 'bccg-animation-slide-bottom')}
-      data-component='ScrollToTop'
+      data-component="ScrollToTop"
       onClick={() => scrollToTopFunc(smooth)}
-      aria-label='Scroll to top'
+      aria-label="Scroll to top"
       style={{
         bottom: `calc((52px + 1rem) + ${abSize}px)`,
       }}
     >
-      <span className="bccg-icon" uk-icon="triangle-up"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><polygon points="5 13 10 8 15 13"></polygon></svg></span>
+      <span className="bccg-icon" uk-icon="triangle-up">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polygon points="5 13 10 8 15 13"></polygon>
+        </svg>
+      </span>
     </button>
   ) : null;
 };

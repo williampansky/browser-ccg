@@ -9,7 +9,14 @@ export default defineCard('PRIME_126', () => ({
     category: 'attack',
     hook: 'attack',
     when: ({ attack, owner, state }) =>
-      attack?.attackerId !== undefined && attack.target.kind === 'hero' && attack.target.player === owner && !!state.players[owner].weapon,
-    do: [computed((ctx) => damage(attackerMinion(), ctx.g.players[ctx.caster].weapon?.attack ?? 0))],
+      attack?.attackerId !== undefined &&
+      attack.target.kind === 'hero' &&
+      attack.target.player === owner &&
+      !!state.players[owner].weapon,
+    do: [
+      computed((ctx) =>
+        damage(attackerMinion(), ctx.g.players[ctx.caster].weapon?.attack ?? 0),
+      ),
+    ],
   },
 }));

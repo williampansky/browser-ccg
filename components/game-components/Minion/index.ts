@@ -1,1 +1,1 @@
-export { Minion } from './Minion'
+export { Minion } from './Minion';

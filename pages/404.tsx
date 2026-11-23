@@ -10,7 +10,7 @@ const {
 export default function Custom404() {
   return (
     <Layout title={home.name} description={home.description}>
-      <div className='custom404__page'>
+      <div className="custom404__page">
         <div>
           <h1>404</h1>
           <code>¯\_(ツ)_/¯</code>

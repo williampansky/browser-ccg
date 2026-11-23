@@ -29,7 +29,17 @@ export const useMeasuredDefaults = (query: ParsedUrlQuery) => {
 };
 
 /** The slider rows for these knob keys (a number box, a reset link and a range). */
-export const LabSliders = ({ keys, q, defaults, setParams }: { keys: string[]; q: ParsedUrlQuery; defaults: Record<string, number>; setParams: (changes: Record<string, string | null>) => void }) => (
+export const LabSliders = ({
+  keys,
+  q,
+  defaults,
+  setParams,
+}: {
+  keys: string[];
+  q: ParsedUrlQuery;
+  defaults: Record<string, number>;
+  setParams: (changes: Record<string, string | null>) => void;
+}) => (
   <>
     {NUMS.filter((n) => keys.includes(n.key)).map((n) => {
       const own = one(q[n.key]);
@@ -38,10 +48,33 @@ export const LabSliders = ({ keys, q, defaults, setParams }: { keys: string[]; q
       return (
         <label key={n.key} style={row}>
           {n.label}{' '}
-          <input type="number" step={n.step ?? 1} value={raw || (defaults[n.key] ?? '')} style={{ width: 66 }} onChange={(e) => setParams({ [n.key]: e.target.value })} />
-          {!own && !PLAY_LAYOUT[n.key] && defaults[n.key] !== undefined && <span style={{ color: '#9aa3b8' }}> (default)</span>}
-          {own && <a style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }} onClick={() => setParams({ [n.key]: null })}>reset</a>}
-          <input type="range" min={Math.min(n.min, defaults[n.key] ?? n.min)} max={Math.max(n.max, defaults[n.key] ?? n.max)} step={n.step ?? 1} value={raw || (defaults[n.key] ?? n.min)} style={wide} onChange={(e) => setParams({ [n.key]: e.target.value })} />
+          <input
+            type="number"
+            step={n.step ?? 1}
+            value={raw || (defaults[n.key] ?? '')}
+            style={{ width: 66 }}
+            onChange={(e) => setParams({ [n.key]: e.target.value })}
+          />
+          {!own && !PLAY_LAYOUT[n.key] && defaults[n.key] !== undefined && (
+            <span style={{ color: '#9aa3b8' }}> (default)</span>
+          )}
+          {own && (
+            <a
+              style={{ marginLeft: 6, cursor: 'pointer', color: '#7aa2ff' }}
+              onClick={() => setParams({ [n.key]: null })}
+            >
+              reset
+            </a>
+          )}
+          <input
+            type="range"
+            min={Math.min(n.min, defaults[n.key] ?? n.min)}
+            max={Math.max(n.max, defaults[n.key] ?? n.max)}
+            step={n.step ?? 1}
+            value={raw || (defaults[n.key] ?? n.min)}
+            style={wide}
+            onChange={(e) => setParams({ [n.key]: e.target.value })}
+          />
         </label>
       );
     })}

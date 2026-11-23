@@ -148,12 +148,19 @@ export interface GameState {
 }
 
 /** Something an attack or effect can aim at: a hero (either player's) or a minion on either board. */
-export type TargetRef = { kind: 'hero'; player: PlayerId } | { kind: 'minion'; instanceId: number };
+export type TargetRef =
+  { kind: 'hero'; player: PlayerId } | { kind: 'minion'; instanceId: number };
 
 export type Action =
   | { type: 'EndTurn' }
   | { type: 'Concede' }
-  | { type: 'PlayCard'; handIndex: number; boardIndex?: number; target?: TargetRef; choice?: number }
+  | {
+      type: 'PlayCard';
+      handIndex: number;
+      boardIndex?: number;
+      target?: TargetRef;
+      choice?: number;
+    }
   | { type: 'Attack'; attackerId: number; target: TargetRef }
   | { type: 'WeaponAttack'; target: TargetRef }
   /** Uses one of the hero's skills (`skill` is 0, 1 or 2); `target` only for a targeted skill */
@@ -188,24 +195,57 @@ export type GameEvent =
   | { type: 'Burned'; player: PlayerId; instanceId: number }
   | { type: 'Fatigue'; player: PlayerId; damage: number }
   | { type: 'HeroDamaged'; player: PlayerId; amount: number }
-  | { type: 'MinionPlayed'; player: PlayerId; instanceId: number; boardIndex: number; target?: TargetRef }
-  | { type: 'HeroSkillUsed'; player: PlayerId; skill: number; target?: TargetRef }
+  | {
+      type: 'MinionPlayed';
+      player: PlayerId;
+      instanceId: number;
+      boardIndex: number;
+      target?: TargetRef;
+    }
+  | {
+      type: 'HeroSkillUsed';
+      player: PlayerId;
+      skill: number;
+      target?: TargetRef;
+    }
   | { type: 'WeaponEquipped'; player: PlayerId; cardId: string }
   | { type: 'WeaponAttacked'; target: TargetRef }
   | { type: 'WeaponBroke'; player: PlayerId }
   | { type: 'ArmorGained'; player: PlayerId; amount: number }
   | { type: 'MinionAttacked'; attackerId: number; target: TargetRef }
-  | { type: 'CardPlayed'; player: PlayerId; instanceId: number; cardId: string; target?: TargetRef; mystery?: boolean }
-  | { type: 'MinionDamaged'; player: PlayerId; instanceId: number; amount: number }
+  | {
+      type: 'CardPlayed';
+      player: PlayerId;
+      instanceId: number;
+      cardId: string;
+      target?: TargetRef;
+      mystery?: boolean;
+    }
+  | {
+      type: 'MinionDamaged';
+      player: PlayerId;
+      instanceId: number;
+      amount: number;
+    }
   | { type: 'CardObtained'; player: PlayerId; instanceId: number }
   | { type: 'Discarded'; player: PlayerId; instanceId: number }
   | { type: 'Healed'; target: TargetRef; amount: number }
   | { type: 'EnergyGained'; player: PlayerId; amount: number }
   | { type: 'MysteryPlaced'; player: PlayerId }
   | { type: 'MysteryRevealed'; player: PlayerId; cardId: string }
-  | { type: 'OverchargeGained'; player: PlayerId; amount: number; cardId: string }
+  | {
+      type: 'OverchargeGained';
+      player: PlayerId;
+      amount: number;
+      cardId: string;
+    }
   | { type: 'BubblePopped'; instanceId: number }
-  | { type: 'MinionSummoned'; player: PlayerId; instanceId: number; cardId: string }
+  | {
+      type: 'MinionSummoned';
+      player: PlayerId;
+      instanceId: number;
+      cardId: string;
+    }
   | { type: 'MinionDied'; player: PlayerId; instanceId: number; cardId: string }
   | { type: 'GameOver'; winner: PlayerId | 'draw' };
 

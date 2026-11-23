@@ -5,16 +5,27 @@ import { applyAction } from '../../rules/apply-action';
 import { legalActions } from '../../rules/legal-actions';
 import { createGame } from '../../state/create-game';
 import type { Action, GameState, TargetRef } from '../../state/types';
-import { catalogOf, minionCard, putOnBoard, setEnergy } from '../../testing/builders';
+import {
+  catalogOf,
+  minionCard,
+  putOnBoard,
+  setEnergy,
+} from '../../testing/builders';
 import { getHero, heroes, heroSkill, withHeroTokens } from '..';
 
 const grunt = minionCard('GRUNT', { cost: 1, attack: 2, health: 3 });
-const catalog = withHeroTokens(catalogOf(...Array.from(loadHsCards().byId.values()), grunt));
+const catalog = withHeroTokens(
+  catalogOf(...Array.from(loadHsCards().byId.values()), grunt),
+);
 
 const game = (hero0: string, hero1 = 'ZEUS'): GameState => {
   const s = createGame(
-    { decks: { '0': Array(30).fill('GRUNT'), '1': Array(30).fill('GRUNT') }, firstPlayer: '0', heroes: { '0': hero0, '1': hero1 } },
-    createSeededRng(1)
+    {
+      decks: { '0': Array(30).fill('GRUNT'), '1': Array(30).fill('GRUNT') },
+      firstPlayer: '0',
+      heroes: { '0': hero0, '1': hero1 },
+    },
+    createSeededRng(1),
   );
   return setEnergy(s, '0', 10);
 };
@@ -23,56 +34,92 @@ const act = (s: GameState, a: Action, seed = 1) => {
   if ('error' in r) throw new Error(r.error);
   return r;
 };
-const skill = (s: GameState, n: number, target?: TargetRef) => act(s, { type: 'HeroSkill', skill: n, target });
+const skill = (s: GameState, n: number, target?: TargetRef) =>
+  act(s, { type: 'HeroSkill', skill: n, target });
 const err = (s: GameState, a: Action) => {
   const r = applyAction(s, a, { rng: createSeededRng(1), catalog });
   return 'error' in r ? r.error : null;
 };
 const endTurns = (s: GameState, n: number): GameState => {
-  for (let i = 0; i < n; i++) s = setEnergy(act(s, { type: 'EndTurn' }).state, s.activePlayer === '0' ? '1' : '0', 10);
+  for (let i = 0; i < n; i++)
+    s = setEnergy(
+      act(s, { type: 'EndTurn' }).state,
+      s.activePlayer === '0' ? '1' : '0',
+      10,
+    );
   return s;
 };
 const foeHero = { kind: 'hero', player: '1' } as const;
 
 describe('spell damage on skills', () => {
   const elder = minionCard('ELDER', { cost: 1, attack: 1, health: 1 });
-  const defs = (c: { id: string }) => (c.id === 'ELDER' ? { spellDamage: 1 } : undefined);
-  const cat = withHeroTokens(catalogOf(...Array.from(loadHsCards().byId.values()), grunt, elder));
+  const defs = (c: { id: string }) =>
+    c.id === 'ELDER' ? { spellDamage: 1 } : undefined;
+  const cat = withHeroTokens(
+    catalogOf(...Array.from(loadHsCards().byId.values()), grunt, elder),
+  );
   const use = (s: GameState, n: number, target?: TargetRef) => {
-    const r = applyAction(s, { type: 'HeroSkill', skill: n, target }, { rng: createSeededRng(1), catalog: cat, defs: defs as never });
+    const r = applyAction(
+      s,
+      { type: 'HeroSkill', skill: n, target },
+      { rng: createSeededRng(1), catalog: cat, defs: defs as never },
+    );
     if ('error' in r) throw new Error(r.error);
     return r.state;
   };
-  it('a Spell Damage +1 minion makes Zeus\' 1 damage skill hit for 2, and it is gone with the minion', () => {
+  it("a Spell Damage +1 minion makes Zeus' 1 damage skill hit for 2, and it is gone with the minion", () => {
     expect(use(game('ZEUS'), 0, foeHero).players['1'].health).toBe(29);
     const withElder = putOnBoard(game('ZEUS'), '0', elder);
     expect(use(withElder, 0, foeHero).players['1'].health).toBe(28);
-    expect(use(putOnBoard(game('ZEUS'), '1', elder), 0, foeHero).players['1'].health).toBe(29); // the enemy's does nothing for you
+    expect(
+      use(putOnBoard(game('ZEUS'), '1', elder), 0, foeHero).players['1'].health,
+    ).toBe(29); // the enemy's does nothing for you
   });
   it('raises an area skill on every minion and leaves a heal alone', () => {
-    let s = putOnBoard(putOnBoard(game('ZEUS'), '0', elder), '1', grunt, { health: 9, maxHealth: 9 });
+    let s = putOnBoard(putOnBoard(game('ZEUS'), '0', elder), '1', grunt, {
+      health: 9,
+      maxHealth: 9,
+    });
     expect(use(s, 1).players['1'].board[0].health).toBe(9 - 4);
     s = putOnBoard(game('SAGE'), '0', elder);
     s = produce(s, (g) => void (g.players['0'].health = 10));
-    expect(use(s, 0, { kind: 'hero', player: '0' }).players['0'].health).toBe(13);
+    expect(use(s, 0, { kind: 'hero', player: '0' }).players['0'].health).toBe(
+      13,
+    );
   });
 });
 
 describe('the playable heroes', () => {
   it('are the five marked active, each with three skills', () => {
-    expect(heroes().map((h) => h.id).sort()).toEqual(['EXILE', 'SAGE', 'WARRIOR', 'WILDCALLER', 'ZEUS']);
+    expect(
+      heroes()
+        .map((h) => h.id)
+        .sort(),
+    ).toEqual(['EXILE', 'SAGE', 'WARRIOR', 'WILDCALLER', 'ZEUS']);
     for (const h of heroes()) expect(h.skills).toHaveLength(3);
   });
   it('take their skill numbers from the ability data', () => {
-    expect(getHero('ZEUS')!.skills.map((k) => [k.cost, k.cooldown])).toEqual([[2, 1], [6, 3], [10, undefined]]);
+    expect(getHero('ZEUS')!.skills.map((k) => [k.cost, k.cooldown])).toEqual([
+      [2, 1],
+      [6, 3],
+      [10, undefined],
+    ]);
   });
   it('createGame refuses an unknown hero', () => {
     expect(() => game('NOPE')).toThrow();
   });
   it('a game without heroes has no hero state and offers no skills', () => {
-    const s = createGame({ decks: { '0': Array(30).fill('GRUNT'), '1': Array(30).fill('GRUNT') }, firstPlayer: '0' }, createSeededRng(1));
+    const s = createGame(
+      {
+        decks: { '0': Array(30).fill('GRUNT'), '1': Array(30).fill('GRUNT') },
+        firstPlayer: '0',
+      },
+      createSeededRng(1),
+    );
     expect(s.players['0'].hero).toBeUndefined();
-    expect(legalActions(s, '0', catalog).some((a) => a.type === 'HeroSkill')).toBe(false);
+    expect(
+      legalActions(s, '0', catalog).some((a) => a.type === 'HeroSkill'),
+    ).toBe(false);
   });
 });
 
@@ -82,42 +129,76 @@ describe('skill rules', () => {
     expect(r.state.players['0'].energy.current).toBe(8);
     expect(r.state.players['0'].hero!.cooldowns[0]).toBe(1);
     expect(r.state.players['1'].health).toBe(29);
-    expect(r.events).toContainEqual({ type: 'HeroSkillUsed', player: '0', skill: 0, target: foeHero });
+    expect(r.events).toContainEqual({
+      type: 'HeroSkillUsed',
+      player: '0',
+      skill: 0,
+      target: foeHero,
+    });
   });
   it('cannot be used again until the owner has started another turn (cooldown 1)', () => {
     const s = skill(game('ZEUS'), 0, foeHero).state;
-    expect(err(s, { type: 'HeroSkill', skill: 0, target: foeHero })).toBe('SKILL_UNAVAILABLE');
+    expect(err(s, { type: 'HeroSkill', skill: 0, target: foeHero })).toBe(
+      'SKILL_UNAVAILABLE',
+    );
     const next = endTurns(s, 2);
-    expect(err(next, { type: 'HeroSkill', skill: 0, target: foeHero })).toBeNull();
+    expect(
+      err(next, { type: 'HeroSkill', skill: 0, target: foeHero }),
+    ).toBeNull();
   });
-  it('a cooldown of 3 skips two of the owner\'s turns', () => {
+  it("a cooldown of 3 skips two of the owner's turns", () => {
     const s = skill(game('ZEUS'), 1).state;
-    expect(err(endTurns(s, 2), { type: 'HeroSkill', skill: 1 })).toBe('SKILL_UNAVAILABLE');
-    expect(err(endTurns(s, 4), { type: 'HeroSkill', skill: 1 })).toBe('SKILL_UNAVAILABLE');
+    expect(err(endTurns(s, 2), { type: 'HeroSkill', skill: 1 })).toBe(
+      'SKILL_UNAVAILABLE',
+    );
+    expect(err(endTurns(s, 4), { type: 'HeroSkill', skill: 1 })).toBe(
+      'SKILL_UNAVAILABLE',
+    );
     expect(err(endTurns(s, 6), { type: 'HeroSkill', skill: 1 })).toBeNull();
   });
   it('an ultimate (no cooldown) works once per game', () => {
     const s = skill(game('ZEUS'), 2, foeHero).state;
     expect(s.players['1'].health).toBe(20);
-    expect(err(endTurns(s, 4), { type: 'HeroSkill', skill: 2, target: foeHero })).toBe('SKILL_UNAVAILABLE');
+    expect(
+      err(endTurns(s, 4), { type: 'HeroSkill', skill: 2, target: foeHero }),
+    ).toBe('SKILL_UNAVAILABLE');
   });
   it('refuses a skill the player cannot afford', () => {
-    expect(err(setEnergy(game('ZEUS'), '0', 1), { type: 'HeroSkill', skill: 0, target: foeHero })).toBe('CANT_AFFORD');
+    expect(
+      err(setEnergy(game('ZEUS'), '0', 1), {
+        type: 'HeroSkill',
+        skill: 0,
+        target: foeHero,
+      }),
+    ).toBe('CANT_AFFORD');
   });
   it('refuses a missing or unknown skill and a missing target', () => {
-    expect(err(game('ZEUS'), { type: 'HeroSkill', skill: 3 })).toBe('BAD_SKILL');
-    expect(err(game('ZEUS'), { type: 'HeroSkill', skill: 0 })).toBe('ILLEGAL_TARGET');
+    expect(err(game('ZEUS'), { type: 'HeroSkill', skill: 3 })).toBe(
+      'BAD_SKILL',
+    );
+    expect(err(game('ZEUS'), { type: 'HeroSkill', skill: 0 })).toBe(
+      'ILLEGAL_TARGET',
+    );
   });
   it('legalActions offers only ready, affordable skills, once per target', () => {
     const s = putOnBoard(game('ZEUS'), '1', grunt);
-    const zeus = (st: GameState) => legalActions(st, '0', catalog).filter((a) => a.type === 'HeroSkill');
+    const zeus = (st: GameState) =>
+      legalActions(st, '0', catalog).filter((a) => a.type === 'HeroSkill');
     // Lightning Strike aims at any of 4 characters (two heroes, one minion... plus none of mine), Rain Lightning is global.
-    expect(zeus(s).filter((a) => a.type === 'HeroSkill' && a.skill === 0)).toHaveLength(3);
-    expect(zeus(s).filter((a) => a.type === 'HeroSkill' && a.skill === 1)).toHaveLength(1);
+    expect(
+      zeus(s).filter((a) => a.type === 'HeroSkill' && a.skill === 0),
+    ).toHaveLength(3);
+    expect(
+      zeus(s).filter((a) => a.type === 'HeroSkill' && a.skill === 1),
+    ).toHaveLength(1);
     expect(zeus(setEnergy(s, '0', 1))).toHaveLength(0);
-    expect(zeus(setEnergy(s, '0', 10)).some((a) => a.type === 'HeroSkill' && a.skill === 2)).toBe(true);
+    expect(
+      zeus(setEnergy(s, '0', 10)).some(
+        (a) => a.type === 'HeroSkill' && a.skill === 2,
+      ),
+    ).toBe(true);
   });
-  it('are not offered on the other player\'s turn', () => {
+  it("are not offered on the other player's turn", () => {
     expect(legalActions(game('ZEUS'), '1', catalog)).toEqual([]);
   });
 });
@@ -133,16 +214,22 @@ describe('Zeus', () => {
   });
   it('Lightning Blast kills a minion it is aimed at', () => {
     const s = putOnBoard(game('ZEUS'), '1', grunt, { health: 9, maxHealth: 9 });
-    const r = skill(s, 2, { kind: 'minion', instanceId: s.players['1'].board[0].instanceId }).state;
+    const r = skill(s, 2, {
+      kind: 'minion',
+      instanceId: s.players['1'].board[0].instanceId,
+    }).state;
     expect(r.players['1'].board).toHaveLength(0);
   });
 });
 
 describe('skill text', () => {
   it('fills in %NUM1% / %NUM2% from the ability numbers and leaves no raw symbol', () => {
-    expect(getHero('WARRIOR')!.skills[2].text).toBe('Set your Health to 15 and gain 10 Armor');
+    expect(getHero('WARRIOR')!.skills[2].text).toBe(
+      'Set your Health to 15 and gain 10 Armor',
+    );
     expect(getHero('EXILE')!.skills[2].text).toMatch(/8\/8/);
-    for (const h of heroes()) for (const sk of h.skills) expect(sk.text).not.toMatch(/%/);
+    for (const h of heroes())
+      for (const sk of h.skills) expect(sk.text).not.toMatch(/%/);
   });
 });
 
@@ -151,14 +238,25 @@ describe('Warrior', () => {
     expect(skill(game('WARRIOR'), 0).state.players['0'].armor).toBe(2);
   });
   it('Violent Strike deals 4, or 6 while the Warrior has 12 or less Health', () => {
-    expect(skill(game('WARRIOR'), 1, foeHero).state.players['1'].health).toBe(26);
-    const low = produce(game('WARRIOR'), (g) => void (g.players['0'].health = 12));
+    expect(skill(game('WARRIOR'), 1, foeHero).state.players['1'].health).toBe(
+      26,
+    );
+    const low = produce(
+      game('WARRIOR'),
+      (g) => void (g.players['0'].health = 12),
+    );
     expect(skill(low, 1, foeHero).state.players['1'].health).toBe(24);
-    const edge = produce(game('WARRIOR'), (g) => void (g.players['0'].health = 13));
+    const edge = produce(
+      game('WARRIOR'),
+      (g) => void (g.players['0'].health = 13),
+    );
     expect(skill(edge, 1, foeHero).state.players['1'].health).toBe(26);
   });
   it('Last Stand sets Health to 15 and gains 10 armor, with no target', () => {
-    const low = produce(game('WARRIOR'), (g) => void ((g.players['0'].health = 5), (g.players['0'].armor = 3)));
+    const low = produce(
+      game('WARRIOR'),
+      (g) => void ((g.players['0'].health = 5), (g.players['0'].armor = 3)),
+    );
     const r = skill(low, 2).state.players['0'];
     expect([r.health, r.armor]).toEqual([15, 13]);
     const high = skill(game('WARRIOR'), 2).state.players['0'];
@@ -169,13 +267,25 @@ describe('Warrior', () => {
 describe('Cleric (SAGE)', () => {
   it('Revitalize heals 3', () => {
     const s = produce(game('SAGE'), (g) => void (g.players['0'].health = 20));
-    expect(skill(s, 0, { kind: 'hero', player: '0' }).state.players['0'].health).toBe(23);
+    expect(
+      skill(s, 0, { kind: 'hero', player: '0' }).state.players['0'].health,
+    ).toBe(23);
   });
   describe('Resurrect: pick a recently dead minion, back with Guard or Bubble', () => {
-    const named = (id: string, attack: number, health: number) => minionCard(id, { cost: 1, attack, health });
-    const minis = Array.from({ length: 8 }, (_, i) => named(`M${i + 1}`, 1, 1 + i));
+    const named = (id: string, attack: number, health: number) =>
+      minionCard(id, { cost: 1, attack, health });
+    const minis = Array.from({ length: 8 }, (_, i) =>
+      named(`M${i + 1}`, 1, 1 + i),
+    );
     const big = named('BIG', 6, 6);
-    const cat = withHeroTokens(catalogOf(...Array.from(loadHsCards().byId.values()), grunt, big, ...minis));
+    const cat = withHeroTokens(
+      catalogOf(
+        ...Array.from(loadHsCards().byId.values()),
+        grunt,
+        big,
+        ...minis,
+      ),
+    );
     const withDead = (mine: string[], theirs: string[] = [], turn = 1) =>
       produce(game('SAGE'), (g) => {
         g.players['0'].graveyard = mine;
@@ -183,9 +293,17 @@ describe('Cleric (SAGE)', () => {
         g.turn = turn;
       });
     const offered = (s: GameState) =>
-      legalActions(s, '0', cat).flatMap((a) => (a.type === 'HeroSkill' && a.skill === 1 && a.choice !== undefined ? [a.choice] : []));
+      legalActions(s, '0', cat).flatMap((a) =>
+        a.type === 'HeroSkill' && a.skill === 1 && a.choice !== undefined
+          ? [a.choice]
+          : [],
+      );
     const useChoice = (s: GameState, choice: number) => {
-      const r = applyAction(s, { type: 'HeroSkill', skill: 1, choice }, { rng: createSeededRng(1), catalog: cat });
+      const r = applyAction(
+        s,
+        { type: 'HeroSkill', skill: 1, choice },
+        { rng: createSeededRng(1), catalog: cat },
+      );
       if ('error' in r) throw new Error(r.error);
       return r.state;
     };
@@ -193,16 +311,34 @@ describe('Cleric (SAGE)', () => {
     it('cannot be used with nothing dead, even if the enemy has dead minions', () => {
       expect(offered(withDead([]))).toEqual([]);
       expect(offered(withDead([], ['BIG']))).toEqual([]);
-      expect(applyAction(withDead([]), { type: 'HeroSkill', skill: 1 }, { rng: createSeededRng(1), catalog: cat })).toEqual({ error: 'BAD_CHOICE' });
+      expect(
+        applyAction(
+          withDead([]),
+          { type: 'HeroSkill', skill: 1 },
+          { rng: createSeededRng(1), catalog: cat },
+        ),
+      ).toEqual({ error: 'BAD_CHOICE' });
     });
     it('offers one minion as two options (Guard, Bubble) and brings it back with the one picked', () => {
       const s = withDead(['GRUNT']);
       expect(offered(s)).toEqual([0, 1]);
       const guard = useChoice(s, 0).players['0'];
-      expect(guard.board.map((m) => [m.cardId, m.keywords.guard, !!m.keywords.bubble])).toEqual([['GRUNT', true, false]]);
+      expect(
+        guard.board.map((m) => [
+          m.cardId,
+          m.keywords.guard,
+          !!m.keywords.bubble,
+        ]),
+      ).toEqual([['GRUNT', true, false]]);
       expect(guard.graveyard).toEqual([]);
       const bubble = useChoice(s, 1).players['0'];
-      expect(bubble.board.map((m) => [m.cardId, !!m.keywords.guard, m.keywords.bubble])).toEqual([['GRUNT', false, true]]);
+      expect(
+        bubble.board.map((m) => [
+          m.cardId,
+          !!m.keywords.guard,
+          m.keywords.bubble,
+        ]),
+      ).toEqual([['GRUNT', false, true]]);
     });
     it('offers two different minions from only the last five deaths', () => {
       const dead = minis.map((m) => m.id); // M1 .. M8; the last five are M4 .. M8
@@ -210,20 +346,32 @@ describe('Cleric (SAGE)', () => {
         const s = withDead(dead, [], turn);
         const ids = offered(s).map((c) => skillOptionCard(s, c));
         expect(new Set(ids).size).toBe(2);
-        ids.forEach((id) => expect(['M4', 'M5', 'M6', 'M7', 'M8']).toContain(id));
+        ids.forEach((id) =>
+          expect(['M4', 'M5', 'M6', 'M7', 'M8']).toContain(id),
+        );
       }
     });
     it('gives the same offer when asked twice and varies from turn to turn', () => {
       const seen = new Set<string>();
       for (let turn = 1; turn <= 60; turn++) {
-        const s = withDead(minis.map((m) => m.id), [], turn);
-        const a = offered(s).map((c) => skillOptionCard(s, c)).join();
-        expect(offered(s).map((c) => skillOptionCard(s, c)).join()).toBe(a);
+        const s = withDead(
+          minis.map((m) => m.id),
+          [],
+          turn,
+        );
+        const a = offered(s)
+          .map((c) => skillOptionCard(s, c))
+          .join();
+        expect(
+          offered(s)
+            .map((c) => skillOptionCard(s, c))
+            .join(),
+        ).toBe(a);
         seen.add(a);
       }
       expect(seen.size).toBeGreaterThan(3);
     });
-    it('now and then offers the strongest of the enemy\'s recent dead instead, and takes it from their graveyard', () => {
+    it("now and then offers the strongest of the enemy's recent dead instead, and takes it from their graveyard", () => {
       let withEnemy = 0;
       let stolen: GameState | undefined;
       for (let turn = 1; turn <= 400; turn++) {
@@ -237,7 +385,9 @@ describe('Cleric (SAGE)', () => {
       }
       expect(withEnemy).toBeGreaterThan(400 * 0.05);
       expect(withEnemy).toBeLessThan(400 * 0.3);
-      const pickBig = offered(stolen!).find((c) => skillOptionCard(stolen!, c) === 'BIG')!;
+      const pickBig = offered(stolen!).find(
+        (c) => skillOptionCard(stolen!, c) === 'BIG',
+      )!;
       const after = useChoice(stolen!, pickBig);
       expect(after.players['0'].board.map((m) => m.cardId)).toEqual(['BIG']);
       expect(after.players['1'].graveyard).toEqual(['M5', 'M6']);
@@ -245,9 +395,18 @@ describe('Cleric (SAGE)', () => {
     });
     it('refuses a choice that was not offered, and a choice on a skill with no options', () => {
       const s = withDead(['GRUNT']);
-      expect(err(s, { type: 'HeroSkill', skill: 1, choice: 2 })).toBe('BAD_CHOICE');
+      expect(err(s, { type: 'HeroSkill', skill: 1, choice: 2 })).toBe(
+        'BAD_CHOICE',
+      );
       expect(err(s, { type: 'HeroSkill', skill: 1 })).toBe('BAD_CHOICE');
-      expect(err(game('SAGE'), { type: 'HeroSkill', skill: 0, choice: 0, target: { kind: 'hero', player: '0' } })).toBe('BAD_CHOICE');
+      expect(
+        err(game('SAGE'), {
+          type: 'HeroSkill',
+          skill: 0,
+          choice: 0,
+          target: { kind: 'hero', player: '0' },
+        }),
+      ).toBe('BAD_CHOICE');
     });
     it('does nothing (and keeps the graveyard) when the board is full', () => {
       let s = withDead(['GRUNT']);
@@ -264,12 +423,16 @@ describe('Cleric (SAGE)', () => {
     };
   });
   it('Mass Resurrect returns up to 3 of them', () => {
-    const s = produce(game('SAGE'), (g) => void (g.players['0'].graveyard = ['GRUNT', 'GRUNT', 'GRUNT', 'GRUNT']));
+    const s = produce(
+      game('SAGE'),
+      (g) =>
+        void (g.players['0'].graveyard = ['GRUNT', 'GRUNT', 'GRUNT', 'GRUNT']),
+    );
     const r = skill(s, 2).state;
     expect(r.players['0'].board).toHaveLength(3);
     expect(r.players['0'].graveyard).toHaveLength(1);
   });
-  it('a minion that dies in combat goes to its owner\'s graveyard; tokens do not', () => {
+  it("a minion that dies in combat goes to its owner's graveyard; tokens do not", () => {
     let s = putOnBoard(game('ZEUS'), '1', grunt, { health: 2, maxHealth: 2 });
     s = skill(s, 1).state;
     expect(s.players['1'].graveyard).toEqual(['GRUNT']);
@@ -290,7 +453,12 @@ describe('Exile', () => {
   });
   it('summons a 4/2 Eagle that can attack at once, then the 8/8 Beast', () => {
     const e = skill(game('EXILE'), 1).state.players['0'].board[0];
-    expect([e.cardId, e.attack, e.health, e.keywords.rush]).toEqual(['HERO_EXILE_EAGLE', 4, 2, true]);
+    expect([e.cardId, e.attack, e.health, e.keywords.rush]).toEqual([
+      'HERO_EXILE_EAGLE',
+      4,
+      2,
+      true,
+    ]);
     const b = skill(game('EXILE'), 2).state.players['0'].board[0];
     expect([b.attack, b.health]).toEqual([8, 8]);
   });
@@ -311,7 +479,9 @@ describe('Wildcaller', () => {
     let s = skill(game('WILDCALLER'), 0).state;
     s = putOnBoard(s, '0', grunt);
     const before = s.players['0'].board.map((m) => [m.attack, m.health]);
-    const r = skill(setEnergy(s, '0', 10), 1).state.players['0'].board.map((m) => [m.attack, m.health]);
+    const r = skill(setEnergy(s, '0', 10), 1).state.players['0'].board.map(
+      (m) => [m.attack, m.health],
+    );
     expect(r[0]).toEqual([before[0][0] + 2, before[0][1] + 2]);
     expect(r[1]).toEqual(before[1]);
   });
@@ -321,11 +491,23 @@ describe('Wildcaller', () => {
     s = setEnergy(s, '0', 10);
     const board = skill(s, 2).state.players['0'].board;
     expect(board).toHaveLength(4);
-    const by = (id: string) => board.find((m) => m.cardId === id && m.instanceId !== first.instanceId)!;
-    expect([by('HERO_DRUID_WOLF')?.attack, by('HERO_DRUID_WOLF')?.health]).toEqual([5, 4]);
-    expect([by('HERO_DRUID_BEAR')?.attack, by('HERO_DRUID_BEAR')?.health]).toEqual([4, 7]);
-    expect([by('HERO_DRUID_HAWK')?.attack, by('HERO_DRUID_HAWK')?.health]).toEqual([4, 3]);
-    expect(board.find((m) => m.instanceId === first.instanceId)!.attack).toBe(first.attack);
+    const by = (id: string) =>
+      board.find((m) => m.cardId === id && m.instanceId !== first.instanceId)!;
+    expect([
+      by('HERO_DRUID_WOLF')?.attack,
+      by('HERO_DRUID_WOLF')?.health,
+    ]).toEqual([5, 4]);
+    expect([
+      by('HERO_DRUID_BEAR')?.attack,
+      by('HERO_DRUID_BEAR')?.health,
+    ]).toEqual([4, 7]);
+    expect([
+      by('HERO_DRUID_HAWK')?.attack,
+      by('HERO_DRUID_HAWK')?.health,
+    ]).toEqual([4, 3]);
+    expect(board.find((m) => m.instanceId === first.instanceId)!.attack).toBe(
+      first.attack,
+    );
   });
 });
 
@@ -346,16 +528,24 @@ describe('bots', () => {
 
 describe('once per game', () => {
   it('Mass Resurrect (Cleric) can be cast only once, however many turns pass', () => {
-    let s = produce(game('SAGE'), (g) => void (g.players['0'].graveyard = ['GRUNT', 'GRUNT', 'GRUNT', 'GRUNT']));
+    let s = produce(
+      game('SAGE'),
+      (g) =>
+        void (g.players['0'].graveyard = ['GRUNT', 'GRUNT', 'GRUNT', 'GRUNT']),
+    );
     s = skill(s, 2).state;
     expect(s.players['0'].hero!.spent[2]).toBe(true);
     for (let i = 0; i < 5; i++) {
       s = endTurns(s, 2);
       expect(err(s, { type: 'HeroSkill', skill: 2 })).toBe('SKILL_UNAVAILABLE');
-      expect(legalActions(s, '0', catalog).some((a) => a.type === 'HeroSkill' && a.skill === 2)).toBe(false);
+      expect(
+        legalActions(s, '0', catalog).some(
+          (a) => a.type === 'HeroSkill' && a.skill === 2,
+        ),
+      ).toBe(false);
     }
   });
-  it('every hero\'s ultimate is once per game, even if the data also gives it a cooldown', () => {
+  it("every hero's ultimate is once per game, even if the data also gives it a cooldown", () => {
     for (const h of heroes()) expect(h.skills[2].cooldown).toBeUndefined();
   });
 });

@@ -19,7 +19,9 @@ $bonus: #ffd45e;
   text-align: left;
   cursor: default;
   font: inherit;
-  transition: box-shadow 0.15s, border-color 0.15s;
+  transition:
+    box-shadow 0.15s,
+    border-color 0.15s;
 }
 
 .green {
@@ -89,7 +91,12 @@ $bonus: #ffd45e;
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--team) 55%, #fff) 0, var(--team) 38%, #11131a 130%);
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in srgb, var(--team) 55%, #fff) 0,
+    var(--team) 38%,
+    #11131a 130%
+  );
   color: #0b0d12;
   font-size: 1.7rem;
   font-weight: 800;
@@ -236,7 +243,9 @@ $bonus: #ffd45e;
   height: 0.85rem;
   border-radius: 2px;
   background: #aab;
-  box-shadow: 2px -2px 0 -0px #7d8499, 4px -4px 0 0 #565c70;
+  box-shadow:
+    2px -2px 0 -0px #7d8499,
+    4px -4px 0 0 #565c70;
   margin-right: 0.25rem;
 }
 
@@ -284,12 +293,16 @@ $bonus: #ffd45e;
 // The weapon can attack now (green, like a playable card); gold while the hero is the selected attacker.
 .weaponReady {
   border-color: #5fd16a;
-  box-shadow: 0 0 8px #5fd16a, inset 0 0 6px #5fd16a55;
+  box-shadow:
+    0 0 8px #5fd16a,
+    inset 0 0 6px #5fd16a55;
 }
 
 .weaponSelected {
   border-color: #ffd45e;
-  box-shadow: 0 0 10px #ffd45e, inset 0 0 6px #ffd45e55;
+  box-shadow:
+    0 0 10px #ffd45e,
+    inset 0 0 6px #ffd45e55;
 }
 
 .noWeapon {

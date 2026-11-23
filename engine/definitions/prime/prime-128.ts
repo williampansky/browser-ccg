@@ -6,7 +6,8 @@ import { self } from '../../effects/selectors';
 export default defineCard('PRIME_128', () => ({
   triggers: [
     on('MinionDied', {
-      when: (e, c) => e.player === c.owner && c.catalog.get(e.cardId)?.race === 'CREATURE',
+      when: (e, c) =>
+        e.player === c.owner && c.catalog.get(e.cardId)?.race === 'CREATURE',
       do: [buff(self(), 2, 1)],
     }),
   ],

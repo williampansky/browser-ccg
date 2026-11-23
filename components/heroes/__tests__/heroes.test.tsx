@@ -16,7 +16,8 @@ afterEach(() => {
   root.remove();
 });
 
-const tile = (name: string) => root.querySelector<HTMLButtonElement>(`button[aria-label="${name}"]`);
+const tile = (name: string) =>
+  root.querySelector<HTMLButtonElement>(`button[aria-label="${name}"]`);
 
 describe('Heroes page', () => {
   it('shows a tile per playable hero', () => {

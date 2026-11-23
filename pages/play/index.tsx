@@ -1,13 +1,23 @@
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import type { FunctionComponent } from 'react';
-import { PLAY_LAYOUT, buildLayoutCss } from '../../components/play-board/layout-css';
-import { lpanFor, useSidebarMode } from '../../components/play-board/sidebar-mode';
+import {
+  PLAY_LAYOUT,
+  buildLayoutCss,
+} from '../../components/play-board/layout-css';
+import {
+  lpanFor,
+  useSidebarMode,
+} from '../../components/play-board/sidebar-mode';
 
 // The board starts its game from the clock, so it renders on the client only.
-const PlayBoard = dynamic(() => import('../../components/play-board/PlayBoard').then((m) => m.PlayBoard), {
-  ssr: false,
-});
+const PlayBoard = dynamic(
+  () =>
+    import('../../components/play-board/PlayBoard').then((m) => m.PlayBoard),
+  {
+    ssr: false,
+  },
+);
 
 /**
  * Hot-seat board for the new Hearthstone-style engine (see ROADMAP Milestone 2). The layout is the board lab's saved "wip" preset

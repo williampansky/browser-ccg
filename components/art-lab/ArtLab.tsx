@@ -8,7 +8,7 @@ import {
   DEFAULT_FOCUS,
   Focus,
   OUTPUTS,
-  cropBox
+  cropBox,
 } from '../../scripts/art/crop';
 import type { FieldInfo, FieldValue } from '../../scripts/art/airtable-card';
 import type { ArtistSuggestions } from '../../scripts/art/artists';
@@ -62,7 +62,7 @@ const KINDS: ArtKind[] = ['card', 'minion', 'deck'];
 const PREVIEW_W: Record<ArtKind, number> = {
   card: 260,
   deck: 480,
-  minion: 208
+  minion: 208,
 };
 
 /**
@@ -98,7 +98,7 @@ const post = (url: string, body: unknown) => {
   return api(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
 };
 
@@ -111,7 +111,7 @@ const CropPanel = ({
   onFocus,
   current,
   on,
-  onOn
+  onOn,
 }: {
   kind: ArtKind;
   src: string;
@@ -139,7 +139,7 @@ const CropPanel = ({
           gap: 12,
           alignItems: 'flex-start',
           flexWrap: 'wrap',
-          marginTop: 8
+          marginTop: 8,
         }}
       >
         <div>
@@ -154,20 +154,20 @@ const CropPanel = ({
               backgroundRepeat: 'no-repeat',
               backgroundSize: `${size.w * scale}px ${size.h * scale}px`,
               backgroundPosition: `${-box.left * scale}px ${-box.top * scale}px`,
-              outline: '1px solid #888'
+              outline: '1px solid #888',
             }}
-            onPointerDown={e => {
+            onPointerDown={(e) => {
               e.currentTarget.setPointerCapture(e.pointerId);
               drag.current = { x: e.clientX, y: e.clientY, f: focus };
             }}
-            onPointerMove={e => {
+            onPointerMove={(e) => {
               const d = drag.current;
               if (!d) return;
               // Dragging the picture right moves the crop window left over it, so focus goes the other way.
               onFocus({
                 ...d.f,
                 x: clamp01(d.f.x - (e.clientX - d.x) / scale / size.w),
-                y: clamp01(d.f.y - (e.clientY - d.y) / scale / size.h)
+                y: clamp01(d.f.y - (e.clientY - d.y) / scale / size.h),
               });
             }}
             onPointerUp={() => (drag.current = null)}
@@ -183,7 +183,7 @@ const CropPanel = ({
               height: H,
               objectFit: 'cover',
               outline: '1px solid #888',
-              display: 'block'
+              display: 'block',
             }}
           />
           <div style={{ fontSize: 11, opacity: 0.7, marginTop: 4 }}>
@@ -191,7 +191,7 @@ const CropPanel = ({
           </div>
         </div>
       </div>
-      {(['x', 'y', 'zoom'] as const).map(k => (
+      {(['x', 'y', 'zoom'] as const).map((k) => (
         <label
           key={k}
           style={{
@@ -199,7 +199,7 @@ const CropPanel = ({
             gap: 8,
             alignItems: 'center',
             marginTop: 6,
-            fontSize: 12
+            fontSize: 12,
           }}
         >
           <span style={{ width: 36 }}>{k}</span>
@@ -210,7 +210,7 @@ const CropPanel = ({
             max={k === 'zoom' ? 4 : 1}
             step={0.005}
             value={focus[k]}
-            onChange={e => onFocus({ ...focus, [k]: Number(e.target.value) })}
+            onChange={(e) => onFocus({ ...focus, [k]: Number(e.target.value) })}
             style={{ flex: 1 }}
           />
           <span style={{ width: 40, textAlign: 'right' }}>
@@ -227,7 +227,7 @@ const CropPanel = ({
  * an Airtable save with "pull" refreshes it.
  */
 const FinalCard = ({ id }: { id: string }) => {
-  const card = hsCards.find(c => c.id === id);
+  const card = hsCards.find((c) => c.id === id);
   return (
     <Group style={{ padding: 12, marginBottom: 12 }}>
       <strong>Final card</strong>
@@ -259,10 +259,10 @@ const CurrentArt = ({ urls }: { urls: Record<ArtKind, string> }) => {
           gap: 16,
           flexWrap: 'wrap',
           alignItems: 'flex-start',
-          marginTop: 8
+          marginTop: 8,
         }}
       >
-        {KINDS.map(k => (
+        {KINDS.map((k) => (
           <figure key={k} style={{ margin: 0 }}>
             {missing[urls[k]] ? (
               <div
@@ -270,7 +270,7 @@ const CurrentArt = ({ urls }: { urls: Record<ArtKind, string> }) => {
                   width: PREVIEW_W[k] / 2,
                   padding: 8,
                   outline: '1px dashed #888',
-                  fontSize: 12
+                  fontSize: 12,
                 }}
               >
                 no {k.toUpperCase()} file
@@ -279,12 +279,12 @@ const CurrentArt = ({ urls }: { urls: Record<ArtKind, string> }) => {
               <img
                 src={urls[k]}
                 alt={`current ${k}`}
-                onError={() => setMissing(m => ({ ...m, [urls[k]]: true }))}
+                onError={() => setMissing((m) => ({ ...m, [urls[k]]: true }))}
                 style={{
                   width: PREVIEW_W[k],
                   maxWidth: '100%',
                   display: 'block',
-                  outline: '1px solid #888'
+                  outline: '1px solid #888',
                 }}
               />
             )}
@@ -306,7 +306,7 @@ const FieldEditor = ({
   info,
   value,
   onChange,
-  suggestions
+  suggestions,
 }: {
   info: FieldInfo;
   value: FieldValue | undefined;
@@ -327,11 +327,11 @@ const FieldEditor = ({
           <Select
             aria-label={info.name}
             value={(value as string) ?? ''}
-            onChange={e => onChange(e.target.value || null)}
+            onChange={(e) => onChange(e.target.value || null)}
             style={{ width: '100%' }}
           >
             <option value="" />
-            {info.choices?.map(c => (
+            {info.choices?.map((c) => (
               <option key={c}>{c}</option>
             ))}
           </Select>
@@ -349,15 +349,15 @@ const FieldEditor = ({
               display: 'flex',
               flexWrap: 'wrap',
               gap: '2px 14px',
-              marginTop: 4
+              marginTop: 4,
             }}
           >
-            {info.choices?.map(c => (
+            {info.choices?.map((c) => (
               <Checkbox
                 key={c}
                 checked={sel.includes(c)}
-                onChange={on =>
-                  onChange(on ? [...sel, c] : sel.filter(s => s !== c))
+                onChange={(on) =>
+                  onChange(on ? [...sel, c] : sel.filter((s) => s !== c))
                 }
               >
                 {c}
@@ -376,7 +376,7 @@ const FieldEditor = ({
             aria-label={info.name}
             rows={3}
             value={(value as string) ?? ''}
-            onChange={e => onChange(e.target.value)}
+            onChange={(e) => onChange(e.target.value)}
             style={{ width: '100%', resize: 'vertical' }}
           />
         </label>
@@ -389,7 +389,7 @@ const FieldEditor = ({
             aria-label={info.name}
             type="number"
             value={(value as number) ?? ''}
-            onChange={e =>
+            onChange={(e) =>
               onChange(e.target.value === '' ? null : Number(e.target.value))
             }
             style={{ width: '100%' }}
@@ -403,14 +403,14 @@ const FieldEditor = ({
           <TextInput
             aria-label={info.name}
             value={(value as string) ?? ''}
-            onChange={e => onChange(e.target.value)}
+            onChange={(e) => onChange(e.target.value)}
             list={suggestions ? `suggest-${info.name}` : undefined}
             autoComplete={suggestions ? 'off' : undefined}
             style={{ width: '100%' }}
           />
           {suggestions && (
             <datalist id={`suggest-${info.name}`}>
-              {suggestions.map(s => (
+              {suggestions.map((s) => (
                 <option key={s} value={s} />
               ))}
             </datalist>
@@ -435,12 +435,12 @@ export const ArtLab = ({ id }: { id: string }) => {
   const [focus, setFocus] = useState<Record<ArtKind, Focus>>({
     card: { ...DEFAULT_FOCUS },
     deck: { ...DEFAULT_FOCUS },
-    minion: { ...DEFAULT_FOCUS }
+    minion: { ...DEFAULT_FOCUS },
   });
   const [on, setOn] = useState<Record<ArtKind, boolean>>({
     card: true,
     deck: true,
-    minion: true
+    minion: true,
   });
 
   const [pull, setPull] = useState(true);
@@ -448,7 +448,7 @@ export const ArtLab = ({ id }: { id: string }) => {
 
   const loadMaster = useCallback(
     () => setMasterUrl(`/api/art-lab/master?id=${id}&t=${Date.now()}`),
-    [id]
+    [id],
   );
 
   // Load the card data from the server when the id changes. Reset the state to
@@ -464,7 +464,7 @@ export const ArtLab = ({ id }: { id: string }) => {
         setCard(c);
         if (c.hasMaster) loadMaster();
       },
-      e => setMsg(`Could not load ${id}: ${e.message}`)
+      (e) => setMsg(`Could not load ${id}: ${e.message}`),
     );
   }, [id, loadMaster]);
 
@@ -506,7 +506,7 @@ export const ArtLab = ({ id }: { id: string }) => {
       const ext = (file.name.split('.').pop() || 'png').toLowerCase();
       const r = await api(`/api/art-lab/master?id=${id}&ext=${ext}`, {
         method: 'POST',
-        body: file
+        body: file,
       });
 
       loadMaster();
@@ -551,7 +551,7 @@ export const ArtLab = ({ id }: { id: string }) => {
    * with the one it is usually credited with.
    */
   const change = (name: string, v: FieldValue) => {
-    return setEdits(e => {
+    return setEdits((e) => {
       const next = { ...e, [name]: v };
       const known =
         name === 'artistName' && typeof v === 'string'
@@ -572,7 +572,7 @@ export const ArtLab = ({ id }: { id: string }) => {
   const urlSuggestions = (c: CardResponse) => {
     const artistName = String(current('artistName') ?? '').trim();
     const mine = c.artists.urlsByName[artistName] ?? [];
-    return [...mine, ...c.artists.urls.filter(u => !mine.includes(u))];
+    return [...mine, ...c.artists.urls.filter((u) => !mine.includes(u))];
   };
 
   return (
@@ -581,7 +581,7 @@ export const ArtLab = ({ id }: { id: string }) => {
         height: '100vh',
         overflowY: 'auto',
         boxSizing: 'border-box',
-        padding: '20px 24px 96px'
+        padding: '20px 24px 96px',
       }}
     >
       <CardLookup current={id} />
@@ -608,7 +608,7 @@ export const ArtLab = ({ id }: { id: string }) => {
           display: 'flex',
           gap: 24,
           alignItems: 'flex-start',
-          flexWrap: 'wrap'
+          flexWrap: 'wrap',
         }}
       >
         <section style={{ flex: '1 1 560px', minWidth: 0 }}>
@@ -618,13 +618,13 @@ export const ArtLab = ({ id }: { id: string }) => {
             urls={{
               card: fileUrl('card'),
               deck: fileUrl('deck'),
-              minion: fileUrl('minion')
+              minion: fileUrl('minion'),
             }}
           />
 
           <label
-            onDragOver={e => e.preventDefault()}
-            onDrop={e => {
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
               e.preventDefault();
               const f = e.dataTransfer.files[0];
               if (f) upload(f);
@@ -634,14 +634,14 @@ export const ArtLab = ({ id }: { id: string }) => {
               border: '2px dashed #888',
               padding: 14,
               marginBottom: 12,
-              textAlign: 'center'
+              textAlign: 'center',
             }}
           >
             Drop a master picture here, or choose one:{' '}
             <input
               type="file"
               accept="image/png,image/jpeg,image/webp"
-              onChange={e => e.target.files?.[0] && upload(e.target.files[0])}
+              onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])}
             />
             <div style={{ fontSize: 12, opacity: 0.7 }}>
               {masterUrl && size
@@ -652,29 +652,29 @@ export const ArtLab = ({ id }: { id: string }) => {
 
           {masterUrl && size && (
             <>
-              {KINDS.map(k => (
+              {KINDS.map((k) => (
                 <CropPanel
                   key={k}
                   kind={k}
                   src={masterUrl}
                   size={size}
                   focus={focus[k]}
-                  onFocus={f => setFocus(o => ({ ...o, [k]: f }))}
+                  onFocus={(f) => setFocus((o) => ({ ...o, [k]: f }))}
                   current={fileUrl(k)}
                   on={on[k]}
-                  onOn={v => setOn(o => ({ ...o, [k]: v }))}
+                  onOn={(v) => setOn((o) => ({ ...o, [k]: v }))}
                 />
               ))}
               <Button
                 variant="primary"
-                disabled={busy || !KINDS.some(k => on[k])}
+                disabled={busy || !KINDS.some((k) => on[k])}
                 onClick={() =>
                   run('Writing images', async () => {
                     const r = await post('/api/art-lab/render', {
                       id,
                       focus: Object.fromEntries(
-                        KINDS.filter(k => on[k]).map(k => [k, focus[k]])
-                      )
+                        KINDS.filter((k) => on[k]).map((k) => [k, focus[k]]),
+                      ),
                     });
                     setStamp(Date.now());
                     return `Wrote ${r.written.map((w: { file: string; kb: number }) => `${w.file} (${w.kb} KB)`).join(', ')}`;
@@ -692,13 +692,13 @@ export const ArtLab = ({ id }: { id: string }) => {
             <p>Loading ...</p>
           ) : (
             <div style={{ display: 'grid', gap: 10 }}>
-              {LOCKED.filter(n => n in card.fields).map(n => (
+              {LOCKED.filter((n) => n in card.fields).map((n) => (
                 <div key={n} style={{ opacity: 0.7 }}>
                   {n}: {String(card.fields[n])} <small>(locked)</small>
                 </div>
               ))}
 
-              {card.schema.map(f => (
+              {card.schema.map((f) => (
                 <div
                   key={f.name}
                   style={
@@ -710,7 +710,7 @@ export const ArtLab = ({ id }: { id: string }) => {
                   <FieldEditor
                     info={f}
                     value={value(f)}
-                    onChange={v => change(f.name, v)}
+                    onChange={(v) => change(f.name, v)}
                     suggestions={
                       f.name === 'artistName'
                         ? card.artists.names
@@ -735,10 +735,10 @@ export const ArtLab = ({ id }: { id: string }) => {
                       const r = await post('/api/art-lab/card', {
                         id,
                         fields: edits,
-                        pull
+                        pull,
                       });
                       setCard(
-                        c => c && { ...c, fields: { ...c.fields, ...edits } }
+                        (c) => c && { ...c, fields: { ...c.fields, ...edits } },
                       );
                       setEdits({});
                       return `Saved ${r.saved.join(', ')} to Airtable${r.pulled ? ' and refreshed data/' : ''}`;

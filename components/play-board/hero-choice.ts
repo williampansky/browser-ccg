@@ -24,10 +24,15 @@ export const heroOptions = (): HeroOption[] => [
 
 /** A valid choice: anything unknown becomes Random. */
 export const normalizeHeroChoice = (choice: unknown): HeroChoice =>
-  typeof choice === 'string' && heroOptions().some((o) => o.value === choice) ? choice : HERO_RANDOM;
+  typeof choice === 'string' && heroOptions().some((o) => o.value === choice)
+    ? choice
+    : HERO_RANDOM;
 
 /** The hero key a choice stands for (`undefined` for none; Random draws from `rng`). */
-export const resolveHero = (choice: HeroChoice, rng: Rng): string | undefined => {
+export const resolveHero = (
+  choice: HeroChoice,
+  rng: Rng,
+): string | undefined => {
   if (choice === HERO_NONE) return undefined;
   const all = heroes();
   const picked = all.find((h) => h.id === choice);
@@ -39,12 +44,17 @@ const KEY = 'ccg.heroes.v1';
 export const loadHeroChoices = (): Record<'0' | '1', HeroChoice> => {
   try {
     const raw = JSON.parse(window.localStorage.getItem(KEY) ?? '{}');
-    return { '0': normalizeHeroChoice(raw['0']), '1': normalizeHeroChoice(raw['1']) };
+    return {
+      '0': normalizeHeroChoice(raw['0']),
+      '1': normalizeHeroChoice(raw['1']),
+    };
   } catch {
     return { '0': HERO_RANDOM, '1': HERO_RANDOM };
   }
 };
-export const saveHeroChoices = (choices: Record<'0' | '1', HeroChoice>): void => {
+export const saveHeroChoices = (
+  choices: Record<'0' | '1', HeroChoice>,
+): void => {
   try {
     window.localStorage.setItem(KEY, JSON.stringify(choices));
   } catch {

@@ -7,13 +7,22 @@ export default defineCard('PRIME_129', () => ({
   mystery: {
     category: 'minion',
     event: 'MinionPlayed',
-    when: ({ event, owner }) => event?.type === 'MinionPlayed' && event.player !== owner,
+    when: ({ event, owner }) =>
+      event?.type === 'MinionPlayed' && event.player !== owner,
     do: [
       computed((ctx) => {
-        const m = [...ctx.g.players['0'].board, ...ctx.g.players['1'].board].find(
-          (x) => ctx.event?.type === 'MinionPlayed' && x.instanceId === ctx.event.instanceId
+        const m = [
+          ...ctx.g.players['0'].board,
+          ...ctx.g.players['1'].board,
+        ].find(
+          (x) =>
+            ctx.event?.type === 'MinionPlayed' &&
+            x.instanceId === ctx.event.instanceId,
         );
-        return damage(eventMinion(), m ? ctx.catalog.get(m.cardId)?.cost ?? 0 : 0);
+        return damage(
+          eventMinion(),
+          m ? (ctx.catalog.get(m.cardId)?.cost ?? 0) : 0,
+        );
       }),
     ],
   },

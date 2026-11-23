@@ -27,20 +27,38 @@ export const HeroBust = ({
   turnTag?: string;
   width?: number;
 }) => {
-  const tone = health <= maxHealth / 3 ? styles.low : health < maxHealth ? styles.hurt : '';
+  const tone =
+    health <= maxHealth / 3
+      ? styles.low
+      : health < maxHealth
+        ? styles.hurt
+        : '';
   return (
     <div
-      className={cx(styles.bust, team === 'red' ? styles.red : '', active ? styles.active : '')}
+      className={cx(
+        styles.bust,
+        team === 'red' ? styles.red : '',
+        active ? styles.active : '',
+      )}
       style={{ ['--w' as string]: `${width}px` }}
       aria-label={`${name}: ${health} health, ${armor} armor`}
     >
-      <div className={styles.arch} style={{ backgroundImage: `url(${heroImage(heroId, 'avatar')})` }} />
+      <div
+        className={styles.arch}
+        style={{ backgroundImage: `url(${heroImage(heroId, 'avatar')})` }}
+      />
       <div className={styles.plate}>
-        <span className={cx(styles.name, name.length > 8 ? styles.longName : '')}>{name}</span>
+        <span
+          className={cx(styles.name, name.length > 8 ? styles.longName : '')}
+        >
+          {name}
+        </span>
         {turnTag && <span className={styles.turn}>{turnTag}</span>}
       </div>
       <span className={cx(styles.gem, styles.hp, tone)}>{health}</span>
-      {armor > 0 && <span className={cx(styles.gem, styles.armor)}>{armor}</span>}
+      {armor > 0 && (
+        <span className={cx(styles.gem, styles.armor)}>{armor}</span>
+      )}
     </div>
   );
 };

@@ -6,7 +6,16 @@ export default defineCard('PRIME_158', () => ({
   mystery: {
     category: 'death',
     event: 'MinionDied',
-    when: ({ event, owner, catalog }) => event?.type === 'MinionDied' && event.player === owner && catalog.get(event.cardId)?.isToken === false,
-    do: [addCardToHand((ctx) => (ctx.event?.type === 'MinionDied' ? ctx.event.cardId : undefined), -1)],
+    when: ({ event, owner, catalog }) =>
+      event?.type === 'MinionDied' &&
+      event.player === owner &&
+      catalog.get(event.cardId)?.isToken === false,
+    do: [
+      addCardToHand(
+        (ctx) =>
+          ctx.event?.type === 'MinionDied' ? ctx.event.cardId : undefined,
+        -1,
+      ),
+    ],
   },
 }));

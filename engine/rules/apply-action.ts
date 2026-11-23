@@ -2,7 +2,13 @@ import { produce } from 'immer';
 import type { CardCatalog } from '../cards/types';
 import type { DefLookup } from '../definitions/define-card';
 import type { Rng } from '../rng';
-import { Action, ActionError, GameEvent, GameState, PlayerId } from '../state/types';
+import {
+  Action,
+  ActionError,
+  GameEvent,
+  GameState,
+  PlayerId,
+} from '../state/types';
 import { attack } from './attack';
 import { playCard } from './play-card';
 import { settle, TriggerLoopError } from './settle';
@@ -30,7 +36,11 @@ const isError = (r: GameState | ActionError): r is ActionError => 'error' in r;
  * Returns the new state and the events that happened, or a typed error. After the action itself,
  * the game is settled: deaths removed, death effects and triggers run, game over checked.
  */
-export const applyAction = (state: GameState, action: Action, ctx: EngineContext): ActionResult | ActionError => {
+export const applyAction = (
+  state: GameState,
+  action: Action,
+  ctx: EngineContext,
+): ActionResult | ActionError => {
   if (state.status === 'over') return { error: 'GAME_OVER' };
   const events: GameEvent[] = [];
   const me = state.activePlayer;
@@ -49,7 +59,10 @@ export const applyAction = (state: GameState, action: Action, ctx: EngineContext
         if (ended.status === 'over') return { state: ended, events };
         const next = events.length;
         const cleaned = produce(ended, (g) => endTurnCleanup(g, me));
-        return { state: settled(startTurn(cleaned, opponent, events), next), events };
+        return {
+          state: settled(startTurn(cleaned, opponent, events), next),
+          events,
+        };
       }
       case 'Concede':
         return {
@@ -57,7 +70,7 @@ export const applyAction = (state: GameState, action: Action, ctx: EngineContext
             produce(state, (g) => {
               g.players[me].health = 0;
             }),
-            0
+            0,
           ),
           events,
         };
@@ -69,10 +82,10 @@ export const applyAction = (state: GameState, action: Action, ctx: EngineContext
           action.type === 'PlayCard'
             ? playCard(state, action, ctx, events)
             : action.type === 'Attack'
-            ? attack(state, action, events, ctx)
-            : action.type === 'HeroSkill'
-            ? useHeroSkill(state, action, ctx, events)
-            : weaponAttack(state, action, events, ctx);
+              ? attack(state, action, events, ctx)
+              : action.type === 'HeroSkill'
+                ? useHeroSkill(state, action, ctx, events)
+                : weaponAttack(state, action, events, ctx);
         return isError(r) ? r : { state: settled(r, 0), events };
       }
     }

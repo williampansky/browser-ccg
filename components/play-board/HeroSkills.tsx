@@ -39,7 +39,7 @@ export const HeroSkills = ({
   selected,
   interactive,
   nodeRef,
-  onPick
+  onPick,
 }: HeroSkillsProps) => {
   const skillStatus = (s: SkillView) => {
     if (s.spent) {
@@ -60,7 +60,7 @@ export const HeroSkills = ({
       aria-label={`${heroName} skills`}
     >
       <span className={styles.hero}>{heroName}</span>
-      {skills.map(s => {
+      {skills.map((s) => {
         const status = skillStatus(s);
         return (
           <button
@@ -74,7 +74,7 @@ export const HeroSkills = ({
               styles.skill,
               s.usable && interactive ? styles.ready : '',
               selected === s.index ? styles.selected : '',
-              s.spent ? styles.spent : ''
+              s.spent ? styles.spent : '',
             )}
             onClick={() => onPick(s.index)}
           >

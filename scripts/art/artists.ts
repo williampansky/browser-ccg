@@ -7,10 +7,15 @@ export interface ArtistSuggestions {
   urlsByName: Record<string, string[]>;
 }
 
-const sortText = (list: Set<string>) => Array.from(list).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+const sortText = (list: Set<string>) =>
+  Array.from(list).sort((a, b) =>
+    a.localeCompare(b, undefined, { sensitivity: 'base' }),
+  );
 
 /** The artist names and URLs already used by cards or heroes (any records with `artistName` / `artistUrl`). Pure, so it is unit tested. */
-export const collectArtists = (records: { artistName?: unknown; artistUrl?: unknown }[]): ArtistSuggestions => {
+export const collectArtists = (
+  records: { artistName?: unknown; artistUrl?: unknown }[],
+): ArtistSuggestions => {
   const names = new Set<string>();
   const urls = new Set<string>();
   const counts: Record<string, Map<string, number>> = {};
@@ -25,6 +30,9 @@ export const collectArtists = (records: { artistName?: unknown; artistUrl?: unkn
     }
   }
   const urlsByName: Record<string, string[]> = {};
-  for (const [name, m] of Object.entries(counts)) urlsByName[name] = Array.from(m.entries()).sort((a, b) => b[1] - a[1]).map(([u]) => u);
+  for (const [name, m] of Object.entries(counts))
+    urlsByName[name] = Array.from(m.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([u]) => u);
   return { names: sortText(names), urls: sortText(urls), urlsByName };
 };

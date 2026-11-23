@@ -10,7 +10,12 @@ export interface SpriteSheet {
 }
 
 /** Pipoya "Light Pillar" (variant a): 5 x 2 frames of 192 px, made to loop. */
-export const LIGHT_PILLAR: SpriteSheet = { src: '/images/fx/light-pillar.png', cols: 5, rows: 2, frame: 192 };
+export const LIGHT_PILLAR: SpriteSheet = {
+  src: '/images/fx/light-pillar.png',
+  cols: 5,
+  rows: 2,
+  frame: 192,
+};
 
 /**
  * Plays a sprite sheet over its (position: relative) parent: one frame at a time at `fps`. `loop` repeats it; otherwise it

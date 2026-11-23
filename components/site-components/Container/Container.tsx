@@ -9,7 +9,5 @@ interface ContainerProps {
 }
 
 export const Container = ({ children }: ContainerProps) => (
-  <div className='site__container'>
-    {children}
-  </div>
+  <div className="site__container">{children}</div>
 );

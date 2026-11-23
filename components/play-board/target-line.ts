@@ -17,7 +17,11 @@ const STEEP = 0.2;
  * control point sits to one side of the midpoint, always the upward side (so the arc rises like a
  * thrown card); for a vertical line, which has no upward side, it bows to the left.
  */
-export const targetLinePath = (from: Point, to: Point, style: TargetLineStyle): string => {
+export const targetLinePath = (
+  from: Point,
+  to: Point,
+  style: TargetLineStyle,
+): string => {
   if (style === 'straight') return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
   const dx = to.x - from.x;
   const dy = to.y - from.y;
@@ -35,7 +39,9 @@ export const targetLinePath = (from: Point, to: Point, style: TargetLineStyle): 
     nx = -Math.sqrt(1 - ny * ny);
   }
   const steep = Math.abs(dx) < len * STEEP;
-  const bow = steep ? Math.max(len * STEEP_BOW, STEEP_MIN_BOW) : Math.max(len * BOW, MIN_BOW);
+  const bow = steep
+    ? Math.max(len * STEEP_BOW, STEEP_MIN_BOW)
+    : Math.max(len * BOW, MIN_BOW);
   const cx = (from.x + to.x) / 2 + nx * bow;
   const cy = (from.y + to.y) / 2 + ny * bow;
   return `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;

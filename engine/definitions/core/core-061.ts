@@ -6,7 +6,10 @@ import { draw } from '../../effects/primitives';
 export default defineCard('CORE_061', () => ({
   triggers: [
     on('MinionSummoned', {
-      when: (e, c) => e.player === c.owner && e.instanceId !== c.selfId && c.catalog.get(e.cardId)?.race === 'CREATURE',
+      when: (e, c) =>
+        e.player === c.owner &&
+        e.instanceId !== c.selfId &&
+        c.catalog.get(e.cardId)?.race === 'CREATURE',
       do: [draw(1)],
     }),
   ],

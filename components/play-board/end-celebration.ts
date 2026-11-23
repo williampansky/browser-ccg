@@ -49,22 +49,94 @@ export const END_DEFAULTS: EndSettings = {
   delayMs: 100,
 };
 
-type NumField = { [K in keyof EndSettings]: EndSettings[K] extends number ? K : never }[keyof EndSettings];
+type NumField = {
+  [K in keyof EndSettings]: EndSettings[K] extends number ? K : never;
+}[keyof EndSettings];
 /** The number knobs: URL key, which setting it is, and the slider range. */
-export const END_KNOBS: { key: string; field: NumField; label: string; min: number; max: number; step?: number }[] = [
-  { key: 'lenn', field: 'count', label: 'Pieces per burst', min: 0, max: 600, step: 10 },
-  { key: 'lens', field: 'spread', label: 'Spread (degrees)', min: 5, max: 360, step: 5 },
+export const END_KNOBS: {
+  key: string;
+  field: NumField;
+  label: string;
+  min: number;
+  max: number;
+  step?: number;
+}[] = [
+  {
+    key: 'lenn',
+    field: 'count',
+    label: 'Pieces per burst',
+    min: 0,
+    max: 600,
+    step: 10,
+  },
+  {
+    key: 'lens',
+    field: 'spread',
+    label: 'Spread (degrees)',
+    min: 5,
+    max: 360,
+    step: 5,
+  },
   { key: 'lenx', field: 'x', label: 'Start X (% from left)', min: 0, max: 100 },
   { key: 'leny', field: 'y', label: 'Start Y (% from top)', min: 0, max: 100 },
-  { key: 'lena', field: 'angle', label: 'Direction (90 = up)', min: 0, max: 360, step: 5 },
+  {
+    key: 'lena',
+    field: 'angle',
+    label: 'Direction (90 = up)',
+    min: 0,
+    max: 360,
+    step: 5,
+  },
   { key: 'lenv', field: 'velocity', label: 'Launch speed', min: 5, max: 100 },
-  { key: 'leng', field: 'gravity', label: 'Gravity (x)', min: 0, max: 3, step: 0.05 },
-  { key: 'lend', field: 'decay', label: 'Slow-down (lower = stops sooner)', min: 0.5, max: 1, step: 0.01 },
-  { key: 'lent', field: 'ticks', label: 'Lifetime (frames, 60 = 1 s)', min: 20, max: 600, step: 10 },
-  { key: 'lenz', field: 'scalar', label: 'Piece size (x)', min: 0.3, max: 3, step: 0.1 },
+  {
+    key: 'leng',
+    field: 'gravity',
+    label: 'Gravity (x)',
+    min: 0,
+    max: 3,
+    step: 0.05,
+  },
+  {
+    key: 'lend',
+    field: 'decay',
+    label: 'Slow-down (lower = stops sooner)',
+    min: 0.5,
+    max: 1,
+    step: 0.01,
+  },
+  {
+    key: 'lent',
+    field: 'ticks',
+    label: 'Lifetime (frames, 60 = 1 s)',
+    min: 20,
+    max: 600,
+    step: 10,
+  },
+  {
+    key: 'lenz',
+    field: 'scalar',
+    label: 'Piece size (x)',
+    min: 0.3,
+    max: 3,
+    step: 0.1,
+  },
   { key: 'lenb', field: 'bursts', label: 'Number of bursts', min: 1, max: 8 },
-  { key: 'lenbg', field: 'gapMs', label: 'Gap between bursts (ms)', min: 50, max: 2000, step: 50 },
-  { key: 'lenl', field: 'delayMs', label: 'Wait before the first burst (ms)', min: 0, max: 3000, step: 50 },
+  {
+    key: 'lenbg',
+    field: 'gapMs',
+    label: 'Gap between bursts (ms)',
+    min: 50,
+    max: 2000,
+    step: 50,
+  },
+  {
+    key: 'lenl',
+    field: 'delayMs',
+    label: 'Wait before the first burst (ms)',
+    min: 0,
+    max: 3000,
+    step: 50,
+  },
 ];
 
 const PALETTES: Record<EndSettings['palette'], string[] | undefined> = {
@@ -96,7 +168,10 @@ export const setEndTuning = (s: EndSettings | undefined) => {
 };
 
 /** Shoots the confetti (skipped when it is off, for a loss when set to wins only, or with reduced motion). */
-export const fireEndConfetti = async (viewerWon: boolean, s: EndSettings = current) => {
+export const fireEndConfetti = async (
+  viewerWon: boolean,
+  s: EndSettings = current,
+) => {
   if (typeof window === 'undefined' || !s.on || s.count <= 0) return;
   if (s.when === 'win' && !viewerWon) return;
   const confetti = (await import('canvas-confetti')).default;
@@ -112,11 +187,27 @@ export const fireEndConfetti = async (viewerWon: boolean, s: EndSettings = curre
   };
   const shoot = () => {
     if (s.mode === 'sides') {
-      void confetti({ ...base, particleCount: Math.ceil(s.count / 2), angle: 60, origin: { x: 0, y: s.y / 100 } });
-      void confetti({ ...base, particleCount: Math.floor(s.count / 2), angle: 120, origin: { x: 1, y: s.y / 100 } });
+      void confetti({
+        ...base,
+        particleCount: Math.ceil(s.count / 2),
+        angle: 60,
+        origin: { x: 0, y: s.y / 100 },
+      });
+      void confetti({
+        ...base,
+        particleCount: Math.floor(s.count / 2),
+        angle: 120,
+        origin: { x: 1, y: s.y / 100 },
+      });
     } else {
-      void confetti({ ...base, particleCount: s.count, angle: s.angle, origin: { x: s.x / 100, y: s.y / 100 } });
+      void confetti({
+        ...base,
+        particleCount: s.count,
+        angle: s.angle,
+        origin: { x: s.x / 100, y: s.y / 100 },
+      });
     }
   };
-  for (let i = 0; i < s.bursts; i++) window.setTimeout(shoot, s.delayMs + i * s.gapMs);
+  for (let i = 0; i < s.bursts; i++)
+    window.setTimeout(shoot, s.delayMs + i * s.gapMs);
 };

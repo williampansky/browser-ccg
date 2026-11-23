@@ -20,7 +20,7 @@ const GLYPH: Record<StatusBadge['kind'], string> = {
   expiring: '⌛',
   asleep: 'z',
   noAttack: '⊘',
-  silenced: '∅'
+  silenced: '∅',
 };
 
 /** True for half a second after the minion's Health goes down, so it can shake (hsclone's "was attacked"). */
@@ -83,7 +83,9 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
   const hurt = useHurtFlash(m.health);
   // Stampede only matters the turn the minion came in: after that its icon fades out, then stays gone.
   const [rushGone, setRushGone] = useState(false);
-  const badges = statusBadges(m, turn, sick).filter((b) => !(b.kind === 'rush' && b.fades && rushGone));
+  const badges = statusBadges(m, turn, sick).filter(
+    (b) => !(b.kind === 'rush' && b.fades && rushGone),
+  );
   const attackTone = statTone(m.attack, card?.attack);
   const healthTone = isDamaged(m) ? 'down' : statTone(m.health, card?.health);
   return (
@@ -97,7 +99,7 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
           hurt ? styles.shake : '',
           m.keywords.hidden ? styles.veiled : '',
           m.silenced ? styles.muted : '',
-          doomed ? styles.doomedPortrait : ''
+          doomed ? styles.doomedPortrait : '',
         )}
       >
         {/* The picture is its own layer inside the oval (which clips it), so it can scale on hover without scaling the frame. */}
@@ -122,10 +124,14 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
       {m.keywords.bubble && <span className={styles.bubble} />}
       {badges.length > 0 && (
         <span className={styles.badges}>
-          {badges.map(b => (
+          {badges.map((b) => (
             <span
               key={b.kind}
-              className={cx(styles.badge, styles[`badge_${b.kind}`], b.fades ? styles.badgeFade : '')}
+              className={cx(
+                styles.badge,
+                styles[`badge_${b.kind}`],
+                b.fades ? styles.badgeFade : '',
+              )}
               onAnimationEnd={b.fades ? () => setRushGone(true) : undefined}
               title={b.label}
               aria-label={b.label}
@@ -136,22 +142,14 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
         </span>
       )}
       <span
-        className={cx(
-          styles.stat,
-          styles.attack,
-          styles[`tone_${attackTone}`]
-        )}
+        className={cx(styles.stat, styles.attack, styles[`tone_${attackTone}`])}
         aria-label={`Attack ${m.attack}`}
       >
         <img src="/images/ui/stat-attack.png" alt="" draggable={false} />
         <b>{m.attack}</b>
       </span>
       <span
-        className={cx(
-          styles.stat,
-          styles.health,
-          styles[`tone_${healthTone}`]
-        )}
+        className={cx(styles.stat, styles.health, styles[`tone_${healthTone}`])}
         aria-label={`Health ${m.health}`}
       >
         <img src="/images/ui/stat-health.png" alt="" draggable={false} />

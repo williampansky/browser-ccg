@@ -31,26 +31,26 @@ export const MinionPower = ({
         isReduced ? styles['power--debuffed'] : '',
         isDestroyed ? styles['power--nulled'] : '',
       )}
-      data-component='MinionPower'
+      data-component="MinionPower"
       data-value={current}
     >
       <div className={cx(styles['text'], elite ? styles['elite'] : '')}>
-        <div className='text__value'>{current}</div>
+        <div className="text__value">{current}</div>
       </div>
       {elite ? (
         <Image
-          alt=''
+          alt=""
           className={cx(styles['badge'], styles['elite'])}
-          role='presentation'
-          layout='fill'
+          role="presentation"
+          layout="fill"
           src={TYPE_WRAPPER}
         />
       ) : (
         <Image
-          alt=''
+          alt=""
           className={styles['badge']}
-          role='presentation'
-          layout='fill'
+          role="presentation"
+          layout="fill"
           src={TYPE_WRAPPER}
         />
       )}

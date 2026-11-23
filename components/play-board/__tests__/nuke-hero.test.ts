@@ -1,6 +1,11 @@
 import { produce } from 'immer';
 import { createGame, createSeededRng } from '../../../engine';
-import { catalogOf, minionCard, putOnBoard, weaponCard } from '../../../engine/testing/builders';
+import {
+  catalogOf,
+  minionCard,
+  putOnBoard,
+  weaponCard,
+} from '../../../engine/testing/builders';
 import { nukeHero } from '../nuke-hero';
 
 const grunt = minionCard('GRUNT', { attack: 2, health: 3 });
@@ -26,10 +31,17 @@ describe('nukeHero', () => {
 
   it('also swings the equipped weapon at the hero', () => {
     const s = produce(putOnBoard(start(), '0', grunt), (g) => {
-      g.players['0'].weapon = { cardId: 'MACE', attack: 3, durability: 2 } as never;
+      g.players['0'].weapon = {
+        cardId: 'MACE',
+        attack: 3,
+        durability: 2,
+      } as never;
     });
     const r = nukeHero(s, '0', createSeededRng(2), catalog);
-    expect(r.steps.map((x) => x.action.type)).toEqual(['Attack', 'WeaponAttack']);
+    expect(r.steps.map((x) => x.action.type)).toEqual([
+      'Attack',
+      'WeaponAttack',
+    ]);
     expect(r.state.players['1'].health).toBe(s.players['1'].health - 5);
   });
 });

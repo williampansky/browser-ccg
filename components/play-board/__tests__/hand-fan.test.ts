@@ -1,4 +1,13 @@
-import { fanDrop, fanRotation, fanX, HAND_BLEED, HAND_CARD_HEIGHT, handSink, handZoom, HAND_OVERLAP } from '../hand-fan';
+import {
+  fanDrop,
+  fanRotation,
+  fanX,
+  HAND_BLEED,
+  HAND_CARD_HEIGHT,
+  handSink,
+  handZoom,
+  HAND_OVERLAP,
+} from '../hand-fan';
 
 describe('hand fan', () => {
   it('tilts the left end left and the right end right, mirrored', () => {
@@ -10,7 +19,8 @@ describe('hand fan', () => {
   });
 
   it('keeps the rotation within +-25 * 0.875 degrees', () => {
-    for (let i = 0; i < 10; i++) expect(Math.abs(fanRotation(i, 10))).toBeLessThanOrEqual(25 * 0.875);
+    for (let i = 0; i < 10; i++)
+      expect(Math.abs(fanRotation(i, 10))).toBeLessThanOrEqual(25 * 0.875);
   });
 
   it('is finite for a one-card hand (hsclone divided by zero there)', () => {
@@ -50,7 +60,8 @@ describe('hand fan', () => {
 
   describe('handSink', () => {
     // On screen, the card tops end up at (rowBottom - cardHeight * zoom) + sink * zoom.
-    const topOnScreen = (rowBottom: number, zoom: number, sink: number) => rowBottom - HAND_CARD_HEIGHT * zoom + sink * zoom;
+    const topOnScreen = (rowBottom: number, zoom: number, sink: number) =>
+      rowBottom - HAND_CARD_HEIGHT * zoom + sink * zoom;
 
     it('shows `peek` px of the cards when there is room, whatever the zoom', () => {
       for (const zoom of [1, 0.66, 0.4]) {
@@ -81,7 +92,8 @@ describe('hand fan', () => {
     it('spaces cards by card width minus the overlap, centred on the middle of the hand', () => {
       expect(fanX(0, 1)).toBe(0);
       expect(fanX(1, 3) - fanX(0, 3)).toBe(144 - HAND_OVERLAP);
-      for (const n of [2, 5, 10]) expect(fanX(0, n) + fanX(n - 1, n)).toBeCloseTo(0);
+      for (const n of [2, 5, 10])
+        expect(fanX(0, n) + fanX(n - 1, n)).toBeCloseTo(0);
     });
   });
 });

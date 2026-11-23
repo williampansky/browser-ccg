@@ -1,8 +1,8 @@
 import type { GameConfig } from './app-config.interface';
 import type { Card } from './card.interface';
 import type { ActionPoints, PlayerID, PlayerName } from './player.interface';
-import type {Player} from './player.interface';
-import type {Zone} from './zone.interface';
+import type { Player } from './player.interface';
+import type { Zone } from './zone.interface';
 
 export interface Counts {
   deck: number;
@@ -23,8 +23,8 @@ export interface LastCardPlayed {
 }
 
 export interface LastMoveMade {
-  args: any[],
-  playerID: PlayerID,
+  args: any[];
+  playerID: PlayerID;
   type: string;
 }
 

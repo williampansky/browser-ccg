@@ -4,7 +4,8 @@ import { defineCard } from '../define-card';
 export default defineCard('CORE_003', (n) => ({
   auras: [
     {
-      affects: ({ sameSide, targetRace }) => sameSide && targetRace === 'SPRITE',
+      affects: ({ sameSide, targetRace }) =>
+        sameSide && targetRace === 'SPRITE',
       attack: n.primary,
     },
   ],

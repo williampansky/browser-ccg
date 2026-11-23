@@ -9,7 +9,7 @@ import type { Card } from '../../engine';
 export const CardTokens = ({
   tokens = [],
   heading = 'Makes or offers',
-  onPick
+  onPick,
 }: {
   tokens?: Card[];
   heading?: string;
@@ -19,7 +19,7 @@ export const CardTokens = ({
     <div className={styles.tokens}>
       <h3>{heading}</h3>
       <div className={styles.tokenRow}>
-        {tokens?.map(t => {
+        {tokens?.map((t) => {
           const face = (
             <>
               <CardFace card={t} width={110} />
@@ -32,7 +32,7 @@ export const CardTokens = ({
               type="button"
               className={`${styles.token} ${styles.tokenPick}`}
               title={`View ${t.name}`}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation(); // a click elsewhere closes the overlay; this one swaps the card
                 onPick(t);
               }}

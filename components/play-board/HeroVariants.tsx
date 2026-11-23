@@ -11,7 +11,8 @@ import { IMPACT_MS, reducedMotion } from './motion';
  */
 /** A weapon whose art file is missing (a 404) shows the placeholder instead of a broken image. */
 const weaponArtFallback = (e: React.SyntheticEvent<HTMLImageElement>) => {
-  if (!e.currentTarget.src.endsWith(PLACEHOLDER_ART)) e.currentTarget.src = PLACEHOLDER_ART;
+  if (!e.currentTarget.src.endsWith(PLACEHOLDER_ART))
+    e.currentTarget.src = PLACEHOLDER_ART;
 };
 
 export interface HeroVariantProps {
@@ -21,16 +22,28 @@ export interface HeroVariantProps {
   maxHealth?: number;
   armor?: number;
   /** PROTOTYPE: an equipped weapon drawn over the portrait (HeroFigure only) */
-  weapon?: { image?: string; attack: number; durability: number; name?: string; temporary?: boolean };
+  weapon?: {
+    image?: string;
+    attack: number;
+    durability: number;
+    name?: string;
+    temporary?: boolean;
+  };
   team?: 'green' | 'red';
   active?: boolean;
   turnTag?: string;
 }
 
-const tone = (health: number, maxHealth: number) => (health <= maxHealth / 3 ? styles.low : health < maxHealth ? styles.hurt : '');
+const tone = (health: number, maxHealth: number) =>
+  health <= maxHealth / 3 ? styles.low : health < maxHealth ? styles.hurt : '';
 const art = (id: string) => `url(${heroImage(id, 'avatar')})`;
 const root = (p: HeroVariantProps, extra: string) =>
-  cx(styles.root, extra, p.team === 'red' ? styles.red : '', p.active ? styles.active : '');
+  cx(
+    styles.root,
+    extra,
+    p.team === 'red' ? styles.red : '',
+    p.active ? styles.active : '',
+  );
 
 /**
  * 2: the hero as a tall framed figure, laid out like the TCG Vol 14 sample card: portrait in the window, name on the ribbon, skills
@@ -65,23 +78,51 @@ export interface FigureLive {
   dom?: React.HTMLAttributes<HTMLDivElement>;
 }
 
-export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & FigureLive) => {
+export const HeroFigure = (
+  p: HeroVariantProps & { skills?: FigureSkill[] } & FigureLive,
+) => {
   const max = p.maxHealth ?? 30;
-  const state = p.health <= max / 3 ? styles.low : p.health < max ? styles.hurt : styles.ok;
+  const state =
+    p.health <= max / 3 ? styles.low : p.health < max ? styles.hurt : styles.ok;
   return (
     <div
       {...p.dom}
       ref={p.rootRef}
-      className={cx(root(p, styles.figure), p.canAct ? styles.canAct : '', p.aim ? styles.aim : '', p.aim && p.aimHover ? styles.aimHover : '', p.selected ? styles.sel : '')}
+      className={cx(
+        root(p, styles.figure),
+        p.canAct ? styles.canAct : '',
+        p.aim ? styles.aim : '',
+        p.aim && p.aimHover ? styles.aimHover : '',
+        p.selected ? styles.sel : '',
+      )}
     >
-      <div className={styles.figPic} style={{ backgroundImage: art(p.heroId) }} />
-      <img className={styles.figFrame} src="/images/frames/HERO-VOL14.png" alt="" draggable={false} />
+      <div
+        className={styles.figPic}
+        style={{ backgroundImage: art(p.heroId) }}
+      />
+      <img
+        className={styles.figFrame}
+        src="/images/frames/HERO-VOL14.png"
+        alt=""
+        draggable={false}
+      />
       {p.weapon && (
         <div
-          className={cx(styles.figWeapon, p.weapon.image ? '' : styles.figWeaponBare, p.weapon.temporary ? styles.figWeaponTemp : '')}
+          className={cx(
+            styles.figWeapon,
+            p.weapon.image ? '' : styles.figWeaponBare,
+            p.weapon.temporary ? styles.figWeaponTemp : '',
+          )}
           aria-label={`${p.weapon.name ?? 'Weapon'}: ${p.weapon.attack} attack, ${p.weapon.durability} durability${p.weapon.temporary ? ', this turn only' : ''}`}
         >
-          {p.weapon.image && <img src={p.weapon.image} alt="" draggable={false} onError={weaponArtFallback} />}
+          {p.weapon.image && (
+            <img
+              src={p.weapon.image}
+              alt=""
+              draggable={false}
+              onError={weaponArtFallback}
+            />
+          )}
           <b className={styles.figWpnAtk}>{p.weapon.attack}</b>
           <b className={styles.figWpnDur}>{p.weapon.durability}</b>
         </div>
@@ -90,7 +131,13 @@ export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & Fi
       <div className={styles.figSkills}>
         {[1, 2, 3].map((n) => {
           const k = p.skills?.[n - 1];
-          const status = !k ? '' : k.spent ? 'Used' : k.cooldownLeft > 0 ? `Ready in ${k.cooldownLeft}` : '';
+          const status = !k
+            ? ''
+            : k.spent
+              ? 'Used'
+              : k.cooldownLeft > 0
+                ? `Ready in ${k.cooldownLeft}`
+                : '';
           return (
             <button
               key={n}
@@ -101,17 +148,36 @@ export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & Fi
                 p.onSkill?.(n - 1);
               }}
               disabled={!!k && !k.usable}
-              aria-label={k ? `${k.name}, cost ${k.cost}${status ? `, ${status}` : ''}: ${k.text}` : `Skill ${n}`}
-              className={cx(styles.figSkill, k?.usable ? styles.ready : '', k?.selected ? styles.picked : '', k && !k.usable ? styles.off : '')}
-              style={{ backgroundImage: `url(${heroImage(p.heroId, `skill-${n}`)})` }}
+              aria-label={
+                k
+                  ? `${k.name}, cost ${k.cost}${status ? `, ${status}` : ''}: ${k.text}`
+                  : `Skill ${n}`
+              }
+              className={cx(
+                styles.figSkill,
+                k?.usable ? styles.ready : '',
+                k?.selected ? styles.picked : '',
+                k && !k.usable ? styles.off : '',
+              )}
+              style={{
+                backgroundImage: `url(${heroImage(p.heroId, `skill-${n}`)})`,
+              }}
             >
               {k && <b className={styles.figCost}>{k.cost}</b>}
               {k?.targeted && <i className={styles.figTarget}>⌖</i>}
-              {status && <em className={styles.figStatus}>{k?.spent ? '✕' : k?.cooldownLeft}</em>}
+              {status && (
+                <em className={styles.figStatus}>
+                  {k?.spent ? '✕' : k?.cooldownLeft}
+                </em>
+              )}
               {k && (
                 <span data-tip="" className={styles.figTip}>
                   <strong>{k.name}</strong>
-                  {status && <em><small> ({status})</small></em>}
+                  {status && (
+                    <em>
+                      <small> ({status})</small>
+                    </em>
+                  )}
                   <br />
                   {k.text}
                 </span>
@@ -121,11 +187,17 @@ export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & Fi
         })}
       </div>
       {!!p.armor && (
-        <span className={cx(styles.figGem, styles.figArmor)} aria-label={`${p.armor} armor`}>
+        <span
+          className={cx(styles.figGem, styles.figArmor)}
+          aria-label={`${p.armor} armor`}
+        >
           <b>{p.armor}</b>
         </span>
       )}
-      <span className={cx(styles.figGem, styles.figHp, state)} aria-label={`${p.health} health`}>
+      <span
+        className={cx(styles.figGem, styles.figHp, state)}
+        aria-label={`${p.health} health`}
+      >
         <b>{p.health}</b>
       </span>
     </div>
@@ -136,18 +208,36 @@ export const HeroFigure = (p: HeroVariantProps & { skills?: FigureSkill[] } & Fi
 export const HeroMedallion = (p: HeroVariantProps) => {
   const max = p.maxHealth ?? 30;
   const t = tone(p.health, max);
-  const hp = t === styles.low ? '#a01212' : t === styles.hurt ? '#e0841f' : '#d8372c';
+  const hp =
+    t === styles.low ? '#a01212' : t === styles.hurt ? '#e0841f' : '#d8372c';
   return (
     <div className={root(p, styles.medal)}>
       <div
         className={styles.medalRing}
-        style={{ ['--fill' as string]: `${(Math.min(p.health, max) / max) * 360}deg`, ['--hp' as string]: hp }}
+        style={{
+          ['--fill' as string]: `${(Math.min(p.health, max) / max) * 360}deg`,
+          ['--hp' as string]: hp,
+        }}
       >
-        {!!p.armor && <span className={styles.medalArmor} style={{ ['--armor' as string]: `${Math.min(p.armor / 15, 1) * 360}deg` }} />}
-        <span className={styles.medalFace} style={{ backgroundImage: art(p.heroId) }} />
+        {!!p.armor && (
+          <span
+            className={styles.medalArmor}
+            style={{
+              ['--armor' as string]: `${Math.min(p.armor / 15, 1) * 360}deg`,
+            }}
+          />
+        )}
+        <span
+          className={styles.medalFace}
+          style={{ backgroundImage: art(p.heroId) }}
+        />
       </div>
-      {p.turnTag && <span className={cx(styles.turnTag, styles.medalTag)}>{p.turnTag}</span>}
-      <span className={cx(styles.hpGem, styles.medalHp, styles.num, t)}>{p.health}</span>
+      {p.turnTag && (
+        <span className={cx(styles.turnTag, styles.medalTag)}>{p.turnTag}</span>
+      )}
+      <span className={cx(styles.hpGem, styles.medalHp, styles.num, t)}>
+        {p.health}
+      </span>
       <span className={styles.medalName}>{p.name}</span>
     </div>
   );
@@ -158,12 +248,26 @@ export const HeroCard = (p: HeroVariantProps) => {
   const max = p.maxHealth ?? 30;
   return (
     <div className={root(p, styles.card)}>
-      <span className={styles.cardArt} style={{ backgroundImage: art(p.heroId) }} />
-      <img className={styles.cardFrame} src={`/images/frames/${p.team === 'red' ? 'RED' : 'GREEN'}.png`} alt="" draggable={false} />
+      <span
+        className={styles.cardArt}
+        style={{ backgroundImage: art(p.heroId) }}
+      />
+      <img
+        className={styles.cardFrame}
+        src={`/images/frames/${p.team === 'red' ? 'RED' : 'GREEN'}.png`}
+        alt=""
+        draggable={false}
+      />
       <span className={styles.cardName}>{p.name}</span>
-      <span className={cx(styles.hpGem, styles.num, tone(p.health, max))}>{p.health}</span>
-      {!!p.armor && <span className={cx(styles.armorGem, styles.num)}>{p.armor}</span>}
-      {p.turnTag && <span className={cx(styles.turnTag, styles.cardTag)}>{p.turnTag}</span>}
+      <span className={cx(styles.hpGem, styles.num, tone(p.health, max))}>
+        {p.health}
+      </span>
+      {!!p.armor && (
+        <span className={cx(styles.armorGem, styles.num)}>{p.armor}</span>
+      )}
+      {p.turnTag && (
+        <span className={cx(styles.turnTag, styles.cardTag)}>{p.turnTag}</span>
+      )}
     </div>
   );
 };
@@ -309,44 +413,97 @@ export const RING_DEFAULTS: RingTune = {
 };
 
 const arcPath = (radius: number, from: number, to: number) => {
-  const pt = (deg: number) => `${(radius * Math.cos((deg * Math.PI) / 180)).toFixed(2)} ${(radius * Math.sin((deg * Math.PI) / 180)).toFixed(2)}`;
+  const pt = (deg: number) =>
+    `${(radius * Math.cos((deg * Math.PI) / 180)).toFixed(2)} ${(radius * Math.sin((deg * Math.PI) / 180)).toFixed(2)}`;
   return `M ${pt(from)} A ${radius} ${radius} 0 ${Math.abs(to - from) > 180 ? 1 : 0} ${to > from ? 1 : 0} ${pt(to)}`;
 };
 
 /** Bubble `i` of `n` on one side: left % of the band, size px, delay s, duration s. Spread by the golden ratio so they never line up. */
-const bubble = (i: number, side: number, n: number): [number, number, number, number] => {
-  const f = (k: number) => (((i + 1) * k + side * 0.37) % 1);
-  return [8 + f(0.618) * 70, 2 + Math.round(f(0.382) * 4), (i / n) * 5 + side * 0.9, 3.4 + f(0.754) * 2.6];
+const bubble = (
+  i: number,
+  side: number,
+  n: number,
+): [number, number, number, number] => {
+  const f = (k: number) => ((i + 1) * k + side * 0.37) % 1;
+  return [
+    8 + f(0.618) * 70,
+    2 + Math.round(f(0.382) * 4),
+    (i / n) * 5 + side * 0.9,
+    3.4 + f(0.754) * 2.6,
+  ];
 };
 const WAVE = 'M0 6 Q25 0 50 6 T100 6 T150 6 T200 6 V12 H0 Z';
 
 /** The liquid inside the disc. `level` is 0 to 1; a change in health restarts the slosh (a tilt and a taller wave) at a strength set by the size of the change. */
-const Liquid = (p: { level: number; health: number; max: number; tone: string; alpha: number; bubbles: number }) => {
+const Liquid = (p: {
+  level: number;
+  health: number;
+  max: number;
+  tone: string;
+  alpha: number;
+  bubbles: number;
+}) => {
   const prev = React.useRef(p.health);
   const [slosh, setSlosh] = React.useState({ n: 0, strength: 0 });
   React.useEffect(() => {
     if (p.health === prev.current) return;
-    const strength = Math.min(1, 0.35 + (Math.abs(p.health - prev.current) / p.max) * 3);
+    const strength = Math.min(
+      1,
+      0.35 + (Math.abs(p.health - prev.current) / p.max) * 3,
+    );
     prev.current = p.health;
     setSlosh((s) => ({ n: s.n + 1, strength }));
   }, [p.health, p.max]);
   return (
     <span
       className={cx(styles.ringLiquid, p.tone)}
-      style={{ ['--lvl' as string]: p.level, ['--liq-a' as string]: p.alpha / 100, ['--slosh' as string]: slosh.strength }}
+      style={{
+        ['--lvl' as string]: p.level,
+        ['--liq-a' as string]: p.alpha / 100,
+        ['--slosh' as string]: slosh.strength,
+      }}
     >
-      <span key={slosh.n} className={cx(styles.liquidTilt, slosh.n ? styles.sloshing : '')}>
+      <span
+        key={slosh.n}
+        className={cx(styles.liquidTilt, slosh.n ? styles.sloshing : '')}
+      >
         <span className={styles.liquidWaveAmp}>
-          <svg className={cx(styles.liquidWave, styles.waveBack)} viewBox="0 0 200 12" preserveAspectRatio="none"><path d={WAVE} /></svg>
-          <svg className={styles.liquidWave} viewBox="0 0 200 12" preserveAspectRatio="none"><path d={WAVE} /></svg>
+          <svg
+            className={cx(styles.liquidWave, styles.waveBack)}
+            viewBox="0 0 200 12"
+            preserveAspectRatio="none"
+          >
+            <path d={WAVE} />
+          </svg>
+          <svg
+            className={styles.liquidWave}
+            viewBox="0 0 200 12"
+            preserveAspectRatio="none"
+          >
+            <path d={WAVE} />
+          </svg>
         </span>
         <span className={styles.liquidBody} />
         <span className={styles.liquidDepth}>
           {[0, 1].map((side) => (
-            <span key={side} className={cx(styles.liquidCol, side ? styles.colRight : '')}>
+            <span
+              key={side}
+              className={cx(styles.liquidCol, side ? styles.colRight : '')}
+            >
               {Array.from({ length: p.bubbles }, (_, i) => {
                 const [x, size, delay, dur] = bubble(i, side, p.bubbles);
-                return <i key={i} style={{ left: `${x}%`, width: size, height: size, animationDelay: `${delay}s`, animationDuration: `${dur}s` }} />;
+                return (
+                  <i
+                    key={i}
+                    style={{
+                      left: `${x}%`,
+                      width: size,
+                      height: size,
+                      animationDelay: `${delay}s`,
+                      animationDuration: `${dur}s`,
+                    }}
+                  />
+                );
               })}
             </span>
           ))}
@@ -368,17 +525,24 @@ const useRingHit = (health: number, armor: number, r: RingTune) => {
   useEffect(() => {
     const before = last.current;
     last.current = { health, armor };
-    const lost = Math.max(0, before.health - health) + Math.max(0, before.armor - armor);
+    const lost =
+      Math.max(0, before.health - health) + Math.max(0, before.armor - armor);
     const gained = Math.max(0, health - before.health);
     if ((lost === 0 && gained === 0) || reducedMotion()) return;
     const amount = lost > 0 ? -lost : gained;
     const id = next.current++;
     const timers = [
-      setTimeout(() => {
-        if (lost > 0) setHits((n) => n + 1);
-        setPops((old) => [...old, { id, amount }]);
-      }, lost > 0 ? r.hitDelay : 0),
-      setTimeout(() => setPops((old) => old.filter((x) => x.id !== id)), (lost > 0 ? r.hitDelay : 0) + r.popMs + 50),
+      setTimeout(
+        () => {
+          if (lost > 0) setHits((n) => n + 1);
+          setPops((old) => [...old, { id, amount }]);
+        },
+        lost > 0 ? r.hitDelay : 0,
+      ),
+      setTimeout(
+        () => setPops((old) => old.filter((x) => x.id !== id)),
+        (lost > 0 ? r.hitDelay : 0) + r.popMs + 50,
+      ),
     ];
     return () => timers.forEach(clearTimeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -394,12 +558,25 @@ export interface RingMystery {
   tip: string;
 }
 
-export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: Partial<RingTune>; mystery?: RingMystery } & FigureLive) => {
+export const HeroRing = (
+  p: HeroVariantProps & {
+    skills?: FigureSkill[];
+    tune?: Partial<RingTune>;
+    mystery?: RingMystery;
+  } & FigureLive,
+) => {
   const r: RingTune = { ...RING_DEFAULTS, ...p.tune };
   const hit = useRingHit(p.health, p.armor ?? 0, r);
   const max = p.maxHealth ?? 30;
   // The ring has four health states (the other variants keep three): full, graze, hurt, low.
-  const t = p.health <= max / 3 ? styles.low : p.health <= (max * 2) / 3 ? styles.hurt : p.health < max ? styles.graze : '';
+  const t =
+    p.health <= max / 3
+      ? styles.low
+      : p.health <= (max * 2) / 3
+        ? styles.hurt
+        : p.health < max
+          ? styles.graze
+          : '';
   const vars = {
     '--ring-d': `${r.d}px`,
     '--ring-w': `${r.w}px`,
@@ -439,29 +616,73 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
     <div
       {...p.dom}
       ref={p.rootRef}
-      className={cx(root(p, styles.ring), p.canAct ? styles.canAct : '', p.aim ? styles.aim : '', p.aim && p.aimHover ? styles.aimHover : '', p.selected ? styles.sel : '', hit.hits > 0 ? (hit.hits % 2 ? styles.hitA : styles.hitB) : '')}
+      className={cx(
+        root(p, styles.ring),
+        p.canAct ? styles.canAct : '',
+        p.aim ? styles.aim : '',
+        p.aim && p.aimHover ? styles.aimHover : '',
+        p.selected ? styles.sel : '',
+        hit.hits > 0 ? (hit.hits % 2 ? styles.hitA : styles.hitB) : '',
+      )}
       style={vars}
     >
       {r.showPop &&
         hit.pops.map((x) => (
-          <span key={x.id} className={cx(styles.ringPop, x.amount < 0 ? styles.ringPopHurt : styles.ringPopHeal)} aria-hidden="true">
+          <span
+            key={x.id}
+            className={cx(
+              styles.ringPop,
+              x.amount < 0 ? styles.ringPopHurt : styles.ringPopHeal,
+            )}
+            aria-hidden="true"
+          >
             {x.amount > 0 ? `+${x.amount}` : x.amount}
           </span>
         ))}
       {r.showName && <span className={styles.ringName}>{p.name}</span>}
-      {r.showTag && p.turnTag && <span className={cx(styles.turnTag, styles.ringTag)}>{p.turnTag}</span>}
+      {r.showTag && p.turnTag && (
+        <span className={cx(styles.turnTag, styles.ringTag)}>{p.turnTag}</span>
+      )}
       {r.bezel > 0 && <span className={styles.ringBezel} />}
       <div className={styles.ringDisc}>
-        {r.hpLiquid && p.health > 0 && <Liquid level={Math.min(1, p.health / max)} health={p.health} max={max} tone={t} alpha={r.liquidAlpha} bubbles={r.liquidBubbles} />}
-        <span className={cx(styles.ringArt, r.hpLiquid ? styles.ringArtInset : '')} style={{ backgroundImage: art(p.heroId) }} />
+        {r.hpLiquid && p.health > 0 && (
+          <Liquid
+            level={Math.min(1, p.health / max)}
+            health={p.health}
+            max={max}
+            tone={t}
+            alpha={r.liquidAlpha}
+            bubbles={r.liquidBubbles}
+          />
+        )}
+        <span
+          className={cx(styles.ringArt, r.hpLiquid ? styles.ringArtInset : '')}
+          style={{ backgroundImage: art(p.heroId) }}
+        />
       </div>
       {r.frame > 0 &&
-        [r.skillAngle + r.skillSpacing, r.skillAngle, r.skillAngle - r.skillSpacing, ...(p.weapon ? [r.weaponAngle] : []), ...(p.mystery ? [r.mysteryAngle] : [])].map((a, i) => (
-          <span key={i} className={styles.ringFrame} style={{ ['--a' as string]: `${a}deg` }} />
+        [
+          r.skillAngle + r.skillSpacing,
+          r.skillAngle,
+          r.skillAngle - r.skillSpacing,
+          ...(p.weapon ? [r.weaponAngle] : []),
+          ...(p.mystery ? [r.mysteryAngle] : []),
+        ].map((a, i) => (
+          <span
+            key={i}
+            className={styles.ringFrame}
+            style={{ ['--a' as string]: `${a}deg` }}
+          />
         ))}
       {[1, 2, 3].map((n) => {
         const k = p.skills?.[n - 1];
-        const status = !k ? '' : k.spent ? 'Used' : k.cooldownLeft > 0 ? `Ready in ${k.cooldownLeft}` : '';
+        const status = !k
+          ? ''
+          : k.spent
+            ? 'Used'
+            : k.cooldownLeft > 0
+              ? `Ready in ${k.cooldownLeft}`
+              : '';
         return (
           <button
             key={n}
@@ -472,16 +693,37 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
               p.onSkill?.(n - 1);
             }}
             disabled={!!k && !k.usable}
-            aria-label={k ? `${k.name}, cost ${k.cost}${status ? `, ${status}` : ''}: ${k.text}` : `Skill ${n}`}
-            className={cx(styles.ringSock, styles.ringSkill, k?.usable ? styles.ready : '', k?.selected ? styles.picked : '', k && !k.usable ? styles.off : '')}
-            style={{ ['--a' as string]: `${r.skillAngle + (2 - n) * r.skillSpacing}deg`, backgroundImage: `url(${heroImage(p.heroId, `skill-${n}`)})` }}
+            aria-label={
+              k
+                ? `${k.name}, cost ${k.cost}${status ? `, ${status}` : ''}: ${k.text}`
+                : `Skill ${n}`
+            }
+            className={cx(
+              styles.ringSock,
+              styles.ringSkill,
+              k?.usable ? styles.ready : '',
+              k?.selected ? styles.picked : '',
+              k && !k.usable ? styles.off : '',
+            )}
+            style={{
+              ['--a' as string]: `${r.skillAngle + (2 - n) * r.skillSpacing}deg`,
+              backgroundImage: `url(${heroImage(p.heroId, `skill-${n}`)})`,
+            }}
           >
             {k && r.showCost && <b className={styles.ringCost}>{k.cost}</b>}
-            {status && <em className={styles.ringStatus}>{k?.spent ? '✕' : k?.cooldownLeft}</em>}
+            {status && (
+              <em className={styles.ringStatus}>
+                {k?.spent ? '✕' : k?.cooldownLeft}
+              </em>
+            )}
             {k && (
               <span data-tip="" className={styles.ringTip}>
                 <strong>{k.name}</strong>
-                {status && <em><small> ({status})</small></em>}
+                {status && (
+                  <em>
+                    <small> ({status})</small>
+                  </em>
+                )}
                 <br />
                 {k.text}
               </span>
@@ -490,20 +732,50 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
         );
       })}
       {p.weapon && (
-      <div
-        className={cx(styles.ringSock, styles.ringWeapon, p.weapon.temporary ? styles.ringWeaponTemp : '')}
-        style={{ ['--a' as string]: `${r.weaponAngle}deg` }}
-        aria-label={`${p.weapon.name ?? 'Weapon'}: ${p.weapon.attack} attack, ${p.weapon.durability} durability`}
-      >
-        {p.weapon.image && <img src={p.weapon.image} alt="" draggable={false} onError={weaponArtFallback} />}
-        <b className={cx(styles.ringStat, styles.ringAtk, styles.num)} style={{ translate: `${r.atkX}px ${r.atkY}px` }}>{p.weapon.attack}</b>
-        <b className={cx(styles.ringStat, styles.ringDur, styles.num)} style={{ translate: `${r.durX}px ${r.durY}px` }}>{p.weapon.durability}</b>
-      </div>
+        <div
+          className={cx(
+            styles.ringSock,
+            styles.ringWeapon,
+            p.weapon.temporary ? styles.ringWeaponTemp : '',
+          )}
+          style={{ ['--a' as string]: `${r.weaponAngle}deg` }}
+          aria-label={`${p.weapon.name ?? 'Weapon'}: ${p.weapon.attack} attack, ${p.weapon.durability} durability`}
+        >
+          {p.weapon.image && (
+            <img
+              src={p.weapon.image}
+              alt=""
+              draggable={false}
+              onError={weaponArtFallback}
+            />
+          )}
+          <b
+            className={cx(styles.ringStat, styles.ringAtk, styles.num)}
+            style={{ translate: `${r.atkX}px ${r.atkY}px` }}
+          >
+            {p.weapon.attack}
+          </b>
+          <b
+            className={cx(styles.ringStat, styles.ringDur, styles.num)}
+            style={{ translate: `${r.durX}px ${r.durY}px` }}
+          >
+            {p.weapon.durability}
+          </b>
+        </div>
       )}
       {p.mystery && (
         <div
-          className={cx(styles.ringSock, styles.ringMystery, p.mystery.cardId ? '' : styles.ringMysteryHidden)}
-          style={{ ['--a' as string]: `${r.mysteryAngle}deg`, ...(p.mystery.cardId ? { backgroundImage: artBackground(p.mystery.cardId) } : {}) }}
+          className={cx(
+            styles.ringSock,
+            styles.ringMystery,
+            p.mystery.cardId ? '' : styles.ringMysteryHidden,
+          )}
+          style={{
+            ['--a' as string]: `${r.mysteryAngle}deg`,
+            ...(p.mystery.cardId
+              ? { backgroundImage: artBackground(p.mystery.cardId) }
+              : {}),
+          }}
           aria-label={`Mystery: ${p.mystery.name}. ${p.mystery.tip}`}
         >
           {!p.mystery.cardId && <b className={styles.ringQuestion}>?</b>}
@@ -515,16 +787,29 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
         </div>
       )}
       {!!p.armor && (
-        <span className={cx(styles.ringPill, styles.ringArmor, styles.num)} style={{ ['--a' as string]: `${r.armorAngle}deg` }} aria-label={`${p.armor} armor`}>
+        <span
+          className={cx(styles.ringPill, styles.ringArmor, styles.num)}
+          style={{ ['--a' as string]: `${r.armorAngle}deg` }}
+          aria-label={`${p.armor} armor`}
+        >
           {p.armor}
         </span>
       )}
       {r.hpArc && (
         <svg className={styles.ringArc} aria-hidden="true">
-          <path d={arcPath(r.d / 2 + r.hpArcOffset, r.hpArcStart, r.hpArcEnd)} className={styles.ringArcTrack} strokeWidth={r.hpArcWidth} />
+          <path
+            d={arcPath(r.d / 2 + r.hpArcOffset, r.hpArcStart, r.hpArcEnd)}
+            className={styles.ringArcTrack}
+            strokeWidth={r.hpArcWidth}
+          />
           {p.health > 0 && (
             <path
-              d={arcPath(r.d / 2 + r.hpArcOffset, r.hpArcStart, r.hpArcStart + (r.hpArcEnd - r.hpArcStart) * Math.min(1, p.health / max))}
+              d={arcPath(
+                r.d / 2 + r.hpArcOffset,
+                r.hpArcStart,
+                r.hpArcStart +
+                  (r.hpArcEnd - r.hpArcStart) * Math.min(1, p.health / max),
+              )}
               className={styles.ringArcFill}
               strokeWidth={r.hpArcWidth}
               stroke={`#${t === styles.low ? r.hpLow : t === styles.hurt ? r.hpHurt : t === styles.graze ? r.hpGraze : r.hpFull}`}
@@ -532,7 +817,11 @@ export const HeroRing = (p: HeroVariantProps & { skills?: FigureSkill[]; tune?: 
           )}
         </svg>
       )}
-      <span className={cx(styles.ringPill, styles.ringHp, styles.num, t)} style={{ ['--a' as string]: `${r.hpAngle}deg` }} aria-label={`${p.health} health`}>
+      <span
+        className={cx(styles.ringPill, styles.ringHp, styles.num, t)}
+        style={{ ['--a' as string]: `${r.hpAngle}deg` }}
+        aria-label={`${p.health} health`}
+      >
         {p.health}
       </span>
     </div>

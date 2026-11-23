@@ -6,10 +6,10 @@ export const CLS = (name: string) => `[class*="play-board_${name}__"]`;
 export const SLOT = '[class*="board-minion_slot__"]';
 export const OVAL = '[class*="board-minion_oval__"]';
 // The first minion on your own board (the one the preview lifts).
-export const MY_FIRST = '[class*="play-board_center__"] > section [class*="play-board_row__"] > :first-child';
+export const MY_FIRST =
+  '[class*="play-board_center__"] > section [class*="play-board_row__"] > :first-child';
 export const BAR = '[class*="energy-bar_bar__"]';
 export const ORBS = '[class*="energy-bar_orbs__"]';
-
 
 export const CSS_FNS: Record<string, (v: number) => string> = {
   lpsh: (v) => `${SLOT}{--port-hover:${v}}`,
@@ -37,9 +37,12 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lw: (v) => `${CLS('table')}{max-width:${v}px !important}`,
   lhs: (v) => `${CLS('hand')}{--hand-sink:${v}px !important}`,
   lhw0: (v) => `${CLS('hand')}{--hand-zoom:${v / 144} !important}`,
-  lhw1: (v) => `${CLS('cardBack')}{width:${v}px !important;height:${(v * 9.5) / 9}px !important;margin-left:${(-v * 2.5) / 9}px !important;margin-right:${(-v * 2.5) / 9}px !important}`,
-  lfw0: (v) => `${CLS('figMe')}{width:${v}px !important;--figW:${v}px !important}`,
-  lfw1: (v) => `${CLS('figFoe')}{width:${v}px !important;--figW:${v}px !important}`,
+  lhw1: (v) =>
+    `${CLS('cardBack')}{width:${v}px !important;height:${(v * 9.5) / 9}px !important;margin-left:${(-v * 2.5) / 9}px !important;margin-right:${(-v * 2.5) / 9}px !important}`,
+  lfw0: (v) =>
+    `${CLS('figMe')}{width:${v}px !important;--figW:${v}px !important}`,
+  lfw1: (v) =>
+    `${CLS('figFoe')}{width:${v}px !important;--figW:${v}px !important}`,
   lfx0: (v) => `${CLS('figMe')}{--lab-x:${v}px}`,
   lfy0: (v) => `${CLS('figMe')}{--lab-y:${v}px}`,
   lfx1: (v) => `${CLS('figFoe')}{--lab-x:${v}px}`,
@@ -68,7 +71,10 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lhsx: (v) => `${CLS('hand')}{--h-edge-px:${v}px}`,
   lhsh: (v) => `${CLS('hand')}{--h-hot-px:${v}px}`,
   // Preview only: draw the slots.
-  lhspv: (v) => (v ? `${CLS('hand')}{--h-slot-show:rgba(255,60,60,0.18);--h-slot-outline:1px}` : ''),
+  lhspv: (v) =>
+    v
+      ? `${CLS('hand')}{--h-slot-show:rgba(255,60,60,0.18);--h-slot-outline:1px}`
+      : '',
   lhol: (v) => `${CLS('hand')}{--h-overlap:${v}px;--h-overlap-base:${v}}`,
   // How long the hover waits before stepping to the next card on its way to the card under the pointer (ms; 0 = jump straight there).
   lhsd: (v) => `${CLS('hand')}{--h-step-ms:${v}}`,
@@ -165,7 +171,8 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lcglow: (v) => `${CLS('castFx')}{--cast-glow:${v}px}`,
   lcmw: (v) => `${CLS('chooseBackdrop')}{--choose-scale:${v}}`,
   lcmg: (v) => `${CLS('chooseBackdrop')}{--choose-gap:${v}px}`,
-  lcmd: (v) => `${CLS('chooseBackdrop')}{background:rgba(0,0,0,${v}) !important}`,
+  lcmd: (v) =>
+    `${CLS('chooseBackdrop')}{background:rgba(0,0,0,${v}) !important}`,
   lcmt: (v) => `${CLS('chooseBackdrop')}{--choose-title:${v}}`,
   lcmhs: (v) => `${CLS('chooseBackdrop')}{--choose-hover:${v}}`,
   lcmhl: (v) => `${CLS('chooseBackdrop')}{--choose-lift:${v}}`,
@@ -178,110 +185,535 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
  * The middle strip's number knobs: one row each (URL key, label, range, default, the CSS variable it sets and its unit). The lab builds its
  * sliders from this and `CSS_FNS` its CSS, so a new knob is one line here plus the rule in play-board.module.scss.
  */
-export const MID_KNOBS: { key: string; label: string; min: number; max: number; step?: number; def: number; cssVar: string; unit: string }[] = [
+export const MID_KNOBS: {
+  key: string;
+  label: string;
+  min: number;
+  max: number;
+  step?: number;
+  def: number;
+  cssVar: string;
+  unit: string;
+}[] = [
   // Horizontal lines (the border above and below the strip)
-  { key: 'lmdlw', label: 'Lines: thickness (px)', min: 0, max: 12, def: 1, cssVar: '--mid-lw', unit: 'px' },
-  { key: 'lmdla', label: 'Lines: opacity', min: 0, max: 1, step: 0.05, def: 1, cssVar: '--mid-la', unit: '' },
-  { key: 'lmdlt', label: 'Lines: top line (1 = show, 0 = hide)', min: 0, max: 1, def: 1, cssVar: '--mid-lt', unit: '' },
-  { key: 'lmdlb', label: 'Lines: bottom line (1 = show, 0 = hide)', min: 0, max: 1, def: 1, cssVar: '--mid-lb', unit: '' },
+  {
+    key: 'lmdlw',
+    label: 'Lines: thickness (px)',
+    min: 0,
+    max: 12,
+    def: 1,
+    cssVar: '--mid-lw',
+    unit: 'px',
+  },
+  {
+    key: 'lmdla',
+    label: 'Lines: opacity',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    def: 1,
+    cssVar: '--mid-la',
+    unit: '',
+  },
+  {
+    key: 'lmdlt',
+    label: 'Lines: top line (1 = show, 0 = hide)',
+    min: 0,
+    max: 1,
+    def: 1,
+    cssVar: '--mid-lt',
+    unit: '',
+  },
+  {
+    key: 'lmdlb',
+    label: 'Lines: bottom line (1 = show, 0 = hide)',
+    min: 0,
+    max: 1,
+    def: 1,
+    cssVar: '--mid-lb',
+    unit: '',
+  },
   // Strip spacing
-  { key: 'lmdp', label: 'Strip: padding up and down (px)', min: 0, max: 80, def: 8, cssVar: '--mid-p', unit: 'px' },
-  { key: 'lmdpx', label: 'Strip: padding left and right (px)', min: 0, max: 200, def: 12, cssVar: '--mid-px', unit: 'px' },
-  { key: 'lmdg', label: 'Strip: gap between items (px)', min: 0, max: 120, def: 16, cssVar: '--mid-g', unit: 'px' },
-  { key: 'lmdh', label: 'Strip: minimum height (px)', min: 0, max: 200, def: 0, cssVar: '--mid-h', unit: 'px' },
+  {
+    key: 'lmdp',
+    label: 'Strip: padding up and down (px)',
+    min: 0,
+    max: 80,
+    def: 8,
+    cssVar: '--mid-p',
+    unit: 'px',
+  },
+  {
+    key: 'lmdpx',
+    label: 'Strip: padding left and right (px)',
+    min: 0,
+    max: 200,
+    def: 12,
+    cssVar: '--mid-px',
+    unit: 'px',
+  },
+  {
+    key: 'lmdg',
+    label: 'Strip: gap between items (px)',
+    min: 0,
+    max: 120,
+    def: 16,
+    cssVar: '--mid-g',
+    unit: 'px',
+  },
+  {
+    key: 'lmdh',
+    label: 'Strip: minimum height (px)',
+    min: 0,
+    max: 200,
+    def: 0,
+    cssVar: '--mid-h',
+    unit: 'px',
+  },
   // Middle text
-  { key: 'lmdts', label: 'Text: size (x)', min: 0.5, max: 3, step: 0.05, def: 1, cssVar: '--mid-ts', unit: '' },
-  { key: 'lmdtw', label: 'Text: weight', min: 100, max: 900, step: 100, def: 400, cssVar: '--mid-tw', unit: '' },
-  { key: 'lmdto', label: 'Text: opacity', min: 0, max: 1, step: 0.05, def: 1, cssVar: '--mid-to', unit: '' },
-  { key: 'lmdtl', label: 'Text: letter spacing (px)', min: -2, max: 10, step: 0.1, def: 0, cssVar: '--mid-tl', unit: 'px' },
-  { key: 'lmdtdx', label: 'Text: move right (px)', min: -600, max: 600, def: 0, cssVar: '--mid-tdx', unit: 'px' },
-  { key: 'lmdtdy', label: 'Text: move down (px)', min: -100, max: 100, def: 0, cssVar: '--mid-tdy', unit: 'px' },
-  { key: 'lmdks', label: 'Clock: size (x)', min: 0.5, max: 3, step: 0.05, def: 1, cssVar: '--mid-ks', unit: '' },
+  {
+    key: 'lmdts',
+    label: 'Text: size (x)',
+    min: 0.5,
+    max: 3,
+    step: 0.05,
+    def: 1,
+    cssVar: '--mid-ts',
+    unit: '',
+  },
+  {
+    key: 'lmdtw',
+    label: 'Text: weight',
+    min: 100,
+    max: 900,
+    step: 100,
+    def: 400,
+    cssVar: '--mid-tw',
+    unit: '',
+  },
+  {
+    key: 'lmdto',
+    label: 'Text: opacity',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    def: 1,
+    cssVar: '--mid-to',
+    unit: '',
+  },
+  {
+    key: 'lmdtl',
+    label: 'Text: letter spacing (px)',
+    min: -2,
+    max: 10,
+    step: 0.1,
+    def: 0,
+    cssVar: '--mid-tl',
+    unit: 'px',
+  },
+  {
+    key: 'lmdtdx',
+    label: 'Text: move right (px)',
+    min: -600,
+    max: 600,
+    def: 0,
+    cssVar: '--mid-tdx',
+    unit: 'px',
+  },
+  {
+    key: 'lmdtdy',
+    label: 'Text: move down (px)',
+    min: -100,
+    max: 100,
+    def: 0,
+    cssVar: '--mid-tdy',
+    unit: 'px',
+  },
+  {
+    key: 'lmdks',
+    label: 'Clock: size (x)',
+    min: 0.5,
+    max: 3,
+    step: 0.05,
+    def: 1,
+    cssVar: '--mid-ks',
+    unit: '',
+  },
   // End turn button
-  { key: 'lmdbr', label: 'End turn: corner radius (px)', min: 0, max: 40, def: 6, cssVar: '--mid-br', unit: 'px' },
-  { key: 'lmdbx', label: 'End turn: padding left and right (px)', min: 0, max: 80, def: 19, cssVar: '--mid-bx', unit: 'px' },
-  { key: 'lmdby', label: 'End turn: padding up and down (px)', min: 0, max: 40, def: 8, cssVar: '--mid-by', unit: 'px' },
-  { key: 'lmdbs', label: 'End turn: text size (x)', min: 0.5, max: 3, step: 0.05, def: 1, cssVar: '--mid-bs', unit: '' },
-  { key: 'lmdbw', label: 'End turn: text weight', min: 100, max: 900, step: 100, def: 700, cssVar: '--mid-bw', unit: '' },
-  { key: 'lmdbg', label: 'End turn: glow (px)', min: 0, max: 40, def: 0, cssVar: '--mid-bg', unit: 'px' },
-  { key: 'lmdbh', label: 'End turn: brightness on hover (x)', min: 0.5, max: 2, step: 0.05, def: 1, cssVar: '--mid-bh', unit: '' },
-  { key: 'lmdbdx', label: 'End turn: move right (px)', min: -600, max: 600, def: 0, cssVar: '--mid-bdx', unit: 'px' },
-  { key: 'lmdbdy', label: 'End turn: move down (px)', min: -100, max: 100, def: 0, cssVar: '--mid-bdy', unit: 'px' },
-  { key: 'lmdbd', label: 'End turn: opacity when disabled', min: 0, max: 1, step: 0.05, def: 0.4, cssVar: '--mid-bd', unit: '' },
+  {
+    key: 'lmdbr',
+    label: 'End turn: corner radius (px)',
+    min: 0,
+    max: 40,
+    def: 6,
+    cssVar: '--mid-br',
+    unit: 'px',
+  },
+  {
+    key: 'lmdbx',
+    label: 'End turn: padding left and right (px)',
+    min: 0,
+    max: 80,
+    def: 19,
+    cssVar: '--mid-bx',
+    unit: 'px',
+  },
+  {
+    key: 'lmdby',
+    label: 'End turn: padding up and down (px)',
+    min: 0,
+    max: 40,
+    def: 8,
+    cssVar: '--mid-by',
+    unit: 'px',
+  },
+  {
+    key: 'lmdbs',
+    label: 'End turn: text size (x)',
+    min: 0.5,
+    max: 3,
+    step: 0.05,
+    def: 1,
+    cssVar: '--mid-bs',
+    unit: '',
+  },
+  {
+    key: 'lmdbw',
+    label: 'End turn: text weight',
+    min: 100,
+    max: 900,
+    step: 100,
+    def: 700,
+    cssVar: '--mid-bw',
+    unit: '',
+  },
+  {
+    key: 'lmdbg',
+    label: 'End turn: glow (px)',
+    min: 0,
+    max: 40,
+    def: 0,
+    cssVar: '--mid-bg',
+    unit: 'px',
+  },
+  {
+    key: 'lmdbh',
+    label: 'End turn: brightness on hover (x)',
+    min: 0.5,
+    max: 2,
+    step: 0.05,
+    def: 1,
+    cssVar: '--mid-bh',
+    unit: '',
+  },
+  {
+    key: 'lmdbdx',
+    label: 'End turn: move right (px)',
+    min: -600,
+    max: 600,
+    def: 0,
+    cssVar: '--mid-bdx',
+    unit: 'px',
+  },
+  {
+    key: 'lmdbdy',
+    label: 'End turn: move down (px)',
+    min: -100,
+    max: 100,
+    def: 0,
+    cssVar: '--mid-bdy',
+    unit: 'px',
+  },
+  {
+    key: 'lmdbd',
+    label: 'End turn: opacity when disabled',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    def: 0.4,
+    cssVar: '--mid-bd',
+    unit: '',
+  },
   // Timer bar
-  { key: 'lmdtb', label: 'Timer bar: show (1 = yes, 0 = no)', min: 0, max: 1, def: 1, cssVar: '--mid-tb', unit: '' },
-  { key: 'lmdth', label: 'Timer bar: height (px)', min: 1, max: 60, def: 4, cssVar: '--mid-th', unit: 'px' },
-  { key: 'lmdtv', label: 'Timer bar: width (1 = whole window, 0 = just the strip)', min: 0, max: 1, def: 1, cssVar: '--mid-tv', unit: '' },
-  { key: 'lmdty', label: 'Timer bar: move down (px)', min: -100, max: 100, def: 0, cssVar: '--mid-ty', unit: 'px' },
-  { key: 'lmdtr', label: 'Timer bar: corner radius (px)', min: 0, max: 30, def: 0, cssVar: '--mid-tr', unit: 'px' },
-  { key: 'lmdtta', label: 'Timer bar: track opacity', min: 0, max: 1, step: 0.05, def: 0.25, cssVar: '--mid-tta', unit: '' },
+  {
+    key: 'lmdtb',
+    label: 'Timer bar: show (1 = yes, 0 = no)',
+    min: 0,
+    max: 1,
+    def: 1,
+    cssVar: '--mid-tb',
+    unit: '',
+  },
+  {
+    key: 'lmdth',
+    label: 'Timer bar: height (px)',
+    min: 1,
+    max: 60,
+    def: 4,
+    cssVar: '--mid-th',
+    unit: 'px',
+  },
+  {
+    key: 'lmdtv',
+    label: 'Timer bar: width (1 = whole window, 0 = just the strip)',
+    min: 0,
+    max: 1,
+    def: 1,
+    cssVar: '--mid-tv',
+    unit: '',
+  },
+  {
+    key: 'lmdty',
+    label: 'Timer bar: move down (px)',
+    min: -100,
+    max: 100,
+    def: 0,
+    cssVar: '--mid-ty',
+    unit: 'px',
+  },
+  {
+    key: 'lmdtr',
+    label: 'Timer bar: corner radius (px)',
+    min: 0,
+    max: 30,
+    def: 0,
+    cssVar: '--mid-tr',
+    unit: 'px',
+  },
+  {
+    key: 'lmdtta',
+    label: 'Timer bar: track opacity',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    def: 0.25,
+    cssVar: '--mid-tta',
+    unit: '',
+  },
 ];
 // Fan tilt for one hand size: `lhrt1` .. `lhrt10` (x) override the main tilt (`lhrt`) while the hand holds exactly that many cards.
-for (let n = 1; n <= 10; n++) CSS_FNS[`lhrt${n}`] = (v) => `${CLS('hand')}[data-count="${n}"]{--h-tilt:${v}}`;
+for (let n = 1; n <= 10; n++)
+  CSS_FNS[`lhrt${n}`] = (v) =>
+    `${CLS('hand')}[data-count="${n}"]{--h-tilt:${v}}`;
 // And the card overlap (the spacing): `lhol1` .. `lhol10`.
-for (let n = 1; n <= 10; n++) CSS_FNS[`lhol${n}`] = (v) => `${CLS('hand')}[data-count="${n}"]{--h-overlap:${v}px}`;
+for (let n = 1; n <= 10; n++)
+  CSS_FNS[`lhol${n}`] = (v) =>
+    `${CLS('hand')}[data-count="${n}"]{--h-overlap:${v}px}`;
 // The same for the fan drop: `lhdp1` .. `lhdp10` override the main drop (`lhdp`) for exactly that many cards.
-for (let n = 1; n <= 10; n++) CSS_FNS[`lhdp${n}`] = (v) => `${CLS('hand')}[data-count="${n}"]{--h-dropk:${v}}`;
-MID_KNOBS.forEach((k) => (CSS_FNS[k.key] = (v) => `${CLS('page')}{${k.cssVar}:${v}${k.unit}}`));
+for (let n = 1; n <= 10; n++)
+  CSS_FNS[`lhdp${n}`] = (v) =>
+    `${CLS('hand')}[data-count="${n}"]{--h-dropk:${v}}`;
+MID_KNOBS.forEach(
+  (k) => (CSS_FNS[k.key] = (v) => `${CLS('page')}{${k.cssVar}:${v}${k.unit}}`),
+);
 /** The lab's preview for the timer bar: how full it is (%), since the lab has no turn clock. */
 export const MID_TIMER_PREVIEW_KEY = 'lmdtpv';
 
 /** The middle strip's text choices (`lmdj` alignment, `lmdtpos` where the timer bar sits): named, not numbers. */
-const MID_JUSTIFY: Record<string, string> = { start: 'flex-start', center: 'center', end: 'flex-end', between: 'space-between' };
+const MID_JUSTIFY: Record<string, string> = {
+  start: 'flex-start',
+  center: 'center',
+  end: 'flex-end',
+  between: 'space-between',
+};
 /** Where the End turn button (`lmdba`) and the status text (`lmdta`) sit along the strip, each on its own: left (the default), center or right.
  *  Left and right stay in the flow (right is an auto margin, after the others); center takes the item out of the flow and puts it on the
  *  strip's exact middle, so it does not depend on what else is in the strip. */
 const MID_ALIGN: Record<string, string> = {
   left: '--mid-%o:0;--mid-%l:0px;--mid-%p:static;--mid-%sx:0px;--mid-%sy:0px',
   right: '--mid-%o:2;--mid-%l:auto;--mid-%p:static;--mid-%sx:0px;--mid-%sy:0px',
-  center: '--mid-%o:0;--mid-%l:0px;--mid-%p:absolute;--mid-%sx:-50%;--mid-%sy:-50%',
+  center:
+    '--mid-%o:0;--mid-%l:0px;--mid-%p:absolute;--mid-%sx:-50%;--mid-%sy:-50%',
 };
 const midAlignCss = (which: 'bp' | 'tp', value: string) =>
-  MID_ALIGN[value] ? `${CLS('page')}{${MID_ALIGN[value].replace(/%(sx|sy|o|l|p)/g, `${which}$1`)}}` : '';
+  MID_ALIGN[value]
+    ? `${CLS('page')}{${MID_ALIGN[value].replace(/%(sx|sy|o|l|p)/g, `${which}$1`)}}`
+    : '';
 const midChoicesCss = (one: (k: string) => string) =>
   [
     midAlignCss('bp', one('lmdba')),
     midAlignCss('tp', one('lmdta')),
-    MID_JUSTIFY[one('lmdj')] ? `${CLS('page')}{--mid-j:${MID_JUSTIFY[one('lmdj')]}}` : '',
-    one('lmdtpos') === 'top' ? `${CLS('page')}{--mid-ttop:0px;--mid-tbot:auto}` : '',
-    one('lmdtpos') === 'middle' ? `${CLS('page')}{--mid-ttop:50%;--mid-tbot:auto}` : '',
+    MID_JUSTIFY[one('lmdj')]
+      ? `${CLS('page')}{--mid-j:${MID_JUSTIFY[one('lmdj')]}}`
+      : '',
+    one('lmdtpos') === 'top'
+      ? `${CLS('page')}{--mid-ttop:0px;--mid-tbot:auto}`
+      : '',
+    one('lmdtpos') === 'middle'
+      ? `${CLS('page')}{--mid-ttop:50%;--mid-tbot:auto}`
+      : '',
   ].join('');
 
 /** Energy bar colours: URL key -> CSS variable. Values are 6-digit hex without the `#` (so they are never mistaken for the numeric knobs). */
-export const ENERGY_COLOURS: Record<string, { cssVar: string; label: string; fallback: string; target?: 'page' }> = {
-  lpoc: { cssVar: '--po-c', label: 'All three (base colour)', fallback: '5fd16a', target: 'page' },
-  lpoac: { cssVar: '--po-ac', label: 'Global / spell area', fallback: '5fd16a', target: 'page' },
-  lpoahc: { cssVar: '--po-ahc', label: 'Global / spell area, hovered', fallback: '5fd16a', target: 'page' },
-  lpozc: { cssVar: '--po-zc', label: 'Minion zone', fallback: '5fd16a', target: 'page' },
-  lpozhc: { cssVar: '--po-zhc', label: 'Minion zone, hovered', fallback: '5fd16a', target: 'page' },
-  lpogc: { cssVar: '--po-gc', label: 'Landing gap', fallback: '5fd16a', target: 'page' },
-  lpgcb: { cssVar: '--bg-base', label: 'Page base (behind the vignette)', fallback: '14161c', target: 'page' },
-  lpgc1: { cssVar: '--bg-c1', label: 'Backdrop centre', fallback: '24454a', target: 'page' },
-  lpgc2: { cssVar: '--bg-c2', label: 'Backdrop middle', fallback: '162a31', target: 'page' },
-  lpgc3: { cssVar: '--bg-c3', label: 'Backdrop edge', fallback: '0a1015', target: 'page' },
-  lflc: { cssVar: '--felt-tint', label: 'Felt tint', fallback: '081216', target: 'page' },
-  lflgc: { cssVar: '--felt-glow', label: 'Felt centre glow', fallback: '509696', target: 'page' },
-  lflrc: { cssVar: '--felt-rim', label: 'Felt rim', fallback: 'ffffff', target: 'page' },
-  lmdlc: { cssVar: '--mid-lc', label: 'Lines', fallback: 'afa18c', target: 'page' },
-  lmdtc: { cssVar: '--mid-tc', label: 'Middle text', fallback: '372810', target: 'page' },
-  lmdkc: { cssVar: '--mid-kc', label: 'Clock', fallback: 'cfd6e6', target: 'page' },
-  lmdkl: { cssVar: '--mid-kl', label: 'Clock, last 10 s', fallback: 'ff7d7d', target: 'page' },
-  lmdbc: { cssVar: '--mid-bc', label: 'End turn: fill', fallback: '3b6fd4', target: 'page' },
-  lmdbb: { cssVar: '--mid-bb', label: 'End turn: border', fallback: '5a8cf0', target: 'page' },
-  lmdbt: { cssVar: '--mid-bt', label: 'End turn: text', fallback: 'e8e8ee', target: 'page' },
-  lmdtfc: { cssVar: '--mid-tfc', label: 'Timer bar: fill', fallback: '5fd16a', target: 'page' },
-  lmdtlc: { cssVar: '--mid-tlc', label: 'Timer bar: fill, last 10 s', fallback: 'ff7d7d', target: 'page' },
-  lmdttc: { cssVar: '--mid-ttc', label: 'Timer bar: track', fallback: '000000', target: 'page' },
-  lenlc: { cssVar: '--end-lc', label: 'Loss: banner colour', fallback: 'ff7b7b', target: 'page' },
-  lenbc: { cssVar: '--end-bc', label: 'Win: banner colour', fallback: 'ffd45e', target: 'page' },
+export const ENERGY_COLOURS: Record<
+  string,
+  { cssVar: string; label: string; fallback: string; target?: 'page' }
+> = {
+  lpoc: {
+    cssVar: '--po-c',
+    label: 'All three (base colour)',
+    fallback: '5fd16a',
+    target: 'page',
+  },
+  lpoac: {
+    cssVar: '--po-ac',
+    label: 'Global / spell area',
+    fallback: '5fd16a',
+    target: 'page',
+  },
+  lpoahc: {
+    cssVar: '--po-ahc',
+    label: 'Global / spell area, hovered',
+    fallback: '5fd16a',
+    target: 'page',
+  },
+  lpozc: {
+    cssVar: '--po-zc',
+    label: 'Minion zone',
+    fallback: '5fd16a',
+    target: 'page',
+  },
+  lpozhc: {
+    cssVar: '--po-zhc',
+    label: 'Minion zone, hovered',
+    fallback: '5fd16a',
+    target: 'page',
+  },
+  lpogc: {
+    cssVar: '--po-gc',
+    label: 'Landing gap',
+    fallback: '5fd16a',
+    target: 'page',
+  },
+  lpgcb: {
+    cssVar: '--bg-base',
+    label: 'Page base (behind the vignette)',
+    fallback: '14161c',
+    target: 'page',
+  },
+  lpgc1: {
+    cssVar: '--bg-c1',
+    label: 'Backdrop centre',
+    fallback: '24454a',
+    target: 'page',
+  },
+  lpgc2: {
+    cssVar: '--bg-c2',
+    label: 'Backdrop middle',
+    fallback: '162a31',
+    target: 'page',
+  },
+  lpgc3: {
+    cssVar: '--bg-c3',
+    label: 'Backdrop edge',
+    fallback: '0a1015',
+    target: 'page',
+  },
+  lflc: {
+    cssVar: '--felt-tint',
+    label: 'Felt tint',
+    fallback: '081216',
+    target: 'page',
+  },
+  lflgc: {
+    cssVar: '--felt-glow',
+    label: 'Felt centre glow',
+    fallback: '509696',
+    target: 'page',
+  },
+  lflrc: {
+    cssVar: '--felt-rim',
+    label: 'Felt rim',
+    fallback: 'ffffff',
+    target: 'page',
+  },
+  lmdlc: {
+    cssVar: '--mid-lc',
+    label: 'Lines',
+    fallback: 'afa18c',
+    target: 'page',
+  },
+  lmdtc: {
+    cssVar: '--mid-tc',
+    label: 'Middle text',
+    fallback: '372810',
+    target: 'page',
+  },
+  lmdkc: {
+    cssVar: '--mid-kc',
+    label: 'Clock',
+    fallback: 'cfd6e6',
+    target: 'page',
+  },
+  lmdkl: {
+    cssVar: '--mid-kl',
+    label: 'Clock, last 10 s',
+    fallback: 'ff7d7d',
+    target: 'page',
+  },
+  lmdbc: {
+    cssVar: '--mid-bc',
+    label: 'End turn: fill',
+    fallback: '3b6fd4',
+    target: 'page',
+  },
+  lmdbb: {
+    cssVar: '--mid-bb',
+    label: 'End turn: border',
+    fallback: '5a8cf0',
+    target: 'page',
+  },
+  lmdbt: {
+    cssVar: '--mid-bt',
+    label: 'End turn: text',
+    fallback: 'e8e8ee',
+    target: 'page',
+  },
+  lmdtfc: {
+    cssVar: '--mid-tfc',
+    label: 'Timer bar: fill',
+    fallback: '5fd16a',
+    target: 'page',
+  },
+  lmdtlc: {
+    cssVar: '--mid-tlc',
+    label: 'Timer bar: fill, last 10 s',
+    fallback: 'ff7d7d',
+    target: 'page',
+  },
+  lmdttc: {
+    cssVar: '--mid-ttc',
+    label: 'Timer bar: track',
+    fallback: '000000',
+    target: 'page',
+  },
+  lenlc: {
+    cssVar: '--end-lc',
+    label: 'Loss: banner colour',
+    fallback: 'ff7b7b',
+    target: 'page',
+  },
+  lenbc: {
+    cssVar: '--end-bc',
+    label: 'Win: banner colour',
+    fallback: 'ffd45e',
+    target: 'page',
+  },
   lecr: { cssVar: '--en', label: 'Orbs (and number)', fallback: '4aa3ff' },
   lecb: { cssVar: '--en-bonus', label: 'Bonus orbs', fallback: 'ffd45e' },
-  lecn: { cssVar: '--en-text', label: 'Number (overrides orbs)', fallback: '4aa3ff' },
+  lecn: {
+    cssVar: '--en-text',
+    label: 'Number (overrides orbs)',
+    fallback: '4aa3ff',
+  },
 };
 const energyColourCss = (one: (k: string) => string) =>
   Object.entries(ENERGY_COLOURS)
     .filter(([k]) => /^[0-9a-f]{6}$/i.test(one(k)))
-    .map(([k, c]) => `${c.target === 'page' ? CLS('page') : BAR}{${c.cssVar}:#${one(k)}}`)
+    .map(
+      ([k, c]) =>
+        `${c.target === 'page' ? CLS('page') : BAR}{${c.cssVar}:#${one(k)}}`,
+    )
     .join('');
 
 /** The landing gap's opening easing (`lpoge`): a named choice, not a number. */
@@ -292,7 +724,10 @@ export const GAP_EASINGS: Record<string, string> = {
   spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
   snap: 'steps(4, end)',
 };
-const gapEasingCss = (one: (k: string) => string) => (GAP_EASINGS[one('lpoge')] ? `${CLS('page')}{--po-ge:${GAP_EASINGS[one('lpoge')]}}` : '');
+const gapEasingCss = (one: (k: string) => string) =>
+  GAP_EASINGS[one('lpoge')]
+    ? `${CLS('page')}{--po-ge:${GAP_EASINGS[one('lpoge')]}}`
+    : '';
 
 /** The layout /play uses: the lab's "wip" preset, layout knobs only (no setup params). A `?l...` param in the /play URL overrides one. */
 export const PLAY_LAYOUT: Record<string, string> = {
@@ -433,7 +868,10 @@ export const PLAY_LAYOUT: Record<string, string> = {
 const backgroundCss = (one: (k: string) => string): string => {
   const file = one('lbgf');
   if (!/^\/[\w./-]+$/.test(file)) return '';
-  const dark = Math.min(1, Math.max(0, one('lbgd') === '' ? 0 : +one('lbgd') || 0));
+  const dark = Math.min(
+    1,
+    Math.max(0, one('lbgd') === '' ? 0 : +one('lbgd') || 0),
+  );
   const x = one('lbgx') === '' ? 50 : +one('lbgx') || 0;
   const y = one('lbgy') === '' ? 50 : +one('lbgy') || 0;
   const tile = one('lbgm') === 'tile';
@@ -446,7 +884,9 @@ const backgroundCss = (one: (k: string) => string): string => {
 };
 
 /** The CSS for a set of layout params (values are strings, as in a URL query). */
-export const buildLayoutCss = (q: Record<string, string | undefined>): string => {
+export const buildLayoutCss = (
+  q: Record<string, string | undefined>,
+): string => {
   const one = (k: string) => q[k] ?? '';
   const preset = one('lpan');
   const split = Math.min(85, Math.max(15, +one('lsplit') || 50)) / 100;
@@ -465,26 +905,31 @@ export const buildLayoutCss = (q: Record<string, string | undefined>): string =>
       `${CLS('deckView')}{${stackSide(preset === 'joinL')};top:calc(1rem + ${col} * ${cut} + var(--sb-d,12px) / 2) !important;bottom:auto !important;height:calc(${col} * (1 - ${cut}) - var(--sb-d,12px) / 2) !important;width:var(--sb-w,242px) !important;--lab-x:${sbx}px !important;--lab-y:${sby}px !important}` +
       `${CLS('sideDivider')}{display:flex !important;${stackSide(preset === 'joinL')};top:calc(1rem + ${col} * ${cut} - var(--sb-d,12px) / 2) !important;width:var(--sb-w,242px) !important;height:var(--sb-d,12px) !important;translate:${sbx}px ${sby}px !important}`
     : '';
-  const panelCss =
-    join
-      ? joinCss
-      : preset === 'swap'
+  const panelCss = join
+    ? joinCss
+    : preset === 'swap'
       ? `${CLS('log')}{left:auto !important;right:1rem !important}${CLS('deckView')}{right:auto !important;left:1rem !important}`
       : preset === 'stackL' || preset === 'stackR'
         ? `${CLS('log')}{${stackSide(preset === 'stackL')};top:1rem !important;bottom:auto !important;height:calc((100vh - 3rem) * ${split}) !important}` +
           `${CLS('deckView')}{${stackSide(preset === 'stackL')};top:calc(1rem + (100vh - 3rem) * ${split} + 1rem) !important;bottom:1rem !important;height:auto !important}`
         : '';
   // Offsets (hero figures and panels) ride on --lab-x / --lab-y so X and Y can be set separately.
-  const offsetCss = [CLS('figMe'), CLS('figFoe'), CLS('log'), CLS('deckView'), BAR]
-    .map((s) => `${s}{translate:var(--lab-x,0px) var(--lab-y,0px) !important}`)
-    .join('') + `${CLS('figSlotRing')}{translate:var(--ring-x,0px) var(--ring-y,0px) !important}`;
+  const offsetCss =
+    [CLS('figMe'), CLS('figFoe'), CLS('log'), CLS('deckView'), BAR]
+      .map(
+        (s) => `${s}{translate:var(--lab-x,0px) var(--lab-y,0px) !important}`,
+      )
+      .join('') +
+    `${CLS('figSlotRing')}{translate:var(--ring-x,0px) var(--ring-y,0px) !important}`;
   // The clicked card's size. `lpv` previews it on the first card in hand without clicking.
   const sel = Math.min(3, Math.max(1, +one('lsel') || 2));
   const selTransform = `transform:translate(var(--x),calc(var(--y-comp) + (${-(110 * sel + 5)}px + var(--hand-sink)) * var(--zoom))) rotate(0deg) scale(calc(${sel} * var(--zoom))) !important`;
   const slotSel = `${CLS('handSlot')}${CLS('slotSelected')}`;
   const selCss =
     (one('lsel') ? `${slotSel},${slotSel}:hover{${selTransform}}` : '') +
-    (one('lpv') ? `${CLS('handSlot')}:nth-child(1){${selTransform};z-index:20 !important;filter:drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e) !important}` : '');
+    (one('lpv')
+      ? `${CLS('handSlot')}:nth-child(1){${selTransform};z-index:20 !important;filter:drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e) !important}`
+      : '');
   // `lmpv` previews a clicked minion on your first one, with the same gold ring the real selection has.
   const minionPreviewCss = one('lmpv')
     ? `${MY_FIRST}{transform:translateY(calc(var(--sel-lift,14px) * -1)) scale(var(--sel-scale,1.08)) !important}` +
@@ -506,8 +951,12 @@ export const buildLayoutCss = (q: Record<string, string | undefined>): string =>
       // The connected sidebar has one width (`lsbw`); the separate log and deck widths would win over it (same weight, later), so they sit out.
       .filter((k) => !(join && (k === 'lgw' || k === 'ldw')))
       .map((k) => CSS_FNS[k](+one(k))),
-    one('lfs') === 'right' ? `${CLS('figSlot')}{left:auto !important;right:0.5rem !important}` : '',
+    one('lfs') === 'right'
+      ? `${CLS('figSlot')}{left:auto !important;right:0.5rem !important}`
+      : '',
     backgroundCss(one),
-    one('lfelt') === '0' ? `${CLS('table')}::before{display:none !important}` : '',
+    one('lfelt') === '0'
+      ? `${CLS('table')}::before{display:none !important}`
+      : '',
   ].join('\n');
 };

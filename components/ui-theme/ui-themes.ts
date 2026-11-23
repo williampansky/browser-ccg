@@ -19,14 +19,31 @@ export interface UiTheme {
 
 /** The first one is the default, and is what a server render and an unknown stored value use. */
 export const UI_THEMES: UiTheme[] = [
-  { id: 'classic', label: 'Classic', blurb: 'The look the site had before themes: flat slate blue, no art, no sounds.' },
-  { id: 'emberhold', label: 'Emberhold', blurb: 'Dark fantasy: gold-trimmed panels and buttons from the Emberhold kit, with its sounds.', sfx: 'emberhold' },
-  { id: 'frostforged', label: 'Frostforged', blurb: 'The same kit in steel and ice, with the same sounds.', sfx: 'emberhold' },
+  {
+    id: 'classic',
+    label: 'Classic',
+    blurb:
+      'The look the site had before themes: flat slate blue, no art, no sounds.',
+  },
+  {
+    id: 'emberhold',
+    label: 'Emberhold',
+    blurb:
+      'Dark fantasy: gold-trimmed panels and buttons from the Emberhold kit, with its sounds.',
+    sfx: 'emberhold',
+  },
+  {
+    id: 'frostforged',
+    label: 'Frostforged',
+    blurb: 'The same kit in steel and ice, with the same sounds.',
+    sfx: 'emberhold',
+  },
 ];
 
 export const DEFAULT_UI_THEME = UI_THEMES[0].id;
 
-export const uiThemeOf = (id: unknown): UiTheme => UI_THEMES.find((t) => t.id === id) ?? UI_THEMES[0];
+export const uiThemeOf = (id: unknown): UiTheme =>
+  UI_THEMES.find((t) => t.id === id) ?? UI_THEMES[0];
 
 export const KEY = 'ccg.uiTheme.v1';
 /** A page can force a theme for a quick comparison: `/play?ui=frostforged`. It is saved like a pick. */
@@ -49,7 +66,8 @@ export const themeFromSearch = (search: string): string | undefined => {
 
 /** Sets the theme on `<html>` (no storage). */
 export const applyUiTheme = (id: string): void => {
-  if (typeof document !== 'undefined') document.documentElement.setAttribute('data-ui-theme', uiThemeOf(id).id);
+  if (typeof document !== 'undefined')
+    document.documentElement.setAttribute('data-ui-theme', uiThemeOf(id).id);
 };
 
 /** Saves, applies and announces a pick. */
@@ -69,5 +87,5 @@ export const setUiTheme = (id: string): void => {
  * (a test compares it with them).
  */
 export const NO_FLASH_SCRIPT = `(function(){try{var q=new URLSearchParams(location.search).get('${URL_PARAM}');var ids=${JSON.stringify(
-  UI_THEMES.map((t) => t.id)
+  UI_THEMES.map((t) => t.id),
 )};var s=localStorage.getItem('${KEY}');var t=ids.indexOf(q)>=0?q:ids.indexOf(s)>=0?s:ids[0];if(ids.indexOf(q)>=0)localStorage.setItem('${KEY}',q);document.documentElement.setAttribute('data-ui-theme',t)}catch(e){}})()`;

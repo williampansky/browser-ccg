@@ -12,10 +12,14 @@ export type TargetSource =
   | { kind: 'card'; handIndex: number; choice?: number };
 
 export const sameTarget = (a: TargetRef, b: TargetRef): boolean =>
-  a.kind === 'hero' ? b.kind === 'hero' && a.player === b.player : b.kind === 'minion' && a.instanceId === b.instanceId;
+  a.kind === 'hero'
+    ? b.kind === 'hero' && a.player === b.player
+    : b.kind === 'minion' && a.instanceId === b.instanceId;
 
-export const isLegalTarget = (legal: TargetRef[], target: TargetRef | undefined): boolean =>
-  !!target && legal.some((t) => sameTarget(t, target));
+export const isLegalTarget = (
+  legal: TargetRef[],
+  target: TargetRef | undefined,
+): boolean => !!target && legal.some((t) => sameTarget(t, target));
 
 /** Every visible character: both heroes and all minions that are not hidden. */
 const visibleCharacters = (state: GameState): TargetRef[] => {
@@ -23,7 +27,8 @@ const visibleCharacters = (state: GameState): TargetRef[] => {
   for (const player of ['0', '1'] as PlayerId[]) {
     out.push({ kind: 'hero', player });
     for (const m of state.players[player].board) {
-      if (!m.keywords.hidden) out.push({ kind: 'minion', instanceId: m.instanceId });
+      if (!m.keywords.hidden)
+        out.push({ kind: 'minion', instanceId: m.instanceId });
     }
   }
   return out;
@@ -38,32 +43,51 @@ export const legalTargets = (
   state: GameState,
   source: TargetSource,
   catalog?: CardCatalog,
-  defs: DefLookup = getCardDef
+  defs: DefLookup = getCardDef,
 ): TargetRef[] => {
   const me = state.activePlayer;
   if (source.kind === 'attack' || source.kind === 'weapon') {
     const foe = opponentOf(me);
     const minions = state.players[foe].board.filter((m) => !m.keywords.hidden);
     const guards = minions.filter((m) => m.keywords.guard);
-    if (guards.length > 0) return guards.map((m) => ({ kind: 'minion', instanceId: m.instanceId }));
-    return [...minions.map((m): TargetRef => ({ kind: 'minion', instanceId: m.instanceId })), { kind: 'hero', player: foe }];
+    if (guards.length > 0)
+      return guards.map((m) => ({ kind: 'minion', instanceId: m.instanceId }));
+    return [
+      ...minions.map((m): TargetRef => ({
+        kind: 'minion',
+        instanceId: m.instanceId,
+      })),
+      { kind: 'hero', player: foe },
+    ];
   }
   if (source.kind === 'skill') {
     const filter = heroSkill(state.players[me].hero?.id, source.skill)?.target;
-    return filter ? visibleCharacters(state).filter((candidate) => filter({ state, caster: me, candidate, catalog })) : [];
+    return filter
+      ? visibleCharacters(state).filter((candidate) =>
+          filter({ state, caster: me, candidate, catalog }),
+        )
+      : [];
   }
   const inHand = state.players[me].hand[source.handIndex];
   const card = inHand && catalog?.get(inHand.cardId);
   const def = card ? defs(card) : undefined;
-  const filter = def?.choices ? def.choices[source.choice ?? -1]?.target : def?.target;
+  const filter = def?.choices
+    ? def.choices[source.choice ?? -1]?.target
+    : def?.target;
   if (!filter) return [];
   // "Can't be targeted by spells or items": hidden from a spell or item's aim, never from an On Play effect or an attack.
   const aimedBySpell = card?.type === 'spell' || card?.type === 'item';
   const untargetable = (t: TargetRef): boolean => {
     if (!aimedBySpell || t.kind !== 'minion' || !catalog) return false;
-    const m = [...state.players['0'].board, ...state.players['1'].board].find((x) => x.instanceId === t.instanceId);
+    const m = [...state.players['0'].board, ...state.players['1'].board].find(
+      (x) => x.instanceId === t.instanceId,
+    );
     const c = m && catalog.get(m.cardId);
     return !!m && !m.silenced && !!c && !!defs(c)?.untargetable;
   };
-  return visibleCharacters(state).filter((candidate) => !untargetable(candidate) && filter({ state, caster: me, candidate, catalog }));
+  return visibleCharacters(state).filter(
+    (candidate) =>
+      !untargetable(candidate) &&
+      filter({ state, caster: me, candidate, catalog }),
+  );
 };

@@ -34,13 +34,15 @@
 
   @keyframes targeting-ripple-buff {
     0% {
-      box-shadow: 0 1px 5px var(--box-shadow-can-be-buffed-color-ripple),
+      box-shadow:
+        0 1px 5px var(--box-shadow-can-be-buffed-color-ripple),
         0 0 0 0 var(--box-shadow-can-be-buffed-color-ripple),
         0 0 0 2.5px var(--box-shadow-can-be-buffed-color-ripple),
         0 0 0 5px var(--box-shadow-can-be-buffed-color-ripple);
     }
     100% {
-      box-shadow: 0 1px 5px var(--box-shadow-can-be-buffed-color-ripple),
+      box-shadow:
+        0 1px 5px var(--box-shadow-can-be-buffed-color-ripple),
         0 0 0 2.5px var(--box-shadow-can-be-buffed-color-ripple),
         0 0 0 5px var(--box-shadow-can-be-buffed-color-ripple),
         0 0 0 20px rgba(0, 0, 0, 0);

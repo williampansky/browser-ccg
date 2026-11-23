@@ -10,8 +10,14 @@ export default defineCard('PRIME_104', (n) => ({
       when: (e, c) => e.player === c.owner,
       do: [
         computed((ctx) => {
-          const attacked = ctx.self !== undefined && (findMinion(ctx.g, ctx.self)?.minion.attacksThisTurn ?? 0) > 0;
-          return buff(self(), attacked ? n.primary : -n.primary, attacked ? n.primary : -n.primary);
+          const attacked =
+            ctx.self !== undefined &&
+            (findMinion(ctx.g, ctx.self)?.minion.attacksThisTurn ?? 0) > 0;
+          return buff(
+            self(),
+            attacked ? n.primary : -n.primary,
+            attacked ? n.primary : -n.primary,
+          );
         }),
       ],
     }),

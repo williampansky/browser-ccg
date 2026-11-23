@@ -52,7 +52,9 @@
     margin: 0.5rem auto 0;
     max-width: calc(var(--card-width) - 10px);
 
-    & > p { margin: 0; }
+    & > p {
+      margin: 0;
+    }
     & > p:nth-child(2) {
       font-size: 70%;
       margin-left: 1px;

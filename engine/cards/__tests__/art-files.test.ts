@@ -8,9 +8,12 @@ import entourage from '../../../data/entourage.json';
 // SET_CORE kept `-DECK` / `-MINION` images (and some token art) from the old zone game, which showed a different card than the `-CARD` art.
 // The `-MINION` images there now are new ones, named without the set prefix like PRIME's. The board still draws minions from `-CARD`.
 
-const dir = (set: string) => path.join(__dirname, '../../../public/images/sets', set);
-const files = (set: string) => fs.readdirSync(dir(set)).filter((f) => !f.startsWith('.')); // Finder's .DS_Store is not art
-const ids = (rows: { id: string }[], prefix: string) => rows.map((r) => r.id).filter((id) => id.startsWith(prefix));
+const dir = (set: string) =>
+  path.join(__dirname, '../../../public/images/sets', set);
+const files = (set: string) =>
+  fs.readdirSync(dir(set)).filter((f) => !f.startsWith('.')); // Finder's .DS_Store is not art
+const ids = (rows: { id: string }[], prefix: string) =>
+  rows.map((r) => r.id).filter((id) => id.startsWith(prefix));
 
 describe('SET_CORE art', () => {
   const coreIds = ids(core as { id: string }[], 'CORE_');
@@ -20,16 +23,26 @@ describe('SET_CORE art', () => {
   it('every CORE card has its -CARD art and its -DECK strip', () => {
     for (const id of coreIds) {
       const n = id.slice('CORE_'.length);
-      expect([id, have.has(`${n}-CARD.jpg`), have.has(`${n}-DECK.jpg`)]).toEqual([id, true, true]);
+      expect([
+        id,
+        have.has(`${n}-CARD.jpg`),
+        have.has(`${n}-DECK.jpg`),
+      ]).toEqual([id, true, true]);
     }
   });
   it('has no file for a card that is not in the data (old zone-game leftovers)', () => {
     const known = new Set([...coreIds, ...tokenIds]);
-    const strays = Array.from(have).filter((f) => !known.has(`CORE_${f.split('-')[0]}`));
+    const strays = Array.from(have).filter(
+      (f) => !known.has(`CORE_${f.split('-')[0]}`),
+    );
     expect(strays).toEqual([]);
   });
   it('names -MINION images like the other art (`012a-MINION.jpg`, no CORE_ prefix)', () => {
-    expect(Array.from(have).filter((f) => f.endsWith('-MINION.jpg') && f.startsWith('CORE_'))).toEqual([]);
+    expect(
+      Array.from(have).filter(
+        (f) => f.endsWith('-MINION.jpg') && f.startsWith('CORE_'),
+      ),
+    ).toEqual([]);
   });
 });
 
@@ -38,10 +51,20 @@ describe('SET_PRIME art', () => {
     const have = new Set(files('SET_PRIME'));
     // PRIME_212 has no art yet (the board shows the placeholder); anything else missing is a mistake.
     const noArtYet = ['PRIME_212'];
-    for (const c of (prime as { id: string; name?: string; active?: boolean }[]).filter((c) => c.name && c.active && !noArtYet.includes(c.id))) {
-      expect([c.id, have.has(`${c.id.slice('PRIME_'.length)}-CARD.jpg`)]).toEqual([c.id, true]);
+    for (const c of (
+      prime as { id: string; name?: string; active?: boolean }[]
+    ).filter((c) => c.name && c.active && !noArtYet.includes(c.id))) {
+      expect([
+        c.id,
+        have.has(`${c.id.slice('PRIME_'.length)}-CARD.jpg`),
+      ]).toEqual([c.id, true]);
     }
-    const known = new Set([...ids(prime as { id: string }[], 'PRIME_'), ...ids(entourage as { id: string }[], 'PRIME_')]);
-    expect(Array.from(have).filter((f) => !known.has(`PRIME_${f.split('-')[0]}`))).toEqual([]);
+    const known = new Set([
+      ...ids(prime as { id: string }[], 'PRIME_'),
+      ...ids(entourage as { id: string }[], 'PRIME_'),
+    ]);
+    expect(
+      Array.from(have).filter((f) => !known.has(`PRIME_${f.split('-')[0]}`)),
+    ).toEqual([]);
   });
 });

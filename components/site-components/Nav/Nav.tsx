@@ -4,7 +4,7 @@ import { siteConfig } from '../../../app.config';
 const { pages } = siteConfig;
 
 export const Nav = () => (
-  <nav className='site__nav'>
+  <nav className="site__nav">
     <ul>
       {Object.entries(pages).map((p, i: number) => {
         const key = p[0];

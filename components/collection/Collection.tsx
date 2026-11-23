@@ -1,7 +1,13 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
-import { classPool, heroes, loadHsCards, playablePool, primePool } from '../../engine';
+import {
+  classPool,
+  heroes,
+  loadHsCards,
+  playablePool,
+  primePool,
+} from '../../engine';
 import { CardDetailOverlay } from '../card-detail/CardDetailOverlay';
 import { CollectionCard } from './CollectionCard';
 import {
@@ -38,7 +44,9 @@ const corePool = playablePool(cards);
 const prime = primePool(cards);
 const pool = [...corePool, ...prime, ...classPool(cards)];
 /** Entourage cards (summoned and offered tokens; an inactive row is left out). Shown only when the box is ticked; the Core/Prime set filter applies to them too (by the set in their id). */
-const tokenPool = Array.from(byId.values()).filter((c) => c.isToken && c.active && c.name);
+const tokenPool = Array.from(byId.values()).filter(
+  (c) => c.isToken && c.active && c.name,
+);
 const effects = effectOptions(pool);
 const races = raceOptions(pool);
 
@@ -53,7 +61,10 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
   const [sort, setSort] = useState<SortKey>('cost');
   const [size, setSize] = useState<SizeId>('medium');
   const [viewing, setViewing] = useState<string | null>(null);
-  const set = <K extends keyof CollectionFilters>(key: K, value: CollectionFilters[K]) => setFilters((f) => ({ ...f, [key]: value }));
+  const set = <K extends keyof CollectionFilters>(
+    key: K,
+    value: CollectionFilters[K],
+  ) => setFilters((f) => ({ ...f, [key]: value }));
 
   // The filters live in the URL (?q=...&type=spell) so a refresh or a shared link keeps them. Read once the router knows
   // the query (a static page has none on the first render), then written back on every change.
@@ -70,8 +81,18 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
   }, [router.isReady, router.query, urlRead]);
   useEffect(() => {
     if (!urlRead) return;
-    const next = new URLSearchParams(toQuery(filters, sort, art, showTokens)).toString();
-    if (next !== window.location.search.replace(/^\?/, '')) router.replace({ pathname: router.pathname, query: toQuery(filters, sort, art, showTokens) }, undefined, { shallow: true, scroll: false });
+    const next = new URLSearchParams(
+      toQuery(filters, sort, art, showTokens),
+    ).toString();
+    if (next !== window.location.search.replace(/^\?/, ''))
+      router.replace(
+        {
+          pathname: router.pathname,
+          query: toQuery(filters, sort, art, showTokens),
+        },
+        undefined,
+        { shallow: true, scroll: false },
+      );
   }, [filters, sort, art, showTokens, urlRead]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // The saved size is read after the first render (it lives in localStorage, which the server does not have).
@@ -81,8 +102,17 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
     saveSize(id);
   };
 
-
-  const shown = useMemo(() => sortCards([...filterCards(pool, filters), ...(showTokens ? filterCards(tokenPool, filters) : [])], sort).filter((c) => !debug || matchesArt(c, art, missing)), [filters, sort, art, showTokens, debug, missing]);
+  const shown = useMemo(
+    () =>
+      sortCards(
+        [
+          ...filterCards(pool, filters),
+          ...(showTokens ? filterCards(tokenPool, filters) : []),
+        ],
+        sort,
+      ).filter((c) => !debug || matchesArt(c, art, missing)),
+    [filters, sort, art, showTokens, debug, missing],
+  );
   const cardWidth = sizeOf(size).width;
   const open = viewing ? byId.get(viewing) : undefined;
 
@@ -90,22 +120,48 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
     <div className={styles.page}>
       <section className={styles.pool}>
         <div className={`${styles.filters} ui-controls`}>
-          <TextInput type="search" placeholder="Search name, id or text" aria-label="Search" value={filters.search} onChange={(e) => set('search', e.target.value)} />
-          <Select value={filters.set} onChange={(e) => set('set', e.target.value as CollectionFilters['set'])} aria-label="Card set">
+          <TextInput
+            type="search"
+            placeholder="Search name, id or text"
+            aria-label="Search"
+            value={filters.search}
+            onChange={(e) => set('search', e.target.value)}
+          />
+          <Select
+            value={filters.set}
+            onChange={(e) =>
+              set('set', e.target.value as CollectionFilters['set'])
+            }
+            aria-label="Card set"
+          >
             {SETS.map((s) => (
               <option key={s} value={s}>
-                {s === 'both' ? 'Core + Prime' : s === 'core' ? `Core (${corePool.length})` : `Prime (${prime.length}, more coming)`}
+                {s === 'both'
+                  ? 'Core + Prime'
+                  : s === 'core'
+                    ? `Core (${corePool.length})`
+                    : `Prime (${prime.length}, more coming)`}
               </option>
             ))}
           </Select>
-          <Select value={filters.type} onChange={(e) => set('type', e.target.value as CollectionFilters['type'])} aria-label="Card type">
+          <Select
+            value={filters.type}
+            onChange={(e) =>
+              set('type', e.target.value as CollectionFilters['type'])
+            }
+            aria-label="Card type"
+          >
             {TYPES.map((t) => (
               <option key={t} value={t}>
                 {t === 'all' ? 'All types' : t}
               </option>
             ))}
           </Select>
-          <Select value={filters.rarity} onChange={(e) => set('rarity', e.target.value)} aria-label="Rarity">
+          <Select
+            value={filters.rarity}
+            onChange={(e) => set('rarity', e.target.value)}
+            aria-label="Rarity"
+          >
             <option value="all">All rarities</option>
             {RARITIES.map((r) => (
               <option key={r.id} value={r.id}>
@@ -113,7 +169,11 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
               </option>
             ))}
           </Select>
-          <Select value={filters.race} onChange={(e) => set('race', e.target.value)} aria-label="Minion race">
+          <Select
+            value={filters.race}
+            onChange={(e) => set('race', e.target.value)}
+            aria-label="Minion race"
+          >
             <option value="all">All races</option>
             {races.map((r) => (
               <option key={r.value} value={r.value}>
@@ -121,7 +181,11 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
               </option>
             ))}
           </Select>
-          <Select value={filters.hero} onChange={(e) => set('hero', e.target.value)} aria-label="Class">
+          <Select
+            value={filters.hero}
+            onChange={(e) => set('hero', e.target.value)}
+            aria-label="Class"
+          >
             <option value="all">All classes</option>
             <option value="neutral">Neutral</option>
             {heroes().map((h) => (
@@ -130,7 +194,11 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
               </option>
             ))}
           </Select>
-          <Select value={filters.effect} onChange={(e) => set('effect', e.target.value)} aria-label="Effect">
+          <Select
+            value={filters.effect}
+            onChange={(e) => set('effect', e.target.value)}
+            aria-label="Effect"
+          >
             <option value="all">Any effect</option>
             {effects.map((x) => (
               <option key={x.value} value={x.value}>
@@ -140,19 +208,41 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
           </Select>
         </div>
         <div className={`${styles.filters} ui-controls`}>
-          <SegmentedControl chips ariaLabel="Mana cost" value={filters.cost} onChange={(c) => set('cost', c)} options={COSTS.map((c) => ({ label: c === 'all' ? 'All' : c, value: c }))} />
-          <Select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} aria-label="Sort by">
+          <SegmentedControl
+            chips
+            ariaLabel="Mana cost"
+            value={filters.cost}
+            onChange={(c) => set('cost', c)}
+            options={COSTS.map((c) => ({
+              label: c === 'all' ? 'All' : c,
+              value: c,
+            }))}
+          />
+          <Select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortKey)}
+            aria-label="Sort by"
+          >
             {SORTS.map((s) => (
               <option key={s.id} value={s.id}>
                 Sort: {s.label}
               </option>
             ))}
           </Select>
-          <Checkbox checked={showTokens} onChange={setShowTokens} title="Also show the summoned and offered entourage cards">
+          <Checkbox
+            checked={showTokens}
+            onChange={setShowTokens}
+            title="Also show the summoned and offered entourage cards"
+          >
             Entourage
           </Checkbox>
           {debug && (
-            <Select value={art} onChange={(e) => setArt(e.target.value as ArtFilter)} aria-label="Art status (dev only)" title="Dev only">
+            <Select
+              value={art}
+              onChange={(e) => setArt(e.target.value as ArtFilter)}
+              aria-label="Art status (dev only)"
+              title="Dev only"
+            >
               {ART_FILTERS.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.id === 'all' ? 'Art: any' : a.label}
@@ -171,8 +261,20 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
               Clear filters
             </Button>
           )}
-          <span className={styles.count}>{shown.length === 1 ? '1 card' : `${shown.length} cards`}</span>
-          <SegmentedControl chips ariaLabel="Card size" value={size} onChange={pickSize} options={SIZES.map((s) => ({ label: s.label, value: s.id, title: `${s.label} cards` }))} />
+          <span className={styles.count}>
+            {shown.length === 1 ? '1 card' : `${shown.length} cards`}
+          </span>
+          <SegmentedControl
+            chips
+            ariaLabel="Card size"
+            value={size}
+            onChange={pickSize}
+            options={SIZES.map((s) => ({
+              label: s.label,
+              value: s.id,
+              title: `${s.label} cards`,
+            }))}
+          />
           <Link href="/deckbuilder">
             <a>Deck builder</a>
           </Link>
@@ -180,17 +282,35 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
             <a>Heroes</a>
           </Link>
         </div>
-        <div className={gridStyles.grid} style={{ gridTemplateColumns: `repeat(auto-fill, ${cardWidth}px)`, ['--card-w' as string]: `${cardWidth}px` } as React.CSSProperties}>
+        <div
+          className={gridStyles.grid}
+          style={
+            {
+              gridTemplateColumns: `repeat(auto-fill, ${cardWidth}px)`,
+              ['--card-w' as string]: `${cardWidth}px`,
+            } as React.CSSProperties
+          }
+        >
           {shown.map((c) => (
             <div key={c.id} className={styles.cardWrap}>
-              <CollectionCard card={c} width={cardWidth} onOpen={() => setViewing(c.id)} />
+              <CollectionCard
+                card={c}
+                width={cardWidth}
+                onOpen={() => setViewing(c.id)}
+              />
             </div>
           ))}
           {shown.length === 0 && <p>No card matches.</p>}
         </div>
       </section>
 
-      {open && <CardDetailOverlay card={open} byId={byId} onClose={() => setViewing(null)} />}
+      {open && (
+        <CardDetailOverlay
+          card={open}
+          byId={byId}
+          onClose={() => setViewing(null)}
+        />
+      )}
     </div>
   );
 };

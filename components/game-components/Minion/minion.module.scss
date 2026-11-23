@@ -1,7 +1,11 @@
 $bs-color1: rgba(0, 0, 0, 0.925);
 $bs-color2: rgba(0, 0, 0, 0.465);
-$bs-default: 0 0 1.5px $bs-color1, 0 0 10px $bs-color2;
-$bs-default-hover: 0 0 4px $bs-color1, 0 0 35px $bs-color2;
+$bs-default:
+  0 0 1.5px $bs-color1,
+  0 0 10px $bs-color2;
+$bs-default-hover:
+  0 0 4px $bs-color1,
+  0 0 35px $bs-color2;
 
 .minion {
   animation-duration: 200ms;

@@ -9,7 +9,9 @@ export const INBOX = 'art-inbox';
 export const findMaster = (id: string, root = process.cwd()): string | null => {
   for (const dir of [path.join(root, INBOX), path.join(root, INBOX, 'done')]) {
     if (!fs.existsSync(dir)) continue;
-    const hit = fs.readdirSync(dir).find((f) => parseArtName(f)?.id === canonicalCardId(id));
+    const hit = fs
+      .readdirSync(dir)
+      .find((f) => parseArtName(f)?.id === canonicalCardId(id));
     if (hit) return path.join(dir, hit);
   }
   return null;

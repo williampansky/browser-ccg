@@ -9,7 +9,10 @@ export default defineCard('PRIME_077', () => ({
   target: minionWhere('friendly', (_m, race) => race === 'SPRITE'),
   onPlay: [
     computed((ctx) => {
-      const t = ctx.target?.kind === 'minion' ? findMinion(ctx.g, ctx.target.instanceId)?.minion : undefined;
+      const t =
+        ctx.target?.kind === 'minion'
+          ? findMinion(ctx.g, ctx.target.instanceId)?.minion
+          : undefined;
       return buff(self(), t?.attack ?? 0, t?.health ?? 0);
     }),
     destroy(chosenTarget()),
