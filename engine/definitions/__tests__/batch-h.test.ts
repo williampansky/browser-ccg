@@ -64,7 +64,7 @@ describe('064 Cultist Acolyte grows for every card the OPPONENT plays', () => {
   });
 });
 
-describe('169 and 051: demise with a token', () => {
+describe('169 and 051: On Death effect with a token', () => {
   it('169 gives 5 Armor and a 3/2 Mace when it dies', () => {
     const s = produce(setup('CORE_043', { mine: [[6, 6, 'PRIME_169']] }), (g) => void (g.players['0'].board[0].health = 0));
     const r = play(s).state;
@@ -92,7 +92,7 @@ describe('flags on minions and players', () => {
     const s = setup('PRIME_137', { mine: [[1, 3]] });
     const buffed = play(s, mref(s, '0', 0)).state;
     expect([buffed.players['0'].board[0].attack, buffed.players['0'].board[0].immune]).toEqual([3, true]);
-    const shot = act(give(buffed, '0', 'PRIME_062'), { type: 'PlayCard', handIndex: 0 }); // a 5/8 warcry-damages itself, not it
+    const shot = act(give(buffed, '0', 'PRIME_062'), { type: 'PlayCard', handIndex: 0 }); // a 5/8 On Play effect-damages itself, not it
     expect(stats(shot, '0')[0][1]).toBe(3);
     const wiped = endTurn(buffed);
     expect(wiped.players['0'].board[0].immune).toBeUndefined();
@@ -210,7 +210,7 @@ describe('083 Void Egg', () => {
     const egg = r.players['0'].board[0];
     expect([egg.cardId, egg.attack, egg.health]).toEqual(['PRIME_013', 4, 6]);
     const died = produce(r, (g) => void (g.players['0'].board[0].health = 0));
-    expect(play(give(died, '0', 'CORE_043')).state.players['0'].hand.length).toBe(1); // Ploofer's demise drew a card
+    expect(play(give(died, '0', 'CORE_043')).state.players['0'].hand.length).toBe(1); // Ploofer's On Death effect drew a card
   });
   it('copies Guard and damage too', () => {
     let s = setup('PRIME_083', { theirs: [[2, 5]] });
@@ -232,7 +232,7 @@ describe('252 War and Ruin', () => {
 });
 
 describe('114 Haranna\'s Curse', () => {
-  it('gives your minions a demise that summons a random 2-cost Creature', () => {
+  it('gives your minions an On Death effect that summons a random 2-cost Creature', () => {
     const cursed = play(setup('PRIME_114', { mine: [[1, 1], [1, 1]], theirs: [[1, 1]] })).state;
     expect(cursed.players['0'].board.every((m) => m.deathSummons?.length === 1)).toBe(true);
     expect(cursed.players['1'].board[0].deathSummons).toBeUndefined();

@@ -63,7 +63,7 @@ describe('legalActions', () => {
     const targets = legalActions(s, '0', catalog).filter((a) => a.type === 'PlayCard');
     expect(targets).toHaveLength(3); // both heroes and the enemy minion
   });
-  it('offers a warcry minion with each target, or untargeted when none exists', () => {
+  it('offers an On Play minion with each target, or untargeted when none exists', () => {
     let s = game(1);
     s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [] } } };
     s = setEnergy(putInHand(s, '0', 'CORE_021'), '0', 5); // buff a minion

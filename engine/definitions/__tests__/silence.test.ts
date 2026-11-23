@@ -30,13 +30,13 @@ describe('what Suppress removes', () => {
     s = produce(s, (g) => void (g.players['1'].board[0].disabledOnTurn = 4));
     expect(play(s, mref(s, '1', 0)).state.players['1'].board[0].disabledOnTurn).toBeUndefined();
   });
-  it('removes demise', () => {
+  it('removes On Death effect', () => {
     const s = setup('PRIME_171', { mine: [[1, 1, 'PRIME_013']] });
     const r = produce(play(s, mref(s, '0', 0)).state, (g) => void (g.players['0'].board[0].health = 0));
     // a later action settles the death: end the turn
     expect(endTurn(r).players['0'].hand.length).toBe(r.players['0'].hand.length); // no draw from Ploofer
     const unsilenced = produce(setup('CORE_043', { mine: [[1, 1, 'PRIME_013']] }), (g) => void (g.players['0'].board[0].health = 0));
-    expect(play(unsilenced).state.players['0'].hand.length).toBe(1); // control: the demise does draw
+    expect(play(unsilenced).state.players['0'].hand.length).toBe(1); // control: the On Death effect does draw
   });
   it('removes triggers', () => {
     const s = setup('PRIME_171', { mine: [[1, 1, 'PRIME_141']], hand: ['CORE_043'] });

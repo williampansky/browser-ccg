@@ -995,7 +995,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
 
   const clickTarget = (t: TargetRef) => {
     if (!isAimable(t)) return false;
-    // For a minion with a warcry, prefer the rightmost board position.
+    // For a minion with an On Play effect, prefer the rightmost board position.
     const matching = options.filter((a) => {
       const at = targetOf(a);
       return at && sameTarget(at, t);

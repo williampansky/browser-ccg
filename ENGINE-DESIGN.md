@@ -139,7 +139,7 @@ reproducible. Instance ids come from `nextInstanceId`.
 2. Play minion, board and the 7 limit, summoning sickness, `Attack`, Guard, death settle loop.
 3. Spells: `legalTargets`, damage/heal/draw primitives, targeted and global play.
 4. Keywords: Bubble, Rush, double attack, hidden, no-attack, Disable, Expiration.
-5. Triggers: warcries, events, `legalActions`.
+5. Triggers: On Play effects, events, `legalActions`.
 6. Weapons and armor.
 7. The random-bot invariant test.
 

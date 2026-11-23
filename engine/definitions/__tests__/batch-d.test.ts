@@ -17,7 +17,7 @@ describe('Batch D cards are all defined and playable', () => {
   });
 });
 
-describe('warcries on your own hero or itself', () => {
+describe('On Play effects on your own hero or itself', () => {
   it('PRIME_217 costs you 3 life', () => expect(play(setup('PRIME_217')).state.players['0'].health).toBe(27));
   it('PRIME_062 damages ITSELF for 4 (a 5/4), not your hero', () => {
     const r = play(setup('PRIME_062')).state;
@@ -33,7 +33,7 @@ describe('warcries on your own hero or itself', () => {
   });
 });
 
-describe('targeted warcries and spells', () => {
+describe('targeted On Play effects and spells', () => {
   it('PRIME_101 only aims at an enemy Guard and destroys it', () => {
     const s = setup('PRIME_101', { theirs: [[1, 9], [1, 9]], mine: [[1, 1]] });
     const guarded = { ...s, players: { ...s.players, '1': { ...s.players['1'], board: s.players['1'].board.map((m, i) => (i === 1 ? { ...m, keywords: { ...m.keywords, guard: true } } : m)) } } };
@@ -82,7 +82,7 @@ describe('board spells', () => {
   });
 });
 
-describe('demise', () => {
+describe('On Death effect', () => {
   const kill = (id: string, extra = {}) => {
     const s = setup('CORE_043', { mine: [[1, 1, id]], ...extra });
     // a spell that kills: put the minion at 0 health and let the engine settle on the next action

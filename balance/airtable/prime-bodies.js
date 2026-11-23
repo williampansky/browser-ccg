@@ -1,4 +1,4 @@
-// Rewrites the "exact body / exact warcry" PRIME cards (balance/PRIME-DISTANCE.md) in Airtable and adds the PRIME_224a token.
+// Rewrites the "exact body / exact On Play effect" PRIME cards (balance/PRIME-DISTANCE.md) in Airtable and adds the PRIME_224a token.
 // Usage: node balance/airtable/prime-bodies.js [--dry]
 const a = require('./api.js');
 const dry = process.argv.includes('--dry');
@@ -11,7 +11,7 @@ const changes = {
   PRIME_040: { attack: 4, health: 4, text: '<strong>%DOUBLE_ATTACK%</strong><br>\nLoses it when damaged' },
   PRIME_017: { mechanics: ['ON_PLAY', 'CHOOSE_ONE', 'HEAL'], text: co('Heal a character 3;<br>\nor deal 1 damage to a character') },
   PRIME_020: { text: '%SILENCE% a minion with<br>\nCost 3 or less' },
-  PRIME_032: { text: '%SILENCE% an enemy minion;<br>\ndraw a card if it had a<br>\nwarcry or a demise' },
+  PRIME_032: { text: '%SILENCE% an enemy minion;<br>\ndraw a card if it had a<br>\nOn Play or On Death effect' },
   PRIME_048: { text: "Swap a minion's Attack and<br>\nHealth; it is %DISABLE%d" },
   PRIME_082: { attack: 4, health: 3, text: '%DESTROY% a minion with 6+<br>\nAttack that is damaged or<br>\nhas attacked this turn' },
   PRIME_095: { attack: 4, health: 5, mechanics: ['ON_PLAY', 'DESTROY', 'ARMOR'], text: "Destroy the enemy's weapon<br>\nand gain its Attack as %ARMOR%" },

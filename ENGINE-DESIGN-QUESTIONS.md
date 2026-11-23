@@ -100,7 +100,7 @@ undo, tests and bots). The repo already depends on it indirectly through boardga
 2. Play minions, board and the 7 limit, summoning sickness, attacking, Guard, death.
 3. Spells: legal targets, damage/heal/draw, targeted and global play.
 4. Keywords: Bubble, Rush, double attack, hidden, no-attack, Disable, Expiration.
-5. Triggers: warcries and event cards, listing all legal actions.
+5. Triggers: On Play effects and event cards, listing all legal actions.
 6. Weapons and armor.
 7. A test where two random bots play many seeded games and the rules invariants are checked every move.
 

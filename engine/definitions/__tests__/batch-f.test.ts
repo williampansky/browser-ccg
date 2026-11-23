@@ -61,11 +61,11 @@ describe('Poison (Touch of Death)', () => {
 });
 
 describe('PRIME_012 Bare Boned (2/3): not targetable by spells or items', () => {
-  it('a spell cannot aim at it, but a warcry and an attack can', () => {
+  it('a spell cannot aim at it, but an On Play effect and an attack can', () => {
     const spell = setup('CORE_093', { theirs: [[1, 5, 'PRIME_012']] });
     expect(failCode(spell, mref(spell, '1', 0))).toBe('ILLEGAL_TARGET');
-    const warcry = setup('CORE_036', { theirs: [[1, 5, 'PRIME_012']] });
-    expect(failCode(warcry, mref(warcry, '1', 0))).toBeUndefined();
+    const onPlayMinion = setup('CORE_036', { theirs: [[1, 5, 'PRIME_012']] });
+    expect(failCode(onPlayMinion, mref(onPlayMinion, '1', 0))).toBeUndefined();
     const item = setup('CORE_046', { mine: [[1, 5, 'PRIME_012']] });
     expect(realCard('CORE_046').type).toBe('item');
     expect(failCode(item, mref(item, '0', 0))).toBe('ILLEGAL_TARGET');

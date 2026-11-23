@@ -57,7 +57,7 @@ export const legalTargets = (
   const def = card ? defs(card) : undefined;
   const filter = def?.choices ? def.choices[source.choice ?? -1]?.target : def?.target;
   if (!filter) return [];
-  // "Can't be targeted by spells or items": hidden from a spell or item's aim, never from a warcry or an attack.
+  // "Can't be targeted by spells or items": hidden from a spell or item's aim, never from an On Play effect or an attack.
   const aimedBySpell = card?.type === 'spell' || card?.type === 'item';
   const untargetable = (t: TargetRef): boolean => {
     if (!aimedBySpell || t.kind !== 'minion' || !catalog) return false;

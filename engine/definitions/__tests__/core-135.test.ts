@@ -2,7 +2,7 @@ import { getCardDef } from '..';
 import { legalActions } from '../../rules/legal-actions';
 import { catalog, failCode, mref, play, realCard, setup, stats } from '../../testing/real-cards';
 
-// CORE_135 warcry: destroy an enemy minion with 7 or more attack power.
+// CORE_135 On Play effect: destroy an enemy minion with 7 or more attack power.
 describe('CORE_135', () => {
   it('is defined', () => {
     expect(getCardDef(realCard('CORE_135'))).toBeDefined();
@@ -20,7 +20,7 @@ describe('CORE_135', () => {
     expect(plays.every((a) => a.type === 'PlayCard' && !a.target)).toBe(true);
     expect(stats(play(s).state, '0')).toEqual([[9, 9], [4, 2]]);
   });
-  it('with nothing to aim at it plays like an ordinary minion: no target, placed on the board, warcry does nothing', () => {
+  it('with nothing to aim at it plays like an ordinary minion: no target, placed on the board, On Play effect does nothing', () => {
     const s = setup('CORE_135', { theirs: [[6, 6]], mine: [[2, 2]] });
     const plays = legalActions(s, '0', catalog).filter((a) => a.type === 'PlayCard' && a.handIndex === 0);
     expect(plays.length).toBeGreaterThan(0);

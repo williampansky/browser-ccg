@@ -60,7 +60,7 @@ export const settle = (g: Draft<GameState>, ctx: EngineContext, events: GameEven
         for (const effect of def?.onDeath ?? []) {
           effect({ g, caster: owner, self: minion.instanceId, rng: ctx.rng, catalog: ctx.catalog, events, sourceCardId: minion.cardId });
         }
-        // Demises given by a spell (Haranna's Curse): a random minion of that race and cost, for the owner.
+        // On Death effects given by a spell (Haranna's Curse): a random minion of that race and cost, for the owner.
         for (const ds of minion.deathSummons ?? []) {
           const pool = cardPool(ctx.catalog, (c) => c.type === 'minion' && c.race === ds.race && c.cost === ds.cost, defs);
           if (pool.length > 0) summonMinion(g, owner, pool[ctx.rng.int(pool.length)], events);

@@ -133,7 +133,7 @@ describe('reacting to minions, damage and deaths', () => {
     return act(t, { type: 'PlayCard', handIndex: 0 });
   };
   it('PRIME_159 halves the Health (rounded up) and Disables the minion', () => {
-    const r = p1Plays(armed('PRIME_159'), 'PRIME_074'); // 4/5 Guard, no warcry
+    const r = p1Plays(armed('PRIME_159'), 'PRIME_074'); // 4/5 Guard, no On Play effect
     const m = minion(r, '1', 0);
     expect([m.attack, m.health]).toEqual([4, 3]);
     expect(m.disabledOnTurn).toBeDefined();

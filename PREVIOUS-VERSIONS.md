@@ -100,7 +100,7 @@ not touched.
     (hero 30 -> 27, log "attacked Player 0 for 3 damage").
   - **Playing a minion:** selecting a minion card shows dashed slots between the board minions;
     clicking one logs "summoned a Wondrous Wisp minion" and places it with no glow (summoning
-    sickness). Its warcry (restore 2 HP) had nothing to heal, so it was not really exercised.
+    sickness). Its On Play effect (restore 2 HP) had nothing to heal, so it was not really exercised.
   - **Console noise:** each minion death logged `ERROR: disallowed move: killMinion` four
     times, probably a client calling a move it is not allowed to. Gameplay was unaffected.
   - **Draw count:** starting a turn took the hand from 5 to 7 more than once, so something draws

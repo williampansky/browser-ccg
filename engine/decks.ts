@@ -9,7 +9,7 @@ const KEYWORD_ONLY = ['BULWARK', 'RUSH', 'BUBBLE', 'NO_ATTACK', 'DOUBLE_ATTACK',
 
 /**
  * True if the card does something its stats and keywords don't capture: every spell and item, and any
- * minion or weapon with a mechanic other than the pure keywords (warcry, aura, spell damage, ...).
+ * minion or weapon with a mechanic other than the pure keywords (On Play effect, aura, spell damage, ...).
  * Erring this way means an unfinished card is refused, never silently played as vanilla.
  */
 export const needsBehaviour = (card: Card): boolean =>

@@ -150,6 +150,25 @@
     "artStatus": "FINAL"
   },
   {
+    "id": "CORE_156",
+    "name": "Eyes of the Mimic",
+    "set": "%SET_002%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_REMARKABLE%",
+    "cardClass": "0 %CLASS_NONE%",
+    "cost": 5,
+    "text": "<strong>%SUMMON%</strong> a copy of a chosen enemy minion",
+    "mechanics": [
+      "%TARGET%",
+      "%SUMMON%"
+    ],
+    "collectible": false,
+    "active": true,
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
+  },
+  {
     "id": "CORE_036",
     "name": "Gloom Stalker",
     "set": "%SET_002%",
@@ -1599,7 +1618,10 @@
     ],
     "numberPrimary": 7,
     "collectible": false,
-    "active": true
+    "active": true,
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "CORE_019",

@@ -44,7 +44,7 @@ Findings
 1. **Card power is already fairly tight.** Baseline rms spread from 50% is 2.15 points; 86 of 132 cards are within
    2 points. All five proposals together only get that to about 2.0 and the 23 cards more than 3 points off to 19-20.
    Nerfing a body by one stat point moves it 1-3 points (Reckoning 53.2 -> 50.4, Obsidian Pincer 53.6 -> 52.1).
-   Warcry-number tweaks are mostly invisible (Horrific Primordial 54.9 either way).
+   On Play-number tweaks are mostly invisible (Horrific Primordial 54.9 either way).
 2. **Cost gradient:** cheap cards win less than expensive ones in random decks (1-cost avg 48.4%, 4-cost 51.7%,
    6-cost 52.8%, 8-cost 55%). Stats per mana at 4+ are generous; that is the main real curve skew.
 3. **The bottom ten cards are a bot gap, not a balance problem.** The greedy bot never plays Bubble, Expiration,

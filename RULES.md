@@ -12,7 +12,7 @@ living document: when a rule changes, change it here, with the date.
    minions and spells, attacking, Guard, hero damage) works. A lot of its behaviour is accidental,
    and some of it is wrong.
 2. **Its engine is hard-coded per card id; the live card data is richer.** `hsclone` reads an
-   older JSON schema (`spellType`, `warcryNumber`, `spellContext`). The Airtable base we pulled into
+   older JSON schema (`spellType`, a separate on-play number field, `spellContext`). The Airtable base we pulled into
    `data/` has since gained `playType`, `playContext`, `numberPrimary/Secondary/RNG`, and
    `mechanics` lists. So `hsclone` tells us **what each card does**, not what the data model is.
 3. **The CORE set is a realistic first-release pool.** Of 132 CORE cards, `hsclone` has code for
@@ -150,11 +150,11 @@ targeting state, not rules. `hasAttacked`, `isAttackingMinionPlayer`, `canReceiv
 | Hero/weapon -> hero | Uses `weapon.attack` (not `playerAttackValue`). Guard enforced. No counter-damage | [A] `attack-player-with-player.js` |
 
 - **Guard (`%BULWARK%`, "only these minions can be attacked").** Restricts minion attackers and the
-  weapon->hero attack; **not** the weapon->minion move, and not spells, warcries or skills. [V-live]
+  weapon->hero attack; **not** the weapon->minion move, and not spells, On Play effects or skills. [V-live]
   only Guards were highlighted as targets; [V-code] gaps above.
 - A hero has one weapon attack per turn; each attack costs 1 durability; weapon is removed at 0.
   Weapon `attack` and `health` are attack and durability. [A]
-- Armor (`playerShieldPoints`) absorbs only attack damage; spell and warcry damage hits health directly.
+- Armor (`playerShieldPoints`) absorbs only attack damage; spell and On Play effect damage hits health directly.
   [A/L]
 
 ### 6.4 Death
@@ -172,7 +172,7 @@ targeting state, not rules. `hasAttacked`, `isAttackingMinionPlayer`, `canReceiv
 The UI contract, to be replaced by one engine query `legalTargets(attackerOrCard, G)`:
 - Minion attacker: if the enemy has any Guard, only Guards; otherwise every non-concealed enemy minion
   plus the hero. [V-live], [A] `determinations.js:18-35`
-- Spells/warcries/skills: per-card id logic in `select-card.js` (a switch), with ad hoc filters
+- Spells/On Play effects/skills: per-card id logic in `select-card.js` (a switch), with ad hoc filters
   (attack <= 3, attack >= 5, damaged, undamaged). They ignore Guard; some exclude concealed. [A]
 - The hero is a separate set of `playerCanBeAttackedBy*` flags. [A]
 
@@ -182,7 +182,7 @@ The UI contract, to be replaced by one engine query `legalTargets(attackerOrCard
 
 `mechanics.json` defines 49 symbols; the card pool uses ~40. The glossary gives the game's own display
 names, which differ from the symbols in places: `%BULWARK%` is shown as **Guard**, `%RUSH%` as
-**Stampede**, `%ON_PLAY%` as **Warcry**. This spec uses the symbol names (Rush, Guard) for consistency
+**Stampede**, `%ON_PLAY%` as **On Play**. This spec uses the symbol names (Rush, Guard) for consistency
 with the data; card text shown to players uses the display names. Counts are CORE / PRIME / ENTOURAGE.
 Role and status columns combine the data analysis [V-data for counts that I recomputed; A otherwise]
 and `hsclone`'s code [A].
@@ -199,7 +199,7 @@ and `hsclone`'s code [A].
 | EXPIRATION | 0 / 1 / 0 | partial | one spell; wrong-board kill bug |
 | ARMOR | 2 / 3 / 0 | working | hero shield points |
 | SPELL_DAMAGE | 4 / 2 / 0 | working | scales many non-damage effects, bug |
-| ON_PLAY (warcry) | 24 / 45 / 1 | working for CORE only | |
+| ON_PLAY (On Play effect) | 24 / 45 / 1 | working for CORE only | |
 | BOON | 8 / 8 / 0 | partial | temporary vs aura, two meanings |
 | BUFF | 12 / 16 / 2 | partial | only spell-damage buffs are mechanic-driven |
 | DESTROY, DRAW_CARD, SUMMON, HEAL, DAMAGE | many | working (bespoke) | per-card code |
@@ -222,11 +222,11 @@ AOE, RANDOM, SET_VALUE), plus standalone keywords. `%EVENT%` carries no event na
 
 ### 8.1 How `hsclone` dispatches (do not copy)
 - **Hard-coded switches by card id**: `play-card.js` (by type), `spells/core.spells.js` (global
-  spells), `moves/cast-targeted-spell.js` (targeted spells), `warcrys/core.warcrys.js`,
+  spells), `moves/cast-targeted-spell.js` (targeted spells), its on-play effects folder,
   `select-card.js` (legal targets). A whitelist in `play-spell-card-by-id.js` duplicates a switch. [A]
 - Only keywords (Guard, Rush, Bubble, ON_PLAY) are data-driven, and only for CORE. PRIME has zero
   bespoke code. [V-code] 0 `PRIME_` ids appear in `lib/`.
-- The numeric input was a single `warcryNumber`, wrapped as `|base + spellDamageBuff|`. That scaling
+- The numeric input was a single on-play number field, wrapped as `|base + spellDamageBuff|`. That scaling
   applies to heals, shield, and draw counts as well. [A] `cast-targeted-spell.js:42-44`
 
 ### 8.2 Spells
@@ -238,12 +238,12 @@ AOE, RANDOM, SET_VALUE), plus standalone keywords. `%EVENT%` carries no event na
 - Random effects use `Math.random` (not `ctx.random`) and `random.Die(n)` for discards, which returns
   1..n, not an index. [V-code] `core.spells.js:31-33`, `cast-targeted-spell.js:395-400`
 
-### 8.3 Warcries (battlecry)
-- The minion is placed on the board first, then its warcry runs; the warcry knows its own slot. [A]
+### 8.3 On Play effects
+- The minion is placed on the board first, then its On Play effect runs; the On Play effect knows its own slot. [A]
 - Immediate (no choice): CORE 007, 012, 013, 020, 025, 026, 032, 033, 035, 041, 082, 118, 122.
   Targeted (player picks): 001, 006, 016, 021, 036, 054, 059, 099, 110, 112 and others. [A]
 - Several silently do nothing when no legal target exists, and 110's target list includes the caster.
-  Warcry amounts do not use the spell-damage bonus. [A]
+  On Play amounts do not use the spell-damage bonus. [A]
 
 ### 8.4 Weapons
 - 5 CORE weapons (Recruit's Mace 1/4, Reckoning 4/2 "restore 2 HP before every attack", Gladius 3/4,
@@ -289,7 +289,7 @@ tokens are created by CORE cards; none has its own logic. [A]
 ## 10. Data schema and loader rules
 
 `hsclone` read an **older schema** than the live Airtable data: [V-code]
-`hsclone`'s JSON has `spellType`, `warcryNumber`, `spellContext`, empty `mechanics` for many cards;
+`hsclone`'s JSON has `spellType`, an on-play number field, `spellContext`, empty `mechanics` for many cards;
 the live data has `playType`, `playContext`, `numberPrimary/Secondary/RNG/Random/Overcharge`, and
 richer `mechanics` (e.g. Fireballs: `[%RANDOM%, %DAMAGE%]`, `numberRNG: 3`).
 
@@ -444,7 +444,7 @@ Each has a **proposed default**.
 
 **Combat semantics**
 10. **Guard scope.** *Default:* Guard restricts **attacks** only (minion and weapon), not spells,
-    warcries or skills.
+    On Play effects or skills.
 11. **What "Rush" means.** hsclone's Rush attacks immediately and can hit the hero (Charge-like).
     *Default:* keep hsclone behaviour, but ask whether a minions-only Rush variant is wanted.
 12. **Double attack.** hsclone's "Onslaught" = two attacks per turn. *Default:* implement
@@ -481,7 +481,7 @@ Each has a **proposed default**.
 - **No new live tests were run in this milestone** beyond the earlier session (selecting/casting
   spells, summoning, attacking, Guard targeting, hero damage, playing a minion).
 - Not live-tested: Disable and Expiration timing, Onslaught, Rush, weapons, hero skills, Bubble,
-  warcry targets, the exact source and count of `killMinion` errors, double-death outcomes.
+  On Play effect targets, the exact source and count of `killMinion` errors, double-death outcomes.
 - The agents' reports were spot-checked (items tagged [V-...]) but not re-derived; the per-card behaviour
   list in Appendix A is agent-reported.
 - `boardgame.io` source was not available, so statements about how 0.35 rejects moves are inference.
@@ -541,8 +541,8 @@ distinct picks, 075 sets Attack (not Health) to 1, 098 draws one card, 104 buffs
 just Demonic), 106 is for one turn, 127 is for one turn only, 096 is not a CORE card here.
 
 **Choices the text leaves open:**
-- **"All friendly minions" warcries (019, 041)** buff your *other* minions, not the warcry minion itself
-  (hsclone's 041 also excluded itself). 054/059/099 warcries *can* aim at the warcry minion itself
+- **"All friendly minions" On Play effects (019, 041)** buff your *other* minions, not the On Play minion itself
+  (hsclone's 041 also excluded itself). 054/059/099 On Play effects *can* aim at the On Play minion itself
   (hsclone could not); the same is true of the existing CORE_021.
 - **088** doubles *current* health and raises max health by the same amount, so it acts as a +X Health buff.
 - **056** sets current *and* max health to 1. **075** sets the *base* Attack to 1; auras and this-turn
@@ -558,13 +558,13 @@ just Demonic), 106 is for one turn, 127 is for one turn only, 096 is not a CORE 
 - **045/051/055 "choose one"** are chosen when playing: `PlayCard.choice`. 055 offers "keep card 1/2/3"
   and keeps the last card if the deck has fewer than three; an empty deck does nothing (no fatigue).
 - **049** adds an *empty* energy slot (capped at 10), unlike 043 which gives energy this turn only.
-- **057** summons one random token; summoned minions never run warcries. 057b (formerly TacMedic) had a warcry that
+- **057** summons one random token; summoned minions never run On Play effects. 057b (formerly TacMedic) had an On Play effect that
   could therefore never fire, so on 2026-11-11 the author turned it into a plain 2/4 Guard minion, now named Frontline
   Guardsman (changed in Airtable and pulled).
 - **020** summons one of its two 1/1 tokens at random (they are identical apart from the name).
 - **050** hits the chosen enemy for 4 and every *other* enemy (hero included) for 1.
 - **Spell damage (011, 015, 028, 037; Q16)** raises each damage hit of your *spells* by its amount and
-  stacks. It never affects warcries, heals, draws, armor or summons. `engine/rules/spell-power.ts` is
+  stacks. It never affects On Play effects, heals, draws, armor or summons. `engine/rules/spell-power.ts` is
   the one place that decides which effects it raises.
 - **Auras ("Boon" on a minion: 003, 062, 108, 130)** are recomputed after every step, so they vanish
   when the minion dies and re-aim as the board changes. 003/130 reach your *other* minions; 108 reaches
@@ -587,13 +587,13 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **Cost changes** (`engine/rules/cost.ts`, `effectiveCost`): a card's own rule (`ownCost`) and your minions' `costMods` all add up. A net reduction
   stops at the floor ("not less than 1") but never raises a card above its printed cost; never below 0. Only the owner's cards are affected.
   220 minions -2 (floor 1); 142 spells only, not items; 086 -1 per *other* card in hand; 085 -1 per minion on *either* board; 247 -1 per
-  point of damage your hero has taken (armor does not count). 037 (Skelly, "your minions cost 3 more") is not built: it is tagged as a warcry.
+  point of damage your hero has taken (armor does not count). 037 (Skelly, "your minions cost 3 more") is not built: it is tagged as an On Play effect.
 - **PRIME_243 Glacial Crescent** ("When used, lose 1 attack instead of 1 Durability"): every swing, at a minion or the hero, deals the weapon's
   current Attack first, then costs it 1 Attack; Durability is never spent. It breaks when its Attack reaches 0, so a new 7/1 swings 7 times
   (7 + 6 + ... + 1 damage). A buff to its Attack adds swings. (`wearsAttack` in `engine/definitions/define-card.ts`, applied in `weapon-attack.ts`.)
-- **Suppress (SILENCE)**: the minion loses its card's behaviour (triggers, auras, Spell Damage, cost changes, demise, conditional effects),
+- **Suppress (SILENCE)**: the minion loses its card's behaviour (triggers, auras, Spell Damage, cost changes, On Death effect, conditional effects),
   all keywords (including Can't Attack) and any Disable. Its Attack, Health, damage and buffs stay. It is a one-way flag (`silenced`).
-  Heroes cannot be Suppressed. 201 Suppresses first, then deals its 1 damage (so a demise does not fire).
+  Heroes cannot be Suppressed. 201 Suppresses first, then deals its 1 damage (so an On Death effect does not fire).
 - **Overcharge (N)**: playing the card locks N of your energy at the start of your *next* turn only (stacks if you play several, never below 0).
   Applies to every card with the OVERLOAD mechanic, whatever its type. `OverchargeGained` is an event, so 205 can react to it.
 - **"While damaged" and other self conditions** (009, 035, 041, 024, 244, 022, 006, 174) are rechecked after every step and vanish when the
@@ -655,17 +655,17 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **078 Infernal Nest (0/7)**: at the start of its owner's next turn it deals 4 to ALL minions, itself included, then is destroyed.
 - **105 Nightmare**: sets BOTH heroes' Health to 18.
 
-### Exact bodies and warcries (2026-11-12; applied in Airtable by `balance/airtable/prime-bodies.js`)
+### Exact bodies and On Play effects (2026-11-12; applied in Airtable by `balance/airtable/prime-bodies.js`)
 
-- **Demise**: 013 (1/3) draws; 019's Warrior Bot has Rush; 004 hits a random enemy minion for 2, else the hero; 246 swaps your weakest minion (least Attack + Health)
+- **On Death**: 013 (1/3) draws; 019's Warrior Bot has Rush; 004 hits a random enemy minion for 2, else the hero; 246 swaps your weakest minion (least Attack + Health)
   for the enemy's strongest; 070 hits all enemies (minions and hero) for 2 and gives your minions Bubble.
 - **Stats**: 007 1/3, 040 4/4, 082 4/3, 095 4/5, 161 2/3, 049 2/2, 055 2/3. **040** has Onslaught only while undamaged.
 - **While on the board**: 043 +1/+1 when YOUR characters are healed; 176 heals your most damaged minion 3 and your hero 1 (end of your turn); 237 gains 2 Armor when a
   friendly minion dies; 239 +1 Attack this turn when an ENEMY minion takes damage; 049 pings a random enemy minion when you summon another minion; 055 hits only enemy
   minions; 141 +1 Attack this turn per spell and draws at 4 Attack; 104 +1/+1 at the end of your turn if it attacked, else -1/-1; 142 spells cost 1 less but your hero takes 1
   per spell; 220 only minions costing 4+ get 2 less (never below 3).
-- **Warcries and spells**: 017 choose heal a character 3 or deal it 1; 020 Suppress a minion with Cost 3 or less; 032 Suppress an enemy minion, draw if its card had a warcry or
-  demise; 048 swap Attack and Health and Disable it; 082 destroy a 6+ Attack minion that is damaged or has attacked this turn; 095 destroy the enemy weapon and gain its Attack as
+- **On Play effects and spells**: 017 choose heal a character 3 or deal it 1; 020 Suppress a minion with Cost 3 or less; 032 Suppress an enemy minion, draw if its card had an On Play effect or
+  On Death effect; 048 swap Attack and Health and Disable it; 082 destroy a 6+ Attack minion that is damaged or has attacked this turn; 095 destroy the enemy weapon and gain its Attack as
   Armor; 161 halve a minion's Attack (rounded down); 028 +3 Attack this turn; 002 friendly minion +2 Attack this turn and 1 damage to it; 224 destroy a minion and summon a 2/2
   Husk for you; 241 damage = your Armor, then lose half of it (rounded up); 233 +2/+4 to a damaged minion.
 - **Return to hand** (`returnToHand`): 026 and 015 return a friendly minion (not the enemy's, not themselves); 185 returns one costing 1 less (`CardInstance.costDelta`) and with Rush
@@ -675,8 +675,8 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 
 - **Poison / Touch of Death** (`CardDef.poison`): in combat, a poisonous minion destroys whatever minion it actually DAMAGED; a popped Bubble means no damage, so no poison. Works
   both ways (attacking or being attacked). 229 only on Creatures. A Suppressed minion loses it. Hero weapon hits are not minions, so they do not poison. 060 (1/3) and 197 are Concealed.
-- **Untargetable** (`CardDef.untargetable`): 012 (2/3) cannot be aimed at by a spell or an item; a warcry or an attack can. Suppressed, it can be targeted.
-- **For the opponent**: 100 summons a 3/3 Cursed Spawn (demise), 096 two 1/1 Toucans (warcry), 092 gives two Sushi (+1/+1 items on a friendly minion), 057 gives them an energy slot.
+- **Untargetable** (`CardDef.untargetable`): 012 (2/3) cannot be aimed at by a spell or an item; an On Play effect or an attack can. Suppressed, it can be targeted.
+- **For the opponent**: 100 summons a 3/3 Cursed Spawn (On Death effect), 096 two 1/1 Toucans (On Play effect), 092 gives two Sushi (+1/+1 items on a friendly minion), 057 gives them an energy slot.
   088 copies a spell to the OTHER hand than the caster's (a face-down Mystery is not copied). 221 destroys one of YOUR energy slots (total -1 for the rest of the game).
 - **Random**: 071 destroys one random enemy minion with 2 or less Attack; 242 destroys a random number (0 to all) of all minions, both sides; 187 makes two random enemy minions each
   deal their Attack to the other; 014 does 4 separate points of damage to random characters on either side (heroes included, and itself); 190 deals 2 to 4 to the target you choose;
@@ -687,7 +687,7 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **Minions**: 079 pops every other Bubble and gains +3/+3 each; 087 Spell Damage +1, draws on death; 093 heals a random friendly minion 2 when you summon another; 215 +1 Health to a random
   friendly minion at the end of your turn; 245 deals 8 to a random enemy at the end of your turn; 249 destroys a random enemy minion whenever you play a card (a Mystery or weapon too, not itself);
   098 summons a Guard 2/2 at the end of your turn; 253/254 affect every OTHER minion (they are 10/10s) and leave Fear / Despair on death; 251 steals 2 random enemy minions and leaves Glory.
-- **037 Skelly (reading to confirm)**: a standing effect, while it is on the board your own minions cost 3 more. The data tags it as a warcry, so it may have meant something else.
+- **037 Skelly (reading to confirm)**: a standing effect, while it is on the board your own minions cost 3 more. The data tags it as an On Play effect, so it may have meant something else.
 
 ### Random cards from a pool (2026-11-12)
 
@@ -695,8 +695,8 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
   card. It grows by itself as cards get definitions. "A random X" picks from the pool cards that match X.
 - **Add to hand**: 140 Tome of Spells (a spell costing 3 or less; the audit's twist), 186 Gift Box (2 any cards), 216 The Ritual (a Demonic minion; the cards call that race Undead),
   091 Harry (a Mythic minion), 154 Amaad (a random card costing 4 less whenever you play a card from hand, not for itself). A full hand burns the card.
-- **Summon**: 084 Serene Valley (demise: a random Creature), 227 Zap (2 damage; if the minion dies, a random Demonic minion costing 4 to 6 for you).
-- **Known quirk (not changed)**: events are handled after deaths in `settle`, so a minion that arrives from a demise can react to a spell cast earlier in the same action.
+- **Summon**: 084 Serene Valley (On Death effect: a random Creature), 227 Zap (2 damage; if the minion dies, a random Demonic minion costing 4 to 6 for you).
+- **Known quirk (not changed)**: events are handled after deaths in `settle`, so a minion that arrives from an On Death effect can react to a spell cast earlier in the same action.
 
 ### The last batch: Sprites, loans, copies and lasting flags (2026-11-12; Airtable edits in `balance/airtable/prime-last.js`)
 
@@ -704,9 +704,9 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
   058 gives your other Sprites +1/+1 and Bubble. 064 grows for every card (spell, minion, weapon, Mystery) the OPPONENT plays.
 - **Loans** (`MinionInstance.loan`): 063 and 179 borrow an enemy minion (2 / 3 or less Attack) until the end of this turn and it can attack at once; 183 keeps one (2 or less Attack) until the end of YOUR
   next turn but it cannot attack on the turn it is taken. At the end of that turn it goes back to its owner; if their board is full it is lost. A borrowed minion that dies stays dead.
-- **083 Void Egg** becomes a copy of the chosen minion: its card (so its effects), Attack, Health, damage, keywords, Suppressed state and granted demises; not its slot or summoning sickness. Its warcry does not run again.
+- **083 Void Egg** becomes a copy of the chosen minion: its card (so its effects), Attack, Health, damage, keywords, Suppressed state and granted On Death effects; not its slot or summoning sickness. Its On Play effect does not run again.
 - **252 War and Ruin**: every other minion, both sides, in play order, attacks a random character on the other side (a hero takes it with no counter; a minion hits back); then it leaves Ruin on death.
-- **114 Haranna's Curse** gives your minions "Demise: summon a random 2-cost Creature for its owner" (`MinionInstance.deathSummons`, a random playable Creature from the pool).
+- **114 Haranna's Curse** gives your minions "On Death: summon a random 2-cost Creature for its owner" (`MinionInstance.deathSummons`, a random playable Creature from the pool).
 - **Temporary stats** (051a Chopped Desert Lizard, `tempHealth`): +1/+1 for one turn; at the end of the turn the Health goes back down but never leaves the minion below 1. 051 leaves one when it dies.
 - **169 Paladin**: on death gain 5 Armor and equip a 3/2 Mace (PRIME_169a).
 - **Immune** (137, `MinionInstance.immune`): a friendly minion gets +2 Attack and takes no damage until the end of the turn.
@@ -714,7 +714,7 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **089 Sir Jorio**: all the OPPONENT's spells cost 0 during their next turn. **196 Soul Lantern** (cost 1): your next spell this turn costs 2 less, and you draw a card. **155 Crystal of Virtue**: you draw whenever that minion attacks.
 - **056 Portal**: at the start of your turn it swaps itself with a random minion card in your hand (that card takes its slot, summoning sick; Portal goes to your hand). Nothing happens without one.
 - **184 The Sorceress (5/7)**: your spells deal +1 damage and heal +1 (healing, `CardDef.spellHealing`).
-- **Not built**: 248 Ah-Xoc-Xin (a Discover of "ROCKING powers" that the data does not define) and 206 Revitalization ("Demise: Revitalization" is not explained anywhere).
+- **Not built**: 248 Ah-Xoc-Xin (a Discover of "ROCKING powers" that the data does not define) and 206 Revitalization ("On Death: Revitalization" is not explained anywhere).
 
 ### Appendix D: Hero skills (2026-11-13; engine in `engine/heroes/`, ability numbers in the ABILITIES table)
 
@@ -739,7 +739,7 @@ three skills. Name, cost, cooldown and text come from `data/abilities.json`; wha
   - The Cleric's **Resurrect** (skill 2) is picked from a list: two minions chosen at random from the last five non-token minions that died on
     your side (different cards where possible), each as two options, **with Guard** or **with Bubble**. With a 15% chance one of the two is
     instead the strongest (attack + health) of the enemy's last five dead, if it beats the weaker pick; it comes back on your side and
-    leaves their graveyard. It returns fresh, with no warcry; nothing is offered (and the skill cannot be used) when none of your minions has
+    leaves their graveyard. It returns fresh, with no On Play effect; nothing is offered (and the skill cannot be used) when none of your minions has
     died. The "random" choice is a function of the turn number and both graveyards (nothing extra is stored), so the offer is the same every time
     you look at it in a turn and changes when something dies or the turn passes. Mass Resurrect (skill 3) is unchanged: 3 random dead minions. (author's call, 2026-11-20)
   - Vital Shot hits the enemy hero directly (Guard does not block it).

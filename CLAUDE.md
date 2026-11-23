@@ -23,10 +23,10 @@ earlier `hsclone` repo as the rules reference. Read these first:
 - **There is a playable hot-seat board at `/play`** (`components/play-board/`): one browser tab, both
   players, the active player at the bottom. It runs on the new engine with the real CORE cards the
   engine fully supports (`playablePool` in `engine/decks.ts`: every CORE card). It defaults to playing against a greedy AI (`engine/bots/greedy-bot.ts`: tries each legal move, scores the result, one move ahead; Player 2); the menu switches it to the random bot (`random-bot.ts`) or to hot-seat. There is no art yet and no multiplayer. "Choose one" cards show option buttons before aiming (not yet
-  clicked through in a browser, only covered by engine tests). `game/game.ts` is still a stub (the
-  boardgame.io adapter comes later). The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-6 of
+  clicked through in a browser, only covered by engine tests). there is no boardgame.io adapter yet (the
+  old `game/` stub was removed; it comes later). The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-6 of
   its build order are done and tested: card model and loader (`engine/cards/`), state and turn flow,
-  minions and combat, spells and `legalTargets`, keywords, triggers/warcries/`legalActions`, and
+  minions and combat, spells and `legalTargets`, keywords, triggers/On Play effects/`legalActions`, and
   weapons/armor/items. After the slices, every CORE card got a definition (Batches A-C: simple effects,
   small new effects, then spell damage, auras, this-turn boosts, a pre-attack hook and a played-cards
   history); the rule readings I had to choose are in `RULES.md` Appendix B. Still to build: the dedicated random-bot invariant suite (slice 7; a first
@@ -48,7 +48,7 @@ earlier `hsclone` repo as the rules reference. Read these first:
 The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`; the order below is not settled. Candidates, roughly in the order discussed:
 
 1. **Playtest the full pool** and confirm or change the readings in `RULES.md` Appendix B. Decided: `CORE_007` only destroys the
-   weapon (follow the text), and `CORE_057b` (a summoned token whose warcry could never fire, formerly TacMedic) is now a plain
+   weapon (follow the text), and `CORE_057b` (a summoned token whose On Play effect could never fire, formerly TacMedic) is now a plain
    2/4 Guard called Frontline Guardsman; the same change is in Airtable and pulled (2026-11-11).
 2. **Card art provenance/licences** (the art itself is ported and on the board; the README carries a "not licensed
    for reuse" notice). Still to do: a card-by-card provenance table and replacing placeholder art (Milestone 4).
@@ -109,7 +109,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   dropped on the board or play area keep their ghost. It uses native browser drag, so it does not work on touch screens.
 - **Debug URL params** (read on every "New game" while they are in the URL): `?first=0|1` picks who goes first
   (0 = Player 1); `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand, in order.
-  `?b0=CORE_027,CORE_061` and `?b1=...` put ready-to-attack minions on that player's board (no warcry or aura runs),
+  `?b0=CORE_027,CORE_061` and `?b1=...` put ready-to-attack minions on that player's board (no On Play effect or aura runs),
   `?w0=CORE_076` and `?w1=...` equip a weapon, `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10). Handy for testing a specific card, e.g. `/play?first=0&p0=CORE_045`.
 
 ## Working style: browser checks
@@ -166,8 +166,6 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - `pages/` - Next routes. `pages/api/` serves cards/users.
 - `engine/` - the new Hearthstone-style rules engine (plain TypeScript, no React or boardgame.io
   in the core). `engine/cards/` loads `data/` into normalised cards. Tests in `__tests__/`.
-- `game/` - boardgame.io game definition (currently a stub). `game/data/` is a stale copy of the old zone-game JSON;
-  it no longer mirrors `data/`.
 - `components/game-components/` - `Card`, `Minion`, `Avatar` (the rest of the old board UI was
   removed). `components/site-components/` - non-game UI.
 - `features/` - Redux Toolkit slices (store in `store.ts`). `hooks/`, `utils/`, `enums/`, `types/`.

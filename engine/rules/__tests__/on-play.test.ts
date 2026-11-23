@@ -62,8 +62,8 @@ const play = (handIndex = 0, target?: TargetRef, boardIndex?: number): Action =>
 const mref = (instanceId: number): TargetRef => ({ kind: 'minion', instanceId });
 const idOf = (s: GameState, p: '0' | '1', i = 0) => s.players[p].board[i].instanceId;
 
-describe('warcries', () => {
-  it('place the minion first, then run the warcry on the chosen target', () => {
+describe('On Play effects', () => {
+  it('place the minion first, then run the On Play effect on the chosen target', () => {
     const s = putOnBoard(withHand('CORE_001'), '1', grunt);
     const a = play(0, mref(idOf(s, '1')));
     const t = act(s, a);
@@ -73,7 +73,7 @@ describe('warcries', () => {
     const types = events(s, a).map((e) => e.type);
     expect(types.indexOf('MinionPlayed')).toBeLessThan(types.indexOf('MinionDamaged'));
   });
-  it('a warcry that kills settles at once', () => {
+  it('an On Play effect that kills settles at once', () => {
     const s = putOnBoard(withHand('CORE_001'), '1', minionCard('LOW', { health: 1 }));
     expect(act(s, play(0, mref(idOf(s, '1')))).players['1'].board).toHaveLength(0);
   });
@@ -83,7 +83,7 @@ describe('warcries', () => {
     expect(fail(s, play(0, mref(9999)))).toBe('ILLEGAL_TARGET');
     expect(fail(s, play(1, mref(idOf(s, '1'))))).toBe('ILLEGAL_TARGET');
   });
-  it('with no legal target the minion is still played and the warcry does nothing', () => {
+  it('with no legal target the minion is still played and the On Play effect does nothing', () => {
     const s = withHand('CORE_021'); // buff a minion, but no minions are in play
     const t = act(s, play());
     expect(t.players['0'].board).toHaveLength(1);
@@ -95,7 +95,7 @@ describe('warcries', () => {
     const t = act(s, play(0, mref(idOf(s, '0'))));
     expect(t.players['0'].board.find((m) => m.cardId === 'GRUNT')).toMatchObject({ attack: 3, health: 4, maxHealth: 4 });
   });
-  it('global warcries need no target', () => {
+  it('global On Play effects need no target', () => {
     expect(act(withHand('CORE_035'), play()).players['1'].health).toBe(27);
     const h = withHand('CORE_013');
     expect(act(h, play()).players['0'].hand).toHaveLength(1);

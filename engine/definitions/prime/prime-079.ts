@@ -2,7 +2,7 @@ import { defineCard } from '../define-card';
 import { buff, computed } from '../../effects/primitives';
 import { self } from '../../effects/selectors';
 
-// PRIME_079 Catspurly Ghost, warcry: "Destroy all Bubbles; gain +3/+3 for each" (every other minion, either side)
+// PRIME_079 Catspurly Ghost, On Play effect: "Destroy all Bubbles; gain +3/+3 for each" (every other minion, either side)
 export default defineCard('PRIME_079', () => ({
   onPlay: [
     computed((ctx) => {

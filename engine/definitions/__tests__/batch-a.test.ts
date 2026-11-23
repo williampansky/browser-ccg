@@ -18,7 +18,7 @@ describe('Batch A cards are all defined and playable', () => {
   });
 });
 
-describe('targeted warcries', () => {
+describe('targeted On Play effects', () => {
   it('006 heals a friendly character for 2 (hero or minion), never an enemy', () => {
     const s = setup('CORE_006', { mine: [[2, 3]], heroHp: { '0': 20 } });
     const hurt = { ...s, players: { ...s.players, '0': { ...s.players['0'], board: [{ ...s.players['0'].board[0], health: 1 }] } } };
@@ -43,7 +43,7 @@ describe('targeted warcries', () => {
   });
 });
 
-describe('untargeted warcries', () => {
+describe('untargeted On Play effects', () => {
   it('026 draws a card', () => {
     const s = setup('CORE_026');
     expect(play(s).state.players['0'].hand).toHaveLength(1);
@@ -97,7 +97,7 @@ describe('untargeted warcries', () => {
     expect(r.players['0'].board).toHaveLength(2);
     expect(stats(r, '0')[1]).toEqual([atk, hp]);
   });
-  it('a summon warcry on a full board still plays the minion and summons nothing', () => {
+  it('a summon On Play effect on a full board still plays the minion and summons nothing', () => {
     const six = Array(6).fill([1, 1]) as [number, number][];
     expect(play(setup('CORE_020', { mine: six })).state.players['0'].board).toHaveLength(7);
   });

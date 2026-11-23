@@ -41,8 +41,8 @@ The big structural finds, in order of how much they matter:
 
 > **Update 2026-11-12:** the choose-one, overload and enrage families are applied in Airtable and rebuilt too (see `RULES.md`, "Choose-one, overload and enrage
 > rewrites"). A few numbers differ from the rows below (208, 120, 121, 024 were adjusted while building).
-> The "exact bodies and warcries" table is applied and built too, except the cards that need a mechanic that is not built yet (Poison, temporary control, random cards from a pool; see the
-> list of unplayable cards from `primePool`). `RULES.md` has the details ("Exact bodies and warcries").
+> The "exact bodies and On Play effects" table is applied and built too, except the cards that need a mechanic that is not built yet (Poison, temporary control, random cards from a pool; see the
+> list of unplayable cards from `primePool`). `RULES.md` has the details ("Exact bodies and On Play effects").
 > The Giants, 214, 107, 228, 078 and 105 are applied and built too (`RULES.md`, "The Giants, the keyword pile and friends").
 
 ## Mysteries (132, 143, 127, 152, 126, 146, 159, 148, 129, 158, 157, 156, 067; payoffs 250, 149, 045, 147)
@@ -70,7 +70,7 @@ Today each Mystery copies a hidden-trap card's trigger *and* payload. Two ways t
 | 157 The Wrong Door (1) | enemy attacks: summon a 2/1 | A | enemy attacks: summon **two 1/1 Mice with Guard** (the attack goes to a Mouse) |
 | 156 Surprise, surprise! (1) | your hero takes damage: deal that much to theirs | A | when your hero takes 5 or more damage in one hit, **restore 5 Health** and draw a card |
 | 132 Light the Dark (2) | remove Concealed from all, destroy enemy Mystery | A | **reveal** every Concealed minion (it loses Concealed and takes 1 damage) and destroy the enemy Mystery; draw only if one was destroyed |
-| 067 Android Infiltrator (4) | warcry: destroy the enemy Mystery | B | warcry: **take** the enemy's Mystery (it becomes yours, face down) |
+| 067 Android Infiltrator (4) | On Play effect: destroy the enemy Mystery | B | On Play effect: **take** the enemy's Mystery (it becomes yours, face down) |
 | 250 / 149 | end of turn with a Mystery: buff | C | leave (they depend on the Mystery system, which is the point) |
 | 045 / 147 | gain on Mystery played / next Mystery costs 0 | C | leave |
 
@@ -121,23 +121,23 @@ Today each Mystery copies a hidden-trap card's trigger *and* payload. Two ways t
 | 078 Infernal Nest (2, 0/7) | destroys the board at the start of your next turn | A | **7 Health, no Attack: at the start of your next turn it deals 4 damage to ALL minions** (the nest dies too) |
 | 105 Nightmare (9, 10/5) | set a hero's health to 15 | B | set **both** heroes to 18 |
 
-## Exact bodies and warcries
+## Exact bodies and On Play effects
 
 | Card | Shape today | Tier | Proposed |
 | --- | --- | --- | --- |
-| 013 Ploofer (2, 2/1) | demise: draw | A | 1/3 for 2, demise: draw a card (a sturdier body, so it no longer matches the stat line) |
-| 019 Phatcat Warrior (3, 2/3) | demise: summon a 2/1 | A | 2/3: demise summons a Warrior Bot that **has Rush** (edit the token in Airtable) |
-| 004 Soul Miner (1, 1/1) | demise: 2 damage to enemy hero | A | demise: 2 damage to **a random enemy minion** (or hero if none) |
+| 013 Ploofer (2, 2/1) | On Death effect: draw | A | 1/3 for 2, On Death effect: draw a card (a sturdier body, so it no longer matches the stat line) |
+| 019 Phatcat Warrior (3, 2/3) | On Death effect: summon a 2/1 | A | 2/3: On Death effect summons a Warrior Bot that **has Rush** (edit the token in Airtable) |
+| 004 Soul Miner (1, 1/1) | On Death effect: 2 damage to enemy hero | A | On Death effect: 2 damage to **a random enemy minion** (or hero if none) |
 | 007 Camocrab (1, 2/1) | Concealed | A | 1/3 Concealed |
 | 040 Slick Naga (6, 4/5) | Onslaught | A | 4/4 Onslaught, **loses it when damaged** |
 | 060 Poisoned Imp (3, 2/3) | Touch of Death | A | 1/3 Touch of Death, **Concealed** |
-| 017 Feline Fisherman (3, 3/3) | warcry: heal 3 | A | 3/3 warcry: **heal 3 or deal 1 damage** (two options) or: heal all friendly characters 1 |
-| 020 Magic Mushroom (3, 2/1) | warcry: Suppress | A | 2/2 warcry: Suppress a minion **with Cost 3 or less** |
-| 032 Siren (4, 4/3) | warcry: Suppress | A | warcry: Suppress an **enemy** minion and **draw a card if it had a warcry or a demise** |
-| 048 Invoked Shaman (2, 2/2) | warcry: swap Attack and Health | A | warcry: **swap the Attack and Health of two minions of your choice** (cost 3) |
-| 082 Foxy Huntsman (5, 4/2) | warcry: destroy a minion with 7+ Attack | A | 4/3: destroy a minion with **Attack 6+ that has attacked this turn or is damaged** |
-| 095 The Inquisitor (5, 5/4) | warcry: destroy enemy weapon, draw its Durability | A | 4/5: destroy the enemy weapon and **gain its Attack as armor**; or **steal it** (equip it) |
-| 161 Enigmatic Courier (3, 3/3) | warcry: set a minion's Attack to 1 | B | 2/3: **a minion loses half its Attack**, rounded up |
+| 017 Feline Fisherman (3, 3/3) | On Play effect: heal 3 | A | 3/3 On Play effect: **heal 3 or deal 1 damage** (two options) or: heal all friendly characters 1 |
+| 020 Magic Mushroom (3, 2/1) | On Play effect: Suppress | A | 2/2 On Play effect: Suppress a minion **with Cost 3 or less** |
+| 032 Siren (4, 4/3) | On Play effect: Suppress | A | On Play effect: Suppress an **enemy** minion and **draw a card if it had an On Play effect or an On Death effect** |
+| 048 Invoked Shaman (2, 2/2) | On Play effect: swap Attack and Health | A | On Play effect: **swap the Attack and Health of two minions of your choice** (cost 3) |
+| 082 Foxy Huntsman (5, 4/2) | On Play effect: destroy a minion with 7+ Attack | A | 4/3: destroy a minion with **Attack 6+ that has attacked this turn or is damaged** |
+| 095 The Inquisitor (5, 5/4) | On Play effect: destroy enemy weapon, draw its Durability | A | 4/5: destroy the enemy weapon and **gain its Attack as armor**; or **steal it** (equip it) |
+| 161 Enigmatic Courier (3, 3/3) | On Play effect: set a minion's Attack to 1 | B | 2/3: **a minion loses half its Attack**, rounded up |
 | 028 / 002 (4 / 1) | give a minion +2 Attack this turn | B | 028: **+3 Attack and Rush** this turn; 002: a friendly minion only, +2 Attack, and it takes 1 damage |
 | 224 Takeover (6) | destroy a minion, restore 3 to your hero | A | destroy a minion and **summon a 2/2 of the same Race for you** (heal dropped) |
 | 241 Outer Beam (3) | damage to a minion equal to your Armor | A | damage equal to your **Armor, then lose half the Armor** (rounded up) |
@@ -145,11 +145,11 @@ Today each Mystery copies a hidden-trap card's trigger *and* payload. Two ways t
 | 185 Into the Shadows (1) | return a friendly minion, its cost -2 | A | return a friendly minion, **it costs 1 less, and gains Rush when replayed** |
 | 063 Seadog Captain (4, 3/3) | if opponent has 4+ minions, take control of one | A | take control of an enemy minion **with 2 or less Attack**; it returns at the **end of the turn** |
 | 179 Malevolent Cephalopod (4) | control a minion of 3 or less Attack until end of turn | A | **until the end of your next turn**, and it must attack |
-| 246 The Chaos Knight (7, 4/5) | demise: steal a random enemy minion | A | demise: **trade** your weakest minion for the opponent's strongest |
-| 183 Data-Mage (6, 4/5) | warcry: take control of a minion with 2 or less Attack | B | take control of a minion **for 2 turns** |
-| 251 Conquest and Glory (10) | steal 2 random minions; demise: Glory | C | leave |
-| 169 Paladin of the Shattered Mirror (8, 6/6) | Bubble, Guard, demise: equip a 5/3 weapon | A | 6/6 Bubble, Guard, demise: **gain 5 Armor and equip a 3/2 weapon** (the weapon token must exist in Airtable) |
-| 070 Rusted Warden (5, 4/4) | Guard, demise: 2 damage to everyone | A | 4/4 Guard, demise: **2 damage to all enemy characters and give your minions Bubble** |
+| 246 The Chaos Knight (7, 4/5) | On Death effect: steal a random enemy minion | A | On Death effect: **trade** your weakest minion for the opponent's strongest |
+| 183 Data-Mage (6, 4/5) | On Play effect: take control of a minion with 2 or less Attack | B | take control of a minion **for 2 turns** |
+| 251 Conquest and Glory (10) | steal 2 random minions; On Death effect: Glory | C | leave |
+| 169 Paladin of the Shattered Mirror (8, 6/6) | Bubble, Guard, On Death effect: equip a 5/3 weapon | A | 6/6 Bubble, Guard, On Death effect: **gain 5 Armor and equip a 3/2 weapon** (the weapon token must exist in Airtable) |
+| 070 Rusted Warden (5, 4/4) | Guard, On Death effect: 2 damage to everyone | A | 4/4 Guard, On Death effect: **2 damage to all enemy characters and give your minions Bubble** |
 | 184 The Sorceress (7, 7/7) | double your spell/ability output | A | 5/7: your spells deal **+1 damage and heal +1** (Spell Damage that also covers healing) |
 | 176 Shaman Wudu (2, 0/5) | heal a random friendly damaged minion 3 at end of turn | A | at end of your turn, heal the **most damaged** friendly minion 2 and **give it +1 Attack until your next turn** |
 | 237 Spellsmith (2, 1/4) | gain 1 Armor when a friendly minion takes damage | A | **gain 2 Armor whenever a friendly minion dies** |

@@ -64,7 +64,7 @@ export const describeEvents = (
         lines.push(`--- Turn ${e.turn}: ${who(e.player)} ---`);
         break;
       case 'MinionPlayed':
-        lines.push(`${who(e.player)} plays ${name(e.instanceId)}${e.target ? ` (warcry on ${target(e.target)})` : ''}`);
+        lines.push(`${who(e.player)} plays ${name(e.instanceId)}${e.target ? ` (On Play on ${target(e.target)})` : ''}`);
         break;
       case 'CardPlayed':
         if (e.mystery) {

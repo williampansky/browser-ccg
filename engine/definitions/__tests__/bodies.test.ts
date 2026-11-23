@@ -4,7 +4,7 @@ import { legalActions } from '../../rules/legal-actions';
 import { backTo, catalog, endTurn, failCode, hero, hurt, minion, mref, play, realCard, run, setup, stats, withWeapon } from '../../testing/real-cards';
 import type { Action, GameState } from '../../state/types';
 
-// The "exact body / exact warcry" rewrites (balance/PRIME-DISTANCE.md, applied by balance/airtable/prime-bodies.js).
+// The "exact body / exact On Play effect" rewrites (balance/PRIME-DISTANCE.md, applied by balance/airtable/prime-bodies.js).
 
 const ids = '004 013 019 007 040 017 020 032 048 082 095 161 028 002 224 241 233 185 026 015 246 070 176 237 043 239 049 055 141 104 142 220'.split(' ');
 it.each(ids)('PRIME_%s is defined', (n) => expect(legalActions(setup(`PRIME_${n}`, { mine: [[1, 3]], theirs: [[1, 3]] }), '0', catalog)).toBeDefined());
@@ -21,7 +21,7 @@ describe('simple stat and token changes', () => {
   });
 });
 
-describe('demise', () => {
+describe('On Death effect', () => {
   it('004 Soul Miner hits a random enemy MINION for 2, or the hero if there is none', () => {
     const withMinion = produce(setup('CORE_043', { mine: [[1, 1, 'PRIME_004']], theirs: [[1, 9]] }), (g) => void (g.players['0'].board[0].health = 0));
     const r = play(withMinion).state;
@@ -130,7 +130,7 @@ describe('while on the board', () => {
   });
 });
 
-describe('warcries and spells', () => {
+describe('On Play effects and spells', () => {
   it('017 Feline Fisherman: heal a character 3, or deal 1 damage to a character', () => {
     const s = setup('PRIME_017', { heroHp: { '1': 20 } });
     const heal = run(s, { type: 'PlayCard', handIndex: 0, choice: 0, target: hero('1') } as Action);
@@ -144,11 +144,11 @@ describe('warcries and spells', () => {
     expect(failCode(s, mref(s, '1', 1))).toBe('ILLEGAL_TARGET');
     expect(failCode(s, hero('1'))).toBe('ILLEGAL_TARGET');
   });
-  it('032 Siren Suppresses an enemy minion and draws only if it had a warcry or demise', () => {
+  it('032 Siren Suppresses an enemy minion and draws only if it had an On Play effect or On Death effect', () => {
     const s = setup('PRIME_032', { theirs: [[1, 1, 'PRIME_013'], [1, 1, 'PRIME_074'], [1, 1, 'PRIME_034']], mine: [[1, 1]] });
-    expect(play(s, mref(s, '1', 0)).state.players['0'].hand).toHaveLength(1); // 013 has a demise
+    expect(play(s, mref(s, '1', 0)).state.players['0'].hand).toHaveLength(1); // 013 has an On Death effect
     expect(play(s, mref(s, '1', 1)).state.players['0'].hand).toHaveLength(0); // 074 is a plain Guard
-    expect(play(s, mref(s, '1', 2)).state.players['0'].hand).toHaveLength(1); // 034 has a warcry
+    expect(play(s, mref(s, '1', 2)).state.players['0'].hand).toHaveLength(1); // 034 has an On Play effect
     expect(failCode(s, mref(s, '0', 0))).toBe('ILLEGAL_TARGET'); // enemy only
   });
   it('048 Invoked Shaman swaps Attack and Health and Disables the minion', () => {

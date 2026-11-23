@@ -100,7 +100,7 @@
     "cost": 10,
     "attack": 12,
     "health": 12,
-    "text": "<strong>Battlecry:</strong> Destroy all other minions and discard your hand.",
+    "text": "<strong>%ON_PLAY%:</strong> Destroy all other minions and discard your hand.",
     "collectible": true,
     "active": true,
     "elite": true,
@@ -244,7 +244,7 @@
     "cost": 7,
     "attack": 6,
     "health": 8,
-    "text": "<strong>Battlecry:</strong> Summon all friendly minions that died this turn",
+    "text": "<strong>%ON_PLAY%:</strong> Summon all friendly minions that died this turn",
     "collectible": true,
     "active": true,
     "elite": true,
@@ -1285,7 +1285,7 @@
     "cost": 3,
     "attack": 3,
     "health": 3,
-    "text": "<strong>Battlecry:</strong> Destroy the minions on either side of this minion and gain their Attack and Health.",
+    "text": "<strong>%ON_PLAY%:</strong> Destroy the minions on either side of this minion and gain their Attack and Health.",
     "collectible": true,
     "active": true,
     "artStatus": "FPO"
@@ -1533,7 +1533,7 @@
     "cost": 3,
     "attack": 2,
     "health": 2,
-    "text": "<strong>Battlecry:</strong> Deal 1 damage. <strong>Combo:</strong> Deal 2 instead.",
+    "text": "<strong>%ON_PLAY%:</strong> Deal 1 damage. <strong>Combo:</strong> Deal 2 instead.",
     "mechanics": [
       "%COMBO%"
     ],
@@ -2200,7 +2200,7 @@
     "cost": 4,
     "attack": 4,
     "health": 4,
-    "text": "<strong>Battlecry:</strong> Give a friendly minion <strong>Stealth</strong> until your next turn.",
+    "text": "<strong>%ON_PLAY%:</strong> Give a friendly minion <strong>Stealth</strong> until your next turn.",
     "collectible": true,
     "active": true,
     "artStatus": "FPO"
@@ -3299,7 +3299,7 @@
     "cost": 1,
     "attack": 1,
     "health": 2,
-    "text": "<strong>Battlecry:</strong> Remove 1 Durability from your opponent's weapon.",
+    "text": "<strong>%ON_PLAY%:</strong> Remove 1 Durability from your opponent's weapon.",
     "collectible": true,
     "active": false,
     "artStatus": "FPO"
@@ -3471,7 +3471,7 @@
     "cost": 9,
     "attack": 8,
     "health": 8,
-    "text": "<strong>Battlecry:</strong> Summon 1/1 Whelps until your side of the battlefield is full.",
+    "text": "<strong>%ON_PLAY%:</strong> Summon 1/1 Whelps until your side of the battlefield is full.",
     "collectible": true,
     "active": true,
     "elite": true,
@@ -4660,7 +4660,7 @@
     "cost": 4,
     "attack": 5,
     "health": 6,
-    "text": "<strong>Battlecry:</strong> Deal 5 damage to your hero.",
+    "text": "<strong>%ON_PLAY%:</strong> Deal 5 damage to your hero.",
     "collectible": true,
     "active": true,
     "artStatus": "FPO"
@@ -4721,7 +4721,7 @@
     "cost": 4,
     "attack": 4,
     "health": 3,
-    "text": "%SILENCE% an enemy minion;<br>\ndraw a card if it had a<br>\nwarcry or a demise",
+    "text": "%SILENCE% an enemy minion;<br>\ndraw a card if it had a<br>\n%ON_PLAY% or a %ON_DEATH% mechanic",
     "mechanics": [
       "%ON_PLAY%",
       "%SILENCE%"
@@ -4835,7 +4835,7 @@
     "cost": 5,
     "attack": 5,
     "health": 4,
-    "text": "<strong>Battlecry:</strong> Give your weapon +1/+1. ",
+    "text": "<strong>%ON_PLAY%:</strong> Give your weapon +1/+1. ",
     "collectible": true,
     "active": false,
     "elite": true,

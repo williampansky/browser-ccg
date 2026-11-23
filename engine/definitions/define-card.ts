@@ -37,7 +37,7 @@ export interface Choice {
 }
 
 /**
- * What a card does. Cards with no `target` are global. For a minion, `onPlay` is its warcry.
+ * What a card does. Cards with no `target` are global. For a minion, `onPlay` is its On Play effect.
  * `onDeath` runs after the minion has been removed (owner is the caster). `triggers` are live
  * only while the minion is on the board (this covers end-of-turn and "whenever ..." cards).
  */
@@ -101,7 +101,7 @@ export interface MysteryDef {
 export interface CardDef {
   /** Touch of Death: a minion this one damages in combat is destroyed. `vs` limits it to minions of that race. */
   poison?: { vs?: string };
-  /** Spells and items cannot target this minion (warcries and attacks still can) */
+  /** Spells and items cannot target this minion (On Play effects and attacks still can) */
   untargetable?: boolean;
   /** While this minion is on either board, turns last at most this many seconds (see `turnSeconds`) */
   turnSeconds?: number;

@@ -19,22 +19,22 @@ describe('needsBehaviour / isPlayable', () => {
     expect(needsBehaviour(minionCard('X', { mechanics: ['BULWARK', 'RUSH'] }))).toBe(false);
     expect(needsBehaviour(weaponCard('W'))).toBe(false);
   });
-  it('minions with any effect mechanic (warcry, event, death, aura, spell damage, ...) need behaviour', () => {
+  it('minions with any effect mechanic (On Play, event, death, aura, spell damage, ...) need behaviour', () => {
     for (const m of ['ON_PLAY', 'EVENT', 'ON_DEATH', 'ON_END', 'COMBO', 'BOON', 'SPELL_DAMAGE', 'BUFF', 'LIFESTEAL']) {
       expect(needsBehaviour(minionCard('X', { mechanics: [m] }))).toBe(true);
     }
   });
   it('is playable only when it needs nothing or has a definition', () => {
-    const warcry = minionCard('CORE_999', { mechanics: ['ON_PLAY'] });
-    expect(isPlayable(warcry, () => undefined)).toBe(false);
-    expect(isPlayable(warcry, () => ({ onPlay: [] }))).toBe(true);
+    const onPlayMinion = minionCard('CORE_999', { mechanics: ['ON_PLAY'] });
+    expect(isPlayable(onPlayMinion, () => undefined)).toBe(false);
+    expect(isPlayable(onPlayMinion, () => ({ onPlay: [] }))).toBe(true);
     expect(isPlayable(minionCard('V'), () => undefined)).toBe(true);
   });
 });
 
-describe('a warcry minion with no definition is refused, never silently played as vanilla', () => {
-  const warcry = minionCard('CORE_999', { cost: 1, mechanics: ['ON_PLAY'] });
-  const catalog = catalogOf(warcry, minionCard('GRUNT'));
+describe('an On Play minion with no definition is refused, never silently played as vanilla', () => {
+  const onPlayMinion = minionCard('CORE_999', { cost: 1, mechanics: ['ON_PLAY'] });
+  const catalog = catalogOf(onPlayMinion, minionCard('GRUNT'));
   const start = (): GameState => {
     let s = createGame({ decks: { '0': Array(30).fill('GRUNT'), '1': Array(30).fill('GRUNT') }, firstPlayer: '0' }, createSeededRng(1));
     s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [] } } };

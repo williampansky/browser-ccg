@@ -113,7 +113,7 @@ hsclone does). The weapon's own attack value is the only attack number.
 ### Q10. Where does Guard apply?
 Guard = "only these minions can be attacked". In hsclone it restricts minion attacks and weapon-vs-hero
 attacks, but not spells (by accident), and the weapon-vs-minion check is commented out.
-**Default:** Guard restricts **attacks** only (minion and weapon), not spells, warcries or skills.
+**Default:** Guard restricts **attacks** only (minion and weapon), not spells, On Play effects or skills.
 
 - [x] Accept default
 - [ ] Override (e.g. Guard also blocks spells):

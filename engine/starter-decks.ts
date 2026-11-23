@@ -75,7 +75,7 @@ STARTER_DECKS.push(
   {
     name: 'Burn',
     minMinions: 8,
-    plan: 'damage spells and damaging warcries, aimed at the enemy hero',
+    plan: 'damage spells and damaging On Play effects, aimed at the enemy hero',
     score: (c) => (says(c, /damage/i) ? 0 : 50) + c.cost * 3 - (c.type === 'spell' ? 6 : 0),
   },
   {

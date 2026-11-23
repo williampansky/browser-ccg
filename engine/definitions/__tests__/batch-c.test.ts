@@ -59,9 +59,9 @@ describe('spell damage (RULES Q16: raises damage dealt by your spells, nothing e
     const out = play(r).state;
     expect(30 - out.players['1'].health + (18 - out.players['1'].board.reduce((a, m) => a + m.health, 0))).toBe(8); // two hits of 4 (3 + 1)
   });
-  it('does NOT raise warcry damage, heals, or draws', () => {
+  it('does NOT raise On Play effect damage, heals, or draws', () => {
     const w = setup('CORE_016', { mine: [[1, 5, 'CORE_011']], theirs: [[1, 9]] });
-    expect(stats(play(w, mref(w, '1', 0)).state, '1')[0][1]).toBe(8); // warcry: still 1
+    expect(stats(play(w, mref(w, '1', 0)).state, '1')[0][1]).toBe(8); // On Play effect: still 1
     const h = setup('CORE_047', { mine: [[1, 5, 'CORE_011']], heroHp: { '1': 5 } });
     expect(play(h, hero('1')).state.players['1'].health).toBe(15); // 5 + 10, not 11 (no spell damage bonus on heals)
     const d = setup('CORE_067', { mine: [[1, 5, 'CORE_011']] });
@@ -87,7 +87,7 @@ describe('auras', () => {
     expect(attacks(destroyOwn(s, 1), '0')).toEqual([2]);
   });
   it('a Sprite played later gets the bonus too', () => {
-    // CORE_012 is a Sprite whose warcry summons a 1/1 Sprite token
+    // CORE_012 is a Sprite whose On Play effect summons a 1/1 Sprite token
     const r = play(setup('CORE_012', { mine: [[1, 1, 'CORE_003']] })).state;
     expect(attacks(r, '0')).toEqual([1, (realCard('CORE_012').attack ?? 0) + 1, 1 + 1]);
   });

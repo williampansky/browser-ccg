@@ -43,7 +43,7 @@ const summonBuffed =
     m.health += health;
   };
 
-/** Brings back up to `count` random dead friendly minions (each only once), fresh and without a warcry. */
+/** Brings back up to `count` random dead friendly minions (each only once), fresh and without an On Play effect. */
 const resurrect =
   (count: number): Effect =>
   (ctx) => {
@@ -64,7 +64,7 @@ const hitChosen =
   };
 
 /**
- * Cleric: brings back the minion the player picked from `resurrectOptions`, with Guard or Bubble (fresh and without a warcry). It leaves
+ * Cleric: brings back the minion the player picked from `resurrectOptions`, with Guard or Bubble (fresh and without an On Play effect). It leaves
  * the graveyard it came from, which for a stolen enemy minion is the enemy's. Nothing happens if the board is full.
  */
 const resurrectPicked = (): Effect => (ctx) => {

@@ -18,7 +18,7 @@ export interface PlayCardArgs {
 
 /**
  * Plays a minion or a spell from the active player's hand. A minion is placed first, then its
- * warcry (`onPlay`) runs. Weapons come in a later slice. Deaths and triggers are settled by the caller.
+ * On Play effect (`onPlay`) runs. Weapons come in a later slice. Deaths and triggers are settled by the caller.
  */
 export const playCard = (
   state: GameState,
@@ -66,8 +66,8 @@ export const playCard = (
     if (player.board.length >= MAX_BOARD) return { error: 'BOARD_FULL' };
   }
 
-  // Targets. A spell that needs a target and has none is refused. A warcry with no legal target
-  // still lets the minion be played; the warcry just does nothing.
+  // Targets. A spell that needs a target and has none is refused. An On Play effect with no legal target
+  // still lets the minion be played; the On Play effect just does nothing.
   if (play?.target) {
     const legal = legalTargets(state, { kind: 'card', handIndex, choice }, catalog, defs);
     if (legal.length > 0 || isSpellLike) {
@@ -91,7 +91,7 @@ export const playCard = (
     }
     if (!def?.mystery) g.played[me].push(card.id);
     p.plays = { now: (p.plays?.now ?? 0) + 1, prev: p.plays?.prev ?? 0 };
-    // Spell damage only counts for spells, not warcries (RULES 8.3, Q16)
+    // Spell damage only counts for spells, not On Play effects (RULES 8.3, Q16)
     const spellDamage =
       card.type === 'spell' ? p.board.reduce((sum, m) => sum + (minionDef(m, catalog, defs)?.spellDamage ?? 0), 0) : 0;
     const spellHealing =

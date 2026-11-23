@@ -14,7 +14,7 @@ export interface EffectContext {
   events: GameEvent[];
   /** The card whose definition is running (used to find its entourage tokens) */
   sourceCardId?: string;
-  /** The minion this effect belongs to: a warcry's minion, or the owner of a trigger or death effect */
+  /** The minion this effect belongs to: an On Play effect's minion, or the owner of a trigger or death effect */
   self?: number;
   /** Spell damage the caster has right now; set only while a SPELL is being played (RULES Q16) */
   spellDamage?: number;

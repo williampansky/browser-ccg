@@ -341,7 +341,7 @@ export const obtainOpponentPlayedCard = (): Effect => (ctx) => {
 };
 
 /**
- * Suppress: the minion loses its card's behaviour (triggers, auras, spell damage, cost changes, demise) and all its
+ * Suppress: the minion loses its card's behaviour (triggers, auras, spell damage, cost changes, On Death effect) and all its
  * keywords, and any Disable. Its stats, damage and buffs stay as they are. Heroes are not affected.
  */
 export const silence =
@@ -765,7 +765,7 @@ export const forceAllAttack = (): Effect => (ctx) => {
   }
 };
 
-/** The selected friendly minions get "Demise: summon a random `race` minion costing `cost`". */
+/** The selected friendly minions get "On Death: summon a random `race` minion costing `cost`". */
 export const grantDeathSummon =
   (select: Selector, race: string, cost: number): Effect =>
   (ctx) => {

@@ -64,9 +64,9 @@ export interface MinionInstance {
   immune?: boolean;
   /** Its owner draws a card whenever it attacks */
   drawsOnAttack?: boolean;
-  /** Demise effects given by a spell: each summons a random minion of this race and exact cost for its owner */
+  /** On Death effects given by a spell: each summons a random minion of this race and exact cost for its owner */
   deathSummons?: { race: string; cost: number }[];
-  /** Suppressed: the card's own behaviour (warcry already spent, triggers, auras, demise, ...) no longer applies */
+  /** Suppressed: the card's own behaviour (On Play effect already spent, triggers, auras, On Death effect, ...) no longer applies */
   silenced?: boolean;
 }
 

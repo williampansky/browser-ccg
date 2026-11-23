@@ -49,7 +49,7 @@ Please don't copy, redistribute or reuse the images.
 
 ## Known issues
 
-- No multiplayer, accounts or server yet (`game/game.ts` is a stub; see [ROADMAP.md](ROADMAP.md)).
+- No multiplayer, accounts or server yet (the boardgame.io adapter is not built yet; see [ROADMAP.md](ROADMAP.md)).
 - `tsc` reports 8 errors: all are `as Card` casts on partial objects in `utils/__tests__/get-card-power.test.ts`. `npm test` and `npm run build` pass.
 - The card site pages and many `utils/` helpers still use the old zone-style card data and shape.
 - Card art is placeholder only (see the notice above); PRIME cards mostly have no art yet.

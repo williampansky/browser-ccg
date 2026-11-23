@@ -17,7 +17,7 @@ const choose = (id: string, choice: number, opts: Parameters<typeof setup>[1], t
   return r.state;
 };
 
-describe('targeted warcries and spells', () => {
+describe('targeted On Play effects and spells', () => {
   it('PRIME_232 trades 1 Health for +2 Attack', () => {
     const s = setup('PRIME_232', { theirs: [[1, 4]] });
     expect(stats(play(s, mref(s, '1', 0)).state, '1')).toEqual([[3, 3]]);
@@ -39,7 +39,7 @@ describe('targeted warcries and spells', () => {
   });
 });
 
-describe('own-stat warcries', () => {
+describe('own-stat On Play effects', () => {
   it('PRIME_010 gains your weapon\'s Attack (nothing without one)', () => {
     expect(stats(play(withWeapon(setup('PRIME_010'), '0')).state, '0')).toEqual([[4, 3]]);
     expect(stats(play(setup('PRIME_010')).state, '0')).toEqual([[2, 3]]);
@@ -56,7 +56,7 @@ describe('own-stat warcries', () => {
   });
 });
 
-describe('adjacent warcries', () => {
+describe('adjacent On Play effects', () => {
   it('PRIME_066 buffs the neighbours +1/+1 and Guard, nobody else', () => {
     const s = setup('PRIME_066', { mine: [[1, 1], [1, 1], [1, 1]] });
     const r = run(s, { type: 'PlayCard', handIndex: 0, boardIndex: 1 } as Action);

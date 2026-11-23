@@ -10,7 +10,7 @@ export interface DebugSetup {
 }
 
 /**
- * Debug setup: puts the listed minions on each board (left to right, ready to attack, no warcry or aura run) and
+ * Debug setup: puts the listed minions on each board (left to right, ready to attack, no On Play effect or aura run) and
  * equips a weapon and sets energy. Ids that are not in the catalog, or not a minion / weapon, are skipped. Board size is capped at 7.
  */
 export const applyDebugSetup = (state: GameState, setup: DebugSetup, catalog: CardCatalog): GameState =>

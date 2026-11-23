@@ -37,10 +37,10 @@ Three skills (all numbers are first guesses):
 ## Cards
 
 ### Warden of the Long Road: bonded companion (`idea`, 2026-11-13)
-**Mythic minion**, 5 mana, 4/5 (one copy per deck). Warcry: summon *Bonded Bear*, a 4/4 Guard.
+**Mythic minion**, 5 mana, 4/5 (one copy per deck). On Play: summon *Bonded Bear*, a 4/4 Guard.
 **Bond:** while both are on the board each has +1 Attack. If the Warden dies, the Bear gets +3/+3. If the Bear dies, the Warden returns to your hand.
 
-- Engine: entourage token, self-aura, demise effects and `returnToHand` exist. New: a "while both are alive" condition on the aura.
+- Engine: entourage token, self-aura, On Death effects and `returnToHand` exist. New: a "while both are alive" condition on the aura.
 - Why: a "kill the bear or kill the druid" decision for the opponent. Cheapest way to test whether bonding is fun before building the hero.
 - Open: should the Bear be the weak point (kill it and the Warden weakens) or the strong point (kill the Warden and the Bear snowballs)?
   As written it is both, which is cleaner to explain but riskier to balance.

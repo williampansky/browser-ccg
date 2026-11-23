@@ -1,5 +1,6 @@
 import { CardDataError, loadCards, sanitizeText, stripSymbol } from '../load-cards';
 import { gameConfig } from '../../../app.config';
+import mechanics from '../../../data/mechanics.json';
 import { loadHsCards } from '../load-hs-cards';
 import type { LoadCardsInput, RawCard } from '../types';
 
@@ -257,11 +258,12 @@ describe('loadHsCards: the committed card data', () => {
     expect(card.text).toBe('Deal 1 damage to three Random enemies');
   });
 
-  test('the glossary supplies the game\'s own display names (Guard, Stampede, Warcry)', () => {
+  test('the glossary supplies the game\'s own display names (from data/mechanics.json, so an Airtable rename follows)', () => {
+    const nameOf = (symbol: string) => (mechanics as { symbol: string; name: string }[]).find((m) => m.symbol === symbol)!.name;
     const guard = cards.find((c) => c.mechanics.includes('BULWARK') && c.textTemplate === '%BULWARK%')!;
-    expect(guard.text).toBe('Guard');
-    expect(cards.some((c) => c.text.includes('Stampede'))).toBe(true);
-    expect(cards.some((c) => c.text.includes('Warcry'))).toBe(true);
+    expect(guard.text).toBe(nameOf('%BULWARK%'));
+    expect(cards.some((c) => c.text.includes(nameOf('%RUSH%')))).toBe(true);
+    expect(cards.some((c) => c.text.includes(nameOf('%ON_PLAY%')))).toBe(true);
   });
 
   test('no card text contains HTML or an unresolved number token', () => {

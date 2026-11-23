@@ -7,5 +7,5 @@ const bothHeroes: Selector = () => [
   { kind: 'hero', player: '1' },
 ];
 
-// PRIME_105 Nightmare, warcry: "Set both heroes' Health to 18"
+// PRIME_105 Nightmare, On Play effect: "Set both heroes' Health to 18"
 export default defineCard('PRIME_105', (n) => ({ onPlay: [setHeroHealth(bothHeroes, n.primary)] }));

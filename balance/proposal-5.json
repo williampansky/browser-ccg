@@ -1,5 +1,5 @@
 {
-  "CORE_112": { "health": 4, "why": "54.9% unmoved by 3->2 warcry; take a point of health: 6/4" },
+  "CORE_112": { "health": 4, "why": "54.9% unmoved by 3->2 On Play; take a point of health: 6/4" },
   "CORE_031": { "health": 4, "why": "53.6%: 4/4 Bulwark at 5" },
   "CORE_024": { "attack": 4, "why": "53.3%: 5c 4/5" },
   "CORE_081": { "attack": 3, "why": "53.2%: weapon that heals 2 per swing at 4/2 -> 3/2" },

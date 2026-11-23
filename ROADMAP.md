@@ -22,7 +22,7 @@ stale (38 of 101 fail) and it has known bugs. Porting from a shallow read would 
 accidents as rules. This milestone produces an authoritative `RULES.md` before any engine code.
 
 - [x] Read the `hsclone` rules code end to end: turn flow and draw, combat and targeting, card
-      effects (spells, warcries, weapons, class skills, boons/buffs), keyword semantics
+      effects (spells, On Play effects, weapons, class skills, boons/buffs), keyword semantics
 - [x] Analyse the card data (`data/`): field semantics, mechanics grammar, number fields,
       `%SYMBOL%` and text-token syntax, data-quality problems
 - [x] Mechanics coverage matrix: what the card pool uses vs. what `hsclone` actually implemented
@@ -95,7 +95,7 @@ simulator first.
 
 - [ ] Choose the first-release pool from the current 69 cards, the old CORE 132 and the old PRIME 254
       (see `PREVIOUS-VERSIONS.md`); Bulwark/Guard, Armor and similar cards are core again
-- [ ] Switch the site pages from the deleted zone-game JSON to the new pool (`data/`), and retire `game/data/`
+- [ ] Switch the site pages from the deleted zone-game JSON to the new pool (`data/`)
 - [ ] Naming and text pass (duplicate names, typos, "Attack" vs "Deal" wording; see `CARD-AUDIT.md`)
 - [ ] Art match pass (mismatched art listed in `CARD-AUDIT.md` section 5)
 - [ ] Art provenance table: card, artist, source, licence, status; replace temporary art
@@ -103,7 +103,7 @@ simulator first.
 ## Milestone 5: Keywords and mechanics
 
 Add one at a time, each with tests: Rush, Double Attack, Bubble, Disable, Expiration, energy shield,
-warcry and on-death effects, boons vs buffs, weapons, class skills/heroes. Order by what the first
+On Play effect and on-death effects, boons vs buffs, weapons, class skills/heroes. Order by what the first
 card pool needs.
 
 ## Milestone 6: Multiplayer

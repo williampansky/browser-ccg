@@ -11,7 +11,7 @@ export const allMinions = (): Selector => (ctx) =>
     ctx.g.players[p].board.map((m): TargetRef => ({ kind: 'minion', instanceId: m.instanceId }))
   );
 
-/** The minion this effect belongs to (a warcry's own minion, or a trigger's owner minion). */
+/** The minion this effect belongs to (an On Play effect's own minion, or a trigger's owner minion). */
 export const self = (): Selector => (ctx) => (ctx.self !== undefined ? [{ kind: 'minion', instanceId: ctx.self }] : []);
 
 /** Who the triggering event was aimed at (an attack's victim, a heal's recipient). */
@@ -43,7 +43,7 @@ const minionRef = (m: { instanceId: number }): TargetRef => ({ kind: 'minion', i
 /** The caster's own hero. */
 export const ownHero = (): Selector => (ctx) => [{ kind: 'hero', player: ctx.caster }];
 
-/** All of the caster's minions (a warcry's own minion included). */
+/** All of the caster's minions (an On Play effect's own minion included). */
 export const friendlyMinions = (): Selector => (ctx) => ctx.g.players[ctx.caster].board.map(minionRef);
 
 /** The caster's minions except the one this effect belongs to. */

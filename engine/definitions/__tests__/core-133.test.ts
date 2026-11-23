@@ -2,7 +2,7 @@ import { produce } from 'immer';
 import { getCardDef } from '..';
 import { mref, realCard, run, setup } from '../../testing/real-cards';
 
-// CORE_133, Demise: deal 2 damage to the enemy's hero.
+// CORE_133, On Death: deal 2 damage to the enemy's hero.
 describe('CORE_133', () => {
   it('is defined', () => {
     expect(getCardDef(realCard('CORE_133'))).toBeDefined();
