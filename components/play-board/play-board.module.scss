@@ -306,12 +306,15 @@
   visibility: hidden;
 }
 
-// A card being dragged or clicked to aim at a target: it keeps its place and size in the hand, with the selection glow only (no click enlargement, no hover lift).
+// A card being dragged or clicked to aim at a target: it stays in its hovered look (the same lift and size as `.handSlot:hover`, which
+// it can not rely on because the pointer leaves the card during a drag), with the selection glow on top.
 .handSlot.slotHeld,
 .handSlot.slotHeld:hover {
   filter: drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e);
-  transform: translate(var(--x), calc(var(--y-comp) + (var(--drop) + var(--hand-sink)) * var(--zoom)))
-    rotate(var(--rot)) scale(var(--zoom));
+  z-index: 10;
+  transform: translate(var(--x), calc(var(--y-comp) + (var(--h-lift, -170px) + var(--hand-sink)) * var(--zoom))) rotate(var(--h-hovrot, 0deg))
+    scale(calc(var(--h-hov, 1.5) * var(--zoom)));
+  transition: transform var(--h-hov-ms, 100ms) cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.15s;
 }
 
 // Doubled class so it outranks `.handSlot:hover`: a selected card keeps its size and glow while the pointer is on it.
