@@ -737,13 +737,14 @@ export const disableWhere =
 /**
  * Returns the caster's selected minions to their hand (a full hand destroys
  * them). The copy costs `costDelta` more (negative is less),
- * and with `rush` it has Rush when played again. Enemy minions are ignored.
+ * and with `rush` it has Rush when played again. Enemy minions are ignored
+ * unless `isAnyOwner` is set (then each goes to its own owner's hand).
  */
 export const returnToHand =
-  (select: Selector, costDelta = 0, rush = false): Effect =>
+  (select: Selector, costDelta = 0, rush = false, isAnyOwner = false): Effect =>
   (ctx) => {
     for (const { owner, minion } of minionsOf(ctx, select)) {
-      if (owner !== ctx.caster) continue;
+      if (owner !== ctx.caster && !isAnyOwner) continue;
       const p = ctx.g.players[owner];
       p.board = p.board.filter((m) => m.instanceId !== minion.instanceId);
       if (p.hand.length >= MAX_HAND) {

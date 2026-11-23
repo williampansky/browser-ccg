@@ -824,6 +824,22 @@
     "isEntourage": true
   },
   {
+    "id": "PRIME_189a",
+    "name": "Defias Bandit",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_ASSASSIN%",
+    "race": "%RACE_NONE%",
+    "cost": 2,
+    "attack": 2,
+    "health": 1,
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "PRIME_096a",
     "name": "Terrified Toucan",
     "set": "%SET_003%",

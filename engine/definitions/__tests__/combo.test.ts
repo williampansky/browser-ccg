@@ -94,3 +94,43 @@ describe('PRIME_199', () => {
     expect(stats(play(setup('PRIME_199', {})).state, '0')[0]).toEqual([2, 2]);
   });
 });
+
+describe('PRIME_189', () => {
+  it('summons a 2/1 Defias Bandit only with Combo', () => {
+    const plain = play(setup('PRIME_189', {})).state;
+    const withCombo = play(afterOneCard(setup('PRIME_189', {}))).state;
+
+    expect(stats(plain, '0')).toEqual([[2, 2]]);
+    expect(stats(withCombo, '0')).toEqual([
+      [2, 2],
+      [2, 1],
+    ]);
+  });
+});
+
+describe('PRIME_198', () => {
+  it('needs no target without Combo', () => {
+    const start = setup('PRIME_198', { theirs: [[1, 3]] });
+
+    expect(playsWithTarget(start)).toBe(false);
+    expect(stats(play(start).state, '1')).toHaveLength(1);
+  });
+
+  it('returns an enemy minion to its owner hand with Combo', () => {
+    const start = afterOneCard(setup('PRIME_198', { theirs: [[1, 3]] }));
+    const handBefore = start.players['1'].hand.length;
+    const { state } = play(start, mref(start, '1', 0));
+
+    expect(stats(state, '1')).toHaveLength(0);
+    expect(state.players['1'].hand).toHaveLength(handBefore + 1);
+  });
+
+  it('returns a friendly minion to your own hand with Combo', () => {
+    const start = afterOneCard(setup('PRIME_198', { mine: [[1, 3]] }));
+    const handBefore = start.players['0'].hand.length;
+    const { state } = play(start, mref(start, '0', 0));
+
+    expect(stats(state, '0')).toEqual([[5, 3]]);
+    expect(state.players['0'].hand).toHaveLength(handBefore);
+  });
+});

@@ -942,7 +942,7 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false,
+    "active": true,
     "artStatus": "FPO"
   },
   {
@@ -1227,6 +1227,7 @@
     ],
     "collectible": true,
     "active": false,
+    "entourage": "PRIME_189a",
     "artStatus": "FPO"
   },
   {
@@ -1508,7 +1509,7 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false,
+    "active": true,
     "artStatus": "FPO"
   },
   {
@@ -1891,7 +1892,7 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false,
+    "active": true,
     "artStatus": "FPO"
   },
   {
@@ -4837,7 +4838,7 @@
     ],
     "playContext": "%SET_VALUE%",
     "collectible": true,
-    "active": false,
+    "active": true,
     "elite": true,
     "artistName": "https://www.artstation.com/dianafranco",
     "artistUrl": "https://www.artstation.com/dianafranco",

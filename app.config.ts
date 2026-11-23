@@ -4,7 +4,7 @@ export const gameConfig: GameConfig = {
   cardCounts: {
     core: 137,
     prime: 259,
-    entourage: 56,
+    entourage: 57,
     game: 1,
   },
   numerics: {
