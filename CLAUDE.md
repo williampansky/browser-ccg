@@ -205,8 +205,46 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 
 ## Conventions
 
-- TypeScript, single quotes, Prettier-style formatting. Types live in `types/`, enums in
-  `enums/`; both have an `index.ts` barrel.
+- TypeScript. Types live in `types/`, enums in `enums/`; both have an `index.ts` barrel.
+- **Formatting is Prettier** (`.prettierrc`: 80 columns, single quotes, `trailingComma: all`, `arrowParens: always`). A
+  PostToolUse hook in `.claude/settings.json` runs `prettier --write` on every ts/tsx/js/scss file Claude edits;
+  `yarn format` / `yarn format:check` run it over the repo. `data/`, `public/`, `balance/` and all `*.json` are ignored (see
+  `.prettierignore`). Prettier does not wrap comments, sort imports or props, or add blank lines, so the rules below are
+  followed by hand.
+
+### Code style (follow these by hand; Prettier does not enforce them)
+
+1. **Destructure instead of re-declaring a property under a new name.** If the code reads `ctx.event`, write
+   `const { event } = ctx`, not `const e = ctx.event`.
+2. **Block comments:** a one-line `/** ... */` is only for text that fits in 80 columns (indentation included). A longer
+   comment is a multi-line block wrapped at 80 columns: `/**`, then ` * ` lines, then ` */` on its own line.
+3. **Arrow functions:** if the body does not fit on one line within 80 columns, use a block body with an explicit
+   `return` (callbacks such as `flatMap` included), not a wrapped expression. An arrow whose body fits on one line stays
+   braceless (`(m) => m.attack >= 7`). A call whose arguments wrap (`.map(\n  (m) => ...\n)`) does not count as the arrow
+   wrapping.
+4. **No long inline conditions.** When a condition, filter or map callback spans several lines or chains more than two
+   operations or comparisons, name the parts (a variable, or a small helper such as `isHiddenMinion`).
+5. **Blank lines:** a multi-line statement (a function, an `if` or loop block, a wrapped call) has a blank line before and
+   after it, except at the start or end of its block. Consecutive single-line declarations stay together with no blank
+   lines.
+6. **JSX props in `.tsx` are alphabetical,** with `key` and `ref` first. A `{...spread}` is a divider: sort the props
+   between spreads, never move anything across one (a later prop overrides the spread).
+7. **Imports,** in this order with a blank line between groups, alphabetical within each: external packages, then `../`,
+   then `./`, then `.scss` and other side-effect imports. `import type` sorts with its group by module path. When you edit
+   a file, fix its imports.
+8. **Descriptive names:** `minion`, `target`, `player`, not `m`, `t`, `p`.
+9. **`if` statements:** a short `if` stays on one line with no braces (`if (target.kind === 'hero') return false;`) when
+   it fits, holds one simple statement and has no `else`. Anything else (an `else`, several statements, complex logic)
+   uses braces over multiple lines, which makes it a multi-line statement under rule 5.
+10. **No magic numbers:** a bare number in rule code gets a descriptive local or shared name, or comes from the card's
+    data (`n.primary`), never a bare `2` or `7`.
+11. **Comments say why,** and only when the code is not already self-explanatory.
+12. **Booleans** are named `is...`, `has...` or `can...`.
+13. **Types:** standard TypeScript practice. No `any`, `interface` for object shapes, `type` for unions, and explicit return
+    types on exported functions.
+14. **Tests are named by card id** (`CORE_135`), never by card name, because names are editable Airtable data.
+
+Not done yet: existing code does not follow rules 2, 6 and 7 (a rewrap and a prop sort are separate sweeps).
 - Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
 - Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.

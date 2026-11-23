@@ -1,7 +1,21 @@
+# Dependencies and build output
+node_modules
 build
 dist
+.next
+.next-test
 now.json
 .vscode
 
-# styles
+# Data pulled from Airtable and other generated JSON
+data
+balance
+art-inbox
+*.json
+
+# Assets and lockfile
+public
+yarn.lock
+
+# Styles
 mixins

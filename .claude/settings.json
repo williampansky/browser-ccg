@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | { read -r file; case \"$file\" in *.ts|*.tsx|*.js|*.scss) \"$CLAUDE_PROJECT_DIR/node_modules/.bin/prettier\" --write --log-level warn \"$file\" ;; esac; } 2>/dev/null || true",
+            "statusMessage": "Formatting with Prettier"
+          }
+        ]
+      }
+    ]
+  }
+}

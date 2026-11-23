@@ -19,6 +19,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,scss}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,scss}\"",
     "test": "export TS_JEST_DISABLE_VER_CHECKER=true && jest --config ./jest.config.ts"
   },
   "dependencies": {
@@ -64,6 +66,7 @@
     "@types/webpack-env": "^1.18.0",
     "jest-matcher-one-of": "^1.0.2",
     "node-sass": "^7.0.3",
+    "prettier": "^3.10.1",
     "sass": "^1.55.0",
     "sharp": "^0.35.5",
     "ts-jest": "^29.0.3",
