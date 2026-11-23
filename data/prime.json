@@ -2214,7 +2214,7 @@
     "cost": 4,
     "text": "Give your hero +4 Attack this turn. Gain 4 Armor.",
     "collectible": true,
-    "active": false,
+    "active": true,
     "artStatus": "FPO"
   },
   {
@@ -3207,7 +3207,7 @@
     "cost": 1,
     "text": "Deal damage equal to your hero's Attack to a minion.",
     "collectible": true,
-    "active": false,
+    "active": true,
     "artStatus": "FPO"
   },
   {

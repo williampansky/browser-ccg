@@ -165,6 +165,19 @@ export const buffWeaponThisTurn =
   };
 
 /**
+ * "Give your hero +N Attack this turn": the hero only attacks with a weapon,
+ * so add it to the equipped one, or equip a one-turn weapon of that attack.
+ */
+export const heroAttackThisTurn =
+  (attack: number): Effect =>
+  (ctx) => {
+    const { weapon } = ctx.g.players[ctx.caster];
+    if (weapon) return buffWeaponThisTurn(attack)(ctx);
+
+    return equipWeapon({ temporary: true, attack, durability: 1 })(ctx);
+  };
+
+/**
  * Adds an empty energy slot (capped at 10). The new slot is not filled until
  * next turn's refill.
  */
@@ -443,10 +456,12 @@ export const buffThisTurn =
 
 /**
  * Equips a weapon with the running card's attack and health (as durability),
- * replacing any weapon.
+ * replacing any weapon. `attack` and `durability` override the card's own.
  */
 export const equipWeapon =
-  (opts: { temporary?: boolean } = {}): Effect =>
+  (
+    opts: { temporary?: boolean; attack?: number; durability?: number } = {},
+  ): Effect =>
   (ctx) => {
     const card = ctx.sourceCardId
       ? ctx.catalog.get(ctx.sourceCardId)
@@ -455,8 +470,8 @@ export const equipWeapon =
     ctx.g.players[ctx.caster].weapon = {
       instanceId: ctx.g.nextInstanceId++,
       cardId: card.id,
-      attack: card.attack ?? 0,
-      durability: card.health ?? 0,
+      attack: opts.attack ?? card.attack ?? 0,
+      durability: opts.durability ?? card.health ?? 0,
       ...(opts.temporary ? { temporary: true } : {}),
     };
     ctx.events.push({
