@@ -32,7 +32,7 @@ export interface CardNumbers {
   secondary?: number;
   /** `numberRNG` (CORE) or `numberRandom` (PRIME): how many random targets */
   random?: number;
-  /** `numberOvercharge`: overload amount */
+  /** `numberOvercharge`: overload amount (`%NUMO%`, capital letter O) */
   overcharge?: number;
 }
 

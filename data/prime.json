@@ -2101,6 +2101,24 @@
     "artStatus": "FINAL"
   },
   {
+    "id": "PRIME_259",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_FREE%",
+    "cardClass": "0 %CLASS_MYSTIC%",
+    "cost": 1,
+    "text": "Deal %NUM1% damage to an enemy and %DISABLE% it",
+    "mechanics": [
+      "%TARGET%",
+      "%DAMAGE%",
+      "%DISABLE%"
+    ],
+    "numberPrimary": 1,
+    "playContext": "%DAMAGE%",
+    "collectible": false,
+    "active": true
+  },
+  {
     "id": "PRIME_195",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
@@ -2145,6 +2163,27 @@
     "collectible": true,
     "active": false,
     "artStatus": "FPO"
+  },
+  {
+    "id": "PRIME_257",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_SUPERIOR%",
+    "cardClass": "0 %CLASS_MYSTIC%",
+    "cost": 3,
+    "text": "Deal %NUM1% damage to all enemies; %OVERLOAD% (%NUMO%)",
+    "mechanics": [
+      "%GLOBAL_SPELL%",
+      "%AOE%",
+      "%DAMAGE%",
+      "%OVERLOAD%"
+    ],
+    "numberPrimary": 4,
+    "numberSecondary": 2,
+    "numberOvercharge": 2,
+    "playContext": "%DAMAGE%",
+    "collectible": false,
+    "active": true
   },
   {
     "id": "PRIME_166",
@@ -4011,6 +4050,23 @@
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
     "artStatus": "FINAL"
+  },
+  {
+    "id": "PRIME_258",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_FREE%",
+    "cardClass": "0 %CLASS_MYSTIC%",
+    "cost": 0,
+    "text": "%BUFF% your %RACE_IDOL% minions with +%NUM1% health",
+    "mechanics": [
+      "%GLOBAL_SPELL%",
+      "%BUFF%"
+    ],
+    "numberPrimary": 2,
+    "playContext": "%BUFF%",
+    "collectible": false,
+    "active": true
   },
   {
     "id": "PRIME_014",

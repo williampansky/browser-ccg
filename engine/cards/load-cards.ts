@@ -424,9 +424,9 @@ function normaliseCard(
 }
 
 /**
- * Substitutes `%NUM%`/`%NUM1%` (primary) and `%NUM2%` (secondary), and replaces
- * glossary tokens
- * with their display names. Unknown tokens are left in place and reported.
+ * Substitutes `%NUM%`/`%NUM1%` (primary), `%NUM2%` (secondary) and `%NUMO%`
+ * (overcharge, with a capital letter O), and replaces glossary tokens with
+ * their display names. Unknown tokens are left in place and reported.
  */
 function renderText(
   template: string,
@@ -455,6 +455,17 @@ function renderText(
         return token;
       }
       return String(numbers.secondary);
+    }
+
+    if (name === 'NUMO') {
+      if (numbers.overcharge === undefined) {
+        report(
+          'text-number-missing',
+          `${token} used but there is no numberOvercharge`,
+        );
+        return token;
+      }
+      return String(numbers.overcharge);
     }
 
     const display = glossary.get(token);

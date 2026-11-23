@@ -2921,8 +2921,9 @@
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
-    "cost": 4,
-    "text": "<strong>%TRANSFORM%</strong> a minion<br>\ninto a 0/1 %RACE_DEMONIC%<br>\nwith <strong>%BULWARK%</strong>",
+    "cardClass": "0 %CLASS_MYSTIC%",
+    "cost": 3,
+    "text": "<strong>%TRANSFORM%</strong> a minion\ninto a 0/1 with <strong>%BULWARK%</strong>",
     "mechanics": [
       "%TRANSFORM%",
       "%TARGET%",

@@ -11,14 +11,20 @@ import { createSeededRng } from '../rng';
 
 const { cards, byId } = loadHsCards();
 const neutral = [...playablePool(cards), ...primePool(cards)];
-const mysticIds = Array.from({ length: 15 }, (_, i) => `PRIME_${200 + i}`);
+const mysticIds = [
+  ...Array.from({ length: 15 }, (_, i) => `PRIME_${200 + i}`),
+  'PRIME_257',
+  'PRIME_258',
+  'PRIME_259',
+  'CORE_109',
+];
 const classOf = (id: string) => byId.get(id)?.heroClass;
 
 describe('classCardsFor', () => {
   it('is the class-locked cards of that class and nothing else', () => {
     const ids = classCardsFor(cards, 'MYSTIC').map((c) => c.id);
 
-    expect([...ids].sort()).toEqual(mysticIds);
+    expect([...ids].sort()).toEqual([...mysticIds].sort());
   });
   it('leaves a class with a single class card with just that card', () => {
     expect(classCardsFor(cards, 'FIGHTER').map((c) => c.id)).toEqual([

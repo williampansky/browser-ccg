@@ -209,6 +209,34 @@ describe('loadCards: normalisation', () => {
     expect(byId.get('CORE_900')!.text).toBe('Deal 7');
   });
 
+  test('%NUMO% reads numberOvercharge', () => {
+    const { byId, issues } = loadCards(
+      input({
+        core: [
+          spell({
+            text: 'Deal %NUM1%; Overload (%NUMO%)',
+            numberPrimary: 4,
+            numberOvercharge: 2,
+          }),
+        ],
+      }),
+    );
+
+    expect(byId.get('CORE_900')!.text).toBe('Deal 4; Overload (2)');
+    expect(issues.filter((i) => i.code === 'text-number-missing')).toEqual([]);
+  });
+
+  test('%NUMO% with no numberOvercharge is reported and left in place', () => {
+    const { byId, issues } = loadCards(
+      input({ core: [spell({ text: 'Overload (%NUMO%)' })] }),
+    );
+
+    expect(byId.get('CORE_900')!.text).toBe('Overload (%NUMO%)');
+    expect(issues.filter((i) => i.code === 'text-number-missing')).toHaveLength(
+      1,
+    );
+  });
+
   test('resolves entourage ids, applies the known typo fix, and reports unresolved ones', () => {
     const { byId, issues } = loadCards(
       input({
