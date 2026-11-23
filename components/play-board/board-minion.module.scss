@@ -414,9 +414,12 @@
 }
 .boostPreview .oval {
   border-color: #7be08a;
+  // The last layer is the usual dark drop shadow, so the preview ring does not replace it.
   box-shadow:
     0 0 0 2px rgba(123, 224, 138, 0.6),
-    0 0 14px rgba(123, 224, 138, 0.55);
+    0 0 14px rgba(123, 224, 138, 0.55),
+    0 var(--sh-def-y, 3px) var(--sh-def-b, 12px)
+      rgba(0, 0, 0, var(--sh-def-a, 0.55));
 }
 .boostPreview .oval::after {
   content: '';
