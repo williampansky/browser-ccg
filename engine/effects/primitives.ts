@@ -746,6 +746,29 @@ export const becomeCopyOf =
     if (me.deathSummons === undefined) delete me.deathSummons;
   };
 
+/**
+ * Summons a copy of the selected minion for the caster, at the far right of their board: its card, current attack and health,
+ * keywords, and any Suppress or On Death summons it carries (RULES Appendix B). Like any new minion it can not attack this turn. A full
+ * board, or nothing selected, means nothing happens. Its own On Play effect does not run (it is summoned, not played).
+ */
+export const summonCopyOf =
+  (select: Selector): Effect =>
+  (ctx) => {
+    const [src] = minionsOf(ctx, select);
+    const card = src && ctx.catalog.get(src.minion.cardId);
+    if (!src || !card) return;
+    const t = src.minion;
+    if (!summonMinion(ctx.g, ctx.caster, card, ctx.events)) return;
+    const board = ctx.g.players[ctx.caster].board;
+    const me = board[board.length - 1];
+    me.attack = t.attack - t.auraAttack - t.tempAttack;
+    me.health = t.health;
+    me.maxHealth = t.maxHealth;
+    me.keywords = { ...t.keywords };
+    me.silenced = t.silenced;
+    if (t.deathSummons) me.deathSummons = [...t.deathSummons];
+  };
+
 /** Every minion except the running one attacks a random character on the other side (a minion fights back; a hero does not), in play order. */
 export const forceAllAttack = (): Effect => (ctx) => {
   const order = [...ctx.g.players['0'].board.map((m) => ({ owner: '0' as const, m })), ...ctx.g.players['1'].board.map((m) => ({ owner: '1' as const, m }))].sort(

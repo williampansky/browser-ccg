@@ -580,6 +580,11 @@ just Demonic), 106 is for one turn, 127 is for one turn only, 096 is not a CORE 
 - **007** destroys the opponent's weapon and nothing else (hsclone also stopped their hero attacking; the text does not say
   so). **Confirmed by the author, 2026-11-11: follow the text, it only destroys the weapon.**
 
+- **CORE_156** ("Summon a copy of a chosen enemy minion"): the copy is for the caster, at the far right of their board, and keeps the
+  original's *current* Attack, Health (damage included), keywords, Suppress and On Death summons, but not its Mysteries, Disable or this-turn
+  boosts. It is summoned, not played, so its On Play effect does not run, and it can not attack the turn it arrives. A full board: nothing happens.
+  Enemy minions only.
+
 ## Appendix C: PRIME card behaviour decisions (2026-11-12)
 
 Readings I chose while giving PRIME cards definitions (`engine/definitions/prime/`). None of these is approved yet; change any you disagree with.
