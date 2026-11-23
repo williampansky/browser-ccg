@@ -1580,6 +1580,28 @@
     "artStatus": "FINAL"
   },
   {
+    "id": "CORE_135",
+    "name": "Behemoth Slayer",
+    "set": "%SET_002%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_REMARKABLE%",
+    "cardClass": "0 %CLASS_NONE%",
+    "race": "%RACE_NONE%",
+    "cost": 4,
+    "attack": 4,
+    "health": 2,
+    "text": "<strong>%ON_PLAY%:</strong> %DESTROY% a minion with %NUM1% or more attack power",
+    "mechanics": [
+      "%ON_PLAY%",
+      "%DESTROY%",
+      "%TARGET%",
+      "%BOOLEAN%"
+    ],
+    "numberPrimary": 7,
+    "collectible": false,
+    "active": true
+  },
+  {
     "id": "CORE_019",
     "name": "Little-big Leader",
     "set": "%SET_002%",
