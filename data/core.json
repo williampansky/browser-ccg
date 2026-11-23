@@ -2921,19 +2921,17 @@
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
-    "cardClass": "0 %CLASS_MYSTIC%",
     "cost": 3,
-    "text": "<strong>%TRANSFORM%</strong> a minion\ninto a 0/1 with <strong>%BULWARK%</strong>",
+    "text": "<strong>%TRANSFORM%</strong> a minion\ninto a 1/1",
     "mechanics": [
       "%TRANSFORM%",
-      "%TARGET%",
-      "%BULWARK%"
+      "%TARGET%"
     ],
-    "numberPrimary": 0,
+    "numberPrimary": 1,
     "numberSecondary": 1,
     "playType": "TARGETED",
     "playContext": "%TRANSFORM%",
-    "targetingArrowText": "%TRANSFORM% a minion into a 0/1 %RACE_DEMONIC% with %BULWARK%",
+    "targetingArrowText": "%TRANSFORM% a minion into a 1/1",
     "collectible": true,
     "active": true,
     "entourage": "CORE_109a",

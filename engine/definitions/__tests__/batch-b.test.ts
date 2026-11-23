@@ -212,11 +212,11 @@ describe('transform', () => {
     const mine = setup('CORE_070', { mine: [[1, 1]] });
     expect(failCode(mine, mref(mine, '0', 0))).toBe('ILLEGAL_TARGET');
   });
-  it('109 turns any minion into a 0/1 Hellbunny with Guard', () => {
+  it('109 turns any minion into a plain 1/1 with no Guard', () => {
     const s = setup('CORE_109', { mine: [[4, 4]] });
     const r = play(s, mref(s, '0', 0)).state;
-    expect(stats(r, '0')).toEqual([[0, 1]]);
-    expect(r.players['0'].board[0].keywords.guard).toBe(true);
+    expect(stats(r, '0')).toEqual([[1, 1]]);
+    expect(r.players['0'].board[0].keywords.guard).toBe(false);
   });
 });
 

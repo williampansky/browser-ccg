@@ -24,7 +24,7 @@ const kill = (s: GameState, index: number): GameState =>
 const boardIds = (s: GameState): string[] =>
   s.players['0'].board.map((m) => m.cardId);
 
-it.each(['206', '207', '212', '257', '258', '259'])(
+it.each(['206', '207', '212', '257', '258', '259', '260'])(
   'PRIME_%s is defined and playable',
   (n) => {
     expect(getCardDef(realCard(`PRIME_${n}`))).toBeDefined();
@@ -287,5 +287,31 @@ describe('PRIME_258: your Idol minions get +2 Health', () => {
   });
   it('leaves their Attack alone', () => {
     expect(idols().players['0'].board.map((m) => m.attack)).toEqual([0, 2, 1]);
+  });
+});
+
+describe('PRIME_260: transform a minion into a 0/1 with Guard', () => {
+  it('is a Mystic class card, not a neutral one', () => {
+    expect(realCard('PRIME_260').heroClass).toBe('MYSTIC');
+    expect(realCard('CORE_109').heroClass).toBeUndefined();
+  });
+  it('turns any minion, yours or theirs, into a 0/1 with Guard', () => {
+    const s = setup('PRIME_260', { mine: [[4, 4]], theirs: [[5, 5]] });
+    const mine = play(s, mref(s, '0', 0)).state.players['0'].board[0];
+    const theirs = play(s, mref(s, '1', 0)).state.players['1'].board[0];
+
+    for (const turned of [mine, theirs]) {
+      expect([turned.attack, turned.health, turned.keywords.guard]).toEqual([
+        0,
+        1,
+        true,
+      ]);
+    }
+  });
+  it('costs 3 and needs a minion to aim at', () => {
+    const s = setup('PRIME_260', { mine: [[4, 4]] });
+
+    expect(play(s, mref(s, '0', 0)).state.players['0'].energy.current).toBe(7);
+    expect(failCode(s)).toBeDefined();
   });
 });

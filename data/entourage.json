@@ -223,12 +223,8 @@
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_NONE%",
     "cost": 1,
-    "attack": 0,
+    "attack": 1,
     "health": 1,
-    "text": "<strong>%BULWARK%</strong>",
-    "mechanics": [
-      "%BULWARK%"
-    ],
     "collectible": false,
     "active": true,
     "artistName": "a-ravlik",
@@ -570,6 +566,26 @@
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
     "artStatus": "FINAL",
+    "isEntourage": true
+  },
+  {
+    "id": "PRIME_260a",
+    "name": "Mutation",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_NONE%",
+    "cost": 1,
+    "attack": 0,
+    "health": 1,
+    "text": "<strong>%BULWARK%</strong>",
+    "mechanics": [
+      "%BULWARK%"
+    ],
+    "collectible": false,
+    "active": true,
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {

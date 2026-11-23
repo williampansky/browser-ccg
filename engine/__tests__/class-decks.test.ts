@@ -16,7 +16,7 @@ const mysticIds = [
   'PRIME_257',
   'PRIME_258',
   'PRIME_259',
-  'CORE_109',
+  'PRIME_260',
 ];
 const classOf = (id: string) => byId.get(id)?.heroClass;
 
