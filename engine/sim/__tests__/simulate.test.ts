@@ -9,55 +9,23 @@ import { chooseGreedyAction } from '../../bots/greedy-bot';
 import { chooseRandomAction } from '../../bots/random-bot';
 import { loadHsCards } from '../../cards/load-hs-cards';
 import { playablePool } from '../../decks';
-import {
-  buildStarterDeck,
-  DECK_SIZE,
-  STARTER_DECKS,
-} from '../../starter-decks';
+import { simDecks } from '../sim-decks';
 
 const { byId, cards } = loadHsCards();
 const pool = playablePool(cards);
-const decks = STARTER_DECKS.map((d) => ({
-  name: d.name,
-  deck: buildStarterDeck(d, pool),
-}));
+const decks = simDecks(pool, 12);
 
-describe('starter decks', () => {
-  it('are 30 distinct, playable cards each, and different from one another', () => {
+describe('sim decks', () => {
+  it('are 30 distinct playable cards each, and different from one another', () => {
     for (const d of decks) {
-      expect(d.deck).toHaveLength(DECK_SIZE);
-      expect(new Set(d.deck).size).toBe(DECK_SIZE);
+      expect(d.deck).toHaveLength(30);
+      expect(new Set(d.deck).size).toBe(30);
       for (const id of d.deck) expect(pool.some((c) => c.id === id)).toBe(true);
     }
     expect(new Set(decks.map((d) => d.deck.join())).size).toBe(decks.length);
   });
-  it('have the curve their plan says: aggro is cheaper than midrange, which is cheaper than control', () => {
-    const avg = (ids: string[]) =>
-      ids.reduce((n, id) => n + (byId.get(id)?.cost ?? 0), 0) / ids.length;
-    const [aggro, mid, control] = decks.map((d) => avg(d.deck));
-    expect(aggro).toBeLessThan(mid);
-    expect(mid).toBeLessThan(control);
-  });
-  it('every deck holds at least its minimum number of minions, and Spellslinger and Armed are not minion-free', () => {
-    const minions = (ids: string[]) =>
-      ids.filter((id) => byId.get(id)?.type === 'minion').length;
-    STARTER_DECKS.forEach((d, i) =>
-      expect(minions(decks[i].deck)).toBeGreaterThanOrEqual(d.minMinions ?? 0),
-    );
-    const spell = decks.findIndex((d) => d.name === 'Spellslinger');
-    expect(STARTER_DECKS[spell].minMinions).toBeGreaterThanOrEqual(10);
-    expect(minions(decks[spell].deck)).toBeGreaterThanOrEqual(12);
-    // still mostly spells
-    expect(
-      decks[spell].deck.filter((id) => byId.get(id)?.type === 'spell').length,
-    ).toBeGreaterThanOrEqual(15);
-    const armed = decks.findIndex((d) => d.name === 'Armed');
-    expect(minions(decks[armed].deck)).toBeGreaterThanOrEqual(10);
-  });
-  it('are deterministic', () => {
-    expect(buildStarterDeck(STARTER_DECKS[0], pool)).toEqual(
-      buildStarterDeck(STARTER_DECKS[0], pool),
-    );
+  it('are the same every run', () => {
+    expect(simDecks(pool, 12)).toEqual(decks);
   });
 });
 
@@ -109,6 +77,6 @@ describe('simulation', () => {
       t.matchups,
     );
     expect(table.split('\n')).toHaveLength(decks.length + 1);
-    expect(table).toContain('Aggro');
+    expect(table).toContain('Deck 1');
   });
 });

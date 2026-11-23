@@ -91,7 +91,7 @@ export const ThemeSample = ({ title }: { title: string }) => {
         />
         <Select aria-label="A drop-down">
           <option>Surprise</option>
-          <option>Random starter deck</option>
+          <option>Random deck</option>
         </Select>
       </Group>
       <div

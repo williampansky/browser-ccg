@@ -1,57 +1,34 @@
-import { buildDeck, Card, checkDeck, MAX_DECK_SIZE, Rng } from '../../engine';
 import {
-  ALL_STARTER_DECKS,
-  buildStarterDeck,
-  MIXED_STARTER_DECKS,
-  poolFor,
-  PRIME_STARTER_DECKS,
-  STARTER_DECKS,
-} from '../../engine/starter-decks';
+  buildClassDeck,
+  buildDeck,
+  Card,
+  checkDeck,
+  MAX_DECK_SIZE,
+  Rng,
+} from '../../engine';
 import type { SavedDeck } from '../deck-builder/deck-model';
 
-/** `'random'`, `'starter:<name>'` or `'saved:<id>'`. */
+/** `'random-all'`, `'random'` or `'saved:<id>'`. */
 export type DeckChoice = string;
+/**
+ * A random deck from CORE only, plus any CORE cards of the hero's class (PRIME
+ * is opt-in).
+ */
 export const RANDOM_DECK: DeckChoice = 'random';
 /**
- * A random deck from CORE and PRIME together (PRIME is opt-in; every other
- * choice here uses CORE only).
+ * A random deck from CORE and PRIME together, with a third of it the hero's own
+ * class cards. The default for both seats.
  */
 export const RANDOM_ALL: DeckChoice = 'random-all';
-/** A (CORE) starter deck picked at random each game. */
-export const RANDOM_STARTER: DeckChoice = 'starter-random';
-/**
- * A PRIME starter deck picked at random each game (PRIME is opt-in, so this is
- * its own choice).
- */
-export const RANDOM_STARTER_PRIME: DeckChoice = 'starter-random-prime';
-/** A Core + Prime starter deck picked at random each game. */
-export const RANDOM_STARTER_BOTH: DeckChoice = 'starter-random-both';
+
+const SAVED_PREFIX = 'saved:';
 
 /**
- * Mostly a starter deck, sometimes (`SURPRISE_RANDOM_ODDS`) a fully random one.
- * The AI seat's default.
- */
-export const SURPRISE: DeckChoice = 'surprise';
-/**
- * The chance, as 1 in N, that `SURPRISE` picks a random deck instead of a
- * starter deck.
- */
-export const SURPRISE_RANDOM_ODDS = 10;
-
-/**
- * The choice the AI seat actually uses: a starter deck or random choice as
- * picked, anything else (a saved deck) becomes `SURPRISE`.
+ * The choice the AI seat actually uses: a random deck as picked, anything else
+ * (a saved deck) becomes `RANDOM_ALL`.
  */
 export const aiDeckChoice = (choice: DeckChoice): DeckChoice =>
-  choice === RANDOM_DECK ||
-  choice === RANDOM_ALL ||
-  choice === RANDOM_STARTER ||
-  choice === RANDOM_STARTER_PRIME ||
-  choice === RANDOM_STARTER_BOTH ||
-  choice === SURPRISE ||
-  ALL_STARTER_DECKS.some((d) => `starter:${d.name}` === choice)
-    ? choice
-    : SURPRISE;
+  choice === RANDOM_DECK || choice === RANDOM_ALL ? choice : RANDOM_ALL;
 
 export interface DeckOption {
   value: DeckChoice;
@@ -61,116 +38,74 @@ export interface DeckOption {
 }
 
 /**
- * Every deck a player can start a game with: random, the starter decks, then
- * the player's saved decks.
+ * Every deck a player can start a game with: the two random decks, then the
+ * player's saved decks.
  */
 export const deckOptions = (saved: SavedDeck[]): DeckOption[] => [
   {
-    value: SURPRISE,
-    label: 'Surprise',
-    plan: 'usually a starter deck, about 1 time in 10 a random deck',
-  },
-  {
-    value: RANDOM_STARTER,
-    label: 'Random starter deck',
-    plan: 'one of the Core starter decks, picked at random',
-  },
-  {
-    value: RANDOM_STARTER_PRIME,
-    label: 'Random Prime starter deck',
-    plan: 'one of the Prime starter decks, picked at random',
-  },
-  {
-    value: RANDOM_STARTER_BOTH,
-    label: 'Random Core + Prime starter deck',
-    plan: 'one of the mixed starter decks, picked at random',
+    value: RANDOM_ALL,
+    label: 'Random deck (Core + Prime)',
+    plan: `${MAX_DECK_SIZE} random cards, a third of them your hero's class cards`,
   },
   {
     value: RANDOM_DECK,
-    label: 'Random deck',
+    label: 'Random deck (Core only)',
     plan: `${MAX_DECK_SIZE} random CORE cards`,
   },
-  {
-    value: RANDOM_ALL,
-    label: 'Random deck (Core + Prime)',
-    plan: `${MAX_DECK_SIZE} random cards, PRIME included`,
-  },
-  ...STARTER_DECKS.map((d) => ({
-    value: `starter:${d.name}`,
-    label: d.name,
-    plan: d.plan,
-  })),
-  ...PRIME_STARTER_DECKS.map((d) => ({
-    value: `starter:${d.name}`,
-    label: `${d.name} (Prime)`,
-    plan: d.plan,
-  })),
-  ...MIXED_STARTER_DECKS.map((d) => ({
-    value: `starter:${d.name}`,
-    label: `${d.name} (Core + Prime)`,
-    plan: d.plan,
-  })),
   ...saved
     .filter((d) => d.cards.length > 0)
     .map((d) => ({
-      value: `saved:${d.id}`,
+      value: `${SAVED_PREFIX}${d.id}`,
       label: `${d.name || 'Unnamed'} (yours, ${d.cards.length} cards)`,
     })),
 ];
 
+/** The hero a saved-deck choice brings along, if it has one. */
+export const savedDeckHero = (
+  choice: DeckChoice,
+  saved: SavedDeck[],
+): string | undefined => {
+  if (!choice.startsWith(SAVED_PREFIX)) return undefined;
+
+  const deck = saved.find((d) => `${SAVED_PREFIX}${d.id}` === choice);
+
+  return deck && deck.cards.length > 0 ? deck.hero : undefined;
+};
+
 /**
  * The card ids for a choice. A choice that no longer exists (a deleted saved
- * deck) falls back to a random deck.
+ * deck, an old removed one) falls back to a random Core + Prime deck.
  */
 export const resolveDeck = (
   choice: DeckChoice,
   pool: Card[],
   saved: SavedDeck[],
   rng: Rng,
-  /** The opt-in PRIME cards, for `RANDOM_ALL` */
+  /** The opt-in PRIME cards */
   prime: Card[] = [],
+  /** The hero's class cards (none for no hero or a class without any) */
+  classCards: Card[] = [],
 ): { name: string; cards: string[]; hero?: string } => {
-  if (choice === RANDOM_ALL)
+  if (choice === RANDOM_DECK) {
+    const ownCore = classCards.filter((c) => c.source === 'core');
+
     return {
-      name: 'a random Core + Prime deck',
-      cards: buildDeck([...pool, ...prime], rng),
-    };
-  if (choice === SURPRISE && rng.int(SURPRISE_RANDOM_ODDS) === 0)
-    return { name: 'a random deck', cards: buildDeck(pool, rng) };
-  if (
-    (choice === RANDOM_STARTER || choice === SURPRISE) &&
-    STARTER_DECKS.length > 0
-  ) {
-    const starter = STARTER_DECKS[rng.int(STARTER_DECKS.length)];
-    return { name: starter.name, cards: buildStarterDeck(starter, pool) };
-  }
-  if (choice === RANDOM_STARTER_PRIME || choice === RANDOM_STARTER_BOTH) {
-    const decks =
-      choice === RANDOM_STARTER_PRIME
-        ? PRIME_STARTER_DECKS
-        : MIXED_STARTER_DECKS;
-    const starter = decks[rng.int(decks.length)];
-    return {
-      name: starter.name,
-      cards: buildStarterDeck(starter, poolFor(starter.set, pool, prime)),
+      name: 'a random Core deck',
+      cards: buildClassDeck(pool, ownCore, rng),
     };
   }
-  if (choice.startsWith('starter:')) {
-    const starter = ALL_STARTER_DECKS.find(
-      (d) => `starter:${d.name}` === choice,
-    );
-    if (starter)
-      return {
-        name: starter.name,
-        cards: buildStarterDeck(starter, poolFor(starter.set, pool, prime)),
-      };
-  }
-  if (choice.startsWith('saved:')) {
-    const deck = saved.find((d) => `saved:${d.id}` === choice);
+
+  if (choice.startsWith(SAVED_PREFIX)) {
+    const deck = saved.find((d) => `${SAVED_PREFIX}${d.id}` === choice);
+
     if (deck && deck.cards.length > 0)
       return { name: deck.name, cards: deck.cards, hero: deck.hero };
   }
-  return { name: 'a random deck', cards: buildDeck(pool, rng) };
+
+  return {
+    name: 'a random Core + Prime deck',
+    cards: buildClassDeck([...pool, ...prime], classCards, rng),
+  };
 };
 
 /**
@@ -185,16 +120,22 @@ export const deckIsLegal = (
 
 const KEY = 'ccg.newGame.v1';
 
+/** A stored choice that still exists; an old one (a removed deck) is reset. */
+const validChoice = (value: unknown): DeckChoice =>
+  value === RANDOM_DECK ||
+  value === RANDOM_ALL ||
+  (typeof value === 'string' && value.startsWith(SAVED_PREFIX))
+    ? value
+    : RANDOM_ALL;
+
 /** The decks picked last time for Player 1 and Player 2. */
 export const loadChoices = (): Record<'0' | '1', DeckChoice> => {
   try {
     const raw = JSON.parse(window.localStorage.getItem(KEY) ?? '{}');
-    return {
-      '0': typeof raw['0'] === 'string' ? raw['0'] : RANDOM_DECK,
-      '1': typeof raw['1'] === 'string' ? raw['1'] : SURPRISE,
-    };
+
+    return { '0': validChoice(raw['0']), '1': validChoice(raw['1']) };
   } catch {
-    return { '0': RANDOM_DECK, '1': SURPRISE };
+    return { '0': RANDOM_ALL, '1': RANDOM_ALL };
   }
 };
 export const saveChoices = (choices: Record<'0' | '1', DeckChoice>): void => {

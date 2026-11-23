@@ -24,6 +24,7 @@ import {
   skillCard,
   withHeroTokens,
   Card,
+  classCardsFor,
   createGame,
   createSeededRng,
   GameEvent,
@@ -92,6 +93,7 @@ import {
   loadChoices,
   resolveDeck,
   saveChoices,
+  savedDeckHero,
 } from './deck-choice';
 import { HeroBar } from './HeroBar';
 import { HeroFigure, HeroRing } from './HeroVariants';
@@ -568,27 +570,49 @@ const newGame = (
   const rng = createSeededRng(seed ?? Date.now() % 2147483647);
   const choices = loadChoices();
   const saved = loadDecks(byId);
-  const p0 = resolveDeck(choices['0'], pool, saved, rng, prime);
-  /**
-   * The AI never plays a saved deck: it gets a starter deck (or a random one if
-   * there is none to pick).
-   */
-  const p1 = resolveDeck(
-    vsAi ? aiDeckChoice(choices['1']) : choices['1'],
+  /** The AI never plays a saved deck: it gets a random one. */
+  const deckChoices = {
+    '0': choices['0'],
+    '1': vsAi ? aiDeckChoice(choices['1']) : choices['1'],
+  };
+  const dbg = debugParams();
+  const heroChoices = loadHeroChoices();
+  // The hero comes first, because its class decides which class cards its
+  // deck may draw. A saved deck with its own hero brings it along; otherwise
+  // the picker's hero is used.
+  const heroKeys = {
+    '0': resolveHero(
+      dbg.heroes['0'] ??
+        savedDeckHero(deckChoices['0'], saved) ??
+        heroChoices['0'],
+      rng,
+    ),
+    '1': resolveHero(
+      dbg.heroes['1'] ??
+        savedDeckHero(deckChoices['1'], saved) ??
+        heroChoices['1'],
+      rng,
+    ),
+  };
+  const classCardsOf = (hero?: string): Card[] =>
+    hero ? classCardsFor(cards, hero) : [];
+  const p0 = resolveDeck(
+    deckChoices['0'],
     pool,
     saved,
     rng,
     prime,
+    classCardsOf(heroKeys['0']),
+  );
+  const p1 = resolveDeck(
+    deckChoices['1'],
+    pool,
+    saved,
+    rng,
+    prime,
+    classCardsOf(heroKeys['1']),
   );
   const decks = { '0': p0.cards, '1': p1.cards };
-  const dbg = debugParams();
-  const heroChoices = loadHeroChoices();
-  const heroKeys = {
-    // A saved deck with its own hero brings it along; otherwise the picker's
-    // hero is used.
-    '0': resolveHero(dbg.heroes['0'] ?? p0.hero ?? heroChoices['0'], rng),
-    '1': resolveHero(dbg.heroes['1'] ?? p1.hero ?? heroChoices['1'], rng),
-  };
   const randomFirst: PlayerId = rng.int(2) === 0 ? '0' : '1';
   const first: PlayerId = dbg.first ?? randomFirst;
   let state = createGame(

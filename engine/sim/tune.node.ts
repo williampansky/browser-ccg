@@ -1,8 +1,8 @@
 /**
  * Weight tuning for the greedy bot. Usage: `npm run tune -- [gamesPerDeck]`.
  * Each variant plays the default weights with the same deck on both sides (so
- * the deck cancels out), for every
- * starter deck, and prints the variant's win rate. Above about 55% over a few
+ * the deck cancels out), for each of 12 seeded random decks, and prints the
+ * variant's win rate. Above about 55% over a few
  * hundred games is a real gain.
  */
 import {
@@ -11,13 +11,13 @@ import {
   GreedyWeights,
 } from '../bots/greedy-bot';
 import { loadHsCards } from '../cards/load-hs-cards';
-import { playablePool } from '../decks';
-import { buildStarterDeck, STARTER_DECKS } from '../starter-decks';
+import { playablePool, primePool } from '../decks';
+import { simDecks } from './sim-decks';
 import { Bot, playMatchup } from './simulate';
 
 const games = Number(process.argv[2] ?? 100);
 const { byId, cards } = loadHsCards();
-const pool = playablePool(cards);
+const decks = simDecks([...playablePool(cards), ...primePool(cards)], 12);
 
 const variants: Record<string, Partial<GreedyWeights>> = {
   'cards worth 1': { card: 1 },
@@ -37,8 +37,7 @@ const asBot =
 for (const [name, tweak] of Object.entries(variants)) {
   const bot = asBot({ ...DEFAULT_WEIGHTS, ...tweak });
   const base = asBot(DEFAULT_WEIGHTS);
-  const rates = STARTER_DECKS.map((d) => {
-    const deck = buildStarterDeck(d, pool);
+  const rates = decks.map(({ deck }) => {
     const m = playMatchup(
       { name: 'variant', deck, bot },
       { name: 'default', deck, bot: base },

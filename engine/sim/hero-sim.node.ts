@@ -1,16 +1,17 @@
 /**
  * Hero balance report. Usage: `npm run sim:heroes -- [mode] [games]`
- *  - `heroes` (default): hero against hero (the five heroes plus "no hero"), with both players on the SAME starter deck, so the deck cancels out.
- *    Every CORE starter deck is used; `games` is per hero pair per deck (alternating seats). Prints the hero grid and each hero's overall rate.
- *  - `decks`: the starter-deck grid with every game's heroes drawn from the five (cycling, so each deck meets each hero evenly), against the same grid
- *    with no heroes, to show what heroes do to deck balance.
+ *  - `heroes` (default): hero against hero (every playable class plus "no hero"), with both players on the SAME deck, so the deck cancels out.
+ *    Twelve seeded random Core + Prime decks are used (`sim-decks.ts`; the decks hold no class cards); `games` is per hero pair per deck
+ *    (alternating seats). Prints the hero grid and each hero's overall rate.
+ *  - `decks`: the same random decks against each other with every game's heroes drawn from the classes (cycling, so each deck meets each hero
+ *    evenly), against the same grid with no heroes, to show what heroes do to deck balance.
  * Greedy bot on both sides.
  */
 import { chooseGreedyAction } from '../bots/greedy-bot';
 import { loadHsCards } from '../cards/load-hs-cards';
 import { playablePool, primePool } from '../decks';
 import { heroes, withHeroTokens } from '../heroes';
-import { buildStarterDeck, poolFor, STARTER_DECKS } from '../starter-decks';
+import { simDecks } from './sim-decks';
 import {
   formatWinTable,
   playGame,
@@ -29,10 +30,7 @@ const { byId, cards } = loadHsCards();
 const catalog = withHeroTokens(byId);
 const pool = playablePool(cards);
 const prime = primePool(cards);
-const decks = STARTER_DECKS.map((d) => ({
-  name: d.name,
-  deck: buildStarterDeck(d, poolFor(d.set, pool, prime)),
-}));
+const decks = simDecks([...pool, ...prime], 12);
 const heroIds = heroes().map((h) => h.id);
 const bot = chooseGreedyAction;
 const started = Date.now();
@@ -82,7 +80,7 @@ if (mode === 'heroes') {
     }
   });
   console.log(
-    `Hero vs hero, same deck both sides, ${decks.length} starter decks x ${games} games per pair (seats alternating), greedy bot\n`,
+    `Hero vs hero, same deck both sides, ${decks.length} random decks x ${games} games per pair (seats alternating), greedy bot\n`,
   );
   const width = 16;
   console.log(''.padEnd(width) + names.map((n) => n.padEnd(width)).join(''));
@@ -168,7 +166,7 @@ if (mode === 'heroes') {
   const turnsOf = (ms: typeof matchups) =>
     ms.reduce((s, m) => s + m.averageTurns, 0) / ms.length;
   console.log(
-    `Starter decks, ${games} games per pairing, greedy bot; heroes drawn from ${heroIds.join(', ')} (cycling)\n`,
+    `Random decks, ${games} games per pairing, greedy bot; heroes drawn from ${heroIds.join(', ')} (cycling)\n`,
   );
   console.log(
     formatWinTable(
