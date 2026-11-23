@@ -286,6 +286,7 @@
     "class": "%CLASS_NECROMANCER%",
     "id": 1,
     "cost": 2,
+    "active": true,
     "cooldown": 1,
     "mechanics": [
       "%DAMAGE%",
