@@ -91,14 +91,29 @@ const fetchAll = async (table) => {
   return records;
 };
 
-const toCard = (fields, isEntourage) => {
+/**
+ * A card's class as the engine reads it: `0 %CLASS_FIGHTER%`. `cardClass` is
+ * a link to the CLASSES table, so Airtable sends the linked record's id and the
+ * symbol is looked up; an older single-select value (`NONE`) still works.
+ */
+const toCardClass = (value, classSymbolById) => {
+  const symbol = Array.isArray(value) ? classSymbolById[value[0]] : value;
+
+  if (!symbol) return undefined;
+
+  const name = symbol.startsWith('CLASS_') ? symbol : `CLASS_${symbol}`;
+
+  return `0 %${name}%`;
+};
+
+const toCard = (fields, classSymbolById, isEntourage) => {
   return dropUndefined({
     id: fields.id,
     name: fields.name,
     set: SETS[fields.set],
     type: wrapSymbol('TYPE_' + fields.type),
     rarity: wrapSymbol('RARITY_' + fields.rarity),
-    cardClass: fields.cardClass && `0 %CLASS_${fields.cardClass}%`,
+    cardClass: toCardClass(fields.cardClass, classSymbolById),
     race: fields.race && wrapSymbol('RACE_' + fields.race),
     cost: fields.cost,
     attack: fields.attack,
@@ -221,12 +236,18 @@ const pull = async () => {
   );
   const cards = rows('CARDS');
   const files = {
-    core: cards.filter(isInSet('CORE')).map((fields) => toCard(fields)),
-    prime: cards.filter(isInSet('PRIME')).map((fields) => toCard(fields)),
+    core: cards
+      .filter(isInSet('CORE'))
+      .map((fields) => toCard(fields, classSymbolById)),
+    prime: cards
+      .filter(isInSet('PRIME'))
+      .map((fields) => toCard(fields, classSymbolById)),
     entourage: cards
       .filter((fields) => fields.isEntourage)
-      .map((fields) => toCard(fields, true)),
-    game: cards.filter(isInSet('GAME')).map((fields) => toCard(fields)),
+      .map((fields) => toCard(fields, classSymbolById, true)),
+    game: cards
+      .filter(isInSet('GAME'))
+      .map((fields) => toCard(fields, classSymbolById)),
     heroes: rows('HEROES').map(toHero),
     classes: rows('CLASSES').map(toClass),
     skills: rows('SKILLS').map((fields) => toSkill(fields, classSymbolById)),

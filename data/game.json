@@ -5,7 +5,6 @@
     "set": "%SET_001%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_NONE%",
-    "cardClass": "0 %CLASS_NONE%",
     "cost": 0,
     "text": "Gain 1 <strong>%ENERGY%</strong> for this turn only",
     "mechanics": [
