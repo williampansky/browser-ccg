@@ -117,8 +117,8 @@
     "numberPrimary": 1
   },
   {
-    "name": "%SUMMON% Spirit Animal",
-    "playContext": "%SUMMON%",
+    "name": "Shapeshift",
+    "playContext": "%ARMOR%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
     "class": "%CLASS_WARDEN%",
@@ -127,9 +127,12 @@
     "active": true,
     "cooldown": 1,
     "mechanics": [
-      "%SUMMON%"
+      "%BUFF%",
+      "%ARMOR%"
     ],
-    "text": "%SUMMON% a %RANDOM% hero-specific %RACE_CREATURE% minion"
+    "text": "Gain +%NUM1% Attack this turn and %NUM2% %ARMOR%",
+    "numberPrimary": 1,
+    "numberSecondary": 1
   },
   {
     "name": "Savagery",

@@ -1,7 +1,14 @@
 import type { Card, CardCatalog } from '../cards/types';
 import type { Effect, SkillOption, TargetFilter } from '../effects/types';
 import type { GameState, PlayerId } from '../state/types';
-import { addArmor, buff, damage, draw, heal } from '../effects/primitives';
+import {
+  addArmor,
+  buff,
+  buffWeaponThisTurn,
+  damage,
+  draw,
+  heal,
+} from '../effects/primitives';
 import {
   allEnemyMinions,
   chosenTarget,
@@ -42,17 +49,6 @@ const summonToken =
   (id: string): Effect =>
   (ctx) => {
     summonMinion(ctx.g, ctx.caster, heroToken(id), ctx.events);
-  };
-
-const summonRandomToken =
-  (ids: string[]): Effect =>
-  (ctx) => {
-    summonMinion(
-      ctx.g,
-      ctx.caster,
-      heroToken(ids[ctx.rng.int(ids.length)]),
-      ctx.events,
-    );
   };
 
 /**
@@ -123,6 +119,32 @@ const equipEntourage =
       cardId: card.id,
     });
   };
+
+const SHAPESHIFT_ATTACK = 1;
+const SHAPESHIFT_ARMOR = 1;
+
+/**
+ * Shapeshift's Attack: added to the weapon the hero holds, or else a one-turn
+ * Claws weapon (a skill has no card of its own to equip).
+ */
+const shapeshiftAttack: Effect = (ctx) => {
+  const { weapon } = ctx.g.players[ctx.caster];
+  if (weapon) return buffWeaponThisTurn(SHAPESHIFT_ATTACK)(ctx);
+
+  const claws = heroToken('HERO_DRUID_CLAWS');
+  ctx.g.players[ctx.caster].weapon = {
+    instanceId: ctx.g.nextInstanceId++,
+    cardId: claws.id,
+    attack: SHAPESHIFT_ATTACK,
+    durability: claws.health ?? 1,
+    temporary: true,
+  };
+  ctx.events.push({
+    type: 'WeaponEquipped',
+    player: ctx.caster,
+    cardId: claws.id,
+  });
+};
 
 const BLOOD_PACT_DAMAGE = 2;
 const BLOOD_PACT_CARDS = 1;
@@ -233,14 +255,10 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
     { effects: [summonToken('HERO_EXILE_BEAST')] },
   ],
   WARDEN: [
+    // Shapeshift: +1 Attack this turn and 1 Armor (the spirit animals now
+    // only come from the ultimate)
     {
-      effects: [
-        summonRandomToken([
-          'HERO_DRUID_WOLF',
-          'HERO_DRUID_BEAR',
-          'HERO_DRUID_HAWK',
-        ]),
-      ],
+      effects: [shapeshiftAttack, addArmor(SHAPESHIFT_ARMOR)],
     },
     { effects: [buff(friendlyOfRace('CREATURE'), 2, 2)] },
     // Ultimate (Stampede of the Wild): one of each Spirit Animal, each with

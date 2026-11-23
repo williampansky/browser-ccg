@@ -4,6 +4,7 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-23
 
+- **Warden skill 1 is Shapeshift:** for 2 energy (cooldown 1) your hero gains +1 Attack this turn and 1 Armor, like the launch Druid. It replaces the free Spirit Animal (the hero sim had Warden winning 85%); the spirit animals now come only from the ultimate. With no weapon you get a one-turn 1/1 Claws weapon; with one, it gets +1 Attack. The SKILLS row `WARDEN-1` was changed in Airtable.
 - **Warden: PRIME_117 and PRIME_118 are active and playable:** 117 deals damage equal to your weapon's Attack to a minion (nothing without a weapon); 118 gives your hero +4 Attack this turn (adds to your weapon, or equips a one-turn weapon) and 4 Armor. The nine entourage cards in the PRIME_111 to 125 block (the tokens and option cards) now carry the Warden class link too, and so do the other classes' entourage cards (PRIME_136a Ranger, 157a and 169a Crusader, 224a Necromancer, 260a Mystic).
 - **Warden: PRIME_122 and PRIME_125 are playable:** PRIME_122 summons three 2/2 Rush minions; PRIME_125 (Choose One) gives your other minions +2/+2 or summons two 2/2 Treants with Guard. Their tokens (PRIME_122a, PRIME_125a to c) were added to Airtable and pulled.
 

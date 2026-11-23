@@ -13,6 +13,7 @@ import {
   setEnergy,
 } from '../../testing/builders';
 import { getHero, heroes, heroSkill, withHeroTokens } from '..';
+import { heroToken } from '../tokens';
 
 // Skills 2 and 3 are shelved (inactive in the SKILLS table) while the
 // launch-style game is built; these tests still cover their code. So every
@@ -662,13 +663,28 @@ describe('Exile', () => {
 });
 
 describe('Wildcaller', () => {
-  it('Spirit Animal summons one of its beasts', () => {
-    const m = skill(game('WARDEN'), 0).state.players['0'].board;
-    expect(m).toHaveLength(1);
-    expect(m[0].cardId.startsWith('HERO_DRUID_')).toBe(true);
+  it('Shapeshift gives +1 Attack this turn and 1 Armor, summoning nothing', () => {
+    const { state } = skill(game('WARDEN'), 0);
+    const { weapon, armor, board } = state.players['0'];
+    expect([weapon?.attack, weapon?.temporary, armor]).toEqual([1, true, 1]);
+    expect(board).toHaveLength(0);
+  });
+  it('Shapeshift adds its Attack to a weapon already equipped', () => {
+    const { state } = skill(
+      produce(game('WARDEN'), (g) => {
+        g.players['0'].weapon = {
+          instanceId: 9999,
+          cardId: 'GRUNT',
+          attack: 2,
+          durability: 2,
+        };
+      }),
+      0,
+    );
+    expect(state.players['0'].weapon?.attack).toBe(3);
   });
   it('Savagery gives every friendly Creature +2/+2 and leaves other minions alone', () => {
-    let s = skill(game('WARDEN'), 0).state;
+    let s = putOnBoard(game('WARDEN'), '0', heroToken('HERO_DRUID_WOLF'));
     s = putOnBoard(s, '0', grunt);
     const before = s.players['0'].board.map((m) => [m.attack, m.health]);
     const r = skill(setEnergy(s, '0', 10), 1).state.players['0'].board.map(
@@ -678,7 +694,7 @@ describe('Wildcaller', () => {
     expect(r[1]).toEqual(before[1]);
   });
   it('the ultimate summons a wolf, a bear and a hawk, each with +2/+2, and leaves Creatures already on the board alone', () => {
-    let s = skill(game('WARDEN'), 0).state;
+    let s = putOnBoard(game('WARDEN'), '0', heroToken('HERO_DRUID_WOLF'));
     const first = s.players['0'].board[0];
     s = setEnergy(s, '0', 10);
     const board = skill(s, 2).state.players['0'].board;
