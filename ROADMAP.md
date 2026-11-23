@@ -158,6 +158,23 @@ the framing and how it responds. Roughly cheapest first:
 
 Tried and rejected: procedural noise textures (stone, felt, wood) and a blurred painted backdrop behind the board.
 
+## Maintenance: bring old code up to the code-style rules (not scheduled)
+
+Prettier and the comment wrapping are applied repo-wide (see `CHANGELOG.md`, 2026-11-22). The by-hand rules in
+`CLAUDE.md` > Conventions > Code style are followed in new and edited code, but older code still breaks some of them.
+Each of these can be a scripted pass in its own commit, checked by comparing every file's compiled output with
+comments stripped (that proves no code changed), then listed in `.git-blame-ignore-revs`:
+
+- [ ] Sort JSX props alphabetically in `.tsx` (rule 6; `key`/`ref` first, `{...spread}` as a divider).
+- [ ] Sort imports (rule 7: packages, `../`, `./`, then `.scss`; blank line between groups).
+- [ ] Braces on any `if` that does not fit on one line (rule 9). Prettier turns a long braceless `if` into a wrapped
+      two-line one, which the rule does not allow.
+- [ ] Comments the wrapping pass left: about 117 trailing comments after code, about 50 with tables, code or directives,
+      and the `.scss` files (not swept at all).
+- [ ] Not scriptable, so fix a file when you edit it: block-bodied arrows (rule 3), named conditions (4), blank lines
+      around multi-line statements (5), descriptive names instead of `m`/`t`/`p` (8), magic numbers (10), boolean
+      names (12), explicit return types on exports (13).
+
 ## Maintenance: split `PlayBoard.tsx` (not scheduled)
 
 `components/play-board/PlayBoard.tsx` is about 1,700 lines (lines 1-338 are module-level code, 340-1703 is one component with about 35
