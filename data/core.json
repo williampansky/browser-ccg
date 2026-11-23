@@ -2951,6 +2951,29 @@
     "artStatus": "FINAL"
   },
   {
+    "id": "CORE_134",
+    "name": "Abyssal Well",
+    "set": "%SET_002%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_REMARKABLE%",
+    "cardClass": "0 %CLASS_NONE%",
+    "race": "%RACE_NONE%",
+    "cost": 2,
+    "attack": 0,
+    "health": 7,
+    "text": "At the start of your next turn, %DESTROY% every single minion",
+    "mechanics": [
+      "%EVENT%",
+      "%DESTROY%",
+      "%AOE%"
+    ],
+    "collectible": false,
+    "active": true,
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
+  },
+  {
     "id": "CORE_109",
     "name": "Mutate",
     "set": "%SET_002%",
