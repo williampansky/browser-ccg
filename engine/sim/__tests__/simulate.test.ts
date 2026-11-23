@@ -8,8 +8,8 @@ import type { Contestant } from '../simulate';
 import { chooseGreedyAction } from '../../bots/greedy-bot';
 import { chooseRandomAction } from '../../bots/random-bot';
 import { loadHsCards } from '../../cards/load-hs-cards';
-import { playablePool } from '../../decks';
-import { simDecks } from '../sim-decks';
+import { classCardsFor, playablePool, primePool } from '../../decks';
+import { classDeck, simDecks } from '../sim-decks';
 
 const { byId, cards } = loadHsCards();
 const pool = playablePool(cards);
@@ -26,6 +26,26 @@ describe('sim decks', () => {
   });
   it('are the same every run', () => {
     expect(simDecks(pool, 12)).toEqual(decks);
+  });
+});
+
+describe('class decks for the sims', () => {
+  const mystic = classCardsFor(cards, 'MYSTIC');
+  const base = simDecks([...pool, ...primePool(cards)], 1)[0].deck;
+
+  it('swap ten class cards into the front of a deck and keep the rest', () => {
+    const deck = classDeck(base, mystic, 1);
+    const own = new Set(mystic.map((c) => c.id));
+
+    expect(deck).toHaveLength(base.length);
+    expect(deck.filter((id) => own.has(id))).toHaveLength(10);
+    expect(deck.slice(10)).toEqual(base.slice(0, base.length - 10));
+  });
+  it('leave a class with no class cards on the plain deck', () => {
+    expect(classDeck(base, classCardsFor(cards, 'WARDEN'), 1)).toEqual(base);
+  });
+  it('are the same every run', () => {
+    expect(classDeck(base, mystic, 3)).toEqual(classDeck(base, mystic, 3));
   });
 });
 
