@@ -30,7 +30,10 @@ export type { HeroInfo, HeroSkill } from './heroes';
 export { skillReady } from './rules/hero-skill';
 export { legalActions } from './rules/legal-actions';
 export {
+  buildClassDeck,
   buildDeck,
+  CLASS_CARD_SLOTS,
+  classCardsFor,
   classPool,
   isPlayable,
   needsBehaviour,

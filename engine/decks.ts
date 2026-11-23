@@ -108,3 +108,31 @@ export const buildDeck = (
   const ids = rng.shuffle(pool.map((c) => c.id));
   return Array.from({ length: size }, (_, i) => ids[i % ids.length]);
 };
+
+/** The class cards in a class deck: a third of it, as in a built class deck. */
+export const CLASS_CARD_SLOTS = MAX_DECK_SIZE / 3;
+
+/** The class-locked cards of one class (see `classPool`). */
+export const classCardsFor = (
+  cards: Card[],
+  classKey: string,
+  defs: DefLookup = getCardDef,
+): Card[] => classPool(cards, defs).filter((c) => c.heroClass === classKey);
+
+/**
+ * A random deck for a hero: up to `CLASS_CARD_SLOTS` different cards of its
+ * class (all of them, when the class has fewer), filled to `size` from the
+ * ordinary `pool`. Never more than `MAX_DECK_SIZE`.
+ */
+export const buildClassDeck = (
+  pool: Card[],
+  classCards: Card[],
+  rng: Rng,
+  size = MAX_DECK_SIZE,
+): string[] => {
+  const total = Math.min(size, MAX_DECK_SIZE);
+  const slots = Math.min(CLASS_CARD_SLOTS, classCards.length, total);
+  const own = rng.shuffle(classCards.map((c) => c.id)).slice(0, slots);
+
+  return [...own, ...buildDeck(pool, rng, total - slots)];
+};
