@@ -218,7 +218,6 @@
   },
   {
     "id": "CORE_109a",
-    "name": "Mutation",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_NONE%",
@@ -226,10 +225,7 @@
     "attack": 1,
     "health": 1,
     "collectible": false,
-    "active": true,
-    "artistName": "a-ravlik",
-    "artistUrl": "https://graphicriver.net/user/a-ravlik",
-    "artStatus": "FINAL",
+    "active": false,
     "isEntourage": true
   },
   {

@@ -2917,7 +2917,6 @@
   },
   {
     "id": "CORE_109",
-    "name": "Mutate",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -2933,12 +2932,9 @@
     "playContext": "%TRANSFORM%",
     "targetingArrowText": "%TRANSFORM% a minion into a 1/1",
     "collectible": true,
-    "active": true,
+    "active": false,
     "entourage": "CORE_109a",
-    "howToEarn": "Provided to all players.",
-    "artistName": "a-ravlik",
-    "artistUrl": "https://graphicriver.net/user/a-ravlik",
-    "artStatus": "FINAL"
+    "howToEarn": "Provided to all players."
   },
   {
     "id": "CORE_076",

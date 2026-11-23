@@ -19,7 +19,12 @@ const ids = (rows: { id: string }[], prefix: string) =>
   rows.map((r) => r.id).filter((id) => id.startsWith(prefix));
 
 describe('SET_CORE art', () => {
-  const coreIds = ids(core as { id: string }[], 'CORE_');
+  // A card switched off in Airtable (CORE_109) needs no art
+  const activeCore = (core as { id: string; active?: boolean }[]).filter(
+    (c) => c.active,
+  );
+  const coreIds = ids(activeCore, 'CORE_');
+  const allCoreIds = ids(core as { id: string }[], 'CORE_');
   const tokenIds = ids(entourage as { id: string }[], 'CORE_');
   const have = new Set(files('SET_CORE'));
 
@@ -34,7 +39,7 @@ describe('SET_CORE art', () => {
     }
   });
   it('has no file for a card that is not in the data (old zone-game leftovers)', () => {
-    const known = new Set([...coreIds, ...tokenIds]);
+    const known = new Set([...allCoreIds, ...tokenIds]);
     const strays = Array.from(have).filter(
       (f) => !known.has(`CORE_${f.split('-')[0]}`),
     );

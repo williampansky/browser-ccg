@@ -330,8 +330,12 @@ describe('loadHsCards: the committed card data', () => {
     expect(issues.filter((i) => i.level === 'error')).toEqual([]);
   });
 
-  test('every CORE card is active and none is a token', () => {
-    expect(bySource('core').every((c) => c.active && !c.isToken)).toBe(true);
+  test('every CORE card is active except the ones switched off on purpose, and none is a token', () => {
+    const switchedOff = ['CORE_109'];
+    const inactive = bySource('core').filter((c) => !c.active);
+
+    expect(inactive.map((c) => c.id)).toEqual(switchedOff);
+    expect(bySource('core').every((c) => !c.isToken)).toBe(true);
   });
 
   test('some PRIME cards are inactive; a token is active only when its row says so (CORE_049a is not)', () => {
