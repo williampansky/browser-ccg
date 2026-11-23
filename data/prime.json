@@ -4428,7 +4428,7 @@
     "cost": 2,
     "attack": 2,
     "health": 3,
-    "text": "Can't be targeted by<br />\nSpells, Items, or Skills",
+    "text": "<strong>%CANT_TARGET%</strong>; can't be targeted by Spells, Items, or Skills",
     "mechanics": [
       "%CANT_TARGET%"
     ],

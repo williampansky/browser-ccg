@@ -261,7 +261,7 @@
     "symbol": "%CANT_TARGET%",
     "description": "Gives minions an ability that renders them unable to be targeted by spells, items, or Hero Abilities.",
     "shortDescription": "Can't be targeted by spells, items, and skills.",
-    "name": "No Target"
+    "name": "Veiled"
   },
   {
     "symbol": "%TARGET%",
