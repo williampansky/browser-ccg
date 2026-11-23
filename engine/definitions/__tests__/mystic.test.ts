@@ -1,10 +1,7 @@
 import { produce } from 'immer';
 import { getCardDef } from '..';
 import { isPlayable } from '../../decks';
-import { createSeededRng } from '../../rng';
-import { applyAction } from '../../rules/apply-action';
 import { legalActions } from '../../rules/legal-actions';
-import { minionCard } from '../../testing/builders';
 import {
   backTo,
   catalog,
@@ -115,48 +112,29 @@ describe('PRIME_206: give a minion "On Death: Resurrect"', () => {
 });
 
 describe('PRIME_207: summon two 2/3 Guard minions, Overload (2)', () => {
-  // PRIME_207a does not exist in Airtable yet, so the token is a stand-in
-  const token = minionCard('PRIME_207a', {
-    cost: 0,
-    attack: 2,
-    health: 3,
-    mechanics: ['BULWARK'],
+  const after = (s: GameState) => play(s).state.players['0'];
+
+  it('names PRIME_207a as its entourage card, a real 2/3 in the data', () => {
+    const token = realCard('PRIME_207a');
+
+    expect(realCard('PRIME_207').entourage).toEqual(['PRIME_207a']);
+    expect([token.attack, token.health]).toEqual([2, 3]);
   });
-  // The loader drops an entourage id that is not in the data, so the card is
-  // patched to name the stand-in
-  const withToken = new Map(catalog)
-    .set('PRIME_207a', token)
-    .set('PRIME_207', { ...realCard('PRIME_207'), entourage: ['PRIME_207a'] });
-  const cast = (s: GameState): GameState => {
-    const r = applyAction(
-      s,
-      { type: 'PlayCard', handIndex: 0 },
-      { rng: createSeededRng(1), catalog: withToken },
-    );
+  it('summons that card twice, each a 2/3 with Guard', () => {
+    const me = after(setup('PRIME_207'));
 
-    if ('error' in r) throw new Error(r.error);
-
-    return r.state;
-  };
-
-  it('summons its entourage minion twice, each a 2/3 with Guard', () => {
-    const after = cast(setup('PRIME_207')).players['0'];
-
-    expect(after.board.map((m) => m.cardId)).toEqual([
-      'PRIME_207a',
-      'PRIME_207a',
-    ]);
-    expect(after.board.map((m) => [m.attack, m.health])).toEqual([
+    expect(me.board.map((m) => m.cardId)).toEqual(['PRIME_207a', 'PRIME_207a']);
+    expect(me.board.map((m) => [m.attack, m.health])).toEqual([
       [2, 3],
       [2, 3],
     ]);
-    expect(after.board.every((m) => m.keywords.guard)).toBe(true);
+    expect(me.board.every((m) => m.keywords.guard)).toBe(true);
   });
   it('costs 3 and locks 2 energy next turn', () => {
-    const after = cast(setup('PRIME_207')).players['0'];
+    const me = after(setup('PRIME_207'));
 
-    expect(after.energy.current).toBe(7);
-    expect(after.overcharge).toBe(2);
+    expect(me.energy.current).toBe(7);
+    expect(me.overcharge).toBe(2);
   });
   it('summons only one when there is room for one', () => {
     const full = setup('PRIME_207', {
@@ -170,9 +148,8 @@ describe('PRIME_207: summon two 2/3 Guard minions, Overload (2)', () => {
       ],
     });
 
-    expect(cast(full).players['0'].board).toHaveLength(7);
+    expect(after(full).board).toHaveLength(7);
   });
-  it.todo('PRIME_207a is a real entourage card in the data (needs its row)');
 });
 
 describe('PRIME_212: 2/8 weapon with Onslaught, Overload (2)', () => {

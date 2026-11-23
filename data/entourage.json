@@ -278,6 +278,24 @@
     "isEntourage": true
   },
   {
+    "id": "PRIME_207a",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_SUPERIOR%",
+    "cardClass": "0 %CLASS_MYSTIC%",
+    "race": "%RACE_ELEMENT%",
+    "cost": 0,
+    "attack": 2,
+    "health": 3,
+    "text": "%BULWARK%",
+    "mechanics": [
+      "%BULWARK%"
+    ],
+    "collectible": false,
+    "active": true,
+    "isEntourage": true
+  },
+  {
     "id": "PRIME_112b",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
