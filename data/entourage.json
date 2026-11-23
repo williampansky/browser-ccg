@@ -573,22 +573,6 @@
     "isEntourage": true
   },
   {
-    "id": "PRIME_204a",
-    "name": "Frosted Sword",
-    "set": "%SET_003%",
-    "type": "%TYPE_WEAPON%",
-    "rarity": "%RARITY_COMMON%",
-    "cost": 0,
-    "attack": 2,
-    "health": 3,
-    "collectible": false,
-    "active": false,
-    "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard",
-    "artStatus": "FINAL",
-    "isEntourage": true
-  },
-  {
     "id": "PRIME_169a",
     "name": "Mace of the Shattered Mirror",
     "set": "%SET_003%",

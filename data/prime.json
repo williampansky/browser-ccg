@@ -711,6 +711,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "cost": 2,
     "attack": 2,
     "health": 2,
@@ -870,6 +871,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "cost": 3,
     "text": "Deal 2 damage to all enemy minions,<br>\nthen %DISABLE% any left with 1 Health<br>\n<strong>%OVERLOAD% (2)</strong>",
     "mechanics": [
@@ -1331,6 +1333,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "race": "%RACE_ELEMENT%",
     "cost": 3,
     "attack": 2,
@@ -1357,6 +1360,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "race": "%RACE_ELEMENT%",
     "cost": 1,
     "attack": 2,
@@ -1695,14 +1699,17 @@
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
-    "race": "%RACE_DEMONIC%",
+    "cardClass": "0 %CLASS_MYSTIC%",
+    "race": "%RACE_ELEMENT%",
     "cost": 8,
-    "attack": 5,
-    "health": 5,
-    "text": "<strong>%BULWARK%, %BUBBLE%</strong><br>\nYour other minions have<br>\n<strong>%RUSH%</strong>",
+    "attack": 3,
+    "health": 6,
+    "text": "%BULWARK%, %BUBBLE%, %RUSH%, %DOUBLE_ATTACK%",
     "mechanics": [
       "%BULWARK%",
-      "%BUBBLE%"
+      "%BUBBLE%",
+      "%RUSH%",
+      "%DOUBLE_ATTACK%"
     ],
     "collectible": true,
     "active": true,
@@ -1980,8 +1987,9 @@
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "cost": 2,
-    "text": "%BUFF% a minion with<br>\n\"<strong>%ON_DEATH%:</strong> Revitalization\"",
+    "text": "%BOON%: Give a minion the following:\n\"<strong>%ON_DEATH%:</strong> %RESURRECT%\"",
     "mechanics": [
       "%ON_DEATH%"
     ],
@@ -2233,6 +2241,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "race": "%RACE_LOCATION%",
     "cost": 3,
     "attack": 0,
@@ -2412,6 +2421,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "cost": 3,
     "text": "Deal 4 damage to a minion<br>\nand 2 to its neighbours<br>\n<strong>%OVERLOAD% (2)</strong>",
     "mechanics": [
@@ -2844,6 +2854,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_REMARKABLE%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "race": "%RACE_ELEMENT%",
     "cost": 5,
     "attack": 6,
@@ -3250,6 +3261,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "cost": 3,
     "text": "%SUMMON% two 2/3<br>\nminions with <strong>%BULWARK%</strong><br>\n<strong>%OVERLOAD% (2)</strong>",
     "mechanics": [
@@ -3271,10 +3283,11 @@
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_REMARKABLE%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "cost": 5,
     "attack": 2,
     "health": 8,
-    "text": "<strong>%DOUBLE_ATTACK%</strong><br>\n%OVERLOAD% (2)",
+    "text": "<strong>%DOUBLE_ATTACK%</strong><br>\n%OVERLOAD% (2) ",
     "mechanics": [
       "%DOUBLE_ATTACK%",
       "%OVERLOAD%"
@@ -3409,6 +3422,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "cost": 1,
     "text": "<strong>%SILENCE%</strong> a minion, then deal %NUM% damage to it",
     "mechanics": [
@@ -4183,6 +4197,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "cost": 2,
     "text": "Deal 3 damage to a minion;<br>\ndraw a card if it dies<br>\n<strong>%OVERLOAD% (1)</strong>",
     "mechanics": [
@@ -4932,6 +4947,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_REMARKABLE%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "cost": 3,
     "text": "Draw a card; it<br>\ncosts 3 less to play",
     "mechanics": [
@@ -5229,6 +5245,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_MYSTIC%",
     "cost": 1,
     "text": "Deal 3 damage to a<br>\n%RANDOM% enemy<br>\n<strong>%OVERLOAD% (1)</strong>",
     "mechanics": [

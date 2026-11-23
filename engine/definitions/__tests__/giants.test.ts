@@ -24,7 +24,7 @@ import type { Action, GameState } from '../../state/types';
 
 const cost = (s: GameState, id: string) =>
   effectiveCost(s, '0', realCard(id), catalog);
-const ids = ['085', '086', '247', '214', '228', '078', '105', '107'];
+const ids = ['085', '086', '247', '228', '078', '105', '107'];
 it.each(ids)('PRIME_%s is defined', (n) => {
   expect(isPlayable(realCard(`PRIME_${n}`))).toBe(true);
   expect(getCardDef(realCard(`PRIME_${n}`))).toBeDefined();
@@ -135,8 +135,8 @@ describe('PRIME_247 Volcanic Giant (12): 1 less per Armor your hero has lost', (
   });
 });
 
-describe('PRIME_214 Spirit of the Night (5/5 Guard, Bubble)', () => {
-  it('has Guard and Bubble but not Rush or Onslaught itself, and gives your OTHER minions Rush', () => {
+describe('PRIME_214 (3/6 Guard, Bubble, Rush, Onslaught)', () => {
+  it('has all four keywords on itself and gives no other minion Rush', () => {
     const r = play(
       setup('PRIME_214', { mine: [[1, 1]], theirs: [[1, 1]] }),
     ).state;
@@ -148,10 +148,10 @@ describe('PRIME_214 Spirit of the Night (5/5 Guard, Bubble)', () => {
       spirit.keywords.bubble,
       spirit.keywords.rush,
       spirit.keywords.doubleAttack,
-    ]).toEqual([5, 5, true, true, false, false]);
+    ]).toEqual([3, 6, true, true, true, true]);
     expect(
       r.players['0'].board.find((m) => m.cardId !== 'PRIME_214')!.keywords.rush,
-    ).toBe(true);
+    ).toBe(false);
     expect(r.players['1'].board[0].keywords.rush).toBe(false);
   });
 });
