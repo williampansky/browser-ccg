@@ -1,5 +1,6 @@
 import type { CardCatalog } from '../cards/types';
 import { getCardDef } from '../definitions';
+import { isComboOn, targetWithCombo } from '../definitions/define-card';
 import type { DefLookup } from '../definitions/define-card';
 import { GameState, PlayerId, TargetRef } from '../state/types';
 import { heroSkill } from '../heroes';
@@ -76,7 +77,7 @@ export const legalTargets = (
   const def = card ? defs(card) : undefined;
   const filter = def?.choices
     ? def.choices[source.choice ?? -1]?.target
-    : def?.target;
+    : def && targetWithCombo(def, isComboOn(state.players[me]));
   if (!filter) return [];
   // "Can't be targeted by spells or items": hidden from a spell or item's aim,
   // never from an On Play effect or an attack.

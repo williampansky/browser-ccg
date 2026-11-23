@@ -42,6 +42,18 @@ export const on = <K extends GameEventType>(
   do: opts.do,
 });
 
+/**
+ * Combo: an extra that applies when the player has already played a card this
+ * turn. Its `effects` run after the card's own On Play effects, or in place of
+ * them when `instead` is set. Its `target` is only asked for when Combo is on
+ * (a card whose normal play needs no aim).
+ */
+export interface ComboDef {
+  target?: TargetFilter;
+  effects: Effect[];
+  instead?: boolean;
+}
+
 /** One option of a "choose one" card. */
 export interface Choice {
   label: string;
@@ -221,6 +233,7 @@ export interface CardDef {
   /** Which characters the player may aim it at. Omit for a global card. */
   target?: TargetFilter;
   onPlay?: Effect[];
+  combo?: ComboDef;
   onDeath?: Effect[];
   triggers?: Trigger[];
 }
@@ -281,4 +294,24 @@ export const numbersOf = (id: string, raw: CardNumbers): Numbers => {
       return need('overcharge');
     },
   };
+};
+
+/** Whether Combo is on for the card the player is about to play. */
+export const isComboOn = (player: { plays?: { now: number } }): boolean =>
+  (player.plays?.now ?? 0) > 0;
+
+/** The card's target filter, counting a Combo target when Combo is on. */
+export const targetWithCombo = (
+  def: CardDef,
+  isCombo: boolean,
+): TargetFilter | undefined =>
+  def.target ?? (isCombo ? def.combo?.target : undefined);
+
+/** The card's On Play effects, with its Combo effects applied when it is on. */
+export const effectsWithCombo = (def: CardDef, isCombo: boolean): Effect[] => {
+  const effects = def.onPlay ?? [];
+  const { combo } = def;
+  if (!isCombo || !combo) return effects;
+
+  return combo.instead ? combo.effects : [...effects, ...combo.effects];
 };

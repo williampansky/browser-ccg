@@ -1,6 +1,11 @@
 import { produce } from 'immer';
 import { needsBehaviour } from '../decks';
 import { getCardDef } from '../definitions';
+import {
+  effectsWithCombo,
+  isComboOn,
+  targetWithCombo,
+} from '../definitions/define-card';
 import type { CardDef } from '../definitions/define-card';
 import type { EngineContext } from './apply-action';
 import {
@@ -69,9 +74,13 @@ export const playCard = (
   // "Choose one" cards need a valid option; every other card refuses one. The
   // chosen option's own
   // target and effects replace the card's.
+  const isCombo = isComboOn(player);
   let play:
     { target?: CardDef['target']; onPlay?: CardDef['onPlay'] } | undefined =
-    def;
+    def && {
+      target: targetWithCombo(def, isCombo),
+      onPlay: effectsWithCombo(def, isCombo),
+    };
   if (def?.choices) {
     if (
       !Number.isInteger(choice) ||

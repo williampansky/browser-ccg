@@ -1,6 +1,7 @@
 import type { CardCatalog } from '../cards/types';
 import { needsBehaviour } from '../decks';
 import { getCardDef } from '../definitions';
+import { isComboOn, targetWithCombo } from '../definitions/define-card';
 import type { DefLookup } from '../definitions/define-card';
 import { Action, GameState, MAX_BOARD, PlayerId } from '../state/types';
 import { effectiveCost } from './cost';
@@ -27,6 +28,7 @@ export const legalActions = (
 ): Action[] => {
   if (state.status === 'over' || state.activePlayer !== player) return [];
   const me = state.players[player];
+  const isCombo = isComboOn(me);
   const actions: Action[] = [{ type: 'EndTurn' }];
 
   me.hand.forEach((inHand, handIndex) => {
@@ -49,7 +51,7 @@ export const legalActions = (
       // option allows).
       const options = def.choices
         ? def.choices.map((c, choice) => ({ choice, needsTarget: !!c.target }))
-        : [{ choice: undefined, needsTarget: !!def.target }];
+        : [{ choice: undefined, needsTarget: !!targetWithCombo(def, isCombo) }];
       for (const { choice, needsTarget } of options) {
         const base: Action =
           choice === undefined
@@ -69,7 +71,15 @@ export const legalActions = (
         }
       }
     } else if (card.type === 'weapon') {
-      actions.push({ type: 'PlayCard', handIndex });
+      // A weapon with an On Play aim is offered once per target; with no legal
+      // target it is still played.
+      const targets =
+        def && targetWithCombo(def, isCombo)
+          ? legalTargets(state, { kind: 'card', handIndex }, catalog, defs)
+          : [];
+      if (targets.length === 0) actions.push({ type: 'PlayCard', handIndex });
+      for (const target of targets)
+        actions.push({ type: 'PlayCard', handIndex, target });
     } else if (card.type === 'minion') {
       if (me.board.length >= MAX_BOARD) return;
       const positions = me.board.length === 0 ? [0] : [0, me.board.length];
@@ -77,7 +87,12 @@ export const legalActions = (
       // target has no legal choice is played without one.
       const options = def?.choices
         ? def.choices.map((c, choice) => ({ choice, needsTarget: !!c.target }))
-        : [{ choice: undefined, needsTarget: !!def?.target }];
+        : [
+            {
+              choice: undefined,
+              needsTarget: !!def && !!targetWithCombo(def, isCombo),
+            },
+          ];
       for (const { choice, needsTarget } of options) {
         const targets = needsTarget
           ? legalTargets(
