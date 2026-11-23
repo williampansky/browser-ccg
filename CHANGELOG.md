@@ -2,6 +2,10 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-23
+
+- **Warden: PRIME_122 and PRIME_125 are playable:** PRIME_122 summons three 2/2 Rush minions; PRIME_125 (Choose One) gives your other minions +2/+2 or summons two 2/2 Treants with Guard. Their tokens (PRIME_122a, PRIME_125a to c) were added to Airtable and pulled.
+
 ## 2026-11-22
 
 - **Boost preview keeps its drop shadow:** the green ring on a minion that a hovered card would improve no longer replaces its dark drop shadow.

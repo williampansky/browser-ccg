@@ -18,6 +18,27 @@
     "isEntourage": true
   },
   {
+    "id": "PRIME_125b",
+    "name": "Call of the Treants",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_COMMON%",
+    "cost": 0,
+    "text": "<strong>%SUMMON%</strong> two 2/2 Treants<br>\nwith %BULWARK%",
+    "mechanics": [
+      "%SUMMON%"
+    ],
+    "numberPrimary": 2,
+    "numberSecondary": 2,
+    "playType": "GLOBAL",
+    "playContext": "%SUMMON%",
+    "collectible": false,
+    "active": true,
+    "entourage": "PRIME_125c",
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "PRIME_224a",
     "name": "Husk",
     "set": "%SET_003%",
@@ -27,6 +48,25 @@
     "cost": 2,
     "attack": 2,
     "health": 2,
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
+    "id": "PRIME_125c",
+    "name": "Treant",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_COMMON%",
+    "race": "%RACE_CREATURE%",
+    "cost": 2,
+    "attack": 2,
+    "health": 2,
+    "text": "%BULWARK%",
+    "mechanics": [
+      "%BULWARK%"
+    ],
     "collectible": false,
     "active": true,
     "artStatus": "FPO",
@@ -217,6 +257,27 @@
     "isEntourage": true
   },
   {
+    "id": "PRIME_125a",
+    "name": "Grove Blessing",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_COMMON%",
+    "cost": 0,
+    "text": "<strong>%BUFF%</strong> your other<br>\nminions with +%NUM1%/+%NUM2%",
+    "mechanics": [
+      "%BUFF%",
+      "%AOE%"
+    ],
+    "numberPrimary": 2,
+    "numberSecondary": 2,
+    "playType": "GLOBAL",
+    "playContext": "%BUFF%",
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "CORE_109a",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
@@ -396,6 +457,25 @@
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
     "artStatus": "FINAL",
+    "isEntourage": true
+  },
+  {
+    "id": "PRIME_122a",
+    "name": "Wild Charger",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_COMMON%",
+    "race": "%RACE_CREATURE%",
+    "cost": 2,
+    "attack": 2,
+    "health": 2,
+    "text": "%RUSH%",
+    "mechanics": [
+      "%RUSH%"
+    ],
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
