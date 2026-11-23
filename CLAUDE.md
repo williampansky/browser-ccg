@@ -215,11 +215,25 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 
 1. **Destructure instead of re-declaring a property under a new name.** If the code reads `ctx.event`, write
    `const { event } = ctx`, not `const e = ctx.event`.
-2. **Comments stay within 80 columns** (indentation included). A one-line `/** ... */` is only for text that fits;
-   a longer doc comment is a multi-line block wrapped at 80 columns: `/**`, then ` * ` lines, then ` */` on its own
-   line. Use `/** */` for docs that should show in editor tooltips (exports, types, helpers other files use). A
-   longer `//` comment wraps onto further `//` lines, which suits notes that do not need a tooltip, such as the header
-   comment on a card definition. Do not use a trailing comment on a line that would pass 80 columns.
+2. **Comments stay within 80 columns** (indentation included), and read like prose a person wrote. A one-line `/** ... */` is only for text that fits;
+   a longer doc comment is a multi-line block: `/**`, then ` * ` lines, then ` */` on its own line. Use `/** */` for docs that
+   should show in editor tooltips (exports, types, helpers other files use). A longer `//` comment wraps onto further `//` lines,
+   which suits notes that do not need a tooltip, such as the header comment on a card definition. Do not use a trailing comment on
+   a line that would pass 80 columns.
+   **Wrap by reflowing the whole paragraph, never line by line.** Join the sentences, then break only where the next word would
+   not fit, so every line but the last runs close to 80 columns. Do not keep an old manual line break, and do not wrap each old
+   line on its own: that leaves short orphan lines ("how many copies the deck" / "that is only in the"). A break may stay only
+   between paragraphs (a blank ` *` line) and before a list item or a deliberately separate note. When you edit a comment,
+   reflow its whole paragraph, and never leave trailing spaces or a lone word on the last line if a small rewording avoids it.
+   Example of the shape wanted:
+   ```
+   /**
+    * One row per distinct card in a deck, like a third-party tracker: how many
+    * copies the deck started with and how many are still in it. Sorted by cost,
+    * then name. A card that is only in the deck now (shuffled in mid-game) counts
+    * its current copies as its total.
+    */
+   ```
 3. **Arrow functions:** if the body does not fit on one line within 80 columns, use a block body with an explicit
    `return` (callbacks such as `flatMap` included), not a wrapped expression. An arrow whose body fits on one line stays
    braceless (`(m) => m.attack >= 7`). A call whose arguments wrap (`.map(\n  (m) => ...\n)`) does not count as the arrow
