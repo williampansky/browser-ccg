@@ -809,6 +809,29 @@
     "artStatus": "FINAL"
   },
   {
+    "id": "CORE_133",
+    "name": "Blistercap",
+    "set": "%SET_002%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_FREE%",
+    "cardClass": "0 %CLASS_NONE%",
+    "race": "%RACE_CREATURE%",
+    "cost": 1,
+    "attack": 2,
+    "health": 1,
+    "text": "<strong>%ON_DEATH%:</strong> Deal %NUM1% damage to the enemy's hero",
+    "mechanics": [
+      "%ON_DEATH%",
+      "%DAMAGE%"
+    ],
+    "numberPrimary": 2,
+    "collectible": false,
+    "active": true,
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
+  },
+  {
     "id": "CORE_035",
     "name": "Red-eyed Killer",
     "set": "%SET_002%",

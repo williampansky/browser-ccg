@@ -1,4 +1,10 @@
 export interface GameConfig {
+  cardCounts: {
+    core: number;
+    prime: number;
+    entourage: number;
+    game: number;
+  };
   numerics: {
     actionPointsPerTurn: number;
     actionPointsTotal: number;

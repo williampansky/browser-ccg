@@ -8,7 +8,7 @@ See [VISION.md](VISION.md) for goals and priorities and [ROADMAP.md](ROADMAP.md)
 A Hearthstone-style game is playable at **`/play`** (run `npm run dev`): minions that attack, hero health, alternating
 turns, Guard, spells, weapons and armor, on a rules engine written from scratch in `engine/` (plain TypeScript, with
 tests). You play against a bot (a greedy one-move-lookahead bot, or a random one) or hot-seat in one tab. Cards are
-played by drag and drop, with click as a fallback. All 132 CORE cards are implemented. There is no multiplayer yet.
+played by drag and drop, with click as a fallback. Every CORE card is implemented. There is no multiplayer yet.
 
 An earlier zone/SNAP-style version is preserved at tag `snap-style-v0` and branch `archive/snap-style`. The card site
 (collection, deck builder, cards, store) still works but still describes that old game; switching it to the new card

@@ -5,6 +5,8 @@ What changed, newest first. Written from the git history; `git log` has the deta
 ## 2026-11-22
 
 - **Boost preview on the board:** rest the pointer on a hand card for about a second (or click or drag it) and a light sheen sweeps over each of your minions it would improve, so you can tell whether Nute Sprite will find a Sprite before you play it. It plays the card on a throwaway copy of the game and compares your minions' Attack, Health and keywords, so it covers every aura and warcry with no per-card data. Cards that need a target are not previewed. `components/play-board/boost-preview.ts`; reduced motion shows a green ring only.
+- **CORE_133 Blistercap:** Demise: deals 2 damage to the enemy hero (`engine/definitions/core/core-133.ts`).
+- **Card counts live in `app.config.ts`:** the number of CORE, PRIME, entourage and GAME cards the data tests expect is `gameConfig.cardCounts`, so adding a card is a one-line edit there. The CORE type-split, weapon and inactive-PRIME counts are gone, and the unnamed-card, dangling-entourage and targeting-mismatch counts now only check that those problems are reported. `CLAUDE.md` and `README.md` no longer repeat card counts.
 - **Greedy bot never silences its own minion:** it could cast Nullify on a minion of its own, throwing away the minion's card text, which its scoring cannot see. `isBadPlay` now rejects a silence on a friendly minion unless that lifts a Disable.
 
 ## 2026-11-20
