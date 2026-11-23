@@ -1,7 +1,7 @@
 import type { CardCatalog } from '../cards/types';
 import type { Effect, SkillOption, TargetFilter } from '../effects/types';
 import type { GameState, PlayerId } from '../state/types';
-import { addArmor, buff, damage, heal } from '../effects/primitives';
+import { addArmor, buff, damage, draw, heal } from '../effects/primitives';
 import {
   allEnemyMinions,
   chosenTarget,
@@ -64,6 +64,21 @@ const summonBuffed =
     m.attack += attack;
     m.maxHealth += health;
     m.health += health;
+  };
+
+const BLOOD_PACT_DAMAGE = 2;
+const BLOOD_PACT_CARDS = 1;
+
+/**
+ * Damages the caster's own hero. Spell damage does not raise it: it is a cost,
+ * not a spell.
+ */
+const hurtSelf =
+  (amount: number): Effect =>
+  (ctx) => {
+    const hero = { kind: 'hero', player: ctx.caster } as const;
+
+    damageTarget(ctx.g, hero, amount, ctx.events);
   };
 
 /**
@@ -179,5 +194,8 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
         summonBuffed('HERO_DRUID_HAWK', 2, 2),
       ],
     },
+  ],
+  NECROMANCER: [
+    { effects: [hurtSelf(BLOOD_PACT_DAMAGE), draw(BLOOD_PACT_CARDS)] },
   ],
 };

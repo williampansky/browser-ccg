@@ -85,6 +85,10 @@ describe('spell damage on skills', () => {
         .health,
     ).toBe(29); // the enemy's does nothing for you
   });
+  it("does not raise the Necromancer's damage to itself", () => {
+    const withElder = putOnBoard(game('NECROMANCER'), '0', elder);
+    expect(use(withElder, 0).players['0'].health).toBe(28);
+  });
   it('raises an area skill on every minion and leaves a heal alone', () => {
     let s = putOnBoard(putOnBoard(game('WIZARD'), '0', elder), '1', grunt, {
       health: 9,
@@ -100,15 +104,18 @@ describe('spell damage on skills', () => {
 });
 
 describe('the playable heroes', () => {
-  it('are the five classes with skill code, each with three skills', () => {
+  it('are the six classes with skill code, each with all of its skills', () => {
     expect(heroes().map((h) => h.id)).toEqual([
       'FIGHTER',
       'WIZARD',
       'RANGER',
       'CLERIC',
+      'NECROMANCER',
       'WARDEN',
     ]);
-    for (const h of heroes()) expect(h.skills).toHaveLength(3);
+    for (const h of heroes()) {
+      expect(h.skills).toHaveLength(h.id === 'NECROMANCER' ? 1 : 3);
+    }
   });
   it('take their skill numbers from the ability data', () => {
     expect(getHero('WIZARD')!.skills.map((k) => [k.cost, k.cooldown])).toEqual([
@@ -280,6 +287,41 @@ describe('Warrior', () => {
   });
 });
 
+describe('Necromancer', () => {
+  const pact = (s: GameState) => skill(s, 0).state.players['0'];
+  const me = (s: GameState) => s.players['0'];
+
+  it('is offered with its skill, which costs 2 energy and has a cooldown of 1', () => {
+    expect(heroSkill('NECROMANCER', 0)).toMatchObject({ cost: 2, cooldown: 1 });
+  });
+  it('takes 2 damage and draws a card, with no target', () => {
+    const before = me(game('NECROMANCER'));
+    const after = pact(game('NECROMANCER'));
+    expect(after.health).toBe(before.health - 2);
+    expect(after.hand).toHaveLength(before.hand.length + 1);
+    expect(after.deck).toHaveLength(before.deck.length - 1);
+  });
+  it('spends the energy and then waits out its cooldown', () => {
+    const s = skill(game('NECROMANCER'), 0).state;
+    expect(me(s).energy.current).toBe(8);
+    expect(err(s, { type: 'HeroSkill', skill: 0 })).not.toBeNull();
+  });
+  it('is absorbed by armor first, like any damage to the hero', () => {
+    const armored = produce(
+      game('NECROMANCER'),
+      (g) => void (g.players['0'].armor = 5),
+    );
+    const after = pact(armored);
+    expect([after.health, after.armor]).toEqual([30, 3]);
+  });
+  it('can bring the hero to 0 Health, which ends the game', () => {
+    const low = produce(
+      game('NECROMANCER'),
+      (g) => void (g.players['0'].health = 2),
+    );
+    expect(pact(low).health).toBe(0);
+  });
+});
 describe('Cleric (SAGE)', () => {
   it('Revitalize heals 3', () => {
     const s = produce(game('CLERIC'), (g) => void (g.players['0'].health = 20));
@@ -565,6 +607,10 @@ describe('once per game', () => {
     }
   });
   it("every hero's ultimate is once per game, even if the data also gives it a cooldown", () => {
-    for (const h of heroes()) expect(h.skills[2].cooldown).toBeUndefined();
+    for (const h of heroes()) {
+      const ultimate = h.skills[2];
+
+      if (ultimate) expect(ultimate.cooldown).toBeUndefined();
+    }
   });
 });
