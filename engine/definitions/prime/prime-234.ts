@@ -4,7 +4,8 @@ import { chosenTarget } from '../../effects/selectors';
 import { enemyMinion } from '../../effects/filters';
 import { findMinion } from '../../rules/lookup';
 
-// PRIME_234 Burning Chrysalis: "Deal 2 damage to an enemy minion; draw a card if it survives"
+// PRIME_234 Burning Chrysalis: "Deal 2 damage to an enemy minion; draw a card
+// if it survives"
 export default defineCard('PRIME_234', (n) => ({
   target: enemyMinion(),
   onPlay: [

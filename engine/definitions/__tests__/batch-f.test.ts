@@ -19,7 +19,8 @@ import {
 } from '../../testing/real-cards';
 import type { Action, GameState } from '../../state/types';
 
-// Batch F: Poison, untargetable, effects aimed at the opponent, random pools of targets, and assorted fresh cards.
+// Batch F: Poison, untargetable, effects aimed at the opponent, random pools of
+// targets, and assorted fresh cards.
 
 const ids =
   '223 116 194 071 242 249 245 234 151 014 090 093 215 087 057 221 012 253 254 251 100 096 088 187 190 079 098 037 211 147 219 060 197 229 092'.split(
@@ -488,7 +489,8 @@ describe('minions on the board', () => {
     const mine = play(setup('CORE_043', { mine: [[0, 6, 'PRIME_088']] })).state;
     expect(mine.players['1'].hand.map((c) => c.cardId)).toContain('CORE_043');
     expect(mine.players['0'].hand).toHaveLength(0);
-    // I cast it while the opponent owns the Traveler: the copy goes to the OTHER hand, which is the owner's (the opponent's)
+    // I cast it while the opponent owns the Traveler: the copy goes to the
+    // OTHER hand, which is the owner's (the opponent's)
     const theirs = play(
       setup('CORE_043', { theirs: [[0, 6, 'PRIME_088']] }),
     ).state;

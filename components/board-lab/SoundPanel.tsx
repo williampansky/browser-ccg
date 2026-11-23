@@ -19,7 +19,8 @@ export const SOUND_SLOTS: [TunableSound, string][] = [
 ];
 
 /**
- * Applies the URL's sound overrides (file `lsf_<slot>`, volume `lsg_<slot>`, pitch variation `lsj_<slot>`, hover gap `lsgap`) to the sound engine.
+ * Applies the URL's sound overrides (file `lsf_<slot>`, volume `lsg_<slot>`,
+ * pitch variation `lsj_<slot>`, hover gap `lsgap`) to the sound engine.
  * The page runs it always, so a URL's sounds apply whichever tab is showing.
  */
 export const useSoundTuning = (q: ParsedUrlQuery) => {
@@ -75,7 +76,10 @@ type SoundPanelProps = {
   setParams: (changes: Record<string, string | null>) => void;
 };
 
-/** The lab's Sounds tab has one accordion section per sound; this is the inside of one: file, volume, pitch variation, length. */
+/**
+ * The lab's Sounds tab has one accordion section per sound; this is the inside
+ * of one: file, volume, pitch variation, length.
+ */
 export const SoundSlotPanel = ({
   slot: n,
   q,

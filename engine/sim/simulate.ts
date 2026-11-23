@@ -17,13 +17,19 @@ export interface GameResult {
 
 const STEP_LIMIT = 8000;
 
-/** Plays one full game. `seed` fixes the shuffles and the bots' choices; player '0' goes first. */
+/**
+ * Plays one full game. `seed` fixes the shuffles and the bots' choices; player
+ * '0' goes first.
+ */
 export const playGame = (
   decks: Record<PlayerId, string[]>,
   bots: Record<PlayerId, Bot>,
   catalog: CardCatalog,
   seed: number,
-  /** Hero key per player (e.g. `ZEUS`); the catalog must then come from `withHeroTokens` */
+  /**
+   * Hero key per player (e.g. `ZEUS`); the catalog must then come from
+   * `withHeroTokens`
+   */
   heroes?: Partial<Record<PlayerId, string>>,
 ): GameResult => {
   const rng = createSeededRng(seed);
@@ -72,7 +78,10 @@ export interface MatchupResult {
   averageTurns: number;
 }
 
-/** `games` games between two contestants, alternating who goes first, so neither side gets the tempo edge. */
+/**
+ * `games` games between two contestants, alternating who goes first, so neither
+ * side gets the tempo edge.
+ */
 export const playMatchup = (
   a: Contestant,
   b: Contestant,
@@ -108,7 +117,10 @@ export interface CardStat {
   wins: number;
 }
 
-/** Plays the contestants against each other (every pair, alternating seats) and tallies per-card results. */
+/**
+ * Plays the contestants against each other (every pair, alternating seats) and
+ * tallies per-card results.
+ */
 export const runTournament = (
   contestants: Contestant[],
   gamesPerPair: number,
@@ -146,7 +158,10 @@ export const runTournament = (
 
 const pct = (x: number) => `${(x * 100).toFixed(0)}%`;
 
-/** A text grid: each cell is the row contestant's win rate against the column contestant. */
+/**
+ * A text grid: each cell is the row contestant's win rate against the column
+ * contestant.
+ */
 export const formatWinTable = (
   names: string[],
   matchups: MatchupResult[],

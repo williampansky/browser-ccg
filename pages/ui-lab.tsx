@@ -17,8 +17,10 @@ import { UiThemePicker } from '../components/ui-theme/UiThemePicker';
 import { UI_THEMES } from '../components/ui-theme/ui-themes';
 
 /**
- * PROTOTYPE page (dev only, not linked): every shared interface element (components/ui/) in its states, under the current interface
- * theme, or under all of them side by side ("Compare themes"). `?ui=<id>` sets the theme for the page. Add every new shared control here.
+ * PROTOTYPE page (dev only, not linked): every shared interface element
+ * (components/ui/) in its states, under the current interface
+ * theme, or under all of them side by side ("Compare themes"). `?ui=<id>` sets
+ * the theme for the page. Add every new shared control here.
  * "Disable all" shows the disabled look of everything at once.
  */
 
@@ -54,7 +56,9 @@ const Section = ({
   </section>
 );
 
-/** Every element, once, under whatever theme its nearest `data-ui-theme` says. */
+/**
+ * Every element, once, under whatever theme its nearest `data-ui-theme` says.
+ */
 const Elements = ({ disabled }: { disabled: boolean }) => {
   const [checks, setChecks] = useState({ a: true, b: false });
   const [sw, setSw] = useState({ a: true, b: false });
@@ -69,7 +73,8 @@ const Elements = ({ disabled }: { disabled: boolean }) => {
   } | null>(null);
   const rowRef = useRef<HTMLDivElement>(null);
 
-  // Live readout of the form row: its height must not change when Clear filters appears.
+  // Live readout of the form row: its height must not change when Clear filters
+  // appears.
   useEffect(() => {
     const row = rowRef.current;
     if (!row) return;

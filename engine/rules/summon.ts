@@ -4,8 +4,10 @@ import { GameEvent, GameState, MAX_BOARD, PlayerId } from '../state/types';
 import { createMinion } from './minion';
 
 /**
- * Puts a new minion on `owner`'s board, just right of `besideId` if that minion is there, otherwise
- * at the far right. A full board (7) means nothing happens (RULES Q7). Returns whether it was summoned.
+ * Puts a new minion on `owner`'s board, just right of `besideId` if that minion
+ * is there, otherwise
+ * at the far right. A full board (7) means nothing happens (RULES Q7). Returns
+ * whether it was summoned.
  * Call inside `produce`.
  */
 export const summonMinion = (

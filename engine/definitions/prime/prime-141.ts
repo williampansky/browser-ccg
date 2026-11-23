@@ -3,7 +3,8 @@ import { buffThisTurn, computed, draw } from '../../effects/primitives';
 import { self } from '../../effects/selectors';
 import { findMinion } from '../../rules/lookup';
 
-// PRIME_141 Fierce Gremlin: "Whenever you cast a spell, gain +1 Attack this turn; draw a card at 4 Attack"
+// PRIME_141 Fierce Gremlin: "Whenever you cast a spell, gain +1 Attack this
+// turn; draw a card at 4 Attack"
 export default defineCard('PRIME_141', (n) => ({
   triggers: [
     on('CardPlayed', {

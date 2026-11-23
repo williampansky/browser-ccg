@@ -1,8 +1,11 @@
 /**
- * `npm run deck -- "<deck-lab url>"`: bakes a deck-lab setup into `DECK_DEFAULTS`.
+ * `npm run deck -- "<deck-lab url>"`: bakes a deck-lab setup into
+ * `DECK_DEFAULTS`.
  *
- * Paste the whole URL from the lab (the `d_<field>` params are the setup). Every value in it is written into
- * `DECK_DEFAULTS` in components/play-board/deck-row-tune.ts. Fields the URL leaves out keep their current default. Nothing
+ * Paste the whole URL from the lab (the `d_<field>` params are the setup).
+ * Every value in it is written into
+ * `DECK_DEFAULTS` in components/play-board/deck-row-tune.ts. Fields the URL
+ * leaves out keep their current default. Nothing
  * is written if any value is unknown or invalid.
  *
  *   npm run deck -- "http://localhost:3000/deck-lab?d_rowH=34&d_artOpacity=80"

@@ -1,8 +1,11 @@
 /**
- * `npm run ring -- "<hero-lab url>"`: bakes a hero-lab ring setup into `RING_DEFAULTS`.
+ * `npm run ring -- "<hero-lab url>"`: bakes a hero-lab ring setup into
+ * `RING_DEFAULTS`.
  *
- * Paste the whole URL from the lab's ring tab (the `r_<field>` params are the setup). Every value in it is written into
- * `RING_DEFAULTS` in components/play-board/HeroVariants.tsx. Fields the URL leaves out keep their current default. Nothing
+ * Paste the whole URL from the lab's ring tab (the `r_<field>` params are the
+ * setup). Every value in it is written into
+ * `RING_DEFAULTS` in components/play-board/HeroVariants.tsx. Fields the URL
+ * leaves out keep their current default. Nothing
  * is written if any value is unknown or invalid.
  *
  *   npm run ring -- "http://localhost:3000/hero-lab?tab=ring&r_d=140&r_w=3"

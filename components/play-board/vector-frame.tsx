@@ -2,9 +2,12 @@ import React from 'react';
 import type { FrameColor } from './card-face-model';
 
 /**
- * A card frame drawn in code (SVG + CSS gradients) instead of the painted PNGs: a few KB instead of ~700 KB per rarity.
- * PROTOTYPE (2026-11-12): everything is drawn in the same 178 x 250 design units as `CardFace`, so it drops in behind the
- * same text, cost and stat positions. See `/card-lab` to compare the two side by side.
+ * A card frame drawn in code (SVG + CSS gradients) instead of the painted PNGs:
+ * a few KB instead of ~700 KB per rarity.
+ * PROTOTYPE (2026-11-12): everything is drawn in the same 178 x 250 design
+ * units as `CardFace`, so it drops in behind the
+ * same text, cost and stat positions. See `/card-lab` to compare the two side
+ * by side.
  */
 
 type Rarity = FrameColor;
@@ -17,7 +20,8 @@ interface Palette {
 }
 
 const PALETTE: Record<Rarity, Palette> = {
-  // Keyed by the frame colour (`RARITY_STYLE` in card-face-model.ts says which rarity gets which).
+  // Keyed by the frame colour (`RARITY_STYLE` in card-face-model.ts says which
+  // rarity gets which).
   STEEL: { trim: '#8aa0bd', light: '#d3deee', dark: '#2f3d52' },
   GREEN: { trim: '#46c76f', light: '#a5f0bb', dark: '#145a2d' },
   BLUE: { trim: '#3c9bff', light: '#9fd0ff', dark: '#123e70' },
@@ -27,7 +31,10 @@ const PALETTE: Record<Rarity, Palette> = {
 
 const id = (r: Rarity, name: string) => `vf-${r}-${name}`;
 
-/** Every gradient and filter, once per rarity (the same ids repeat across cards; the definitions are identical). */
+/**
+ * Every gradient and filter, once per rarity (the same ids repeat across cards;
+ * the definitions are identical).
+ */
 const Defs = ({ r }: { r: Rarity }) => {
   const p = PALETTE[r];
   return (
@@ -71,7 +78,10 @@ const Defs = ({ r }: { r: Rarity }) => {
   );
 };
 
-/** The frame: a steel slab with a window for the art, rarity trim, a ribbon for the name and a parchment text area. */
+/**
+ * The frame: a steel slab with a window for the art, rarity trim, a ribbon for
+ * the name and a parchment text area.
+ */
 export const VectorFrame = ({
   color: rarity,
   className,

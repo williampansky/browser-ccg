@@ -15,7 +15,10 @@ interface HeroBarProps extends Omit<
   'children' | 'className'
 > {
   name: string;
-  /** What the avatar shows when the player has no hero portrait: "1", "2" or "AI". */
+  /**
+   * What the avatar shows when the player has no hero portrait: "1", "2" or
+   * "AI".
+   */
   emblem: string;
   /** Hero portrait image; replaces the emblem. */
   portrait?: string;
@@ -31,11 +34,20 @@ interface HeroBarProps extends Omit<
   energy: { current: number; total: number };
   /** Energy locked at the start of this player's next turn (Overcharge) */
   overcharge?: number;
-  /** The player's face-down Mystery: its card name (the viewer's own) or just its category (the opponent's) */
+  /**
+   * The player's face-down Mystery: its card name (the viewer's own) or just
+   * its category (the opponent's)
+   */
   mystery?: string;
-  /** What hovering the Mystery badge explains: the card's text for its owner, only what it reacts to for the opponent */
+  /**
+   * What hovering the Mystery badge explains: the card's text for its owner,
+   * only what it reacts to for the opponent
+   */
   mysteryTip?: string;
-  /** Open the tooltip below the badge (the opponent's bar is at the top of the screen) */
+  /**
+   * Open the tooltip below the badge (the opponent's bar is at the top of the
+   * screen)
+   */
   mysteryTipBelow?: boolean;
   deck: number;
   hand: number;
@@ -45,7 +57,10 @@ interface HeroBarProps extends Omit<
   showTitles?: boolean;
   /** The avatar is what aim arrows point at, so the board tracks that node. */
   avatarRef?: (el: HTMLElement | null) => void;
-  /** Interaction states (a legal target, hovered as one, selected as an attacker, able to attack: `canAct`). */
+  /**
+   * Interaction states (a legal target, hovered as one, selected as an
+   * attacker, able to attack: `canAct`).
+   */
   aim?: boolean;
   aimHover?: boolean;
   selected?: boolean;
@@ -53,7 +68,8 @@ interface HeroBarProps extends Omit<
 }
 
 /**
- * A hero's status bar: a ring-gauge avatar (health, armor), the name and turn, a row of energy slots, deck and hand
+ * A hero's status bar: a ring-gauge avatar (health, armor), the name and turn,
+ * a row of energy slots, deck and hand
  * counts, and the weapon. The whole bar is the click/drop target.
  */
 export const HeroBar = ({

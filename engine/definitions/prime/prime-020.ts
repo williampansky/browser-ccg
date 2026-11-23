@@ -3,7 +3,8 @@ import { silence } from '../../effects/primitives';
 import { chosenTarget } from '../../effects/selectors';
 import { findMinion } from '../../rules/lookup';
 
-// PRIME_020 Magic Mushroom, On Play effect: "Suppress a minion with Cost 3 or less"
+// PRIME_020 Magic Mushroom, On Play effect: "Suppress a minion with Cost 3 or
+// less"
 export default defineCard('PRIME_020', () => ({
   target: (c) => {
     if (c.candidate.kind !== 'minion') return false;

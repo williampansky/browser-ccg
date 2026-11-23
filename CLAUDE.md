@@ -216,8 +216,11 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 
 1. **Destructure instead of re-declaring a property under a new name.** If the code reads `ctx.event`, write
    `const { event } = ctx`, not `const e = ctx.event`.
-2. **Block comments:** a one-line `/** ... */` is only for text that fits in 80 columns (indentation included). A longer
-   comment is a multi-line block wrapped at 80 columns: `/**`, then ` * ` lines, then ` */` on its own line.
+2. **Comments stay within 80 columns** (indentation included). A one-line `/** ... */` is only for text that fits;
+   a longer doc comment is a multi-line block wrapped at 80 columns: `/**`, then ` * ` lines, then ` */` on its own
+   line. Use `/** */` for docs that should show in editor tooltips (exports, types, helpers other files use). A
+   longer `//` comment wraps onto further `//` lines, which suits notes that do not need a tooltip, such as the header
+   comment on a card definition. Do not use a trailing comment on a line that would pass 80 columns.
 3. **Arrow functions:** if the body does not fit on one line within 80 columns, use a block body with an explicit
    `return` (callbacks such as `flatMap` included), not a wrapped expression. An arrow whose body fits on one line stays
    braceless (`(m) => m.attack >= 7`). A call whose arguments wrap (`.map(\n  (m) => ...\n)`) does not count as the arrow
@@ -244,7 +247,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
     types on exported functions.
 14. **Tests are named by card id** (`CORE_135`), never by card name, because names are editable Airtable data.
 
-Not done yet: existing code does not follow rules 2, 6 and 7 (a rewrap and a prop sort are separate sweeps).
+Not done yet: existing code does not follow rules 6 and 7 (a prop sort and an import sort are separate sweeps).
 - Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
 - Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.

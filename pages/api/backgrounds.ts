@@ -2,7 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-/** The images under `public/images/backgrounds`, as URLs, for the board lab's background picker (dev tool). */
+/**
+ * The images under `public/images/backgrounds`, as URLs, for the board lab's
+ * background picker (dev tool).
+ */
 export default function handler(
   _req: NextApiRequest,
   res: NextApiResponse<string[]>,

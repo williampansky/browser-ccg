@@ -14,7 +14,8 @@ import {
 } from '../../testing/real-cards';
 import type { Action, GameState, TargetRef } from '../../state/types';
 
-// "Choose one" cards: the player picks an option (`choice`) as part of PlayCard, then a target if
+// "Choose one" cards: the player picks an option (`choice`) as part of
+// PlayCard, then a target if
 // that option needs one.
 
 const playChoice = (

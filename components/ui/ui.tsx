@@ -4,9 +4,12 @@ import cx from '../../utils/cx';
 import { AnimatedIcon } from './AnimatedIcon';
 
 /**
- * The shared interface controls. Every screen that is meant to follow the interface theme builds its buttons, drop-downs, checkboxes
- * and switches from these, not from raw `<button>` / `<select>`, so a theme (styles/themes/_themes.scss) and any behaviour change
- * (focus, sounds, a11y) lands everywhere at once. The look lives in styles/site-styles/_ui-kit.scss.
+ * The shared interface controls. Every screen that is meant to follow the
+ * interface theme builds its buttons, drop-downs, checkboxes
+ * and switches from these, not from raw `<button>` / `<select>`, so a theme
+ * (styles/themes/_themes.scss) and any behaviour change
+ * (focus, sounds, a11y) lands everywhere at once. The look lives in
+ * styles/site-styles/_ui-kit.scss.
  * Not for the cards, minions or heroes: those have their own look.
  */
 
@@ -48,7 +51,10 @@ export const LinkButton = ({
   </Link>
 );
 
-/** A drop-down. Always pass `aria-label` (or wrap it in a label) so it has a name. */
+/**
+ * A drop-down. Always pass `aria-label` (or wrap it in a label) so it has a
+ * name.
+ */
 export const Select = ({
   className,
   ...rest
@@ -77,7 +83,10 @@ type CheckboxProps = Omit<
   checked: boolean;
   /** Called with the new value. */
   onChange: (checked: boolean) => void;
-  /** Goes on the label (the box is tiny, a hover title belongs on the whole thing). */
+  /**
+   * Goes on the label (the box is tiny, a hover title belongs on the whole
+   * thing).
+   */
   title?: string;
 };
 
@@ -149,7 +158,8 @@ export interface SegmentOption<T extends string | number | boolean> {
 }
 
 /**
- * A choice of one: a labelled segmented control (`label` shows on the left, e.g. Opponent) or, with `chips`, a row of small separate
+ * A choice of one: a labelled segmented control (`label` shows on the left,
+ * e.g. Opponent) or, with `chips`, a row of small separate
  * buttons (mana cost, card size). Radio semantics either way.
  */
 export function SegmentedControl<T extends string | number | boolean>({
@@ -196,7 +206,10 @@ export function SegmentedControl<T extends string | number | boolean>({
   );
 }
 
-/** A titled box (menus, dialogs). Layout (width, padding, gap) comes from `className`; the look from the theme. */
+/**
+ * A titled box (menus, dialogs). Layout (width, padding, gap) comes from
+ * `className`; the look from the theme.
+ */
 export const Panel = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>

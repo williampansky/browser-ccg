@@ -15,7 +15,10 @@ import { minionDef } from './minion';
 import { mysteryBeforeAttack } from './mystery';
 import { isLegalTarget, legalTargets } from './targeting';
 
-/** True if this minion may not attack right now (no attack, can't attack, disabled, out of attacks, or summoning sick). */
+/**
+ * True if this minion may not attack right now (no attack, can't attack,
+ * disabled, out of attacks, or summoning sick).
+ */
 export const cantAttack = (m: MinionInstance, turn: number): boolean => {
   if (m.attack < 1 || m.keywords.noAttack) return true;
   if (m.disabledOnTurn === turn) return true;
@@ -23,7 +26,10 @@ export const cantAttack = (m: MinionInstance, turn: number): boolean => {
   return !m.keywords.rush && m.playedOnTurn === turn; // summoning sickness
 };
 
-/** Does `source` carry Touch of Death that works on `victim`? (Suppressed minions lose it.) */
+/**
+ * Does `source` carry Touch of Death that works on `victim`? (Suppressed
+ * minions lose it.)
+ */
 const touchOfDeath = (
   source: MinionInstance,
   victim: MinionInstance,
@@ -66,7 +72,8 @@ export const attack = (
     a.attacksThisTurn += 1;
     a.keywords.hidden = false; // attacking reveals a hidden minion
     if (a.drawsOnAttack) drawCard(g, me, events);
-    // The defender's Mystery may react first, and may redirect the attack or even kill the attacker.
+    // The defender's Mystery may react first, and may redirect the attack or
+    // even kill the attacker.
     const target = ctx
       ? mysteryBeforeAttack(g, ctx, events, {
           attackerPlayer: me,
@@ -82,12 +89,14 @@ export const attack = (
       const id = target.instanceId;
       const d = g.players[foe].board.find((m) => m.instanceId === id);
       if (!d) return;
-      // Simultaneous damage (RULES Q15): read both attack values before applying either.
+      // Simultaneous damage (RULES Q15): read both attack values before
+      // applying either.
       const [dealt, taken] = [a.attack, d.attack];
       const [dBefore, aBefore] = [d.health, a.health];
       damageMinion(d, dealt, events, foe);
       damageMinion(a, taken, events, me);
-      // Touch of Death: a poisonous minion destroys whatever it actually damaged (a popped Bubble absorbs it).
+      // Touch of Death: a poisonous minion destroys whatever it actually
+      // damaged (a popped Bubble absorbs it).
       if (ctx) {
         if (d.health < dBefore && touchOfDeath(a, d, ctx)) d.health = 0;
         if (a.health < aBefore && touchOfDeath(d, a, ctx)) a.health = 0;

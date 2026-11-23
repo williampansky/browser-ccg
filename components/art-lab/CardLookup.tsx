@@ -11,7 +11,10 @@ const ALL: LookupCard[] = [...core, ...prime, ...entourage, ...game].filter(
   (c: LookupCard) => c.id,
 );
 
-/** Type a card id or name (from the local data/*.json), pick it, and the button adds `?id=` to the address. */
+/**
+ * Type a card id or name (from the local data/*.json), pick it, and the button
+ * adds `?id=` to the address.
+ */
 export const CardLookup = ({ current }: { current?: string }) => {
   const router = useRouter();
   const [q, setQ] = useState('');

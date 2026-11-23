@@ -5,13 +5,18 @@ import cx from '../../utils/cx';
 interface EnergyBarProps {
   current: number;
   total: number;
-  /** Cost of the card being dragged or selected: the slots it would use blink. Leave out when no card is picked. */
+  /**
+   * Cost of the card being dragged or selected: the slots it would use blink.
+   * Leave out when no card is picked.
+   */
   cost?: number;
 }
 
 /**
- * A tall column of energy orbs beside the board, filling from the bottom (hsclone's layout), big enough to read at a glance. The
- * hero bar keeps its small row. With a card picked, the orbs it would spend blink; if you cannot afford it every orb blinks red.
+ * A tall column of energy orbs beside the board, filling from the bottom
+ * (hsclone's layout), big enough to read at a glance. The
+ * hero bar keeps its small row. With a card picked, the orbs it would spend
+ * blink; if you cannot afford it every orb blinks red.
  */
 export const EnergyBar = ({ current, total, cost }: EnergyBarProps) => {
   const pips = energyPips(current, total);

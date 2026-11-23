@@ -1,6 +1,8 @@
 /**
- * Layout overrides for the /play board, as CSS over the real stylesheet. The /board-lab page edits these knobs live; `/play` applies
- * `PLAY_LAYOUT` (the saved "wip" preset from the lab). Param names are the lab's URL keys (see the header comment in pages/board-lab.tsx).
+ * Layout overrides for the /play board, as CSS over the real stylesheet. The
+ * /board-lab page edits these knobs live; `/play` applies
+ * `PLAY_LAYOUT` (the saved "wip" preset from the lab). Param names are the
+ * lab's URL keys (see the header comment in pages/board-lab.tsx).
  */
 export const CLS = (name: string) => `[class*="play-board_${name}__"]`;
 export const SLOT = '[class*="board-minion_slot__"]';
@@ -47,7 +49,8 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lfy0: (v) => `${CLS('figMe')}{--lab-y:${v}px}`,
   lfx1: (v) => `${CLS('figFoe')}{--lab-x:${v}px}`,
   lfy1: (v) => `${CLS('figFoe')}{--lab-y:${v}px}`,
-  // The ring hero display has its own offsets: the figure's were tuned for a different shape and would push the ring off screen.
+  // The ring hero display has its own offsets: the figure's were tuned for a
+  // different shape and would push the ring off screen.
   lrx0: (v) => `${CLS('figMe')}{--ring-x:${v}px}`,
   lry0: (v) => `${CLS('figMe')}{--ring-y:${v}px}`,
   lrx1: (v) => `${CLS('figFoe')}{--ring-x:${v}px}`,
@@ -56,17 +59,21 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lms: (v) => `${SLOT}{--sel-scale:${v}}`,
   lmh: (v) => `${SLOT}{--aim-scale:${v}}`,
   lsel: () => '',
-  // Hand look and feel: CSS variables on .hand (see the .handSlot block in play-board.module.scss for what each one does).
-  // `--h-tilt-base` is the same number kept apart, so the lab can show it as the starting point of the per-count sliders.
+  // Hand look and feel: CSS variables on .hand (see the .handSlot block in
+  // play-board.module.scss for what each one does).
+  // `--h-tilt-base` is the same number kept apart, so the lab can show it as
+  // the starting point of the per-count sliders.
   lhrt: (v) => `${CLS('hand')}{--h-tilt:${v};--h-tilt-base:${v}}`,
   lhdp: (v) => `${CLS('hand')}{--h-dropk:${v};--h-dropk-base:${v}}`,
   lhdc: (v) => `${CLS('hand')}{--h-curve:${v}}`,
-  // Hover slot width as a % of the card spacing (100 = the slots just touch, less leaves gaps, more makes them overlap); 0 turns slots off.
+  // Hover slot width as a % of the card spacing (100 = the slots just touch,
+  // less leaves gaps, more makes them overlap); 0 turns slots off.
   lhsw: (v) =>
     v <= 0
       ? `${CLS('handSlot')}{pointer-events:auto !important}${CLS('handHits')}{display:none !important}`
       : `${CLS('hand')}{--h-slot:${v / 100}}`,
-  // Edge slots reach out to the card's outer edge (0 = no, 1 = to the edge) and `lhsx` px further; the hovered slot grows `lhsh` px each side.
+  // Edge slots reach out to the card's outer edge (0 = no, 1 = to the edge) and
+  // `lhsx` px further; the hovered slot grows `lhsh` px each side.
   lhse: (v) => `${CLS('hand')}{--h-edge:${v}}`,
   lhsx: (v) => `${CLS('hand')}{--h-edge-px:${v}px}`,
   lhsh: (v) => `${CLS('hand')}{--h-hot-px:${v}px}`,
@@ -76,7 +83,8 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
       ? `${CLS('hand')}{--h-slot-show:rgba(255,60,60,0.18);--h-slot-outline:1px}`
       : '',
   lhol: (v) => `${CLS('hand')}{--h-overlap:${v}px;--h-overlap-base:${v}}`,
-  // How long the hover waits before stepping to the next card on its way to the card under the pointer (ms; 0 = jump straight there).
+  // How long the hover waits before stepping to the next card on its way to the
+  // card under the pointer (ms; 0 = jump straight there).
   lhsd: (v) => `${CLS('hand')}{--h-step-ms:${v}}`,
   lhov: (v) => `${CLS('hand')}{--h-hov:${v}}`,
   lhoy: (v) => `${CLS('hand')}{--h-lift:${-v}px}`,
@@ -92,10 +100,12 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lhfl: (v) => `${CLS('hand')}{--h-flash:${v}}`,
   lhsm: (v) => `${CLS('hand')}{--h-sheen-ms:${v}ms}`,
   lsplit: () => '',
-  // Connected sidebar: its width and the thickness of the drag bar between log and deck.
+  // Connected sidebar: its width and the thickness of the drag bar between log
+  // and deck.
   lsbw: (v) => `${CLS('page')}{--sb-w:${v}px}`,
   lsbd: (v) => `${CLS('page')}{--sb-d:${v}px}`,
-  // Connected sidebar: the whole column's height (px); without it the column fills the window, 1rem in from the top and bottom.
+  // Connected sidebar: the whole column's height (px); without it the column
+  // fills the window, 1rem in from the top and bottom.
   lsbh: (v) => `${CLS('page')}{--sb-h:${v}px}`,
   lgw: (v) => `${CLS('log')}{width:${v}px !important}`,
   ldw: (v) => `${CLS('deckView')}{width:${v}px !important}`,
@@ -106,7 +116,8 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   les: (v) => `${BAR}{scale:${v} !important}`,
   lex: (v) => `${BAR}{--lab-x:${v}px}`,
   ley: (v) => `${BAR}{--lab-y:${v}px}`,
-  // Green "play this" overlays: outline width / radius, fill strength (%) idle / hovered / landing gap, gap width, dashed (1) or solid (0), hand glow.
+  // Green "play this" overlays: outline width / radius, fill strength (%) idle
+  // / hovered / landing gap, gap width, dashed (1) or solid (0), hand glow.
   lpow: (v) => `${CLS('page')}{--po-w:${v}px}`,
   lpor: (v) => `${CLS('page')}{--po-r:${v}px}`,
   lpoi: (v) => `${CLS('page')}{--po-idle:${v}}`,
@@ -116,8 +127,10 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lpoo: (v) => `${CLS('page')}{--po-op:${v}}`,
   lpos: (v) => (v ? '' : `${CLS('page')}{--po-style:solid}`),
   lpoga: (v) => `${CLS('page')}{--po-glow:${v}px}`,
-  // Per-element play overlays: a = global cast area, z = minion zone, g = landing gap. o opacity, i idle fill, h hover fill, hw hover outline width,
-  // hg hover glow, t hover fade ms. Gap: gb outline width, gd open ms, gs start opacity, gp pulse seconds (0 = off), gq pulse brightness.
+  // Per-element play overlays: a = global cast area, z = minion zone, g =
+  // landing gap. o opacity, i idle fill, h hover fill, hw hover outline width,
+  // hg hover glow, t hover fade ms. Gap: gb outline width, gd open ms, gs start
+  // opacity, gp pulse seconds (0 = off), gq pulse brightness.
   lpoao: (v) => `${CLS('page')}{--po-ao:${v}}`,
   lpoai: (v) => `${CLS('page')}{--po-ai:${v}}`,
   lpoah: (v) => `${CLS('page')}{--po-ah:${v}}`,
@@ -136,7 +149,8 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lpogs: (v) => `${CLS('page')}{--po-gs:${v}}`,
   lpogp: (v) => `${CLS('page')}{--po-gp:${v}s}`,
   lpogq: (v) => `${CLS('page')}{--po-gb:${v}}`,
-  // Backdrop and felt panel (the area around the image): weave, middle-colour position, felt alphas, corner radius, rim, shadows, extra size.
+  // Backdrop and felt panel (the area around the image): weave, middle-colour
+  // position, felt alphas, corner radius, rim, shadows, extra size.
   lpgw: (v) => `${CLS('page')}{--bg-weave:${v}}`,
   lpgm: (v) => `${CLS('page')}{--bg-mid:${v}%}`,
   lflt: (v) => `${CLS('page')}{--felt-tint-a:${v}}`,
@@ -153,7 +167,8 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lenf: (v) => `${CLS('page')}{--end-fade:${v}ms}`,
   lenol: (v) => `${CLS('page')}{--end-dark-l:${v}}`,
   lenbs: (v) => `${CLS('page')}{--end-bs:${v}}`,
-  // Energy bar look: glows, number size / visibility, blink rate / strength (colours are `ENERGY_COLOURS`, below).
+  // Energy bar look: glows, number size / visibility, blink rate / strength
+  // (colours are `ENERGY_COLOURS`, below).
   leg: (v) => `${BAR}{--en-glow:${v}px}`,
   legt: (v) => `${BAR}{--en-text-glow:${v}px}`,
   lecs: (v) => `${BAR}{--en-cs:${v}}`,
@@ -162,7 +177,8 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lebr: (v) => `${BAR}{--en-br:${v}s}`,
   lebb: (v) => `${BAR}{--en-bb:${v}}`,
   lebg: (v) => `${BAR}{--en-bg:${v}px}`,
-  // The cast popup (a spell or item being played): offset from its default spot, size, length, slam size, glow, shockwave ring.
+  // The cast popup (a spell or item being played): offset from its default
+  // spot, size, length, slam size, glow, shockwave ring.
   lcx: (v) => `${CLS('castFx')}{--cast-x:${v}px}`,
   lcy: (v) => `${CLS('castFx')}{--cast-y:${v}px}`,
   lcs: (v) => `${CLS('castFx')}{--cast-size:${v}}`,
@@ -182,8 +198,10 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
 };
 
 /**
- * The middle strip's number knobs: one row each (URL key, label, range, default, the CSS variable it sets and its unit). The lab builds its
- * sliders from this and `CSS_FNS` its CSS, so a new knob is one line here plus the rule in play-board.module.scss.
+ * The middle strip's number knobs: one row each (URL key, label, range,
+ * default, the CSS variable it sets and its unit). The lab builds its
+ * sliders from this and `CSS_FNS` its CSS, so a new knob is one line here plus
+ * the rule in play-board.module.scss.
  */
 export const MID_KNOBS: {
   key: string;
@@ -491,7 +509,8 @@ export const MID_KNOBS: {
     unit: '',
   },
 ];
-// Fan tilt for one hand size: `lhrt1` .. `lhrt10` (x) override the main tilt (`lhrt`) while the hand holds exactly that many cards.
+// Fan tilt for one hand size: `lhrt1` .. `lhrt10` (x) override the main tilt
+// (`lhrt`) while the hand holds exactly that many cards.
 for (let n = 1; n <= 10; n++)
   CSS_FNS[`lhrt${n}`] = (v) =>
     `${CLS('hand')}[data-count="${n}"]{--h-tilt:${v}}`;
@@ -499,17 +518,24 @@ for (let n = 1; n <= 10; n++)
 for (let n = 1; n <= 10; n++)
   CSS_FNS[`lhol${n}`] = (v) =>
     `${CLS('hand')}[data-count="${n}"]{--h-overlap:${v}px}`;
-// The same for the fan drop: `lhdp1` .. `lhdp10` override the main drop (`lhdp`) for exactly that many cards.
+// The same for the fan drop: `lhdp1` .. `lhdp10` override the main drop
+// (`lhdp`) for exactly that many cards.
 for (let n = 1; n <= 10; n++)
   CSS_FNS[`lhdp${n}`] = (v) =>
     `${CLS('hand')}[data-count="${n}"]{--h-dropk:${v}}`;
 MID_KNOBS.forEach(
   (k) => (CSS_FNS[k.key] = (v) => `${CLS('page')}{${k.cssVar}:${v}${k.unit}}`),
 );
-/** The lab's preview for the timer bar: how full it is (%), since the lab has no turn clock. */
+/**
+ * The lab's preview for the timer bar: how full it is (%), since the lab has no
+ * turn clock.
+ */
 export const MID_TIMER_PREVIEW_KEY = 'lmdtpv';
 
-/** The middle strip's text choices (`lmdj` alignment, `lmdtpos` where the timer bar sits): named, not numbers. */
+/**
+ * The middle strip's text choices (`lmdj` alignment, `lmdtpos` where the timer
+ * bar sits): named, not numbers.
+ */
 const MID_JUSTIFY: Record<string, string> = {
   start: 'flex-start',
   center: 'center',
@@ -544,7 +570,10 @@ const midChoicesCss = (one: (k: string) => string) =>
       : '',
   ].join('');
 
-/** Energy bar colours: URL key -> CSS variable. Values are 6-digit hex without the `#` (so they are never mistaken for the numeric knobs). */
+/**
+ * Energy bar colours: URL key -> CSS variable. Values are 6-digit hex without
+ * the `#` (so they are never mistaken for the numeric knobs).
+ */
 export const ENERGY_COLOURS: Record<
   string,
   { cssVar: string; label: string; fallback: string; target?: 'page' }
@@ -729,7 +758,10 @@ const gapEasingCss = (one: (k: string) => string) =>
     ? `${CLS('page')}{--po-ge:${GAP_EASINGS[one('lpoge')]}}`
     : '';
 
-/** The layout /play uses: the lab's "wip" preset, layout knobs only (no setup params). A `?l...` param in the /play URL overrides one. */
+/**
+ * The layout /play uses: the lab's "wip" preset, layout knobs only (no setup
+ * params). A `?l...` param in the /play URL overrides one.
+ */
 export const PLAY_LAYOUT: Record<string, string> = {
   ldw: '310',
   ldx: '0',
@@ -756,7 +788,8 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lpan: 'default',
   ls: '8',
   lsel: '1.85',
-  // Minion portrait scale inside the frame: hover (1 = none), selected, speed in ms, centre from the top in %
+  // Minion portrait scale inside the frame: hover (1 = none), selected, speed
+  // in ms, centre from the top in %
   lpsh: '1',
   lpss: '1.1',
   lpsm: '60',
@@ -767,14 +800,16 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lbgb: '0',
   lbgd: '0.1',
   lbgf: '/images/backgrounds/paper-v1.jpg',
-  // Minion drop shadows (darkness per state; the selected one is also pushed 27 px down)
+  // Minion drop shadows (darkness per state; the selected one is also pushed 27
+  // px down)
   lshaima: '0.75',
   lshdefa: '0.75',
   lshhova: '0.65',
   lshrdya: '0.75',
   lshsela: '0.15',
   lshsely: '27',
-  // Backdrop and felt panel (the author's 2026-11-15 "board-and-casting" preset)
+  // Backdrop and felt panel (the author's 2026-11-15 "board-and-casting"
+  // preset)
   lflgc: 'ced12e',
   lflo: '0.85',
   lflrc: 'ffaa33',
@@ -783,8 +818,10 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lpgc1: '91592b',
   lpgc2: '2a1b09',
   lpgc3: '573905',
-  // Play overlays: base colour, global-area opacity 0, minion-zone opacity 0, gap opening (570 ms, springy, pulsing every 2 s)
-  // Middle strip: End turn (radius 14, glow 14, hover 1.35x, brown fill and border), timer bar (strip width, 5 px down, faint track, tan / red fill);
+  // Play overlays: base colour, global-area opacity 0, minion-zone opacity 0,
+  // gap opening (570 ms, springy, pulsing every 2 s)
+  // Middle strip: End turn (radius 14, glow 14, hover 1.35x, brown fill and
+  // border), timer bar (strip width, 5 px down, faint track, tan / red fill);
   // lmdtpv is only the lab's preview fill (%)
   lmdbr: '8',
   lmdbg: '14',
@@ -797,7 +834,8 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lmdtfc: 'c79d75',
   lmdtlc: 'e14747',
   lmdtpv: '16',
-  // End game screen: overlay darkness (win .75, loss .5), 200 ms fade, banner size 1 (the confetti defaults are END_DEFAULTS)
+  // End game screen: overlay darkness (win .75, loss .5), 200 ms fade, banner
+  // size 1 (the confetti defaults are END_DEFAULTS)
   leno: '0.75',
   lenf: '200',
   lenbs: '1',
@@ -861,8 +899,10 @@ export const PLAY_LAYOUT: Record<string, string> = {
 };
 
 /**
- * The board's background image (the lab's Background section): `lbgf` the image URL (none = off), `lbgt` where it goes (`table` = the play
- * surface, the default; `page` = behind everything), `lbgm` `cover` or `tile`, `lbgs` the tile size in px, `lbgx` / `lbgy` the focus point in %,
+ * The board's background image (the lab's Background section): `lbgf` the image
+ * URL (none = off), `lbgt` where it goes (`table` = the play
+ * surface, the default; `page` = behind everything), `lbgm` `cover` or `tile`,
+ * `lbgs` the tile size in px, `lbgx` / `lbgy` the focus point in %,
  * `lbgd` how much it is darkened (0 to 1), `lbgb` blur in px.
  */
 const backgroundCss = (one: (k: string) => string): string => {
@@ -883,7 +923,9 @@ const backgroundCss = (one: (k: string) => string): string => {
     : `${CLS('table')}::before{background:${image} !important;background-origin:border-box !important;filter:blur(${blur}px)}`;
 };
 
-/** The CSS for a set of layout params (values are strings, as in a URL query). */
+/**
+ * The CSS for a set of layout params (values are strings, as in a URL query).
+ */
 export const buildLayoutCss = (
   q: Record<string, string | undefined>,
 ): string => {
@@ -892,11 +934,14 @@ export const buildLayoutCss = (
   const split = Math.min(85, Math.max(15, +one('lsplit') || 50)) / 100;
   const stackSide = (left: boolean) =>
     `${left ? 'left:1rem !important;right:auto !important' : 'right:1rem !important;left:auto !important'}`;
-  // The connected sidebar: log over deck in one column on the left (`joinL`) or right (`joinR`), flush, with a drag bar between them. The split
-  // is the dragged one (--side-drag, set by the drag bar and remembered) or else `lsplit`.
+  // The connected sidebar: log over deck in one column on the left (`joinL`) or
+  // right (`joinR`), flush, with a drag bar between them. The split
+  // is the dragged one (--side-drag, set by the drag bar and remembered) or
+  // else `lsplit`.
   const join = preset === 'joinL' || preset === 'joinR';
   const cut = `var(--side-drag, ${split})`;
-  // One offset moves the whole column: the log's (`lgx` / `lgy`), shared by the deck and the drag bar so they never come apart.
+  // One offset moves the whole column: the log's (`lgx` / `lgy`), shared by the
+  // deck and the drag bar so they never come apart.
   const sbx = +one('lgx') || 0;
   const sby = +one('lgy') || 0;
   const col = 'var(--sb-h, calc(100vh - 2rem))';
@@ -913,7 +958,8 @@ export const buildLayoutCss = (
         ? `${CLS('log')}{${stackSide(preset === 'stackL')};top:1rem !important;bottom:auto !important;height:calc((100vh - 3rem) * ${split}) !important}` +
           `${CLS('deckView')}{${stackSide(preset === 'stackL')};top:calc(1rem + (100vh - 3rem) * ${split} + 1rem) !important;bottom:1rem !important;height:auto !important}`
         : '';
-  // Offsets (hero figures and panels) ride on --lab-x / --lab-y so X and Y can be set separately.
+  // Offsets (hero figures and panels) ride on --lab-x / --lab-y so X and Y can
+  // be set separately.
   const offsetCss =
     [CLS('figMe'), CLS('figFoe'), CLS('log'), CLS('deckView'), BAR]
       .map(
@@ -921,7 +967,8 @@ export const buildLayoutCss = (
       )
       .join('') +
     `${CLS('figSlotRing')}{translate:var(--ring-x,0px) var(--ring-y,0px) !important}`;
-  // The clicked card's size. `lpv` previews it on the first card in hand without clicking.
+  // The clicked card's size. `lpv` previews it on the first card in hand
+  // without clicking.
   const sel = Math.min(3, Math.max(1, +one('lsel') || 2));
   const selTransform = `transform:translate(var(--x),calc(var(--y-comp) + (${-(110 * sel + 5)}px + var(--hand-sink)) * var(--zoom))) rotate(0deg) scale(calc(${sel} * var(--zoom))) !important`;
   const slotSel = `${CLS('handSlot')}${CLS('slotSelected')}`;
@@ -930,7 +977,8 @@ export const buildLayoutCss = (
     (one('lpv')
       ? `${CLS('handSlot')}:nth-child(1){${selTransform};z-index:20 !important;filter:drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e) !important}`
       : '');
-  // `lmpv` previews a clicked minion on your first one, with the same gold ring the real selection has.
+  // `lmpv` previews a clicked minion on your first one, with the same gold ring
+  // the real selection has.
   const minionPreviewCss = one('lmpv')
     ? `${MY_FIRST}{transform:translateY(calc(var(--sel-lift,14px) * -1)) scale(var(--sel-scale,1.08)) !important}` +
       `${MY_FIRST} [class*="board-minion_portrait__"]{transform:scale(var(--port-sel,1)) !important}` +
@@ -939,7 +987,8 @@ export const buildLayoutCss = (
   return [
     minionPreviewCss,
     panelCss,
-    // Horizontal energy bar: the orbs were listed bottom-first for the column, so row-reverse puts the first one on the left.
+    // Horizontal energy bar: the orbs were listed bottom-first for the column,
+    // so row-reverse puts the first one on the left.
     one('leo') === 'h' ? `${ORBS}{flex-direction:row-reverse !important}` : '',
     offsetCss,
     energyColourCss(one),
@@ -948,7 +997,8 @@ export const buildLayoutCss = (
     selCss,
     ...Object.keys(CSS_FNS)
       .filter((k) => one(k) !== '' && !Number.isNaN(+one(k)))
-      // The connected sidebar has one width (`lsbw`); the separate log and deck widths would win over it (same weight, later), so they sit out.
+      // The connected sidebar has one width (`lsbw`); the separate log and deck
+      // widths would win over it (same weight, later), so they sit out.
       .filter((k) => !(join && (k === 'lgw' || k === 'ldw')))
       .map((k) => CSS_FNS[k](+one(k))),
     one('lfs') === 'right'

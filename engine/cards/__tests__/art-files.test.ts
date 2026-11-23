@@ -4,9 +4,12 @@ import core from '../../../data/core.json';
 import prime from '../../../data/prime.json';
 import entourage from '../../../data/entourage.json';
 
-// The card art folders must match the CURRENT card data. The Hearthstone-style rebuild reassigned card ids, and for a while
-// SET_CORE kept `-DECK` / `-MINION` images (and some token art) from the old zone game, which showed a different card than the `-CARD` art.
-// The `-MINION` images there now are new ones, named without the set prefix like PRIME's. The board still draws minions from `-CARD`.
+// The card art folders must match the CURRENT card data. The Hearthstone-style
+// rebuild reassigned card ids, and for a while
+// SET_CORE kept `-DECK` / `-MINION` images (and some token art) from the old
+// zone game, which showed a different card than the `-CARD` art.
+// The `-MINION` images there now are new ones, named without the set prefix
+// like PRIME's. The board still draws minions from `-CARD`.
 
 const dir = (set: string) =>
   path.join(__dirname, '../../../public/images/sets', set);
@@ -49,7 +52,8 @@ describe('SET_CORE art', () => {
 describe('SET_PRIME art', () => {
   it('every named, active PRIME card has -CARD art, and nothing in the folder belongs to no card', () => {
     const have = new Set(files('SET_PRIME'));
-    // PRIME_212 has no art yet (the board shows the placeholder); anything else missing is a mistake.
+    // PRIME_212 has no art yet (the board shows the placeholder); anything else
+    // missing is a mistake.
     const noArtYet = ['PRIME_212'];
     for (const c of (
       prime as { id: string; name?: string; active?: boolean }[]

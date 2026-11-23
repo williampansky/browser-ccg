@@ -5,8 +5,10 @@ import { marked } from 'marked';
 const REPO = 'https://github.com/williampansky/browser-ccg/blob/hs-rebuild/';
 
 /**
- * Reads a markdown file from the repo root and returns HTML. Server only (use it in `getStaticProps`).
- * The files are our own, so the output is trusted. Relative links to other repo files, which only
+ * Reads a markdown file from the repo root and returns HTML. Server only (use
+ * it in `getStaticProps`).
+ * The files are our own, so the output is trusted. Relative links to other repo
+ * files, which only
  * work on GitHub, are pointed there.
  */
 export const renderMarkdown = (file: string): string => {

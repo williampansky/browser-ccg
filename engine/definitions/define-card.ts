@@ -19,7 +19,10 @@ export interface TriggerInfo {
   selfId: number;
 }
 
-/** "When this event happens (and `when` holds) while this minion is on the board, run `do`." */
+/**
+ * "When this event happens (and `when` holds) while this minion is on the
+ * board, run `do`."
+ */
 export interface Trigger {
   event: GameEventType;
   when?: (e: GameEvent, c: TriggerInfo) => boolean;
@@ -47,13 +50,21 @@ export interface Choice {
 }
 
 /**
- * What a card does. Cards with no `target` are global. For a minion, `onPlay` is its On Play effect.
- * `onDeath` runs after the minion has been removed (owner is the caster). `triggers` are live
- * only while the minion is on the board (this covers end-of-turn and "whenever ..." cards).
+ * What a card does. Cards with no `target` are global. For a minion, `onPlay`
+ * is its On Play effect.
+ * `onDeath` runs after the minion has been removed (owner is the caster).
+ * `triggers` are live
+ * only while the minion is on the board (this covers end-of-turn and "whenever
+ * ..." cards).
  */
-/** What an aura minion does to the minions it reaches while it is on the board. */
+/**
+ * What an aura minion does to the minions it reaches while it is on the board.
+ */
 export interface Aura {
-  /** Does this aura reach `target`? (`distance` is the board-slot gap on the same side, else Infinity.) */
+  /**
+   * Does this aura reach `target`? (`distance` is the board-slot gap on the
+   * same side, else Infinity.)
+   */
   affects: (c: {
     source: MinionInstance;
     target: MinionInstance;
@@ -65,23 +76,35 @@ export interface Aura {
   rush?: boolean;
 }
 
-/** "Your <cards> cost N less/more" while this minion is on the board (the owner's cards only). */
+/**
+ * "Your <cards> cost N less/more" while this minion is on the board (the
+ * owner's cards only).
+ */
 export interface CostMod {
   affects: (card: Card) => boolean;
   /** Negative makes cards cheaper, positive dearer */
   delta: number;
-  /** A reduction never takes a card below this (or below its own printed cost, if that is already lower). Default 0 */
+  /**
+   * A reduction never takes a card below this (or below its own printed cost,
+   * if that is already lower). Default 0
+   */
   floor?: number;
 }
 
-/** What a minion gives ITSELF while a condition holds ("+3 Attack if damaged", "Stampede if you have a weapon"). */
+/**
+ * What a minion gives ITSELF while a condition holds ("+3 Attack if damaged",
+ * "Stampede if you have a weapon").
+ */
 export interface SelfAura {
   attack?: number;
   rush?: boolean;
   doubleAttack?: boolean;
 }
 
-/** What a face-down Mystery spell does. It only reacts on the opponent's turn, and then it is gone (RULES Appendix C). */
+/**
+ * What a face-down Mystery spell does. It only reacts on the opponent's turn,
+ * and then it is gone (RULES Appendix C).
+ */
 export interface MysteryCheck {
   state: GameState;
   catalog: CardCatalog;
@@ -101,7 +124,10 @@ export type MysteryCategory =
 export interface MysteryDef {
   /** What the opponent is told about a face-down Mystery */
   category: MysteryCategory;
-  /** Reacts BEFORE an enemy attack / enemy spell resolves (it may redirect it) ... */
+  /**
+   * Reacts BEFORE an enemy attack / enemy spell resolves (it may redirect it)
+   * ...
+   */
   hook?: 'attack' | 'spell';
   /** ... or AFTER this event happens */
   event?: GameEventType;
@@ -110,20 +136,36 @@ export interface MysteryDef {
 }
 
 export interface CardDef {
-  /** Touch of Death: a minion this one damages in combat is destroyed. `vs` limits it to minions of that race. */
+  /**
+   * Touch of Death: a minion this one damages in combat is destroyed. `vs`
+   * limits it to minions of that race.
+   */
   poison?: { vs?: string };
-  /** Spells and items cannot target this minion (On Play effects and attacks still can) */
+  /**
+   * Spells and items cannot target this minion (On Play effects and attacks
+   * still can)
+   */
   untargetable?: boolean;
-  /** While this minion is on either board, turns last at most this many seconds (see `turnSeconds`) */
+  /**
+   * While this minion is on either board, turns last at most this many seconds
+   * (see `turnSeconds`)
+   */
   turnSeconds?: number;
-  /** While this minion is on its owner's board, the OPPONENT's turns last at most this many seconds */
+  /**
+   * While this minion is on its owner's board, the OPPONENT's turns last at
+   * most this many seconds
+   */
   opponentTurnSeconds?: number;
   /** Present on a Mystery spell: it is placed face down instead of resolving */
   mystery?: MysteryDef;
-  /** Keywords the card's data lists but the minion only has under a condition (see `selfAura`): not given when it is created */
+  /**
+   * Keywords the card's data lists but the minion only has under a condition
+   * (see `selfAura`): not given when it is created
+   */
   conditionalKeywords?: (keyof import('../state/types').MinionKeywords)[];
   /**
-   * Conditions on the minion itself, rechecked after every step. `base` is its Attack without any aura or condition
+   * Conditions on the minion itself, rechecked after every step. `base` is its
+   * Attack without any aura or condition
    * (so "Attack always equals Health" can be `health - base`).
    */
   selfAura?: (c: {
@@ -132,23 +174,40 @@ export interface CardDef {
     owner: PlayerId;
     base: number;
   }) => SelfAura;
-  /** Cost changes this minion gives its owner's cards in hand while it is on the board */
+  /**
+   * Cost changes this minion gives its owner's cards in hand while it is on the
+   * board
+   */
   costMods?: CostMod[];
-  /** A change to this card's own cost while it is in hand ("costs 1 less for each ..."). Negative is cheaper */
+  /**
+   * A change to this card's own cost while it is in hand ("costs 1 less for
+   * each ..."). Negative is cheaper
+   */
   ownCost?: (c: { state: GameState; owner: PlayerId }) => number;
-  /** "+N Spell Damage" while on the board: raises the damage of your spells (RULES Q16) */
+  /**
+   * "+N Spell Damage" while on the board: raises the damage of your spells
+   * (RULES Q16)
+   */
   spellDamage?: number;
   /** "Your spells heal N more" while on the board */
   spellHealing?: number;
-  /** Ongoing effects on other minions while this one is on the board (recomputed after every step) */
+  /**
+   * Ongoing effects on other minions while this one is on the board (recomputed
+   * after every step)
+   */
   auras?: Aura[];
   /** For weapons: runs before each hero attack with the weapon */
   beforeAttack?: Effect[];
-  /** For weapons: each attack costs 1 Attack instead of 1 Durability (it breaks when its Attack reaches 0) */
+  /**
+   * For weapons: each attack costs 1 Attack instead of 1 Durability (it breaks
+   * when its Attack reaches 0)
+   */
   wearsAttack?: boolean;
   /**
-   * "Choose one" cards: the player picks an option when playing (`PlayCard.choice`), and that option's
-   * own `target` and `onPlay` apply instead of the card's. Options have a short `label` for the UI.
+   * "Choose one" cards: the player picks an option when playing
+   * (`PlayCard.choice`), and that option's
+   * own `target` and `onPlay` apply instead of the card's. Options have a short
+   * `label` for the UI.
    */
   choices?: Choice[];
   /** Which characters the player may aim it at. Omit for a global card. */
@@ -158,10 +217,16 @@ export interface CardDef {
   triggers?: Trigger[];
 }
 
-/** Looks up a card's behaviour. The engine defaults to the real registry; tests can inject their own. */
+/**
+ * Looks up a card's behaviour. The engine defaults to the real registry; tests
+ * can inject their own.
+ */
 export type DefLookup = (card: Card) => CardDef | undefined;
 
-/** The card's number fields, with a clear error if a card is missing one it needs. */
+/**
+ * The card's number fields, with a clear error if a card is missing one it
+ * needs.
+ */
 export interface Numbers {
   primary: number;
   secondary: number;
@@ -180,8 +245,10 @@ export const defineCard = (
 ): Definition => ({ id, create });
 
 /**
- * The only place that reads raw number fields (RULES Q23 is provisional, so what each field means
- * lives here). Asking for a number the card doesn't have throws instead of silently using NaN.
+ * The only place that reads raw number fields (RULES Q23 is provisional, so
+ * what each field means
+ * lives here). Asking for a number the card doesn't have throws instead of
+ * silently using NaN.
  */
 export const numbersOf = (id: string, raw: CardNumbers): Numbers => {
   const need = (name: keyof CardNumbers) => {

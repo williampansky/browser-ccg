@@ -19,7 +19,10 @@ const isFriendly = (state: GameState, t: TargetRef): boolean =>
         (m) => m.instanceId === t.instanceId,
       );
 
-/** True when `after` is worse for the target than `before`: less health, less attack, a lost keyword, newly disabled, or dead. */
+/**
+ * True when `after` is worse for the target than `before`: less health, less
+ * attack, a lost keyword, newly disabled, or dead.
+ */
 const targetWorse = (
   before: GameState,
   after: GameState,
@@ -46,7 +49,10 @@ const targetWorse = (
   );
 };
 
-/** True when `after` is strictly better for the target than `before` (more health or attack, or a gained keyword) and not worse in any way. */
+/**
+ * True when `after` is strictly better for the target than `before` (more
+ * health or attack, or a gained keyword) and not worse in any way.
+ */
 const targetBetter = (
   before: GameState,
   after: GameState,
@@ -66,13 +72,18 @@ const targetBetter = (
   return a.health > b.health || a.attack > b.attack || gainedKeyword;
 };
 
-/** What a spell or item can change, flattened so two states can be compared. `handDelta` adjusts one player's hand size. */
+/**
+ * What a spell or item can change, flattened so two states can be compared.
+ * `handDelta` adjusts one player's hand size.
+ */
 const snapshot = (s: GameState, handDelta: { player: PlayerId; by: number }) =>
   JSON.stringify(
     (['0', '1'] as PlayerId[]).map((p) => {
       const pl = s.players[p];
       const hand = pl.hand.length + (handDelta.player === p ? handDelta.by : 0);
-      // Includes the lasting flags a card can set (a face-down Mystery, a spell discount, a Health floor, free spells), so those plays are not "nothing".
+      // Includes the lasting flags a card can set (a face-down Mystery, a spell
+      // discount, a Health floor, free spells), so those plays are not
+      // "nothing".
       return [
         pl.board,
         pl.health,
@@ -92,9 +103,12 @@ const snapshot = (s: GameState, handDelta: { player: PlayerId; by: number }) =>
   );
 
 /**
- * True when the action would be a bad play a person would not make: a targeted card that hurts the bot's
- * own character (a damage spell or Disable on its own minion) or buffs an enemy one, or a spell or item that changes nothing
- * (a weapon buff with no weapon). It plays the action on a copy with a throwaway rng and compares.
+ * True when the action would be a bad play a person would not make: a targeted
+ * card that hurts the bot's
+ * own character (a damage spell or Disable on its own minion) or buffs an enemy
+ * one, or a spell or item that changes nothing
+ * (a weapon buff with no weapon). It plays the action on a copy with a
+ * throwaway rng and compares.
  */
 export const isBadPlay = (
   state: GameState,
@@ -115,8 +129,10 @@ export const isBadPlay = (
     targetWorse(state, result.state, a.target)
   )
     return true;
-  // Silencing its own minion throws away the minion's card text and keywords, which the bot's scoring cannot see
-  // (a no-attack aura minion even looks better silenced, as its Attack starts to count). Only worth it to lift a Disable.
+  // Silencing its own minion throws away the minion's card text and keywords,
+  // which the bot's scoring cannot see
+  // (a no-attack aura minion even looks better silenced, as its Attack starts
+  // to count). Only worth it to lift a Disable.
   if (a.target && a.target.kind === 'minion' && isFriendly(state, a.target)) {
     const [b, after] = [
       findMinion(state, a.target.instanceId),
@@ -132,7 +148,8 @@ export const isBadPlay = (
     targetBetter(state, result.state, a.target)
   )
     return true;
-  // A temporary weapon (Steel Gauntlet) is only worth playing if the hero can then swing it this turn.
+  // A temporary weapon (Steel Gauntlet) is only worth playing if the hero can
+  // then swing it this turn.
   const me = state.activePlayer;
   const weapon = result.state.players[me].weapon;
   if (
@@ -146,7 +163,8 @@ export const isBadPlay = (
     state.players[state.activePlayer].hand[a.handIndex]?.cardId ?? '',
   );
   if (played && played.type !== 'minion') {
-    // The played card leaves the hand, so the "before" hand is counted one card shorter.
+    // The played card leaves the hand, so the "before" hand is counted one card
+    // shorter.
     return (
       snapshot(state, { player: me, by: -1 }) ===
       snapshot(result.state, { player: me, by: 0 })

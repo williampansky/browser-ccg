@@ -13,7 +13,8 @@ import {
 import { legalActions } from '../../rules/legal-actions';
 import { setEnergy } from '../../testing/builders';
 
-// Overcharge (N): playing the card locks N energy at the start of your NEXT turn.
+// Overcharge (N): playing the card locks N energy at the start of your NEXT
+// turn.
 
 const nextTurnEnergy = (s: ReturnType<typeof setup>) =>
   backTo(endTurn(s), '0').players['0'].energy;

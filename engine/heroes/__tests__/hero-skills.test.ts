@@ -184,7 +184,8 @@ describe('skill rules', () => {
     const s = putOnBoard(game('ZEUS'), '1', grunt);
     const zeus = (st: GameState) =>
       legalActions(st, '0', catalog).filter((a) => a.type === 'HeroSkill');
-    // Lightning Strike aims at any of 4 characters (two heroes, one minion... plus none of mine), Rain Lightning is global.
+    // Lightning Strike aims at any of 4 characters (two heroes, one minion...
+    // plus none of mine), Rain Lightning is global.
     expect(
       zeus(s).filter((a) => a.type === 'HeroSkill' && a.skill === 0),
     ).toHaveLength(3);
@@ -416,7 +417,9 @@ describe('Cleric (SAGE)', () => {
       expect(after.graveyard).toEqual(['GRUNT']);
     });
 
-    /** The card a legal Resurrect choice would bring back (read off its label). */
+    /**
+     * The card a legal Resurrect choice would bring back (read off its label).
+     */
     const skillOptionCard = (s: GameState, choice: number): string => {
       const opts = heroSkill('SAGE', 1)!.options!(s, '0', cat);
       return opts[choice].cardId!;
@@ -436,7 +439,8 @@ describe('Cleric (SAGE)', () => {
     let s = putOnBoard(game('ZEUS'), '1', grunt, { health: 2, maxHealth: 2 });
     s = skill(s, 1).state;
     expect(s.players['1'].graveyard).toEqual(['GRUNT']);
-    // Eagle (4/2) summoned, then Rain Lightning from the other side kills it: a token is not remembered.
+    // Eagle (4/2) summoned, then Rain Lightning from the other side kills it: a
+    // token is not remembered.
     let t = skill(game('EXILE', 'ZEUS'), 1).state;
     t = setEnergy(act(t, { type: 'EndTurn' }).state, '1', 10);
     t = skill(t, 1).state;

@@ -46,7 +46,10 @@ export const DeckBuilder = () => {
   const [cost, setCost] = useState<(typeof COSTS)[number]>('all');
   const [search, setSearch] = useState('');
   const [note, setNote] = useState('');
-  /** The card shown enlarged in the detail window (flavor text, the tokens it makes, add / close), or null. */
+  /**
+   * The card shown enlarged in the detail window (flavor text, the tokens it
+   * makes, add / close), or null.
+   */
   const [viewing, setViewing] = useState<string | null>(null);
   const bigWidth = useDetailCardWidth();
 
@@ -63,7 +66,8 @@ export const DeckBuilder = () => {
     window.addEventListener('keydown', key);
     return () => window.removeEventListener('keydown', key);
   }, [viewing]);
-  // Every change is saved as it happens (but not before the first load, which would wipe the saved decks).
+  // Every change is saved as it happens (but not before the first load, which
+  // would wipe the saved decks).
   useEffect(() => {
     if (loaded) saveDecks(decks);
   }, [decks, loaded]);
@@ -177,7 +181,8 @@ export const DeckBuilder = () => {
                   )}
                   onClick={() => setViewing(c.id)}
                   onContextMenu={(e) => {
-                    // Right-click adds a copy without opening the card (and no browser menu).
+                    // Right-click adds a copy without opening the card (and no
+                    // browser menu).
                     e.preventDefault();
                     add(c.id);
                   }}

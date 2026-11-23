@@ -11,16 +11,25 @@ import styles from './play-board.module.scss';
 const POPUP_WIDTH = 220;
 const POPUP_GAP = 8;
 
-/** How long after a popup closes the next row still shows its card at once (ms): the pointer is crossing from one row to the next. */
+/**
+ * How long after a popup closes the next row still shows its card at once (ms):
+ * the pointer is crossing from one row to the next.
+ */
 const WARM_GRACE_MS = 250;
-/** Shared by every row: until when a row's card shows without waiting (set while a popup is open, and for the grace period after it closes). */
+/**
+ * Shared by every row: until when a row's card shows without waiting (set while
+ * a popup is open, and for the grace period after it closes).
+ */
 let warmUntil = 0;
 const isWarm = () => Date.now() < warmUntil;
 
 /**
- * One deck-tracker row: cost gem, name and copies left, over the card's `-DECK` strip. Used by the /play deck panel and by the deck lab.
- * Its look is the `--dk-*` variables of whatever holds it (`deckRowVars`). Resting the pointer on it for `hoverDelayMs` pops up the full
- * card, on the side of the row that has room: a row in the left half of the window opens it to the right, one in the right half to the left.
+ * One deck-tracker row: cost gem, name and copies left, over the card's `-DECK`
+ * strip. Used by the /play deck panel and by the deck lab.
+ * Its look is the `--dk-*` variables of whatever holds it (`deckRowVars`).
+ * Resting the pointer on it for `hoverDelayMs` pops up the full
+ * card, on the side of the row that has room: a row in the left half of the
+ * window opens it to the right, one in the right half to the left.
  */
 export const DeckRowView = ({
   row,
@@ -39,7 +48,8 @@ export const DeckRowView = ({
   } | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => () => clearTimeout(timer.current), []);
-  // A row that goes away with its popup open (the card was drawn) must not leave the shared state warm for good.
+  // A row that goes away with its popup open (the card was drawn) must not
+  // leave the shared state warm for good.
   const open = useRef(false);
   open.current = !!pos;
   useEffect(

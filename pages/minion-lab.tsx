@@ -8,8 +8,10 @@ import minionStyles from '../components/play-board/board-minion.module.scss';
 import cx from '../utils/cx';
 
 /**
- * PROTOTYPE page (dev only, not linked): the board minion (MinionFace) on its own, a gallery of the different looks, with sliders for the
- * overall shape and for where each element sits. Static, like /hero-lab. Everything is in the URL, so a look can be shared:
+ * PROTOTYPE page (dev only, not linked): the board minion (MinionFace) on its
+ * own, a gallery of the different looks, with sliders for the
+ * overall shape and for where each element sits. Static, like /hero-lab.
+ * Everything is in the URL, so a look can be shared:
  *  - shape: lm height px, la aspect (height / width), lr corner radius %, lbw border px, lot oval Y offset px, lgs guard shield scale
  *  - attack badge: lax / lay offset px, las size px, lanf numeral font size px, lanx / lany numeral position inside the badge px
  *  - health badge: lhx / lhy offset px, lhs size px, lhnf numeral font size px, lhnx / lhny numeral position inside the badge px
@@ -20,7 +22,10 @@ import cx from '../utils/cx';
  */
 const { cards } = loadHsCards();
 
-/** The top end of every slider (offsets run from minus this to plus it). Edit freely. */
+/**
+ * The top end of every slider (offsets run from minus this to plus it). Edit
+ * freely.
+ */
 const SLIDER_MAX = {
   lm: 300,
   la: 2,
@@ -76,11 +81,17 @@ const num = (v: string | undefined, decimals = 0) => {
 type Knob = {
   key: keyof typeof SLIDER_MAX;
   label: string;
-  /** Slider minimum (offsets are symmetric: leave `min` off and it is minus the max) */
+  /**
+   * Slider minimum (offsets are symmetric: leave `min` off and it is minus the
+   * max)
+   */
   min?: number;
   step?: number;
   css: (v: number) => string;
-  /** The real value on the first minion, measured from the DOM (the slider's default while unset) */
+  /**
+   * The real value on the first minion, measured from the DOM (the slider's
+   * default while unset)
+   */
   read: () => number | undefined;
 };
 
@@ -88,10 +99,15 @@ const computed = (selector: string) => {
   const e = first(selector);
   return e ? getComputedStyle(e) : undefined;
 };
-// The stylesheet reads --nudge-x / --nudge-y into `translate` (with the real default offsets), so each axis has its own slider.
+/**
+ * The stylesheet reads --nudge-x / --nudge-y into `translate` (with the real
+ * default offsets), so each axis has its own slider.
+ */
 const VARS = (selector: string, axis: 'x' | 'y', v: number) =>
   `${selector}{--nudge-${axis}:${v}px}`;
-/** The element's current offset on one axis, read from its computed `translate`. */
+/**
+ * The element's current offset on one axis, read from its computed `translate`.
+ */
 const nudge = (selector: string, axis: 'x' | 'y') => {
   const t = computed(selector)?.translate;
   if (!t || t === 'none') return 0;
@@ -303,7 +319,8 @@ const KNOBS: Knob[] = [
     css: (v) => `${BADGE}{border-radius:${v}% !important}`,
     read: () => 50,
   },
-  // Onslaught's "x2" is drawn smaller than the other glyphs (0.72rem vs 0.95rem), so it follows at the same ratio.
+  // Onslaught's "x2" is drawn smaller than the other glyphs (0.72rem vs
+  // 0.95rem), so it follows at the same ratio.
   {
     key: 'lkf',
     label: 'Glyph size (px)',
@@ -324,7 +341,10 @@ const KNOBS: Knob[] = [
   },
 ];
 
-// Keyword icon colours (hex without #). Per keyword: the ring (kb-) and the glyph (kg-); `kbg` is the shared background.
+/**
+ * Keyword icon colours (hex without #). Per keyword: the ring (kb-) and the
+ * glyph (kg-); `kbg` is the shared background.
+ */
 const KINDS: [string, string][] = [
   ['rush', 'Stampede'],
   ['onslaught', 'Onslaught'],
@@ -539,11 +559,17 @@ const MinionLab = () => {
   const [colourDefaults, setColourDefaults] = useState<Record<string, string>>(
     {},
   );
-  // Render only on the client: the URL params are not known on the server, so a first render there would not match.
+  /**
+   * Render only on the client: the URL params are not known on the server, so a
+   * first render there would not match.
+   */
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  // Which sections are open (all, to start with); "Collapse all" / "Expand all" set every one. Remembered in localStorage.
+  /**
+   * Which sections are open (all, to start with); "Collapse all" / "Expand all"
+   * set every one. Remembered in localStorage.
+   */
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   useEffect(() => {
     try {
@@ -565,7 +591,10 @@ const MinionLab = () => {
   const toggleSection = (id: string, open: boolean) =>
     isOpen(id) !== open && storeSections({ ...openSections, [id]: open });
 
-  // The control panel's width (px): dragged by its right edge, remembered in localStorage, double-click resets.
+  /**
+   * The control panel's width (px): dragged by its right edge, remembered in
+   * localStorage, double-click resets.
+   */
   const [panelW, setPanelW] = useState(290);
   const resize = useRef<{ x: number; w: number } | null>(null);
   useEffect(() => {
@@ -606,7 +635,8 @@ const MinionLab = () => {
     });
   };
 
-  // The real value of each knob, measured from the first minion on screen (only while it has no override of its own).
+  // The real value of each knob, measured from the first minion on screen (only
+  // while it has no override of its own).
   useEffect(() => {
     if (!router.isReady) return;
     const measure = () =>

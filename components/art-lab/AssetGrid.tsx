@@ -4,7 +4,10 @@ import { AttributionRule, findAttribution } from './attribution';
 
 const url = (f: string) => `/api/art-lab/assets?file=${encodeURIComponent(f)}`;
 
-/** The artist for a file from art-assets-attribution.json, or a dim "no artist" note. */
+/**
+ * The artist for a file from art-assets-attribution.json, or a dim "no artist"
+ * note.
+ */
 const Credit = ({
   file,
   rules,

@@ -1,7 +1,9 @@
 /**
  * Weight tuning for the greedy bot. Usage: `npm run tune -- [gamesPerDeck]`.
- * Each variant plays the default weights with the same deck on both sides (so the deck cancels out), for every
- * starter deck, and prints the variant's win rate. Above about 55% over a few hundred games is a real gain.
+ * Each variant plays the default weights with the same deck on both sides (so
+ * the deck cancels out), for every
+ * starter deck, and prints the variant's win rate. Above about 55% over a few
+ * hundred games is a real gain.
  */
 import {
   chooseGreedyActionWith,

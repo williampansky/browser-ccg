@@ -12,7 +12,8 @@ import {
   setup,
 } from '../../testing/real-cards';
 
-// PRIME_255: Warrior-only COMMON spell, "Deal 1 damage for each Armor you have (cannot be used on heroes)".
+// PRIME_255: Warrior-only COMMON spell, "Deal 1 damage for each Armor you have
+// (cannot be used on heroes)".
 
 const withArmor = (
   armor: number,

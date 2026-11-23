@@ -21,7 +21,8 @@ export const friendlyCharacter = (): TargetFilter => (c) =>
   ownerOf(c) === c.caster;
 
 /**
- * A minion on the given side that passes `test`. `race` is the minion's card race (needs the catalog,
+ * A minion on the given side that passes `test`. `race` is the minion's card
+ * race (needs the catalog,
  * which `legalTargets` supplies). Heroes never pass.
  */
 export const minionWhere =

@@ -15,7 +15,8 @@ import useConfigCssVariables from '../hooks/useConfigCssVariables';
 /**
  * Stops NextJS from breaking the dev page due to the
  * bgio/socketio.js bot actions null error.
- * @see https://github.com/vercel/next.js/discussions/13387#discussioncomment-101564
+ * @see
+ *   https://github.com/vercel/next.js/discussions/13387#discussioncomment-101564
  */
 export const noOverlayWorkaroundScript = `
   function isGame() {

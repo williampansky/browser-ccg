@@ -3,7 +3,8 @@ import { addArmor, damage, draw } from '../../effects/primitives';
 import { chosenTarget } from '../../effects/selectors';
 import { anyCharacter } from '../../effects/filters';
 
-// PRIME_112 Night Breeze, Select One: "2 damage and gain 2 Armor; or 1 damage and draw a card"
+// PRIME_112 Night Breeze, Select One: "2 damage and gain 2 Armor; or 1 damage
+// and draw a card"
 export default defineCard('PRIME_112', (n) => ({
   choices: [
     {

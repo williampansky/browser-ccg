@@ -1,8 +1,10 @@
 import { RING_DEFAULTS, RingTune } from './HeroVariants';
 
 /**
- * The ring's settings from a URL query string: `r_<field>` params over RING_DEFAULTS (the same params the hero lab writes, so a
- * lab URL's setup carries over to the board). Numbers, 6-digit hex colours and on/off flags (`1` / `0`); anything else is ignored.
+ * The ring's settings from a URL query string: `r_<field>` params over
+ * RING_DEFAULTS (the same params the hero lab writes, so a
+ * lab URL's setup carries over to the board). Numbers, 6-digit hex colours and
+ * on/off flags (`1` / `0`); anything else is ignored.
  */
 export const parseRingTune = (search: string): RingTune => {
   const params = new URLSearchParams(search);

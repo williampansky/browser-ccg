@@ -7,10 +7,14 @@ import styles from './board-minion.module.scss';
 import cx from '../../utils/cx';
 
 /**
- * What a minion on the board looks like, ported from hsclone's `MinionV2`: an oval portrait of the card's art, a sword badge for Attack
- * at the bottom left and a shield badge for Health at the bottom right (Health turns orange when damaged). Keywords change the drawing:
- * Guard is a steel shield behind the oval, Bubble a ring around it, Concealed a veil over it. The rest are small icons along the top.
- * The button around it (selection, aim and drag states) lives in PlayBoard; this is only the picture.
+ * What a minion on the board looks like, ported from hsclone's `MinionV2`: an
+ * oval portrait of the card's art, a sword badge for Attack
+ * at the bottom left and a shield badge for Health at the bottom right (Health
+ * turns orange when damaged). Keywords change the drawing:
+ * Guard is a steel shield behind the oval, Bubble a ring around it, Concealed a
+ * veil over it. The rest are small icons along the top.
+ * The button around it (selection, aim and drag states) lives in PlayBoard;
+ * this is only the picture.
  */
 
 const GLYPH: Record<StatusBadge['kind'], string> = {
@@ -23,7 +27,10 @@ const GLYPH: Record<StatusBadge['kind'], string> = {
   silenced: '∅',
 };
 
-/** True for half a second after the minion's Health goes down, so it can shake (hsclone's "was attacked"). */
+/**
+ * True for half a second after the minion's Health goes down, so it can shake
+ * (hsclone's "was attacked").
+ */
 const useHurtFlash = (health: number): boolean => {
   const last = useRef(health);
   const [flash, setFlash] = useState(false);
@@ -81,7 +88,8 @@ interface Props {
 
 export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
   const hurt = useHurtFlash(m.health);
-  // Stampede only matters the turn the minion came in: after that its icon fades out, then stays gone.
+  // Stampede only matters the turn the minion came in: after that its icon
+  // fades out, then stays gone.
   const [rushGone, setRushGone] = useState(false);
   const badges = statusBadges(m, turn, sick).filter(
     (b) => !(b.kind === 'rush' && b.fades && rushGone),

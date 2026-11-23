@@ -15,7 +15,8 @@ import {
 } from '../../testing/real-cards';
 import type { Action, GameState } from '../../state/types';
 
-// Suppress (SILENCE): a minion loses its card's behaviour and its keywords; stats, damage and buffs stay.
+// Suppress (SILENCE): a minion loses its card's behaviour and its keywords;
+// stats, damage and buffs stay.
 
 const withKeywords = (s: GameState, player: '0' | '1', i: number, k: object) =>
   produce(s, (g) => void Object.assign(g.players[player].board[i].keywords, k));

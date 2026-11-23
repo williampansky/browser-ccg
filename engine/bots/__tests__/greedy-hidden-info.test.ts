@@ -3,7 +3,10 @@ import type { GameState } from '../../state/types';
 import { catalog, endTurn, play, setup } from '../../testing/real-cards';
 import { chooseGreedyAction } from '../greedy-bot';
 
-/** Player 0 sets PRIME_148, then it is Player 1's turn with a ready 5/5 and nothing to play (so the only question is the attack). */
+/**
+ * Player 0 sets PRIME_148, then it is Player 1's turn with a ready 5/5 and
+ * nothing to play (so the only question is the attack).
+ */
 const armed = (): GameState => {
   const s = endTurn(
     play(setup('PRIME_148', { theirs: [[5, 5]], heroHp: { '0': 20 } })).state,
@@ -14,7 +17,8 @@ const armed = (): GameState => {
   };
 };
 
-// The bot must not see through the human's face-down Mystery: it cannot know what it will do, so a Mystery must neither
+// The bot must not see through the human's face-down Mystery: it cannot know
+// what it will do, so a Mystery must neither
 // scare it off attacking nor lure it into attacking.
 
 describe('greedy bot and a face-down Mystery', () => {

@@ -12,7 +12,10 @@ interface CardFlightProps {
   width: number;
 }
 
-/** A played minion's card, flying from the hand to its slot on the board and shrinking into it. Drawn above everything, input-proof. */
+/**
+ * A played minion's card, flying from the hand to its slot on the board and
+ * shrinking into it. Drawn above everything, input-proof.
+ */
 export const CardFlight = ({ card, from, to, width }: CardFlightProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
   useLayoutEffect(() => {

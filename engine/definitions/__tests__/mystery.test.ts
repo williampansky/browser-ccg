@@ -16,7 +16,8 @@ import {
 } from '../../testing/real-cards';
 import type { Action, GameState } from '../../state/types';
 
-// Mysteries: placed face down, react on the OPPONENT's turn only, one at a time. Player 0 sets the Mystery; player 1 acts.
+// Mysteries: placed face down, react on the OPPONENT's turn only, one at a
+// time. Player 0 sets the Mystery; player 1 acts.
 
 const ids = [
   '143',
@@ -45,7 +46,10 @@ it.each(ids)('PRIME_%s is defined', (n) => {
   ).toBe(true);
 });
 
-/** P0 plays `id` (a Mystery) with `mine` on the board, ends the turn, and it is P1's turn with `theirs` on the board. */
+/**
+ * P0 plays `id` (a Mystery) with `mine` on the board, ends the turn, and it is
+ * P1's turn with `theirs` on the board.
+ */
 const armed = (
   id: string,
   opts: Parameters<typeof setup>[1] = {},
@@ -82,7 +86,8 @@ describe('placing a Mystery', () => {
     ).toBe(false);
   });
   it("does not react on its owner's own turn", () => {
-    // P0 sets Resurrection, then on the same turn attacks with a 1-Health minion into a 5/5 and loses it.
+    // P0 sets Resurrection, then on the same turn attacks with a 1-Health
+    // minion into a 5/5 and loses it.
     const s = play(
       setup('PRIME_158', { mine: [[1, 1, 'PRIME_062']], theirs: [[5, 5]] }),
     ).state;

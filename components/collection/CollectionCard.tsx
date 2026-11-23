@@ -3,7 +3,10 @@ import { CardFace } from '../play-board/CardFace';
 import { useTilt } from '../card-detail/use-tilt';
 import styles from './collection.module.scss';
 
-/** One card in the collection grid: it tilts toward the pointer and a sheen follows it (the rest is CSS). */
+/**
+ * One card in the collection grid: it tilts toward the pointer and a sheen
+ * follows it (the rest is CSS).
+ */
 export const CollectionCard = ({
   card,
   width,

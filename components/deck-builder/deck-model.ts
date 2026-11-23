@@ -1,11 +1,17 @@
 import { Card, MAX_DECK_SIZE, maxCopies } from '../../engine';
 
-/** A deck the player saved: a name and the card ids (a card with two copies appears twice), sorted by cost then name. */
+/**
+ * A deck the player saved: a name and the card ids (a card with two copies
+ * appears twice), sorted by cost then name.
+ */
 export interface SavedDeck {
   id: string;
   name: string;
   cards: string[];
-  /** A hero key such as `ZEUS`. Unset means the deck does not choose: the New game picker's hero is used. */
+  /**
+   * A hero key such as `ZEUS`. Unset means the deck does not choose: the New
+   * game picker's hero is used.
+   */
   hero?: string;
 }
 
@@ -54,7 +60,10 @@ export const removeCard = (deck: SavedDeck, id: string): SavedDeck => {
     : { ...deck, cards: deck.cards.filter((_, i) => i !== at) };
 };
 
-/** Keeps only cards that exist, within the copy and size limits (saved decks may predate a data change). */
+/**
+ * Keeps only cards that exist, within the copy and size limits (saved decks may
+ * predate a data change).
+ */
 export const cleanDeck = (
   deck: SavedDeck,
   byId: ReadonlyMap<string, Card>,

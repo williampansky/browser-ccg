@@ -1,7 +1,10 @@
 import mechanics from '../../../data/mechanics.json';
 import { loadHsCards } from '../load-hs-cards';
 
-/** A mechanic's display name as the data names it (Airtable renames it; the tests follow). */
+/**
+ * A mechanic's display name as the data names it (Airtable renames it; the
+ * tests follow).
+ */
 const nameOf = (symbol: string): string =>
   (mechanics as { symbol: string; name: string }[]).find(
     (m) => m.symbol === symbol,

@@ -1,7 +1,10 @@
 import type { Draft } from 'immer';
 import type { GameEvent, GameState } from '../state/types';
 
-/** Ends the game if a hero is at 0 health. Both at 0 is a draw. Call inside `produce`. */
+/**
+ * Ends the game if a hero is at 0 health. Both at 0 is a draw. Call inside
+ * `produce`.
+ */
 export const checkWin = (g: Draft<GameState>, events: GameEvent[]): void => {
   if (g.status === 'over') return;
   const dead0 = g.players['0'].health <= 0;

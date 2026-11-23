@@ -1,6 +1,9 @@
-// A custom drag ghost. The browser's own drag image is always drawn semi-transparent (the board lines show through the
-// card text), so a dragged card hides it and this fully opaque clone follows the pointer instead, with a little motion:
-// a pop on pickup, a lag behind the pointer and a tilt into the direction of travel while moving, and a settle on release.
+// A custom drag ghost. The browser's own drag image is always drawn
+// semi-transparent (the board lines show through the
+// card text), so a dragged card hides it and this fully opaque clone follows
+// the pointer instead, with a little motion:
+// a pop on pickup, a lag behind the pointer and a tilt into the direction of
+// travel while moving, and a settle on release.
 
 const FOLLOW = 0.3; // how much of the gap to the pointer is closed each frame (lower = floatier)
 const TILT_PER_PX = 1.6; // degrees of 3D tilt per pixel of speed per frame (the collection page's tilt, driven by motion)
@@ -9,7 +12,11 @@ const MAX_ROLL = 8; // degrees of sideways roll
 
 export type DragGhost = {
   stop: () => void;
-  /** Runs `cb` once the ghost has landed (flown back to the hand slot) or vanished; at once if it already has. The hand uses it to keep the real card hidden until then. */
+  /**
+   * Runs `cb` once the ghost has landed (flown back to the hand slot) or
+   * vanished; at once if it already has. The hand uses it to keep the real card
+   * hidden until then.
+   */
   whenDone: (cb: () => void) => void;
 };
 
@@ -56,8 +63,10 @@ export const startDragGhost = (
   let settling = false;
 
   const onOver = (e: DragEvent) => {
-    // Accepting the drag everywhere makes a drop on empty space a real drop, so the browser ends the drag at once
-    // instead of playing its slow snap-back animation first (that was the long delay before a cancelled card returned).
+    // Accepting the drag everywhere makes a drop on empty space a real drop, so
+    // the browser ends the drag at once
+    // instead of playing its slow snap-back animation first (that was the long
+    // delay before a cancelled card returned).
     e.preventDefault();
     if (e.clientX === 0 && e.clientY === 0) return;
     tx = e.clientX;
@@ -70,7 +79,8 @@ export const startDragGhost = (
     const dy = (ty - cy) * (settling ? 0.4 : FOLLOW);
     cx += dx;
     cy += dy;
-    // Moving right tips the card's right edge away (rotateY), moving down tips its bottom away (rotateX).
+    // Moving right tips the card's right edge away (rotateY), moving down tips
+    // its bottom away (rotateX).
     ry += (clamp(dx * TILT_PER_PX, MAX_TILT) - ry) * 0.2;
     rx += (clamp(-dy * TILT_PER_PX, MAX_TILT) - rx) * 0.2;
     roll += (clamp(dx * 0.6, MAX_ROLL) - roll) * 0.2;
@@ -82,7 +92,10 @@ export const startDragGhost = (
 
   const callbacks: (() => void)[] = [];
   let landed = false;
-  /** The ghost is as good as gone (arrived, or faded): whoever was waiting can show the real card. */
+  /**
+   * The ghost is as good as gone (arrived, or faded): whoever was waiting can
+   * show the real card.
+   */
   const land = () => {
     landed = true;
     callbacks.splice(0).forEach((cb) => cb());
@@ -93,7 +106,8 @@ export const startDragGhost = (
     land();
   };
 
-  // Released: if the card was played its hand button is gone (fade out where it is); if not, fly back to its hand slot.
+  // Released: if the card was played its hand button is gone (fade out where it
+  // is); if not, fly back to its hand slot.
   const stop = () => {
     if (done) return;
     done = true;
@@ -107,7 +121,8 @@ export const startDragGhost = (
         tx = r.left + r.width / 2;
         ty = r.top + r.height / 2;
         scaleTarget = 1;
-        // The ghost has all but arrived after ~110 ms: swap it for the real card in one frame (no fade), so the two are never on screen together.
+        // The ghost has all but arrived after ~110 ms: swap it for the real
+        // card in one frame (no fade), so the two are never on screen together.
         setTimeout(finish, 110);
       } else {
         scaleTarget = 0.8;
@@ -118,7 +133,8 @@ export const startDragGhost = (
       }
     }, 30);
   };
-  // A played card unmounts its own button, so dragend may never reach the page: the drop itself ends the ghost too.
+  // A played card unmounts its own button, so dragend may never reach the page:
+  // the drop itself ends the ghost too.
   document.addEventListener('drop', stop, true);
   document.addEventListener('dragend', stop, true);
 

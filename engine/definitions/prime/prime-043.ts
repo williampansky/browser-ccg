@@ -2,7 +2,8 @@ import { defineCard, on } from '../define-card';
 import { buff } from '../../effects/primitives';
 import { self } from '../../effects/selectors';
 
-// PRIME_043 Tra'an Guard: "Whenever your characters are healed, gain +1/+1" (your hero or your minions; not the opponent's)
+// PRIME_043 Tra'an Guard: "Whenever your characters are healed, gain +1/+1"
+// (your hero or your minions; not the opponent's)
 export default defineCard('PRIME_043', (n) => ({
   triggers: [
     on('Healed', {

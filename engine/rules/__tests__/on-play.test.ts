@@ -24,7 +24,8 @@ import type {
   TargetRef,
 } from '../../state/types';
 
-// Real definitions, fabricated stats. T_HEAL is test-only (no CORE spell uses heal yet).
+// Real definitions, fabricated stats. T_HEAL is test-only (no CORE spell uses
+// heal yet).
 const testDefs: Record<string, CardDef> = {
   T_HEAL: { target: anyCharacter(), onPlay: [heal(chosenTarget(), 2)] },
 };
@@ -187,7 +188,8 @@ describe('On Play effects', () => {
       'CORE_012',
       'CORE_012a',
     ]);
-    // With another minion to its right, the token goes directly beside the summoner, not at the end.
+    // With another minion to its right, the token goes directly beside the
+    // summoner, not at the end.
     const crowded = act(
       putOnBoard(withHand('CORE_012'), '0', grunt),
       play(0, undefined, 0),

@@ -4,7 +4,10 @@ import { cleanDeck, SavedDeck } from './deck-model';
 
 const DECKS_KEY = 'ccg.decks.v1';
 
-/** Hero keys that were renamed, so a deck saved under the old key keeps its hero. */
+/**
+ * Hero keys that were renamed, so a deck saved under the old key keeps its
+ * hero.
+ */
 const RENAMED: Record<string, string> = { FORSAKEN_DRUID: 'WILDCALLER' };
 
 const read = (key: string): string | null => {
@@ -26,7 +29,10 @@ const write = (key: string, value: string | null): void => {
   }
 };
 
-/** The saved decks, cleaned against the current card data. Bad or missing storage gives no decks. */
+/**
+ * The saved decks, cleaned against the current card data. Bad or missing
+ * storage gives no decks.
+ */
 export const loadDecks = (byId: ReadonlyMap<string, Card>): SavedDeck[] => {
   try {
     const raw = JSON.parse(read(DECKS_KEY) ?? '[]');

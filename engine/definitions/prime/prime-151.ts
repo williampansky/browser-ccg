@@ -4,7 +4,8 @@ import { chosenTarget } from '../../effects/selectors';
 import { anyMinion } from '../../effects/filters';
 import { findMinion } from '../../rules/lookup';
 
-// PRIME_151 Telekinesis: "Deal 2 damage to a minion; if it was Disabled, draw a card" (checked before the damage)
+// PRIME_151 Telekinesis: "Deal 2 damage to a minion; if it was Disabled, draw a
+// card" (checked before the damage)
 export default defineCard('PRIME_151', (n) => ({
   target: anyMinion(),
   onPlay: [

@@ -1,13 +1,19 @@
 /**
- * The player's profile: a display name and a colour theme. Stored in this browser's localStorage for now (one load / save pair,
- * so swapping in accounts later means replacing `loadProfile` and `saveProfile` and nothing else). The profile is only ever
- * read through `normalizeProfile`, so a hand-edited or old value can never break the board.
+ * The player's profile: a display name and a colour theme. Stored in this
+ * browser's localStorage for now (one load / save pair,
+ * so swapping in accounts later means replacing `loadProfile` and `saveProfile`
+ * and nothing else). The profile is only ever
+ * read through `normalizeProfile`, so a hand-edited or old value can never
+ * break the board.
  */
 
 export interface ColorTheme {
   id: string;
   label: string;
-  /** The side colour: the hero bar's ring and glow, the log name, the "your turn" highlight */
+  /**
+   * The side colour: the hero bar's ring and glow, the log name, the "your
+   * turn" highlight
+   */
   color: string;
 }
 
@@ -38,7 +44,10 @@ export const DEFAULT_PROFILE: PlayerProfile = {
 const FOE_THEME = 'red';
 const FOE_THEME_IF_RED = 'blue';
 
-/** A name as it is shown: control characters and extra spaces removed, trimmed, at most `MAX_NAME_LENGTH`; empty becomes the default. */
+/**
+ * A name as it is shown: control characters and extra spaces removed, trimmed,
+ * at most `MAX_NAME_LENGTH`; empty becomes the default.
+ */
 export const cleanName = (raw: unknown): string => {
   const s =
     typeof raw === 'string'
@@ -55,7 +64,10 @@ export const cleanName = (raw: unknown): string => {
 export const themeOf = (id: unknown): ColorTheme =>
   THEMES.find((t) => t.id === id) ?? THEMES[0];
 
-/** Any stored value as a valid profile (a missing or unknown field falls back to the default). */
+/**
+ * Any stored value as a valid profile (a missing or unknown field falls back to
+ * the default).
+ */
 export const normalizeProfile = (raw: unknown): PlayerProfile => {
   const o =
     typeof raw === 'object' && raw !== null
@@ -64,11 +76,17 @@ export const normalizeProfile = (raw: unknown): PlayerProfile => {
   return { name: cleanName(o.name), theme: themeOf(o.theme).id };
 };
 
-/** The opponent's side colour: red, or blue when the player chose red (so the two sides never match). */
+/**
+ * The opponent's side colour: red, or blue when the player chose red (so the
+ * two sides never match).
+ */
 export const foeTheme = (mine: string): ColorTheme =>
   themeOf(mine === FOE_THEME ? FOE_THEME_IF_RED : FOE_THEME);
 
-/** Log markup names a player `Player 1` / `Player 2`; this shows the profile's name for Player 1 (and leaves anything else alone). */
+/**
+ * Log markup names a player `Player 1` / `Player 2`; this shows the profile's
+ * name for Player 1 (and leaves anything else alone).
+ */
 export const logName = (markup: string, myName: string): string =>
   markup === 'Player 1' ? myName : markup;
 

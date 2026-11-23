@@ -13,9 +13,12 @@ import { loadHsCards } from '../engine';
 import styles from '../components/play-board/play-board.module.scss';
 
 /**
- * Deck lab (dev only): the look of the deck-tracker rows on /play, with the card's `-DECK` strip behind each name. Every value is a `d_<field>`
- * URL param (DeckTune in components/play-board/deck-row-tune.ts), so a setup is a URL: `npm run deck -- "<this page's url>"` bakes it into
- * DECK_DEFAULTS, which /play uses. `w` sets the width of the preview panel (not baked: the panel's width is the board lab's).
+ * Deck lab (dev only): the look of the deck-tracker rows on /play, with the
+ * card's `-DECK` strip behind each name. Every value is a `d_<field>`
+ * URL param (DeckTune in components/play-board/deck-row-tune.ts), so a setup is
+ * a URL: `npm run deck -- "<this page's url>"` bakes it into
+ * DECK_DEFAULTS, which /play uses. `w` sets the width of the preview panel (not
+ * baked: the panel's width is the board lab's).
  */
 const panelBtn: CSSProperties = {
   padding: '4px 12px',
@@ -26,7 +29,10 @@ const panelBtn: CSSProperties = {
   cursor: 'pointer',
 };
 
-/** A spread of real CORE cards (every kind of cost), some with copies and some used up, so every row state shows. */
+/**
+ * A spread of real CORE cards (every kind of cost), some with copies and some
+ * used up, so every row state shows.
+ */
 const sampleRows = (): DeckRow[] => {
   const cards = Array.from(loadHsCards().byId.values())
     .filter(
@@ -51,7 +57,8 @@ const sampleRows = (): DeckRow[] => {
 
 const DeckLab = () => {
   const router = useRouter();
-  // The router has the query once it is ready (before that the server and the first client render both use the defaults, so they match).
+  // The router has the query once it is ready (before that the server and the
+  // first client render both use the defaults, so they match).
   const search = router.isReady ? (router.asPath.split('?')[1] ?? '') : '';
   const tune = useMemo(() => parseDeckTune(search), [search]);
   const rows = useMemo(sampleRows, []);

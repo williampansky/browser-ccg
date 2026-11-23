@@ -43,16 +43,26 @@ const { cards, byId } = loadHsCards();
 const corePool = playablePool(cards);
 const prime = primePool(cards);
 const pool = [...corePool, ...prime, ...classPool(cards)];
-/** Entourage cards (summoned and offered tokens; an inactive row is left out). Shown only when the box is ticked; the Core/Prime set filter applies to them too (by the set in their id). */
+/**
+ * Entourage cards (summoned and offered tokens; an inactive row is left out).
+ * Shown only when the box is ticked; the Core/Prime set filter applies to them
+ * too (by the set in their id).
+ */
 const tokenPool = Array.from(byId.values()).filter(
   (c) => c.isToken && c.active && c.name,
 );
 const effects = effectOptions(pool);
 const races = raceOptions(pool);
 
-/** Every card the engine can play, browsable. There is no ownership yet, so the collection is the whole pool. */
+/**
+ * Every card the engine can play, browsable. There is no ownership yet, so the
+ * collection is the whole pool.
+ */
 export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
-  // Dev-only art tools: hidden in a production build. `missingArt` (ids with no art file) comes from getStaticProps.
+  /**
+   * Dev-only art tools: hidden in a production build. `missingArt` (ids with no
+   * art file) comes from getStaticProps.
+   */
   const debug = process.env.NODE_ENV !== 'production';
   const missing = useMemo(() => new Set(missingArt), [missingArt]);
   const [art, setArt] = useState<ArtFilter>('all');
@@ -66,8 +76,12 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
     value: CollectionFilters[K],
   ) => setFilters((f) => ({ ...f, [key]: value }));
 
-  // The filters live in the URL (?q=...&type=spell) so a refresh or a shared link keeps them. Read once the router knows
-  // the query (a static page has none on the first render), then written back on every change.
+  /**
+   * The filters live in the URL (?q=...&type=spell) so a refresh or a shared
+   * link keeps them. Read once the router knows
+   * the query (a static page has none on the first render), then written back
+   * on every change.
+   */
   const router = useRouter();
   const [urlRead, setUrlRead] = useState(false);
   useEffect(() => {
@@ -95,7 +109,8 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
       );
   }, [filters, sort, art, showTokens, urlRead]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // The saved size is read after the first render (it lives in localStorage, which the server does not have).
+  // The saved size is read after the first render (it lives in localStorage,
+  // which the server does not have).
   useEffect(() => setSize(loadSize()), []);
   const pickSize = (id: SizeId) => {
     setSize(id);

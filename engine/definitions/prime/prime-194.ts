@@ -8,7 +8,8 @@ const destroyOwnWeapon: Effect = (ctx) => {
   ctx.events.push({ type: 'WeaponBroke', player: ctx.caster });
 };
 
-// PRIME_194 Ignition: "Destroy your weapon and deal its Attack to all enemies" (their minions and hero; nothing happens without a weapon)
+// PRIME_194 Ignition: "Destroy your weapon and deal its Attack to all enemies"
+// (their minions and hero; nothing happens without a weapon)
 export default defineCard('PRIME_194', () => ({
   onPlay: [
     computed((ctx) => {

@@ -2,7 +2,8 @@ import { defineCard } from '../define-card';
 import { computed, draw } from '../../effects/primitives';
 import { MAX_HEALTH } from '../../state/types';
 
-// PRIME_231 Peace Keeping: "Draw card(s) for each injured friendly character" (your hero counts; one card each)
+// PRIME_231 Peace Keeping: "Draw card(s) for each injured friendly character"
+// (your hero counts; one card each)
 export default defineCard('PRIME_231', (n) => ({
   onPlay: [
     computed((ctx) => {

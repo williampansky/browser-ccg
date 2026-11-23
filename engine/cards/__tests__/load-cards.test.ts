@@ -284,7 +284,8 @@ describe('loadCards: fails loudly', () => {
 
 /**
  * Tests against the committed data (`data/`, pulled with `npm run airtable`).
- * The expected card counts are `gameConfig.cardCounts` in `app.config.ts`. If you add cards or re-pull the data and a
+ * The expected card counts are `gameConfig.cardCounts` in `app.config.ts`. If
+ * you add cards or re-pull the data and a
  * count changes, check that the change is real, then update the number there.
  */
 describe('loadHsCards: the committed card data', () => {
@@ -346,7 +347,8 @@ describe('loadHsCards: the committed card data', () => {
     expect(card.playType).toBe('global');
     expect(card.numbers).toEqual({ primary: 1, random: 3 });
     expect(card.mechanics).toEqual(['RANDOM', 'DAMAGE']);
-    // Glossary display names keep their capitalisation, so "Random" is capitalised mid-sentence.
+    // Glossary display names keep their capitalisation, so "Random" is
+    // capitalised mid-sentence.
     // The engine never reads `text`; it is for display only.
     expect(card.text).toBe('Deal 1 damage to three Random enemies');
   });

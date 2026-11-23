@@ -765,7 +765,10 @@ const midGroup = {
   borderBottom: '1px solid #2a2f3e',
 } as const;
 
-/** The strip between the two boards: End turn, the status text and clock, the horizontal lines and a turn-timer bar. */
+/**
+ * The strip between the two boards: End turn, the status text and clock, the
+ * horizontal lines and a turn-timer bar.
+ */
 export const MiddlePanel = ({ q, setParams, sliders }: PanelProps) => (
   <>
     <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>

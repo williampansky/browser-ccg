@@ -4,8 +4,10 @@ import { getCardDef } from '../definitions';
 import type { DefLookup } from '../definitions/define-card';
 
 /**
- * The cards "a random card" can be: real CORE and PRIME cards (not tokens, not unnamed placeholders) that the engine can play
- * faithfully. Sorted by id so that, with the same seed, the same card is picked. `where` narrows it (a spell, a race, a cost...).
+ * The cards "a random card" can be: real CORE and PRIME cards (not tokens, not
+ * unnamed placeholders) that the engine can play
+ * faithfully. Sorted by id so that, with the same seed, the same card is
+ * picked. `where` narrows it (a spell, a race, a cost...).
  * The pool grows by itself as more cards get definitions.
  */
 export const cardPool = (

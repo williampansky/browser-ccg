@@ -1,6 +1,8 @@
 /**
- * Writes the game's art files from one master picture, one focus per kind (the art lab's "Write images"). The same crop maths and sizes
- * as `npm run art` (crop.ts), but each of card / deck / minion can be framed on its own. Needs `sharp`, so server side only.
+ * Writes the game's art files from one master picture, one focus per kind (the
+ * art lab's "Write images"). The same crop maths and sizes
+ * as `npm run art` (crop.ts), but each of card / deck / minion can be framed on
+ * its own. Needs `sharp`, so server side only.
  */
 import fs from 'fs';
 import path from 'path';
@@ -24,7 +26,10 @@ export interface Written {
   kb: number;
 }
 
-/** Cuts `src` into the requested kinds. Throws for an id that is not a card id or a set folder that does not exist. */
+/**
+ * Cuts `src` into the requested kinds. Throws for an id that is not a card id
+ * or a set folder that does not exist.
+ */
 export const renderArt = async (
   id: string,
   src: string,

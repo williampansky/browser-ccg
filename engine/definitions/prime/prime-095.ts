@@ -6,7 +6,8 @@ import {
 } from '../../effects/primitives';
 import { opponentOf } from '../../rules/lookup';
 
-// PRIME_095 The Inquisitor (4/5), On Play effect: "Destroy the enemy's weapon and gain its Attack as Armor"
+// PRIME_095 The Inquisitor (4/5), On Play effect: "Destroy the enemy's weapon
+// and gain its Attack as Armor"
 export default defineCard('PRIME_095', () => ({
   onPlay: [
     computed((ctx) =>

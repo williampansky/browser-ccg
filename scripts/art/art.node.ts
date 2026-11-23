@@ -1,13 +1,17 @@
 /**
- * `npm run art`: turns the master pictures in `art-inbox/` into the files the game reads.
+ * `npm run art`: turns the master pictures in `art-inbox/` into the files the
+ * game reads.
  *
  *   art-inbox/CORE_117.png   ->  public/images/sets/SET_CORE/117-CARD.jpg    (1000 x 1000)
  *                                 public/images/sets/SET_CORE/117-DECK.jpg    (600 x 75 strip)
  *                                 public/images/sets/SET_CORE/117-MINION.jpg  (640 x 800), only if the card already has one, or with --minion
  *
- * Masters are named by card id (`CORE_117.png`, `PRIME_029.jpg`, `PRIME_099a.webp`). Where the strip and the portrait are cut from is
- * `art-focus.json` ({ "CORE_117": { "x": 0.5, "y": 0.3, "zoom": 1.4 } }; x and y are 0 to 1 across the picture, zoom 1 or more; leave a card out for the
- * default). Done masters move to `art-inbox/done/` so a second run does nothing.
+ * Masters are named by card id (`CORE_117.png`, `PRIME_029.jpg`,
+ * `PRIME_099a.webp`). Where the strip and the portrait are cut from is
+ * `art-focus.json` ({ "CORE_117": { "x": 0.5, "y": 0.3, "zoom": 1.4 } }; x and
+ * y are 0 to 1 across the picture, zoom 1 or more; leave a card out for the
+ * default). Done masters move to `art-inbox/done/` so a second run does
+ * nothing.
  *
  *   npm run art                      process everything in art-inbox/
  *   npm run art -- CORE_117          only that card (also re-does one from art-inbox/done/)
@@ -106,7 +110,8 @@ const run = async () => {
         : '';
     for (const kind of kinds) {
       const out = OUTPUTS[kind];
-      // The card keeps the whole picture, so it ignores zoom; the strip and the portrait use the card's focus point and zoom.
+      // The card keeps the whole picture, so it ignores zoom; the strip and the
+      // portrait use the card's focus point and zoom.
       const box = cropBox(
         width,
         height,

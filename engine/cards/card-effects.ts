@@ -15,9 +15,12 @@ for (const m of mechanics as unknown as RawGlossaryEntry[])
   glossary.set(String(m.symbol).replace(/%/g, ''), m);
 
 /**
- * The effects a card has, for the card detail window: exactly the entries in its Airtable `mechanics` array, in that order, each with the
- * glossary's name and description. Nothing is hidden (the window is the deep look at a card) and nothing is added from the card text, so
- * a keyword the text names but the array lacks is not listed: fix the array in Airtable.
+ * The effects a card has, for the card detail window: exactly the entries in
+ * its Airtable `mechanics` array, in that order, each with the
+ * glossary's name and description. Nothing is hidden (the window is the deep
+ * look at a card) and nothing is added from the card text, so
+ * a keyword the text names but the array lacks is not listed: fix the array in
+ * Airtable.
  */
 export const effectsOf = (card: Card): CardEffect[] => {
   const out: CardEffect[] = [];

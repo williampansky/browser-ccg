@@ -11,7 +11,8 @@ import {
 } from '../../testing/real-cards';
 import type { Action, GameState } from '../../state/types';
 
-// "Add / summon a random card": the pool is every playable CORE or PRIME card, narrowed by the card's own condition.
+// "Add / summon a random card": the pool is every playable CORE or PRIME card,
+// narrowed by the card's own condition.
 
 const withSeed = (s: GameState, seed: number) => {
   const r = run(s, { type: 'PlayCard', handIndex: 0 } as Action, seed);
@@ -92,7 +93,8 @@ describe('summon a random card', () => {
         (g) => void (g.players['0'].board[0].health = 0),
       );
       const r = withSeed(died, seed);
-      // (the Creature that arrives may react to the spell that was cast just before: Spider King summons a Spider)
+      // (the Creature that arrives may react to the spell that was cast just
+      // before: Spider King summons a Spider)
       expect(r.players['0'].board.length).toBeGreaterThanOrEqual(1);
       expect(catalog.get(r.players['0'].board[0].cardId)!.race).toBe(
         'CREATURE',

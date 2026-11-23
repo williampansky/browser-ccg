@@ -6,10 +6,14 @@ import type { GameState, PlayerId } from '../state/types';
 import { minionDef } from './minion';
 
 /**
- * Recomputes every aura. Each minion remembers how much Attack its auras currently give it
- * (`auraAttack`, already included in `attack`) and whether its Rush is on loan (`auraRush`); this
- * works out what they should be now and applies only the difference. So an aura vanishes cleanly
- * when its minion dies or moves out of reach, without touching buffs. Call inside `produce`.
+ * Recomputes every aura. Each minion remembers how much Attack its auras
+ * currently give it
+ * (`auraAttack`, already included in `attack`) and whether its Rush is on loan
+ * (`auraRush`); this
+ * works out what they should be now and applies only the difference. So an aura
+ * vanishes cleanly
+ * when its minion dies or moves out of reach, without touching buffs. Call
+ * inside `produce`.
  */
 export const recomputeAuras = (
   g: Draft<GameState>,

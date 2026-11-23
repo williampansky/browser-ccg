@@ -1,7 +1,11 @@
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
-/** The lab's floating panel: dragged by its header (double-click docks it top right), resized by its edge, hidden with Hide. Position and width are remembered. */
+/**
+ * The lab's floating panel: dragged by its header (double-click docks it top
+ * right), resized by its edge, hidden with Hide. Position and width are
+ * remembered.
+ */
 export const LabOverlay = ({
   onSetAll,
   children,
@@ -11,7 +15,8 @@ export const LabOverlay = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
-  // The overlay's position (top-left corner, px); null = docked top right. Dragged by its header, remembered in localStorage.
+  // The overlay's position (top-left corner, px); null = docked top right.
+  // Dragged by its header, remembered in localStorage.
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const drag = useRef<{ dx: number; dy: number } | null>(null);
@@ -26,7 +31,8 @@ export const LabOverlay = ({
       /* no saved position */
     }
   }, []);
-  // The overlay's width (px): dragged by the panel's outer edge (left edge while docked top right, since the right side is pinned).
+  // The overlay's width (px): dragged by the panel's outer edge (left edge
+  // while docked top right, since the right side is pinned).
   const [width, setWidth] = useState(250);
   const resize = useRef<{ x: number; w: number } | null>(null);
   useEffect(() => {

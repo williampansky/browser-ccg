@@ -1,7 +1,8 @@
 import { boostedMinions } from '../boost-preview';
 import { catalog, setup } from '../../../engine/testing/real-cards';
 
-// CORE_003: "Your other Sprites gain +1 Attack". Board: one Sprite (CORE_003 itself is a Sprite) and a Creature.
+// CORE_003: "Your other Sprites gain +1 Attack". Board: one Sprite (CORE_003
+// itself is a Sprite) and a Creature.
 describe('boostedMinions', () => {
   it('lists only the matching minion for CORE_003', () => {
     const s = setup('CORE_003', {

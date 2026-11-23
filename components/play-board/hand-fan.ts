@@ -1,20 +1,30 @@
 /**
- * The fan of the hand: how far each card is rotated and dropped, ported from hsclone's `CardInteraction`
- * (`calcRotate` / `calcOffset`) with the same constants. hsclone used `numberOfCards + 1` as the total, which
- * leaned the fan to one side (it had a placeholder card in the hand); here the fan is centred on the hand, which
- * gives hsclone's numbers for a full hand. The divisor is clamped to 1 (hsclone divided by 0 for one card).
+ * The fan of the hand: how far each card is rotated and dropped, ported from
+ * hsclone's `CardInteraction`
+ * (`calcRotate` / `calcOffset`) with the same constants. hsclone used
+ * `numberOfCards + 1` as the total, which
+ * leaned the fan to one side (it had a placeholder card in the hand); here the
+ * fan is centred on the hand, which
+ * gives hsclone's numbers for a full hand. The divisor is clamped to 1 (hsclone
+ * divided by 0 for one card).
  */
 
 const clamp = (n: number, min: number, max: number) =>
   Math.min(max, Math.max(min, n));
 
-/** Rotation in degrees of the card at `index` in a hand of `count` cards (0 = leftmost). */
+/**
+ * Rotation in degrees of the card at `index` in a hand of `count` cards (0 =
+ * leftmost).
+ */
 export const fanRotation = (index: number, count: number): number => {
   const raw = ((index - (count - 1) / 2) / Math.max(count - 1, 1)) * 50;
   return clamp(raw, -25, 25) * 0.875;
 };
 
-/** How far down (px, at full card size) the card sits: the ends drop, the middle stays high. */
+/**
+ * How far down (px, at full card size) the card sits: the ends drop, the middle
+ * stays high.
+ */
 export const fanDrop = (index: number, count: number): number => {
   const raw = Math.abs(
     ((index - (count - 1) / 2) / Math.max(count - 1, 1)) * 80,
@@ -23,29 +33,40 @@ export const fanDrop = (index: number, count: number): number => {
 };
 
 /**
- * How much neighbouring cards overlap, in px at full card size. hsclone's cards sit nearly side by side: a 178px box pulled
- * left by 102.6px puts neighbours 76px apart, and the scaled card is about 85px wide, so about a tenth overlaps (the earlier
- * 38% / 48px here was a misreading and made the hand feel cramped). 20px of 144 is about 14%.
+ * How much neighbouring cards overlap, in px at full card size. hsclone's cards
+ * sit nearly side by side: a 178px box pulled
+ * left by 102.6px puts neighbours 76px apart, and the scaled card is about 85px
+ * wide, so about a tenth overlaps (the earlier
+ * 38% / 48px here was a misreading and made the hand feel cramped). 20px of 144
+ * is about 14%.
  */
 export const HAND_OVERLAP = 20;
 
 /**
- * Horizontal position of the card at `index`, px at full size, measured from the middle of the hand. Cards are placed with
- * transforms (not flex layout) so that adding or removing a card slides the others to their new places instead of jumping.
+ * Horizontal position of the card at `index`, px at full size, measured from
+ * the middle of the hand. Cards are placed with
+ * transforms (not flex layout) so that adding or removing a card slides the
+ * others to their new places instead of jumping.
  */
 export const fanX = (index: number, count: number, cardWidth = 144): number =>
   (index - (count - 1) / 2) * (cardWidth - HAND_OVERLAP);
 
-/** How far the hand row is wider than the board column it sits in (a 10px bleed on each side, see `.hand` in the SCSS). */
+/**
+ * How far the hand row is wider than the board column it sits in (a 10px bleed
+ * on each side, see `.hand` in the SCSS).
+ */
 export const HAND_BLEED = 20;
 
 /** The scale of a hovered card (CSS `.handSlot:hover`). */
 export const HAND_LIFT_SCALE = 1.5;
 
 /**
- * Zoom so `count` overlapping cards of `cardWidth` fit the board column (the row's `width` less its bleed), never above 1.
- * Room is kept at both ends for the hovered card: it grows to 1.5x, so an end card pokes out `cardWidth / 4` past its slot,
- * and without that room it landed on top of the log panel (or the deck panel on the right) from 8 cards on (playtest, 2026-11-12).
+ * Zoom so `count` overlapping cards of `cardWidth` fit the board column (the
+ * row's `width` less its bleed), never above 1.
+ * Room is kept at both ends for the hovered card: it grows to 1.5x, so an end
+ * card pokes out `cardWidth / 4` past its slot,
+ * and without that room it landed on top of the log panel (or the deck panel on
+ * the right) from 8 cards on (playtest, 2026-11-12).
  */
 export const handZoom = (
   width: number,
@@ -58,16 +79,25 @@ export const handZoom = (
   return Math.min(1, Math.max(0, width - HAND_BLEED) / needed);
 };
 
-/** The height of a card in hand at full size (1 : 1.4 of the 144px width, rounded as in the CSS). */
+/**
+ * The height of a card in hand at full size (1 : 1.4 of the 144px width,
+ * rounded as in the CSS).
+ */
 export const HAND_CARD_HEIGHT = 202;
 
-/** The most the cards sink below their fan position, in px as seen on screen (hsclone's hand shows only their tops). */
+/**
+ * The most the cards sink below their fan position, in px as seen on screen
+ * (hsclone's hand shows only their tops).
+ */
 const MAX_VISIBLE_SINK = 100;
 
 /**
- * How far (CSS px, unzoomed: the hand's `zoom` scales translate lengths too) to sink the cards so `peek` px of their tops
- * show above the bottom edge of the window. The cards sit at the bottom of the row and shrink with the zoom, so their top
- * is `rowBottom - cardHeight * zoom`, not the row's top. Capped at 100px on screen; negative on a short window, where the
+ * How far (CSS px, unzoomed: the hand's `zoom` scales translate lengths too) to
+ * sink the cards so `peek` px of their tops
+ * show above the bottom edge of the window. The cards sit at the bottom of the
+ * row and shrink with the zoom, so their top
+ * is `rowBottom - cardHeight * zoom`, not the row's top. Capped at 100px on
+ * screen; negative on a short window, where the
  * cards must rise instead so they never vanish offscreen.
  */
 export const handSink = (

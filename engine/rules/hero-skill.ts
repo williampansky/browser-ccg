@@ -12,7 +12,10 @@ import { getCardDef } from '../definitions';
 import { minionDef } from './minion';
 import { isLegalTarget, legalTargets } from './targeting';
 
-/** Is this skill off cooldown and (for a one-use ultimate) not yet used? Says nothing about energy or targets. */
+/**
+ * Is this skill off cooldown and (for a one-use ultimate) not yet used? Says
+ * nothing about energy or targets.
+ */
 export const skillReady = (
   state: GameState,
   player: PlayerId,
@@ -27,9 +30,12 @@ export const skillReady = (
 };
 
 /**
- * The active player uses one of their hero's skills: pays its energy, starts its cooldown (or spends a one-use ultimate)
- * and runs its effects. Deaths and triggers are settled by the caller. Skills are not spells ("when you cast a spell"
- * effects do not fire), but your minions' Spell Damage raises the damage a skill deals, as it does for a spell.
+ * The active player uses one of their hero's skills: pays its energy, starts
+ * its cooldown (or spends a one-use ultimate)
+ * and runs its effects. Deaths and triggers are settled by the caller. Skills
+ * are not spells ("when you cast a spell"
+ * effects do not fire), but your minions' Spell Damage raises the damage a
+ * skill deals, as it does for a spell.
  */
 export const useHeroSkill = (
   state: GameState,

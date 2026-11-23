@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-/** The art lab writes to Airtable and to `public/`: only on a dev server, and only when the request really is for localhost. */
+/**
+ * The art lab writes to Airtable and to `public/`: only on a dev server, and
+ * only when the request really is for localhost.
+ */
 export const devOnly = (req: NextApiRequest, res: NextApiResponse): boolean => {
   const host = String(req.headers.host || '').split(':')[0];
   if (

@@ -12,21 +12,36 @@ import type { SavedDeck } from '../deck-builder/deck-model';
 /** `'random'`, `'starter:<name>'` or `'saved:<id>'`. */
 export type DeckChoice = string;
 export const RANDOM_DECK: DeckChoice = 'random';
-/** A random deck from CORE and PRIME together (PRIME is opt-in; every other choice here uses CORE only). */
+/**
+ * A random deck from CORE and PRIME together (PRIME is opt-in; every other
+ * choice here uses CORE only).
+ */
 export const RANDOM_ALL: DeckChoice = 'random-all';
 /** A (CORE) starter deck picked at random each game. */
 export const RANDOM_STARTER: DeckChoice = 'starter-random';
-/** A PRIME starter deck picked at random each game (PRIME is opt-in, so this is its own choice). */
+/**
+ * A PRIME starter deck picked at random each game (PRIME is opt-in, so this is
+ * its own choice).
+ */
 export const RANDOM_STARTER_PRIME: DeckChoice = 'starter-random-prime';
 /** A Core + Prime starter deck picked at random each game. */
 export const RANDOM_STARTER_BOTH: DeckChoice = 'starter-random-both';
 
-/** Mostly a starter deck, sometimes (`SURPRISE_RANDOM_ODDS`) a fully random one. The AI seat's default. */
+/**
+ * Mostly a starter deck, sometimes (`SURPRISE_RANDOM_ODDS`) a fully random one.
+ * The AI seat's default.
+ */
 export const SURPRISE: DeckChoice = 'surprise';
-/** The chance, as 1 in N, that `SURPRISE` picks a random deck instead of a starter deck. */
+/**
+ * The chance, as 1 in N, that `SURPRISE` picks a random deck instead of a
+ * starter deck.
+ */
 export const SURPRISE_RANDOM_ODDS = 10;
 
-/** The choice the AI seat actually uses: a starter deck or random choice as picked, anything else (a saved deck) becomes `SURPRISE`. */
+/**
+ * The choice the AI seat actually uses: a starter deck or random choice as
+ * picked, anything else (a saved deck) becomes `SURPRISE`.
+ */
 export const aiDeckChoice = (choice: DeckChoice): DeckChoice =>
   choice === RANDOM_DECK ||
   choice === RANDOM_ALL ||
@@ -45,7 +60,10 @@ export interface DeckOption {
   plan?: string;
 }
 
-/** Every deck a player can start a game with: random, the starter decks, then the player's saved decks. */
+/**
+ * Every deck a player can start a game with: random, the starter decks, then
+ * the player's saved decks.
+ */
 export const deckOptions = (saved: SavedDeck[]): DeckOption[] => [
   {
     value: SURPRISE,
@@ -100,7 +118,10 @@ export const deckOptions = (saved: SavedDeck[]): DeckOption[] => [
     })),
 ];
 
-/** The card ids for a choice. A choice that no longer exists (a deleted saved deck) falls back to a random deck. */
+/**
+ * The card ids for a choice. A choice that no longer exists (a deleted saved
+ * deck) falls back to a random deck.
+ */
 export const resolveDeck = (
   choice: DeckChoice,
   pool: Card[],
@@ -152,7 +173,10 @@ export const resolveDeck = (
   return { name: 'a random deck', cards: buildDeck(pool, rng) };
 };
 
-/** True if a deck fits the rules (30 cards at most); saved decks are cleaned on load, so this guards the rest. */
+/**
+ * True if a deck fits the rules (30 cards at most); saved decks are cleaned on
+ * load, so this guards the rest.
+ */
 export const deckIsLegal = (
   cards: string[],
   byId: ReadonlyMap<string, Card>,

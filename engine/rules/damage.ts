@@ -8,7 +8,10 @@ import {
   TargetRef,
 } from '../state/types';
 
-/** Damages a hero: armor absorbs first, health is clamped at 0. Call inside `produce`. */
+/**
+ * Damages a hero: armor absorbs first, health is clamped at 0. Call inside
+ * `produce`.
+ */
 export const damageHero = (
   g: Draft<GameState>,
   player: PlayerId,
@@ -24,7 +27,9 @@ export const damageHero = (
   events.push({ type: 'HeroDamaged', player, amount });
 };
 
-/** Damages a hero or a minion. Heroes lose armor first. Call inside `produce`. */
+/**
+ * Damages a hero or a minion. Heroes lose armor first. Call inside `produce`.
+ */
 export const damageTarget = (
   g: Draft<GameState>,
   target: TargetRef,
@@ -41,7 +46,10 @@ export const damageTarget = (
   }
 };
 
-/** Heals a hero (max 30) or a minion (max health). Emits `Healed` only if something was restored. */
+/**
+ * Heals a hero (max 30) or a minion (max health). Emits `Healed` only if
+ * something was restored.
+ */
 export const healTarget = (
   g: Draft<GameState>,
   target: TargetRef,
@@ -70,7 +78,8 @@ export const healTarget = (
 };
 
 /**
- * Damages a minion. Bubble absorbs the first hit that would do damage, from any source (RULES Q13),
+ * Damages a minion. Bubble absorbs the first hit that would do damage, from any
+ * source (RULES Q13),
  * and pops. A hit of 0 does nothing. Call inside `produce`.
  */
 export const damageMinion = (

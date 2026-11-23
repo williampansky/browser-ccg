@@ -13,9 +13,15 @@ export interface StarterDeck {
   set?: DeckSet;
   /** What the deck is trying to do, for the win-rate table */
   plan: string;
-  /** The deck always holds at least this many minions, even if its score would prefer other cards (default 0) */
+  /**
+   * The deck always holds at least this many minions, even if its score would
+   * prefer other cards (default 0)
+   */
   minMinions?: number;
-  /** Lower is picked first; cards are taken by ascending score, ties by id (so decks are deterministic) */
+  /**
+   * Lower is picked first; cards are taken by ascending score, ties by id (so
+   * decks are deterministic)
+   */
   score: (c: Card) => number;
 }
 
@@ -25,7 +31,10 @@ const has = (c: Card, ...tags: string[]) =>
   tags.some((t) => c.mechanics.includes(t));
 const says = (c: Card, re: RegExp) => re.test(c.text);
 
-/** Three archetypes, built from whatever cards the engine supports, so they grow with the pool. */
+/**
+ * Three archetypes, built from whatever cards the engine supports, so they grow
+ * with the pool.
+ */
 export const STARTER_DECKS: StarterDeck[] = [
   {
     name: 'Aggro',
@@ -59,7 +68,8 @@ export const STARTER_DECKS: StarterDeck[] = [
     name: 'Spellslinger',
     minMinions: 12,
     plan: 'mostly spells, with 12 mid-cost minions to hold the board',
-    // Centred on 2.5 mana: centred at 1 or 2 the deck lost almost every game against the others (bot-vs-bot tuning, 2026-11-12).
+    // Centred on 2.5 mana: centred at 1 or 2 the deck lost almost every game
+    // against the others (bot-vs-bot tuning, 2026-11-12).
     score: (c) =>
       (c.type === 'spell' ? 0 : c.type === 'item' ? 25 : 30) +
       Math.abs(c.cost - 2.5) * 4 -
@@ -76,11 +86,17 @@ export const STARTER_DECKS: StarterDeck[] = [
   },
 ];
 
-/** The deck's plan as a score the other archetypes share: how cheap and how big the card is. */
+/**
+ * The deck's plan as a score the other archetypes share: how cheap and how big
+ * the card is.
+ */
 const curve = (c: Card, centre: number, weight = 4) =>
   Math.abs(c.cost - centre) * weight - stats(c) / 3;
 
-/** More CORE decks: each leans on a kind of card the pool has (Rush, damage, drawing, a race, removal). */
+/**
+ * More CORE decks: each leans on a kind of card the pool has (Rush, damage,
+ * drawing, a race, removal).
+ */
 STARTER_DECKS.push(
   {
     name: 'Rush Down',
@@ -131,7 +147,8 @@ STARTER_DECKS.push(
 );
 
 /**
- * PRIME starter decks (built only from the PRIME cards the engine can play). Several lean on a whole PRIME mechanic: Mysteries,
+ * PRIME starter decks (built only from the PRIME cards the engine can play).
+ * Several lean on a whole PRIME mechanic: Mysteries,
  * Overcharge, Poison, the Sprite tribe, the big cost-reducing Giants.
  */
 export const PRIME_STARTER_DECKS: StarterDeck[] = [
@@ -326,8 +343,10 @@ export const poolFor = (
   set === 'prime' ? prime : set === 'both' ? [...core, ...prime] : core;
 
 /**
- * The 30 cards of a starter deck, chosen from `pool` (distinct cards, best score first). If the deck has `minMinions`, its
- * best-scoring minions are taken first and the rest of the deck is filled by score from everything else.
+ * The 30 cards of a starter deck, chosen from `pool` (distinct cards, best
+ * score first). If the deck has `minMinions`, its
+ * best-scoring minions are taken first and the rest of the deck is filled by
+ * score from everything else.
  */
 export const buildStarterDeck = (deck: StarterDeck, pool: Card[]): string[] => {
   const ranked = [...pool].sort(

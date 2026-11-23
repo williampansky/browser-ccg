@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { PLAY_LAYOUT } from './layout-css';
 
 /**
- * Whether /play shows the log and the deck as two separate panels or as one connected sidebar with a drag bar between them (the choice is a
- * player's, kept in this browser). `null` = the saved layout's own (`PLAY_LAYOUT.lpan`). The page and the menu both read it through
+ * Whether /play shows the log and the deck as two separate panels or as one
+ * connected sidebar with a drag bar between them (the choice is a
+ * player's, kept in this browser). `null` = the saved layout's own
+ * (`PLAY_LAYOUT.lpan`). The page and the menu both read it through
  * `useSidebarMode`, and `saveSidebarMode` tells every listener.
  */
 export type SidebarMode = 'connected' | 'separate';
@@ -46,13 +48,18 @@ export const useSidebarMode = (): SidebarMode | null => {
 const isJoin = (lpan: string | undefined) =>
   lpan === 'joinL' || lpan === 'joinR';
 
-/** What the menu should show: the player's choice, else what the saved layout does. */
+/**
+ * What the menu should show: the player's choice, else what the saved layout
+ * does.
+ */
 export const effectiveSidebarMode = (mode: SidebarMode | null): SidebarMode =>
   mode ?? (isJoin(PLAY_LAYOUT.lpan) ? 'connected' : 'separate');
 
 /**
- * The `lpan` /play should use: the saved one, changed to match the player's choice. Connected goes on the side the saved layout already
- * stacks or joins on (the right unless it says left); separate undoes a saved connected one into the matching stacked arrangement.
+ * The `lpan` /play should use: the saved one, changed to match the player's
+ * choice. Connected goes on the side the saved layout already
+ * stacks or joins on (the right unless it says left); separate undoes a saved
+ * connected one into the matching stacked arrangement.
  */
 export const lpanFor = (
   saved: string | undefined,

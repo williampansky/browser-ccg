@@ -1,13 +1,19 @@
 /**
- * The animated shape icons (crosses, plus signs, dots, a cross turning into a check): white-on-transparent PNG frame sequences in
- * `public/images/ui/animated/<id>/<NNN>.png` (96 px, frames numbered from 000). Drawn through a mask, so they take the text colour of
- * wherever they sit, and a theme can tint them. Frames of an icon load the first time it plays (see `AnimatedIcon`).
+ * The animated shape icons (crosses, plus signs, dots, a cross turning into a
+ * check): white-on-transparent PNG frame sequences in
+ * `public/images/ui/animated/<id>/<NNN>.png` (96 px, frames numbered from 000).
+ * Drawn through a mask, so they take the text colour of
+ * wherever they sit, and a theme can tint them. Frames of an icon load the
+ * first time it plays (see `AnimatedIcon`).
  */
 export interface AnimatedIconDef {
   id: string;
   label: string;
   frames: number;
-  /** A looping icon (dots) with no resting pose: it is sized by all its frames, not just the last one. */
+  /**
+   * A looping icon (dots) with no resting pose: it is sized by all its frames,
+   * not just the last one.
+   */
   spinner?: boolean;
 }
 

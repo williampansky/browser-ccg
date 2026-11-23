@@ -95,7 +95,8 @@ describe('shared interface controls', () => {
 });
 
 describe('themed screens use the shared controls', () => {
-  // Raw form controls in these files would skip the interface theme; build them from components/ui instead.
+  // Raw form controls in these files would skip the interface theme; build them
+  // from components/ui instead.
   const fs = require('fs') as typeof import('fs');
   const path = require('path') as typeof import('path');
   const files = [

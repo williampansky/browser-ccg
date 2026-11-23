@@ -2,8 +2,10 @@ import { isMuted } from '../play-board/sounds';
 import { uiThemeOf } from './ui-themes';
 
 /**
- * Menu sounds that come from the interface theme's sound folder (`public/sounds/<theme.sfx>/ui_<name>.ogg`). Separate from the board's
- * synthesised game sounds in `play-board/sounds.ts`, but they share its mute switch. A theme with no `sfx` folder is silent.
+ * Menu sounds that come from the interface theme's sound folder
+ * (`public/sounds/<theme.sfx>/ui_<name>.ogg`). Separate from the board's
+ * synthesised game sounds in `play-board/sounds.ts`, but they share its mute
+ * switch. A theme with no `sfx` folder is silent.
  */
 export type UiSound =
   | 'click'
@@ -55,8 +57,10 @@ export const playUiSound = (sound: UiSound): void => {
 };
 
 /**
- * One document-level listener: a click on a button inside any `[data-ui-sfx]` area plays its sound (a switch plays on or off, a disabled
- * button plays the error). Areas opt in, so the board's own buttons stay quiet. Returns the cleanup.
+ * One document-level listener: a click on a button inside any `[data-ui-sfx]`
+ * area plays its sound (a switch plays on or off, a disabled
+ * button plays the error). Areas opt in, so the board's own buttons stay quiet.
+ * Returns the cleanup.
  */
 export const installUiSfx = (): (() => void) => {
   const onClick = (e: MouseEvent) => {
@@ -67,7 +71,8 @@ export const installUiSfx = (): (() => void) => {
     if (el instanceof HTMLButtonElement && el.disabled)
       return playUiSound('error');
     const role = el.getAttribute('role');
-    // The click runs before React re-renders, so aria-checked still holds the old value.
+    // The click runs before React re-renders, so aria-checked still holds the
+    // old value.
     if (role === 'switch')
       return playUiSound(
         el.getAttribute('aria-checked') === 'true' ? 'toggleOff' : 'toggleOn',

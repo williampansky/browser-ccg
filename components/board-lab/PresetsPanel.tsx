@@ -5,11 +5,16 @@ import { row } from './lab-model';
 type Preset = { name: string; qs: string; layoutOnly: boolean };
 const PRESET_KEY = 'ccg.boardlab.presets';
 
-/** Saved layouts: a name plus a URL param string (everything, or only the layout params), kept in this browser's localStorage. */
+/**
+ * Saved layouts: a name plus a URL param string (everything, or only the layout
+ * params), kept in this browser's localStorage.
+ */
 export const PresetsPanel = () => {
   const router = useRouter();
-  // Presets: a name plus a saved URL param string (everything, or only the layout params: all of them start with "l").
-  // Loading one replaces the URL; the board restarts only if a restart-needing param (heroes, hand) differs.
+  // Presets: a name plus a saved URL param string (everything, or only the
+  // layout params: all of them start with "l").
+  // Loading one replaces the URL; the board restarts only if a restart-needing
+  // param (heroes, hand) differs.
   const [presets, setPresets] = useState<Preset[]>([]);
   const [presetName, setPresetName] = useState('');
   const [layoutOnly, setLayoutOnly] = useState(false);

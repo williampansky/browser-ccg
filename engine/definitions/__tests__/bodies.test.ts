@@ -19,7 +19,8 @@ import {
 } from '../../testing/real-cards';
 import type { Action, GameState } from '../../state/types';
 
-// The "exact body / exact On Play effect" rewrites (balance/PRIME-DISTANCE.md, applied by balance/airtable/prime-bodies.js).
+// The "exact body / exact On Play effect" rewrites (balance/PRIME-DISTANCE.md,
+// applied by balance/airtable/prime-bodies.js).
 
 const ids =
   '004 013 019 007 040 017 020 032 048 082 095 161 028 002 224 241 233 185 026 015 246 070 176 237 043 239 049 055 141 104 142 220'.split(

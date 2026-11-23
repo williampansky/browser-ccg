@@ -1,6 +1,9 @@
 import { heroes, Rng } from '../../engine';
 
-/** `'random'`, `'none'` (no hero skills, the old game) or a hero key such as `ZEUS`. */
+/**
+ * `'random'`, `'none'` (no hero skills, the old game) or a hero key such as
+ * `ZEUS`.
+ */
 export type HeroChoice = string;
 export const HERO_RANDOM: HeroChoice = 'random';
 export const HERO_NONE: HeroChoice = 'none';
@@ -28,7 +31,10 @@ export const normalizeHeroChoice = (choice: unknown): HeroChoice =>
     ? choice
     : HERO_RANDOM;
 
-/** The hero key a choice stands for (`undefined` for none; Random draws from `rng`). */
+/**
+ * The hero key a choice stands for (`undefined` for none; Random draws from
+ * `rng`).
+ */
 export const resolveHero = (
   choice: HeroChoice,
   rng: Rng,

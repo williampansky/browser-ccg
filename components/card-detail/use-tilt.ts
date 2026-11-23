@@ -2,8 +2,10 @@ import { useRef } from 'react';
 import type { MouseEvent, RefObject } from 'react';
 
 /**
- * Pointer-following tilt. Spread the result onto an element whose CSS reads `--rx` / `--ry` (the tilt) and `--mx` / `--my`
- * (where the pointer is, for a sheen); the hook only sets those four variables, and removes them when the pointer leaves.
+ * Pointer-following tilt. Spread the result onto an element whose CSS reads
+ * `--rx` / `--ry` (the tilt) and `--mx` / `--my`
+ * (where the pointer is, for a sheen); the hook only sets those four variables,
+ * and removes them when the pointer leaves.
  */
 export const useTilt = <T extends HTMLElement>(
   maxDegrees: number,

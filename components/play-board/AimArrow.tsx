@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import styles from './play-board.module.scss';
 import { targetLinePath } from './target-line';
 
-/** The aiming arrow. It owns the pointer position, so moving the mouse re-renders only this, not the whole board. */
+/**
+ * The aiming arrow. It owns the pointer position, so moving the mouse
+ * re-renders only this, not the whole board.
+ */
 export const AimArrow = ({
   from,
   hit,

@@ -1,9 +1,13 @@
 /**
- * `npm run board -- "<url or query>"`: bakes a board-lab layout into `PLAY_LAYOUT` (what /play uses).
+ * `npm run board -- "<url or query>"`: bakes a board-lab layout into
+ * `PLAY_LAYOUT` (what /play uses).
  *
- * Paste the board-lab URL, or just its query (`les=0.8&lex=-1281&ley=-49`). Every layout knob in it (`l...` params) is written into
- * `PLAY_LAYOUT` in components/play-board/layout-css.ts: a knob already there is changed, a new one is added at the end. Knobs the
- * URL leaves out keep their saved value. Left alone on purpose: the board setup (b0 p0 h0 ... herotype, which are not layout) and
+ * Paste the board-lab URL, or just its query (`les=0.8&lex=-1281&ley=-49`).
+ * Every layout knob in it (`l...` params) is written into
+ * `PLAY_LAYOUT` in components/play-board/layout-css.ts: a knob already there is
+ * changed, a new one is added at the end. Knobs the
+ * URL leaves out keep their saved value. Left alone on purpose: the board setup
+ * (b0 p0 h0 ... herotype, which are not layout) and
  * the lab's preview switches (anything ending in `pv`: lpv, lcpv, lenpv ...).
  *
  *   npm run board -- "http://localhost:3000/board-lab?les=0.8&lex=-1281&lry0=151"

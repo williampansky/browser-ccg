@@ -5,9 +5,12 @@ import type { GameState, PlayerId } from '../state/types';
 import { minionDef } from './minion';
 
 /**
- * What `player` pays to play `card` right now: the printed cost, changed by the card's own rule (`ownCost`) and by
- * `costMods` on that player's minions. All changes add up; a net reduction stops at the highest floor among the
- * reducing rules, but never raises a card above its printed cost (so "not less than 1" leaves a 0-cost card at 0).
+ * What `player` pays to play `card` right now: the printed cost, changed by the
+ * card's own rule (`ownCost`) and by
+ * `costMods` on that player's minions. All changes add up; a net reduction
+ * stops at the highest floor among the
+ * reducing rules, but never raises a card above its printed cost (so "not less
+ * than 1" leaves a 0-cost card at 0).
  * Never below 0.
  */
 export const effectiveCost = (
@@ -16,7 +19,10 @@ export const effectiveCost = (
   card: Card,
   catalog: CardCatalog,
   defs: DefLookup = getCardDef,
-  /** A cost change carried by this particular copy of the card (`CardInstance.costDelta`) */
+  /**
+   * A cost change carried by this particular copy of the card
+   * (`CardInstance.costDelta`)
+   */
   copyDelta = 0,
 ): number => {
   const me = state.players[player];

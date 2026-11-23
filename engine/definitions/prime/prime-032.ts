@@ -4,7 +4,9 @@ import { chosenTarget } from '../../effects/selectors';
 import { enemyMinion } from '../../effects/filters';
 import { findMinion } from '../../rules/lookup';
 
-// PRIME_032 Siren, On Play effect: "Suppress an enemy minion; draw a card if it had an On Play effect or an On Death effect" (judged by its card, before it is Suppressed)
+// PRIME_032 Siren, On Play effect: "Suppress an enemy minion; draw a card if it
+// had an On Play effect or an On Death effect" (judged by its card, before it
+// is Suppressed)
 export default defineCard('PRIME_032', () => ({
   target: enemyMinion(),
   onPlay: [

@@ -28,7 +28,8 @@ const emptyPlayer = (deck: CardInstance[]): PlayerState => ({
 });
 
 /**
- * Builds a new game: shuffles both decks, deals opening hands (3 / 4), then starts turn 1.
+ * Builds a new game: shuffles both decks, deals opening hands (3 / 4), then
+ * starts turn 1.
  * The second player also gets `secondPlayerBonusCard` (The Orb) if given.
  */
 export const createGame = (setup: GameSetup, rng: Rng): GameState => {

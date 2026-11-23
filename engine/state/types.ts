@@ -1,4 +1,6 @@
-/** Game state. Everything here is JSON-serialisable; no UI state lives in it. */
+/**
+ * Game state. Everything here is JSON-serialisable; no UI state lives in it.
+ */
 
 export type PlayerId = '0' | '1';
 
@@ -11,13 +13,21 @@ export const MAX_BOARD = 7;
 export interface CardInstance {
   instanceId: number;
   cardId: string;
-  /** A cost change that travels with this copy of the card ("costs 1 less"); the engine never goes below 0 */
+  /**
+   * A cost change that travels with this copy of the card ("costs 1 less"); the
+   * engine never goes below 0
+   */
   costDelta?: number;
-  /** If this card is a minion, it enters play with Rush ("has Rush when played") */
+  /**
+   * If this card is a minion, it enters play with Rush ("has Rush when played")
+   */
   rushOnPlay?: boolean;
 }
 
-/** A face-down Mystery. The owner sees it; the opponent sees only its category (`MysteryDef.category`). */
+/**
+ * A face-down Mystery. The owner sees it; the opponent sees only its category
+ * (`MysteryDef.category`).
+ */
 export interface MysteryInstance {
   instanceId: number;
   cardId: string;
@@ -38,39 +48,68 @@ export interface MinionInstance {
   attack: number;
   health: number;
   maxHealth: number;
-  /** `GameState.turn` when it entered play (summoning sickness compares this to the current turn) */
+  /**
+   * `GameState.turn` when it entered play (summoning sickness compares this to
+   * the current turn)
+   */
   playedOnTurn: number;
   attacksThisTurn: number;
   keywords: MinionKeywords;
-  /** Order of entering play (RULES Q15: dead minions are removed in this order) */
+  /**
+   * Order of entering play (RULES Q15: dead minions are removed in this order)
+   */
   playSeq: number;
-  /** Attack currently added by auras (already included in `attack`; the engine recomputes it) */
+  /**
+   * Attack currently added by auras (already included in `attack`; the engine
+   * recomputes it)
+   */
   auraAttack: number;
   /** True while Rush comes from an aura rather than the card or a spell */
   auraRush: boolean;
-  /** True while Onslaught (double attack) comes from the card's own condition rather than the card or a spell */
+  /**
+   * True while Onslaught (double attack) comes from the card's own condition
+   * rather than the card or a spell
+   */
   auraDouble?: boolean;
-  /** Attack added "for this turn only" (already included in `attack`; removed when the turn ends) */
+  /**
+   * Attack added "for this turn only" (already included in `attack`; removed
+   * when the turn ends)
+   */
   tempAttack: number;
   /** The turn number on which this minion may not attack (set by Disable) */
   disabledOnTurn?: number;
   /** The turn number at whose start this minion dies (set by Expiration) */
   expiresOnTurn?: number;
-  /** Health added "for this turn only" (already in `health` and `maxHealth`; taken back when the turn ends, never leaving less than 1) */
+  /**
+   * Health added "for this turn only" (already in `health` and `maxHealth`;
+   * taken back when the turn ends, never leaving less than 1)
+   */
   tempHealth?: number;
-  /** Borrowed from `from` (Seadog Captain, Data-Mage, ...): goes back at the end of the turn numbered `returnOnTurn` */
+  /**
+   * Borrowed from `from` (Seadog Captain, Data-Mage, ...): goes back at the end
+   * of the turn numbered `returnOnTurn`
+   */
   loan?: { from: PlayerId; returnOnTurn: number };
   /** Takes no damage until the end of the turn */
   immune?: boolean;
   /** Its owner draws a card whenever it attacks */
   drawsOnAttack?: boolean;
-  /** On Death effects given by a spell: each summons a random minion of this race and exact cost for its owner */
+  /**
+   * On Death effects given by a spell: each summons a random minion of this
+   * race and exact cost for its owner
+   */
   deathSummons?: { race: string; cost: number }[];
-  /** Suppressed: the card's own behaviour (On Play effect already spent, triggers, auras, On Death effect, ...) no longer applies */
+  /**
+   * Suppressed: the card's own behaviour (On Play effect already spent,
+   * triggers, auras, On Death effect, ...) no longer applies
+   */
   silenced?: boolean;
 }
 
-/** A hero's equipped weapon. `durability` drops by 1 per attack; at 0 the weapon breaks. */
+/**
+ * A hero's equipped weapon. `durability` drops by 1 per attack; at 0 the weapon
+ * breaks.
+ */
 export interface WeaponInstance {
   instanceId: number;
   cardId: string;
@@ -78,15 +117,24 @@ export interface WeaponInstance {
   durability: number;
   /** Removed when its owner's turn ends (CORE_127) */
   temporary?: boolean;
-  /** Attack added "for this turn only" (already included in `attack`; removed when the turn ends; CORE_127 on a weapon) */
+  /**
+   * Attack added "for this turn only" (already included in `attack`; removed
+   * when the turn ends; CORE_127 on a weapon)
+   */
   tempAttack?: number;
 }
 
-/** A player's hero and the state of its skills (RULES Appendix D). Absent when a game is set up without heroes. */
+/**
+ * A player's hero and the state of its skills (RULES Appendix D). Absent when a
+ * game is set up without heroes.
+ */
 export interface HeroState {
   /** Hero key, e.g. `ZEUS` (see `engine/heroes`) */
   id: string;
-  /** Own turns still to wait before each skill can be used again (0 = ready); ticks down as this player's turn starts */
+  /**
+   * Own turns still to wait before each skill can be used again (0 = ready);
+   * ticks down as this player's turn starts
+   */
   cooldowns: number[];
   /** One-use skills (no cooldown in the data) that have been used */
   spent: boolean[];
@@ -103,29 +151,57 @@ export interface PlayerState {
   weapon: WeaponInstance | null;
   /** Weapon attacks made this turn (one allowed) */
   weaponAttacksThisTurn: number;
-  /** Fatigue counter: number of empty-deck draws so far (damage = the new value) */
+  /**
+   * Fatigue counter: number of empty-deck draws so far (damage = the new value)
+   */
   fatigue: number;
-  /** The turn number on which this hero may not attack with its weapon (set by Disable, e.g. Ice Primordial) */
+  /**
+   * The turn number on which this hero may not attack with its weapon (set by
+   * Disable, e.g. Ice Primordial)
+   */
   heroDisabledOnTurn?: number;
-  /** Overcharge: energy that stays locked at the start of this player's next turn (then cleared) */
+  /**
+   * Overcharge: energy that stays locked at the start of this player's next
+   * turn (then cleared)
+   */
   overcharge?: number;
-  /** On this turn number the player's NEXT spell costs `amount` less (Soul Lantern); used up when a spell is played */
+  /**
+   * On this turn number the player's NEXT spell costs `amount` less (Soul
+   * Lantern); used up when a spell is played
+   */
   spellDiscount?: { turn: number; amount: number };
-  /** On this turn number all of this player's spells cost 0 (Sir Jorio, on the opponent) */
+  /**
+   * On this turn number all of this player's spells cost 0 (Sir Jorio, on the
+   * opponent)
+   */
   freeSpellsOnTurn?: number;
-  /** On this turn number this player's minions cannot be reduced below 1 Health (Ring of the Lucii) */
+  /**
+   * On this turn number this player's minions cannot be reduced below 1 Health
+   * (Ring of the Lucii)
+   */
   healthFloorOnTurn?: number;
-  /** The turn number on which this player's next Mystery costs 0 (Vibrant Mage) */
+  /**
+   * The turn number on which this player's next Mystery costs 0 (Vibrant Mage)
+   */
   mysteryFreeOnTurn?: number;
-  /** Cards this player has played this turn (`now`) and on their previous turn (`prev`), for "cards you played this turn and last" */
+  /**
+   * Cards this player has played this turn (`now`) and on their previous turn
+   * (`prev`), for "cards you played this turn and last"
+   */
   plays?: { now: number; prev: number };
   /** Armor this player's hero has lost to damage over the whole game */
   armorSpent?: number;
-  /** The turn number on which this player's hero last took damage (for "on turns your hero took damage") */
+  /**
+   * The turn number on which this player's hero last took damage (for "on turns
+   * your hero took damage")
+   */
   heroHurtOnTurn?: number;
   /** The hero and its skills, if the game was set up with heroes */
   hero?: HeroState;
-  /** Card ids of this player's non-token minions that have died, oldest first (for Resurrect) */
+  /**
+   * Card ids of this player's non-token minions that have died, oldest first
+   * (for Resurrect)
+   */
   graveyard?: string[];
   /** The player's active Mystery (at most one), or none */
   mystery?: MysteryInstance | null;
@@ -147,7 +223,10 @@ export interface GameState {
   deaths?: number;
 }
 
-/** Something an attack or effect can aim at: a hero (either player's) or a minion on either board. */
+/**
+ * Something an attack or effect can aim at: a hero (either player's) or a
+ * minion on either board.
+ */
 export type TargetRef =
   { kind: 'hero'; player: PlayerId } | { kind: 'minion'; instanceId: number };
 
@@ -163,7 +242,10 @@ export type Action =
     }
   | { type: 'Attack'; attackerId: number; target: TargetRef }
   | { type: 'WeaponAttack'; target: TargetRef }
-  /** Uses one of the hero's skills (`skill` is 0, 1 or 2); `target` only for a targeted skill */
+  /**
+   * Uses one of the hero's skills (`skill` is 0, 1 or 2); `target` only for a
+   * targeted skill
+   */
   | { type: 'HeroSkill'; skill: number; target?: TargetRef; choice?: number };
 
 export type ActionErrorCode =
@@ -255,7 +337,9 @@ export interface GameSetup {
   firstPlayer: PlayerId;
   /** A card added to the second player's opening hand (The Orb, `GAME_001`) */
   secondPlayerBonusCard?: string;
-  /** Each player's hero key (`ZEUS`, ...). Omit for a game without hero skills. */
+  /**
+   * Each player's hero key (`ZEUS`, ...). Omit for a game without hero skills.
+   */
   heroes?: Partial<Record<PlayerId, string>>;
 }
 

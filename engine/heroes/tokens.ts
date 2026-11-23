@@ -1,8 +1,10 @@
 import type { Card, CardCatalog } from '../cards/types';
 
 /**
- * Minions and weapons that hero skills create. They are not in Airtable (the ability rows carry only numbers), so they
- * are defined here; a token with no art file shows the placeholder art. Ids start with `HERO_` so they never clash with
+ * Minions and weapons that hero skills create. They are not in Airtable (the
+ * ability rows carry only numbers), so they
+ * are defined here; a token with no art file shows the placeholder art. Ids
+ * start with `HERO_` so they never clash with
  * a card id.
  */
 const token = (
@@ -50,14 +52,20 @@ export const heroToken = (id: string): Card => {
   return card;
 };
 
-/** The catalog plus the hero tokens: use this wherever a game with heroes is played or drawn. */
+/**
+ * The catalog plus the hero tokens: use this wherever a game with heroes is
+ * played or drawn.
+ */
 export const withHeroTokens = (catalog: CardCatalog): Map<string, Card> => {
   const out = new Map(catalog);
   for (const c of HERO_TOKENS) out.set(c.id, c);
   return out;
 };
 
-/** A hero skill drawn as a card (for the cast popup when an ultimate is used): a spell with the skill's name, cost and text. */
+/**
+ * A hero skill drawn as a card (for the cast popup when an ultimate is used): a
+ * spell with the skill's name, cost and text.
+ */
 export const skillCard = (
   heroId: string,
   skill: {

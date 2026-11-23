@@ -10,7 +10,10 @@ import { summonMinion } from './summon';
 import { mysteriesOnEvent } from './mystery';
 import { checkWin } from './win';
 
-/** Thrown when effects keep triggering each other without end; `applyAction` turns it into an error. */
+/**
+ * Thrown when effects keep triggering each other without end; `applyAction`
+ * turns it into an error.
+ */
 export class TriggerLoopError extends Error {
   constructor() {
     super('trigger loop');
@@ -34,7 +37,8 @@ const boardsInPlayOrder = (
  *     death effects (also in play order).
  *  2. Otherwise take the next unprocessed event and run every matching trigger of minions on the
  *     board, in play order.
- * Finally check for game over. `from` is the index of the first event this call should react to.
+ * Finally check for game over. `from` is the index of the first event this call
+ * should react to.
  * Call inside `produce`.
  */
 export const settle = (
@@ -49,7 +53,8 @@ export const settle = (
     if (steps > MAX_STEPS) throw new TriggerLoopError();
     recomputeAuras(g, ctx.catalog, defs);
 
-    // Ring of the Lucii: this turn, a damaged minion of that player's cannot be reduced below 1 Health.
+    // Ring of the Lucii: this turn, a damaged minion of that player's cannot be
+    // reduced below 1 Health.
     for (const owner of ['0', '1'] as PlayerId[]) {
       if (g.players[owner].healthFloorOnTurn !== g.turn) continue;
       for (const m of g.players[owner].board) if (m.health <= 0) m.health = 1;
@@ -85,7 +90,8 @@ export const settle = (
             sourceCardId: minion.cardId,
           });
         }
-        // On Death effects given by a spell (Haranna's Curse): a random minion of that race and cost, for the owner.
+        // On Death effects given by a spell (Haranna's Curse): a random minion
+        // of that race and cost, for the owner.
         for (const ds of minion.deathSummons ?? []) {
           const pool = cardPool(
             ctx.catalog,

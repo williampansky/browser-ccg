@@ -13,10 +13,14 @@ import {
 import { UiThemePicker } from '../ui-theme/UiThemePicker';
 import styles from './profile-page.module.scss';
 
-/** Edits the player profile. Everything is saved as you type, in this browser (`loadProfile` / `saveProfile`). */
+/**
+ * Edits the player profile. Everything is saved as you type, in this browser
+ * (`loadProfile` / `saveProfile`).
+ */
 export const ProfilePage = () => {
   const [profile, setProfile] = useState<PlayerProfile>(DEFAULT_PROFILE);
-  // Only save once the stored profile has been read, or the first render would overwrite it with the default.
+  // Only save once the stored profile has been read, or the first render would
+  // overwrite it with the default.
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setProfile(loadProfile());

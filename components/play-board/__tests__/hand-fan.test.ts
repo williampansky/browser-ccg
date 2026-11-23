@@ -59,7 +59,8 @@ describe('hand fan', () => {
   });
 
   describe('handSink', () => {
-    // On screen, the card tops end up at (rowBottom - cardHeight * zoom) + sink * zoom.
+    // On screen, the card tops end up at (rowBottom - cardHeight * zoom) + sink
+    // * zoom.
     const topOnScreen = (rowBottom: number, zoom: number, sink: number) =>
       rowBottom - HAND_CARD_HEIGHT * zoom + sink * zoom;
 
@@ -82,7 +83,8 @@ describe('hand fan', () => {
     });
 
     it('keeps a shrunken hand on screen: the row bottom, not the row top, decides (flex-end)', () => {
-      // A 10-card hand at zoom 0.26 in a 800px window whose row bottom is at 840: the old row-top maths put the cards offscreen.
+      // A 10-card hand at zoom 0.26 in a 800px window whose row bottom is at
+      // 840: the old row-top maths put the cards offscreen.
       const sink = handSink(800, 840, 0.26, 110);
       expect(topOnScreen(840, 0.26, sink)).toBeLessThan(800);
     });

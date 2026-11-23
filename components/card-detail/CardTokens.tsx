@@ -3,8 +3,10 @@ import styles from '../deck-builder/deck-builder.module.scss';
 import type { Card } from '../../engine';
 
 /**
- * A row of related cards under the card's text, each with its name: the entourage cards a card makes or offers, or (when the card is itself an
- * entourage card) the cards that make it. With `onPick`, each one can be clicked to view it instead.
+ * A row of related cards under the card's text, each with its name: the
+ * entourage cards a card makes or offers, or (when the card is itself an
+ * entourage card) the cards that make it. With `onPick`, each one can be
+ * clicked to view it instead.
  */
 export const CardTokens = ({
   tokens = [],

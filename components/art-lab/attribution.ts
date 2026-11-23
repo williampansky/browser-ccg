@@ -12,7 +12,10 @@ const matches = (pattern: string, file: string) => {
   }
 };
 
-/** The first rule with any regex matching the path (case-insensitive); a bad regex never matches. */
+/**
+ * The first rule with any regex matching the path (case-insensitive); a bad
+ * regex never matches.
+ */
 export const findAttribution = (
   file: string,
   rules: AttributionRule[],

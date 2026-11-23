@@ -20,7 +20,8 @@ import {
 import type { Card } from '../../cards/types';
 import type { Action, GameEvent, GameState } from '../../state/types';
 
-// Test-only behaviour, injected through `ctx.defs`, so these tests cover the mechanism, not real cards.
+// Test-only behaviour, injected through `ctx.defs`, so these tests cover the
+// mechanism, not real cards.
 const testDefs: Record<string, CardDef> = {
   T_BOOM: { onPlay: [damage(allMinions(), 9)] },
   T_DEATHDRAW: { onDeath: [draw(1)] },
@@ -123,7 +124,8 @@ describe('death effects', () => {
     s = putOnBoard(s, '0', card('T_DYER')); // when it dies, damages P1's minions
     s = putOnBoard(s, '0', plain);
     s = putOnBoard(s, '1', plain);
-    // Boom kills everything at once already; instead check the chain with an attack.
+    // Boom kills everything at once already; instead check the chain with an
+    // attack.
     s = withHand();
     s = putOnBoard(s, '0', card('T_DYER'));
     s = putOnBoard(s, '1', plain);
@@ -135,7 +137,8 @@ describe('death effects', () => {
       attackerId: dyer,
       target: { kind: 'minion', instanceId: victim },
     });
-    // The dyer (1 health) trades with the victim; its death effect then deals 9 to every enemy minion.
+    // The dyer (1 health) trades with the victim; its death effect then deals 9
+    // to every enemy minion.
     expect(state.players['0'].board).toHaveLength(0);
     expect(state.players['1'].board).toHaveLength(0);
     expect(died(events)).toHaveLength(3);

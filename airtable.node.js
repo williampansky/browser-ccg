@@ -1,11 +1,16 @@
 /**
  * Pulls the card database from Airtable into `data/*.json`.   Usage: `npm run airtable`
  *
- * Needs AIRTABLE_API_KEY and AIRTABLE_BASE_ID in ./.env.local (read access is enough).
- * Reads the tables CARDS, HEROES, ABILITIES, MECHANICS and CONSTANTS and writes core, prime, entourage, game,
- * heroes, abilities, mechanics and constants as JSON in the shape the engine loads: single-select values get their
- * `%SYMBOL%` wrapping back (`MINION` -> `%TYPE_MINION%`); card `text` already carries its own `%TOKEN%`s.
- * Fetches every table first and writes only if all succeed and none is empty, so a failed pull never clobbers data.
+ * Needs AIRTABLE_API_KEY and AIRTABLE_BASE_ID in ./.env.local (read access is
+ * enough).
+ * Reads the tables CARDS, HEROES, ABILITIES, MECHANICS and CONSTANTS and writes
+ * core, prime, entourage, game,
+ * heroes, abilities, mechanics and constants as JSON in the shape the engine
+ * loads: single-select values get their
+ * `%SYMBOL%` wrapping back (`MINION` -> `%TYPE_MINION%`); card `text` already
+ * carries its own `%TOKEN%`s.
+ * Fetches every table first and writes only if all succeed and none is empty,
+ * so a failed pull never clobbers data.
  */
 const fs = require('fs');
 

@@ -4,7 +4,10 @@ import { CardFace } from '../components/play-board/CardFace';
 
 const { cards } = loadHsCards();
 
-/** PROTOTYPE page: the painted PNG card frame (top) against the code-drawn SVG/CSS frame (bottom), same cards, same layout. */
+/**
+ * PROTOTYPE page: the painted PNG card frame (top) against the code-drawn
+ * SVG/CSS frame (bottom), same cards, same layout.
+ */
 const CardLab = () => {
   const samples = useMemo(() => {
     const real = cards.filter((c) => c.source !== 'entourage' && c.name);
@@ -37,7 +40,8 @@ const CardLab = () => {
       ))}
     </div>
   );
-  // The site's global CSS sets overflow: hidden on the page, so this page scrolls inside itself (and clears the fixed bottom nav).
+  // The site's global CSS sets overflow: hidden on the page, so this page
+  // scrolls inside itself (and clears the fixed bottom nav).
   return (
     <main
       style={{

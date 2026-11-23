@@ -7,12 +7,16 @@ import type { GameState } from '../state/types';
 export const DEFAULT_TURN_SECONDS = 60;
 
 /**
- * The time limit for the current turn: 60 seconds, or less while a minion shortens it (Cronus: the owner's opponent gets 30). The shortest
+ * The time limit for the current turn: 60 seconds, or less while a minion
+ * shortens it (Cronus: the owner's opponent gets 30). The shortest
  * limit wins. A Suppressed minion no longer counts.
  *
- * The engine has no clock: it only says how long a turn may last. Whoever runs the game enforces it by ending the turn when the
- * time is up (`{ type: 'EndTurn' }`). A browser tab cannot do this fairly (a player controls their own page), so for
- * networked play the game server must keep the clock and call this same function; the `/play` page is only a local stand-in.
+ * The engine has no clock: it only says how long a turn may last. Whoever runs
+ * the game enforces it by ending the turn when the
+ * time is up (`{ type: 'EndTurn' }`). A browser tab cannot do this fairly (a
+ * player controls their own page), so for
+ * networked play the game server must keep the clock and call this same
+ * function; the `/play` page is only a local stand-in.
  */
 export const turnSeconds = (
   state: GameState,

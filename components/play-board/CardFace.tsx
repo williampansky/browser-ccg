@@ -23,33 +23,58 @@ import {
   VectorStat,
 } from './vector-frame';
 
-// useLayoutEffect warns during server rendering; the fit only matters in the browser.
+// useLayoutEffect warns during server rendering; the fit only matters in the
+// browser.
 const useIsoLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 interface CardFaceProps {
   card: Card;
-  /** How wide to draw the card, in pixels (the height follows: the frame is 1 : 1.4). */
+  /**
+   * How wide to draw the card, in pixels (the height follows: the frame is 1 :
+   * 1.4).
+   */
   width: number;
-  /** Override the printed attack / health (for a card whose stats are not the printed ones). */
+  /**
+   * Override the printed attack / health (for a card whose stats are not the
+   * printed ones).
+   */
   attack?: number;
   health?: number;
-  /** Spell damage on the viewer's board: a spell's damage numbers show raised (in a different colour). */
+  /**
+   * Spell damage on the viewer's board: a spell's damage numbers show raised
+   * (in a different colour).
+   */
   spellDamage?: number;
-  /** What the card costs the viewer right now, if a card on the board changes it (shown green when lower, red when higher). */
+  /**
+   * What the card costs the viewer right now, if a card on the board changes it
+   * (shown green when lower, red when higher).
+   */
   cost?: number;
-  /** PROTOTYPE: draw the frame, gem, emblem and stat badges as inline SVG instead of the PNG files (see `vector-frame.tsx`). */
+  /**
+   * PROTOTYPE: draw the frame, gem, emblem and stat badges as inline SVG
+   * instead of the PNG files (see `vector-frame.tsx`).
+   */
   vector?: boolean;
-  /** A CSS `background-image` for the art, instead of the card id's own files (for things that are not in `data/`, like hero skills). */
+  /**
+   * A CSS `background-image` for the art, instead of the card id's own files
+   * (for things that are not in `data/`, like hero skills).
+   */
   art?: string;
-  /** Leave the cost gem's number out (a stand-in card for a choice that costs nothing) */
+  /**
+   * Leave the cost gem's number out (a stand-in card for a choice that costs
+   * nothing)
+   */
   hideCost?: boolean;
 }
 
 /**
- * The framed card from `hsclone`: the art sits behind a rarity frame (a PNG with a see-through window), and the cost
- * gem, name ribbon, text, type, rarity gem and attack/health badges are laid over it. Everything is positioned in the
- * frame's own 178 x 250 design units, scaled by the `--u` custom property (pixels per unit).
+ * The framed card from `hsclone`: the art sits behind a rarity frame (a PNG
+ * with a see-through window), and the cost
+ * gem, name ribbon, text, type, rarity gem and attack/health badges are laid
+ * over it. Everything is positioned in the
+ * frame's own 178 x 250 design units, scaled by the `--u` custom property
+ * (pixels per unit).
  */
 export const CardFace = ({
   card,
@@ -73,7 +98,8 @@ export const CardFace = ({
     ),
   );
 
-  // Shrink the description until it sits inside its box (long text wrapped to five lines and ran over the badges).
+  // Shrink the description until it sits inside its box (long text wrapped to
+  // five lines and ran over the badges).
   const textRef = useRef<HTMLSpanElement | null>(null);
   useIsoLayoutEffect(() => {
     const box = textRef.current;
@@ -101,7 +127,8 @@ export const CardFace = ({
       box.style.setProperty('--text-scale', String(scale));
     };
     fit();
-    // The card font may still be loading on the first draw; measure again once it is in.
+    // The card font may still be loading on the first draw; measure again once
+    // it is in.
     let cancelled = false;
     document.fonts?.ready.then(() => !cancelled && fit());
     return () => {

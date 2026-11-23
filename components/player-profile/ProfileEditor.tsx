@@ -16,10 +16,14 @@ interface Props {
   onChange: (next: PlayerProfile) => void;
 }
 
-/** The player's name and colour theme. The text box keeps what you type; the saved name is the cleaned-up version of it. */
+/**
+ * The player's name and colour theme. The text box keeps what you type; the
+ * saved name is the cleaned-up version of it.
+ */
 export const ProfileEditor = ({ profile, onChange }: Props) => {
   const [draft, setDraft] = useState(profile.name);
-  // If the saved profile changes underneath (loaded after the first render), show it.
+  // If the saved profile changes underneath (loaded after the first render),
+  // show it.
   useEffect(() => setDraft(profile.name), [profile.name]);
   return (
     <section className={styles.editor} aria-label="Your profile">

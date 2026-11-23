@@ -1,12 +1,18 @@
 /**
- * How a deck-tracker row (`.deckRow` in play-board.module.scss, the `-DECK` strip behind the name) looks. `DECK_DEFAULTS` is the saved look;
- * the deck lab (`/deck-lab`) edits it live through `d_<field>` URL params and `npm run deck` bakes a lab URL into it. `/play` reads the same
- * params over the defaults (`parseDeckTune`), so a lab URL's setup carries over. The values reach the CSS as `--dk-*` variables (`deckRowVars`).
+ * How a deck-tracker row (`.deckRow` in play-board.module.scss, the `-DECK`
+ * strip behind the name) looks. `DECK_DEFAULTS` is the saved look;
+ * the deck lab (`/deck-lab`) edits it live through `d_<field>` URL params and
+ * `npm run deck` bakes a lab URL into it. `/play` reads the same
+ * params over the defaults (`parseDeckTune`), so a lab URL's setup carries
+ * over. The values reach the CSS as `--dk-*` variables (`deckRowVars`).
  */
 export interface DeckTune {
   /** Draw the `-DECK` strip behind each row */
   showArt: boolean;
-  /** Row: height, gap between rows, corner radius, left accent bar width (px), padding left / right, gap between the row's items */
+  /**
+   * Row: height, gap between rows, corner radius, left accent bar width (px),
+   * padding left / right, gap between the row's items
+   */
   rowH: number;
   rowGap: number;
   radius: number;
@@ -14,7 +20,10 @@ export interface DeckTune {
   padL: number;
   padR: number;
   itemGap: number;
-  /** The strip: zoom (100 = just covers the row), where it is centred (% across / down), opacity, brightness, saturation (%), blur (px) */
+  /**
+   * The strip: zoom (100 = just covers the row), where it is centred (% across
+   * / down), opacity, brightness, saturation (%), blur (px)
+   */
   artZoom: number;
   artX: number;
   artY: number;
@@ -22,11 +31,17 @@ export interface DeckTune {
   artBright: number;
   artSat: number;
   artBlur: number;
-  /** A shade over the strip so the name reads: its opacity at the left edge and at the right edge (%), and how far across (%) it has changed by */
+  /**
+   * A shade over the strip so the name reads: its opacity at the left edge and
+   * at the right edge (%), and how far across (%) it has changed by
+   */
   shadeLeft: number;
   shadeRight: number;
   shadeStop: number;
-  /** How much of the shade is left while the pointer is on the row (%, 100 = no change) */
+  /**
+   * How much of the shade is left while the pointer is on the row (%, 100 = no
+   * change)
+   */
   hoverShade: number;
   /** How long the pointer rests on a row before the full card pops up (ms) */
   hoverDelay: number;
@@ -34,7 +49,9 @@ export interface DeckTune {
   costShow: boolean;
   costSize: number;
   costFont: number;
-  /** Name and count text (px) and name shadow strength (px of glow, 0 = none) */
+  /**
+   * Name and count text (px) and name shadow strength (px of glow, 0 = none)
+   */
   nameFont: number;
   nameWeight: number;
   nameShadow: number;
@@ -89,7 +106,10 @@ export const DECK_DEFAULTS: DeckTune = {
   countColour: 'e8e8ee',
 };
 
-/** The deck look from a URL query string: `d_<field>` params over DECK_DEFAULTS. Numbers, 6-digit hex colours and `1` / `0` flags; anything else is ignored. */
+/**
+ * The deck look from a URL query string: `d_<field>` params over DECK_DEFAULTS.
+ * Numbers, 6-digit hex colours and `1` / `0` flags; anything else is ignored.
+ */
 export const parseDeckTune = (search: string): DeckTune => {
   const params = new URLSearchParams(search);
   const tune: Record<string, number | string | boolean> = { ...DECK_DEFAULTS };
@@ -108,7 +128,10 @@ export const parseDeckTune = (search: string): DeckTune => {
   return tune as unknown as DeckTune;
 };
 
-/** The CSS variables the deck rows read (set on the element that holds the rows). */
+/**
+ * The CSS variables the deck rows read (set on the element that holds the
+ * rows).
+ */
 export const deckRowVars = (t: DeckTune): Record<string, string> => ({
   '--dk-h': `${t.rowH}px`,
   '--dk-row-gap': `${t.rowGap}px`,

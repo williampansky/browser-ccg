@@ -1,6 +1,8 @@
 /**
- * Airtable access for the art lab: read one CARDS row with the field types, and write changed fields back. Server side only (the key
- * in `.env.local` never reaches the browser). The lab never creates or deletes rows.
+ * Airtable access for the art lab: read one CARDS row with the field types, and
+ * write changed fields back. Server side only (the key
+ * in `.env.local` never reaches the browser). The lab never creates or deletes
+ * rows.
  */
 import fs from 'fs';
 
@@ -13,7 +15,10 @@ export interface FieldInfo {
 }
 export type FieldValue = string | number | boolean | string[] | null;
 
-/** Fields the lab does not offer: the row's key, and the ones that decide which file the card lives in. */
+/**
+ * Fields the lab does not offer: the row's key, and the ones that decide which
+ * file the card lives in.
+ */
 export const LOCKED_FIELDS = ['id', 'set', 'isEntourage'];
 
 const loadEnv = () => {
@@ -26,7 +31,8 @@ const loadEnv = () => {
 
 const creds = () => {
   loadEnv();
-  // The lab prefers the _CLAUDE_CODE pair (the token that can write); the plain pair is what `npm run airtable` reads with.
+  // The lab prefers the _CLAUDE_CODE pair (the token that can write); the plain
+  // pair is what `npm run airtable` reads with.
   const key =
     process.env.AIRTABLE_API_KEY_CLAUDE_CODE || process.env.AIRTABLE_API_KEY;
   const base =
@@ -70,7 +76,10 @@ const KINDS: Record<string, FieldKind> = {
   multipleSelects: 'multi',
 };
 
-/** The editable CARDS fields, in table order. Field types the lab cannot edit (links, formulas...) are left out. */
+/**
+ * The editable CARDS fields, in table order. Field types the lab cannot edit
+ * (links, formulas...) are left out.
+ */
 export const readSchema = async (): Promise<FieldInfo[]> => {
   const { base } = creds();
   const json = await call(
@@ -116,8 +125,10 @@ export const readCard = async (id: string): Promise<CardRow | null> => {
 };
 
 /**
- * Turns what the form holds into an Airtable update: only fields that are editable, an emptied text/number/select becomes `null`
- * (Airtable's way to clear a cell), a number box holding text is rejected. Pure, so it is unit tested.
+ * Turns what the form holds into an Airtable update: only fields that are
+ * editable, an emptied text/number/select becomes `null`
+ * (Airtable's way to clear a cell), a number box holding text is rejected.
+ * Pure, so it is unit tested.
  */
 export const toUpdate = (
   schema: FieldInfo[],

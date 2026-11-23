@@ -13,7 +13,9 @@ import type {
   RawGlossaryEntry,
 } from './types';
 
-/** Thrown by `loadCards` in strict mode when the data has error-level problems. */
+/**
+ * Thrown by `loadCards` in strict mode when the data has error-level problems.
+ */
 export class CardDataError extends Error {
   readonly issues: CardIssue[];
 
@@ -29,7 +31,8 @@ export class CardDataError extends Error {
 }
 
 /**
- * Known typos in the Airtable data, fixed at load time. Keep this list short and
+ * Known typos in the Airtable data, fixed at load time. Keep this list short
+ * and
  * remove an entry once the data itself is fixed.
  */
 const ENTOURAGE_ID_FIXES: Record<string, string> = {
@@ -60,7 +63,8 @@ function stripPrefix(value: unknown, prefix: string): string | undefined {
 }
 
 /**
- * Turns the HTML-ish card text into plain text: line breaks (including the malformed
+ * Turns the HTML-ish card text into plain text: line breaks (including the
+ * malformed
  * `<br >`) become spaces, other tags are removed, whitespace is collapsed.
  */
 export function sanitizeText(html: string): string {
@@ -72,7 +76,8 @@ export function sanitizeText(html: string): string {
 }
 
 /**
- * Like `sanitizeText`, but keeps the formatting a card face needs: line breaks become `<br>` and only `<strong>`,
+ * Like `sanitizeText`, but keeps the formatting a card face needs: line breaks
+ * become `<br>` and only `<strong>`,
  * `<em>` and `<small>` tags survive. Other whitespace is collapsed.
  */
 export function sanitizeRichText(html: string): string {
@@ -190,7 +195,8 @@ function normaliseCard(
     return undefined;
   }
 
-  // numbers: absent means "not applicable"; 0 is a real value, so never use `||`
+  // numbers: absent means "not applicable"; 0 is a real value, so never use
+  // `||`
   const readNumber = (field: string): number | undefined => {
     const value = raw[field];
     if (value === undefined || value === null || value === '') return undefined;
@@ -283,7 +289,8 @@ function normaliseCard(
       ? raw.name.trim()
       : undefined;
   if (!name) report('warning', 'missing-name', id, 'has no name');
-  // An active card with no name in Airtable is shown and playable under its own id (`PRIME_168`); the data stays unnamed.
+  // An active card with no name in Airtable is shown and playable under its own
+  // id (`PRIME_168`); the data stays unnamed.
   // Inactive cards and tokens stay unnamed, so the pools keep leaving them out.
   if (
     !name &&
@@ -292,7 +299,8 @@ function normaliseCard(
     raw.isEntourage !== true
   )
     name = id;
-  // A few cards are named by a glossary symbol (e.g. `%BUBBLE%`); show the glossary's display name.
+  // A few cards are named by a glossary symbol (e.g. `%BUBBLE%`); show the
+  // glossary's display name.
   if (name && /^%[A-Z0-9_]+%$/.test(name)) {
     const display = glossary.get(name);
     if (display) name = display;
@@ -376,7 +384,8 @@ function normaliseCard(
   if (typeof raw.flavor === 'string' && raw.flavor)
     card.flavor = sanitizeText(raw.flavor);
   if (typeof raw.description === 'string' && raw.description) {
-    // The rules note, shown in the card detail window: plain text, with the glossary names put in for any %SYMBOL%.
+    // The rules note, shown in the card detail window: plain text, with the
+    // glossary names put in for any %SYMBOL%.
     card.designNote = renderText(
       sanitizeText(raw.description),
       numbers,
@@ -399,7 +408,8 @@ function normaliseCard(
 }
 
 /**
- * Substitutes `%NUM%`/`%NUM1%` (primary) and `%NUM2%` (secondary), and replaces glossary tokens
+ * Substitutes `%NUM%`/`%NUM1%` (primary) and `%NUM2%` (secondary), and replaces
+ * glossary tokens
  * with their display names. Unknown tokens are left in place and reported.
  */
 function renderText(

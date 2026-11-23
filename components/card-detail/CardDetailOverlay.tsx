@@ -30,7 +30,8 @@ export const CardDetailOverlay = ({
   byId: Map<string, Card>;
   onClose: () => void;
 }) => {
-  // The card being shown starts as the one that was opened; clicking a related card (a token or its parent) swaps it.
+  // The card being shown starts as the one that was opened; clicking a related
+  // card (a token or its parent) swaps it.
   const [card, setCard] = useState(opened);
   useEffect(() => setCard(opened), [opened]);
   const [copied, setCopied] = useState<string | null>(null);
@@ -38,13 +39,17 @@ export const CardDetailOverlay = ({
 
   /**
    * The tokens (ENTOURAGE) this card makes. Filter out any that are missing
-   * from the byId map, which can happen if a token is in a set that isn't loaded.
+   * from the byId map, which can happen if a token is in a set that isn't
+   * loaded.
    */
   const tokens = card.entourage
     .map((id) => byId.get(id))
     .filter((t): t is Card => !!t && t.active);
 
-  /** For an entourage card: the cards that make or offer it (an entourage card has no tokens of its own to show). */
+  /**
+   * For an entourage card: the cards that make or offer it (an entourage card
+   * has no tokens of its own to show).
+   */
   const parents = useMemo(
     () =>
       card.isToken

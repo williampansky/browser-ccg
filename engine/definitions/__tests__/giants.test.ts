@@ -19,7 +19,8 @@ import {
 } from '../../testing/real-cards';
 import type { Action, GameState } from '../../state/types';
 
-// The Giants (state-dependent costs), the keyword-pile 8-drop, and a few rewritten exact effects (balance/PRIME-DISTANCE.md).
+// The Giants (state-dependent costs), the keyword-pile 8-drop, and a few
+// rewritten exact effects (balance/PRIME-DISTANCE.md).
 
 const cost = (s: GameState, id: string) =>
   effectiveCost(s, '0', realCard(id), catalog);
@@ -60,7 +61,8 @@ describe('PRIME_085 Bark Creature: 1 less per minion that has died (max 6)', () 
     ).toBe(4); // capped at 6
   });
   it('the engine counts real deaths', () => {
-    // CORE_125 deals 2 to two random enemy minions: two 1-health minions both die.
+    // CORE_125 deals 2 to two random enemy minions: two 1-health minions both
+    // die.
     const s = play(
       setup('CORE_125', {
         theirs: [

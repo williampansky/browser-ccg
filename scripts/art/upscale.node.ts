@@ -1,13 +1,21 @@
 /**
  * `npm run upscale -- <folder of small icons> [--out <folder>] [--model digital-art-4x] [--size 1000]`
  *
- * Upscales every PNG/JPG in a folder with Real-ESRGAN (the `realesrgan-ncnn-vulkan` command line tool, the engine under Upscayl):
- * as many 4x passes as it takes to reach `--size`, then a Lanczos resize down to exactly size x size (PNG). Output goes next to the source folder (`<folder>-upscaled`) unless `--out` is given. Names are kept, so
- * rename the results to a card id (`CORE_117.png`) and move them into `art-inbox/` for `npm run art`.
+ * Upscales every PNG/JPG in a folder with Real-ESRGAN (the
+ * `realesrgan-ncnn-vulkan` command line tool, the engine under Upscayl):
+ * as many 4x passes as it takes to reach `--size`, then a Lanczos resize down
+ * to exactly size x size (PNG). Output goes next to the source folder
+ * (`<folder>-upscaled`) unless `--out` is given. Names are kept, so
+ * rename the results to a card id (`CORE_117.png`) and move them into
+ * `art-inbox/` for `npm run art`.
  *
- * The tool is a third-party binary and stays out of the repo. Point at it with `REALESRGAN_DIR` (default `~/tools/realesrgan/realesrgan-ncnn-vulkan-v0.2.0-macos`);
- * its `models/` folder needs `<model>.param` and `.bin` (Upscayl's models: github.com/upscayl/upscayl, resources/models).
- * `digital-art-4x` suits flat painted icons; `remacri-4x` / `high-fidelity-4x` looked about the same in a first test.
+ * The tool is a third-party binary and stays out of the repo. Point at it with
+ * `REALESRGAN_DIR` (default
+ * `~/tools/realesrgan/realesrgan-ncnn-vulkan-v0.2.0-macos`);
+ * its `models/` folder needs `<model>.param` and `.bin` (Upscayl's models:
+ * github.com/upscayl/upscayl, resources/models).
+ * `digital-art-4x` suits flat painted icons; `remacri-4x` / `high-fidelity-4x`
+ * looked about the same in a first test.
  */
 import fs from 'fs';
 import os from 'os';

@@ -2,7 +2,8 @@ import { defineCard } from '../define-card';
 import { computed, damage } from '../../effects/primitives';
 import { eventMinion } from '../../effects/selectors';
 
-// PRIME_129 Pit Trap, Mystery (Minion): "After your opponent plays a minion, deal damage equal to its Cost to it"
+// PRIME_129 Pit Trap, Mystery (Minion): "After your opponent plays a minion,
+// deal damage equal to its Cost to it"
 export default defineCard('PRIME_129', () => ({
   mystery: {
     category: 'minion',

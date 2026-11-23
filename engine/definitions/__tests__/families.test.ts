@@ -17,7 +17,8 @@ import {
 } from '../../testing/real-cards';
 import type { Action, GameState } from '../../state/types';
 
-// The choose-one, overload and enrage families after the distance rewrite (balance/PRIME-DISTANCE.md).
+// The choose-one, overload and enrage families after the distance rewrite
+// (balance/PRIME-DISTANCE.md).
 
 const ids =
   '111 112 113 115 119 120 121 123 124 200 202 203 204 205 208 209 213 009 022 024 035 041 244 006'.split(

@@ -14,10 +14,16 @@ import { summonMinion } from '../rules/summon';
 import { resurrectOptions } from './resurrect-offer';
 import { heroToken } from './tokens';
 
-/** What a skill does besides its numbers (those come from the ABILITIES table): who it may aim at, and the effects. */
+/**
+ * What a skill does besides its numbers (those come from the ABILITIES table):
+ * who it may aim at, and the effects.
+ */
 export interface SkillCode {
   target?: TargetFilter;
-  /** When set, the skill is used by picking one of these (listed fresh from the game state); with none to list it cannot be used */
+  /**
+   * When set, the skill is used by picking one of these (listed fresh from the
+   * game state); with none to list it cannot be used
+   */
   options?: (
     state: GameState,
     player: PlayerId,
@@ -45,7 +51,10 @@ const summonRandomToken =
     );
   };
 
-/** Summons the hero token with `attack` / `health` added on top of its own numbers (nothing happens if the board is full). */
+/**
+ * Summons the hero token with `attack` / `health` added on top of its own
+ * numbers (nothing happens if the board is full).
+ */
 const summonBuffed =
   (id: string, attack: number, health: number): Effect =>
   (ctx) => {
@@ -57,7 +66,10 @@ const summonBuffed =
     m.health += health;
   };
 
-/** Brings back up to `count` random dead friendly minions (each only once), fresh and without an On Play effect. */
+/**
+ * Brings back up to `count` random dead friendly minions (each only once),
+ * fresh and without an On Play effect.
+ */
 const resurrect =
   (count: number): Effect =>
   (ctx) => {
@@ -84,8 +96,10 @@ const hitChosen =
   };
 
 /**
- * Cleric: brings back the minion the player picked from `resurrectOptions`, with Guard or Bubble (fresh and without an On Play effect). It leaves
- * the graveyard it came from, which for a stolen enemy minion is the enemy's. Nothing happens if the board is full.
+ * Cleric: brings back the minion the player picked from `resurrectOptions`,
+ * with Guard or Bubble (fresh and without an On Play effect). It leaves
+ * the graveyard it came from, which for a stolen enemy minion is the enemy's.
+ * Nothing happens if the board is full.
  */
 const resurrectPicked = (): Effect => (ctx) => {
   const pick = resurrectOptions(ctx.g, ctx.caster, ctx.catalog)[
@@ -103,7 +117,10 @@ const resurrectPicked = (): Effect => (ctx) => {
   grave.splice(grave.lastIndexOf(id), 1);
 };
 
-/** Warrior's Last Stand: Health is set to `health` (up, or down from a higher total) and the hero gains `armor`. */
+/**
+ * Warrior's Last Stand: Health is set to `health` (up, or down from a higher
+ * total) and the hero gains `armor`.
+ */
 const lastStand =
   (health: number, armor: number): Effect =>
   (ctx) => {
@@ -111,7 +128,9 @@ const lastStand =
     addArmor(armor)(ctx);
   };
 
-/** Skill code per hero key; entry `n` is that hero's ability with id `n + 1`. */
+/**
+ * Skill code per hero key; entry `n` is that hero's ability with id `n + 1`.
+ */
 export const SKILL_CODE: Record<string, SkillCode[]> = {
   ZEUS: [
     { target: anyCharacter, effects: [damage(chosenTarget(), 1)] },
@@ -149,7 +168,8 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
       ],
     },
     { effects: [buff(friendlyOfRace('CREATURE'), 2, 2)] },
-    // Ultimate (Stampede of the Wild): one of each Spirit Animal, each with +2/+2 (other Creatures are not buffed)
+    // Ultimate (Stampede of the Wild): one of each Spirit Animal, each with
+    // +2/+2 (other Creatures are not buffed)
     {
       effects: [
         summonBuffed('HERO_DRUID_WOLF', 2, 2),

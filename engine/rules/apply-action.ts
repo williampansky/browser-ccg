@@ -21,11 +21,17 @@ export interface ActionResult {
   events: GameEvent[];
 }
 
-/** What the engine needs besides the state: randomness, the read-only card catalog, card behaviour. */
+/**
+ * What the engine needs besides the state: randomness, the read-only card
+ * catalog, card behaviour.
+ */
 export interface EngineContext {
   rng: Rng;
   catalog: CardCatalog;
-  /** Where card behaviour comes from. Defaults to the real registry; tests inject their own. */
+  /**
+   * Where card behaviour comes from. Defaults to the real registry; tests
+   * inject their own.
+   */
   defs?: DefLookup;
 }
 
@@ -33,8 +39,10 @@ const isError = (r: GameState | ActionError): r is ActionError => 'error' in r;
 
 /**
  * Applies an action by the active player. Never mutates `state`.
- * Returns the new state and the events that happened, or a typed error. After the action itself,
- * the game is settled: deaths removed, death effects and triggers run, game over checked.
+ * Returns the new state and the events that happened, or a typed error. After
+ * the action itself,
+ * the game is settled: deaths removed, death effects and triggers run, game
+ * over checked.
  */
 export const applyAction = (
   state: GameState,
@@ -52,7 +60,8 @@ export const applyAction = (
   try {
     switch (action.type) {
       case 'EndTurn': {
-        // Two phases, so end-of-turn effects happen before the next turn begins.
+        // Two phases, so end-of-turn effects happen before the next turn
+        // begins.
         const from = events.length;
         events.push({ type: 'TurnEnded', player: me });
         const ended = settled(state, from);

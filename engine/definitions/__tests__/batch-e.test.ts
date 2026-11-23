@@ -16,7 +16,8 @@ import {
 } from '../../testing/real-cards';
 import type { Action } from '../../state/types';
 
-// Batch E: this-turn boosts, adjacency, random friendly picks, stat swaps, hero health, and the choose-one PRIME cards.
+// Batch E: this-turn boosts, adjacency, random friendly picks, stat swaps, hero
+// health, and the choose-one PRIME cards.
 
 const ids =
   '104 059 028 002 232 048 172 163 010 068 105 241 160 066 054 046 052 176 231 115 124 113 120 112 121 123'.split(

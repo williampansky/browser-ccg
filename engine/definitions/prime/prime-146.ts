@@ -1,7 +1,8 @@
 import { defineCard } from '../define-card';
 import { addCardToHand } from '../../effects/primitives';
 
-// PRIME_146 Black Hole, Mystery (Spell): "When your opponent casts a spell, add a copy to your hand" (the spell still resolves)
+// PRIME_146 Black Hole, Mystery (Spell): "When your opponent casts a spell, add
+// a copy to your hand" (the spell still resolves)
 export default defineCard('PRIME_146', () => ({
   mystery: {
     category: 'spell',

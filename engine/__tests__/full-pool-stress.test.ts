@@ -1,4 +1,5 @@
-// Whole-pool stress: random bots play mixed CORE+PRIME decks and the board, hand, energy, health and loan rules are checked after every action.
+// Whole-pool stress: random bots play mixed CORE+PRIME decks and the board,
+// hand, energy, health and loan rules are checked after every action.
 import {
   applyAction,
   buildDeck,

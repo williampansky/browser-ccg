@@ -47,7 +47,9 @@ const fail = (s: GameState, a: Action): ActionErrorCode => {
   return r.error;
 };
 const endTurn = (s: GameState) => act(s, { type: 'EndTurn' });
-/** P0 to move on turn 1, hand replaced by exactly these cards, plenty of energy. */
+/**
+ * P0 to move on turn 1, hand replaced by exactly these cards, plenty of energy.
+ */
 const withHand = (...ids: string[]): GameState => {
   let s = fresh();
   s = { ...s, players: { ...s.players, '0': { ...s.players['0'], hand: [] } } };

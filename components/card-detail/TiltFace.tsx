@@ -3,7 +3,10 @@ import { CardFace } from '../play-board/CardFace';
 import { useTilt } from './use-tilt';
 import styles from './tilt-face.module.scss';
 
-/** The enlarged card in a detail window: it tilts toward the pointer and a sheen follows it. */
+/**
+ * The enlarged card in a detail window: it tilts toward the pointer and a sheen
+ * follows it.
+ */
 export const TiltFace = ({ card, width }: { card: Card; width: number }) => {
   const tilt = useTilt<HTMLDivElement>(9);
   return (

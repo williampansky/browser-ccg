@@ -1,9 +1,16 @@
 import { useEffect } from 'react';
 
-/** Marks a tooltip element: `useKeepTipsInViewport` shifts every `[data-tip]` back on screen when the pointer or focus moves. */
+/**
+ * Marks a tooltip element: `useKeepTipsInViewport` shifts every `[data-tip]`
+ * back on screen when the pointer or focus moves.
+ */
 export const TIP_ATTR = 'data-tip';
 
-/** How far (px) a box must move to sit fully inside the viewport, keeping `margin` px from the edges. The box wins over the margin if it is too big to fit. */
+/**
+ * How far (px) a box must move to sit fully inside the viewport, keeping
+ * `margin` px from the edges. The box wins over the margin if it is too big to
+ * fit.
+ */
 export const viewportShift = (
   rect: { left: number; top: number; right: number; bottom: number },
   viewport: { width: number; height: number },
@@ -22,8 +29,10 @@ export const viewportShift = (
 };
 
 /**
- * Moves `el` (a tooltip) back inside the window with the individual `translate` property, which stacks with any `transform` the
- * stylesheet uses to centre it. Safe to call again: it undoes its own last shift first. Does nothing for an element that is not laid out.
+ * Moves `el` (a tooltip) back inside the window with the individual `translate`
+ * property, which stacks with any `transform` the
+ * stylesheet uses to centre it. Safe to call again: it undoes its own last
+ * shift first. Does nothing for an element that is not laid out.
  */
 export const nudgeIntoViewport = (el: HTMLElement, margin = 8): void => {
   el.style.translate = '';
@@ -41,8 +50,10 @@ export const nudgeIntoViewport = (el: HTMLElement, margin = 8): void => {
 };
 
 /**
- * Keeps CSS-only tooltips (the ones that appear on :hover / :focus) on screen: after each mouseover or focus change, every
- * `[data-tip]` element is nudged. They are few, so this is cheap, and it needs no per-tooltip wiring beyond the attribute.
+ * Keeps CSS-only tooltips (the ones that appear on :hover / :focus) on screen:
+ * after each mouseover or focus change, every
+ * `[data-tip]` element is nudged. They are few, so this is cheap, and it needs
+ * no per-tooltip wiring beyond the attribute.
  */
 export const useKeepTipsInViewport = (): void => {
   useEffect(() => {

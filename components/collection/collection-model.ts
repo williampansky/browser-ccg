@@ -5,7 +5,10 @@ export const COSTS = ['all', '0', '1', '2', '3', '4', '5', '6', '7+'] as const;
 export const TYPES = ['all', 'minion', 'spell', 'weapon', 'item'] as const;
 export const SETS = ['both', 'core', 'prime'] as const;
 
-/** Rarities from lowest to highest, with the name players see (the same order as `RARITY_STYLE`). */
+/**
+ * Rarities from lowest to highest, with the name players see (the same order as
+ * `RARITY_STYLE`).
+ */
 export const RARITIES = [
   { id: 'FREE', label: 'Free' },
   { id: 'COMMON', label: 'Common' },
@@ -25,7 +28,10 @@ export interface CollectionFilters {
   race: string;
   /** `all`, or a mechanic symbol (`RUSH`) */
   effect: string;
-  /** `all`, `neutral` (no class), or a hero key (`WARRIOR`) for the cards only that hero's deck may hold */
+  /**
+   * `all`, `neutral` (no class), or a hero key (`WARRIOR`) for the cards only
+   * that hero's deck may hold
+   */
   hero: string;
 }
 
@@ -45,7 +51,11 @@ export const isFiltered = (f: CollectionFilters): boolean =>
     (k) => f[k] !== DEFAULT_FILTERS[k],
   );
 
-/** Which set a card belongs to for the set filter: an entourage card's own `source` is `entourage`, so it follows the set in its id (`CORE_051a` is Core). */
+/**
+ * Which set a card belongs to for the set filter: an entourage card's own
+ * `source` is `entourage`, so it follows the set in its id (`CORE_051a` is
+ * Core).
+ */
 export const setOf = (c: Card): string =>
   c.isToken ? c.id.split('_')[0].toLowerCase() : c.source;
 
@@ -81,7 +91,10 @@ export const filterCards = (
   });
 };
 
-/** Dev-only art checks: `missing` = no `-CARD` file on disk, `fpo` / `final` = the Airtable `artStatus`, `untracked` = no status yet. */
+/**
+ * Dev-only art checks: `missing` = no `-CARD` file on disk, `fpo` / `final` =
+ * the Airtable `artStatus`, `untracked` = no status yet.
+ */
 export const ART_FILTERS = [
   { id: 'all', label: 'Any art' },
   { id: 'missing', label: 'No art file' },
@@ -115,7 +128,10 @@ const PARAM = {
 const one = (v: string | string[] | undefined): string | undefined =>
   Array.isArray(v) ? v[0] : v;
 
-/** The filters as URL params: only those that differ from the default, so an unfiltered page has a clean URL. */
+/**
+ * The filters as URL params: only those that differ from the default, so an
+ * unfiltered page has a clean URL.
+ */
 export const toQuery = (
   f: CollectionFilters,
   sort: SortKey,
@@ -131,7 +147,10 @@ export const toQuery = (
   return q;
 };
 
-/** The reverse; a value that is not valid for its filter (a hand-edited URL) falls back to the default. */
+/**
+ * The reverse; a value that is not valid for its filter (a hand-edited URL)
+ * falls back to the default.
+ */
 export const fromQuery = (
   query: Record<string, string | string[] | undefined>,
 ): {
@@ -210,7 +229,11 @@ export type SortKey = (typeof SORTS)[number]['id'];
 
 const byName = (a: Card, b: Card) => (a.name ?? '').localeCompare(b.name ?? '');
 
-/** A sorted copy. Cost, name and rarity go low to high; attack and health go high to low, with cards that have none last. Ties fall back to cost, then name. */
+/**
+ * A sorted copy. Cost, name and rarity go low to high; attack and health go
+ * high to low, with cards that have none last. Ties fall back to cost, then
+ * name.
+ */
 export const sortCards = (cards: readonly Card[], key: SortKey): Card[] => {
   const rank = (c: Card) => RARITIES.findIndex((r) => r.id === c.rarity);
   const stat = (c: Card) => (key === 'attack' ? c.attack : c.health);
@@ -244,7 +267,10 @@ export const sizeOf = (id: unknown) =>
 
 const KEY = 'ccg.collection.v1';
 
-/** The grid size chosen last time in this browser (medium when there is none, or the stored value is junk). */
+/**
+ * The grid size chosen last time in this browser (medium when there is none, or
+ * the stored value is junk).
+ */
 export const loadSize = (): SizeId => {
   try {
     return sizeOf(JSON.parse(window.localStorage.getItem(KEY) ?? '{}')?.size)

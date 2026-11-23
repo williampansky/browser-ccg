@@ -3,9 +3,14 @@ import { createSeededRng } from '../rng';
 import type { SkillOption } from '../effects/types';
 import type { GameState, PlayerId } from '../state/types';
 
-/** How many of a player's most recent deaths the Cleric's Resurrect looks at. */
+/**
+ * How many of a player's most recent deaths the Cleric's Resurrect looks at.
+ */
 export const RECENT_DEAD = 5;
-/** Chance (out of 100) that one of the two offered minions is the strongest of the enemy's recent dead instead. */
+/**
+ * Chance (out of 100) that one of the two offered minions is the strongest of
+ * the enemy's recent dead instead.
+ */
 export const ENEMY_OFFER_PERCENT = 15;
 
 const FNV_OFFSET = 2166136261;
@@ -24,12 +29,17 @@ const stats = (catalog: CardCatalog, id: string): number => {
 };
 
 /**
- * What the Cleric's Resurrect offers right now: two minions picked at random from this player's last `RECENT_DEAD` deaths
- * (different cards where it can), with a small chance one of them is the strongest of the enemy's last `RECENT_DEAD`
- * deaths instead. Each minion comes back with Guard or with Bubble, so every minion is two options (Guard first).
+ * What the Cleric's Resurrect offers right now: two minions picked at random
+ * from this player's last `RECENT_DEAD` deaths
+ * (different cards where it can), with a small chance one of them is the
+ * strongest of the enemy's last `RECENT_DEAD`
+ * deaths instead. Each minion comes back with Guard or with Bubble, so every
+ * minion is two options (Guard first).
  *
- * The "random" pick is a function of the turn number and both graveyards, so asking twice in a turn gives the same offer
- * (the legal actions and the skill itself must agree, and a bot can try it on a copy of the game), and it changes whenever
+ * The "random" pick is a function of the turn number and both graveyards, so
+ * asking twice in a turn gives the same offer
+ * (the legal actions and the skill itself must agree, and a bot can try it on a
+ * copy of the game), and it changes whenever
  * something dies or the turn passes. Nothing is stored in the game state.
  */
 export const resurrectOptions = (
@@ -45,7 +55,8 @@ export const resurrectOptions = (
     hash(`${state.turn}|${player}|${mine.join(',')}|${theirs.join(',')}`),
   );
 
-  // Two picks from my recent dead: different cards first, then repeats if there are not two different ones.
+  // Two picks from my recent dead: different cards first, then repeats if there
+  // are not two different ones.
   const pool = [...mine];
   const picks: { cardId: string; from: PlayerId }[] = [];
   while (picks.length < 2 && pool.length > 0) {
@@ -56,7 +67,8 @@ export const resurrectOptions = (
     picks.push({ cardId: id, from: player });
   }
 
-  // The rare enemy minion: only if it is stronger than the weakest pick, and then it takes that pick's place (or the free second slot).
+  // The rare enemy minion: only if it is stronger than the weakest pick, and
+  // then it takes that pick's place (or the free second slot).
   const roll = rng.int(100);
   if (roll < ENEMY_OFFER_PERCENT && theirs.length > 0) {
     const best = theirs.reduce((a, b) =>

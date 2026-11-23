@@ -10,14 +10,23 @@ export interface HeroSkill {
   index: number;
   name: string;
   cost: number;
-  /** Own turns to wait after using it; `undefined` means it can be used once per game (an ultimate) */
+  /**
+   * Own turns to wait after using it; `undefined` means it can be used once per
+   * game (an ultimate)
+   */
   cooldown?: number;
   text: string;
-  /** Frame colour of its cast popup: the ability's `rarity` column in Airtable (`COMMON`, `MYTHIC`, ...); `FREE` (steel, no gem) when blank */
+  /**
+   * Frame colour of its cast popup: the ability's `rarity` column in Airtable
+   * (`COMMON`, `MYTHIC`, ...); `FREE` (steel, no gem) when blank
+   */
   rarity: string;
   /** Set when the skill needs a target */
   target?: TargetFilter;
-  /** Set when the skill is used by picking one of a list drawn from the game (see `SkillCode.options`) */
+  /**
+   * Set when the skill is used by picking one of a list drawn from the game
+   * (see `SkillCode.options`)
+   */
   options?: SkillCode['options'];
   effects: Effect[];
 }
@@ -29,7 +38,10 @@ export interface HeroInfo {
   shortDescription: string;
   /** `MELEE`, `RANGED` or `HYBRID` */
   archetype: string;
-  /** Backstory as HTML paragraphs (from Airtable); empty when none is written yet */
+  /**
+   * Backstory as HTML paragraphs (from Airtable); empty when none is written
+   * yet
+   */
   lore: string;
   artistName?: string;
   artistUrl?: string;
@@ -67,7 +79,10 @@ type RawAbility = {
   rarity?: string;
 };
 
-/** Heroes marked active in the data that also have skill code and all three abilities. */
+/**
+ * Heroes marked active in the data that also have skill code and all three
+ * abilities.
+ */
 const build = (): HeroInfo[] => {
   const out: HeroInfo[] = [];
   for (const h of heroData as {
@@ -99,7 +114,8 @@ const build = (): HeroInfo[] => {
         index,
         name: display(a.name),
         cost: a.cost,
-        // An ultimate is once per game whatever cooldown the data gives it (True Form has one by mistake).
+        // An ultimate is once per game whatever cooldown the data gives it
+        // (True Form has one by mistake).
         cooldown:
           !a.ultimate && a.cooldown && a.cooldown > 0 ? a.cooldown : undefined,
         text: display(

@@ -1,13 +1,18 @@
 /**
- * The end-of-game confetti (canvas-confetti). Everything about it is a setting, so the board lab's "End game" tab can tune it live:
- * `settingsFromQuery` reads the lab's `len*` URL params, `setEndTuning` hands them to the board, and `fireEndConfetti` shoots it.
+ * The end-of-game confetti (canvas-confetti). Everything about it is a setting,
+ * so the board lab's "End game" tab can tune it live:
+ * `settingsFromQuery` reads the lab's `len*` URL params, `setEndTuning` hands
+ * them to the board, and `fireEndConfetti` shoots it.
  * With no tuning, /play uses `END_DEFAULTS`.
  */
 export interface EndSettings {
   on: boolean;
   /** Fire for every game end, or only when the viewer won */
   when: 'all' | 'win';
-  /** `burst`: one shot from (x, y); `sides`: two cannons from the left and right edges */
+  /**
+   * `burst`: one shot from (x, y); `sides`: two cannons from the left and right
+   * edges
+   */
   mode: 'burst' | 'sides';
   palette: 'default' | 'gold' | 'fire' | 'ice';
   count: number;
@@ -167,7 +172,10 @@ export const setEndTuning = (s: EndSettings | undefined) => {
   current = s ?? END_DEFAULTS;
 };
 
-/** Shoots the confetti (skipped when it is off, for a loss when set to wins only, or with reduced motion). */
+/**
+ * Shoots the confetti (skipped when it is off, for a loss when set to wins
+ * only, or with reduced motion).
+ */
 export const fireEndConfetti = async (
   viewerWon: boolean,
   s: EndSettings = current,

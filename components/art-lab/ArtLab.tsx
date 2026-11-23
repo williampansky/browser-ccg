@@ -91,7 +91,8 @@ const api = async (url: string, init?: RequestInit) => {
 
 /**
  * Send a POST request with a JSON body to the given URL, and return the parsed
- * JSON response. This is used to send edits to the server for saving to Airtable
+ * JSON response. This is used to send edits to the server for saving to
+ * Airtable
  * or rendering images.
  */
 const post = (url: string, body: unknown) => {
@@ -102,7 +103,10 @@ const post = (url: string, body: unknown) => {
   });
 };
 
-/** One crop: the master shown through the output's frame (drag to move it, sliders to zoom); the file on disk now sits beside it. */
+/**
+ * One crop: the master shown through the output's frame (drag to move it,
+ * sliders to zoom); the file on disk now sits beside it.
+ */
 const CropPanel = ({
   kind,
   src,
@@ -163,7 +167,8 @@ const CropPanel = ({
             onPointerMove={(e) => {
               const d = drag.current;
               if (!d) return;
-              // Dragging the picture right moves the crop window left over it, so focus goes the other way.
+              // Dragging the picture right moves the crop window left over it,
+              // so focus goes the other way.
               onFocus({
                 ...d.f,
                 x: clamp01(d.f.x - (e.clientX - d.x) / scale / size.w),
@@ -245,7 +250,8 @@ const FinalCard = ({ id }: { id: string }) => {
 };
 
 /**
- * The three files the game reads for this card, straight from public/images/sets
+ * The three files the game reads for this card, straight from
+ * public/images/sets
  * (a missing file says so instead of showing a broken image).
  */
 const CurrentArt = ({ urls }: { urls: Record<ArtKind, string> }) => {
@@ -300,7 +306,8 @@ const CurrentArt = ({ urls }: { urls: Record<ArtKind, string> }) => {
 
 /**
  * Field editor: checkbox, select, multi-select, long text, number, or string
- * with optional suggestions. The edited value is sent to the parent via onChange.
+ * with optional suggestions. The edited value is sent to the parent via
+ * onChange.
  */
 const FieldEditor = ({
   info,
@@ -480,7 +487,8 @@ export const ArtLab = ({ id }: { id: string }) => {
 
   /**
    * Run a job with a label, showing a busy indicator and a message. If the job
-   * succeeds, show its result; if it fails, show the error message. This is used
+   * succeeds, show its result; if it fails, show the error message. This is
+   * used
    * for uploading the master picture and saving edits to Airtable.
    */
   const run = async (label: string, job: () => Promise<string>) => {
@@ -540,7 +548,8 @@ export const ArtLab = ({ id }: { id: string }) => {
   const changed = Object.keys(edits);
 
   /**
-   * Current value of a field: the edited one if it exists, otherwise the card's.
+   * Current value of a field: the edited one if it exists, otherwise the
+   * card's.
    */
   const current = (name: string) => {
     return name in edits ? edits[name] : card?.fields[name];

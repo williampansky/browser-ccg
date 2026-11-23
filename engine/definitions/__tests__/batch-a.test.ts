@@ -10,8 +10,10 @@ import {
   stats,
 } from '../../testing/real-cards';
 
-// Batch A: cards built only from simple effects (damage, heal, draw, buff, summon, energy).
-// Every test plays the REAL card from data, so the numbers in the card data are what is checked.
+// Batch A: cards built only from simple effects (damage, heal, draw, buff,
+// summon, energy).
+// Every test plays the REAL card from data, so the numbers in the card data are
+// what is checked.
 
 const ids = [
   ...[

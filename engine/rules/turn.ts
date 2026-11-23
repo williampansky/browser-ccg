@@ -3,7 +3,8 @@ import { GameEvent, GameState, MAX_ENERGY, PlayerId } from '../state/types';
 import { drawCard } from './draw';
 
 /**
- * Ends "this turn only" effects when `player`'s turn ends: temporary Attack (on minions and weapons) is taken back
+ * Ends "this turn only" effects when `player`'s turn ends: temporary Attack (on
+ * minions and weapons) is taken back
  * (never below 0) and a temporary weapon is removed. Call inside `produce`.
  */
 export const endTurnCleanup = (g: Draft<GameState>, player: PlayerId): void => {
@@ -12,7 +13,8 @@ export const endTurnCleanup = (g: Draft<GameState>, player: PlayerId): void => {
       if (m.tempAttack !== 0) m.attack = Math.max(0, m.attack - m.tempAttack);
       m.tempAttack = 0;
       if (m.tempHealth) {
-        // "+N Health this turn only": the maximum drops back, and current Health follows but never below 1
+        // "+N Health this turn only": the maximum drops back, and current
+        // Health follows but never below 1
         m.maxHealth = Math.max(1, m.maxHealth - m.tempHealth);
         m.health = Math.max(1, Math.min(m.health, m.maxHealth));
         m.tempHealth = 0;
@@ -26,7 +28,8 @@ export const endTurnCleanup = (g: Draft<GameState>, player: PlayerId): void => {
     }
   }
   if (g.players[player].weapon?.temporary) g.players[player].weapon = null;
-  // Borrowed minions go home when their loan ends (a full home board loses them).
+  // Borrowed minions go home when their loan ends (a full home board loses
+  // them).
   for (const p of ['0', '1'] as const) {
     for (const m of [...g.players[p].board]) {
       if (!m.loan || m.loan.returnOnTurn > g.turn) continue;
@@ -43,7 +46,10 @@ export const endTurnCleanup = (g: Draft<GameState>, player: PlayerId): void => {
   }
 };
 
-/** Starts `player`'s turn: turn +1, energy total +1 (cap 10) and refill, minions ready, then draw one card. */
+/**
+ * Starts `player`'s turn: turn +1, energy total +1 (cap 10) and refill, minions
+ * ready, then draw one card.
+ */
 export const startTurn = (
   state: GameState,
   player: PlayerId,
@@ -69,7 +75,8 @@ export const startTurn = (
     };
     g.players[player].weaponAttacksThisTurn = 0;
     events.push({ type: 'TurnStarted', player, turn: g.turn });
-    // Expiration: marked minions on either board are brought to 0 health now; `settle` removes them.
+    // Expiration: marked minions on either board are brought to 0 health now;
+    // `settle` removes them.
     for (const p of ['0', '1'] as const) {
       for (const m of g.players[p].board)
         if (m.expiresOnTurn !== undefined && m.expiresOnTurn <= g.turn)

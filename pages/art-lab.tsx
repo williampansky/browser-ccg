@@ -5,7 +5,11 @@ import { CardLookup } from '../components/art-lab/CardLookup';
 import { AssetGrid } from '../components/art-lab/AssetGrid';
 import { Button } from '../components/ui';
 
-/** Dev lab: `/art-lab` looks a card up (id or name); `/art-lab?id=CORE_122` frames its art and edits its Airtable CARDS row. See components/art-lab/ArtLab.tsx. */
+/**
+ * Dev lab: `/art-lab` looks a card up (id or name); `/art-lab?id=CORE_122`
+ * frames its art and edits its Airtable CARDS row. See
+ * components/art-lab/ArtLab.tsx.
+ */
 const ArtLabPage = () => {
   const router = useRouter();
   const { query, isReady } = router;

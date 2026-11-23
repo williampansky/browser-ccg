@@ -1,11 +1,16 @@
 import { MAX_ENERGY, MAX_HEALTH } from '../../engine';
 
-/** One energy slot: ready to spend, already spent this turn, a bonus slot (the Orb), or not unlocked yet. */
+/**
+ * One energy slot: ready to spend, already spent this turn, a bonus slot (the
+ * Orb), or not unlocked yet.
+ */
 export type PipState = 'ready' | 'spent' | 'bonus' | 'locked';
 
 /**
- * The row of energy slots for a hero bar. `total` slots are unlocked; `current` of them are still available. `current`
- * can exceed `total` (The Orb gives an extra point for the turn), shown as `bonus` slots after the unlocked ones.
+ * The row of energy slots for a hero bar. `total` slots are unlocked; `current`
+ * of them are still available. `current`
+ * can exceed `total` (The Orb gives an extra point for the turn), shown as
+ * `bonus` slots after the unlocked ones.
  */
 export const energyPips = (
   current: number,
@@ -18,8 +23,10 @@ export const energyPips = (
   });
 
 /**
- * Which slots a card of this cost would use up: the topmost available ones (bonus slots first), as flags per slot. A card that costs
- * more than is available marks every available slot (the caller shows that as "can't afford").
+ * Which slots a card of this cost would use up: the topmost available ones
+ * (bonus slots first), as flags per slot. A card that costs
+ * more than is available marks every available slot (the caller shows that as
+ * "can't afford").
  */
 export const pipsToSpend = (pips: PipState[], cost: number): boolean[] => {
   const out = pips.map(() => false);
@@ -41,6 +48,9 @@ export const healthFraction = (
 
 export type HealthTone = 'healthy' | 'hurt' | 'critical';
 
-/** Colour band of the ring and the number: green above half, amber above a quarter, red below. */
+/**
+ * Colour band of the ring and the number: green above half, amber above a
+ * quarter, red below.
+ */
 export const healthTone = (fraction: number): HealthTone =>
   fraction > 0.5 ? 'healthy' : fraction > 0.25 ? 'hurt' : 'critical';

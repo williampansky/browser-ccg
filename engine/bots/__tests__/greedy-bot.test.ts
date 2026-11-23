@@ -91,7 +91,8 @@ describe('greedy bot', () => {
   it('does not throw a minion away into a bigger one', () => {
     let s = ready(start(), '0', small);
     s = ready(s, '1', wall);
-    // a Guard forces the only legal attack into the 5/5, which loses the 1/1 for nothing
+    // a Guard forces the only legal attack into the 5/5, which loses the 1/1
+    // for nothing
     expect(choose(s)).toEqual({ type: 'EndTurn' });
   });
   it('must attack the Guard minion, since that is the only legal target', () => {

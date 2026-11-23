@@ -19,9 +19,12 @@ const better = (b: MinionInstance, a: MinionInstance): boolean =>
   );
 
 /**
- * Which of `player`'s minions already on the board would be made better if hand card `handIndex` were played now
- * (more Attack or Health, or a new keyword). It plays the card on a throwaway copy, so every aura, On Play effect and
- * "your Sprites get +1 Attack" rule is covered without per-card data. Cards that need a target are not previewed
+ * Which of `player`'s minions already on the board would be made better if hand
+ * card `handIndex` were played now
+ * (more Attack or Health, or a new keyword). It plays the card on a throwaway
+ * copy, so every aura, On Play effect and
+ * "your Sprites get +1 Attack" rule is covered without per-card data. Cards
+ * that need a target are not previewed
  * (the legal-target highlight already covers them).
  */
 export const boostedMinions = (

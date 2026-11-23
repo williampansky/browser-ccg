@@ -15,7 +15,8 @@ import {
 } from '../../testing/real-cards';
 import type { GameState, TargetRef } from '../../state/types';
 
-// Batch B: cards that needed small new effects (destroy, transform, set stat, discard, steal, ...).
+// Batch B: cards that needed small new effects (destroy, transform, set stat,
+// discard, steal, ...).
 
 const ids = [
   ...[

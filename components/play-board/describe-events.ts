@@ -16,7 +16,10 @@ export const MYSTERY_CATEGORY_LABEL = {
 } as const;
 
 /** What the opponent is told about a face-down Mystery: its category only. */
-/** What a face-down Mystery of this category will react to, as told to the player it is set against. */
+/**
+ * What a face-down Mystery of this category will react to, as told to the
+ * player it is set against.
+ */
 export const MYSTERY_HINT = {
   attack: 'Reacts when you attack.',
   spell: 'Reacts when you cast a spell.',
@@ -34,7 +37,10 @@ export const mysteryCategory = (
   return cat ? MYSTERY_CATEGORY_LABEL[cat] : '?';
 };
 
-/** Finds a card name for an instance id, looking in every state given (an instance may have died). */
+/**
+ * Finds a card name for an instance id, looking in every state given (an
+ * instance may have died).
+ */
 export const nameOfInstance = (
   id: number,
   catalog: CardCatalog,
@@ -52,24 +58,36 @@ export const nameOfInstance = (
   return `minion #${id}`;
 };
 
-/** Log markup: `**Player 1**` is a player (coloured by side), `__Card__` is a card name (bold italic). */
+/**
+ * Log markup: `**Player 1**` is a player (coloured by side), `__Card__` is a
+ * card name (bold italic).
+ */
 const who = (p: '0' | '1') => `**Player ${Number(p) + 1}**`;
 const card = (name: string) => `__${name}__`;
 
-/** Turns the events of one action into short log lines. Events with no player-facing meaning are skipped. */
+/**
+ * Turns the events of one action into short log lines. Events with no
+ * player-facing meaning are skipped.
+ */
 export const describeEvents = (
   events: GameEvent[],
   catalog: CardCatalog,
   before: GameState,
   after: GameState,
-  /** Whose face-down Mystery cards may be named in the log (the human player's, against the AI); null names nobody's, as in hot-seat */
+  /**
+   * Whose face-down Mystery cards may be named in the log (the human player's,
+   * against the AI); null names nobody's, as in hot-seat
+   */
   reveal: '0' | '1' | null = null,
 ): string[] => {
   const name = (id: number) => card(nameOfInstance(id, catalog, before, after));
   const cardName = (id: string) => card(catalog.get(id)?.name ?? id);
   const target = (t: TargetRef) =>
     t.kind === 'hero' ? `${who(t.player)}'s hero` : name(t.instanceId);
-  /** " (+1 Spell Damage)" when the caster had Spell Damage and the spell deals damage or heals (the card's own text shows the base numbers). */
+  /**
+   * " (+1 Spell Damage)" when the caster had Spell Damage and the spell deals
+   * damage or heals (the card's own text shows the base numbers).
+   */
   const spellDamageNote = (player: '0' | '1', cardId: string): string => {
     const c = catalog.get(cardId);
     if (!c || c.type !== 'spell' || !/damage|heal|restore/i.test(c.text))
@@ -171,8 +189,10 @@ export const describeEvents = (
         break;
     }
   }
-  // Changes that have no event of their own (buffs, keywords, Disable, ...) are read from the before/after states.
-  // At turn changes "this turn" boosts wear off, which would only be noise, so skip those.
+  // Changes that have no event of their own (buffs, keywords, Disable, ...) are
+  // read from the before/after states.
+  // At turn changes "this turn" boosts wear off, which would only be noise, so
+  // skip those.
   if (!events.some((e) => e.type === 'TurnEnded' || e.type === 'TurnStarted')) {
     lines.push(...describeChanges(before, after, catalog));
   }
@@ -188,7 +208,10 @@ const KEYWORD_NAMES: Record<keyof MinionInstance['keywords'], string> = {
   noAttack: "Can't Attack",
 };
 
-/** Lines for minions that changed between two states in ways no event reports. Aura attack is ignored. */
+/**
+ * Lines for minions that changed between two states in ways no event reports.
+ * Aura attack is ignored.
+ */
 export const describeChanges = (
   before: GameState,
   after: GameState,

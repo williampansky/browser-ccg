@@ -3,8 +3,10 @@ import styles from './hero-bust.module.scss';
 import cx from '../../utils/cx';
 
 /**
- * PROTOTYPE hero display ("option 1"): an arched portrait window that rises above a base plate, so the head stands out from the
- * bar. Health and armor are gems at the plate's corners. Not used by /play yet; see pages/hero-lab.tsx.
+ * PROTOTYPE hero display ("option 1"): an arched portrait window that rises
+ * above a base plate, so the head stands out from the
+ * bar. Health and armor are gems at the plate's corners. Not used by /play yet;
+ * see pages/hero-lab.tsx.
  */
 export const HeroBust = ({
   heroId,

@@ -3,7 +3,10 @@ import { useEffect, useState } from 'react';
 import { PLAY_LAYOUT } from '../play-board/layout-css';
 import { NUMS, one, row, wide } from './lab-model';
 
-/** What the board uses when a knob has no override: measured from the DOM, so an untouched slider sits at the real default. */
+/**
+ * What the board uses when a knob has no override: measured from the DOM, so an
+ * untouched slider sits at the real default.
+ */
 export const useMeasuredDefaults = (query: ParsedUrlQuery) => {
   const [defaults, setDefaults] = useState<Record<string, number>>({});
   useEffect(() => {
@@ -28,7 +31,9 @@ export const useMeasuredDefaults = (query: ParsedUrlQuery) => {
   return defaults;
 };
 
-/** The slider rows for these knob keys (a number box, a reset link and a range). */
+/**
+ * The slider rows for these knob keys (a number box, a reset link and a range).
+ */
 export const LabSliders = ({
   keys,
   q,
@@ -43,7 +48,8 @@ export const LabSliders = ({
   <>
     {NUMS.filter((n) => keys.includes(n.key)).map((n) => {
       const own = one(q[n.key]);
-      // With no override the board uses /play's saved value (PLAY_LAYOUT) when there is one, so show that.
+      // With no override the board uses /play's saved value (PLAY_LAYOUT) when
+      // there is one, so show that.
       const raw = own || PLAY_LAYOUT[n.key] || '';
       return (
         <label key={n.key} style={row}>

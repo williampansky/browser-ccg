@@ -9,8 +9,10 @@ interface Pop {
 }
 
 /**
- * A number that floats up and fades each time `value` changes: red `-3` for damage, green `+2` for healing. It waits for the
- * hit to land (`IMPACT_MS`) so it appears on contact, not before the attacker arrives. The first render never pops.
+ * A number that floats up and fades each time `value` changes: red `-3` for
+ * damage, green `+2` for healing. It waits for the
+ * hit to land (`IMPACT_MS`) so it appears on contact, not before the attacker
+ * arrives. The first render never pops.
  */
 export const FloatDelta = ({
   value,

@@ -3,7 +3,8 @@ import { isBadPlay } from '../common';
 import { createSeededRng } from '../../rng';
 import { catalog, play, setup } from '../../testing/real-cards';
 
-// The greedy bot used to treat a face-down Mystery as "a card that changes nothing" and never played one.
+// The greedy bot used to treat a face-down Mystery as "a card that changes
+// nothing" and never played one.
 
 describe('greedy bot and Mysteries / Overcharge', () => {
   it('plays a Mystery it can afford instead of passing', () => {

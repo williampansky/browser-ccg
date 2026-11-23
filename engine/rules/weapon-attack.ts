@@ -8,9 +8,12 @@ import { mysteryBeforeAttack } from './mystery';
 import { isLegalTarget, legalTargets } from './targeting';
 
 /**
- * The active hero attacks with its weapon (RULES Q9). One attack per turn, 1 durability each.
- * Against a hero: damage only. Against a minion: the hero takes the minion's attack as
- * counter-damage and the minion takes the weapon's attack, at the same time. Guard applies (Q10).
+ * The active hero attacks with its weapon (RULES Q9). One attack per turn, 1
+ * durability each.
+ * Against a hero: damage only. Against a minion: the hero takes the minion's
+ * attack as
+ * counter-damage and the minion takes the weapon's attack, at the same time.
+ * Guard applies (Q10).
  * Deaths and triggers are settled by the caller.
  */
 export const weaponAttack = (
@@ -34,7 +37,8 @@ export const weaponAttack = (
     const p = g.players[me];
     const w = p.weapon!;
     p.weaponAttacksThisTurn += 1;
-    // The defender's Mystery may react first and redirect the attack (hero attacks have no attacker minion).
+    // The defender's Mystery may react first and redirect the attack (hero
+    // attacks have no attacker minion).
     const target = ctx
       ? mysteryBeforeAttack(g, ctx, events, {
           attackerPlayer: me,

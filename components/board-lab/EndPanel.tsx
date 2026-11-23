@@ -18,7 +18,10 @@ const TUNING_KEYS = [
   ...END_KNOBS.map((k) => k.key),
 ];
 
-/** Hands the URL's confetti settings to the board (the page runs it always, like the sound tuning). */
+/**
+ * Hands the URL's confetti settings to the board (the page runs it always, like
+ * the sound tuning).
+ */
 export const useEndTuning = (q: ParsedUrlQuery) => {
   const key = TUNING_KEYS.map((k) => one(q[k])).join('|');
   useEffect(() => {
@@ -39,7 +42,10 @@ const btn = (on: boolean) =>
     background: on ? '#3d5afe' : '#232634',
   }) as const;
 
-/** The end-of-game screen: the dark overlay and banner, and the confetti. Fire it again or show the whole screen with the buttons. */
+/**
+ * The end-of-game screen: the dark overlay and banner, and the confetti. Fire
+ * it again or show the whole screen with the buttons.
+ */
 export const EndPanel = ({ q, setParams, sliders }: PanelProps) => {
   return (
     <>

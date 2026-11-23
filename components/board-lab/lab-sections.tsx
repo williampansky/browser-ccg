@@ -8,7 +8,10 @@ import {
 } from '../play-board/layout-css';
 import { one } from './lab-model';
 
-/** The URL params each accordion section owns, for its Copy / Paste config buttons. (Presets has none.) */
+/**
+ * The URL params each accordion section owns, for its Copy / Paste config
+ * buttons. (Presets has none.)
+ */
 const SHADOW_KEYS = ['def', 'rdy', 'sel', 'aim', 'hov'].flatMap((st) =>
   ['y', 'b', 'a'].map((k) => `lsh${st}${k}`),
 );
@@ -279,7 +282,10 @@ export const SECTION_IDS = [
   'shadows',
 ];
 
-/** Which accordion sections are open (default: Presets and Board); remembered in localStorage. */
+/**
+ * Which accordion sections are open (default: Presets and Board); remembered in
+ * localStorage.
+ */
 export const useLabSections = () => {
   const [sections, setSections] = useState<Record<string, boolean>>({
     presets: true,
@@ -314,7 +320,10 @@ export const useLabSections = () => {
   return { sections, setAllSections, toggleSection };
 };
 
-/** What a section's controls hold right now: the URL's values, else /play's saved ones (PLAY_LAYOUT), as `key=value&...`. */
+/**
+ * What a section's controls hold right now: the URL's values, else /play's
+ * saved ones (PLAY_LAYOUT), as `key=value&...`.
+ */
 const sectionConfig = (keys: string[], q: ParsedUrlQuery): string => {
   const u = new URLSearchParams();
   keys.forEach((k) => {
@@ -338,7 +347,10 @@ export const LabSection = ({
   note: string;
   open: boolean;
   onToggle: (id: string, open: boolean) => void;
-  /** The section's keys and the lab's URL state, to show Copy / Paste config buttons */
+  /**
+   * The section's keys and the lab's URL state, to show Copy / Paste config
+   * buttons
+   */
   config?: {
     keys: string[];
     q: ParsedUrlQuery;

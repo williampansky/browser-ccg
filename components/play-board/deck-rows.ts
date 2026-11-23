@@ -17,8 +17,10 @@ const count = (ids: string[]) =>
   );
 
 /**
- * One row per distinct card in a deck, like a third-party Hearthstone tracker: how many copies the deck
- * started with and how many are still in it. Sorted by cost, then name. A card that is only in the
+ * One row per distinct card in a deck, like a third-party Hearthstone tracker:
+ * how many copies the deck
+ * started with and how many are still in it. Sorted by cost, then name. A card
+ * that is only in the
  * deck now (shuffled in mid-game) counts its current copies as its total.
  */
 export const deckRows = (

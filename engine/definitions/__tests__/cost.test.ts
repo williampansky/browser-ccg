@@ -12,7 +12,8 @@ import {
 import { setEnergy } from '../../testing/builders';
 import type { GameState } from '../../state/types';
 
-// Cost changes: effectiveCost is what the engine charges, what legalActions allows, and what the UI shows.
+// Cost changes: effectiveCost is what the engine charges, what legalActions
+// allows, and what the UI shows.
 
 const cost = (s: GameState, id: string) =>
   effectiveCost(s, '0', realCard(id), catalog);

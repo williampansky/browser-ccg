@@ -49,7 +49,10 @@ const SKILL_STATES = [
   ['off', 'Disabled (no energy)'],
 ] as const;
 
-/** The hero's real skill n (name, cost, text from the data) in a chosen state; heroes without skill code get placeholders. */
+/**
+ * The hero's real skill n (name, cost, text from the data) in a chosen state;
+ * heroes without skill code get placeholders.
+ */
 const skillFrom = (state: string, n: number, heroId: string): FigureSkill => {
   const real = getHero(heroId)?.skills[n - 1];
   return {
@@ -64,7 +67,10 @@ const skillFrom = (state: string, n: number, heroId: string): FigureSkill => {
   };
 };
 
-/** Prototype weapon art for the standing figure, keyed by card id (attack / durability from data/core.json). */
+/**
+ * Prototype weapon art for the standing figure, keyed by card id (attack /
+ * durability from data/core.json).
+ */
 const WEAPONS: Record<
   string,
   { image: string; attack: number; durability: number }
@@ -101,7 +107,10 @@ type ColourKey =
   | 'hpLow'
   | 'hitColour'
   | 'healColour';
-/** The ring tab's number knobs. Each lives in the URL as `r_<field>` so a setup can be copied. */
+/**
+ * The ring tab's number knobs. Each lives in the URL as `r_<field>` so a setup
+ * can be copied.
+ */
 const RING_KNOBS: {
   field: NumKey;
   label: string;
@@ -321,7 +330,10 @@ const HEROES = [
   ['WILDCALLER', 'Wildcaller'],
 ];
 
-/** PROTOTYPE page: the "bust" hero display with the real hero art (dev only, not linked). */
+/**
+ * PROTOTYPE page: the "bust" hero display with the real hero art (dev only, not
+ * linked).
+ */
 const HeroLab = () => {
   const [health, setHealth] = useState(30);
   const [armor, setArmor] = useState(0);
@@ -331,11 +343,11 @@ const HeroLab = () => {
   const [skillStates, setSkillStates] = useState(['ready', 'cd3', 'spent']);
   const router = useRouter();
 
-  // The tab lives in ?tab= so a refresh (or a shared link) keeps it.
+  /** The tab lives in ?tab= so a refresh (or a shared link) keeps it. */
   const param = router.query.tab;
   const tab = TABS.find((t) => t.id === param)?.id ?? 'bust';
 
-  // ?hero=ZEUS shows just that hero, centred, to focus on tweaking.
+  /** ?hero=ZEUS shows just that hero, centred, to focus on tweaking. */
   const focus = HEROES.find(([id]) => id === router.query.hero)?.[0] ?? '';
 
   const setFocus = (id: string) => {
@@ -347,7 +359,9 @@ const HeroLab = () => {
     );
   };
 
-  // The ring tab's settings come from the URL (`r_<field>`), over the defaults.
+  /**
+   * The ring tab's settings come from the URL (`r_<field>`), over the defaults.
+   */
   const q1 = (k: string) =>
     (Array.isArray(router.query[k])
       ? router.query[k]?.[0]

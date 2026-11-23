@@ -3,7 +3,8 @@ import { damage, draw } from '../../effects/primitives';
 import { chosenTarget } from '../../effects/selectors';
 import { anyCharacter } from '../../effects/filters';
 
-// CORE_051 Nature's Wrath, spell, "Select One: Deal 5 damage or 2 and draw a card"
+// CORE_051 Nature's Wrath, spell, "Select One: Deal 5 damage or 2 and draw a
+// card"
 // (hsclone never drew the card; the printed text wins)
 export default defineCard('CORE_051', (n) => ({
   choices: [

@@ -3,7 +3,10 @@ import { reducedMotion } from './motion';
 
 export interface SpriteSheet {
   src: string;
-  /** Frames across and down, and the size of one frame in px. Frames read left to right, then top to bottom. */
+  /**
+   * Frames across and down, and the size of one frame in px. Frames read left
+   * to right, then top to bottom.
+   */
   cols: number;
   rows: number;
   frame: number;
@@ -18,8 +21,10 @@ export const LIGHT_PILLAR: SpriteSheet = {
 };
 
 /**
- * Plays a sprite sheet over its (position: relative) parent: one frame at a time at `fps`. `loop` repeats it; otherwise it
- * plays once and calls `onDone`. `size` is the drawn width in px (frames are square), centred on the parent.
+ * Plays a sprite sheet over its (position: relative) parent: one frame at a
+ * time at `fps`. `loop` repeats it; otherwise it
+ * plays once and calls `onDone`. `size` is the drawn width in px (frames are
+ * square), centred on the parent.
  */
 export const SpriteEffect = ({
   sheet = LIGHT_PILLAR,

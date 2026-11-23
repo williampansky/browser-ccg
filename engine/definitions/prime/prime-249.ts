@@ -2,7 +2,8 @@ import { defineCard, on } from '../define-card';
 import { destroy } from '../../effects/primitives';
 import { randomEnemyMinions } from '../../effects/selectors';
 
-// PRIME_249 Hell Executioner: "Whenever you play a card, destroy a Random enemy minion" (any card from hand, a Mystery included; not itself)
+// PRIME_249 Hell Executioner: "Whenever you play a card, destroy a Random enemy
+// minion" (any card from hand, a Mystery included; not itself)
 export default defineCard('PRIME_249', () => {
   const kill = [destroy(randomEnemyMinions(1))];
   return {

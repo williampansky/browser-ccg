@@ -1,10 +1,15 @@
 /**
- * The crop maths and file naming for `npm run art` (scripts/art/art.node.ts): one square master per card becomes the three files the
- * game reads (`NNN-CARD.jpg`, `NNN-DECK.jpg`, `NNN-MINION.jpg`). Plain functions, so they are unit tested; the script only adds the image work.
+ * The crop maths and file naming for `npm run art` (scripts/art/art.node.ts):
+ * one square master per card becomes the three files the
+ * game reads (`NNN-CARD.jpg`, `NNN-DECK.jpg`, `NNN-MINION.jpg`). Plain
+ * functions, so they are unit tested; the script only adds the image work.
  */
 export type ArtKind = 'card' | 'deck' | 'minion';
 
-/** The sizes the game reads: card 1000 x 1000, deck strip 600 x 75 (8 : 1), board minion 640 x 800 (4 : 5). */
+/**
+ * The sizes the game reads: card 1000 x 1000, deck strip 600 x 75 (8 : 1),
+ * board minion 640 x 800 (4 : 5).
+ */
 export const OUTPUTS: Record<
   ArtKind,
   { width: number; height: number; suffix: string }
@@ -14,7 +19,10 @@ export const OUTPUTS: Record<
   minion: { width: 640, height: 800, suffix: 'MINION' },
 };
 
-/** Where the crop sits: x and y are 0 to 1 across the picture (0.5, 0.4 = centred, a little above the middle), zoom 1 = as wide as it can be. */
+/**
+ * Where the crop sits: x and y are 0 to 1 across the picture (0.5, 0.4 =
+ * centred, a little above the middle), zoom 1 = as wide as it can be.
+ */
 export interface Focus {
   x: number;
   y: number;
@@ -30,8 +38,10 @@ export interface Box {
 }
 
 /**
- * The biggest box with this width : height ratio that fits the picture, made smaller by `zoom` (1 or more), centred on the focus point
- * and pushed back inside the picture if it would hang over an edge. Whole pixels.
+ * The biggest box with this width : height ratio that fits the picture, made
+ * smaller by `zoom` (1 or more), centred on the focus point
+ * and pushed back inside the picture if it would hang over an edge. Whole
+ * pixels.
  */
 export const cropBox = (
   srcW: number,

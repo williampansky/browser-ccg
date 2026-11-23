@@ -6,7 +6,10 @@ type Props = {
   html: string;
 };
 
-/** A page whose body is rendered markdown (`renderMarkdown` in `getStaticProps`). */
+/**
+ * A page whose body is rendered markdown (`renderMarkdown` in
+ * `getStaticProps`).
+ */
 export const MarkdownPage = ({ title, description, html }: Props) => (
   <Layout title={title} description={description}>
     <div className="markdown__page">

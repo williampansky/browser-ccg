@@ -2,7 +2,8 @@ import { defineCard } from '../define-card';
 import { disable, reduceAttack } from '../../effects/primitives';
 import { attackerMinion } from '../../effects/selectors';
 
-// PRIME_127 Faint Slumber, Mystery (Attack): "The next minion to attack you is Disabled and loses 2 Attack" (the attack still happens)
+// PRIME_127 Faint Slumber, Mystery (Attack): "The next minion to attack you is
+// Disabled and loses 2 Attack" (the attack still happens)
 export default defineCard('PRIME_127', () => ({
   mystery: {
     category: 'attack',

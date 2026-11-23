@@ -3,7 +3,8 @@ import { damage, ifDead, summonRandomCard } from '../../effects/primitives';
 import { chosenTarget } from '../../effects/selectors';
 import { anyMinion } from '../../effects/filters';
 
-// PRIME_227 Zap: "Deal 2 damage to a minion; if it dies, summon a Random 4/5/6-cost Undead for you" (the data's Demonic race)
+// PRIME_227 Zap: "Deal 2 damage to a minion; if it dies, summon a Random
+// 4/5/6-cost Undead for you" (the data's Demonic race)
 export default defineCard('PRIME_227', (n) => ({
   target: anyMinion(),
   onPlay: [

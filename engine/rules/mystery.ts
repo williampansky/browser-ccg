@@ -9,9 +9,12 @@ import type { GameEvent, GameState, PlayerId } from '../state/types';
 type Reaction = Pick<MysteryCheck, 'event' | 'attack' | 'cast'>;
 
 /**
- * Lets `owner`'s Mystery react, if it matches `kind` and its condition holds. A Mystery only reacts on the OPPONENT's turn, and
- * then it is spent (a `MysteryRevealed` event). Effects run as the owner's; `attack` / `cast` in the context can be changed by
- * them to redirect what is about to happen. Returns whether it fired. Call inside `produce`.
+ * Lets `owner`'s Mystery react, if it matches `kind` and its condition holds. A
+ * Mystery only reacts on the OPPONENT's turn, and
+ * then it is spent (a `MysteryRevealed` event). Effects run as the owner's;
+ * `attack` / `cast` in the context can be changed by
+ * them to redirect what is about to happen. Returns whether it fired. Call
+ * inside `produce`.
  */
 const react = (
   g: Draft<GameState>,
@@ -56,7 +59,10 @@ const react = (
   return true;
 };
 
-/** An enemy attack is about to happen: the defender's Mystery may react and redirect it. Returns the (possibly new) target. */
+/**
+ * An enemy attack is about to happen: the defender's Mystery may react and
+ * redirect it. Returns the (possibly new) target.
+ */
 export const mysteryBeforeAttack = (
   g: Draft<GameState>,
   ctx: EngineContext,
@@ -77,7 +83,10 @@ export const mysteryBeforeAttack = (
   return info.target;
 };
 
-/** A spell is about to resolve: the caster's opponent's Mystery may react and redirect it. Returns the (possibly new) target. */
+/**
+ * A spell is about to resolve: the caster's opponent's Mystery may react and
+ * redirect it. Returns the (possibly new) target.
+ */
 export const mysteryBeforeSpell = (
   g: Draft<GameState>,
   ctx: EngineContext,
@@ -98,7 +107,10 @@ export const mysteryBeforeSpell = (
   return info.target;
 };
 
-/** After an event: every Mystery waiting on that event type may react (called by `settle`). */
+/**
+ * After an event: every Mystery waiting on that event type may react (called by
+ * `settle`).
+ */
 export const mysteriesOnEvent = (
   g: Draft<GameState>,
   ctx: EngineContext,

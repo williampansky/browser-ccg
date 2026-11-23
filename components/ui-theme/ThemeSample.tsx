@@ -11,8 +11,11 @@ import {
 } from '../ui';
 
 /**
- * A miniature of the menu built only from the shared controls (`components/ui/`), so it looks however the theme in force says. The theme lab
- * shows one per theme (each in its own `data-ui-theme` box). Add every new shared control here so a theme can be judged on all of them.
+ * A miniature of the menu built only from the shared controls
+ * (`components/ui/`), so it looks however the theme in force says. The theme
+ * lab
+ * shows one per theme (each in its own `data-ui-theme` box). Add every new
+ * shared control here so a theme can be judged on all of them.
  */
 export const ThemeSample = ({ title }: { title: string }) => {
   const [sound, setSound] = useState(true);

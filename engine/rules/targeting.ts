@@ -35,9 +35,12 @@ const visibleCharacters = (state: GameState): TargetRef[] => {
 };
 
 /**
- * The one place that decides what may be targeted. The UI uses it to highlight, and `applyAction`
- * uses it to validate. Attacks (minion or weapon): enemy characters, narrowed to Guard minions while any is present
- * (RULES Q10: Guard restricts attacks only). Cards: whatever the card's own filter allows.
+ * The one place that decides what may be targeted. The UI uses it to highlight,
+ * and `applyAction`
+ * uses it to validate. Attacks (minion or weapon): enemy characters, narrowed
+ * to Guard minions while any is present
+ * (RULES Q10: Guard restricts attacks only). Cards: whatever the card's own
+ * filter allows.
  */
 export const legalTargets = (
   state: GameState,
@@ -75,7 +78,8 @@ export const legalTargets = (
     ? def.choices[source.choice ?? -1]?.target
     : def?.target;
   if (!filter) return [];
-  // "Can't be targeted by spells or items": hidden from a spell or item's aim, never from an On Play effect or an attack.
+  // "Can't be targeted by spells or items": hidden from a spell or item's aim,
+  // never from an On Play effect or an attack.
   const aimedBySpell = card?.type === 'spell' || card?.type === 'item';
   const untargetable = (t: TargetRef): boolean => {
     if (!aimedBySpell || t.kind !== 'minion' || !catalog) return false;

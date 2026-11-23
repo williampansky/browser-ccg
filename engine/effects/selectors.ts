@@ -15,11 +15,17 @@ export const allMinions = (): Selector => (ctx) =>
     })),
   );
 
-/** The minion this effect belongs to (an On Play effect's own minion, or a trigger's owner minion). */
+/**
+ * The minion this effect belongs to (an On Play effect's own minion, or a
+ * trigger's owner minion).
+ */
 export const self = (): Selector => (ctx) =>
   ctx.self !== undefined ? [{ kind: 'minion', instanceId: ctx.self }] : [];
 
-/** Who the triggering event was aimed at (an attack's victim, a heal's recipient). */
+/**
+ * Who the triggering event was aimed at (an attack's victim, a heal's
+ * recipient).
+ */
 export const eventTarget = (): Selector => (ctx) => {
   const e = ctx.event;
   return e && (e.type === 'MinionAttacked' || e.type === 'Healed')
@@ -38,8 +44,10 @@ export const allEnemyMinions = (): Selector => (ctx) =>
   }));
 
 /**
- * Up to `count` distinct enemies (minions and the hero), chosen at random. If there are fewer
- * enemies than `count`, all of them. Picks are made up front, so damage lands at the same time.
+ * Up to `count` distinct enemies (minions and the hero), chosen at random. If
+ * there are fewer
+ * enemies than `count`, all of them. Picks are made up front, so damage lands
+ * at the same time.
  */
 export const randomEnemies =
   (count: number): Selector =>
@@ -80,7 +88,10 @@ export const allFriendlies = (): Selector => (ctx) => [
   ...friendlyMinions()(ctx),
 ];
 
-/** The enemy hero and all enemy minions (hidden ones too: area effects still hit them, RULES Q19). */
+/**
+ * The enemy hero and all enemy minions (hidden ones too: area effects still hit
+ * them, RULES Q19).
+ */
 export const allEnemies = (): Selector => (ctx) => [
   ...enemyHero()(ctx),
   ...allEnemyMinions()(ctx),
@@ -128,7 +139,10 @@ const isHidden = (ctx: Parameters<Selector>[0], id: number): boolean =>
   !!ctx.g.players[opponentOf(ctx.caster)].board.find((m) => m.instanceId === id)
     ?.keywords.hidden;
 
-/** Up to `count` distinct minions of the caster's, at random. `where` narrows who can be picked (the minion this effect belongs to is allowed). */
+/**
+ * Up to `count` distinct minions of the caster's, at random. `where` narrows
+ * who can be picked (the minion this effect belongs to is allowed).
+ */
 export const randomFriendlyMinions =
   (
     count: number,
@@ -144,7 +158,9 @@ export const randomFriendlyMinions =
       .slice(0, count)
       .map(minionRef);
 
-/** The minions standing next to the one this effect belongs to, on its own side. */
+/**
+ * The minions standing next to the one this effect belongs to, on its own side.
+ */
 export const adjacentToSelf = (): Selector => (ctx) => {
   const board = ctx.g.players[ctx.caster].board;
   const i = board.findIndex((m) => m.instanceId === ctx.self);
@@ -159,7 +175,10 @@ export const attackerMinion = (): Selector => (ctx) =>
     ? [{ kind: 'minion', instanceId: ctx.attack.attackerId }]
     : [];
 
-/** The minion an event is about (a played minion, a damaged one), while a Mystery or trigger reacts to it. */
+/**
+ * The minion an event is about (a played minion, a damaged one), while a
+ * Mystery or trigger reacts to it.
+ */
 export const eventMinion = (): Selector => (ctx) => {
   const e = ctx.event;
   return e &&
@@ -191,7 +210,9 @@ export const friendlyOfRace =
       .filter((m) => ctx.catalog.get(m.cardId)?.race === race)
       .map(minionRef);
 
-/** The minion most recently summoned for the caster (use right after a summon). */
+/**
+ * The minion most recently summoned for the caster (use right after a summon).
+ */
 export const lastSummoned = (): Selector => (ctx) => {
   for (let i = ctx.events.length - 1; i >= 0; i--) {
     const e = ctx.events[i];
@@ -201,7 +222,10 @@ export const lastSummoned = (): Selector => (ctx) => {
   return [];
 };
 
-/** The caster's most damaged minion (the most missing Health; none if nothing is damaged). */
+/**
+ * The caster's most damaged minion (the most missing Health; none if nothing is
+ * damaged).
+ */
 export const mostDamagedFriendly = (): Selector => (ctx) => {
   const hurt = ctx.g.players[ctx.caster].board.filter(
     (m) => m.health < m.maxHealth,

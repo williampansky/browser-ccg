@@ -3,7 +3,8 @@ import { buff, grantKeyword, heal } from '../../effects/primitives';
 import { chosenTarget, ownHero } from '../../effects/selectors';
 import { friendlyMinion } from '../../effects/filters';
 
-// PRIME_113 Spring Spell, Select One: "+3 Attack and Rush; or +3 Health, Guard and heal your hero 3" (a friendly minion)
+// PRIME_113 Spring Spell, Select One: "+3 Attack and Rush; or +3 Health, Guard
+// and heal your hero 3" (a friendly minion)
 export default defineCard('PRIME_113', (n) => ({
   choices: [
     {

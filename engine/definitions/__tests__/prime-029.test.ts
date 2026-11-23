@@ -3,7 +3,8 @@ import { effectiveCost } from '../../rules/cost';
 import { catalog, realCard, setup } from '../../testing/real-cards';
 import type { GameState, PlayerId } from '../../state/types';
 
-// PRIME_029: "Costs 1 less per Attack of your weapon" (a 4 cost minion with Guard).
+// PRIME_029: "Costs 1 less per Attack of your weapon" (a 4 cost minion with
+// Guard).
 
 const card = realCard('PRIME_029');
 const armed = (s: GameState, player: PlayerId, attack: number): GameState =>

@@ -5,13 +5,18 @@ import { blankCard } from './blank-card';
 import { CardFace } from './CardFace';
 import styles from './play-board.module.scss';
 
-/** One thing to pick: the card it is (drawn in full; a stand-in blank card when there is none), and a caption under it. */
+/**
+ * One thing to pick: the card it is (drawn in full; a stand-in blank card when
+ * there is none), and a caption under it.
+ */
 export interface ChooseOption {
   /** The option's own card, if it has one */
   card?: Card;
   /** The name shown on the stand-in blank card when `card` is missing */
   label: string;
-  /** Under the card: what picking it does ("with Guard", the option's text, ...) */
+  /**
+   * Under the card: what picking it does ("with Guard", the option's text, ...)
+   */
   caption?: string;
 }
 
@@ -19,8 +24,10 @@ export interface ChooseOption {
 export const CHOOSE_CARD_WIDTH = 190;
 
 /**
- * The pick dialog: "choose one" cards, Surveying Drone and the Cleric's Resurrect. Each option is the real card, framed like one in hand, with a
- * caption under it. The look (card size, gap, backdrop, hover, caption) is the board lab's "Choose dialog" section, through `--choose-*` variables.
+ * The pick dialog: "choose one" cards, Surveying Drone and the Cleric's
+ * Resurrect. Each option is the real card, framed like one in hand, with a
+ * caption under it. The look (card size, gap, backdrop, hover, caption) is the
+ * board lab's "Choose dialog" section, through `--choose-*` variables.
  * Clicking the backdrop or Cancel closes it.
  */
 export const ChooseModal = ({

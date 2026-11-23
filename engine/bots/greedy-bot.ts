@@ -13,11 +13,20 @@ import type {
 } from '../state/types';
 import { isBadPlay } from './common';
 
-/** The numbers the bot's judgement is built from. Tuned with `npm run sim` (see `engine/sim/`). */
+/**
+ * The numbers the bot's judgement is built from. Tuned with `npm run sim` (see
+ * `engine/sim/`).
+ */
 export interface GreedyWeights {
-  /** What one card in hand is worth, in "stat points" (a minion's attack + health, roughly) */
+  /**
+   * What one card in hand is worth, in "stat points" (a minion's attack +
+   * health, roughly)
+   */
   card: number;
-  /** Value of each of the first 8 health points (including armor), then of points 9 to 15, then above 15 */
+  /**
+   * Value of each of the first 8 health points (including armor), then of
+   * points 9 to 15, then above 15
+   */
   lifeLow: number;
   lifeMid: number;
   lifeHigh: number;
@@ -25,7 +34,10 @@ export interface GreedyWeights {
   bubble: number;
   /** Per unit of weapon attack times durability */
   weapon: number;
-  /** A face-down Mystery waiting to fire (more than the card in hand it came from, which is worth `card`) */
+  /**
+   * A face-down Mystery waiting to fire (more than the card in hand it came
+   * from, which is worth `card`)
+   */
   mystery: number;
   /** Each energy locked by Overcharge next turn */
   overcharge: number;
@@ -43,7 +55,10 @@ export const DEFAULT_WEIGHTS: GreedyWeights = {
   overcharge: 1.5,
 };
 
-/** An action must beat standing still by this much, or the bot ends its turn instead. */
+/**
+ * An action must beat standing still by this much, or the bot ends its turn
+ * instead.
+ */
 const MIN_GAIN = 0.01;
 
 const lifeValue = (hp: number, w: GreedyWeights): number => {
@@ -79,7 +94,10 @@ const sideValue = (p: PlayerState, w: GreedyWeights): number => {
 
 const WIN = 1e6;
 
-/** How good `state` looks for `me`: their side's value minus the opponent's. Winning or losing outweighs everything. */
+/**
+ * How good `state` looks for `me`: their side's value minus the opponent's.
+ * Winning or losing outweighs everything.
+ */
 export const evaluate = (
   state: GameState,
   me: PlayerId,
@@ -92,10 +110,14 @@ export const evaluate = (
 };
 
 /**
- * A one-move lookahead opponent. It tries every legal action on a copy of the game, scores the result with
- * `evaluate`, and picks the best, or ends the turn once nothing improves its position. It skips the same
- * pointless plays as the random bot (`isBadPlay`) and always swings a temporary weapon (it is lost at end of
- * turn). It can not see what the opponent will do next or what is in their hand. Ties are broken with `rng`.
+ * A one-move lookahead opponent. It tries every legal action on a copy of the
+ * game, scores the result with
+ * `evaluate`, and picks the best, or ends the turn once nothing improves its
+ * position. It skips the same
+ * pointless plays as the random bot (`isBadPlay`) and always swings a temporary
+ * weapon (it is lost at end of
+ * turn). It can not see what the opponent will do next or what is in their
+ * hand. Ties are broken with `rng`.
  * Call it repeatedly until it returns `EndTurn`.
  */
 export const chooseGreedyActionWith = (
@@ -107,8 +129,10 @@ export const chooseGreedyActionWith = (
 ): Action => {
   const me = state.activePlayer;
   const actions = legalActions(state, me, catalog, defs);
-  // The bot knows the opponent has a Mystery but not which one, so it plans on a copy without it. Simulating on the real
-  // state would let it see what the Mystery does and avoid exactly the attacks that would trigger it.
+  // The bot knows the opponent has a Mystery but not which one, so it plans on
+  // a copy without it. Simulating on the real
+  // state would let it see what the Mystery does and avoid exactly the attacks
+  // that would trigger it.
   const foe: PlayerId = me === '0' ? '1' : '0';
   const seen: GameState = state.players[foe].mystery
     ? {

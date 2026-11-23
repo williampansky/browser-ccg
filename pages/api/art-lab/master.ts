@@ -15,7 +15,10 @@ const TYPES: Record<string, string> = {
   webp: 'image/webp',
 };
 
-/** Art lab: GET ?id= sends the master picture from art-inbox/; POST ?id=&ext=png with the raw file as the body saves one there. Dev only. */
+/**
+ * Art lab: GET ?id= sends the master picture from art-inbox/; POST ?id=&ext=png
+ * with the raw file as the body saves one there. Dev only.
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,

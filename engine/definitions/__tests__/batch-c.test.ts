@@ -19,7 +19,8 @@ import {
 } from '../../testing/real-cards';
 import type { GameState, PlayerId } from '../../state/types';
 
-// Batch C: spell damage, auras, this-turn boosts, a pre-attack hook, and the played-cards history.
+// Batch C: spell damage, auras, this-turn boosts, a pre-attack hook, and the
+// played-cards history.
 
 const ids = [
   ...[
@@ -49,7 +50,9 @@ describe('Batch C cards are all defined and playable', () => {
   });
 });
 
-/** Gives P0 a Destroy spell (CORE_101) and plays it on one of their own minions. */
+/**
+ * Gives P0 a Destroy spell (CORE_101) and plays it on one of their own minions.
+ */
 const destroyOwn = (s: GameState, boardIndex: number): GameState => {
   const withSpell = produce(s, (g) => {
     g.players['0'].hand.push({ instanceId: 9001, cardId: 'CORE_101' });

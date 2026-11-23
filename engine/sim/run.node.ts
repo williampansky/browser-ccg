@@ -1,7 +1,11 @@
 /**
- * Bot-vs-bot balance report. Usage: `npm run sim -- [gamesPerPair] [bot] [decks]` where bot is `greedy` (default) or `random`, and
- * decks is `core` (default), `prime`, `mixed` (Core + Prime decks) or `all` (every starter deck against every other).
- * Prints a win-rate grid for those starter decks, each deck's overall win rate, then the best and worst cards by win rate when played.
+ * Bot-vs-bot balance report. Usage:
+ * `npm run sim -- [gamesPerPair] [bot] [decks]` where bot is `greedy` (default)
+ * or `random`, and
+ * decks is `core` (default), `prime`, `mixed` (Core + Prime decks) or `all`
+ * (every starter deck against every other).
+ * Prints a win-rate grid for those starter decks, each deck's overall win rate,
+ * then the best and worst cards by win rate when played.
  */
 import { chooseGreedyAction } from '../bots/greedy-bot';
 import { chooseRandomAction } from '../bots/random-bot';

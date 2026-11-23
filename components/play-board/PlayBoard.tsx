@@ -144,7 +144,11 @@ import { playUiSound } from '../ui-theme/ui-sfx';
 import styles from './play-board.module.scss';
 
 let activeGhost: DragGhost | null = null; // the opaque card that follows the pointer during a hand drag
-/** Un-hides the dragged hand card once the ghost has flown back to it (at once when there is no ghost), so the real card and the ghost are never both visible. */
+/**
+ * Un-hides the dragged hand card once the ghost has flown back to it (at once
+ * when there is no ghost), so the real card and the ghost are never both
+ * visible.
+ */
 const clearDraggedHandWhenLanded = (set: (v: null) => void) =>
   activeGhost ? activeGhost.whenDone(() => set(null)) : set(null);
 
@@ -173,22 +177,37 @@ const heroText = (s: GameState, p: PlayerId) => {
   const hero = getHero(s.players[p].hero?.id);
   return hero ? ` as ${hero.name}` : '';
 };
-/** A deck's own name for the deck panel's heading; undefined for an unnamed deck (the generated "a random deck" names read as sentence text, not a title). */
+/**
+ * A deck's own name for the deck panel's heading; undefined for an unnamed deck
+ * (the generated "a random deck" names read as sentence text, not a title).
+ */
 const namedDeck = (name?: string) =>
   name && !/^an? random /i.test(name) && name !== 'Unnamed' ? name : undefined;
-/** A card only if its Airtable row is active; an inactive one is treated as missing (the choose dialog then shows a blank card). */
+/**
+ * A card only if its Airtable row is active; an inactive one is treated as
+ * missing (the choose dialog then shows a blank card).
+ */
 const activeCard = (c?: Card): Card | undefined => (c?.active ? c : undefined);
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
-/** What a player is called on the board: your own name for Player 1, "Player 2" (and "(AI)" against the bot) for the other seat. */
+/**
+ * What a player is called on the board: your own name for Player 1, "Player 2"
+ * (and "(AI)" against the bot) for the other seat.
+ */
 const playerLabel = (p: PlayerId, mode: Mode, myName: string) =>
   p === '0'
     ? myName
     : `Player 2${mode === 'ai' && p === AI_PLAYER ? ' (AI)' : ''}`;
-/** The art of a card (`artBackground`: art, then `fallbackId`'s art, then PLACEHOLDER.jpg when a file is missing). */
+/**
+ * The art of a card (`artBackground`: art, then `fallbackId`'s art, then
+ * PLACEHOLDER.jpg when a file is missing).
+ */
 const artStyle = (id?: string, fallbackId?: string): React.CSSProperties => ({
   backgroundImage: artBackground(id, fallbackId),
 });
-/** An invisible 1px drag image: the aim arrow shows an attack, so no ghost of the attacker needs to cover the targets. */
+/**
+ * An invisible 1px drag image: the aim arrow shows an attack, so no ghost of
+ * the attacker needs to cover the targets.
+ */
 const blankDragImage = (() => {
   if (typeof Image === 'undefined') return null;
   const img = new Image();
@@ -196,10 +215,16 @@ const blankDragImage = (() => {
     'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
   return img;
 })();
-/** While a drag is active the body carries this class, which hides the hover popups (see play-board.module.scss). */
+/**
+ * While a drag is active the body carries this class, which hides the hover
+ * popups (see play-board.module.scss).
+ */
 const setDragging = (on: boolean) =>
   document.body.classList.toggle('dragging', on);
-/** Card type -> accent colour class (minion blue, spell purple, weapon orange, item teal). */
+/**
+ * Card type -> accent colour class (minion blue, spell purple, weapon orange,
+ * item teal).
+ */
 const typeClass = (type?: string) =>
   type ? (styles[`type_${type}`] ?? '') : '';
 const targetKey = (t: TargetRef) =>
@@ -213,7 +238,10 @@ const sameTarget = (a: TargetRef, b: TargetRef) =>
     ? b.kind === 'hero' && a.player === b.player
     : b.kind === 'minion' && a.instanceId === b.instanceId;
 
-/** Renders log markup: `**Player 1**` (coloured by side) and `__Card__` (bold italic). */
+/**
+ * Renders log markup: `**Player 1**` (coloured by side) and `__Card__` (bold
+ * italic).
+ */
 const plain = (text?: string) =>
   (text ?? '')
     .replace(/<[^>]*>/g, ' ')
@@ -229,7 +257,10 @@ const tipByName = new Map(
     }: ${plain(c.text)}`,
   ]),
 );
-/** Hero skills by name, as cards: so the log can show their tooltip and open their big view like any card's. */
+/**
+ * Hero skills by name, as cards: so the log can show their tooltip and open
+ * their big view like any card's.
+ */
 const skillCardByName = new Map(
   heroes().flatMap((h) =>
     h.skills.map((s) => [s.name, skillCard(h.id, s)] as const),
@@ -241,8 +272,14 @@ skillCardByName.forEach((c, name) =>
 /** A card (or hero skill) by the name the log prints. */
 const logCardByName = (name: string): Card | undefined =>
   cards.find((c) => c.name === name) ?? skillCardByName.get(name);
-/** Instant tooltip (fixed-position, so scrolling panels can't clip it). `side` is which way it opens from the element. */
-/** How long the pointer must rest on a board minion before its tooltip shows (ms). */
+/**
+ * Instant tooltip (fixed-position, so scrolling panels can't clip it). `side`
+ * is which way it opens from the element.
+ */
+/**
+ * How long the pointer must rest on a board minion before its tooltip shows
+ * (ms).
+ */
 const MINION_TIP_DELAY_MS = 800;
 const useTip = (
   tip: string | undefined,
@@ -274,8 +311,12 @@ const useTip = (
       setPos(null);
     },
   };
-  // Rendered into <body>: inside a minion (which is scaled while selected and thrown while attacking) a fixed element
-  // is positioned against that transform, not the window, and the tip landed far away (playtest 2026-11-13).
+  /**
+   * Rendered into <body>: inside a minion (which is scaled while selected and
+   * thrown while attacking) a fixed element
+   * is positioned against that transform, not the window, and the tip landed
+   * far away (playtest 2026-11-13).
+   */
   const node =
     pos && tip && !quiet && typeof document !== 'undefined'
       ? createPortal(
@@ -295,11 +336,20 @@ const useTip = (
       : null;
   return { handlers, node };
 };
-/** Width of a card in hand at full size (the hand shrinks them together when it gets crowded). */
+/**
+ * Width of a card in hand at full size (the hand shrinks them together when it
+ * gets crowded).
+ */
 const HAND_CARD_WIDTH = 144;
-/** How many px of the tops of the cards in hand stay visible above the bottom edge of the window. */
+/**
+ * How many px of the tops of the cards in hand stay visible above the bottom
+ * edge of the window.
+ */
 const HAND_PEEK = 110;
-/** A card name in the log: hover for its text; right-click (or a click, if the player chose that) for the collection's big view. */
+/**
+ * A card name in the log: hover for its text; right-click (or a click, if the
+ * player chose that) for the collection's big view.
+ */
 const LogCard = ({
   name,
   onInspect,
@@ -337,9 +387,15 @@ interface Ghost {
   /** ms to wait before dying: an attack's killing blow has to land first */
   delay: number;
 }
-/** How long a death plays before the slot is gone (see `minionDie` in board-minion.module.scss). */
+/**
+ * How long a death plays before the slot is gone (see `minionDie` in
+ * board-minion.module.scss).
+ */
 const DEATH_MS = 750;
-/** The row of minions with this owner's ghosts put back at the places their minions died. */
+/**
+ * The row of minions with this owner's ghosts put back at the places their
+ * minions died.
+ */
 const withGhosts = (
   nodes: React.ReactNode[],
   ghosts: Ghost[],
@@ -355,7 +411,9 @@ const withGhosts = (
     );
   return out;
 };
-/** A board minion: hovering shows its printed card next to its current stats. */
+/**
+ * A board minion: hovering shows its printed card next to its current stats.
+ */
 const MinionTip = ({
   card,
   m,
@@ -428,7 +486,10 @@ const renderLogLine = (
 
 const SIDE_SPLIT_KEY = 'ccg.sideSplit.v1';
 
-/** How long the hover look stays after the pointer leaves a hover slot (ms), so crossing the gap to the next slot does not flicker. */
+/**
+ * How long the hover look stays after the pointer leaves a hover slot (ms), so
+ * crossing the gap to the next slot does not flicker.
+ */
 const HOVER_RELEASE_MS = 70;
 
 const targetOf = (a: Action): TargetRef | undefined =>
@@ -440,11 +501,16 @@ const targetOf = (a: Action): TargetRef | undefined =>
     : undefined;
 
 /**
- * Debug URL params for /play (read on every new game): `?first=0|1` picks who goes first (Player 1 = 0),
- * `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand (in hand order),
- * `?b0=CORE_027,...` and `?b1=...` put ready minions on that player's board, `?w0=CORE_076` and `?w1=...` equip a weapon,
- * `?hn0=9` and `?hn1=...` deal that player exactly that many cards (0-10, the rest come from or go back to the deck),
- * `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10), `?h0=ZEUS` and `?h1=...` pick a hero (or `none`).
+ * Debug URL params for /play (read on every new game): `?first=0|1` picks who
+ * goes first (Player 1 = 0),
+ * `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's
+ * opening hand (in hand order),
+ * `?b0=CORE_027,...` and `?b1=...` put ready minions on that player's board,
+ * `?w0=CORE_076` and `?w1=...` equip a weapon,
+ * `?hn0=9` and `?hn1=...` deal that player exactly that many cards (0-10, the
+ * rest come from or go back to the deck),
+ * `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10),
+ * `?h0=ZEUS` and `?h1=...` pick a hero (or `none`).
  */
 const debugParams = (): {
   first?: PlayerId;
@@ -498,7 +564,10 @@ const newGame = (
   const choices = loadChoices();
   const saved = loadDecks(byId);
   const p0 = resolveDeck(choices['0'], pool, saved, rng, prime);
-  // The AI never plays a saved deck: it gets a starter deck (or a random one if there is none to pick).
+  /**
+   * The AI never plays a saved deck: it gets a starter deck (or a random one if
+   * there is none to pick).
+   */
   const p1 = resolveDeck(
     vsAi ? aiDeckChoice(choices['1']) : choices['1'],
     pool,
@@ -510,7 +579,8 @@ const newGame = (
   const dbg = debugParams();
   const heroChoices = loadHeroChoices();
   const heroKeys = {
-    // A saved deck with its own hero brings it along; otherwise the picker's hero is used.
+    // A saved deck with its own hero brings it along; otherwise the picker's
+    // hero is used.
     '0': resolveHero(dbg.heroes['0'] ?? p0.hero ?? heroChoices['0'], rng),
     '1': resolveHero(dbg.heroes['1'] ?? p1.hero ?? heroChoices['1'], rng),
   };
@@ -530,14 +600,18 @@ const newGame = (
       const me = g.players[p];
       dbg.hands[p].forEach((cardId, i) => {
         if (i >= me.hand.length) return;
-        // Swap with a copy still in the deck when there is one (keeps the deck tracker honest); else overwrite the slot.
+        /**
+         * Swap with a copy still in the deck when there is one (keeps the deck
+         * tracker honest); else overwrite the slot.
+         */
         const inDeck = me.deck.findIndex((c) => c.cardId === cardId);
         if (inDeck >= 0) me.deck[inDeck].cardId = me.hand[i].cardId;
         me.hand[i].cardId = cardId;
       });
     });
   });
-  // `?hn0=` / `?hn1=`: a hand of exactly that many cards, taken from the top of the deck or put back on it.
+  // `?hn0=` / `?hn1=`: a hand of exactly that many cards, taken from the top of
+  // the deck or put back on it.
   state = produce(state, (g) => {
     (['0', '1'] as PlayerId[]).forEach((p) => {
       const want = dbg.handSize[p];
@@ -558,9 +632,13 @@ const newGame = (
   };
 };
 
-/** Hot-seat board: the active player is always at the bottom, the other player's hand is hidden. */
 /**
- * Layout-lab mode (the /board-lab page): no AI and no turn clock, a fixed seed (so decks and hands are the same every game), and the
+ * Hot-seat board: the active player is always at the bottom, the other player's
+ * hand is hidden.
+ */
+/**
+ * Layout-lab mode (the /board-lab page): no AI and no turn clock, a fixed seed
+ * (so decks and hands are the same every game), and the
  * boards and energy follow these props live instead of restarting the game.
  */
 export interface LabProps {
@@ -568,19 +646,37 @@ export interface LabProps {
   energy: Record<PlayerId, number | undefined>;
   /** Whose turn it is (the toggle in the lab); unset leaves the game's own */
   active?: PlayerId;
-  /** Replay the cast popup (a sample spell) on a loop so its overlay knobs can be tuned: whose cast it looks like */
+  /**
+   * Replay the cast popup (a sample spell) on a loop so its overlay knobs can
+   * be tuned: whose cast it looks like
+   */
   castPreview?: PlayerId;
-  /** Hold the end-of-game overlay and banner on the board, as a win or a loss (the confetti fires when it turns on) */
+  /**
+   * Hold the end-of-game overlay and banner on the board, as a win or a loss
+   * (the confetti fires when it turns on)
+   */
   endPreview?: 'win' | 'loss';
   /** How full the timer bar looks (%), since the lab has no turn clock */
   timerPct?: number;
-  /** Make the energy bar blink as if a card were picked: the orbs it would spend, or all of them red (cannot afford) */
-  /** Show the green play overlays without picking a card: the board zone and landing gap (a minion), or the cast area (a spell) */
+  /**
+   * Make the energy bar blink as if a card were picked: the orbs it would
+   * spend, or all of them red (cannot afford)
+   */
+  /**
+   * Show the green play overlays without picking a card: the board zone and
+   * landing gap (a minion), or the cast area (a spell)
+   */
   overlayPreview?: 'minion' | 'minion-hot' | 'spell' | 'spell-hot';
   blinkPreview?: 'spend' | 'red';
-  /** Hold this card of your hand (1 = leftmost) in its hover look, so the hover knobs can be tuned without the pointer */
+  /**
+   * Hold this card of your hand (1 = leftmost) in its hover look, so the hover
+   * knobs can be tuned without the pointer
+   */
   handHover?: number;
-  /** Hold the pick dialog open with a sample "choose one" card, so its knobs (`lcm...`) can be tuned */
+  /**
+   * Hold the pick dialog open with a sample "choose one" card, so its knobs
+   * (`lcm...`) can be tuned
+   */
   choosePreview?: boolean;
 }
 const LAB_SEED = 20261114;
@@ -589,7 +685,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const [state, setState] = useState<GameState | null>(null);
   /** One entry per action, oldest first. */
   const [log, setLog] = useState<string[][]>([]);
-  /** Each player's deck list at the start, for the deck tracker on the right. */
+  /**
+   * Each player's deck list at the start, for the deck tracker on the right.
+   */
   const [startDecks, setStartDecks] = useState<Record<PlayerId, string[]>>({
     '0': [],
     '1': [],
@@ -608,15 +706,24 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const viewerRef = useRef<PlayerId>('0');
   modeRef.current = mode;
   const [menuOpen, setMenuOpen] = useState(false);
-  /** The player's name and colour theme, edited on the /profile page (this browser only for now; see player-profile/profile.ts). */
+  /**
+   * The player's name and colour theme, edited on the /profile page (this
+   * browser only for now; see player-profile/profile.ts).
+   */
   const [profile, setProfileState] = useState<PlayerProfile>(DEFAULT_PROFILE);
   useEffect(() => setProfileState(loadProfile()), []);
-  /** Each side's colour: yours is your theme; the other seat is red (blue if you chose red). */
+  /**
+   * Each side's colour: yours is your theme; the other seat is red (blue if you
+   * chose red).
+   */
   const sideColors = {
     '0': themeOf(profile.theme).color,
     '1': foeTheme(profile.theme).color,
   } as Record<'0' | '1', string>;
-  /** The "New game" deck picker: null when closed, else the choices being edited. */
+  /**
+   * The "New game" deck picker: null when closed, else the choices being
+   * edited.
+   */
   const [picker, setPicker] = useState<Record<PlayerId, DeckChoice> | null>(
     null,
   );
@@ -639,7 +746,11 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const sidebarChoice = useSidebarMode();
   const logCardTrigger = useLogCardTrigger();
   useEffect(() => setA11y(isAccessible()), []);
-  // Each hero is drawn as the Vol 14 figure card (components/play-board/HeroVariants.tsx); ?herofig=0 brings back the old bar.
+  /**
+   * Each hero is drawn as the Vol 14 figure card
+   * (components/play-board/HeroVariants.tsx); ?herofig=0 brings back the old
+   * bar.
+   */
   const [figUi, setFigUi] = useState(true);
   useEffect(
     () =>
@@ -648,10 +759,17 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       ),
     [],
   );
-  // The hero is drawn as the thin ring with orbiting sockets (its look: RING_DEFAULTS, over the `r_<field>` params the hero lab writes); ?herotype=figure brings back the figure card.
+  /**
+   * The hero is drawn as the thin ring with orbiting sockets (its look:
+   * RING_DEFAULTS, over the `r_<field>` params the hero lab writes);
+   * ?herotype=figure brings back the figure card.
+   */
   const [heroType, setHeroType] = useState<'figure' | 'ring'>('ring');
   const [ringTune, setRingTune] = useState(() => parseRingTune(''));
-  // The deck panel's rows (the `-DECK` strip behind each name): DECK_DEFAULTS over the `d_<field>` params the deck lab writes.
+  /**
+   * The deck panel's rows (the `-DECK` strip behind each name): DECK_DEFAULTS
+   * over the `d_<field>` params the deck lab writes.
+   */
   const [deckTune, setDeckTune] = useState(() => parseDeckTune(''));
   useEffect(() => {
     setHeroType(
@@ -662,22 +780,39 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     setRingTune(parseRingTune(window.location.search));
     setDeckTune(parseDeckTune(window.location.search));
   }, []);
-  /** Turn timer: 60 s per turn (15 s with Cronus on a board), on by default; running out ends the turn. Local stand-in for a server clock. */
+  /**
+   * Turn timer: 60 s per turn (15 s with Cronus on a board), on by default;
+   * running out ends the turn. Local stand-in for a server clock.
+   */
   const [timerOn, setTimerOnState] = useState(true);
   useEffect(() => setTimerOnState(isTimerOn()), []);
   const [gameKey, setGameKey] = useState(0);
   const turnStartedAt = useRef(Date.now());
   const [now, setNow] = useState(() => Date.now());
   const rngRef = useRef<Rng | null>(null);
-  // The log shows the newest line at the bottom and stays pinned there unless you scroll up to read older events.
+  /**
+   * The log shows the newest line at the bottom and stays pinned there unless
+   * you scroll up to read older events.
+   */
   const logRef = useRef<HTMLDivElement | null>(null);
   const logPinned = useRef(true);
-  // Targeting line: where the pointer is, which character it is over, and the DOM nodes to draw between.
-  /** The AI's pending targeted action: shown as an arrow first (a card from hand starts at the hero, so it stays hidden). */
-  // Minions that just died stay on the board as ghosts while their death plays, then the row closes up.
+  // Targeting line: where the pointer is, which character it is over, and the
+  // DOM nodes to draw between.
+  /**
+   * The AI's pending targeted action: shown as an arrow first (a card from hand
+   * starts at the hero, so it stays hidden).
+   */
+  /**
+   * Minions that just died stay on the board as ghosts while their death plays,
+   * then the row closes up.
+   */
   const [ghosts, setGhosts] = useState<Ghost[]>([]);
-  // A minion played from your hand: its card flies from the hand to the slot, and the minion's landing waits for it.
-  /** When a freshly played minion has finished landing, so a Stampede attack waits before it lunges. */
+  // A minion played from your hand: its card flies from the hand to the slot,
+  // and the minion's landing waits for it.
+  /**
+   * When a freshly played minion has finished landing, so a Stampede attack
+   * waits before it lunges.
+   */
   const landedAt = useRef(new Map<number, number>());
   const [foeAim, setFoeAim] = useState<{
     action: Action;
@@ -712,8 +847,11 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     setGameKey((k) => k + 1);
   }, []);
 
-  // While something is selected: follow the pointer (for the targeting line), and let Escape or a
-  // right-click cancel the selection.
+  /**
+   * While something is selected: follow the pointer (for the targeting line),
+   * and let Escape or a
+   * right-click cancel the selection.
+   */
   const hasSelection = selection !== null;
   useEffect(() => {
     if (!hasSelection) return;
@@ -747,12 +885,16 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   useKeepTipsInViewport();
   useEffect(preloadSounds, []);
 
-  // Start on the client only: the deck shuffle uses the clock, which would not match server rendering.
+  // Start on the client only: the deck shuffle uses the clock, which would not
+  // match server rendering.
   useEffect(start, [start]);
 
-  // `body.dragging` hides the hover popups during a drag. A dropped card that gets played unmounts its own button, so its
-  // dragend never reaches React; clear the class on any drop/dragend, on the first mouse move after a drag (browsers send
-  // none during a native drag), and whenever the game state changes, so the tooltips can never stay hidden.
+  // `body.dragging` hides the hover popups during a drag. A dropped card that
+  // gets played unmounts its own button, so its
+  // dragend never reaches React; clear the class on any drop/dragend, on the
+  // first mouse move after a drag (browsers send
+  // none during a native drag), and whenever the game state changes, so the
+  // tooltips can never stay hidden.
   useEffect(() => {
     const off = () => setDragging(false);
     window.addEventListener('mousemove', off);
@@ -792,13 +934,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           state.players[state.activePlayer].hand[action.handIndex]?.cardId ??
             '',
         );
-        // Every card played gets the cast popup (minions and weapons too); a Mystery goes face down, so it never does (that would show the card).
+        // Every card played gets the cast popup (minions and weapons too); a
+        // Mystery goes face down, so it never does (that would show the card).
         if (played && !getCardDef(played)?.mystery) {
           setCastFx({ card: played, owner: state.activePlayer, n: Date.now() });
         }
       }
       if (action.type === 'HeroSkill') {
-        // Every hero skill gets the cast popup, like a spell.
+        /** Every hero skill gets the cast popup, like a spell. */
         const heroId = state.players[state.activePlayer].hero?.id;
         const skill = heroSkill(heroId, action.skill);
         if (heroId && skill)
@@ -813,7 +956,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       if (summoned && summoned.type === 'MinionPlayed') {
         landedAt.current.set(summoned.instanceId, Date.now() + 520);
       }
-      // Attacks are thrown at the target; a big hit jolts the table when it lands.
+      // Attacks are thrown at the target; a big hit jolts the table when it
+      // lands.
       if (action.type === 'Attack' || action.type === 'WeaponAttack') {
         const from = nodes.current.get(
           action.type === 'Attack'
@@ -821,7 +965,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             : `h${state.activePlayer}`,
         );
         const to = action.target && nodes.current.get(targetKey(action.target));
-        // A minion that attacks (Stampede) before it has landed would lunge unseen: wait for it to land.
+        /**
+         * A minion that attacks (Stampede) before it has landed would lunge
+         * unseen: wait for it to land.
+         */
         const wait =
           action.type === 'Attack'
             ? Math.max(
@@ -829,8 +976,11 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                 (landedAt.current.get(action.attackerId) ?? 0) - Date.now(),
               )
             : 0;
-        // An attacker that dies in the exchange is replaced by a death ghost on the next render, so the lunge goes to the ghost
-        // (which is already visible, so it does not wait for the landing).
+        /**
+         * An attacker that dies in the exchange is replaced by a death ghost on
+         * the next render, so the lunge goes to the ghost
+         * (which is already visible, so it does not wait for the landing).
+         */
         const attackerDies =
           action.type === 'Attack' &&
           result.events.some(
@@ -887,7 +1037,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         );
       }
       setState(result.state);
-      // Sounds wait for the picture's impact: the strike of an attack.
+      /** Sounds wait for the picture's impact: the strike of an attack. */
       const isAttack =
         action.type === 'Attack' || action.type === 'WeaponAttack';
       playSounds(
@@ -910,7 +1060,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     [state],
   );
 
-  // The viewer is who sits at the bottom: always Player 1 against the AI, the active player in hot-seat.
+  /**
+   * The viewer is who sits at the bottom: always Player 1 against the AI, the
+   * active player in hot-seat.
+   */
   const viewer: PlayerId = !state
     ? '0'
     : mode === 'ai'
@@ -918,9 +1071,16 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       : state.activePlayer;
   viewerRef.current = viewer;
 
-  // The end-of-game confetti, once when a game ends (or when the lab's end screen preview turns on). In hot-seat both seats are at the screen, so it counts as a win.
+  /**
+   * The end-of-game confetti, once when a game ends (or when the lab's end
+   * screen preview turns on). In hot-seat both seats are at the screen, so it
+   * counts as a win.
+   */
   const gameEnded = state?.status === 'over' || !!lab?.endPreview;
-  // Who the end screen says won (the lab's preview picks a side: you, or the opponent).
+  /**
+   * Who the end screen says won (the lab's preview picks a side: you, or the
+   * opponent).
+   */
   const endWinner = lab?.endPreview
     ? lab.endPreview === 'win'
       ? viewer
@@ -943,7 +1103,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     state.status === 'playing' &&
     state.activePlayer === AI_PLAYER;
 
-  // Lab mode: keep the boards and energy in step with the props without touching the hands, decks or heroes.
+  /**
+   * Lab mode: keep the boards and energy in step with the props without
+   * touching the hands, decks or heroes.
+   */
   const labKey = lab
     ? JSON.stringify([lab.boards, lab.energy, lab.active])
     : '';
@@ -970,7 +1133,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [labKey, gameKey]);
 
-  // The clock restarts whenever a turn begins (or a new game). It counts only on a human's turn.
+  /**
+   * The clock restarts whenever a turn begins (or a new game). It counts only
+   * on a human's turn.
+   */
   const timerApplies =
     !lab && timerOn && !!state && state.status === 'playing' && !aiToMove;
   useEffect(() => {
@@ -985,7 +1151,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const turnLimit = state ? turnSeconds(state, byId) : DEFAULT_TURN_SECONDS;
   const clockLeft = secondsLeft(turnStartedAt.current, now, turnLimit);
   const timedOut = timerApplies && clockLeft <= 0;
-  // The timer bar drains every frame from the exact time left (the clock text above counts whole seconds, which made the bar step once a second).
+  /**
+   * The timer bar drains every frame from the exact time left (the clock text
+   * above counts whole seconds, which made the bar step once a second).
+   */
   const timerFillRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (!timerApplies) return;
@@ -1007,7 +1176,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timedOut]);
 
-  // The AI takes one action per tick, so you can follow what it does. A targeted action first shows an aiming arrow.
+  // The AI takes one action per tick, so you can follow what it does. A
+  // targeted action first shows an aiming arrow.
   useEffect(() => {
     if (!aiToMove || !state || !rngRef.current || foeAim) return;
     const rng = rngRef.current;
@@ -1038,7 +1208,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     return () => clearTimeout(timer);
   }, [foeAim, dispatch]);
 
-  // With nothing selected, Escape opens the menu (with a selection it cancels it, handled above).
+  /**
+   * With nothing selected, Escape opens the menu (with a selection it cancels
+   * it, handled above).
+   */
   const selectionRef = useRef<Selection | null>(null);
   selectionRef.current = selection;
   useEffect(() => {
@@ -1053,7 +1226,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const castRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (!castFx) return;
-    // The animation length can be changed in the board lab, so read it from the element (1.6 s by default).
+    /**
+     * The animation length can be changed in the board lab, so read it from the
+     * element (1.6 s by default).
+     */
     const secs = castRef.current
       ? parseFloat(getComputedStyle(castRef.current).animationDuration)
       : NaN;
@@ -1064,7 +1240,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     return () => clearTimeout(timer);
   }, [castFx]);
 
-  // Lab only: keep replaying the cast popup with the first spell in the pool, so it can be tuned without playing one.
+  /**
+   * Lab only: keep replaying the cast popup with the first spell in the pool,
+   * so it can be tuned without playing one.
+   */
   const castPreview = lab?.castPreview;
   useEffect(() => {
     if (castPreview === undefined) return;
@@ -1077,19 +1256,31 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     return () => clearInterval(loop);
   }, [castPreview, byId]);
 
-  // Keep the hand on one row: past what fits, the cards shrink together.
+  /** Keep the hand on one row: past what fits, the cards shrink together. */
   const handRef = useRef<HTMLDivElement | null>(null);
   const [handWidth, setHandWidth] = useState(0);
-  // How far the cards sink below the row so only their tops show; shrinks on short windows so they never vanish offscreen.
+  /**
+   * How far the cards sink below the row so only their tops show; shrinks on
+   * short windows so they never vanish offscreen.
+   */
   const [handSink, setHandSink] = useState(100);
-  // The cast-a-spell area is the board above the player bar: `bottomRef` is that bar's section, `tableRef` the board.
+  /**
+   * The cast-a-spell area is the board above the player bar: `bottomRef` is
+   * that bar's section, `tableRef` the board.
+   */
   const tableRef = useRef<HTMLDivElement | null>(null);
-  /** The board's width, so a full row of seven minions fits (their size follows it). */
+  /**
+   * The board's width, so a full row of seven minions fits (their size follows
+   * it).
+   */
   const [boardWidth, setBoardWidth] = useState(0);
   const bottomRef = useRef<HTMLElement | null>(null);
   const [areaHeight, setAreaHeight] = useState(0);
   const [areaHot, setAreaHot] = useState(false);
-  /** True when a pointer at this height is over the cast area, i.e. on the board and above the player bar. */
+  /**
+   * True when a pointer at this height is over the cast area, i.e. on the board
+   * and above the player bar.
+   */
   const aboveBar = (clientY: number) =>
     !!bottomRef.current &&
     clientY < bottomRef.current.getBoundingClientRect().top;
@@ -1132,13 +1323,23 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     return () => ro.disconnect();
   }, [state]);
 
-  // Space ends the turn (when you can), unless a choice dialog is open.
+  /** Space ends the turn (when you can), unless a choice dialog is open. */
   const [hoverGap, setHoverGap] = useState<number | null>(null);
-  /** A "choose one" card being dragged (it is not selected until dropped, because selecting opens its dialog). */
+  /**
+   * A "choose one" card being dragged (it is not selected until dropped,
+   * because selecting opens its dialog).
+   */
   const [dragIndex, setDragIndex] = useState<number | null>(null);
-  /** The hand card being dragged: hidden in the hand so only the drag image shows. */
+  /**
+   * The hand card being dragged: hidden in the hand so only the drag image
+   * shows.
+   */
   const [draggedHand, setDraggedHand] = useState<number | null>(null);
-  /** The connected sidebar's divider (the board lab's "Connected sidebar" arrangement): the log's share of the column's height, 0.12 to 0.88; null = the layout's own. */
+  /**
+   * The connected sidebar's divider (the board lab's "Connected sidebar"
+   * arrangement): the log's share of the column's height, 0.12 to 0.88; null =
+   * the layout's own.
+   */
   const [sideDrag, setSideDrag] = useState<number | null>(null);
   const sideDragRef = useRef<number | null>(null);
   const logPanel = useRef<HTMLElement | null>(null);
@@ -1156,7 +1357,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     e.preventDefault();
     const el = e.currentTarget;
     el.setPointerCapture(e.pointerId);
-    // The column runs from the top of the log to the bottom of the deck (its height can be set in the board lab), whatever the window is.
+    /**
+     * The column runs from the top of the log to the bottom of the deck (its
+     * height can be set in the board lab), whatever the window is.
+     */
     const top = logPanel.current?.getBoundingClientRect().top ?? 16;
     const bottom =
       deckPanel.current?.getBoundingClientRect().bottom ??
@@ -1186,11 +1390,17 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     setSide(null);
     window.localStorage.removeItem(SIDE_SPLIT_KEY);
   };
-  /** The card whose hover slot the pointer is on (it lifts); let go a moment after the pointer leaves. */
+  /**
+   * The card whose hover slot the pointer is on (it lifts); let go a moment
+   * after the pointer leaves.
+   */
   const [hoverHand, setHoverHand] = useState<number | null>(null);
   const hoverRelease = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Hover pacing: `underHand` is the slot the pointer is on, `hoverRef` mirrors `hoverHand` for the timer, `stepTimer` is the pending next step and
-  // `lastHoverAt` when the hover last changed.
+  /**
+   * Hover pacing: `underHand` is the slot the pointer is on, `hoverRef` mirrors
+   * `hoverHand` for the timer, `stepTimer` is the pending next step and
+   * `lastHoverAt` when the hover last changed.
+   */
   const underHand = useRef<number | null>(null);
   const hoverRef = useRef<number | null>(null);
   const stepTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1238,12 +1448,19 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     else stepTimer.current = setTimeout(step, wait);
   };
   useEffect(() => stopStepping, []);
-  // A card dragged to aim at a target stays in the hand (selected, with the arrow); it must not take a click's enlargement.
+  /**
+   * A card dragged to aim at a target stays in the hand (selected, with the
+   * arrow); it must not take a click's enlargement.
+   */
   const [heldHand, setHeldHand] = useState<number | null>(null);
-  // A dragged card that gets played unmounts its own button (when it was the last one in the hand), so its dragend never
-  // reaches React and `draggedHand` would stay set: the next card drawn into that slot came up invisible (playtest 2026-11-12).
-  // Clear it on any window drop/dragend (the drop event still fires) and whenever the game state changes. `dragIndex` is only
-  // cleared on a state change, never on drop, because the drop handlers still need it.
+  // A dragged card that gets played unmounts its own button (when it was the
+  // last one in the hand), so its dragend never
+  // reaches React and `draggedHand` would stay set: the next card drawn into
+  // that slot came up invisible (playtest 2026-11-12).
+  // Clear it on any window drop/dragend (the drop event still fires) and
+  // whenever the game state changes. `dragIndex` is only
+  // cleared on a state change, never on drop, because the drop handlers still
+  // need it.
   useEffect(() => {
     const clear = () => {
       clearDraggedHandWhenLanded(setDraggedHand);
@@ -1261,7 +1478,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     setHeldHand(null);
     setDragIndex(null);
   }, [state]);
-  /** Where a choose-one card was dropped; picking its option in the dialog then plays it there. */
+  /**
+   * Where a choose-one card was dropped; picking its option in the dialog then
+   * plays it there.
+   */
   const [pendingDrop, setPendingDrop] = useState<{
     boardIndex?: number;
     target?: TargetRef;
@@ -1272,14 +1492,20 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const modalOpenRef = useRef(false);
   const menuOpenRef = useRef(false);
   menuOpenRef.current = menuOpen;
-  // The menu's own sounds (they come from the interface theme and are silent in a theme without any).
+  /**
+   * The menu's own sounds (they come from the interface theme and are silent in
+   * a theme without any).
+   */
   const menuWasOpen = useRef(false);
   useEffect(() => {
     if (menuOpen !== menuWasOpen.current)
       playUiSound(menuOpen ? 'open' : 'close');
     menuWasOpen.current = menuOpen;
   }, [menuOpen]);
-  /** Set each render to `onNukeHero` while "Attack hero" is available (null otherwise): Shift+Space runs it. */
+  /**
+   * Set each render to `onNukeHero` while "Attack hero" is available (null
+   * otherwise): Shift+Space runs it.
+   */
   const nukeRef = useRef<(() => void) | null>(null);
   const canEndTurn = !!state && state.status === 'playing' && !aiToMove;
   useEffect(() => {
@@ -1293,7 +1519,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       )
         return;
       e.preventDefault(); // no page scroll, and no click on a focused button
-      // Shift+Space is "Attack hero": it does nothing when that is unavailable, so it can never end the turn by accident.
+      // Shift+Space is "Attack hero": it does nothing when that is unavailable,
+      // so it can never end the turn by accident.
       if (e.shiftKey) nukeRef.current?.();
       else dispatch({ type: 'EndTurn' });
     };
@@ -1308,7 +1535,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     };
   }, [canEndTurn, dispatch]);
 
-  // A soft shimmer plays while a card is held: clicked (selected) or being dragged.
+  /**
+   * A soft shimmer plays while a card is held: clicked (selected) or being
+   * dragged.
+   */
   const cardHeld =
     selection?.kind === 'hand' ||
     dragIndex !== null ||
@@ -1320,13 +1550,19 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   }, [cardHeld]);
   useEffect(() => stopHoldSound, []);
 
-  // `legalActions` is empty when it is not that player's turn, which also locks the board during the AI's turn.
+  /**
+   * `legalActions` is empty when it is not that player's turn, which also locks
+   * the board during the AI's turn.
+   */
   const actions = useMemo(
     () => (state ? legalActions(state, viewer, byId) : []),
     [state, viewer],
   );
 
-  // After resting on a hand card for a moment, pulse the minions on the board that playing it would improve.
+  /**
+   * After resting on a hand card for a moment, pulse the minions on the board
+   * that playing it would improve.
+   */
   const [previewHand, setPreviewHand] = useState<number | null>(null);
   useEffect(() => {
     setPreviewHand(null);
@@ -1337,7 +1573,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     );
     return () => clearTimeout(t);
   }, [hoverHand]);
-  // A clicked (selected) or dragged hand card keeps the preview on, with no delay.
+  /**
+   * A clicked (selected) or dragged hand card keeps the preview on, with no
+   * delay.
+   */
   const previewIndex =
     selection?.kind === 'hand' ? selection.index : (dragIndex ?? previewHand);
   const boostIds = useMemo(
@@ -1361,7 +1600,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       e.preventDefault();
   };
 
-  // What the current selection can aim at.
+  /** What the current selection can aim at. */
   const optionsFor = (sel: Selection | null): Action[] => {
     if (!sel) return [];
     if (sel.kind === 'hand') {
@@ -1386,7 +1625,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   };
   const options = optionsFor(selection);
   const aimable = options.map(targetOf).filter((t): t is TargetRef => !!t);
-  // A dragged choose-one card has no selection yet, so its legal targets and zones come straight from its plays.
+  /**
+   * A dragged choose-one card has no selection yet, so its legal targets and
+   * zones come straight from its plays.
+   */
   const dragPlays =
     dragIndex === null
       ? []
@@ -1403,7 +1645,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
 
   const clickTarget = (t: TargetRef) => {
     if (!isAimable(t)) return false;
-    // For a minion with an On Play effect, prefer the rightmost board position.
+    /**
+     * For a minion with an On Play effect, prefer the rightmost board position.
+     */
     const matching = options.filter((a) => {
       const at = targetOf(a);
       return at && sameTarget(at, t);
@@ -1419,9 +1663,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     return true;
   };
 
-  // Minions the action under the pointer would kill (a skull is drawn on each): the action is tried on a copy of the game, so
-  // attacks (including the attacker dying to the counter-hit), Bubble, spells and skills are all judged by the real rules. The
-  // opponent's face-down Mystery is left out of the copy, so this never reveals what it does.
+  /**
+   * Minions the action under the pointer would kill (a skull is drawn on each):
+   * the action is tried on a copy of the game, so
+   * attacks (including the attacker dying to the counter-hit), Bubble, spells
+   * and skills are all judged by the real rules. The
+   * opponent's face-down Mystery is left out of the copy, so this never reveals
+   * what it does.
+   */
   const doomed = new Set<number>();
   if (hover && !over) {
     const act = options.find((a) => {
@@ -1458,7 +1707,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     }
   }
 
-  // Spell damage from the viewer's board, shown on the spells in their hand.
+  /**
+   * Spell damage from the viewer's board, shown on the spells in their hand.
+   */
   const mySpellDamage = state.players[viewer].board.reduce(
     (sum, m) =>
       sum +
@@ -1466,7 +1717,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     0,
   );
 
-  // "Attack hero" button: with no enemy minions in the way, every ready minion and the hero's weapon hit the enemy hero.
+  /**
+   * "Attack hero" button: with no enemy minions in the way, every ready minion
+   * and the hero's weapon hit the enemy hero.
+   */
   const heroHits = actions.filter(
     (a) =>
       (a.type === 'Attack' || a.type === 'WeaponAttack') &&
@@ -1516,7 +1770,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     }
     setSelection(null);
     (document.activeElement as HTMLElement | null)?.blur?.();
-    // "Attack hero" swings every attacker in turn: each is thrown at the hero, one after another, then the turn passes.
+    // "Attack hero" swings every attacker in turn: each is thrown at the hero,
+    // one after another, then the turn passes.
     if (!reducedMotion()) {
       const swings = heard.filter(
         (e) => e.type === 'MinionAttacked' || e.type === 'WeaponAttacked',
@@ -1553,7 +1808,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       );
     }
   };
-  /** Click a skill button: an untargeted skill is used at once; a targeted one is selected and then aimed. */
+  /**
+   * Click a skill button: an untargeted skill is used at once; a targeted one
+   * is selected and then aimed.
+   */
   const pickSkill = (index: number) => {
     if (over) return;
     const uses = actions.filter(
@@ -1590,7 +1848,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const untargetedPlays =
     selection?.kind === 'hand' ? options.filter((a) => !targetOf(a)) : [];
 
-  // "Choose one" cards: one button per option. An option that needs no target plays right away.
+  /**
+   * "Choose one" cards: one button per option. An option that needs no target
+   * plays right away.
+   */
   const choiceOptions: number[] =
     selection?.kind === 'hand' && selection.choice === undefined
       ? Array.from(
@@ -1609,12 +1870,15 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     const card = selectedCard;
     const def = card && getCardDef(card);
     const raw = def?.choices?.[choice]?.label ?? `Option ${choice + 1}`;
-    // A spell's damage option shows what it will really deal with your Spell Damage (the in-hand text already does).
+    /**
+     * A spell's damage option shows what it will really deal with your Spell
+     * Damage (the in-hand text already does).
+     */
     const base =
       card?.type === 'spell'
         ? plain(withSpellDamageText(raw, mySpellDamage))
         : raw;
-    // Surveying Drone: show which card each option keeps.
+    /** Surveying Drone: show which card each option keeps. */
     const top =
       card?.id === 'CORE_055'
         ? byId.get(state.players[me].deck[choice]?.cardId ?? '')
@@ -1650,13 +1914,17 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         );
         return;
       }
-      // The option does not fit where it was dropped: fall through to the click flow.
+      // The option does not fit where it was dropped: fall through to the click
+      // flow.
     }
     if (plays.length > 0 && plays.every((a) => !a.target)) dispatch(plays[0]);
     else setSelection({ ...selection, choice });
   };
 
-  // Drop zones: what a click would play right now (shown as a glow that brightens on hover).
+  /**
+   * Drop zones: what a click would play right now (shown as a glow that
+   * brightens on hover).
+   */
   const placedPlays = untargetedPlays.filter(
     (a) => a.type === 'PlayCard' && a.boardIndex !== undefined,
   );
@@ -1672,8 +1940,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       dragPlaced ||
       overlayPreview?.startsWith('minion')) &&
     !over;
-  // A dragged choose-one card is a global play until it is dropped: anywhere on the board opens its dialog (a targeted option
-  // is then aimed with the arrow), as well as straight onto a target. Unless its options are placed on the board (a gap).
+  /**
+   * A dragged choose-one card is a global play until it is dropped: anywhere on
+   * the board opens its dialog (a targeted option
+   * is then aimed with the arrow), as well as straight onto a target. Unless
+   * its options are placed on the board (a gap).
+   */
   const dragChoice = dragIndex !== null;
   const areaZone =
     ((untargetedPlays.length > 0 && placedPlays.length === 0) ||
@@ -1687,7 +1959,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     setDragIndex(null);
   };
 
-  // The gap under the pointer, ignoring the spacer that marks it (so it does not move its own target).
+  /**
+   * The gap under the pointer, ignoring the spacer that marks it (so it does
+   * not move its own target).
+   */
   const gapAt = (row: Element, clickX: number) =>
     gapIndex(
       Array.from(row.children)
@@ -1706,14 +1981,19 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       ? Math.min(hoverGap ?? 1, myBoard.length)
       : null;
 
-  // Click-to-play: with a minion selected, click your board where you want it to land (between two minions, or at either end);
-  // with a spell or other card that needs no aim, click anywhere in the play area.
+  /**
+   * Click-to-play: with a minion selected, click your board where you want it
+   * to land (between two minions, or at either end);
+   * with a spell or other card that needs no aim, click anywhere in the play
+   * area.
+   */
   const playFromArea = (
     e: React.MouseEvent,
     zone: 'board' | 'table',
     dropped = false,
   ) => {
-    // A click on a button (a minion, End turn...) means something else; a card dropped over a minion still lands in the gap.
+    // A click on a button (a minion, End turn...) means something else; a card
+    // dropped over a minion still lands in the gap.
     if (
       over ||
       selection?.kind !== 'hand' ||
@@ -1728,7 +2008,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     const placed = plain.filter((a) => a.boardIndex !== undefined);
     if (placed.length > 0) {
       if (zone !== 'board') return;
-      // Land in the gap nearest the click: between two minions, or at either end.
+      /**
+       * Land in the gap nearest the click: between two minions, or at either
+       * end.
+       */
       const boardIndex = gapAt(e.currentTarget, e.clientX);
       const pick = placed[0];
       if (pick.type === 'PlayCard') dispatch({ ...pick, boardIndex });
@@ -1737,8 +2020,11 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     }
   };
 
-  // Surveying Drone: a dialog showing the cards you can keep, with their stats.
-  // A skill used by picking one of a list (the Cleric's Resurrect): one button per option, from the engine's own list.
+  /**
+   * Surveying Drone: a dialog showing the cards you can keep, with their stats.
+   * A skill used by picking one of a list (the Cleric's Resurrect): one button
+   * per option, from the engine's own list.
+   */
   const skillPick =
     selection?.kind === 'skill'
       ? heroSkill(state.players[me].hero?.id, selection.index)
@@ -1760,11 +2046,17 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   };
   const droneModal =
     selectedCard?.id === 'CORE_055' && choiceOptions.length > 0;
-  // Every "choose one" card asks in a dialog first, however small the options are.
+  /**
+   * Every "choose one" card asks in a dialog first, however small the options
+   * are.
+   */
   const choiceModal = choiceOptions.length > 0 && !droneModal;
   modalOpenRef.current = droneModal || choiceModal || skillModal;
 
-  // The pick dialog (ChooseModal): its title, and one real card per option (a blank NONE-rarity card when an option has none).
+  /**
+   * The pick dialog (ChooseModal): its title, and one real card per option (a
+   * blank NONE-rarity card when an option has none).
+   */
   const topOfDeck = (c: number) =>
     byId.get(state.players[me].deck[c]?.cardId ?? '');
   const previewCard = byId.get('CORE_051'); // the lab's sample: a "choose one" card
@@ -1781,7 +2073,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     pickChooseOption = (i) => pickChoice(choiceOptions[i]);
   } else if (choiceModal) {
     chooseTitle = `${selectedCard?.name}: choose one`;
-    // Options print as their own entourage card where one exists (CORE_051a, CORE_128b...).
+    // Options print as their own entourage card where one exists (CORE_051a,
+    // CORE_128b...).
     chooseOptions = choiceOptions.map((c) => ({
       card: activeCard(byId.get(`${selectedCard?.id}${'abcdef'[c]}`)),
       label: choiceLabel(c),
@@ -1805,8 +2098,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     }));
   }
 
-  // Drag and drop (the main way to play a card; clicking still works). Dragging selects the card, so the same drop zones,
-  // targets and arrow show as for a click; dropping plays it exactly as a click would.
+  /**
+   * Drag and drop (the main way to play a card; clicking still works). Dragging
+   * selects the card, so the same drop zones,
+   * targets and arrow show as for a click; dropping plays it exactly as a click
+   * would.
+   */
   const dropOnTarget = (t: TargetRef) => ({
     onDragOver: (e: React.DragEvent) => {
       if (!isAimable(t)) return;
@@ -1824,7 +2121,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     },
   });
 
-  // Drag an attacker (your minion or hero) onto an enemy: it is selected for the drag, exactly like a click.
+  /**
+   * Drag an attacker (your minion or hero) onto an enemy: it is selected for
+   * the drag, exactly like a click.
+   */
   const dragFrom = (sel: Selection) => ({
     draggable: true,
     onDragStart: (e: React.DragEvent) => {
@@ -1841,7 +2141,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     },
   });
 
-  // The oval height of every board minion, set on both rows (the CSS reads --m-h).
+  /**
+   * The oval height of every board minion, set on both rows (the CSS reads
+   * --m-h).
+   */
   const minionRowStyle = {
     ['--m-h' as string]: `${minionOvalHeight(boardWidth)}px`,
   } as React.CSSProperties;
@@ -1863,7 +2166,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           setHover({ kind: 'minion', instanceId: m.instanceId })
         }
         onMouseLeave={() => setHover(null)}
-        // Right-click shows the card in the collection's big view (while something is selected, right-click cancels it instead).
+        // Right-click shows the card in the collection's big view (while
+        // something is selected, right-click cancels it instead).
         onContextMenu={(e: React.MouseEvent) => {
           if (hasSelection || !card) return;
           e.preventDefault();
@@ -2111,7 +2415,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   };
 
   const handCount = state.players[me].hand.length;
-  // The card being dragged or selected: the energy bar blinks the orbs it would spend.
+  /**
+   * The card being dragged or selected: the energy bar blinks the orbs it would
+   * spend.
+   */
   const pendingIndex = selection?.kind === 'hand' ? selection.index : dragIndex;
   const pendingCard =
     pendingIndex === null
@@ -2138,7 +2445,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       (a) => a.type === 'PlayCard' && a.handIndex === index,
     );
     const selected = selection?.kind === 'hand' && selection.index === index;
-    // "Choose one" cards are dragged without selecting (selecting opens the dialog); the drop opens it, then the pick plays it there.
+    /**
+     * "Choose one" cards are dragged without selecting (selecting opens the
+     * dialog); the drop opens it, then the pick plays it there.
+     */
     const isChoice = actions.some(
       (a) =>
         a.type === 'PlayCard' &&
@@ -2163,8 +2473,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       !over &&
       playable &&
       setSelection(selected ? null : { kind: 'hand', index });
-    // A quick double-click plays a minion at the far right of your board. (The two clicks before it select and deselect the card,
-    // so a minion that needs aiming, or a choose-one card, is left selected for the normal flow.)
+    /**
+     * A quick double-click plays a minion at the far right of your board. (The
+     * two clicks before it select and deselect the card,
+     * so a minion that needs aiming, or a choose-one card, is left selected for
+     * the normal flow.)
+     */
     const doubleClick = () => {
       if (over || !playable) return;
       const plays = actions.filter(
@@ -2195,9 +2509,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       stopStepping();
       hoverRef.current = null;
       setHoverHand(null);
-      // A card that aims at a target gets the arrow instead of a ghost (the ghost would cover the target); one that is
-      // dropped on the board or play area has no arrow, so its ghost stays as the only drag feedback.
-      // (A choose-one card has no arrow while it is dragged, since it is not selected, so it gets the ghost like any other card.)
+      /**
+       * A card that aims at a target gets the arrow instead of a ghost (the
+       * ghost would cover the target); one that is
+       * dropped on the board or play area has no arrow, so its ghost stays as
+       * the only drag feedback.
+       * (A choose-one card has no arrow while it is dragged, since it is not
+       * selected, so it gets the ghost like any other card.)
+       */
       const aimsAtTarget =
         !!blankDragImage &&
         !isChoice &&
@@ -2207,7 +2526,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       if (aimsAtTarget) {
         e.dataTransfer.setDragImage(blankDragImage!, 0, 0);
       } else {
-        // The browser's own drag image is always semi-transparent, so hide it and draw an opaque ghost that follows the pointer.
+        // The browser's own drag image is always semi-transparent, so hide it
+        // and draw an opaque ghost that follows the pointer.
         if (blankDragImage) e.dataTransfer.setDragImage(blankDragImage, 0, 0);
         activeGhost?.stop();
         // The ghost copies the card, not the hover slot that was grabbed.
@@ -2220,8 +2540,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           e.clientY,
         );
       }
-      // Select after the drag has begun: re-rendering the dragged card inside dragstart can cancel it.
-      // The card is hidden in the hand only when a ghost replaces it; one that aims with the arrow stays put, selected,
+      // Select after the drag has begun: re-rendering the dragged card inside
+      // dragstart can cancel it.
+      // The card is hidden in the hand only when a ghost replaces it; one that
+      // aims with the arrow stays put, selected,
       // so it does not vanish while the arrow is active (playtest 2026-11-12).
       setTimeout(() => {
         if (!aimsAtTarget) setDraggedHand(index);
@@ -2241,9 +2563,13 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       setHover(null);
       setHoverGap(null);
     };
-    // The hover slot: the pointer is tested against a slot (a column that never moves or grows), not the card, so a lifted, enlarged card
-    // cannot block the cards beside it. The card takes the hover look from `hoverHand`; it lets go a moment after the pointer leaves, so
-    // crossing a gap between slots does not flicker.
+    /**
+     * The hover slot: the pointer is tested against a slot (a column that never
+     * moves or grows), not the card, so a lifted, enlarged card
+     * cannot block the cards beside it. The card takes the hover look from
+     * `hoverHand`; it lets go a moment after the pointer leaves, so
+     * crossing a gap between slots does not flicker.
+     */
     const enterSlot = () => hoverTo(index);
     const leaveSlot = () => {
       if (hoverRelease.current) clearTimeout(hoverRelease.current);
@@ -2315,7 +2641,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     return { cardEl, hitEl };
   };
 
-  // The targeting line: from the selected card, minion or hero to the pointer (green over a legal target, else grey).
+  /**
+   * The targeting line: from the selected card, minion or hero to the pointer
+   * (green over a legal target, else grey).
+   */
   const sourceKey =
     selection?.kind === 'hand'
       ? `c${selection.index}`
@@ -2327,7 +2656,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             ? `h${me}`
             : null;
   const sourceEl = sourceKey ? nodes.current.get(sourceKey) : undefined;
-  // The arrow always follows the pointer; a legal target under it is shown by highlighting that target.
+  /**
+   * The arrow always follows the pointer; a legal target under it is shown by
+   * highlighting that target.
+   */
   const overTarget =
     hover && isAimable(hover) ? nodes.current.get(targetKey(hover)) : undefined;
   const lineFrom = sourceEl && aimable.length > 0 ? centerOf(sourceEl) : null;

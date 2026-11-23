@@ -5,13 +5,18 @@ import { createMinion } from '../../engine/rules/minion';
 export interface DebugSetup {
   boards: Record<PlayerId, string[]>;
   weapons: Record<PlayerId, string | undefined>;
-  /** Energy to start with (current and total), 0-10; unset leaves the game's own value. */
+  /**
+   * Energy to start with (current and total), 0-10; unset leaves the game's own
+   * value.
+   */
   energy?: Record<PlayerId, number | undefined>;
 }
 
 /**
- * Debug setup: puts the listed minions on each board (left to right, ready to attack, no On Play effect or aura run) and
- * equips a weapon and sets energy. Ids that are not in the catalog, or not a minion / weapon, are skipped. Board size is capped at 7.
+ * Debug setup: puts the listed minions on each board (left to right, ready to
+ * attack, no On Play effect or aura run) and
+ * equips a weapon and sets energy. Ids that are not in the catalog, or not a
+ * minion / weapon, are skipped. Board size is capped at 7.
  */
 export const applyDebugSetup = (
   state: GameState,

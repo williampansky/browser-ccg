@@ -11,13 +11,17 @@ import {
 
 export interface NukeHeroResult {
   state: GameState;
-  /** The actions that were applied, in order (events per action, for the log). */
+  /**
+   * The actions that were applied, in order (events per action, for the log).
+   */
   steps: { action: Action; events: GameEvent[]; before: GameState }[];
 }
 
 /**
- * "Nuke the enemy player": every ready minion, then the hero's weapon, hits the enemy hero. A minion keeps swinging
- * while it can (Onslaught attacks twice). Stops early if the game ends. Does not end the turn.
+ * "Nuke the enemy player": every ready minion, then the hero's weapon, hits the
+ * enemy hero. A minion keeps swinging
+ * while it can (Onslaught attacks twice). Stops early if the game ends. Does
+ * not end the turn.
  */
 export const nukeHero = (
   state: GameState,

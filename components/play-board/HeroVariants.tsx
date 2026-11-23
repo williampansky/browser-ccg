@@ -6,10 +6,14 @@ import { artBackground, PLACEHOLDER_ART } from './card-face-model';
 import { IMPACT_MS, reducedMotion } from './motion';
 
 /**
- * PROTOTYPE hero displays 2 to 4 (option 1 is HeroBust): the standing figure, the big medallion and the hero as a framed card.
+ * PROTOTYPE hero displays 2 to 4 (option 1 is HeroBust): the standing figure,
+ * the big medallion and the hero as a framed card.
  * Dev preview only (pages/hero-lab.tsx); /play does not use them.
  */
-/** A weapon whose art file is missing (a 404) shows the placeholder instead of a broken image. */
+/**
+ * A weapon whose art file is missing (a 404) shows the placeholder instead of a
+ * broken image.
+ */
 const weaponArtFallback = (e: React.SyntheticEvent<HTMLImageElement>) => {
   if (!e.currentTarget.src.endsWith(PLACEHOLDER_ART))
     e.currentTarget.src = PLACEHOLDER_ART;
@@ -46,15 +50,20 @@ const root = (p: HeroVariantProps, extra: string) =>
   );
 
 /**
- * 2: the hero as a tall framed figure, laid out like the TCG Vol 14 sample card: portrait in the window, name on the ribbon, skills
+ * 2: the hero as a tall framed figure, laid out like the TCG Vol 14 sample
+ * card: portrait in the window, name on the ribbon, skills
  * in the text panel, big green gem = health (in the ring), blue gem = armor.
- * Positions are in the frame PNG's 857 x 1200 units, as percentages, so the card scales with its width.
+ * Positions are in the frame PNG's 857 x 1200 units, as percentages, so the
+ * card scales with its width.
  */
 export interface FigureSkill {
   name: string;
   cost: number;
   text: string;
-  /** Ready to use right now; false = dimmed and disabled (no energy, not your turn) */
+  /**
+   * Ready to use right now; false = dimmed and disabled (no energy, not your
+   * turn)
+   */
   usable: boolean;
   /** Own turns left before it is ready again; 0 when ready */
   cooldownLeft: number;
@@ -204,7 +213,10 @@ export const HeroFigure = (
   );
 };
 
-/** 3: a big round portrait; health is the outer arc, armor a thinner arc inside it, the number sits at the bottom. */
+/**
+ * 3: a big round portrait; health is the outer arc, armor a thinner arc inside
+ * it, the number sits at the bottom.
+ */
 export const HeroMedallion = (p: HeroVariantProps) => {
   const max = p.maxHealth ?? 30;
   const t = tone(p.health, max);
@@ -243,7 +255,10 @@ export const HeroMedallion = (p: HeroVariantProps) => {
   );
 };
 
-/** 4: the hero drawn like the hand cards: art in a rarity frame, name on the ribbon, health and armor in the corners. */
+/**
+ * 4: the hero drawn like the hand cards: art in a rarity frame, name on the
+ * ribbon, health and armor in the corners.
+ */
 export const HeroCard = (p: HeroVariantProps) => {
   const max = p.maxHealth ?? 30;
   return (
@@ -273,9 +288,12 @@ export const HeroCard = (p: HeroVariantProps) => {
 };
 
 /**
- * 5: a thin dark ring with the portrait inside and the stats orbiting its rim like a watch face: the skills along the left (9 o'clock),
- * the weapon at 3 o'clock, a pill-shaped health badge at 6 o'clock and an armor pill beside it. Kept thin and dark so it does not read as
- * a thick sculpted bezel. Every size, angle and colour is in `RingTune` (the hero lab's ring tab edits it).
+ * 5: a thin dark ring with the portrait inside and the stats orbiting its rim
+ * like a watch face: the skills along the left (9 o'clock),
+ * the weapon at 3 o'clock, a pill-shaped health badge at 6 o'clock and an armor
+ * pill beside it. Kept thin and dark so it does not read as
+ * a thick sculpted bezel. Every size, angle and colour is in `RingTune` (the
+ * hero lab's ring tab edits it).
  * Angles are CSS ones: 0deg = 3 o'clock, 90deg = 6, 180deg = 9, 270deg = 12.
  */
 export interface RingTune {
@@ -283,21 +301,33 @@ export interface RingTune {
   d: number;
   w: number;
   sock: number;
-  /** How far the sockets / pills sit out from the rim (px; negative = inside the ring) */
+  /**
+   * How far the sockets / pills sit out from the rim (px; negative = inside the
+   * ring)
+   */
   rimSock: number;
   rimPill: number;
-  /** The middle skill's angle, and the angle between skills (the first skill is above the middle one) */
+  /**
+   * The middle skill's angle, and the angle between skills (the first skill is
+   * above the middle one)
+   */
   skillAngle: number;
   skillSpacing: number;
   weaponAngle: number;
   hpAngle: number;
   armorAngle: number;
-  /** The armor pill's own size (a circle when equal) and its own offset from the rim (px, minus = inside) */
+  /**
+   * The armor pill's own size (a circle when equal) and its own offset from the
+   * rim (px, minus = inside)
+   */
   armorW: number;
   armorH: number;
   rimArmor: number;
   armorFont: number;
-  /** The weapon's attack and durability pills: one size (a circle when equal) and font for both, plus a nudge for each (px, from its default corner) */
+  /**
+   * The weapon's attack and durability pills: one size (a circle when equal)
+   * and font for both, plus a nudge for each (px, from its default corner)
+   */
   wpnW: number;
   wpnH: number;
   wpnFont: number;
@@ -311,7 +341,11 @@ export interface RingTune {
   /** Colours as 6-digit hex without the # */
   ringColour: string;
   socketColour: string;
-  /** Health colours (hex, no #): full (at max), graze (over two thirds), hurt (over a third) and low (a third of max or less); the pill, arc and liquid all use them */
+  /**
+   * Health colours (hex, no #): full (at max), graze (over two thirds), hurt
+   * (over a third) and low (a third of max or less); the pill, arc and liquid
+   * all use them
+   */
   hpFull: string;
   hpGraze: string;
   hpHurt: string;
@@ -319,23 +353,42 @@ export interface RingTune {
   showName: boolean;
   showTag: boolean;
   showCost: boolean;
-  /** Health as an arc around the outside of the ring: it fills from `hpArcStart` toward `hpArcEnd` (CSS angles), `hpArcOffset` px out from the rim */
+  /**
+   * Health as an arc around the outside of the ring: it fills from `hpArcStart`
+   * toward `hpArcEnd` (CSS angles), `hpArcOffset` px out from the rim
+   */
   hpArc: boolean;
   hpArcStart: number;
   hpArcEnd: number;
   hpArcOffset: number;
   hpArcWidth: number;
-  /** Health as liquid in a hollow glass ring around a smaller portrait: it sloshes when health changes and bubbles rise. `liquidBand` is the ring's width (px), `liquidAlpha` the liquid's opacity (0 to 100) */
+  /**
+   * Health as liquid in a hollow glass ring around a smaller portrait: it
+   * sloshes when health changes and bubbles rise. `liquidBand` is the ring's
+   * width (px), `liquidAlpha` the liquid's opacity (0 to 100)
+   */
   hpLiquid: boolean;
   liquidBand: number;
   liquidAlpha: number;
   /** Bubbles rising on each side of the liquid ring */
   liquidBubbles: number;
-  /** A metal bezel picture behind the disc (`public/images/ui/hero-ring-bezel.png`); 0 = off, 100 = its inner edge sits on the disc's rim, bigger = larger */
+  /**
+   * A metal bezel picture behind the disc
+   * (`public/images/ui/hero-ring-bezel.png`); 0 = off, 100 = its inner edge
+   * sits on the disc's rim, bigger = larger
+   */
   bezel: number;
-  /** A metal frame around the skill and weapon sockets (`public/images/ui/hero-socket-frame.png`): its outer diameter in px, 0 = off. Only the frame picture changes size; `sock` still sizes the socket and what is in it */
+  /**
+   * A metal frame around the skill and weapon sockets
+   * (`public/images/ui/hero-socket-frame.png`): its outer diameter in px, 0 =
+   * off. Only the frame picture changes size; `sock` still sizes the socket and
+   * what is in it
+   */
   frame: number;
-  /** Where the Mystery socket sits (deg, 0 = 3 o'clock); it only shows while a Mystery is set */
+  /**
+   * Where the Mystery socket sits (deg, 0 = 3 o'clock); it only shows while a
+   * Mystery is set
+   */
   mysteryAngle: number;
   /** Taking damage: the ring shakes (`hitShake` px sideways, `hitTilt` deg, over `hitShakeMs`; 0 px and 0 deg = no shake) and the amount floats up from the
    *  middle (`popSize` px, `popRise` px up, over `popMs`; `showPop` off hides it). Both wait `hitDelay` ms, so they land with an attack's strike. Healing shows
@@ -418,7 +471,10 @@ const arcPath = (radius: number, from: number, to: number) => {
   return `M ${pt(from)} A ${radius} ${radius} 0 ${Math.abs(to - from) > 180 ? 1 : 0} ${to > from ? 1 : 0} ${pt(to)}`;
 };
 
-/** Bubble `i` of `n` on one side: left % of the band, size px, delay s, duration s. Spread by the golden ratio so they never line up. */
+/**
+ * Bubble `i` of `n` on one side: left % of the band, size px, delay s, duration
+ * s. Spread by the golden ratio so they never line up.
+ */
 const bubble = (
   i: number,
   side: number,
@@ -434,7 +490,11 @@ const bubble = (
 };
 const WAVE = 'M0 6 Q25 0 50 6 T100 6 T150 6 T200 6 V12 H0 Z';
 
-/** The liquid inside the disc. `level` is 0 to 1; a change in health restarts the slosh (a tilt and a taller wave) at a strength set by the size of the change. */
+/**
+ * The liquid inside the disc. `level` is 0 to 1; a change in health restarts
+ * the slosh (a tilt and a taller wave) at a strength set by the size of the
+ * change.
+ */
 const Liquid = (p: {
   level: number;
   health: number;
@@ -514,8 +574,10 @@ const Liquid = (p: {
 };
 
 /**
- * What the ring does when its hero is hurt or healed: `hits` counts damage (health or armor lost) so the ring can restart its shake each
- * time, and `pops` are the numbers floating up (negative = damage, positive = health gained). Both wait `r.hitDelay` ms. The first render never reacts.
+ * What the ring does when its hero is hurt or healed: `hits` counts damage
+ * (health or armor lost) so the ring can restart its shake each
+ * time, and `pops` are the numbers floating up (negative = damage, positive =
+ * health gained). Both wait `r.hitDelay` ms. The first render never reacts.
  */
 const useRingHit = (health: number, armor: number, r: RingTune) => {
   const last = useRef({ health, armor });
@@ -550,11 +612,17 @@ const useRingHit = (health: number, armor: number, r: RingTune) => {
   return { hits, pops };
 };
 
-/** A face-down Mystery on the ring: `cardId` is set for its owner (the card's art shows), left out for the opponent (a question mark). */
+/**
+ * A face-down Mystery on the ring: `cardId` is set for its owner (the card's
+ * art shows), left out for the opponent (a question mark).
+ */
 export interface RingMystery {
   cardId?: string;
   name: string;
-  /** Hover text: the card's text for the owner, what it reacts to for the opponent */
+  /**
+   * Hover text: the card's text for the owner, what it reacts to for the
+   * opponent
+   */
   tip: string;
 }
 
@@ -568,7 +636,10 @@ export const HeroRing = (
   const r: RingTune = { ...RING_DEFAULTS, ...p.tune };
   const hit = useRingHit(p.health, p.armor ?? 0, r);
   const max = p.maxHealth ?? 30;
-  // The ring has four health states (the other variants keep three): full, graze, hurt, low.
+  /**
+   * The ring has four health states (the other variants keep three): full,
+   * graze, hurt, low.
+   */
   const t =
     p.health <= max / 3
       ? styles.low

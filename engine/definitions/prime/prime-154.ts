@@ -1,7 +1,9 @@
 import { defineCard, on } from '../define-card';
 import { addRandomCardToHand } from '../../effects/primitives';
 
-// PRIME_154 Amaad the Shaper: "Whenever you play a card, add a Random card to your hand; it costs (4) less" (any card from hand, a Mystery or weapon too; not itself)
+// PRIME_154 Amaad the Shaper: "Whenever you play a card, add a Random card to
+// your hand; it costs (4) less" (any card from hand, a Mystery or weapon too;
+// not itself)
 export default defineCard('PRIME_154', (n) => {
   const gift = [addRandomCardToHand(() => true, 1, -n.primary)];
   return {

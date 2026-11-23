@@ -23,8 +23,10 @@ export interface PlayCardArgs {
 }
 
 /**
- * Plays a minion or a spell from the active player's hand. A minion is placed first, then its
- * On Play effect (`onPlay`) runs. Weapons come in a later slice. Deaths and triggers are settled by the caller.
+ * Plays a minion or a spell from the active player's hand. A minion is placed
+ * first, then its
+ * On Play effect (`onPlay`) runs. Weapons come in a later slice. Deaths and
+ * triggers are settled by the caller.
  */
 export const playCard = (
   state: GameState,
@@ -44,9 +46,11 @@ export const playCard = (
   if (!card) return { error: 'UNKNOWN_CARD' };
 
   const def = defs(card);
-  // Items (potions, scrolls, ...) are one-shot effects and play exactly like spells.
+  // Items (potions, scrolls, ...) are one-shot effects and play exactly like
+  // spells.
   const isSpellLike = card.type === 'spell' || card.type === 'item';
-  // A card that needs behaviour but has none is refused, rather than silently played as vanilla.
+  // A card that needs behaviour but has none is refused, rather than silently
+  // played as vanilla.
   if (!def && (isSpellLike || needsBehaviour(card)))
     return { error: 'UNSUPPORTED_CARD' };
   const cost = effectiveCost(
@@ -62,7 +66,8 @@ export const playCard = (
   // A Mystery goes face down; only one at a time.
   if (def?.mystery && player.mystery) return { error: 'MYSTERY_ACTIVE' };
 
-  // "Choose one" cards need a valid option; every other card refuses one. The chosen option's own
+  // "Choose one" cards need a valid option; every other card refuses one. The
+  // chosen option's own
   // target and effects replace the card's.
   let play:
     { target?: CardDef['target']; onPlay?: CardDef['onPlay'] } | undefined =
@@ -89,7 +94,8 @@ export const playCard = (
     if (player.board.length >= MAX_BOARD) return { error: 'BOARD_FULL' };
   }
 
-  // Targets. A spell that needs a target and has none is refused. An On Play effect with no legal target
+  // Targets. A spell that needs a target and has none is refused. An On Play
+  // effect with no legal target
   // still lets the minion be played; the On Play effect just does nothing.
   if (play?.target) {
     const legal = legalTargets(
@@ -177,7 +183,8 @@ export const playCard = (
         cardId: card.id,
       });
     } else if (def?.mystery) {
-      // Placed face down. It still counts as casting a spell (the `mystery` flag keeps other Mysteries from reacting to it).
+      // Placed face down. It still counts as casting a spell (the `mystery`
+      // flag keeps other Mysteries from reacting to it).
       p.mystery = { instanceId: inHand.instanceId, cardId: card.id };
       events.push({ type: 'MysteryPlaced', player: me });
       events.push({
@@ -197,7 +204,8 @@ export const playCard = (
         ...(target ? { target } : {}),
       });
     }
-    // The enemy's Mystery may react to a spell about to resolve, and may redirect it.
+    // The enemy's Mystery may react to a spell about to resolve, and may
+    // redirect it.
     let aim = target;
     if (card.type === 'spell')
       aim = mysteryBeforeSpell(g, ctx, events, {

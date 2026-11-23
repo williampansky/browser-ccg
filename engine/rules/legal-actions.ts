@@ -10,9 +10,12 @@ import { skillReady } from './hero-skill';
 import { legalTargets } from './targeting';
 
 /**
- * Every action `player` could take right now that `applyAction` would accept. Empty unless it is
- * that player's turn and the game is still on. Minions are offered at the far left and far right
- * of the board only (not every gap), which keeps the list small for bots; the UI can still send
+ * Every action `player` could take right now that `applyAction` would accept.
+ * Empty unless it is
+ * that player's turn and the game is still on. Minions are offered at the far
+ * left and far right
+ * of the board only (not every gap), which keeps the list small for bots; the
+ * UI can still send
  * any valid `boardIndex`.
  */
 export const legalActions = (
@@ -41,7 +44,8 @@ export const legalActions = (
         if (!me.mystery) actions.push({ type: 'PlayCard', handIndex });
         return;
       }
-      // A "choose one" card is offered once per option (and per target that option allows).
+      // A "choose one" card is offered once per option (and per target that
+      // option allows).
       const options = def.choices
         ? def.choices.map((c, choice) => ({ choice, needsTarget: !!c.target }))
         : [{ choice: undefined, needsTarget: !!def.target }];
@@ -68,7 +72,8 @@ export const legalActions = (
     } else if (card.type === 'minion') {
       if (me.board.length >= MAX_BOARD) return;
       const positions = me.board.length === 0 ? [0] : [0, me.board.length];
-      // A "choose one" minion is offered once per option; an option whose target has no legal choice is played without one.
+      // A "choose one" minion is offered once per option; an option whose
+      // target has no legal choice is played without one.
       const options = def?.choices
         ? def.choices.map((c, choice) => ({ choice, needsTarget: !!c.target }))
         : [{ choice: undefined, needsTarget: !!def?.target }];

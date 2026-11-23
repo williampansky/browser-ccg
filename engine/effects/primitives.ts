@@ -34,7 +34,10 @@ export const draw =
     for (let i = 0; i < count; i++) drawCard(ctx.g, ctx.caster, ctx.events);
   };
 
-/** Adds energy for this turn only. May exceed the total; the refill at next turn start resets it. */
+/**
+ * Adds energy for this turn only. May exceed the total; the refill at next turn
+ * start resets it.
+ */
 export const gainEnergy =
   (amount: number): Effect =>
   (ctx) => {
@@ -42,7 +45,10 @@ export const gainEnergy =
     ctx.events.push({ type: 'EnergyGained', player: ctx.caster, amount });
   };
 
-/** Finds the live (draft) minion a target refers to; heroes and missing minions give nothing. */
+/**
+ * Finds the live (draft) minion a target refers to; heroes and missing minions
+ * give nothing.
+ */
 const minionsOf = (ctx: Parameters<Effect>[0], select: Selector) =>
   select(ctx).flatMap((t) => {
     if (t.kind !== 'minion') return [];
@@ -58,11 +64,14 @@ export const grantKeyword =
       minion.keywords[keyword] = true;
   };
 
-/** Disable: the minion cannot attack during its owner's next turn (RULES Q17). */
+/**
+ * Disable: the minion cannot attack during its owner's next turn (RULES Q17).
+ */
 export const disable =
   (select: Selector): Effect =>
   (ctx) => {
-    // Turns alternate, so the owner's next turn is the next turn, or the one after if it is theirs now.
+    // Turns alternate, so the owner's next turn is the next turn, or the one
+    // after if it is theirs now.
     const until = (owner: string) =>
       ctx.g.activePlayer === owner ? ctx.g.turn + 2 : ctx.g.turn + 1;
     for (const { owner, minion } of minionsOf(ctx, select))
@@ -73,7 +82,10 @@ export const disable =
         ctx.g.players[t.player].heroDisabledOnTurn = until(t.player);
   };
 
-/** Expiration: the minion dies at the start of the caster's next turn (RULES Q18, provisional). */
+/**
+ * Expiration: the minion dies at the start of the caster's next turn (RULES
+ * Q18, provisional).
+ */
 export const expire =
   (select: Selector): Effect =>
   (ctx) => {
@@ -84,8 +96,10 @@ export const expire =
   };
 
 /**
- * Summons a token from the running card's entourage list: the `index`-th one, or the one with that card id (use the id when the list also holds
- * option cards, so reordering the list in Airtable cannot change which token is summoned). Full board: nothing happens.
+ * Summons a token from the running card's entourage list: the `index`-th one,
+ * or the one with that card id (use the id when the list also holds
+ * option cards, so reordering the list in Airtable cannot change which token is
+ * summoned). Full board: nothing happens.
  */
 export const summonEntourage =
   (which: number | string = 0): Effect =>
@@ -97,7 +111,8 @@ export const summonEntourage =
       typeof which === 'string'
         ? (source?.entourage.indexOf(which) ?? -1)
         : which;
-    // A token named by id may sit on one of the card's option cards (a Choose One's 'b' lists 'c'), not on the card itself
+    // A token named by id may sit on one of the card's option cards (a Choose
+    // One's 'b' lists 'c'), not on the card itself
     const token =
       typeof which === 'string' && index < 0
         ? ctx.catalog.get(which)
@@ -136,7 +151,10 @@ export const buffWeapon =
     if (weapon) weapon.attack += attack;
   };
 
-/** Like `buffWeapon`, but only until the end of the turn (the attack is taken back by `endTurnCleanup`). */
+/**
+ * Like `buffWeapon`, but only until the end of the turn (the attack is taken
+ * back by `endTurnCleanup`).
+ */
 export const buffWeaponThisTurn =
   (attack: number): Effect =>
   (ctx) => {
@@ -146,7 +164,10 @@ export const buffWeaponThisTurn =
     weapon.tempAttack = (weapon.tempAttack ?? 0) + attack;
   };
 
-/** Adds an empty energy slot (capped at 10). The new slot is not filled until next turn's refill. */
+/**
+ * Adds an empty energy slot (capped at 10). The new slot is not filled until
+ * next turn's refill.
+ */
 export const gainEnergySlot =
   (amount = 1): Effect =>
   (ctx) => {
@@ -154,7 +175,9 @@ export const gainEnergySlot =
     e.total = Math.min(MAX_ENERGY, e.total + amount);
   };
 
-/** Summons one token chosen at random from the running card's entourage list. */
+/**
+ * Summons one token chosen at random from the running card's entourage list.
+ */
 export const summonRandomEntourage = (): Effect => (ctx) => {
   const source = ctx.sourceCardId
     ? ctx.catalog.get(ctx.sourceCardId)
@@ -168,14 +191,20 @@ export const summonRandomEntourage = (): Effect => (ctx) => {
   summonMinion(ctx.g, ctx.caster, token, ctx.events, ctx.self);
 };
 
-/** Destroys minions outright. Ignores Bubble and health (RULES: destroy is not damage). */
+/**
+ * Destroys minions outright. Ignores Bubble and health (RULES: destroy is not
+ * damage).
+ */
 export const destroy =
   (select: Selector): Effect =>
   (ctx) => {
     for (const { minion } of minionsOf(ctx, select)) minion.health = 0;
   };
 
-/** Sets the base attack to an exact value (text wins over hsclone for 075); auras and this-turn boosts still apply on top. */
+/**
+ * Sets the base attack to an exact value (text wins over hsclone for 075);
+ * auras and this-turn boosts still apply on top.
+ */
 export const setAttack =
   (select: Selector, value: number): Effect =>
   (ctx) => {
@@ -193,7 +222,10 @@ export const setHealth =
     }
   };
 
-/** Doubles current health. Maximum health rises by the same amount, so it acts as a +X health buff. */
+/**
+ * Doubles current health. Maximum health rises by the same amount, so it acts
+ * as a +X health buff.
+ */
 export const doubleHealth =
   (select: Selector): Effect =>
   (ctx) => {
@@ -212,8 +244,10 @@ export const healToFull =
   };
 
 /**
- * Replaces each minion, in the same slot, with a fresh copy of the running card's `index`-th entourage
- * token. Damage, buffs, keywords and timers are all gone; the new minion has summoning sickness.
+ * Replaces each minion, in the same slot, with a fresh copy of the running
+ * card's `index`-th entourage
+ * token. Damage, buffs, keywords and timers are all gone; the new minion has
+ * summoning sickness.
  */
 export const transformInto =
   (select: Selector, index = 0): Effect =>
@@ -238,7 +272,10 @@ export const transformInto =
     }
   };
 
-/** Takes control of enemy minions. With no room on the caster's board, the minion stays put. */
+/**
+ * Takes control of enemy minions. With no room on the caster's board, the
+ * minion stays put.
+ */
 export const steal =
   (select: Selector): Effect =>
   (ctx) => {
@@ -258,7 +295,10 @@ export const steal =
     }
   };
 
-/** The caster discards `count` random cards from hand (fewer if the hand is smaller). */
+/**
+ * The caster discards `count` random cards from hand (fewer if the hand is
+ * smaller).
+ */
 export const discardRandom =
   (count = 1): Effect =>
   (ctx) => {
@@ -282,7 +322,10 @@ export const destroyEnemyWeapon = (): Effect => (ctx) => {
   }
 };
 
-/** Deals damage, then heals the caster's hero for the damage actually dealt (Bubble-absorbed hits heal nothing). */
+/**
+ * Deals damage, then heals the caster's hero for the damage actually dealt
+ * (Bubble-absorbed hits heal nothing).
+ */
 export const damageWithLifesteal =
   (select: Selector, amount: number): Effect =>
   (ctx) => {
@@ -302,7 +345,10 @@ export const damageWithLifesteal =
   };
 const ownHeroRef: Selector = (ctx) => [{ kind: 'hero', player: ctx.caster }];
 
-/** The caster draws a card if the selected minion is at 0 health (use right after damaging it). */
+/**
+ * The caster draws a card if the selected minion is at 0 health (use right
+ * after damaging it).
+ */
 export const drawIfDead =
   (select: Selector): Effect =>
   (ctx) => {
@@ -314,7 +360,10 @@ export const drawIfDead =
     if (dead) draw(1)(ctx);
   };
 
-/** Gives the running minion +`attack`/+`health` for each OTHER minion its owner has. */
+/**
+ * Gives the running minion +`attack`/+`health` for each OTHER minion its owner
+ * has.
+ */
 export const buffPerOtherFriendly =
   (attack: number, health: number): Effect =>
   (ctx) => {
@@ -329,7 +378,9 @@ export const buffPerOtherFriendly =
     )(ctx);
   };
 
-/** Sacrifices (destroys) the chosen friendly minion and heals the caster's hero. */
+/**
+ * Sacrifices (destroys) the chosen friendly minion and heals the caster's hero.
+ */
 export const sacrificeFor =
   (select: Selector, healAmount: number): Effect =>
   (ctx) => {
@@ -342,8 +393,10 @@ export const sacrificeFor =
   };
 
 /**
- * Looks at the top `look` cards of the caster's deck, keeps the one at `keep` (the last one if fewer
- * were available) and discards the rest. A full hand burns the kept card. An empty deck does nothing
+ * Looks at the top `look` cards of the caster's deck, keeps the one at `keep`
+ * (the last one if fewer
+ * were available) and discards the rest. A full hand burns the kept card. An
+ * empty deck does nothing
  * (looking is not drawing, so no fatigue).
  */
 export const keepFromTop =
@@ -375,7 +428,10 @@ export const keepFromTop =
     });
   };
 
-/** "+N Attack this turn": raises attack now and takes it back when the turn ends. */
+/**
+ * "+N Attack this turn": raises attack now and takes it back when the turn
+ * ends.
+ */
 export const buffThisTurn =
   (select: Selector, attack: number): Effect =>
   (ctx) => {
@@ -385,7 +441,10 @@ export const buffThisTurn =
     }
   };
 
-/** Equips a weapon with the running card's attack and health (as durability), replacing any weapon. */
+/**
+ * Equips a weapon with the running card's attack and health (as durability),
+ * replacing any weapon.
+ */
 export const equipWeapon =
   (opts: { temporary?: boolean } = {}): Effect =>
   (ctx) => {
@@ -407,7 +466,10 @@ export const equipWeapon =
     });
   };
 
-/** Adds a copy of a random card the opponent has played to the caster's hand (burned if the hand is full). */
+/**
+ * Adds a copy of a random card the opponent has played to the caster's hand
+ * (burned if the hand is full).
+ */
 export const obtainOpponentPlayedCard = (): Effect => (ctx) => {
   const history = ctx.g.played[opponentOf(ctx.caster)];
   if (history.length === 0) return;
@@ -423,8 +485,10 @@ export const obtainOpponentPlayedCard = (): Effect => (ctx) => {
 };
 
 /**
- * Suppress: the minion loses its card's behaviour (triggers, auras, spell damage, cost changes, On Death effect) and all its
- * keywords, and any Disable. Its stats, damage and buffs stay as they are. Heroes are not affected.
+ * Suppress: the minion loses its card's behaviour (triggers, auras, spell
+ * damage, cost changes, On Death effect) and all its
+ * keywords, and any Disable. Its stats, damage and buffs stay as they are.
+ * Heroes are not affected.
  */
 export const silence =
   (select: Selector): Effect =>
@@ -444,7 +508,10 @@ export const silence =
     }
   };
 
-/** Swaps each minion's Attack and Health (maximum health follows). A minion with 0 Attack ends at 0 health and dies. */
+/**
+ * Swaps each minion's Attack and Health (maximum health follows). A minion with
+ * 0 Attack ends at 0 health and dies.
+ */
 export const swapAttackAndHealth =
   (select: Selector): Effect =>
   (ctx) => {
@@ -465,7 +532,10 @@ export const setAttackToHealth =
       minion.attack = minion.health + minion.auraAttack + minion.tempAttack;
   };
 
-/** Doubles each minion's current Attack (the extra stays after the turn, like a buff). */
+/**
+ * Doubles each minion's current Attack (the extra stays after the turn, like a
+ * buff).
+ */
 export const doubleAttackStat =
   (select: Selector): Effect =>
   (ctx) => {
@@ -473,7 +543,10 @@ export const doubleAttackStat =
       minion.attack += minion.attack;
   };
 
-/** Sets a hero's health to an exact value (it may go up or down; armor is untouched). */
+/**
+ * Sets a hero's health to an exact value (it may go up or down; armor is
+ * untouched).
+ */
 export const setHeroHealth =
   (select: Selector, value: number): Effect =>
   (ctx) => {
@@ -481,7 +554,10 @@ export const setHeroHealth =
       if (t.kind === 'hero') ctx.g.players[t.player].health = value;
   };
 
-/** Runs `make(ctx)` to build the effect from the live game state (for amounts that depend on it, like armor or hand size). */
+/**
+ * Runs `make(ctx)` to build the effect from the live game state (for amounts
+ * that depend on it, like armor or hand size).
+ */
 export const computed =
   (make: (ctx: Parameters<Effect>[0]) => Effect): Effect =>
   (ctx) =>
@@ -508,7 +584,10 @@ export const halveHealth =
     }
   };
 
-/** Adds a card to the caster's hand (burned if full). `costDelta` follows that copy ("costs 1 less" is -1). */
+/**
+ * Adds a card to the caster's hand (burned if full). `costDelta` follows that
+ * copy ("costs 1 less" is -1).
+ */
 export const addCardToHand =
   (
     cardId: string | ((ctx: Parameters<Effect>[0]) => string | undefined),
@@ -533,7 +612,10 @@ export const addCardToHand =
     ctx.events.push({ type: 'CardObtained', player: who, instanceId });
   };
 
-/** While a Mystery reacts to an attack: the attack goes to the minion most recently summoned for the caster (if any). */
+/**
+ * While a Mystery reacts to an attack: the attack goes to the minion most
+ * recently summoned for the caster (if any).
+ */
 export const redirectAttackToSummoned = (): Effect => (ctx) => {
   if (!ctx.attack) return;
   for (let i = ctx.events.length - 1; i >= 0; i--) {
@@ -545,7 +627,10 @@ export const redirectAttackToSummoned = (): Effect => (ctx) => {
   }
 };
 
-/** While a Mystery reacts to a spell: the spell goes to a random minion the spell's caster controls (unchanged if they have none). */
+/**
+ * While a Mystery reacts to a spell: the spell goes to a random minion the
+ * spell's caster controls (unchanged if they have none).
+ */
 export const redirectCastToCasterMinion = (): Effect => (ctx) => {
   if (!ctx.cast?.target) return;
   const mine = ctx.g.players[ctx.cast.caster].board;
@@ -587,7 +672,10 @@ export const destroyEnemyMystery =
     for (const effect of then) effect(ctx);
   };
 
-/** Takes the opponent's Mystery for the caster (it stays face down). If the caster already has one, it is just destroyed. */
+/**
+ * Takes the opponent's Mystery for the caster (it stays face down). If the
+ * caster already has one, it is just destroyed.
+ */
 export const stealEnemyMystery = (): Effect => (ctx) => {
   const me = ctx.g.players[ctx.caster];
   const foe = ctx.g.players[opponentOf(ctx.caster)];
@@ -596,7 +684,10 @@ export const stealEnemyMystery = (): Effect => (ctx) => {
   foe.mystery = null;
 };
 
-/** Draws `count` cards; each card drawn this way has its cost changed by `delta` (negative is cheaper) for the rest of the game. */
+/**
+ * Draws `count` cards; each card drawn this way has its cost changed by `delta`
+ * (negative is cheaper) for the rest of the game.
+ */
 export const drawDiscounted =
   (count: number, delta: number): Effect =>
   (ctx) => {
@@ -628,7 +719,8 @@ export const disableWhere =
   };
 
 /**
- * Returns the caster's selected minions to their hand (a full hand destroys them). The copy costs `costDelta` more (negative is less),
+ * Returns the caster's selected minions to their hand (a full hand destroys
+ * them). The copy costs `costDelta` more (negative is less),
  * and with `rush` it has Rush when played again. Enemy minions are ignored.
  */
 export const returnToHand =
@@ -660,7 +752,10 @@ export const returnToHand =
     }
   };
 
-/** Halves each minion's Attack (rounded down). Auras and this-turn boosts stay as they are. */
+/**
+ * Halves each minion's Attack (rounded down). Auras and this-turn boosts stay
+ * as they are.
+ */
 export const halveAttack =
   (select: Selector): Effect =>
   (ctx) => {
@@ -671,7 +766,10 @@ export const halveAttack =
     }
   };
 
-/** Swaps the caster's weakest minion (least Attack + Health) with the opponent's strongest. Does nothing if either side has none. */
+/**
+ * Swaps the caster's weakest minion (least Attack + Health) with the opponent's
+ * strongest. Does nothing if either side has none.
+ */
 export const tradeWeakestForStrongest = (): Effect => (ctx) => {
   const mine = ctx.g.players[ctx.caster].board;
   const theirs = ctx.g.players[opponentOf(ctx.caster)].board;
@@ -690,7 +788,10 @@ export const tradeWeakestForStrongest = (): Effect => (ctx) => {
   }
 };
 
-/** Summons the running card's `index`-th entourage token for the OPPONENT, `count` times (a full board: nothing). */
+/**
+ * Summons the running card's `index`-th entourage token for the OPPONENT,
+ * `count` times (a full board: nothing).
+ */
 export const summonEntourageForOpponent =
   (index = 0, count = 1): Effect =>
   (ctx) => {
@@ -714,7 +815,10 @@ export const giveOpponentEnergySlot =
     e.total = Math.min(MAX_ENERGY, e.total + amount);
   };
 
-/** The caster loses `amount` energy slots (never below 0; current energy follows). */
+/**
+ * The caster loses `amount` energy slots (never below 0; current energy
+ * follows).
+ */
 export const loseEnergySlot =
   (amount = 1): Effect =>
   (ctx) => {
@@ -723,7 +827,10 @@ export const loseEnergySlot =
     e.current = Math.min(e.current, e.total);
   };
 
-/** The caster draws `count` minion cards from their deck (the first ones found; they leave the deck, a full hand burns them). */
+/**
+ * The caster draws `count` minion cards from their deck (the first ones found;
+ * they leave the deck, a full hand burns them).
+ */
 export const drawMinionsFromDeck =
   (count: number): Effect =>
   (ctx) => {
@@ -751,14 +858,20 @@ export const drawMinionsFromDeck =
     }
   };
 
-/** Destroys a random number (0 to all) of the minions on both boards, picked at random. */
+/**
+ * Destroys a random number (0 to all) of the minions on both boards, picked at
+ * random.
+ */
 export const destroyRandomNumberOfAll = (): Effect => (ctx) => {
   const all = [...ctx.g.players['0'].board, ...ctx.g.players['1'].board];
   const k = ctx.rng.int(all.length + 1);
   for (const m of ctx.rng.shuffle([...all]).slice(0, k)) m.health = 0;
 };
 
-/** Two random enemy minions fight: each deals its Attack to the other (no Guard, no triggers beyond the damage). */
+/**
+ * Two random enemy minions fight: each deals its Attack to the other (no Guard,
+ * no triggers beyond the damage).
+ */
 export const forceFight = (): Effect => (ctx) => {
   const picks = ctx.rng
     .shuffle(
@@ -784,7 +897,9 @@ export const forceFight = (): Effect => (ctx) => {
   );
 };
 
-/** `count` times: 1 damage to a random character (hero or minion, either side). */
+/**
+ * `count` times: 1 damage to a random character (hero or minion, either side).
+ */
 export const scatterDamage =
   (count: number): Effect =>
   (ctx) => {
@@ -826,7 +941,10 @@ export const freeMysteryThisTurn = (): Effect => (ctx) => {
   ctx.g.players[ctx.caster].mysteryFreeOnTurn = ctx.g.turn;
 };
 
-/** Gives the OTHER player (not the one who just played the spell) a copy of the spell that was played. */
+/**
+ * Gives the OTHER player (not the one who just played the spell) a copy of the
+ * spell that was played.
+ */
 export const copyPlayedSpellToOtherHand = (): Effect => (ctx) => {
   const e = ctx.event;
   if (e?.type !== 'CardPlayed') return;
@@ -834,7 +952,8 @@ export const copyPlayedSpellToOtherHand = (): Effect => (ctx) => {
 };
 
 /**
- * Adds `count` random playable cards that pass `where` to the caster's hand (a full hand burns them). Each can cost `costDelta` more
+ * Adds `count` random playable cards that pass `where` to the caster's hand (a
+ * full hand burns them). Each can cost `costDelta` more
  * (negative is less). With no card to pick, nothing happens.
  */
 export const addRandomCardToHand =
@@ -852,7 +971,10 @@ export const addRandomCardToHand =
     }
   };
 
-/** Summons a random playable minion card that passes `where` for the caster (a full board: nothing). */
+/**
+ * Summons a random playable minion card that passes `where` for the caster (a
+ * full board: nothing).
+ */
 export const summonRandomCard =
   (where: (c: Card) => boolean): Effect =>
   (ctx) => {
@@ -867,7 +989,10 @@ export const summonRandomCard =
     );
   };
 
-/** Runs `then` if the selected minion is at 0 health (use right after damaging it). */
+/**
+ * Runs `then` if the selected minion is at 0 health (use right after damaging
+ * it).
+ */
 export const ifDead =
   (select: Selector, then: Effect): Effect =>
   (ctx) => {
@@ -879,7 +1004,10 @@ export const ifDead =
     if (dead) then(ctx);
   };
 
-/** Adds Attack and Health "for this turn only" (the Health is taken back at the end of the turn, never leaving a minion below 1). */
+/**
+ * Adds Attack and Health "for this turn only" (the Health is taken back at the
+ * end of the turn, never leaving a minion below 1).
+ */
 export const buffThisTurnBoth =
   (select: Selector, attack: number, health: number): Effect =>
   (ctx) => {
@@ -893,8 +1021,10 @@ export const buffThisTurnBoth =
   };
 
 /**
- * Borrows enemy minions for `turns` of the caster's turns (1 = until the end of this turn, 2 = until the end of their next turn). They go
- * home when it ends (a full home board loses them). With `canAttack` they can attack at once. No room on the caster's board: nothing happens.
+ * Borrows enemy minions for `turns` of the caster's turns (1 = until the end of
+ * this turn, 2 = until the end of their next turn). They go
+ * home when it ends (a full home board loses them). With `canAttack` they can
+ * attack at once. No room on the caster's board: nothing happens.
  */
 export const loanMinion =
   (select: Selector, turns: number, canAttack: boolean): Effect =>
@@ -915,7 +1045,10 @@ export const loanMinion =
     }
   };
 
-/** The running minion becomes a copy of the selected minion: its card, stats, keywords and effects (not its place or its summoning sickness). */
+/**
+ * The running minion becomes a copy of the selected minion: its card, stats,
+ * keywords and effects (not its place or its summoning sickness).
+ */
 export const becomeCopyOf =
   (select: Selector): Effect =>
   (ctx) => {
@@ -938,9 +1071,12 @@ export const becomeCopyOf =
   };
 
 /**
- * Summons a copy of the selected minion for the caster, at the far right of their board: its card, current attack and health,
- * keywords, and any Suppress or On Death summons it carries (RULES Appendix B). Like any new minion it can not attack this turn. A full
- * board, or nothing selected, means nothing happens. Its own On Play effect does not run (it is summoned, not played).
+ * Summons a copy of the selected minion for the caster, at the far right of
+ * their board: its card, current attack and health,
+ * keywords, and any Suppress or On Death summons it carries (RULES Appendix B).
+ * Like any new minion it can not attack this turn. A full
+ * board, or nothing selected, means nothing happens. Its own On Play effect
+ * does not run (it is summoned, not played).
  */
 export const summonCopyOf =
   (select: Selector): Effect =>
@@ -960,7 +1096,10 @@ export const summonCopyOf =
     if (t.deathSummons) me.deathSummons = [...t.deathSummons];
   };
 
-/** Every minion except the running one attacks a random character on the other side (a minion fights back; a hero does not), in play order. */
+/**
+ * Every minion except the running one attacks a random character on the other
+ * side (a minion fights back; a hero does not), in play order.
+ */
 export const forceAllAttack = (): Effect => (ctx) => {
   const order = [
     ...ctx.g.players['0'].board.map((m) => ({ owner: '0' as const, m })),
@@ -991,7 +1130,10 @@ export const forceAllAttack = (): Effect => (ctx) => {
   }
 };
 
-/** The selected friendly minions get "On Death: summon a random `race` minion costing `cost`". */
+/**
+ * The selected friendly minions get "On Death: summon a random `race` minion
+ * costing `cost`".
+ */
 export const grantDeathSummon =
   (select: Selector, race: string, cost: number): Effect =>
   (ctx) => {
@@ -1008,7 +1150,10 @@ export const grantImmune =
     for (const { minion } of minionsOf(ctx, select)) minion.immune = true;
   };
 
-/** The selected minions make their owner draw a card whenever they attack (for good). */
+/**
+ * The selected minions make their owner draw a card whenever they attack (for
+ * good).
+ */
 export const grantDrawOnAttack =
   (select: Selector): Effect =>
   (ctx) => {
@@ -1033,7 +1178,10 @@ export const healthFloorThisTurn = (): Effect => (ctx) => {
   ctx.g.players[ctx.caster].healthFloorOnTurn = ctx.g.turn;
 };
 
-/** Equips the running card's `index`-th entourage weapon token (replacing any weapon). */
+/**
+ * Equips the running card's `index`-th entourage weapon token (replacing any
+ * weapon).
+ */
 export const equipTokenWeapon =
   (index = 0): Effect =>
   (ctx) => {
@@ -1058,7 +1206,10 @@ export const equipTokenWeapon =
     });
   };
 
-/** The running minion swaps places with a random minion card from its owner's hand (which goes onto the board in its slot; this card goes to the hand). */
+/**
+ * The running minion swaps places with a random minion card from its owner's
+ * hand (which goes onto the board in its slot; this card goes to the hand).
+ */
 export const swapSelfWithHandMinion = (): Effect => (ctx) => {
   const p = ctx.g.players[ctx.caster];
   const slot = p.board.findIndex((m) => m.instanceId === ctx.self);

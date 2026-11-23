@@ -3,7 +3,10 @@ import { getCardDef } from '../definitions';
 import type { CardDef, DefLookup } from '../definitions/define-card';
 import type { MinionInstance, MinionKeywords } from '../state/types';
 
-/** The behaviour a minion on the board has right now: its card's, unless it has been Suppressed. */
+/**
+ * The behaviour a minion on the board has right now: its card's, unless it has
+ * been Suppressed.
+ */
 export const minionDef = (
   minion: MinionInstance,
   catalog: CardCatalog,
@@ -14,7 +17,10 @@ export const minionDef = (
   return card && defs(card);
 };
 
-/** Builds a fresh minion from its card. Keyword flags come from the card's mechanics. */
+/**
+ * Builds a fresh minion from its card. Keyword flags come from the card's
+ * mechanics.
+ */
 export const createMinion = (
   card: Card,
   instanceId: number,

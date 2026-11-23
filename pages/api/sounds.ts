@@ -14,7 +14,10 @@ const walk = (dir: string, base: string): string[] =>
           : [],
     );
 
-/** The audio files under `public/sounds`, as URLs, for the board lab's sound picker (dev tool). */
+/**
+ * The audio files under `public/sounds`, as URLs, for the board lab's sound
+ * picker (dev tool).
+ */
 export default function handler(
   _req: NextApiRequest,
   res: NextApiResponse<string[]>,

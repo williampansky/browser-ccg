@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 
 /**
- * How a card name in the log opens the collection's big card view: a right-click (the default, so a plain click stays free) or a single
- * left-click. A player's choice, kept in this browser; the menu and the log both read it through `useLogCardTrigger`.
+ * How a card name in the log opens the collection's big card view: a
+ * right-click (the default, so a plain click stays free) or a single
+ * left-click. A player's choice, kept in this browser; the menu and the log
+ * both read it through `useLogCardTrigger`.
  */
 export type LogCardTrigger = 'rightClick' | 'click';
 const KEY = 'ccg.logCardTrigger.v1';

@@ -55,7 +55,8 @@ const PlayBoard = dynamic(
 );
 
 /**
- * PROTOTYPE page (dev only, not linked): the real /play board, frozen into a setup you choose, with an overlay of layout knobs.
+ * PROTOTYPE page (dev only, not linked): the real /play board, frozen into a
+ * setup you choose, with an overlay of layout knobs.
  * Everything is in the URL, so a layout can be shared or bookmarked:
  *  - setup (the same debug params as /play): b0 b1 (board minion ids), turn (0 = player, 1 = enemy; applied live), p0 p1 (hand ids), w0 w1, e0 e1, h0 h1, first, herofig
  *  - layout (CSS overrides over the real stylesheet): lm minion height px, lg minion gap px, lml/lms clicked-minion lift px / scale, lmh aimed-at target scale, lmpv=1 previews it on your first minion, ls section gap px, lw table max width px,
@@ -63,8 +64,10 @@ const PlayBoard = dynamic(
  *    lhrt/lhdp fan tilt/drop (x), lhol card overlap px, lhov/lhoy/lhot hover scale/lift px/tilt deg, lhom hover ms, lhpa/lhpb/lhpm parting px (adjacent / further out) and ms, lhha/lhhs/lhfl/lhsm hover halo opacity/swell, flash brightness, sheen ms, lhst settle ms, lhdr draw-in ms, lhpv=N holds card N in its hover look, hn0/hn1 cards dealt to each hand (setup, not baked),
  *    lsel clicked-card scale, lpv=1 previews it on the first card, lpan log/deck arrangement (swap|stackL|stackR), lsplit stacked log share %,
  *    lgw/ldw log/deck width px, les energy bar scale, lex/ley its X/Y offsets px, leo=h horizontal energy bar, lgx/lgy/ldx/ldy their X/Y offsets px, lfelt=0 hides the felt panel
- * Changing a setup param restarts the board (it is a fresh game each time, not a live one); layout knobs apply instantly.
- * The pieces live in components/board-lab/: lab-model (knob table), lab-panels (the sections), LabOverlay (the floating panel), PresetsPanel, SoundPanel.
+ * Changing a setup param restarts the board (it is a fresh game each time, not
+ * a live one); layout knobs apply instantly.
+ * The pieces live in components/board-lab/: lab-model (knob table), lab-panels
+ * (the sections), LabOverlay (the floating panel), PresetsPanel, SoundPanel.
  */
 const { cards } = loadHsCards();
 
@@ -106,7 +109,8 @@ const BoardLab = () => {
     });
   };
 
-  // First visit with no setup in the URL: a full-looking board, you going first, the figure heroes.
+  // First visit with no setup in the URL: a full-looking board, you going
+  // first, the figure heroes.
   useEffect(() => {
     if (!router.isReady) return;
     if (SETUP_KEYS.some((k) => k in router.query)) return;
@@ -121,7 +125,8 @@ const BoardLab = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
 
-  // With no layout params the lab shows exactly what /play shows (PLAY_LAYOUT); a param in the URL overrides one knob.
+  // With no layout params the lab shows exactly what /play shows (PLAY_LAYOUT);
+  // a param in the URL overrides one knob.
   const css = buildLayoutCss({
     ...PLAY_LAYOUT,
     ...Object.fromEntries(Object.keys(q).map((k) => [k, one(q[k])])),

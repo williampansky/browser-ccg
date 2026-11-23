@@ -3,8 +3,10 @@ import { GameEvent, GameState, MAX_HAND, PlayerId } from '../state/types';
 import { damageHero } from './damage';
 
 /**
- * Draws one card. Full hand: the card is burned (removed from the deck, not added).
- * Empty deck: fatigue, escalating 1, 2, 3... damage to the hero. Call inside `produce`.
+ * Draws one card. Full hand: the card is burned (removed from the deck, not
+ * added).
+ * Empty deck: fatigue, escalating 1, 2, 3... damage to the hero. Call inside
+ * `produce`.
  */
 export const drawCard = (
   g: Draft<GameState>,

@@ -1,4 +1,7 @@
-/** Test helpers for exercising the real CORE definitions against the real card data. */
+/**
+ * Test helpers for exercising the real CORE definitions against the real card
+ * data.
+ */
 import { produce } from 'immer';
 import { loadHsCards } from '../cards/load-hs-cards';
 import type { Card } from '../cards/types';
@@ -30,7 +33,10 @@ export const realCard = (id: string): Card => {
 };
 
 /** [attack, health] of each minion to put on a board, left to right. */
-/** An optional third entry names a real card to use instead of the plain test minion (for its race). */
+/**
+ * An optional third entry names a real card to use instead of the plain test
+ * minion (for its race).
+ */
 export type BoardSpec = ([number, number] | [number, number, string])[];
 
 export interface Scenario {
@@ -41,7 +47,10 @@ export interface Scenario {
   heroHp?: Partial<Record<PlayerId, number>>;
 }
 
-/** P0 to move with `cardId` in hand (index 0), 10 energy, and the given boards. Deck: 30 grunts. */
+/**
+ * P0 to move with `cardId` in hand (index 0), 10 energy, and the given boards.
+ * Deck: 30 grunts.
+ */
 export const setup = (cardId: string, sc: Scenario = {}): GameState => {
   let s = createGame(
     {
@@ -125,7 +134,10 @@ export const withWeapon = (s: GameState, player: PlayerId): GameState =>
     };
   });
 
-/** Plays hand slot 0, then every legal option is not needed here: returns the legal targets for it. */
+/**
+ * Plays hand slot 0, then every legal option is not needed here: returns the
+ * legal targets for it.
+ */
 export { legalTargets } from '../rules/targeting';
 
 /** Ends the active player's turn (and starts the other's). */

@@ -15,7 +15,10 @@ export default function TheCollectionPage({
   );
 }
 
-/** Dev tooling: the ids whose `-CARD` art file is not on disk (read at build/request time; only shown in development). */
+/**
+ * Dev tooling: the ids whose `-CARD` art file is not on disk (read at
+ * build/request time; only shown in development).
+ */
 export const getStaticProps = async () => {
   const { existsSync } = await import('fs');
   const { join } = await import('path');

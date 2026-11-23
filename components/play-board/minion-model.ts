@@ -1,6 +1,9 @@
 import type { MinionInstance } from '../../engine';
 
-/** A small status icon on a board minion. `kind` picks the glyph and colour, `label` is the words for a tooltip or a screen reader. */
+/**
+ * A small status icon on a board minion. `kind` picks the glyph and colour,
+ * `label` is the words for a tooltip or a screen reader.
+ */
 export interface StatusBadge {
   kind:
     | 'rush'
@@ -11,13 +14,20 @@ export interface StatusBadge {
     | 'noAttack'
     | 'silenced';
   label: string;
-  /** The icon is only useful for a while and is fading out (Stampede after the turn the minion came in) */
+  /**
+   * The icon is only useful for a while and is fading out (Stampede after the
+   * turn the minion came in)
+   */
   fades?: boolean;
 }
 
 /**
- * The status icons a minion shows. Guard, Bubble and Concealed are NOT here: they change how the whole minion is drawn (a shield behind it,
- * a ring around it, a veil over it). Stampede is only useful the turn the minion came in, so it is marked `fades` from the next turn on. `sick` is summoning sickness (it cannot attack yet); only the viewer's own minions show it.
+ * The status icons a minion shows. Guard, Bubble and Concealed are NOT here:
+ * they change how the whole minion is drawn (a shield behind it,
+ * a ring around it, a veil over it). Stampede is only useful the turn the
+ * minion came in, so it is marked `fades` from the next turn on. `sick` is
+ * summoning sickness (it cannot attack yet); only the viewer's own minions show
+ * it.
  */
 export const statusBadges = (
   m: MinionInstance,
@@ -45,8 +55,10 @@ export const statusBadges = (
 };
 
 /**
- * How a stat compares with the card's printed number: `up` when buffed above it, `down` when below it, `same` otherwise.
- * For Health, being damaged is a separate thing (`damaged`): a minion can be buffed and damaged at once.
+ * How a stat compares with the card's printed number: `up` when buffed above
+ * it, `down` when below it, `same` otherwise.
+ * For Health, being damaged is a separate thing (`damaged`): a minion can be
+ * buffed and damaged at once.
  */
 export const statTone = (
   current: number,
@@ -63,17 +75,25 @@ export const isDamaged = (
   m: Pick<MinionInstance, 'health' | 'maxHealth'>,
 ): boolean => m.health < m.maxHealth;
 
-/** The most minions a side can have, and the smallest and largest oval height (px) a minion is drawn at. */
+/**
+ * The most minions a side can have, and the smallest and largest oval height
+ * (px) a minion is drawn at.
+ */
 export const MAX_BOARD_MINIONS = 7;
 export const MINION_OVAL_MAX = 128;
 export const MINION_OVAL_MIN = 76;
-/** Room a minion needs beside its oval (the Attack and Health badges stick out), and the gap between minions, in px. */
+/**
+ * Room a minion needs beside its oval (the Attack and Health badges stick out),
+ * and the gap between minions, in px.
+ */
 const SLOT_SIDE = 26;
 const SLOT_GAP = 4;
 
 /**
- * The oval height (px) for the board minions, so a full side of seven fits one row of `boardWidth` px: full size (128px) when
- * there is room, smaller on a narrow window, never below `MINION_OVAL_MIN`. The oval is 1 : 1.25 (width : height).
+ * The oval height (px) for the board minions, so a full side of seven fits one
+ * row of `boardWidth` px: full size (128px) when
+ * there is room, smaller on a narrow window, never below `MINION_OVAL_MIN`. The
+ * oval is 1 : 1.25 (width : height).
  */
 export const minionOvalHeight = (boardWidth: number): number => {
   if (boardWidth <= 0) return MINION_OVAL_MAX;

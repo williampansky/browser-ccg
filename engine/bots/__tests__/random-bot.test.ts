@@ -117,7 +117,8 @@ describe('random bot', () => {
         '0': { ...s.players['0'], hand: s.players['0'].hand.slice(-1) },
       },
     });
-    // CORE_111 gives your minions +3 Attack: with no minions it is wasted, with one it is fine.
+    // CORE_111 gives your minions +3 Attack: with no minions it is wasted, with
+    // one it is fine.
     const wrath = onlyHand(
       setEnergy(putInHand(start(), '0', 'CORE_111'), '0', 5),
     );

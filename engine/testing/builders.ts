@@ -1,4 +1,7 @@
-/** Test helpers: tiny hand-made cards and state tweaks. Not used by the engine itself. */
+/**
+ * Test helpers: tiny hand-made cards and state tweaks. Not used by the engine
+ * itself.
+ */
 import { produce } from 'immer';
 import type { Card, CardCatalog, CardNumbers } from '../cards/types';
 import { createMinion } from '../rules/minion';
@@ -75,7 +78,10 @@ export const putInHand = (
     g.players[player].hand.push({ instanceId: g.nextInstanceId++, cardId });
   });
 
-/** Puts a ready-to-attack minion (played on turn 0) on a player's board; tweak it with `patch`. */
+/**
+ * Puts a ready-to-attack minion (played on turn 0) on a player's board; tweak
+ * it with `patch`.
+ */
 export const putOnBoard = (
   state: GameState,
   player: PlayerId,

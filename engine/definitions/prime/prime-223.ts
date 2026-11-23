@@ -4,7 +4,8 @@ import { allEnemyMinions, chosenTarget } from '../../effects/selectors';
 import { friendlyMinion } from '../../effects/filters';
 import { findMinion } from '../../rules/lookup';
 
-// PRIME_223 Cursed Concoction: "Destroy a friendly minion; deal its Attack to all enemy minions"
+// PRIME_223 Cursed Concoction: "Destroy a friendly minion; deal its Attack to
+// all enemy minions"
 export default defineCard('PRIME_223', () => ({
   target: friendlyMinion(),
   onPlay: [

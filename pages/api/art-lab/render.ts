@@ -4,7 +4,11 @@ import { FocusByKind, renderArt } from '../../../scripts/art/render';
 import { devOnly } from '../../../scripts/art/dev-guard';
 import { canonicalCardId } from '../../../components/art-lab/lookup';
 
-/** Art lab: POST { id, focus: { card?, deck?, minion? } } writes those images from the card's master in art-inbox/, then moves the master to art-inbox/done/ (as `npm run art` does). Dev only. */
+/**
+ * Art lab: POST { id, focus: { card?, deck?, minion? } } writes those images
+ * from the card's master in art-inbox/, then moves the master to
+ * art-inbox/done/ (as `npm run art` does). Dev only.
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,

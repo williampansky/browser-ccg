@@ -14,7 +14,10 @@ export type Num = {
   max: number;
   step?: number;
   css: (v: number) => string;
-  /** Reads the board's current value for this knob from the DOM (used for the slider's default while no override is set). */
+  /**
+   * Reads the board's current value for this knob from the DOM (used for the
+   * slider's default while no override is set).
+   */
   read: () => number | undefined;
 };
 
@@ -30,8 +33,10 @@ export const cs = (name: string) => {
 };
 
 /**
- * The top end of every slider, in one place (px unless noted). Edit freely: a slider whose real default is above its max stretches
- * to fit it anyway. The offset sliders (lfx0 ... ley, lgx ... ldy) run from minus this value to plus it.
+ * The top end of every slider, in one place (px unless noted). Edit freely: a
+ * slider whose real default is above its max stretches
+ * to fit it anyway. The offset sliders (lfx0 ... ley, lgx ... ldy) run from
+ * minus this value to plus it.
  */
 export const SLIDER_MAX = {
   // Minions and table
@@ -48,7 +53,8 @@ export const SLIDER_MAX = {
   lhw0: 260,
   lhw1: 260,
   lsel: 3,
-  // Hero figures (width, then X / Y offset: the offset sliders run from minus this to plus this)
+  // Hero figures (width, then X / Y offset: the offset sliders run from minus
+  // this to plus this)
   lfw0: 320,
   lfw1: 320,
   lfx0: 2000,
@@ -280,7 +286,8 @@ export const NUMS: Num[] = [
     css: CSS_FNS.lhs,
     read: () => px(cs('hand')?.getPropertyValue('--hand-sink')),
   },
-  // Your hand: the cards are 144 px wide at zoom 1 (the board computes a smaller zoom to fit a big hand), so width = 144 x zoom.
+  // Your hand: the cards are 144 px wide at zoom 1 (the board computes a
+  // smaller zoom to fit a big hand), so width = 144 x zoom.
   {
     key: 'lhw0',
     label: 'My hand card width (px)',
@@ -292,7 +299,8 @@ export const NUMS: Num[] = [
       return Number.isNaN(z) ? undefined : Math.round(z * 144);
     },
   },
-  // The enemy's hand: card backs (144 x 152 px by default, overlapping by 40 px each side), scaled together.
+  // The enemy's hand: card backs (144 x 152 px by default, overlapping by 40 px
+  // each side), scaled together.
   {
     key: 'lhw1',
     label: 'Enemy hand card width (px)',
@@ -317,7 +325,8 @@ export const NUMS: Num[] = [
     css: CSS_FNS.lfw1,
     read: () => px(cs('figFoe')?.width),
   },
-  // Hero figure position: an offset from where /play puts it (via the individual `translate` property, so it composes with the rest).
+  // Hero figure position: an offset from where /play puts it (via the
+  // individual `translate` property, so it composes with the rest).
   {
     key: 'lfx0',
     label: 'My hero X offset (px)',
@@ -382,7 +391,8 @@ export const NUMS: Num[] = [
     css: CSS_FNS.lfy1,
     read: () => 0,
   },
-  // A clicked minion: how far it lifts and how much it grows (the board's own defaults are 14 px and 1.08x).
+  // A clicked minion: how far it lifts and how much it grows (the board's own
+  // defaults are 14 px and 1.08x).
   {
     key: 'lml',
     label: 'Clicked minion lift (px)',
@@ -411,7 +421,8 @@ export const NUMS: Num[] = [
     css: CSS_FNS.lmh,
     read: () => 1,
   },
-  // The clicked (selected) hand card: /play scales it 2x (hand zoom on top) and lifts it so it stays on screen.
+  // The clicked (selected) hand card: /play scales it 2x (hand zoom on top) and
+  // lifts it so it stays on screen.
   // Hand fan (tilt and drop as multiples of hsclone's numbers) and spacing
   {
     key: 'lhrt',
@@ -429,7 +440,8 @@ export const NUMS: Num[] = [
     max: 3,
     step: 0.05,
     css: CSS_FNS[`lhrt${i + 1}`],
-    // starts from the main tilt (kept in --h-tilt-base), so an untouched count looks like it does now
+    // starts from the main tilt (kept in --h-tilt-base), so an untouched count
+    // looks like it does now
     read: () => {
       const v = parseFloat(cs('hand')?.getPropertyValue('--h-tilt-base') ?? '');
       return Number.isNaN(v) ? 1 : v;
@@ -658,7 +670,8 @@ export const NUMS: Num[] = [
     css: CSS_FNS.lsel,
     read: () => 2,
   },
-  // The log and deck panels. Their presets are in `panelCss`; these are size and offset.
+  // The log and deck panels. Their presets are in `panelCss`; these are size
+  // and offset.
   {
     key: 'lsplit',
     label: 'Stacked: log share of height (%)',
@@ -742,7 +755,8 @@ export const NUMS: Num[] = [
     css: CSS_FNS.ldy,
     read: () => 0,
   },
-  // The energy bar: scale and an X / Y offset from where /play puts it (just outside the table's right edge).
+  // The energy bar: scale and an X / Y offset from where /play puts it (just
+  // outside the table's right edge).
   {
     key: 'les',
     label: 'Energy bar scale (x)',
@@ -1157,7 +1171,8 @@ export const NUMS: Num[] = [
     css: CSS_FNS.lebg,
     read: () => 14,
   },
-  // The cast popup that flashes when a spell or item is played (defaults are what /play does).
+  // The cast popup that flashes when a spell or item is played (defaults are
+  // what /play does).
   {
     key: 'lcx',
     label: 'Cast popup X offset (px)',
@@ -1308,7 +1323,8 @@ NUMS.push({
   read: () => +(PLAY_LAYOUT[MID_TIMER_PREVIEW_KEY] ?? 70),
 });
 
-// The end game screen: CSS knobs (overlay, banner) and the confetti numbers (applied by the End game panel, not by CSS).
+// The end game screen: CSS knobs (overlay, banner) and the confetti numbers
+// (applied by the End game panel, not by CSS).
 NUMS.push(
   {
     key: 'leno',
@@ -1375,7 +1391,10 @@ export const SETUP_KEYS = [
   'herotype',
   'turn',
 ];
-/** The setup params that need a new game (heroes are chosen at deal time, hands are dealt). Boards and energy are applied live. */
+/**
+ * The setup params that need a new game (heroes are chosen at deal time, hands
+ * are dealt). Boards and energy are applied live.
+ */
 export const RESTART_KEYS = [
   'p0',
   'p1',

@@ -1,5 +1,6 @@
 /**
- * Turn timer for `/play` (a local stand-in: see `turnSeconds` in the engine for why a networked game needs a server-side clock).
+ * Turn timer for `/play` (a local stand-in: see `turnSeconds` in the engine for
+ * why a networked game needs a server-side clock).
  * The option is saved in localStorage and is on by default.
  */
 const KEY = 'ccg-turn-timer';
@@ -22,7 +23,10 @@ export const setTimerOn = (on: boolean): void => {
   }
 };
 
-/** Whole seconds left (rounded up, so "0:01" shows until the very end), never below 0. */
+/**
+ * Whole seconds left (rounded up, so "0:01" shows until the very end), never
+ * below 0.
+ */
 export const secondsLeft = (
   startedAt: number,
   now: number,

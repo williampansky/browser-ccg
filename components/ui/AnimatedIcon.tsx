@@ -2,23 +2,35 @@ import React, { useEffect, useRef } from 'react';
 import { animatedIconOf, FRAME_RATE, frameUrl } from './animated-icons';
 
 /**
- * Frames are decoded once into images and painted on a <canvas>, tinted with the element's text colour. Swapping a CSS mask-image per frame
- * flashed (the browser can show nothing while it decodes the next URL, and every frame re-rendered React), so nothing here touches React
- * state while playing: a frame is one synchronous draw. Sequences differ in canvas size and padding (Parallel Dots is 177 x 49, one plus sign is a
- * small shape in a 500 px frame), so each icon is sized by its resting shape (the last frame; all frames for the dot spinners) and fitted into a square.
+ * Frames are decoded once into images and painted on a <canvas>, tinted with
+ * the element's text colour. Swapping a CSS mask-image per frame
+ * flashed (the browser can show nothing while it decodes the next URL, and
+ * every frame re-rendered React), so nothing here touches React
+ * state while playing: a frame is one synchronous draw. Sequences differ in
+ * canvas size and padding (Parallel Dots is 177 x 49, one plus sign is a
+ * small shape in a 500 px frame), so each icon is sized by its resting shape
+ * (the last frame; all frames for the dot spinners) and fitted into a square.
  */
 const SIZE = 96; // the frames' own size
 
 interface Loaded {
   frames: HTMLImageElement[];
-  /** The box (in each frame's own pixels) that sizes the icon: the shape at rest (last frame), or every frame for a spinner. */
+  /**
+   * The box (in each frame's own pixels) that sizes the icon: the shape at rest
+   * (last frame), or every frame for a spinner.
+   */
   box: { x: number; y: number; w: number; h: number };
-  /** Share of the square the box fills (a resting shape leaves room for the overshoot and spin of the animation). */
+  /**
+   * Share of the square the box fills (a resting shape leaves room for the
+   * overshoot and spin of the animation).
+   */
   fill: number;
 }
 const decoded = new Map<string, Promise<Loaded>>();
 
-/** The smallest rectangle that covers the visible pixels of the given frames. */
+/**
+ * The smallest rectangle that covers the visible pixels of the given frames.
+ */
 const unionBox = (frames: HTMLImageElement[]): Loaded['box'] => {
   const w = frames[0].naturalWidth;
   const h = frames[0].naturalHeight;
@@ -52,7 +64,10 @@ const unionBox = (frames: HTMLImageElement[]): Loaded['box'] => {
     : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
 };
 
-/** Fetches and decodes every frame of an icon once, and works out where the shape sits. */
+/**
+ * Fetches and decodes every frame of an icon once, and works out where the
+ * shape sits.
+ */
 export const preloadIcon = (id: string): Promise<Loaded> => {
   const def = animatedIconOf(id);
   if (!def || typeof Image === 'undefined')
@@ -91,12 +106,14 @@ type Props = {
   /** Size in px (it is square). 0 lets CSS (`style`) size it. */
   size?: number;
   /**
-   * `on`: plays forward when this turns true and back when it turns false; rests on the last frame while true and shows nothing while false.
+   * `on`: plays forward when this turns true and back when it turns false;
+   * rests on the last frame while true and shows nothing while false.
    * Leave undefined to show one fixed frame (see `rest`).
    */
   on?: boolean;
   /**
-   * With `on`: nothing is drawn while off (a fast fade-out instead of playing back), and turning on plays from the first frame. For things that
+   * With `on`: nothing is drawn while off (a fast fade-out instead of playing
+   * back), and turning on plays from the first frame. For things that
    * come and go, like a checkbox tick, where the first frame must not show.
    */
   hideWhenOff?: boolean;
@@ -108,7 +125,10 @@ type Props = {
   style?: React.CSSProperties;
 };
 
-/** An animated icon in the current text colour. Honors `prefers-reduced-motion` (no animation, just the resting frame). */
+/**
+ * An animated icon in the current text colour. Honors `prefers-reduced-motion`
+ * (no animation, just the resting frame).
+ */
 export const AnimatedIcon = ({
   name,
   size = 20,
@@ -136,8 +156,10 @@ export const AnimatedIcon = ({
     frameRef.current = f;
     ctx.globalCompositeOperation = 'source-over';
     ctx.clearRect(0, 0, SIZE, SIZE);
-    // The sizing box is the same for every frame, so nothing jumps; it is centred and fitted (never stretched) to a share of the square. Parts of
-    // a frame that fall outside it (overshoot, a spin) still draw, up to the edge of the canvas.
+    // The sizing box is the same for every frame, so nothing jumps; it is
+    // centred and fitted (never stretched) to a share of the square. Parts of
+    // a frame that fall outside it (overshoot, a spin) still draw, up to the
+    // edge of the canvas.
     const b = box.current;
     const k = Math.min(SIZE / b.w, SIZE / b.h) * fill.current * 0.98 || 1;
     ctx.drawImage(
@@ -152,13 +174,17 @@ export const AnimatedIcon = ({
     ctx.fillRect(0, 0, SIZE, SIZE);
   };
 
-  /** Nothing drawn: the "off" end of an icon (the first frames of most icons are stray marks, not a blank). */
+  /**
+   * Nothing drawn: the "off" end of an icon (the first frames of most icons are
+   * stray marks, not a blank).
+   */
   const clear = () => {
     ref.current?.getContext('2d')?.clearRect(0, 0, SIZE, SIZE);
     frameRef.current = 0;
   };
 
-  // Redraw in the new colour when the interface theme changes under a resting icon.
+  // Redraw in the new colour when the interface theme changes under a resting
+  // icon.
   useEffect(() => {
     const mo = new MutationObserver(
       () => frameRef.current !== null && draw(frameRef.current),
@@ -217,7 +243,8 @@ export const AnimatedIcon = ({
       if (on === undefined) return draw(Math.round(rest * last));
       if (hideWhenOff) {
         if (!on) return fade(false); // keep whatever is drawn, fade it away
-        // On the first render a checked box just shows its tick; later it is drawn in, from a cleared first frame (not the old finished tick).
+        // On the first render a checked box just shows its tick; later it is
+        // drawn in, from a cleared first frame (not the old finished tick).
         if (first || reduced) {
           draw(last);
           return fade(true);

@@ -2,7 +2,10 @@ import { Select } from '../ui';
 import { useUiTheme } from './useUiTheme';
 import { UI_THEMES, uiThemeOf } from './ui-themes';
 
-/** A drop-down of the interface themes with the current one's blurb under it. Used on /profile and in the /play menu. */
+/**
+ * A drop-down of the interface themes with the current one's blurb under it.
+ * Used on /profile and in the /play menu.
+ */
 export const UiThemePicker = ({ blurb = true }: { blurb?: boolean }) => {
   const [id, setId] = useUiTheme();
   return (

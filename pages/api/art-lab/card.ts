@@ -14,7 +14,10 @@ import { collectArtists } from '../../../scripts/art/artists';
 import { devOnly } from '../../../scripts/art/dev-guard';
 import { canonicalCardId } from '../../../components/art-lab/lookup';
 
-/** Artist names/URLs already used in data/*.json (cards and heroes), for the lab's suggestions. */
+/**
+ * Artist names/URLs already used in data/*.json (cards and heroes), for the
+ * lab's suggestions.
+ */
 const artistSuggestions = () => {
   const dir = path.join(process.cwd(), 'data');
   const records: { artistName?: unknown; artistUrl?: unknown }[] = [];
@@ -31,8 +34,10 @@ const artistSuggestions = () => {
 };
 
 /**
- * Art lab: GET ?id=CORE_122 reads that CARDS row and the editable field types; POST { id, fields } writes only the fields sent
- * (and, with `pull`, re-runs `npm run airtable` so `data/*.json` matches). Dev only.
+ * Art lab: GET ?id=CORE_122 reads that CARDS row and the editable field types;
+ * POST { id, fields } writes only the fields sent
+ * (and, with `pull`, re-runs `npm run airtable` so `data/*.json` matches). Dev
+ * only.
  */
 export default async function handler(
   req: NextApiRequest,

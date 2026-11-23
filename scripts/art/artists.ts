@@ -3,7 +3,10 @@ export interface ArtistSuggestions {
   names: string[];
   /** Every artist URL already in the data, sorted ignoring case. */
   urls: string[];
-  /** The URLs seen with each name, most used first, so picking a name can fill in the URL. */
+  /**
+   * The URLs seen with each name, most used first, so picking a name can fill
+   * in the URL.
+   */
   urlsByName: Record<string, string[]>;
 }
 
@@ -12,7 +15,10 @@ const sortText = (list: Set<string>) =>
     a.localeCompare(b, undefined, { sensitivity: 'base' }),
   );
 
-/** The artist names and URLs already used by cards or heroes (any records with `artistName` / `artistUrl`). Pure, so it is unit tested. */
+/**
+ * The artist names and URLs already used by cards or heroes (any records with
+ * `artistName` / `artistUrl`). Pure, so it is unit tested.
+ */
 export const collectArtists = (
   records: { artistName?: unknown; artistUrl?: unknown }[],
 ): ArtistSuggestions => {

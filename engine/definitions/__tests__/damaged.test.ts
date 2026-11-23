@@ -14,7 +14,8 @@ import {
 import { legalActions } from '../../rules/legal-actions';
 import type { Action, GameState } from '../../state/types';
 
-// "While damaged" self effects (selfAura) and "whenever a minion takes damage" triggers.
+// "While damaged" self effects (selfAura) and "whenever a minion takes damage"
+// triggers.
 
 const ids = [
   '009',
@@ -39,7 +40,10 @@ it.each(ids)('%s is defined and playable', (id) => {
   ).toBe(true);
 });
 
-/** A board with one `id` minion at its printed stats, then a spell is played so the engine settles. */
+/**
+ * A board with one `id` minion at its printed stats, then a spell is played so
+ * the engine settles.
+ */
 const settled = (
   id: string,
   mutate: (s: GameState) => GameState = (s) => s,

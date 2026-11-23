@@ -1,5 +1,6 @@
 /**
- * Motion that gives the board weight: things are thrown, land and hit rather than just changing state. Everything here is
+ * Motion that gives the board weight: things are thrown, land and hit rather
+ * than just changing state. Everything here is
  * skipped when the player asks the system for reduced motion.
  */
 export const reducedMotion = (): boolean =>
@@ -7,7 +8,10 @@ export const reducedMotion = (): boolean =>
   !!window.matchMedia &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/** When the strike of an attack lands, in ms after it starts; the target's shake and damage numbers wait for this. */
+/**
+ * When the strike of an attack lands, in ms after it starts; the target's shake
+ * and damage numbers wait for this.
+ */
 export const IMPACT_MS = 190;
 const LUNGE_MS = 520;
 
@@ -17,8 +21,10 @@ export interface Point {
 }
 
 /**
- * The keyframes of an attack, as offsets from the attacker's place: pull back a little (the wind-up), strike most of the way to
- * the target and hit it at `IMPACT_MS`, then ease home. `to` is the vector from attacker to target centre.
+ * The keyframes of an attack, as offsets from the attacker's place: pull back a
+ * little (the wind-up), strike most of the way to
+ * the target and hit it at `IMPACT_MS`, then ease home. `to` is the vector from
+ * attacker to target centre.
  */
 export const lungeFrames = (to: Point): Keyframe[] => {
   const len = Math.hypot(to.x, to.y) || 1;
@@ -52,7 +58,10 @@ const centre = (el: HTMLElement): Point => {
   return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
 };
 
-/** The vector from `attacker`'s centre to `target`'s, read now (so it survives either element leaving the page later). */
+/**
+ * The vector from `attacker`'s centre to `target`'s, read now (so it survives
+ * either element leaving the page later).
+ */
 export const aimVector = (
   attacker: HTMLElement,
   target: HTMLElement,
@@ -62,7 +71,10 @@ export const aimVector = (
   return { x: t.x - a.x, y: t.y - a.y };
 };
 
-/** Throws `attacker` along `to` (see `aimVector`) and back. Raises it above its neighbours for the duration. */
+/**
+ * Throws `attacker` along `to` (see `aimVector`) and back. Raises it above its
+ * neighbours for the duration.
+ */
 export const lungeBy = (attacker: HTMLElement, to: Point): void => {
   if (reducedMotion() || !attacker.animate || !attacker.isConnected) return;
   const prev = attacker.style.zIndex;
@@ -95,10 +107,16 @@ export const nudge = (el: HTMLElement, strength: number): void => {
   );
 };
 
-/** How long a played minion's card flies from the hand to its slot; the landing waits for it. */
+/**
+ * How long a played minion's card flies from the hand to its slot; the landing
+ * waits for it.
+ */
 export const FLIGHT_MS = 380;
 
-/** The keyframes of a card flying from `from` to `to` (screen rects): it rises a little, then swoops in and shrinks to the minion. */
+/**
+ * The keyframes of a card flying from `from` to `to` (screen rects): it rises a
+ * little, then swoops in and shrinks to the minion.
+ */
 export const flightFrames = (from: DOMRect, to: DOMRect): Keyframe[] => {
   const dx = to.left + to.width / 2 - (from.left + from.width / 2);
   const dy = to.top + to.height / 2 - (from.top + from.height / 2);

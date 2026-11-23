@@ -4,7 +4,10 @@ import { getCardDef } from './definitions';
 import type { DefLookup } from './definitions/define-card';
 import type { Rng } from './rng';
 
-/** Mechanics the engine implements from the card's stats alone. Anything else needs a definition. */
+/**
+ * Mechanics the engine implements from the card's stats alone. Anything else
+ * needs a definition.
+ */
 const KEYWORD_ONLY = [
   'BULWARK',
   'RUSH',
@@ -15,20 +18,30 @@ const KEYWORD_ONLY = [
 ];
 
 /**
- * True if the card does something its stats and keywords don't capture: every spell and item, and any
- * minion or weapon with a mechanic other than the pure keywords (On Play effect, aura, spell damage, ...).
- * Erring this way means an unfinished card is refused, never silently played as vanilla.
+ * True if the card does something its stats and keywords don't capture: every
+ * spell and item, and any
+ * minion or weapon with a mechanic other than the pure keywords (On Play
+ * effect, aura, spell damage, ...).
+ * Erring this way means an unfinished card is refused, never silently played as
+ * vanilla.
  */
 export const needsBehaviour = (card: Card): boolean =>
   card.type === 'spell' ||
   card.type === 'item' ||
   card.mechanics.some((m) => !KEYWORD_ONLY.includes(m));
 
-/** The engine can play this card faithfully: it needs no behaviour, or it has a definition. */
+/**
+ * The engine can play this card faithfully: it needs no behaviour, or it has a
+ * definition.
+ */
 export const isPlayable = (card: Card, defs: DefLookup = getCardDef): boolean =>
   !needsBehaviour(card) || defs(card) !== undefined;
 
-/** Real, collectible-pool cards (class-restricted cards are left out: random and starter decks have no hero) the engine fully supports right now. Grows as definitions are added. */
+/**
+ * Real, collectible-pool cards (class-restricted cards are left out: random and
+ * starter decks have no hero) the engine fully supports right now. Grows as
+ * definitions are added.
+ */
 export const playablePool = (
   cards: Card[],
   defs: DefLookup = getCardDef,
@@ -43,8 +56,10 @@ export const playablePool = (
   );
 
 /**
- * PRIME cards the engine can play right now. Kept apart from `playablePool` (CORE): PRIME is opt-in, so CORE's balance and
- * the starter decks do not change. A card with no name is a placeholder in the data and is left out until it has one.
+ * PRIME cards the engine can play right now. Kept apart from `playablePool`
+ * (CORE): PRIME is opt-in, so CORE's balance and
+ * the starter decks do not change. A card with no name is a placeholder in the
+ * data and is left out until it has one.
  */
 export const primePool = (
   cards: Card[],
@@ -61,8 +76,10 @@ export const primePool = (
   );
 
 /**
- * Class-restricted cards (a `heroClass`, e.g. Warrior's Smash!) the engine can play. Kept out of every other pool: only the deck
- * builder and the collection offer them, and the builder only to a deck with that hero.
+ * Class-restricted cards (a `heroClass`, e.g. Warrior's Smash!) the engine can
+ * play. Kept out of every other pool: only the deck
+ * builder and the collection offer them, and the builder only to a deck with
+ * that hero.
  */
 export const classPool = (
   cards: Card[],
@@ -78,7 +95,10 @@ export const classPool = (
       isPlayable(c, defs),
   );
 
-/** A random deck of `size` distinct cards from the pool (cycles if the pool is smaller). Never more than `MAX_DECK_SIZE`. */
+/**
+ * A random deck of `size` distinct cards from the pool (cycles if the pool is
+ * smaller). Never more than `MAX_DECK_SIZE`.
+ */
 export const buildDeck = (
   pool: Card[],
   rng: Rng,

@@ -1,4 +1,6 @@
-/** Randomness the engine is allowed to use. The engine never calls Math.random. */
+/**
+ * Randomness the engine is allowed to use. The engine never calls Math.random.
+ */
 export interface Rng {
   /** Integer in [0, maxExclusive) */
   int(maxExclusive: number): number;

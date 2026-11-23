@@ -7,7 +7,8 @@ import {
   setup,
 } from '../../testing/real-cards';
 
-// CORE_134: at the start of your next turn, destroy every single minion (both boards, itself included).
+// CORE_134: at the start of your next turn, destroy every single minion (both
+// boards, itself included).
 describe('CORE_134', () => {
   it('is defined', () => {
     expect(getCardDef(realCard('CORE_134'))).toBeDefined();

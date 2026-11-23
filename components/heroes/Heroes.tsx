@@ -11,11 +11,16 @@ const ARCHETYPES: Record<string, string> = {
 };
 const isPlaceholder = (text: string) => /lorem ipsum/i.test(text);
 
-/** Everything a hero's skill row shows. Cooldown is undefined for an ultimate (once per game). */
+/**
+ * Everything a hero's skill row shows. Cooldown is undefined for an ultimate
+ * (once per game).
+ */
 export const skillMeta = (cost: number, cooldown?: number) =>
   `${cost} energy · ${cooldown ? `cooldown ${cooldown}` : 'once per game'}`;
 
-/** A grid of the playable heroes; click one for its portrait, story and skills. */
+/**
+ * A grid of the playable heroes; click one for its portrait, story and skills.
+ */
 export const Heroes = () => {
   const list = heroes();
   const [viewing, setViewing] = useState<string | null>(null);

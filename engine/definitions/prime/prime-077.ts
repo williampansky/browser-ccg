@@ -4,7 +4,8 @@ import { chosenTarget, self } from '../../effects/selectors';
 import { minionWhere } from '../../effects/filters';
 import { findMinion } from '../../rules/lookup';
 
-// PRIME_077 Phantom Spider, On Play effect: "Destroy a friendly Sprite and gain its stats" (its current Attack and Health)
+// PRIME_077 Phantom Spider, On Play effect: "Destroy a friendly Sprite and gain
+// its stats" (its current Attack and Health)
 export default defineCard('PRIME_077', () => ({
   target: minionWhere('friendly', (_m, race) => race === 'SPRITE'),
   onPlay: [

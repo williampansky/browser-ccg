@@ -112,7 +112,10 @@ import core107 from './core/core-107';
 import core114 from './core/core-114';
 import core129 from './core/core-129';
 
-/** Every card with behaviour beyond its stats and keywords. Vanilla cards have no entry. */
+/**
+ * Every card with behaviour beyond its stats and keywords. Vanilla cards have
+ * no entry.
+ */
 const all: Definition[] = [
   ...primeDefinitions,
   core091,

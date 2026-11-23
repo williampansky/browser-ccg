@@ -15,7 +15,8 @@ import {
   stats,
 } from '../../testing/real-cards';
 
-// Batch D: the first PRIME cards, built only from effects CORE already uses. Each test plays the REAL card from data.
+// Batch D: the first PRIME cards, built only from effects CORE already uses.
+// Each test plays the REAL card from data.
 
 const ids = [
   ...[
@@ -197,7 +198,8 @@ describe('board spells', () => {
 describe('On Death effect', () => {
   const kill = (id: string, extra = {}) => {
     const s = setup('CORE_043', { mine: [[1, 1, id]], ...extra });
-    // a spell that kills: put the minion at 0 health and let the engine settle on the next action
+    // a spell that kills: put the minion at 0 health and let the engine settle
+    // on the next action
     const dying = hurt(s, '0', 0, 0);
     return play(dying).state;
   };

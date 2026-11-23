@@ -24,7 +24,10 @@ const walk = (dir: string, out: string[] = []): string[] => {
   return out;
 };
 
-/** Art lab Assets tab: GET lists images under art-assets/ (subfolders included); GET ?file=sub/x.png sends one. Dev only. */
+/**
+ * Art lab Assets tab: GET lists images under art-assets/ (subfolders included);
+ * GET ?file=sub/x.png sends one. Dev only.
+ */
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!devOnly(req, res)) return;
   try {

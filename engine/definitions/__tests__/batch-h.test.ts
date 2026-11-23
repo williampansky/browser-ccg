@@ -19,7 +19,8 @@ import {
 } from '../../testing/real-cards';
 import type { Action, GameState } from '../../state/types';
 
-// Batch H: the Sprite tribe, temporary control, copies, and cards that give a minion or a player a lasting flag.
+// Batch H: the Sprite tribe, temporary control, copies, and cards that give a
+// minion or a player a lasting flag.
 
 const ids =
   '080 044 077 058 064 169 051 051a 137 238 089 196 056 155 184 063 179 183 083 252 114'.split(

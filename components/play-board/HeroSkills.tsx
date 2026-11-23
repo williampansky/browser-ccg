@@ -22,7 +22,9 @@ interface HeroSkillsProps {
   heroName: string;
   skills: SkillView[];
   selected: number | null;
-  /** Skills can be clicked (it is this player's turn and they are the viewer) */
+  /**
+   * Skills can be clicked (it is this player's turn and they are the viewer)
+   */
   interactive: boolean;
   /** Ref callback for each skill button */
   nodeRef: (index: number) => (el: HTMLElement | null) => void;
