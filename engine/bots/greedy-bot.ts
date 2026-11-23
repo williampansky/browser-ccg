@@ -11,6 +11,7 @@ import type {
   PlayerId,
   PlayerState,
 } from '../state/types';
+import { getCardDef } from '../definitions';
 import { isBadPlay } from './common';
 
 /**
@@ -78,13 +79,17 @@ const minionValue = (m: MinionInstance, w: GreedyWeights): number => {
   return v;
 };
 
-const sideValue = (p: PlayerState, w: GreedyWeights): number => {
+const sideValue = (
+  p: PlayerState,
+  w: GreedyWeights,
+  boardCounts: boolean,
+): number => {
   const weapon = p.weapon
     ? p.weapon.attack * p.weapon.durability * w.weapon
     : 0;
   return (
     lifeValue(p.health + p.armor, w) +
-    p.board.reduce((sum, m) => sum + minionValue(m, w), 0) +
+    (boardCounts ? p.board.reduce((sum, m) => sum + minionValue(m, w), 0) : 0) +
     p.hand.length * w.card +
     weapon +
     (p.mystery ? w.mystery : 0) -
@@ -94,19 +99,35 @@ const sideValue = (p: PlayerState, w: GreedyWeights): number => {
 
 const WIN = 1e6;
 
+/** Says whether a card clears every minion at the start of its owner's next turn. */
+export type IsBoardWipe = (cardId: string) => boolean;
+
 /**
  * How good `state` looks for `me`: their side's value minus the opponent's.
- * Winning or losing outweighs everything.
+ * Winning or losing outweighs everything. While a board-wiping minion (see
+ * `isBoardWipe`) is out, neither board is worth anything: it is all gone by the
+ * time that matters, so such a card scores by what it removes.
  */
 export const evaluate = (
   state: GameState,
   me: PlayerId,
   w: GreedyWeights = DEFAULT_WEIGHTS,
+  isBoardWipe?: IsBoardWipe,
 ): number => {
   if (state.status === 'over')
     return state.winner === me ? WIN : state.winner === 'draw' ? 0 : -WIN;
   const foe: PlayerId = me === '0' ? '1' : '0';
-  return sideValue(state.players[me], w) - sideValue(state.players[foe], w);
+  const wipeComing =
+    isBoardWipe !== undefined &&
+    (['0', '1'] as const).some((player) =>
+      state.players[player].board.some(
+        (minion) => !minion.silenced && isBoardWipe(minion.cardId),
+      ),
+    );
+  return (
+    sideValue(state.players[me], w, !wipeComing) -
+    sideValue(state.players[foe], w, !wipeComing)
+  );
 };
 
 /**
@@ -129,6 +150,11 @@ export const chooseGreedyActionWith = (
 ): Action => {
   const me = state.activePlayer;
   const actions = legalActions(state, me, catalog, defs);
+  const lookup = defs ?? getCardDef;
+  const isBoardWipe: IsBoardWipe = (cardId) => {
+    const card = catalog.get(cardId);
+    return !!card && !!lookup(card)?.boardWipe;
+  };
   // The bot knows the opponent has a Mystery but not which one, so it plans on
   // a copy without it. Simulating on the real
   // state would let it see what the Mystery does and avoid exactly the attacks
@@ -145,7 +171,7 @@ export const chooseGreedyActionWith = (
     : state;
   const score = (a: Action): number => {
     const r = applyAction(seen, a, { rng: createSeededRng(1), catalog, defs });
-    return 'error' in r ? -Infinity : evaluate(r.state, me, w);
+    return 'error' in r ? -Infinity : evaluate(r.state, me, w, isBoardWipe);
   };
   const best = (list: Action[], floor: number): Action | undefined => {
     let top = floor;
@@ -168,7 +194,11 @@ export const chooseGreedyActionWith = (
   const moves = actions.filter(
     (a) => a.type !== 'EndTurn' && !isBadPlay(state, a, catalog, defs),
   );
-  return best(moves, evaluate(seen, me, w) + MIN_GAIN) ?? { type: 'EndTurn' };
+  return (
+    best(moves, evaluate(seen, me, w, isBoardWipe) + MIN_GAIN) ?? {
+      type: 'EndTurn',
+    }
+  );
 };
 
 /** The bot with the default weights. */

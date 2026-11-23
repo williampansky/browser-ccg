@@ -6,6 +6,7 @@ import { allMinions } from '../../effects/selectors';
 // minion" (both boards, itself included).
 // It dies with the rest, so the trigger fires once.
 export default defineCard('CORE_134', () => ({
+  boardWipe: true,
   triggers: [
     on('TurnStarted', {
       when: (e, c) => e.player === c.owner,

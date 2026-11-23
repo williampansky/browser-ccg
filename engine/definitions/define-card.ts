@@ -147,6 +147,12 @@ export interface CardDef {
    */
   untargetable?: boolean;
   /**
+   * Destroys every minion at the start of its owner's next turn (CORE_134).
+   * The destroying is the card's own trigger; this marker only lets the greedy
+   * bot value the card by what it removes, not by its own body.
+   */
+  boardWipe?: boolean;
+  /**
    * While this minion is on either board, turns last at most this many seconds
    * (see `turnSeconds`)
    */
