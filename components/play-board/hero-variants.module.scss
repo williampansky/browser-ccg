@@ -798,6 +798,11 @@
     z-index: 30;
   }
 
+  &:hover,
+  &:focus-visible {
+    filter: brightness(1.2);
+  }
+
   &:hover .ringTip,
   &:focus-visible .ringTip {
     visibility: visible;
