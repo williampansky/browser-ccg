@@ -504,6 +504,7 @@ export const silence =
         noAttack: false,
       };
       minion.auraRush = false;
+      delete minion.resurrects;
       delete minion.disabledOnTurn;
     }
   };
@@ -1134,6 +1135,19 @@ export const forceAllAttack = (): Effect => (ctx) => {
  * The selected friendly minions get "On Death: summon a random `race` minion
  * costing `cost`".
  */
+/**
+ * Gives the caster's chosen minions "On Death: Resurrect": when one dies it
+ * comes back once as a fresh copy of its card (an enemy minion is skipped, as
+ * it would come back for its owner).
+ */
+export const grantResurrection =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { owner, minion } of minionsOf(ctx, select)) {
+      if (owner === ctx.caster) minion.resurrects = true;
+    }
+  };
+
 export const grantDeathSummon =
   (select: Selector, race: string, cost: number): Effect =>
   (ctx) => {

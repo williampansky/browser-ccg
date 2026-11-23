@@ -1,11 +1,28 @@
 import { produce } from 'immer';
+import type { CardCatalog } from '../cards/types';
 import { ActionError, GameEvent, GameState, TargetRef } from '../state/types';
 import { getCardDef } from '../definitions';
+import type { DefLookup } from '../definitions/define-card';
 import type { EngineContext } from './apply-action';
 import { damageHero, damageMinion } from './damage';
 import { opponentOf } from './lookup';
 import { mysteryBeforeAttack } from './mystery';
 import { isLegalTarget, legalTargets } from './targeting';
+
+const SINGLE_SWING = 1;
+const DOUBLE_SWING = 2;
+
+/** How many times a turn the hero may swing this weapon (Onslaught: twice). */
+export const weaponSwings = (
+  cardId: string,
+  catalog?: CardCatalog,
+  defs: DefLookup = getCardDef,
+): number => {
+  const card = catalog?.get(cardId);
+  const def = card && defs(card);
+
+  return def?.weaponDoubleAttack ? DOUBLE_SWING : SINGLE_SWING;
+};
 
 /**
  * The active hero attacks with its weapon (RULES Q9). One attack per turn, 1
@@ -28,7 +45,8 @@ export const weaponAttack = (
   if (!weapon) return { error: 'NO_WEAPON' };
   if (state.players[me].heroDisabledOnTurn === state.turn)
     return { error: 'HERO_CANT_ATTACK' };
-  if (weapon.attack < 1 || state.players[me].weaponAttacksThisTurn >= 1)
+  const swings = weaponSwings(weapon.cardId, ctx?.catalog, ctx?.defs);
+  if (weapon.attack < 1 || state.players[me].weaponAttacksThisTurn >= swings)
     return { error: 'HERO_CANT_ATTACK' };
   if (!isLegalTarget(legalTargets(state, { kind: 'weapon' }), chosen))
     return { error: 'ILLEGAL_TARGET' };

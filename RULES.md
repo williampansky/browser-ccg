@@ -719,7 +719,13 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **089 Sir Jorio**: all the OPPONENT's spells cost 0 during their next turn. **196 Soul Lantern** (cost 1): your next spell this turn costs 2 less, and you draw a card. **155 Crystal of Virtue**: you draw whenever that minion attacks.
 - **056 Portal**: at the start of your turn it swaps itself with a random minion card in your hand (that card takes its slot, summoning sick; Portal goes to your hand). Nothing happens without one.
 - **184 The Sorceress (5/7)**: your spells deal +1 damage and heal +1 (healing, `CardDef.spellHealing`).
-- **Not built**: 248 Ah-Xoc-Xin (a Discover of "ROCKING powers" that the data does not define) and 206 Revitalization ("On Death: Revitalization" is not explained anywhere).
+- **Not built**: 248 Ah-Xoc-Xin (a Discover of "ROCKING powers" that the data does not define).
+
+### The Mystic block, the last three cards (PRIME 200-214; 2026-11-23)
+
+- **206 Revitalization** (spell, cost 2): "Give a minion: On Death: Resurrect". It is aimed at one of YOUR minions only (the copy that comes back belongs to the minion's owner). When the minion dies it returns once, as a fresh copy of its printed card (printed stats, no buffs, no On Play effect, summoning sick) on its owner's side; the copy does not carry the effect (`MinionInstance.resurrects`). Silence removes it. The dead minion's own slot is free by then, so it returns even from a full board.
+- **207** (spell, cost 3): summons two of its entourage card (`PRIME_207a`, a 2/3 with Guard) and Overloads 2; with room for one, one is summoned. The entourage row does not exist in Airtable yet, so until it does the card throws when played.
+- **212** (weapon 2/8, cost 5): the hero may swing it twice per turn (`CardDef.weaponDoubleAttack`, limit in `weaponSwings`), each swing costing 1 Durability; the two swings come back every turn. Overload 2. Every other weapon is still one swing a turn.
 
 ### Appendix D: Hero skills (2026-11-13; engine in `engine/heroes/`, ability numbers in the ABILITIES table)
 

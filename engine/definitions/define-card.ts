@@ -209,6 +209,8 @@ export interface CardDef {
    * when its Attack reaches 0)
    */
   wearsAttack?: boolean;
+  /** For weapons: the hero may swing twice a turn (Onslaught) */
+  weaponDoubleAttack?: boolean;
   /**
    * "Choose one" cards: the player picks an option when playing
    * (`PlayCard.choice`), and that option's

@@ -100,6 +100,11 @@ export interface MinionInstance {
    */
   deathSummons?: { race: string; cost: number }[];
   /**
+   * On Death: it comes back once as a fresh copy of its card for its owner
+   * (PRIME_206); the copy does not carry this
+   */
+  resurrects?: boolean;
+  /**
    * Suppressed: the card's own behaviour (On Play effect already spent,
    * triggers, auras, On Death effect, ...) no longer applies
    */

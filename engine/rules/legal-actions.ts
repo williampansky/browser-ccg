@@ -8,6 +8,7 @@ import { cantAttack } from './attack';
 import { heroSkill } from '../heroes';
 import { skillReady } from './hero-skill';
 import { legalTargets } from './targeting';
+import { weaponSwings } from './weapon-attack';
 
 /**
  * Every action `player` could take right now that `applyAction` would accept.
@@ -101,7 +102,7 @@ export const legalActions = (
   if (
     me.weapon &&
     me.weapon.attack >= 1 &&
-    me.weaponAttacksThisTurn < 1 &&
+    me.weaponAttacksThisTurn < weaponSwings(me.weapon.cardId, catalog, defs) &&
     me.heroDisabledOnTurn !== state.turn
   ) {
     for (const target of legalTargets(state, { kind: 'weapon' }))

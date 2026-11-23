@@ -102,6 +102,13 @@ export const settle = (
           if (pool.length > 0)
             summonMinion(g, owner, pool[ctx.rng.int(pool.length)], events);
         }
+        // "On Death: Resurrect" (PRIME_206): a fresh copy of the printed card
+        const original = minion.resurrects
+          ? ctx.catalog.get(minion.cardId)
+          : undefined;
+
+        if (original?.type === 'minion')
+          summonMinion(g, owner, original, events);
       }
       continue;
     }
