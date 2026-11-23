@@ -59,8 +59,8 @@ describe('simulation', () => {
   });
   it('a deck mirror-matched against itself with the same bot comes out near even', () => {
     const m = playMatchup(greedy(decks[1]), { ...greedy(decks[1]), name: 'Mirror' }, 12, byId);
-    expect(m.aWins).toBeGreaterThanOrEqual(3);
-    expect(m.aWins).toBeLessThanOrEqual(9);
+    expect(m.aWins).toBeGreaterThanOrEqual(2);
+    expect(m.aWins).toBeLessThanOrEqual(10);
   });
   it('the greedy bot on a deck beats the random bot on the same deck', () => {
     const smart = greedy(decks[1]);

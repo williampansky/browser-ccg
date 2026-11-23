@@ -198,6 +198,32 @@
     "artStatus": "FINAL"
   },
   {
+    "id": "CORE_157",
+    "name": "Infernal Hut",
+    "set": "%SET_002%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_SUPERIOR%",
+    "cardClass": "0 %CLASS_NONE%",
+    "race": "%RACE_LOCATION%",
+    "cost": 5,
+    "attack": 4,
+    "health": 4,
+    "text": "<strong>%NO_ATTACK%</strong>, <strong>%BULWARK%</strong>, <strong>%ON_DEATH%:</strong> deal %NUM% damage to everyone",
+    "mechanics": [
+      "%NO_ATTACK%",
+      "%BULWARK%",
+      "%ON_DEATH%",
+      "%DAMAGE%",
+      "%AOE%"
+    ],
+    "numberPrimary": 2,
+    "collectible": false,
+    "active": true,
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
+  },
+  {
     "id": "CORE_053",
     "name": "Shadow-Shiv",
     "set": "%SET_002%",

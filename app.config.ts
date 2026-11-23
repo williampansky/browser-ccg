@@ -2,7 +2,7 @@ import type { AppConfig, GameConfig, Pages, SiteConfig } from './types';
 
 export const gameConfig: GameConfig = {
   cardCounts: {
-    core: 136,
+    core: 137,
     prime: 255,
     entourage: 45,
     game: 1
