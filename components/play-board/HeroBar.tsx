@@ -1,5 +1,6 @@
 import React from 'react';
 import { FloatDelta } from './FloatDelta';
+import { heroArtFallback, heroArtRef } from './hero-images';
 import { energyPips, healthFraction, healthTone } from './hero-bar-model';
 import styles from './hero-bar.module.scss';
 import cx from '../../utils/cx';
@@ -133,10 +134,12 @@ export const HeroBar = ({
         <span className={styles.face}>
           {portrait ? (
             <img
-              className={styles.portrait}
-              src={portrait}
+              ref={heroArtRef}
               alt=""
+              className={styles.portrait}
               draggable={false}
+              onError={heroArtFallback}
+              src={portrait}
             />
           ) : (
             emblem

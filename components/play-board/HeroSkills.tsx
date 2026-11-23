@@ -1,3 +1,4 @@
+import { heroArtFallback, heroArtRef } from './hero-images';
 import styles from './hero-skills.module.scss';
 import cx from '../../utils/cx';
 
@@ -81,10 +82,12 @@ export const HeroSkills = ({
             onClick={() => onPick(s.index)}
           >
             <img
-              className={styles.icon}
-              src={s.icon}
+              ref={heroArtRef}
               alt=""
+              className={styles.icon}
               draggable={false}
+              onError={heroArtFallback}
+              src={s.icon}
             />
             <b className={styles.cost}>{s.cost}</b>
             {s.targeted && <i className={styles.target}>⌖</i>}

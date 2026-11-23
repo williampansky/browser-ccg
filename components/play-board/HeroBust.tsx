@@ -1,4 +1,4 @@
-import { heroImage } from './hero-images';
+import { heroArtLayers } from './hero-images';
 import styles from './hero-bust.module.scss';
 import cx from '../../utils/cx';
 
@@ -47,7 +47,7 @@ export const HeroBust = ({
     >
       <div
         className={styles.arch}
-        style={{ backgroundImage: `url(${heroImage(heroId, 'avatar')})` }}
+        style={{ backgroundImage: heroArtLayers(heroId, 'avatar') }}
       />
       <div className={styles.plate}>
         <span
