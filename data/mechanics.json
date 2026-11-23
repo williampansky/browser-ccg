@@ -87,7 +87,7 @@
     "symbol": "%ON_PLAY%",
     "description": "A triggered effect which activates when the card is played from your hand.",
     "shortDescription": "Activates when played.",
-    "name": "Warcry"
+    "name": "On Play"
   },
   {
     "symbol": "%ENERGY_CRYSTAL%",
@@ -171,7 +171,7 @@
     "symbol": "%ON_DEATH%",
     "description": "A triggered effect which activates when the minion dies. It is identified by a skull and crossbones that appears at the bottom of the minion's portrait.",
     "shortDescription": "Activates on minion death.",
-    "name": "Demise"
+    "name": "On Death"
   },
   {
     "symbol": "%DISABLE%",
