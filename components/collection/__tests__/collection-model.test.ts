@@ -226,7 +226,10 @@ describe('class filter', () => {
     expect(
       filterCards(withClass, f({ hero: 'FIGHTER' })).map((c) => c.id),
     ).toContain('PRIME_255');
-    expect(filterCards(withClass, f({ hero: 'WIZARD' }))).toHaveLength(0);
+    const wizard = filterCards(withClass, f({ hero: 'WIZARD' }));
+
+    expect(wizard.length).toBeGreaterThan(0);
+    expect(wizard.every((c) => c.heroClass === 'WIZARD')).toBe(true);
   });
   it('round-trips through the URL', () => {
     const q = toQuery(f({ hero: 'FIGHTER' }), 'cost', 'all');

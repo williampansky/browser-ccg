@@ -42,7 +42,7 @@ describe('class decks for the sims', () => {
     expect(deck.slice(10)).toEqual(base.slice(0, base.length - 10));
   });
   it('leave a class with no class cards on the plain deck', () => {
-    expect(classDeck(base, classCardsFor(cards, 'WARDEN'), 1)).toEqual(base);
+    expect(classDeck(base, [], 1)).toEqual(base);
   });
   it('are the same every run', () => {
     expect(classDeck(base, mystic, 3)).toEqual(classDeck(base, mystic, 3));

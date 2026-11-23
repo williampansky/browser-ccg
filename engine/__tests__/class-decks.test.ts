@@ -26,14 +26,29 @@ describe('classCardsFor', () => {
 
     expect([...ids].sort()).toEqual([...mysticIds].sort());
   });
-  it('leaves a class with a single class card with just that card', () => {
-    expect(classCardsFor(cards, 'FIGHTER').map((c) => c.id)).toEqual([
-      'PRIME_255',
-    ]);
+  it('gives every class its own playable cards (Ranger and Assassin the fewest)', () => {
+    for (const key of [
+      'FIGHTER',
+      'WIZARD',
+      'RANGER',
+      'CLERIC',
+      'CRUSADER',
+      'ASSASSIN',
+      'MYSTIC',
+      'NECROMANCER',
+      'WARDEN',
+    ]) {
+      const own = classCardsFor(cards, key);
+
+      expect(own.length).toBeGreaterThanOrEqual(8);
+      expect(own.every((c) => c.heroClass === key)).toBe(true);
+    }
   });
-  it('is empty for a class with none yet, and for no class', () => {
-    expect(classCardsFor(cards, 'WARDEN')).toEqual([]);
+  it('is empty for no class', () => {
     expect(classCardsFor(cards, 'NOPE')).toEqual([]);
+  });
+  it('keeps every class card out of the ordinary pool', () => {
+    expect(neutral.some((c) => c.heroClass)).toBe(false);
   });
 });
 
@@ -67,13 +82,14 @@ describe('buildClassDeck', () => {
     }
   });
   it('puts in every class card a small class has, and fills the rest', () => {
-    const ids = deck('FIGHTER');
+    const few = classCardsFor(cards, 'FIGHTER').slice(0, 3);
+    const ids = buildClassDeck(neutral, few, createSeededRng(1));
 
-    expect(ids.filter((id) => id === 'PRIME_255')).toHaveLength(1);
+    for (const card of few) expect(ids).toContain(card.id);
     expect(ids).toHaveLength(MAX_DECK_SIZE);
   });
   it('is just an ordinary random deck for a class with no class cards', () => {
-    const ids = deck('WARDEN');
+    const ids = buildClassDeck(neutral, [], createSeededRng(1));
 
     expect(ids).toHaveLength(MAX_DECK_SIZE);
     expect(ids.every((id) => !classOf(id))).toBe(true);
@@ -91,5 +107,67 @@ describe('buildClassDeck', () => {
     );
 
     expect(small).toHaveLength(12);
+  });
+});
+
+describe('class decks across every class', () => {
+  const classKeys = [
+    'FIGHTER',
+    'WIZARD',
+    'RANGER',
+    'CLERIC',
+    'CRUSADER',
+    'ASSASSIN',
+    'MYSTIC',
+    'NECROMANCER',
+    'WARDEN',
+  ];
+  const isSecret = (id: string) => {
+    const card = byId.get(id);
+
+    return card?.type === 'spell' && card.mechanics.includes('MYSTERY');
+  };
+
+  it('hold only ordinary cards and their own class cards, never another class\u2019s', () => {
+    for (const key of classKeys) {
+      for (let seed = 1; seed <= 15; seed++) {
+        const ids = buildClassDeck(
+          neutral,
+          classCardsFor(cards, key),
+          createSeededRng(seed),
+        );
+
+        for (const id of ids) {
+          const owner = classOf(id);
+
+          expect([key, seed, id, owner === undefined || owner === key]).toEqual(
+            [key, seed, id, true],
+          );
+        }
+      }
+    }
+  });
+  it('a Mystic deck never holds a Secret (they belong to other classes)', () => {
+    for (let seed = 1; seed <= 40; seed++) {
+      const ids = buildClassDeck(
+        neutral,
+        classCardsFor(cards, 'MYSTIC'),
+        createSeededRng(seed),
+      );
+
+      expect(ids.filter(isSecret)).toEqual([]);
+    }
+  });
+  it('a Wizard deck can hold Secrets, since its block has them', () => {
+    let seen = 0;
+
+    for (let seed = 1; seed <= 40; seed++) {
+      seen += buildClassDeck(
+        neutral,
+        classCardsFor(cards, 'WIZARD'),
+        createSeededRng(seed),
+      ).filter(isSecret).length;
+    }
+    expect(seen).toBeGreaterThan(0);
   });
 });
