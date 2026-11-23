@@ -1,175 +1,250 @@
 /**
- * Pulls the card database from Airtable into `data/*.json`.   Usage: `npm run airtable`
+ * Pulls the card database from Airtable into `data/*.json`.
+ * Usage: `npm run airtable`
  *
  * Needs AIRTABLE_API_KEY and AIRTABLE_BASE_ID in ./.env.local (read access is
  * enough).
- * Reads the tables CARDS, HEROES, ABILITIES, MECHANICS and CONSTANTS and writes
- * core, prime, entourage, game,
- * heroes, abilities, mechanics and constants as JSON in the shape the engine
- * loads: single-select values get their
- * `%SYMBOL%` wrapping back (`MINION` -> `%TYPE_MINION%`); card `text` already
- * carries its own `%TOKEN%`s.
+ *
+ * Reads the tables CARDS, HEROES, CLASSES, SKILLS, MECHANICS and CONSTANTS
+ * and writes core, prime, entourage, game, heroes, classes, skills,
+ * mechanics and constants as JSON in the shape the engine loads:
+ * single-select values get their `%SYMBOL%` wrapping back
+ * (`MINION` -> `%TYPE_MINION%`); card `text` already carries its own
+ * `%TOKEN%`s.
+ *
  * Fetches every table first and writes only if all succeed and none is empty,
  * so a failed pull never clobbers data.
  */
 const fs = require('fs');
 
 const OUT_DIR = './data';
-for (const line of fs.readFileSync('./.env.local', 'utf8').split('\n')) {
-  const m = line.match(/^([A-Z_]+)=(.*)$/);
-  if (m && !(m[1] in process.env)) process.env[m[1]] = m[2].trim();
+const ENV_FILE = './.env.local';
+const TABLE_NAMES = [
+  'CARDS',
+  'HEROES',
+  'CLASSES',
+  'SKILLS',
+  'MECHANICS',
+  'CONSTANTS',
+];
+const PAGE_SIZE = 100;
+// Airtable allows 5 requests per second; stay under it.
+const REQUEST_GAP_MS = 230;
+const JSON_INDENT = 2;
+const SETS = { GAME: '%SET_001%', CORE: '%SET_002%', PRIME: '%SET_003%' };
+
+for (const line of fs.readFileSync(ENV_FILE, 'utf8').split('\n')) {
+  const match = line.match(/^([A-Z_]+)=(.*)$/);
+
+  if (match && !(match[1] in process.env)) {
+    const [, key, value] = match;
+    process.env[key] = value.trim();
+  }
 }
-const { AIRTABLE_API_KEY: KEY, AIRTABLE_BASE_ID: BASE } = process.env;
-if (!KEY || !BASE)
+
+const { AIRTABLE_API_KEY: apiKey, AIRTABLE_BASE_ID: baseId } = process.env;
+
+if (!apiKey || !baseId) {
   throw new Error(
     'AIRTABLE_API_KEY and AIRTABLE_BASE_ID must be set in ./.env.local',
   );
-
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-async function fetchAll(table) {
-  const out = [];
-  let offset;
-  do {
-    const url = `https://api.airtable.com/v0/${BASE}/${encodeURIComponent(table)}?pageSize=100${offset ? `&offset=${offset}` : ''}`;
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${KEY}` },
-    });
-    const json = await res.json().catch(() => ({}));
-    if (!res.ok)
-      throw new Error(
-        `${table}: ${res.status} ${JSON.stringify(json.error || json)}`,
-      );
-    out.push(...json.records.map((r) => r.fields));
-    offset = json.offset;
-    await sleep(230); // under 5 requests/second
-  } while (offset);
-  return out;
 }
 
-const P = (s) => (s === undefined ? undefined : `%${s}%`);
-const SETS = { GAME: '%SET_001%', CORE: '%SET_002%', PRIME: '%SET_003%' };
-const drop = (o) =>
-  Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined));
+const sleep = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
 
-const card = (f, isEntourage) =>
-  drop({
-    id: f.id,
-    name: f.name,
-    set: SETS[f.set],
-    type: P('TYPE_' + f.type),
-    rarity: P('RARITY_' + f.rarity),
-    cardClass: f.cardClass && `0 %CLASS_${f.cardClass}%`,
-    race: f.race && P('RACE_' + f.race),
-    cost: f.cost,
-    attack: f.attack,
-    health: f.health,
-    text: f.text,
-    mechanics: f.mechanics && f.mechanics.map(P),
-    numberPrimary: f.numberPrimary,
-    numberSecondary: f.numberSecondary,
-    numberRandom: f.numberRandom,
-    numberOvercharge: f.numberOvercharge,
-    playType: f.playType,
-    playContext: f.playContext && P(f.playContext),
-    targetingArrowText: f.targetingText,
-    collectible: f.collectible ?? false,
-    active: f.active ?? false,
-    elite: f.elite,
-    entourage: f.entourage,
-    flavor: f.flavor,
-    howToEarn: f.howToEarn,
-    howToEarnGolden: f.howToEarnGolden,
-    artistName: f.artistName,
-    artistUrl: f.artistUrl,
-    artStatus: f.artStatus,
-    description: f.description,
+const wrapSymbol = (value) => (value === undefined ? undefined : `%${value}%`);
+
+const dropUndefined = (record) => {
+  const entries = Object.entries(record);
+
+  return Object.fromEntries(entries.filter(([, value]) => value !== undefined));
+};
+
+const toNumberIfNumeric = (value) => (isNaN(value) ? value : Number(value));
+
+const fetchAll = async (table) => {
+  const records = [];
+  let offset;
+
+  do {
+    const pageParam = offset ? `&offset=${offset}` : '';
+    const path = `${baseId}/${encodeURIComponent(table)}`;
+    const url = `https://api.airtable.com/v0/${path}?pageSize=${PAGE_SIZE}${pageParam}`;
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      const detail = JSON.stringify(body.error || body);
+
+      throw new Error(`${table}: ${response.status} ${detail}`);
+    }
+
+    records.push(...body.records);
+    offset = body.offset;
+    await sleep(REQUEST_GAP_MS);
+  } while (offset);
+
+  return records;
+};
+
+const toCard = (fields, isEntourage) => {
+  return dropUndefined({
+    id: fields.id,
+    name: fields.name,
+    set: SETS[fields.set],
+    type: wrapSymbol('TYPE_' + fields.type),
+    rarity: wrapSymbol('RARITY_' + fields.rarity),
+    cardClass: fields.cardClass && `0 %CLASS_${fields.cardClass}%`,
+    race: fields.race && wrapSymbol('RACE_' + fields.race),
+    cost: fields.cost,
+    attack: fields.attack,
+    health: fields.health,
+    text: fields.text,
+    mechanics: fields.mechanics && fields.mechanics.map(wrapSymbol),
+    numberPrimary: fields.numberPrimary,
+    numberSecondary: fields.numberSecondary,
+    numberRandom: fields.numberRandom,
+    numberOvercharge: fields.numberOvercharge,
+    playType: fields.playType,
+    playContext: fields.playContext && wrapSymbol(fields.playContext),
+    targetingArrowText: fields.targetingText,
+    collectible: fields.collectible ?? false,
+    active: fields.active ?? false,
+    elite: fields.elite,
+    entourage: fields.entourage,
+    flavor: fields.flavor,
+    howToEarn: fields.howToEarn,
+    howToEarnGolden: fields.howToEarnGolden,
+    artistName: fields.artistName,
+    artistUrl: fields.artistUrl,
+    artStatus: fields.artStatus,
+    description: fields.description,
     isEntourage: isEntourage ? true : undefined,
   });
+};
 
-(async () => {
-  const names = ['CARDS', 'HEROES', 'ABILITIES', 'MECHANICS', 'CONSTANTS'];
-  const t = {};
-  for (const n of names) {
-    process.stdout.write(`Fetching ${n} ... `);
-    t[n] = await fetchAll(n);
-    if (t[n].length === 0)
-      throw new Error(`${n} came back empty; nothing written`);
-    console.log(`${t[n].length} rows`);
+const toHero = (fields) => {
+  return dropUndefined({
+    name: fields.name,
+    symbol: wrapSymbol(fields.symbol),
+    slug: fields.slug,
+    archetype: fields.archetype,
+    class: wrapSymbol(fields.class),
+    shortDescription: fields.shortDescription,
+    lore: fields.lore,
+    active: fields.active,
+    artistName: fields.artistName,
+    artistUrl: fields.artistUrl,
+  });
+};
+
+const toClass = (fields) => {
+  return dropUndefined({
+    name: fields.name,
+    symbol: wrapSymbol(fields.symbol),
+    shortDescription: fields.shortDescription,
+    active: fields.active,
+  });
+};
+
+// `class` is a link: Airtable sends the linked record's id, so the symbol is
+// looked up from the CLASSES table.
+const toSkill = (fields, classSymbolById) => {
+  const [classId] = fields.class || [];
+
+  return dropUndefined({
+    name: fields.name,
+    playContext: wrapSymbol(fields.playContext),
+    type: wrapSymbol('TYPE_' + fields.type),
+    playType: fields.playType,
+    class: wrapSymbol(classSymbolById[classId]),
+    id: toNumberIfNumeric(fields.id),
+    cost: fields.cost,
+    active: fields.active,
+    cooldown: fields.cooldown,
+    mechanics: fields.mechanics && fields.mechanics.map(wrapSymbol),
+    text: fields.text,
+    numberPrimary: fields.numberPrimary,
+    numberSecondary: fields.numberSecondary,
+    numberRandom: fields.numberRandom,
+    rarity: fields.rarity ? wrapSymbol('RARITY_' + fields.rarity) : undefined,
+    targetingArrowText: fields.targetingText,
+    entourage: fields.entourage,
+    ultimate: fields.ultimate,
+    description: fields.description,
+  });
+};
+
+const toMechanic = (fields) => {
+  return dropUndefined({
+    symbol: wrapSymbol(fields.symbol),
+    description: fields.description,
+    shortDescription: fields.shortDescription,
+    name: fields.name,
+  });
+};
+
+const toConstant = (fields) => {
+  return dropUndefined({
+    name: fields.name,
+    type: fields.type,
+    symbol: wrapSymbol(fields.symbol),
+    description: fields.description,
+  });
+};
+
+const isInSet = (setName) => {
+  return (fields) => !fields.isEntourage && fields.set === setName;
+};
+
+const pull = async () => {
+  const tables = {};
+
+  for (const name of TABLE_NAMES) {
+    process.stdout.write(`Fetching ${name} ... `);
+    tables[name] = await fetchAll(name);
+
+    if (tables[name].length === 0) {
+      throw new Error(`${name} came back empty; nothing written`);
+    }
+
+    console.log(`${tables[name].length} rows`);
   }
-  const cards = t.CARDS;
+
+  const rows = (name) => tables[name].map((record) => record.fields);
+  const classSymbolById = Object.fromEntries(
+    tables.CLASSES.map((record) => [record.id, record.fields.symbol]),
+  );
+  const cards = rows('CARDS');
   const files = {
-    core: cards
-      .filter((c) => !c.isEntourage && c.set === 'CORE')
-      .map((c) => card(c)),
-    prime: cards
-      .filter((c) => !c.isEntourage && c.set === 'PRIME')
-      .map((c) => card(c)),
-    entourage: cards.filter((c) => c.isEntourage).map((c) => card(c, true)),
-    game: cards
-      .filter((c) => !c.isEntourage && c.set === 'GAME')
-      .map((c) => card(c)),
-    heroes: t.HEROES.map((h) =>
-      drop({
-        name: h.name,
-        symbol: P(h.symbol),
-        slug: h.slug,
-        archetype: h.archetype,
-        shortDescription: h.shortDescription,
-        lore: h.lore,
-        active: h.active,
-        artistName: h.artistName,
-        artistUrl: h.artistUrl,
-      }),
-    ),
-    abilities: t.ABILITIES.map((a) =>
-      drop({
-        name: a.name,
-        playContext: P(a.playContext),
-        type: P('TYPE_' + a.type),
-        playType: a.playType,
-        hero: P(a.heroSymbol),
-        id: isNaN(a.id) ? a.id : Number(a.id),
-        cost: a.cost,
-        active: a.active,
-        cooldown: a.cooldown,
-        mechanics: a.mechanics && a.mechanics.map(P),
-        text: a.text,
-        numberPrimary: a.numberPrimary,
-        numberSecondary: a.numberSecondary,
-        numberRandom: a.numberRandom,
-        rarity: a.rarity ? P('RARITY_' + a.rarity) : undefined,
-        targetingArrowText: a.targetingText,
-        entourage: a.entourage,
-        ultimate: a.ultimate,
-        description: a.description,
-      }),
-    ),
-    mechanics: t.MECHANICS.map((m) =>
-      drop({
-        symbol: P(m.symbol),
-        description: m.description,
-        shortDescription: m.shortDescription,
-        name: m.name,
-      }),
-    ),
-    constants: t.CONSTANTS.map((c) =>
-      drop({
-        name: c.name,
-        type: c.type,
-        symbol: P(c.symbol),
-        description: c.description,
-      }),
-    ),
+    core: cards.filter(isInSet('CORE')).map((fields) => toCard(fields)),
+    prime: cards.filter(isInSet('PRIME')).map((fields) => toCard(fields)),
+    entourage: cards
+      .filter((fields) => fields.isEntourage)
+      .map((fields) => toCard(fields, true)),
+    game: cards.filter(isInSet('GAME')).map((fields) => toCard(fields)),
+    heroes: rows('HEROES').map(toHero),
+    classes: rows('CLASSES').map(toClass),
+    skills: rows('SKILLS').map((fields) => toSkill(fields, classSymbolById)),
+    mechanics: rows('MECHANICS').map(toMechanic),
+    constants: rows('CONSTANTS').map(toConstant),
   };
+
   fs.mkdirSync(OUT_DIR, { recursive: true });
+
   for (const [file, items] of Object.entries(files)) {
-    fs.writeFileSync(
-      `${OUT_DIR}/${file}.json`,
-      JSON.stringify(items, null, 2) + '\n',
-    );
+    const json = JSON.stringify(items, null, JSON_INDENT);
+
+    fs.writeFileSync(`${OUT_DIR}/${file}.json`, json + '\n');
     console.log(`Wrote ${OUT_DIR}/${file}.json (${items.length})`);
   }
-})().catch((e) => {
-  console.error(`\nairtable failed: ${e.message}`);
+};
+
+pull().catch((error) => {
+  console.error(`\nairtable failed: ${error.message}`);
   process.exit(1);
 });
