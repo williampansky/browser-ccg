@@ -8,13 +8,16 @@ import {
 } from '../hero-choice';
 
 describe('hero choice', () => {
-  it('lists Random, the six heroes and No hero skills', () => {
+  it('lists Random, the nine heroes and No hero skills', () => {
     expect(heroOptions().map((o) => o.value)).toEqual([
       HERO_RANDOM,
       'FIGHTER',
       'WIZARD',
       'RANGER',
       'CLERIC',
+      'CRUSADER',
+      'ASSASSIN',
+      'MYSTIC',
       'NECROMANCER',
       'WARDEN',
       HERO_NONE,
@@ -25,9 +28,9 @@ describe('hero choice', () => {
     expect(resolveHero('FIGHTER', rng)).toBe('FIGHTER');
     expect(resolveHero(HERO_NONE, rng)).toBeUndefined();
     const seen = new Set(
-      Array.from({ length: 60 }, () => resolveHero(HERO_RANDOM, rng)),
+      Array.from({ length: 300 }, () => resolveHero(HERO_RANDOM, rng)),
     );
-    expect(seen.size).toBe(6);
+    expect(seen.size).toBe(9);
   });
   it('turns anything unknown into Random', () => {
     expect(normalizeHeroChoice('NOPE')).toBe(HERO_RANDOM);

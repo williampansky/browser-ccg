@@ -1,12 +1,15 @@
 import { getHero, heroes } from '..';
 
 describe('the shelved skills (real SKILLS data)', () => {
-  it('offers the six classes that have skill code and an active skill', () => {
+  it('offers all nine classes, each with its first skill active', () => {
     expect(heroes().map((h) => h.id)).toEqual([
       'FIGHTER',
       'WIZARD',
       'RANGER',
       'CLERIC',
+      'CRUSADER',
+      'ASSASSIN',
+      'MYSTIC',
       'NECROMANCER',
       'WARDEN',
     ]);
@@ -18,9 +21,8 @@ describe('the shelved skills (real SKILLS data)', () => {
       ]);
     }
   });
-  it('offers no hero for a class whose skill is inactive or has no code', () => {
-    for (const id of ['ASSASSIN', 'CRUSADER', 'MYSTIC']) {
-      expect(getHero(id)).toBeUndefined();
-    }
+  it('keeps skills 2 and 3 out even where the table still has text for them', () => {
+    expect(getHero('CRUSADER')!.skills).toHaveLength(1);
+    expect(getHero('WIZARD')!.skills).toHaveLength(1);
   });
 });

@@ -74,6 +74,7 @@
     "class": "%CLASS_MYSTIC%",
     "id": 1,
     "cost": 2,
+    "active": true,
     "cooldown": 1,
     "mechanics": [
       "%SUMMON%",
@@ -168,6 +169,7 @@
     "class": "%CLASS_ASSASSIN%",
     "id": 1,
     "cost": 2,
+    "active": true,
     "cooldown": 1,
     "mechanics": [
       "%WEAPON%"
@@ -338,6 +340,7 @@
     "class": "%CLASS_CRUSADER%",
     "id": 1,
     "cost": 2,
+    "active": true,
     "cooldown": 1,
     "mechanics": [
       "%SUMMON%"

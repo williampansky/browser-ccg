@@ -337,6 +337,9 @@ const HEROES = [
   ['RANGER', 'Ranger'],
   ['CLERIC', 'Cleric'],
   ['FIGHTER', 'Fighter'],
+  ['CRUSADER', 'Crusader'],
+  ['MYSTIC', 'Mystic'],
+  ['NECROMANCER', 'Necromancer'],
   ['WARDEN', 'Warden'],
 ];
 

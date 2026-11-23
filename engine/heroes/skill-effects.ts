@@ -66,6 +66,47 @@ const summonBuffed =
     m.health += health;
   };
 
+/** The Mystic's totems; a call never repeats one already on the board. */
+const MYSTIC_TOTEMS = [
+  'HERO_MYSTIC_EMBER',
+  'HERO_MYSTIC_STONE',
+  'HERO_MYSTIC_SPRING',
+  'HERO_MYSTIC_GALE',
+];
+
+const summonTotem: Effect = (ctx) => {
+  const onBoard = new Set(ctx.g.players[ctx.caster].board.map((m) => m.cardId));
+  const free = MYSTIC_TOTEMS.filter((id) => !onBoard.has(id));
+
+  if (free.length === 0) return;
+
+  summonMinion(
+    ctx.g,
+    ctx.caster,
+    heroToken(free[ctx.rng.int(free.length)]),
+    ctx.events,
+  );
+};
+
+/** Equips the hero token weapon `id`, replacing any weapon. */
+const equipToken =
+  (id: string): Effect =>
+  (ctx) => {
+    const card = heroToken(id);
+
+    ctx.g.players[ctx.caster].weapon = {
+      instanceId: ctx.g.nextInstanceId++,
+      cardId: card.id,
+      attack: card.attack ?? 0,
+      durability: card.health ?? 0,
+    };
+    ctx.events.push({
+      type: 'WeaponEquipped',
+      player: ctx.caster,
+      cardId: card.id,
+    });
+  };
+
 const BLOOD_PACT_DAMAGE = 2;
 const BLOOD_PACT_CARDS = 1;
 
@@ -198,4 +239,7 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
   NECROMANCER: [
     { effects: [hurtSelf(BLOOD_PACT_DAMAGE), draw(BLOOD_PACT_CARDS)] },
   ],
+  CRUSADER: [{ effects: [summonToken('HERO_CRUSADER_RECRUIT')] }],
+  MYSTIC: [{ effects: [summonTotem] }],
+  ASSASSIN: [{ effects: [equipToken('HERO_ASSASSIN_DAGGER')] }],
 };

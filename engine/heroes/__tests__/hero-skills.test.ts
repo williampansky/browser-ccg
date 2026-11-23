@@ -4,6 +4,7 @@ import { createSeededRng } from '../../rng';
 import { applyAction } from '../../rules/apply-action';
 import { legalActions } from '../../rules/legal-actions';
 import { createGame } from '../../state/create-game';
+import { MAX_BOARD } from '../../state/types';
 import type { Action, GameState, TargetRef } from '../../state/types';
 import {
   catalogOf,
@@ -14,13 +15,23 @@ import {
 import { getHero, heroes, heroSkill, withHeroTokens } from '..';
 
 // Skills 2 and 3 are shelved (inactive in the SKILLS table) while the
-// launch-style game is built; these tests still cover their code, so every
-// skill that belongs to a class is switched on here.
-jest.mock('../../../data/skills.json', () =>
-  (jest.requireActual('../../../data/skills.json') as { class?: string }[]).map(
-    (skill) => ({ ...skill, active: Boolean(skill.class) }),
-  ),
-);
+// launch-style game is built; these tests still cover their code. So every
+// skill of the classes that have all three coded is switched on here, and
+// skill 1 of the others.
+jest.mock('../../../data/skills.json', () => {
+  const allThree = ['FIGHTER', 'WIZARD', 'RANGER', 'CLERIC', 'WARDEN'];
+  const raw = jest.requireActual('../../../data/skills.json') as {
+    class?: string;
+    id: number;
+  }[];
+
+  return raw.map((skill) => {
+    const key = (skill.class ?? '').replace(/%/g, '').replace('CLASS_', '');
+    const isOn = allThree.includes(key) || (!!skill.class && skill.id === 1);
+
+    return { ...skill, active: isOn };
+  });
+});
 
 const grunt = minionCard('GRUNT', { cost: 1, attack: 2, health: 3 });
 const catalog = withHeroTokens(
@@ -104,17 +115,22 @@ describe('spell damage on skills', () => {
 });
 
 describe('the playable heroes', () => {
-  it('are the six classes with skill code, each with all of its skills', () => {
+  it('are the nine classes with skill code, each with all of its skills', () => {
     expect(heroes().map((h) => h.id)).toEqual([
       'FIGHTER',
       'WIZARD',
       'RANGER',
       'CLERIC',
+      'CRUSADER',
+      'ASSASSIN',
+      'MYSTIC',
       'NECROMANCER',
       'WARDEN',
     ]);
     for (const h of heroes()) {
-      expect(h.skills).toHaveLength(h.id === 'NECROMANCER' ? 1 : 3);
+      const onlyFirst = ['CRUSADER', 'ASSASSIN', 'MYSTIC', 'NECROMANCER'];
+
+      expect(h.skills).toHaveLength(onlyFirst.includes(h.id) ? 1 : 3);
     }
   });
   it('take their skill numbers from the ability data', () => {
@@ -322,6 +338,132 @@ describe('Necromancer', () => {
     expect(pact(low).health).toBe(0);
   });
 });
+describe('Crusader', () => {
+  it('Recruit costs 2 energy with a cooldown of 1', () => {
+    expect(heroSkill('CRUSADER', 0)).toMatchObject({ cost: 2, cooldown: 1 });
+  });
+  it('summons a 1/1 Recruit onto the board, with no target', () => {
+    const board = skill(game('CRUSADER'), 0).state.players['0'].board;
+
+    expect(board).toHaveLength(1);
+    expect(board[0].cardId).toBe('HERO_CRUSADER_RECRUIT');
+    expect([board[0].attack, board[0].health]).toEqual([1, 1]);
+  });
+  it('does nothing but still costs energy when the board is full', () => {
+    let s = game('CRUSADER');
+
+    for (let i = 0; i < MAX_BOARD; i++) s = putOnBoard(s, '0', grunt);
+    const after = skill(s, 0).state.players['0'];
+
+    expect(after.board).toHaveLength(MAX_BOARD);
+    expect(after.energy.current).toBe(8);
+  });
+});
+
+describe('Mystic', () => {
+  const totems = [
+    'HERO_MYSTIC_EMBER',
+    'HERO_MYSTIC_STONE',
+    'HERO_MYSTIC_SPRING',
+    'HERO_MYSTIC_GALE',
+  ];
+  const boardOf = (s: GameState) =>
+    s.players['0'].board.map((minion) => minion.cardId);
+  const callTotems = (times: number, seed = 1): GameState => {
+    let s = game('MYSTIC');
+
+    for (let i = 0; i < times; i++) {
+      s = act(s, { type: 'HeroSkill', skill: 0 }, seed + i).state;
+      s = endTurns(s, 2);
+    }
+
+    return s;
+  };
+
+  it('Call Totem costs 2 energy with a cooldown of 1', () => {
+    expect(heroSkill('MYSTIC', 0)).toMatchObject({ cost: 2, cooldown: 1 });
+  });
+  it('summons one of the four totems', () => {
+    for (let seed = 1; seed <= 20; seed++) {
+      const s = act(game('MYSTIC'), { type: 'HeroSkill', skill: 0 }, seed);
+
+      expect(totems).toContain(boardOf(s.state)[0]);
+    }
+  });
+  it('never repeats a totem you already have, so four calls give all four', () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      expect([...boardOf(callTotems(4, seed))].sort()).toEqual(
+        [...totems].sort(),
+      );
+    }
+  });
+  it('does nothing once all four totems are on the board', () => {
+    const s = callTotems(5);
+
+    expect(boardOf(s)).toHaveLength(4);
+  });
+  it('Stone Totem has Guard, Ember Totem is a plain 1/1', () => {
+    const stone = putOnBoard(
+      game('MYSTIC'),
+      '0',
+      catalog.get('HERO_MYSTIC_STONE')!,
+    );
+    const ember = catalog.get('HERO_MYSTIC_EMBER')!;
+
+    expect(stone.players['0'].board[0].keywords.guard).toBe(true);
+    expect([ember.attack, ember.health]).toEqual([1, 1]);
+  });
+  it('Spring Totem heals your minions 1 at the end of your turn', () => {
+    let s = putOnBoard(game('MYSTIC'), '0', catalog.get('HERO_MYSTIC_SPRING')!);
+
+    s = putOnBoard(s, '0', grunt, { health: 1, maxHealth: 3 });
+    s = act(s, { type: 'EndTurn' }).state;
+    expect(s.players['0'].board[1].health).toBe(2);
+  });
+  it('Gale Totem adds +1 Spell Damage to your skills', () => {
+    const s = putOnBoard(game('WIZARD'), '0', catalog.get('HERO_MYSTIC_GALE')!);
+
+    expect(skill(s, 0, foeHero).state.players['1'].health).toBe(28);
+  });
+});
+
+describe('Assassin', () => {
+  it('Equip Dagger costs 2 energy with a cooldown of 1', () => {
+    expect(heroSkill('ASSASSIN', 0)).toMatchObject({ cost: 2, cooldown: 1 });
+  });
+  it('equips a 1/2 dagger, with no target', () => {
+    const after = skill(game('ASSASSIN'), 0).state.players['0'];
+
+    expect(after.weapon).toMatchObject({
+      cardId: 'HERO_ASSASSIN_DAGGER',
+      attack: 1,
+      durability: 2,
+    });
+    expect(after.energy.current).toBe(8);
+  });
+  it('replaces a weapon you already hold', () => {
+    const armed = produce(game('ASSASSIN'), (g) => {
+      g.players['0'].weapon = {
+        instanceId: 99,
+        cardId: 'OLD',
+        attack: 5,
+        durability: 1,
+      };
+    });
+
+    expect(skill(armed, 0).state.players['0'].weapon?.cardId).toBe(
+      'HERO_ASSASSIN_DAGGER',
+    );
+  });
+  it('lets the hero attack with it straight away, wearing it down', () => {
+    const armed = skill(game('ASSASSIN'), 0).state;
+    const hit = act(armed, { type: 'WeaponAttack', target: foeHero }).state;
+
+    expect(hit.players['1'].health).toBe(29);
+    expect(hit.players['0'].weapon?.durability).toBe(1);
+  });
+});
+
 describe('Cleric (SAGE)', () => {
   it('Revitalize heals 3', () => {
     const s = produce(game('CLERIC'), (g) => void (g.players['0'].health = 20));
