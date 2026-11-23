@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { heroes } from '../../engine/heroes';
 import type { HeroInfo } from '../../engine/heroes';
-import { heroImage } from '../play-board/hero-images';
+import {
+  heroArtFallback,
+  heroArtRef,
+  heroImage,
+} from '../play-board/hero-images';
 import styles from './heroes.module.scss';
 
 const ARCHETYPES: Record<string, string> = {
@@ -45,9 +49,11 @@ export const Heroes = () => {
             aria-label={h.name}
           >
             <img
-              src={heroImage(h.id, 'avatar')}
+              ref={heroArtRef}
               alt=""
               className={styles.portrait}
+              onError={heroArtFallback}
+              src={heroImage(h.id, 'avatar')}
             />
             <span className={styles.name}>{h.name}</span>
             <span className={styles.arch}>
@@ -71,15 +77,14 @@ const HeroDetail = ({
   <div className={styles.backdrop} onClick={onClose}>
     <div className={styles.detail} role="dialog" aria-label={hero.name}>
       <img
-        src={heroImage(hero.id, 'avatar')}
         alt=""
         className={styles.bigPortrait}
+        onError={heroArtFallback}
+        src={heroImage(hero.id, 'avatar')}
       />
       <div className={styles.text}>
         <h2>{hero.name}</h2>
-        <p className={styles.meta}>
-          {ARCHETYPES[hero.archetype] ?? hero.archetype} hero
-        </p>
+        <p className={styles.meta}>{hero.id}</p>
         {hero.shortDescription && !isPlaceholder(hero.shortDescription) && (
           <p className={styles.blurb}>{hero.shortDescription}</p>
         )}
@@ -90,7 +95,11 @@ const HeroDetail = ({
               key={s.index}
               className={s.cooldown === undefined ? styles.ultimate : ''}
             >
-              <img src={heroImage(hero.id, `skill-${s.index + 1}`)} alt="" />
+              <img
+                alt=""
+                onError={heroArtFallback}
+                src={heroImage(hero.id, `skill-${s.index + 1}`)}
+              />
               <div>
                 <strong>{s.name}</strong>
                 <small>{skillMeta(s.cost, s.cooldown)}</small>

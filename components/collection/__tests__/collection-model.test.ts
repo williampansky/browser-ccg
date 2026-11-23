@@ -203,7 +203,10 @@ describe('entourage cards and the set filter', () => {
     expect(prime.length).toBeGreaterThan(0);
     expect(core.every((c) => c.id.startsWith('CORE_'))).toBe(true);
     expect(prime.every((c) => c.id.startsWith('PRIME_'))).toBe(true);
-    expect(core.length + prime.length).toBe(
+    const gameTokens = tokens.filter((c) => c.id.startsWith('GAME_'));
+
+    expect(gameTokens.length).toBeGreaterThan(0);
+    expect(core.length + prime.length + gameTokens.length).toBe(
       filterCards(tokens, f({ set: 'both' })).length,
     );
   });
@@ -221,14 +224,14 @@ describe('class filter', () => {
       filterCards(withClass, f({ hero: 'neutral' })).some((c) => c.heroClass),
     ).toBe(false);
     expect(
-      filterCards(withClass, f({ hero: 'WARRIOR' })).map((c) => c.id),
+      filterCards(withClass, f({ hero: 'FIGHTER' })).map((c) => c.id),
     ).toContain('PRIME_255');
-    expect(filterCards(withClass, f({ hero: 'ZEUS' }))).toHaveLength(0);
+    expect(filterCards(withClass, f({ hero: 'WIZARD' }))).toHaveLength(0);
   });
   it('round-trips through the URL', () => {
-    const q = toQuery(f({ hero: 'WARRIOR' }), 'cost', 'all');
-    expect(q.class).toBe('WARRIOR');
-    expect(fromQuery(q).filters.hero).toBe('WARRIOR');
+    const q = toQuery(f({ hero: 'FIGHTER' }), 'cost', 'all');
+    expect(q.class).toBe('FIGHTER');
+    expect(fromQuery(q).filters.hero).toBe('FIGHTER');
   });
 });
 

@@ -253,11 +253,11 @@ describe('deck choice', () => {
 describe('a saved deck with a hero', () => {
   it('hands its hero back, and a deck with none gives undefined', () => {
     const decks = [
-      { ...saved[0], hero: 'ZEUS' },
+      { ...saved[0], hero: 'WIZARD' },
       { id: 'c', name: 'Plain', cards: ['CORE_001'] },
     ];
     expect(resolveDeck('saved:a', pool, decks, createSeededRng(1)).hero).toBe(
-      'ZEUS',
+      'WIZARD',
     );
     expect(
       resolveDeck('saved:c', pool, decks, createSeededRng(1)).hero,

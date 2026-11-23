@@ -8,29 +8,38 @@ import {
 } from '../hero-choice';
 
 describe('hero choice', () => {
-  it('lists Random, the five heroes and No hero skills', () => {
+  it('lists Random, the nine heroes and No hero skills', () => {
     expect(heroOptions().map((o) => o.value)).toEqual([
       HERO_RANDOM,
-      'ZEUS',
-      'WILDCALLER',
-      'EXILE',
-      'WARRIOR',
-      'SAGE',
+      'FIGHTER',
+      'WIZARD',
+      'RANGER',
+      'CLERIC',
+      'CRUSADER',
+      'ASSASSIN',
+      'MYSTIC',
+      'NECROMANCER',
+      'WARDEN',
       HERO_NONE,
     ]);
   });
   it('resolves a named hero, none, and random to a real hero', () => {
     const rng = createSeededRng(3);
-    expect(resolveHero('WARRIOR', rng)).toBe('WARRIOR');
+    expect(resolveHero('FIGHTER', rng)).toBe('FIGHTER');
     expect(resolveHero(HERO_NONE, rng)).toBeUndefined();
     const seen = new Set(
-      Array.from({ length: 60 }, () => resolveHero(HERO_RANDOM, rng)),
+      Array.from({ length: 300 }, () => resolveHero(HERO_RANDOM, rng)),
     );
-    expect(seen.size).toBe(5);
+    expect(seen.size).toBe(9);
   });
   it('turns anything unknown into Random', () => {
     expect(normalizeHeroChoice('NOPE')).toBe(HERO_RANDOM);
     expect(normalizeHeroChoice(4)).toBe(HERO_RANDOM);
-    expect(normalizeHeroChoice('ZEUS')).toBe('ZEUS');
+    expect(normalizeHeroChoice('WIZARD')).toBe('WIZARD');
+  });
+  it('turns an old hero key into its class key', () => {
+    expect(normalizeHeroChoice('ZEUS')).toBe('WIZARD');
+    expect(normalizeHeroChoice('WARRIOR')).toBe('FIGHTER');
+    expect(normalizeHeroChoice('FORSAKEN_DRUID')).toBe('WARDEN');
   });
 });

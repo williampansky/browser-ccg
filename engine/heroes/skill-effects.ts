@@ -1,7 +1,7 @@
-import type { CardCatalog } from '../cards/types';
+import type { Card, CardCatalog } from '../cards/types';
 import type { Effect, SkillOption, TargetFilter } from '../effects/types';
 import type { GameState, PlayerId } from '../state/types';
-import { addArmor, buff, damage, heal } from '../effects/primitives';
+import { addArmor, buff, damage, draw, heal } from '../effects/primitives';
 import {
   allEnemyMinions,
   chosenTarget,
@@ -15,7 +15,7 @@ import { resurrectOptions } from './resurrect-offer';
 import { heroToken } from './tokens';
 
 /**
- * What a skill does besides its numbers (those come from the ABILITIES table):
+ * What a skill does besides its numbers (those come from the SKILLS table):
  * who it may aim at, and the effects.
  */
 export interface SkillCode {
@@ -29,7 +29,11 @@ export interface SkillCode {
     player: PlayerId,
     catalog: CardCatalog,
   ) => SkillOption[];
-  effects: Effect[];
+  /**
+   * The effects, or a function of the skill's entourage card ids (the
+   * `entourage` column of the SKILLS table) for a skill whose tokens are data
+   */
+  effects: Effect[] | ((tokenIds: string[]) => Effect[]);
 }
 
 const anyCharacter: TargetFilter = () => true;
@@ -64,6 +68,75 @@ const summonBuffed =
     m.attack += attack;
     m.maxHealth += health;
     m.health += health;
+  };
+
+/** A token from the card data (an entourage card of the skill). */
+const tokenCard = (ctx: Parameters<Effect>[0], id: string): Card => {
+  const card = ctx.catalog.get(id);
+
+  if (!card) throw new Error(`hero skill token ${id} is not in the catalog`);
+
+  return card;
+};
+
+/** Summons the skill's entourage minion `id`. */
+const summonEntourage =
+  (id: string): Effect =>
+  (ctx) => {
+    summonMinion(ctx.g, ctx.caster, tokenCard(ctx, id), ctx.events);
+  };
+
+/**
+ * Summons one of the skill's entourage minions at random, never one that is
+ * already on the board; nothing happens once they are all out.
+ */
+const summonUnseen =
+  (ids: string[]): Effect =>
+  (ctx) => {
+    const onBoard = new Set(
+      ctx.g.players[ctx.caster].board.map((m) => m.cardId),
+    );
+    const free = ids.filter((id) => !onBoard.has(id));
+
+    if (free.length === 0) return;
+
+    const pick = free[ctx.rng.int(free.length)];
+
+    summonMinion(ctx.g, ctx.caster, tokenCard(ctx, pick), ctx.events);
+  };
+
+/** Equips the skill's entourage weapon `id`, replacing any weapon. */
+const equipEntourage =
+  (id: string): Effect =>
+  (ctx) => {
+    const card = tokenCard(ctx, id);
+
+    ctx.g.players[ctx.caster].weapon = {
+      instanceId: ctx.g.nextInstanceId++,
+      cardId: card.id,
+      attack: card.attack ?? 0,
+      durability: card.health ?? 0,
+    };
+    ctx.events.push({
+      type: 'WeaponEquipped',
+      player: ctx.caster,
+      cardId: card.id,
+    });
+  };
+
+const BLOOD_PACT_DAMAGE = 2;
+const BLOOD_PACT_CARDS = 1;
+
+/**
+ * Damages the caster's own hero. Spell damage does not raise it: it is a cost,
+ * not a spell.
+ */
+const hurtSelf =
+  (amount: number): Effect =>
+  (ctx) => {
+    const hero = { kind: 'hero', player: ctx.caster } as const;
+
+    damageTarget(ctx.g, hero, amount, ctx.events);
   };
 
 /**
@@ -129,15 +202,17 @@ const lastStand =
   };
 
 /**
- * Skill code per hero key; entry `n` is that hero's ability with id `n + 1`.
+ * Skill code per class key; entry `n` is that class's skill with id `n + 1`.
+ * Skills 2 and 3 are shelved (inactive in the SKILLS table) until the
+ * launch-style game is done, so they are kept here but not offered.
  */
 export const SKILL_CODE: Record<string, SkillCode[]> = {
-  ZEUS: [
+  WIZARD: [
     { target: anyCharacter, effects: [damage(chosenTarget(), 1)] },
     { effects: [damage(allEnemyMinions(), 3)] },
     { target: anyCharacter, effects: [damage(chosenTarget(), 10)] },
   ],
-  WARRIOR: [
+  FIGHTER: [
     { effects: [addArmor(2)] },
     {
       target: anyCharacter,
@@ -147,17 +222,17 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
     },
     { effects: [lastStand(15, 10)] },
   ],
-  SAGE: [
+  CLERIC: [
     { target: anyCharacter, effects: [heal(chosenTarget(), 3)] },
     { options: resurrectOptions, effects: [resurrectPicked()] },
     { effects: [resurrect(3)] },
   ],
-  EXILE: [
+  RANGER: [
     { effects: [damage(enemyHero(), 2)] },
     { effects: [summonToken('HERO_EXILE_EAGLE')] },
     { effects: [summonToken('HERO_EXILE_BEAST')] },
   ],
-  WILDCALLER: [
+  WARDEN: [
     {
       effects: [
         summonRandomToken([
@@ -178,4 +253,10 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
       ],
     },
   ],
+  NECROMANCER: [
+    { effects: [hurtSelf(BLOOD_PACT_DAMAGE), draw(BLOOD_PACT_CARDS)] },
+  ],
+  CRUSADER: [{ effects: ([recruit]) => [summonEntourage(recruit)] }],
+  MYSTIC: [{ effects: (totems) => [summonUnseen(totems)] }],
+  ASSASSIN: [{ effects: ([dagger]) => [equipEntourage(dagger)] }],
 };

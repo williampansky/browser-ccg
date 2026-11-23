@@ -12,6 +12,7 @@ import type {
   RawCard,
   RawGlossaryEntry,
 } from './types';
+import { CLASS_KEYS, LEGACY_HERO_CLASS, classKey } from '../heroes/classes';
 
 /**
  * Thrown by `loadCards` in strict mode when the data has error-level problems.
@@ -54,6 +55,21 @@ export function stripSymbol(value: unknown): string | undefined {
   if (typeof value !== 'string') return undefined;
   const match = value.trim().match(/^(?:\d+\s+)?%([A-Z0-9_]+)%$/);
   return match ? match[1] : undefined;
+}
+
+/**
+ * The class a card is restricted to: `0 %CLASS_FIGHTER%` -> `FIGHTER`; the
+ * older `%CLASS_HERO_WARRIOR%` form still maps to its class. `undefined` for
+ * `%CLASS_NONE%` or anything that is not a class.
+ */
+function readHeroClass(value: unknown): string | undefined {
+  const symbol = stripSymbol(value);
+  if (!symbol) return undefined;
+
+  const legacy = symbol.replace(/^CLASS_HERO_/, '');
+  const key = LEGACY_HERO_CLASS[legacy] ?? classKey(legacy);
+
+  return (CLASS_KEYS as readonly string[]).includes(key) ? key : undefined;
 }
 
 function stripPrefix(value: unknown, prefix: string): string | undefined {
@@ -358,8 +374,8 @@ function normaliseCard(
     collectible: raw.collectible === true,
   };
 
-  const heroClass = stripPrefix(raw.cardClass, 'CLASS_HERO_');
-  if (heroClass && !heroClass.startsWith('CLASS_')) card.heroClass = heroClass;
+  const heroClass = readHeroClass(raw.cardClass);
+  if (heroClass) card.heroClass = heroClass;
   if (name) card.name = name;
   const attack = readNumber('attack');
   const health = readNumber('health');

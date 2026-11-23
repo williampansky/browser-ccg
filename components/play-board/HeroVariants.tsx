@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { heroImage } from './hero-images';
+import { heroArtLayers } from './hero-images';
 import styles from './hero-variants.module.scss';
 import cx from '../../utils/cx';
 import { artBackground, PLACEHOLDER_ART } from './card-face-model';
@@ -40,7 +40,23 @@ export interface HeroVariantProps {
 
 const tone = (health: number, maxHealth: number) =>
   health <= maxHealth / 3 ? styles.low : health < maxHealth ? styles.hurt : '';
-const art = (id: string) => `url(${heroImage(id, 'avatar')})`;
+const SKILL_SLOTS = [1, 2, 3];
+const MIDDLE_SLOT = 2;
+
+/** Where a skill socket sits on the ring (deg); slot 2 is the centre one. */
+const slotAngle = (
+  r: { skillAngle: number; skillSpacing: number },
+  slot: number,
+): number => r.skillAngle + (MIDDLE_SLOT - slot) * r.skillSpacing;
+
+/**
+ * The skill sockets to draw: only those that hold a skill (skills 2 and 3 are
+ * shelved), or all three when no skills are given (the lab previews).
+ */
+const visibleSlots = (p: { skills?: FigureSkill[] }): number[] =>
+  SKILL_SLOTS.filter((slot) => !p.skills || p.skills[slot - 1]);
+
+const art = (id: string) => heroArtLayers(id, 'avatar');
 const root = (p: HeroVariantProps, extra: string) =>
   cx(
     styles.root,
@@ -138,7 +154,7 @@ export const HeroFigure = (
       )}
       <span className={styles.figName}>{p.name}</span>
       <div className={styles.figSkills}>
-        {[1, 2, 3].map((n) => {
+        {visibleSlots(p).map((n) => {
           const k = p.skills?.[n - 1];
           const status = !k
             ? ''
@@ -169,7 +185,7 @@ export const HeroFigure = (
                 k && !k.usable ? styles.off : '',
               )}
               style={{
-                backgroundImage: `url(${heroImage(p.heroId, `skill-${n}`)})`,
+                backgroundImage: heroArtLayers(p.heroId, `skill-${n}`),
               }}
             >
               {k && <b className={styles.figCost}>{k.cost}</b>}
@@ -733,9 +749,7 @@ export const HeroRing = (
       </div>
       {r.frame > 0 &&
         [
-          r.skillAngle + r.skillSpacing,
-          r.skillAngle,
-          r.skillAngle - r.skillSpacing,
+          ...visibleSlots(p).map((slot) => slotAngle(r, slot)),
           ...(p.weapon ? [r.weaponAngle] : []),
           ...(p.mystery ? [r.mysteryAngle] : []),
         ].map((a, i) => (
@@ -745,7 +759,7 @@ export const HeroRing = (
             style={{ ['--a' as string]: `${a}deg` }}
           />
         ))}
-      {[1, 2, 3].map((n) => {
+      {visibleSlots(p).map((n) => {
         const k = p.skills?.[n - 1];
         const status = !k
           ? ''
@@ -777,8 +791,8 @@ export const HeroRing = (
               k && !k.usable ? styles.off : '',
             )}
             style={{
-              ['--a' as string]: `${r.skillAngle + (2 - n) * r.skillSpacing}deg`,
-              backgroundImage: `url(${heroImage(p.heroId, `skill-${n}`)})`,
+              ['--a' as string]: `${slotAngle(r, n)}deg`,
+              backgroundImage: heroArtLayers(p.heroId, `skill-${n}`),
             }}
           >
             {k && r.showCost && <b className={styles.ringCost}>{k.cost}</b>}

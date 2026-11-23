@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Wizard",
+    "symbol": "%CLASS_WIZARD%"
+  },
+  {
+    "name": "Crusader",
+    "symbol": "%CLASS_CRUSADER%"
+  },
+  {
+    "name": "Mystic",
+    "symbol": "%CLASS_MYSTIC%"
+  },
+  {
+    "name": "Assassin",
+    "symbol": "%CLASS_ASSASSIN%"
+  },
+  {
+    "name": "Ranger",
+    "symbol": "%CLASS_RANGER%"
+  },
+  {
+    "name": "Cleric",
+    "symbol": "%CLASS_CLERIC%"
+  },
+  {
+    "name": "Fighter",
+    "symbol": "%CLASS_FIGHTER%"
+  },
+  {
+    "name": "Necromancer",
+    "symbol": "%CLASS_NECROMANCER%"
+  },
+  {
+    "name": "Warden",
+    "symbol": "%CLASS_WARDEN%"
+  }
+]

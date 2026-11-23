@@ -68,6 +68,17 @@ const skillFrom = (state: string, n: number, heroId: string): FigureSkill => {
 };
 
 /**
+ * Only the skills the hero has (skills 2 and 3 are shelved), each in its chosen
+ * state, so a hero with one skill shows one socket.
+ */
+const heroSkillsFor = (states: string[], heroId: string): FigureSkill[] =>
+  states.flatMap((state, index) => {
+    const hasSkill = !!getHero(heroId)?.skills[index];
+
+    return hasSkill ? [skillFrom(state, index + 1, heroId)] : [];
+  });
+
+/**
  * Prototype weapon art for the standing figure, keyed by card id (attack /
  * durability from data/core.json).
  */
@@ -321,13 +332,15 @@ const RING_FLAGS: { field: FlagKey; label: string }[] = [
 ];
 
 const HEROES = [
-  ['ZEUS', 'Zeus'],
-  ['ASAR', 'Asar'],
-  ['ATLAS', 'Atlas'],
-  ['EXILE', 'Exile'],
-  ['SAGE', 'Sage'],
-  ['WARRIOR', 'Warrior'],
-  ['WILDCALLER', 'Wildcaller'],
+  ['WIZARD', 'Wizard'],
+  ['ASSASSIN', 'Assassin'],
+  ['RANGER', 'Ranger'],
+  ['CLERIC', 'Cleric'],
+  ['FIGHTER', 'Fighter'],
+  ['CRUSADER', 'Crusader'],
+  ['MYSTIC', 'Mystic'],
+  ['NECROMANCER', 'Necromancer'],
+  ['WARDEN', 'Warden'],
 ];
 
 /**
@@ -570,7 +583,7 @@ const HeroLab = () => {
   return (
     <main
       style={{
-        padding: '24px 24px 96px',
+        padding: '24px 24px 0',
         color: '#e8eaf2',
         background: '#14161c',
         position: 'fixed',
@@ -776,7 +789,7 @@ const HeroLab = () => {
                   key={id}
                   {...p}
                   weapon={WEAPONS[weapon]}
-                  skills={skillStates.map((st, i) => skillFrom(st, i + 1, id))}
+                  skills={heroSkillsFor(skillStates, id)}
                 />
               ) : tab === 'medal' ? (
                 <HeroMedallion key={id} {...p} />
@@ -800,7 +813,7 @@ const HeroLab = () => {
                         : undefined
                   }
                   weapon={WEAPONS[weapon]}
-                  skills={skillStates.map((st, i) => skillFrom(st, i + 1, id))}
+                  skills={heroSkillsFor(skillStates, id)}
                 />
               ) : (
                 <HeroCard key={id} {...p} />

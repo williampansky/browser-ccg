@@ -1,73 +1,105 @@
 [
   {
-    "name": "Atlas",
-    "symbol": "%HERO_ATLAS%",
-    "slug": "atlas",
-    "archetype": "RANGED",
-    "artistName": "Davide Scalia",
-    "artistUrl": "https://www.artstation.com/davidescalia"
+    "name": "Warden",
+    "symbol": "%HERO_WARDEN_DEFAULT%",
+    "class": "%CLASS_WARDEN%",
+    "active": true
+  },
+  {
+    "name": "Fighter",
+    "symbol": "%HERO_FIGHTER_DEFAULT%",
+    "class": "%CLASS_FIGHTER%",
+    "active": true
+  },
+  {
+    "name": "Perseus",
+    "symbol": "%HERO_PERSEUS%",
+    "class": "%CLASS_CRUSADER%"
   },
   {
     "name": "Zeus",
     "symbol": "%HERO_ZEUS%",
-    "slug": "zeus",
-    "archetype": "RANGED",
+    "class": "%CLASS_WIZARD%",
     "shortDescription": "Olympian god of the sky and the thunder, the king of all other gods and men.",
     "lore": "Olympian god of the sky and the thunder, the king of all other gods and men. Zeus is king of Mount Olympus, the home of Greek gods, where he rules the world and imposes his will onto gods and mortals alike. As the king of the gods and sitting atop the golden throne on Olympus, Zeus is revered by all.",
-    "active": true,
     "artistName": "Dzhovanna Sallama",
     "artistUrl": "https://www.artstation.com/jovannasallama"
   },
   {
-    "name": "Wildcaller",
-    "symbol": "%HERO_WILDCALLER%",
-    "slug": "wildcaller",
-    "archetype": "RANGED",
-    "active": true,
-    "artistName": "Huussii",
-    "artistUrl": "https://www.deviantart.com/huussii"
+    "name": "Assassin",
+    "symbol": "%HERO_ASSASSIN_DEFAULT%",
+    "class": "%CLASS_ASSASSIN%",
+    "active": true
   },
   {
-    "name": "Exile",
-    "symbol": "%HERO_EXILE%",
-    "slug": "exile",
-    "archetype": "RANGED",
-    "active": true,
-    "artistName": "Platinum YB",
-    "artistUrl": "https://www.artstation.com/lightandshadow"
+    "name": "Argus",
+    "symbol": "%HERO_ARGUS%",
+    "class": "%CLASS_WARDEN%"
   },
   {
-    "name": "Warrior",
-    "symbol": "%HERO_WARRIOR%",
-    "slug": "warrior",
-    "archetype": "MELEE",
+    "name": "Proteus",
+    "symbol": "%HERO_PROTEUS%",
+    "class": "%CLASS_MYSTIC%"
+  },
+  {
+    "name": "Orion",
+    "symbol": "%HERO_ORION%",
+    "class": "%CLASS_RANGER%"
+  },
+  {
+    "name": "Heracles",
+    "symbol": "%HERO_HERACLES%",
+    "class": "%CLASS_FIGHTER%"
+  },
+  {
+    "name": "Dolon",
+    "symbol": "%HERO_DOLON%",
+    "class": "%CLASS_ASSASSIN%"
+  },
+  {
+    "name": "Necromancer",
+    "symbol": "%HERO_NECROMANCER_DEFAULT%",
+    "class": "%CLASS_NECROMANCER%",
+    "active": true
+  },
+  {
+    "name": "Crusader",
+    "symbol": "%HERO_CRUSADER_DEFAULT%",
+    "class": "%CLASS_CRUSADER%",
+    "active": true
+  },
+  {
+    "name": "Wizard",
+    "symbol": "%HERO_WIZARD_DEFAULT%",
+    "class": "%CLASS_WIZARD%",
+    "active": true
+  },
+  {
+    "name": "Cleric",
+    "symbol": "%HERO_CLERIC_DEFAULT%",
+    "class": "%CLASS_CLERIC%",
+    "active": true
+  },
+  {
+    "name": "Persephone",
+    "symbol": "%HERO_PERSEPHONE%",
+    "class": "%CLASS_NECROMANCER%"
+  },
+  {
+    "name": "Asclepius",
+    "symbol": "%HERO_ASCLEPIUS%",
+    "class": "%CLASS_CLERIC%"
+  },
+  {
+    "name": "Ranger",
+    "symbol": "%HERO_RANGER_DEFAULT%",
+    "class": "%CLASS_RANGER%",
     "active": true
   },
   {
     "name": "Mystic",
-    "symbol": "%HERO_MYSTIC%",
-    "slug": "mystic",
-    "archetype": "HYBRID"
-  },
-  {
-    "name": "Asar",
-    "symbol": "%HERO_ASAR%",
-    "slug": "asar",
-    "archetype": "MELEE",
-    "artistName": "Naranbaatar Ganbold",
-    "artistUrl": "https://www.artstation.com/naranbaatars"
-  },
-  {
-    "name": "Summoner",
-    "symbol": "%HERO_SUMMONER%",
-    "slug": "summoner",
-    "archetype": "RANGED"
-  },
-  {
-    "name": "Cleric",
-    "symbol": "%HERO_SAGE%",
-    "slug": "cleric",
-    "archetype": "RANGED",
+    "symbol": "%HERO_MYSTIC_DEFAULT%",
+    "class": "%CLASS_MYSTIC%",
     "active": true
   }
 ]

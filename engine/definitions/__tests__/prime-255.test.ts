@@ -22,13 +22,13 @@ const withArmor = (
   produce(setup('PRIME_255', sc), (g) => void (g.players['0'].armor = armor));
 
 describe('PRIME_255', () => {
-  it('is a COMMON, 1 cost spell restricted to the WARRIOR class', () => {
+  it('is a COMMON, 1 cost spell restricted to the FIGHTER class', () => {
     const c = realCard('PRIME_255');
     expect([c.rarity, c.cost, c.type, c.heroClass]).toEqual([
       'COMMON',
       1,
       'spell',
-      'WARRIOR',
+      'FIGHTER',
     ]);
     expect(isPlayable(c)).toBe(true);
   });
@@ -51,8 +51,8 @@ describe('class-restricted cards', () => {
   const { byId } = loadHsCards();
   it('only a deck with that hero may include the card', () => {
     expect(checkDeck(['PRIME_255'], byId).ok).toBe(false);
-    expect(checkDeck(['PRIME_255'], byId, true, 'ZEUS').ok).toBe(false);
-    expect(checkDeck(['PRIME_255'], byId, true, 'WARRIOR').ok).toBe(true);
+    expect(checkDeck(['PRIME_255'], byId, true, 'WIZARD').ok).toBe(false);
+    expect(checkDeck(['PRIME_255'], byId, true, 'FIGHTER').ok).toBe(true);
   });
   it('neutral cards need no hero', () => {
     expect(byId.get('CORE_001')!.heroClass).toBeUndefined();
