@@ -85,7 +85,7 @@ Done when: you can play a full game against yourself in the browser, to a win.
       Random bot and greedy bot (`engine/bots/greedy-bot.ts`, one-move lookahead) done and wired into `/play`; the menu switches between them
 - [x] Bot-vs-bot simulation: run N games per deck matchup and print win rates and per-card stats (`npm run sim`)
 - [x] A few starter decks for the bot (Aggro, Midrange, Control; `engine/starter-decks.ts`)
-- [ ] Teach the greedy bot's `evaluate` about Combo: it plays one move ahead, so it has no reason to play a cheap card first to switch a Combo card on. Assassin sat at 43% in the 2026-11-23 hero sim (the bottom, with Fighter) even though all seven Combo cards were active; re-run `npm run sim:heroes` after this to see whether that was the bot.
+- [x] Teach the greedy bot about Combo: it plays one move ahead, so it had no reason to play a cheap card first to switch a Combo card on. It now scores a move that turns Combo on by a `combo` weight per affordable Combo card in hand. Assassin went from 43% to 46% in the hero sim (within noise), so the bot was not the main cause; Crusader (61%) to Fighter (43%) is the bigger gap to look at.
 
 Done when: one command prints a win-rate table for the starter decks.
 
