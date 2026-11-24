@@ -83,6 +83,7 @@ import {
   artBackground,
   artUrl,
   PLACEHOLDER_ART,
+  tokenSkillIcons,
   withSpellDamageText,
 } from './card-face-model';
 import { loadDecks } from '../deck-builder/deck-storage';
@@ -2314,6 +2315,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               weapon && p.weapon
                 ? {
                     name: weapon.name,
+                    fallbacks: tokenSkillIcons(weapon.id),
                     image:
                       (/^(CORE|PRIME|GAME)_/.test(weapon.id)
                         ? artUrl(weapon.id)

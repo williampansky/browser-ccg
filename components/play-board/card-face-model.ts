@@ -117,7 +117,7 @@ const HERO_TOKEN_CLASS: [RegExp, string][] = [
 ];
 
 /** Skill 1 icon layers (`.jpg`, then `.png`) for a skill-made token's id. */
-const tokenSkillIcons = (id?: string): string[] => {
+export const tokenSkillIcons = (id?: string): string[] => {
   const heroClass =
     (id && TOKEN_CLASS[id]) ??
     HERO_TOKEN_CLASS.find(([pattern]) => id && pattern.test(id))?.[1];

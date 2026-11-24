@@ -11,12 +11,19 @@ import { IMPACT_MS, reducedMotion } from './motion';
  * Dev preview only (pages/hero-lab.tsx); /play does not use them.
  */
 /**
- * A weapon whose art file is missing (a 404) shows the placeholder instead of a
- * broken image.
+ * A weapon whose art file is missing (a 404) tries the next file in its
+ * `data-fallbacks` list (space separated), then shows the placeholder instead
+ * of a broken image.
  */
 const weaponArtFallback = (e: React.SyntheticEvent<HTMLImageElement>) => {
-  if (!e.currentTarget.src.endsWith(PLACEHOLDER_ART))
-    e.currentTarget.src = PLACEHOLDER_ART;
+  const image = e.currentTarget;
+  if (image.src.endsWith(PLACEHOLDER_ART)) return;
+
+  const [next, ...rest] = (image.dataset.fallbacks ?? '')
+    .split(' ')
+    .filter(Boolean);
+  image.dataset.fallbacks = rest.join(' ');
+  image.src = next ?? PLACEHOLDER_ART;
 };
 
 export interface HeroVariantProps {
@@ -28,6 +35,8 @@ export interface HeroVariantProps {
   /** PROTOTYPE: an equipped weapon drawn over the portrait (HeroFigure only) */
   weapon?: {
     image?: string;
+    /** Files to try, in order, if `image` is missing */
+    fallbacks?: string[];
     attack: number;
     durability: number;
     name?: string;
@@ -144,6 +153,7 @@ export const HeroFigure = (
             <img
               src={p.weapon.image}
               alt=""
+              data-fallbacks={p.weapon.fallbacks?.join(' ')}
               draggable={false}
               onError={weaponArtFallback}
             />
@@ -830,6 +840,7 @@ export const HeroRing = (
             <img
               src={p.weapon.image}
               alt=""
+              data-fallbacks={p.weapon.fallbacks?.join(' ')}
               draggable={false}
               onError={weaponArtFallback}
             />
