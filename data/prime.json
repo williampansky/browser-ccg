@@ -1631,6 +1631,7 @@
   },
   {
     "id": "PRIME_262",
+    "name": "Hooded Scribe",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -1649,7 +1650,9 @@
     "playContext": "%DEBUFF%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_020",
@@ -2299,6 +2302,7 @@
   },
   {
     "id": "PRIME_270",
+    "name": "Gaping Maw",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -2317,7 +2321,9 @@
     "numberPrimary": 2,
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_257",
@@ -2648,6 +2654,7 @@
   },
   {
     "id": "PRIME_263",
+    "name": "Dawn Wyrm",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -2667,7 +2674,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_045",
@@ -3070,6 +3079,7 @@
   },
   {
     "id": "PRIME_261",
+    "name": "Riveted Sentinel",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -3086,7 +3096,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_036",
@@ -3132,6 +3144,7 @@
   },
   {
     "id": "PRIME_271",
+    "name": "Pit Overlord",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -3151,7 +3164,9 @@
     "active": true,
     "elite": true,
     "entourage": "PRIME_271a",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_213",
