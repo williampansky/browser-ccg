@@ -500,6 +500,17 @@ export const obtainOpponentPlayedCard = (): Effect => (ctx) => {
 };
 
 /**
+ * The running card comes back into the caster's hand at the start of their
+ * next turn (a full hand burns it).
+ */
+export const returnThisCardNextTurn = (): Effect => (ctx) => {
+  if (!ctx.sourceCardId) return;
+
+  const p = ctx.g.players[ctx.caster];
+  p.returning = [...(p.returning ?? []), ctx.sourceCardId];
+};
+
+/**
  * Suppress: the minion loses its card's behaviour (triggers, auras, spell
  * damage, cost changes, On Death effect) and all its
  * keywords, and any Disable. Its stats, damage and buffs stay as they are.

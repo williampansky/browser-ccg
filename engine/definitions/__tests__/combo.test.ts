@@ -2,6 +2,7 @@ import { produce } from 'immer';
 import { legalActions } from '../../rules/legal-actions';
 import {
   catalog,
+  endTurn,
   hero,
   mref,
   play,
@@ -132,5 +133,32 @@ describe('PRIME_198', () => {
 
     expect(stats(state, '0')).toEqual([[5, 3]]);
     expect(state.players['0'].hand).toHaveLength(handBefore);
+  });
+});
+
+describe('PRIME_191', () => {
+  it('deals 2 damage to the enemy hero and does not come back without Combo', () => {
+    const { state } = play(setup('PRIME_191', {}));
+
+    expect(state.players['1'].health).toBe(28);
+    expect(state.players['0'].returning).toBeUndefined();
+  });
+
+  it('with Combo it returns to your hand at the start of your next turn', () => {
+    const { state } = play(afterOneCard(setup('PRIME_191', {})));
+    const nextTurn = endTurn(endTurn(state));
+    const { hand } = nextTurn.players['0'];
+
+    expect(hand.some((card) => card.cardId === 'PRIME_191')).toBe(true);
+    expect(nextTurn.players['0'].returning).toBeUndefined();
+  });
+
+  it('is not in your hand on the opponent turn in between', () => {
+    const { state } = play(afterOneCard(setup('PRIME_191', {})));
+    const midTurn = endTurn(state);
+
+    expect(
+      midTurn.players['0'].hand.some((card) => card.cardId === 'PRIME_191'),
+    ).toBe(false);
   });
 });

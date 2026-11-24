@@ -1,6 +1,32 @@
 import { Draft, produce } from 'immer';
-import { GameEvent, GameState, MAX_ENERGY, PlayerId } from '../state/types';
+import {
+  GameEvent,
+  GameState,
+  MAX_ENERGY,
+  MAX_HAND,
+  PlayerId,
+} from '../state/types';
 import { drawCard } from './draw';
+
+/** Puts back the cards that were set to return at the start of this turn. */
+const returnCards = (
+  g: GameState,
+  player: PlayerId,
+  events: GameEvent[],
+): void => {
+  const p = g.players[player];
+  const cardIds = p.returning ?? [];
+  delete p.returning;
+  for (const cardId of cardIds) {
+    const instanceId = g.nextInstanceId++;
+    if (p.hand.length >= MAX_HAND) {
+      events.push({ type: 'Burned', player, instanceId });
+      continue;
+    }
+    p.hand.push({ instanceId, cardId });
+    events.push({ type: 'CardObtained', player, instanceId });
+  }
+};
 
 /**
  * Ends "this turn only" effects when `player`'s turn ends: temporary Attack (on
@@ -82,5 +108,6 @@ export const startTurn = (
         if (m.expiresOnTurn !== undefined && m.expiresOnTurn <= g.turn)
           m.health = 0;
     }
+    returnCards(g, player, events);
     drawCard(g, player, events);
   });

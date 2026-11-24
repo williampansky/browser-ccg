@@ -194,6 +194,11 @@ export interface PlayerState {
    * (`prev`), for "cards you played this turn and last"
    */
   plays?: { now: number; prev: number };
+  /**
+   * Card ids that come back into this player's hand at the start of their
+   * next turn (PRIME_191's Combo)
+   */
+  returning?: string[];
   /** Armor this player's hero has lost to damage over the whole game */
   armorSpent?: number;
   /**

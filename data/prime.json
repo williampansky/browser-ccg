@@ -1226,7 +1226,7 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false,
+    "active": true,
     "entourage": "PRIME_189a",
     "artStatus": "FPO"
   },
@@ -5163,7 +5163,7 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false,
+    "active": true,
     "artStatus": "FPO"
   },
   {
