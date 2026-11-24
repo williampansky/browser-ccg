@@ -206,6 +206,86 @@ free); (2) the setup and debug code; (3) the drag-and-drop handlers and ghost st
 selection, hover and drag state), so they go after the module-level pieces are out and tested. Do the same for `pages/minion-lab.tsx`
 (also one big knob table plus UI) if it keeps being edited.
 
+## Replace Airtable with a local card editor (not scheduled; estimate only)
+
+Why: pulls spend API quota, every write needs approval, `data/*.json` is already
+the real source of truth the game runs on, and card edits have no git history.
+What it would cost: the grid, sorting and views, phone access and
+collaboration. Sized by reading `airtable.node.js` (271 lines),
+`scripts/art/airtable-card.ts`, `pages/api/art-lab/card.ts` and the loader
+(`engine/cards/load-cards.ts`). The data is small: 137 CORE, 271 PRIME, 67
+entourage and 1 GAME card, plus 9 classes, 18 heroes, 23 skills, 53 mechanics
+and 24 constants. Estimates are for working with Claude (wall-clock, plus the
+author's review time), not for a solo human.
+
+What the pull transforms, which sets the migration scope: it wraps select values
+as `%TYPE_MINION%`, `%RARITY_X%` and `%SET_002%`, turns the `cardClass` and
+`SKILLS.class` links into class symbols (`0 %CLASS_FIGHTER%`), renames
+`targetingText` to `targetingArrowText`, defaults `collectible` and `active` to
+false, and splits one CARDS table into four files. The loader strips all of that
+again (`stripSymbol`), and about 29 non-test files read `data/*.json` directly.
+
+**Phase 1: make the JSON editable, keep its shape (about 1 session).**
+Treat `data/*.json` as the source of truth as it stands; do not change the
+`%SYMBOL%` shape yet. Re-point the art-lab card panel (`airtable-card.ts` and
+`pages/api/art-lab/card.ts`) at the files: the same `FieldInfo` schema, but
+choices come from the loader's known symbols and `mechanics.json` instead of
+Airtable's meta API, and a save rewrites the one record (stable key order,
+2-space indent, a trailing newline, same as the pull writes today).
+`toUpdate` and its test carry over. Drop the "then pull" checkbox. Low risk: no
+engine or loader change.
+
+**Phase 2: new-card and other tables (about 1 session).**
+A "new card" form that picks the next free id for a set and the
+`PRIME_NNNa` token naming (see "Tokens" in `CLAUDE.md`), and editing for
+skills, heroes, classes, mechanics and constants (the same field editor with a
+different schema each). Integrity tests: every `entourage` id exists, every
+class is one of `CLASS_KEYS`, ids are unique across files, art files exist (some
+of this is in `art-files.test.ts`), and `gameConfig.cardCounts` matches.
+
+**Phase 3: a grid (1 to 2 sessions, optional).**
+Sort, filter and search the cards in a table with inline editing of simple
+fields. This is the part that makes it feel like Airtable. Skip it if the
+per-card editor is enough. The editor is dev-only and does not follow the UI
+themes (labs are not themed), so a styled, batteries-included grid is fine.
+Before choosing, check each package's React peer range: the site is on React 17
+and Next 12, and several grids now need React 18 or later. Keep the grid behind
+one `CardGrid` component so it can be swapped. Options (versions and licences
+not yet verified; spike one for an hour against `data/core.json` first):
+- **AG Grid Community** (MIT): first pick. Built-in cell editors, select
+  dropdowns, column filters, sorting, resize, reorder, pinning, copy and paste
+  and a quick text filter. Range selection and the fill handle are Enterprise
+  (paid).
+- **Glide Data Grid** (MIT): canvas, fast, the most spreadsheet-like feel. More
+  work for filtering and sorting; React 17 support unchecked.
+- **react-data-grid** (MIT): lightweight, editing and copy/paste built in;
+  recent versions may need React 18, so an older release may be needed.
+- **TanStack Table v8** (MIT): headless, works on React 17, but every editor
+  and all the markup is ours to build. Only worth it if we want full control.
+- Not recommended: MUI X DataGrid (pulls in all of MUI), Handsontable
+  (non-commercial or paid licence), and NocoDB, Baserow or Teable (Airtable
+  clones on SQL: no JSON diffs in git, which recreates two sources of truth).
+- If no good grid supports React 17, run the editor as a small separate app
+  under `tools/` with its own React version, or pin an older release.
+
+**Phase 4: clean the schema (about 1 session, optional, the riskiest).**
+Store bare symbols and real class keys (`"type": "MINION"`,
+`"heroClass": "FIGHTER"`) and drop the `0 ` prefix and the legacy
+`%CLASS_HERO_WARRIOR%` reading, `ENTOURAGE_ID_FIXES` and the old-key paths in
+the loader. It touches the loader, its tests and the ~29 readers, so it comes
+last and only if the `%SYMBOL%` shape bothers us. Phases 1 to 3 do not need it.
+
+**Retire Airtable (under 1 hour).**
+Remove `airtable.node.js`, the `airtable` script and `balance/airtable/`, the
+`AIRTABLE_*` env notes, and rewrite the Airtable sections of `CLAUDE.md`
+(including the "never edit Airtable unasked" rule: git becomes the undo). Take
+one last pull first and keep the base as a read-only archive.
+
+Total: about 3 sessions for a working editor with new-card support (phases 1 and
+2 plus retirement), 4 to 6 with the grid and the schema clean-up. Biggest
+unknowns: whether PRIME card edits depend on Airtable-only fields the pull drops
+(none seen so far), and how much grid polish is wanted.
+
 ## Ideas / unscheduled
 
 - Collectible heroes with different abilities (the old repos had 9 heroes) as a monetization angle
