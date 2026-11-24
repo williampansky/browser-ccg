@@ -101,6 +101,15 @@ export const startTurn = (
     };
     g.players[player].weaponAttacksThisTurn = 0;
     events.push({ type: 'TurnStarted', player, turn: g.turn });
+    // An Attack debuff that lasted until now ends (never past the minion's
+    // own death: a dead minion is simply gone).
+    for (const p of ['0', '1'] as const) {
+      for (const m of g.players[p].board) {
+        if (!m.attackDebuff || m.attackDebuff.untilTurn > g.turn) continue;
+        m.attack += m.attackDebuff.amount;
+        delete m.attackDebuff;
+      }
+    }
     // Expiration: marked minions on either board are brought to 0 health now;
     // `settle` removes them.
     for (const p of ['0', '1'] as const) {

@@ -1277,3 +1277,68 @@ export const swapSelfWithHandMinion = (): Effect => (ctx) => {
     cardId: card.id,
   });
 };
+
+/**
+ * Takes Attack from minions until the start of the caster's next turn, when it
+ * comes back. Attack never goes below 0, and only what was actually taken
+ * returns.
+ */
+export const reduceAttackUntilNextTurn =
+  (select: Selector, amount: number): Effect =>
+  (ctx) => {
+    const isCastersTurn = ctx.g.activePlayer === ctx.caster;
+    const untilTurn = isCastersTurn ? ctx.g.turn + 2 : ctx.g.turn + 1;
+
+    for (const { minion } of minionsOf(ctx, select)) {
+      const taken = Math.min(minion.attack, amount);
+      const earlier = minion.attackDebuff?.amount ?? 0;
+
+      minion.attack -= taken;
+      minion.attackDebuff = { amount: earlier + taken, untilTurn };
+    }
+  };
+
+/** Gives minions Touch of Death (they destroy what they damage). */
+export const grantPoison =
+  (select: Selector): Effect =>
+  (ctx) => {
+    for (const { minion } of minionsOf(ctx, select)) minion.poisonous = true;
+  };
+
+/**
+ * The caster draws until their hand is as big as the opponent's, but at most
+ * `cap` cards.
+ */
+export const drawToMatchOpponent = (cap: number): Effect =>
+  computed((ctx) => {
+    const mine = ctx.g.players[ctx.caster].hand.length;
+    const theirs = ctx.g.players[opponentOf(ctx.caster)].hand.length;
+
+    return draw(Math.min(cap, Math.max(0, theirs - mine)));
+  });
+
+/**
+ * The owner of the targeted minion draws `count` cards. Run it before the
+ * minion is destroyed, while it is still on the board.
+ */
+export const targetOwnerDraws =
+  (count: number): Effect =>
+  (ctx) => {
+    const found = ctx.target?.kind === 'minion' && findMinion(ctx.g, ctx.target.instanceId);
+
+    if (!found) return;
+
+    for (let i = 0; i < count; i++) drawCard(ctx.g, found.owner, ctx.events);
+  };
+
+/**
+ * Heals the caster's hero by the targeted minion's current Health. Run it
+ * before the minion is destroyed.
+ */
+export const healByTargetHealth: Effect = (ctx) => {
+  const found = ctx.target?.kind === 'minion' && findMinion(ctx.g, ctx.target.instanceId);
+
+  if (!found) return;
+
+  heal(ownHeroRef, found.minion.health)(ctx);
+};

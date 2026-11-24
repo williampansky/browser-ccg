@@ -81,6 +81,13 @@ export interface MinionInstance {
   /** The turn number at whose start this minion dies (set by Expiration) */
   expiresOnTurn?: number;
   /**
+   * Attack taken away until the start of the turn numbered `untilTurn`, when
+   * it comes back (PRIME_262)
+   */
+  attackDebuff?: { amount: number; untilTurn: number };
+  /** Touch of Death given by a spell (PRIME_267), not by the card itself */
+  poisonous?: boolean;
+  /**
    * Health added "for this turn only" (already in `health` and `maxHealth`;
    * taken back when the turn ends, never leaving less than 1)
    */

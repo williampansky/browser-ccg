@@ -435,7 +435,7 @@
   },
   {
     "id": "GAME_002",
-    "name": "Recruit",
+    "name": "Conscript",
     "set": "%SET_001%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_NONE%",
@@ -950,7 +950,7 @@
   },
   {
     "id": "GAME_008",
-    "name": "Claws",
+    "name": "Talons",
     "set": "%SET_001%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_NONE%",
@@ -1004,8 +1004,24 @@
     "isEntourage": true
   },
   {
+    "id": "GAME_009",
+    "name": "Hellspawn",
+    "set": "%SET_001%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_NECROMANCER%",
+    "race": "%RACE_DEMONIC%",
+    "cost": 0,
+    "attack": 6,
+    "health": 6,
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "GAME_003",
-    "name": "Dagger",
+    "name": "Shiv",
     "set": "%SET_001%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_NONE%",

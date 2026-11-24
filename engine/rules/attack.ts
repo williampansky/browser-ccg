@@ -35,6 +35,8 @@ const touchOfDeath = (
   victim: MinionInstance,
   ctx: EngineContext,
 ): boolean => {
+  if (source.poisonous && !source.silenced) return true;
+
   const def = minionDef(source, ctx.catalog, ctx.defs ?? getCardDef);
   if (!def?.poison) return false;
   return (

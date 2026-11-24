@@ -206,6 +206,18 @@ import prime212 from './prime-212';
 import prime257 from './prime-257';
 import prime258 from './prime-258';
 import prime259 from './prime-259';
+import prime261 from './prime-261';
+import prime262 from './prime-262';
+import prime263 from './prime-263';
+import prime264 from './prime-264';
+import prime265 from './prime-265';
+import prime266 from './prime-266';
+import prime267 from './prime-267';
+import prime268 from './prime-268';
+import prime269 from './prime-269';
+import prime270 from './prime-270';
+import prime271 from './prime-271';
+import prime272 from './prime-272';
 import prime260 from './prime-260';
 
 /** PRIME cards with behaviour beyond their stats and keywords. */
@@ -418,4 +430,16 @@ export const primeDefinitions: Definition[] = [
   prime258,
   prime259,
   prime260,
+  prime261,
+  prime262,
+  prime263,
+  prime264,
+  prime265,
+  prime266,
+  prime267,
+  prime268,
+  prime269,
+  prime270,
+  prime271,
+  prime272,
 ];

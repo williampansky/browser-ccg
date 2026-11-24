@@ -273,7 +273,7 @@
     "symbol": "%COMBO%",
     "description": "Triggers an effect when played from the hand if you already played another card this turn.",
     "shortDescription": "Triggers effect when played subsequently.",
-    "name": "Combo"
+    "name": "Flow"
   },
   {
     "symbol": "%SPELL_DAMAGE%",

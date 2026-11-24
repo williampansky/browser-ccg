@@ -687,6 +687,25 @@
     "artStatus": "FPO"
   },
   {
+    "id": "PRIME_266",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_ASSASSIN%",
+    "cost": 2,
+    "text": "%RETURN% an enemy minion to its owner's hand; it costs %NUM1% more",
+    "mechanics": [
+      "%TARGET%",
+      "%RETURN%",
+      "%COST%"
+    ],
+    "numberPrimary": 1,
+    "playContext": "%RETURN%",
+    "collectible": true,
+    "active": true,
+    "artStatus": "FPO"
+  },
+  {
     "id": "PRIME_139",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
@@ -1601,6 +1620,28 @@
     "artStatus": "FPO"
   },
   {
+    "id": "PRIME_262",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_CLERIC%",
+    "race": "%RACE_NONE%",
+    "cost": 1,
+    "attack": 2,
+    "health": 1,
+    "text": "<strong>%ON_PLAY%:</strong> Give an enemy minion -%NUM1% Attack until your next turn",
+    "mechanics": [
+      "%ON_PLAY%",
+      "%DEBUFF%",
+      "%TARGET%"
+    ],
+    "numberPrimary": 2,
+    "playContext": "%DEBUFF%",
+    "collectible": true,
+    "active": true,
+    "artStatus": "FPO"
+  },
+  {
     "id": "PRIME_020",
     "name": "Magic Mushroom",
     "set": "%SET_003%",
@@ -1891,6 +1932,24 @@
     "mechanics": [
       "%COMBO%"
     ],
+    "collectible": true,
+    "active": true,
+    "artStatus": "FPO"
+  },
+  {
+    "id": "PRIME_264",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_CRUSADER%",
+    "cost": 3,
+    "text": "%DRAW_CARD% until you have as many cards as your opponent (up to %NUM1%)",
+    "mechanics": [
+      "%GLOBAL_SPELL%",
+      "%DRAW_CARD%"
+    ],
+    "numberPrimary": 5,
+    "playContext": "%DRAW_CARD%",
     "collectible": true,
     "active": true,
     "artStatus": "FPO"
@@ -2219,6 +2278,28 @@
     "artStatus": "FPO"
   },
   {
+    "id": "PRIME_270",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_SUPERIOR%",
+    "cardClass": "0 %CLASS_NECROMANCER%",
+    "race": "%RACE_DEMONIC%",
+    "cost": 5,
+    "attack": 5,
+    "health": 7,
+    "text": "<strong>%RUSH%</strong><br>\n<strong>%ON_PLAY%:</strong> %DISCARD_CARD% %NUM1% random cards from your hand",
+    "mechanics": [
+      "%RUSH%",
+      "%ON_PLAY%",
+      "%DISCARD_CARD%",
+      "%RANDOM%"
+    ],
+    "numberPrimary": 2,
+    "collectible": true,
+    "active": true,
+    "artStatus": "FPO"
+  },
+  {
     "id": "PRIME_257",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
@@ -2538,6 +2619,29 @@
     "active": true,
     "artistName": "Kevin Moran",
     "artistUrl": "https://www.artstation.com/kevinmoranart",
+    "artStatus": "FPO"
+  },
+  {
+    "id": "PRIME_263",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_MYTHIC%",
+    "cardClass": "0 %CLASS_CLERIC%",
+    "race": "%RACE_NONE%",
+    "cost": 8,
+    "attack": 5,
+    "health": 5,
+    "text": "<strong>%ON_PLAY%:</strong> %DESTROY% a minion and %HEAL% your hero for its Health",
+    "mechanics": [
+      "%ON_PLAY%",
+      "%DESTROY%",
+      "%HEAL%",
+      "%TARGET%"
+    ],
+    "playContext": "%DESTROY%",
+    "collectible": true,
+    "active": true,
+    "elite": true,
     "artStatus": "FPO"
   },
   {
@@ -2940,6 +3044,26 @@
     "artStatus": "FPO"
   },
   {
+    "id": "PRIME_261",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_SUPERIOR%",
+    "cardClass": "0 %CLASS_FIGHTER%",
+    "race": "%RACE_NONE%",
+    "cost": 2,
+    "attack": 1,
+    "health": 4,
+    "text": "Whenever a friendly minion takes damage, gain %NUM1% %ARMOR%",
+    "mechanics": [
+      "%EVENT%",
+      "%ARMOR%"
+    ],
+    "numberPrimary": 1,
+    "collectible": true,
+    "active": true,
+    "artStatus": "FPO"
+  },
+  {
     "id": "PRIME_036",
     "name": "Egg Thief",
     "set": "%SET_003%",
@@ -2958,6 +3082,48 @@
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
     "artStatus": "FINAL"
+  },
+  {
+    "id": "PRIME_272",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_WARDEN%",
+    "cost": 1,
+    "text": "%DESTROY% a minion. Its owner draws %NUM1% cards",
+    "mechanics": [
+      "%TARGET%",
+      "%DESTROY%",
+      "%DRAW_CARD%"
+    ],
+    "numberPrimary": 2,
+    "playContext": "%DESTROY%",
+    "collectible": true,
+    "active": true,
+    "artStatus": "FPO"
+  },
+  {
+    "id": "PRIME_271",
+    "set": "%SET_003%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_MYTHIC%",
+    "cardClass": "0 %CLASS_NECROMANCER%",
+    "race": "%RACE_DEMONIC%",
+    "cost": 9,
+    "attack": 3,
+    "health": 15,
+    "text": "<strong>%ON_PLAY%:</strong> Set your Health to %NUM1% and %SUMMON% a 6/6 Infernal",
+    "mechanics": [
+      "%ON_PLAY%",
+      "%SET_VALUE%",
+      "%SUMMON%"
+    ],
+    "numberPrimary": 15,
+    "collectible": true,
+    "active": true,
+    "elite": true,
+    "entourage": "GAME_009",
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_213",
@@ -3672,6 +3838,25 @@
     "artStatus": "FINAL"
   },
   {
+    "id": "PRIME_267",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_SUPERIOR%",
+    "cardClass": "0 %CLASS_ASSASSIN%",
+    "cost": 4,
+    "text": "%BUFF% a friendly minion with +%NUM1% Attack and %POISON%",
+    "mechanics": [
+      "%TARGET%",
+      "%BUFF%",
+      "%POISON%"
+    ],
+    "numberPrimary": 2,
+    "playContext": "%BUFF%",
+    "collectible": true,
+    "active": true,
+    "artStatus": "FPO"
+  },
+  {
     "id": "PRIME_079",
     "name": "Catspurly Ghost",
     "set": "%SET_003%",
@@ -3734,6 +3919,24 @@
     "flavor": "One day he earned his freedom because of his great performance in arena. Now he's working as tutor for young gladiators.",
     "artistName": "Naranbaatar Ganbold",
     "artistUrl": "https://www.artstation.com/naranbaatars",
+    "artStatus": "FPO"
+  },
+  {
+    "id": "PRIME_268",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_REMARKABLE%",
+    "cardClass": "0 %CLASS_ASSASSIN%",
+    "cost": 6,
+    "text": "%RETURN% ALL minions to their owners' hands",
+    "mechanics": [
+      "%GLOBAL_SPELL%",
+      "%AOE%",
+      "%RETURN%"
+    ],
+    "playContext": "%RETURN%",
+    "collectible": true,
+    "active": true,
     "artStatus": "FPO"
   },
   {
@@ -3895,6 +4098,25 @@
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
     "artStatus": "FINAL"
+  },
+  {
+    "id": "PRIME_269",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_NECROMANCER%",
+    "cost": 2,
+    "text": "Deal %NUM1% damage to a minion. If it is %RACE_DEMONIC%, give it +%NUM1%/+%NUM1% instead",
+    "mechanics": [
+      "%TARGET%",
+      "%DAMAGE%",
+      "%BUFF%"
+    ],
+    "numberPrimary": 2,
+    "playContext": "%DAMAGE%",
+    "collectible": true,
+    "active": true,
+    "artStatus": "FPO"
   },
   {
     "id": "PRIME_194",
@@ -5239,6 +5461,26 @@
     "cardClass": "0 %CLASS_FIGHTER%",
     "cost": 4,
     "text": "Deal 4 damage. If you have 12 or less Health, deal 6 instead.",
+    "collectible": true,
+    "active": true,
+    "artStatus": "FPO"
+  },
+  {
+    "id": "PRIME_265",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_COMMON%",
+    "cardClass": "0 %CLASS_ASSASSIN%",
+    "cost": 2,
+    "text": "Deal %NUM1% damage to a character<br>\n<strong>Combo:</strong> Deal %NUM2% instead",
+    "mechanics": [
+      "%TARGET%",
+      "%DAMAGE%",
+      "%COMBO%"
+    ],
+    "numberPrimary": 2,
+    "numberSecondary": 4,
+    "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
     "artStatus": "FPO"
