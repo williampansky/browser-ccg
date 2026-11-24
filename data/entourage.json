@@ -36,7 +36,9 @@
     "collectible": false,
     "active": true,
     "entourage": "PRIME_125c",
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -283,7 +285,9 @@
     "playContext": "%BUFF%",
     "collectible": false,
     "active": true,
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
