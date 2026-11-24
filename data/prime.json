@@ -718,7 +718,7 @@
     "cost": 9,
     "attack": 8,
     "health": 8,
-    "text": "<strong>Charge</strong>",
+    "text": "<strong>%RUSH%</strong>",
     "mechanics": [
       "%RUSH%"
     ],
