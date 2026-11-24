@@ -2,10 +2,10 @@ import { defineCard } from '../define-card';
 import { computed, summonEntourage } from '../../effects/primitives';
 import { opponentOf } from '../../rules/lookup';
 
-const HOUND = 'GAME_010';
+const HOUND = 'PRIME_131a';
 
 // PRIME_131 spell: "For each enemy minion, summon a 1/1 Hound with Rush" (the
-// token is GAME_010; the count is taken when the spell is cast, and a full
+// token is PRIME_131a; the count is taken when the spell is cast, and a full
 // board stops the summoning)
 export default defineCard('PRIME_131', () => ({
   onPlay: [

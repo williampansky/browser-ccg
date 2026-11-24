@@ -569,7 +569,7 @@
     "text": "For each enemy minion, summon a 1/1 Hound with Charge.",
     "collectible": true,
     "active": true,
-    "entourage": "GAME_010",
+    "entourage": "PRIME_131a",
     "artStatus": "FPO"
   },
   {
@@ -740,7 +740,7 @@
     "text": "<strong>%ON_PLAY%:</strong> Equip a 2/2 weapon.",
     "collectible": true,
     "active": true,
-    "entourage": "GAME_013",
+    "entourage": "PRIME_235a",
     "artStatus": "FPO"
   },
   {
@@ -2529,7 +2529,7 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "GAME_014, GAME_015, GAME_016, GAME_017",
+    "entourage": "PRIME_109a, PRIME_109b, PRIME_109c, PRIME_109d",
     "artStatus": "FPO"
   },
   {
@@ -3133,7 +3133,7 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "GAME_009",
+    "entourage": "PRIME_271a",
     "artStatus": "FPO"
   },
   {
@@ -3631,7 +3631,7 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "GAME_012",
+    "entourage": "PRIME_108a",
     "artStatus": "FPO"
   },
   {
@@ -5016,7 +5016,7 @@
     "text": "If you have a weapon, give it +1/+1. Otherwise equip a 1/3 weapon.",
     "collectible": true,
     "active": true,
-    "entourage": "GAME_011",
+    "entourage": "PRIME_236a",
     "artStatus": "FPO"
   },
   {

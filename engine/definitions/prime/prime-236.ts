@@ -6,10 +6,10 @@ import {
 } from '../../effects/primitives';
 
 const WEAPON_BONUS = 1;
-const PRACTICE_BLADE = 'GAME_011';
+const PRACTICE_BLADE = 'PRIME_236a';
 
 // PRIME_236 spell: "If you have a weapon, give it +1/+1. Otherwise equip a 1/3
-// weapon" (the 1/3 weapon is the token GAME_011)
+// weapon" (the 1/3 weapon is the token PRIME_236a)
 export default defineCard('PRIME_236', () => ({
   onPlay: [
     computed((ctx) =>

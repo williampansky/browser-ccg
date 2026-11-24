@@ -5,8 +5,8 @@ import { anyMinion } from '../../effects/filters';
 
 const NO_COST_CHANGE = 0;
 
-// GAME_014 (a Dream card): "Return a minion to its owner's hand"
-export default defineCard('GAME_014', () => ({
+// PRIME_109a (a Dream card): "Return a minion to its owner's hand"
+export default defineCard('PRIME_109a', () => ({
   target: anyMinion(),
   onPlay: [returnToHand(chosenTarget(), NO_COST_CHANGE, false, true)],
 }));

@@ -25,7 +25,7 @@ describe('PRIME_236', () => {
   it('equips a 1/3 weapon when you have none', () => {
     const weapon = play(setup('PRIME_236')).state.players['0'].weapon;
 
-    expect(weapon?.cardId).toBe('GAME_011');
+    expect(weapon?.cardId).toBe('PRIME_236a');
     expect([weapon?.attack, weapon?.durability]).toEqual([1, 3]);
   });
 
@@ -104,7 +104,9 @@ describe('PRIME_181', () => {
 
     expect(skillFor(state.players['0'].hero, 0)?.artCardId).toBe('PRIME_181');
     expect(skillFor(state.players['0'].hero, 1)?.artCardId).toBeUndefined();
-    expect(skillFor(withHero().players['0'].hero, 0)?.artCardId).toBeUndefined();
+    expect(
+      skillFor(withHero().players['0'].hero, 0)?.artCardId,
+    ).toBeUndefined();
   });
 
   it('leaves the other skills alone', () => {
@@ -222,11 +224,18 @@ describe('PRIME_108', () => {
     const board = play(setup('PRIME_108')).state.players['0'].board;
 
     expect(board).toHaveLength(7);
-    expect(board.filter((m) => m.cardId === 'GAME_012')).toHaveLength(6);
+    expect(board.filter((m) => m.cardId === 'PRIME_108a')).toHaveLength(6);
   });
 
   it('fills only the room that is left', () => {
-    const state = play(setup('PRIME_108', { mine: [[1, 1], [1, 1]] })).state;
+    const state = play(
+      setup('PRIME_108', {
+        mine: [
+          [1, 1],
+          [1, 1],
+        ],
+      }),
+    ).state;
 
     expect(state.players['0'].board).toHaveLength(7);
   });
@@ -239,7 +248,7 @@ describe('PRIME_109', () => {
     const after = endTurn(played).players['0'].hand;
 
     expect(after).toHaveLength(before + 1);
-    expect(after.at(-1)?.cardId).toMatch(/^GAME_01[4-7]$/);
+    expect(after.at(-1)?.cardId).toMatch(/^PRIME_109[a-d]$/);
   });
 });
 
@@ -247,21 +256,21 @@ describe('PRIME_235', () => {
   it('equips a 2/2 weapon', () => {
     const weapon = play(setup('PRIME_235')).state.players['0'].weapon;
 
-    expect(weapon?.cardId).toBe('GAME_013');
+    expect(weapon?.cardId).toBe('PRIME_235a');
     expect([weapon?.attack, weapon?.durability]).toEqual([2, 2]);
   });
 });
 
 describe('the Dream cards', () => {
-  it('GAME_014 returns a minion to its owner', () => {
-    const start = setup('GAME_014', { theirs: [[2, 2]] });
+  it('PRIME_109a returns a minion to its owner', () => {
+    const start = setup('PRIME_109a', { theirs: [[2, 2]] });
     const result = play(start, mref(start, '1', 0)).state;
 
     expect(result.players['1'].board).toHaveLength(0);
   });
 
-  it('GAME_015 gives +4/+4 and the minion dies at your next turn start', () => {
-    const start = setup('GAME_015', { mine: [[1, 1]] });
+  it('PRIME_109b gives +4/+4 and the minion dies at your next turn start', () => {
+    const start = setup('PRIME_109b', { mine: [[1, 1]] });
     const buffed = play(start, mref(start, '0', 0)).state;
     const later = endTurn(endTurn(buffed));
 
@@ -269,8 +278,8 @@ describe('the Dream cards', () => {
     expect(later.players['0'].board).toHaveLength(0);
   });
 
-  it('GAME_017 cannot be aimed at by spells', () => {
-    const start = setup('PRIME_265', { theirs: [[3, 5, 'GAME_017']] });
+  it('PRIME_109d cannot be aimed at by spells', () => {
+    const start = setup('PRIME_265', { theirs: [[3, 5, 'PRIME_109d']] });
     const result = run(start, {
       type: 'PlayCard',
       handIndex: 0,

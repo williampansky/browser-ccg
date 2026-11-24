@@ -2,6 +2,10 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-24
+
+- **A card's own tokens are named after the card:** the nine `GAME_` tokens that only one card makes are renamed to that card's id plus a letter, in the PRIME set (new rule in `CLAUDE.md`; class and skill tokens stay `GAME_002` to `GAME_008`). With the author's approval, 15 Airtable `CARDS` records changed (`id` and `set` on the nine tokens, `entourage` on the six parents, nothing else): GAME_009 to PRIME_271a (Hellspawn), GAME_010 to PRIME_131a (Wolf), GAME_011 to PRIME_236a (Practice Blade), GAME_012 to PRIME_108a (Whelp), GAME_013 to PRIME_235a (Training Sword), GAME_014 to 017 to PRIME_109a to d (the Dream cards). `data/` has the same change (no pull), the six parent definitions and the three token definitions (moved from `definitions/game/` to `definitions/prime/`) use the new ids, and the tests and `RULES.md` follow. The old ids appear only in earlier entries below.
+
 ## 2026-11-23
 
 - **Combo is called Flow on cards:** the MECHANICS table names `%COMBO%` "Flow", but seven cards had the word "Combo" typed into their text. With the author's approval, the `text` of those seven `CARDS` records in Airtable (PRIME_188, 189, 191, 192, 193, 198, 265; nothing else touched) now says `<strong>%COMBO%:</strong>`, which the loader fills from the glossary, so a future rename follows. `data/prime.json` has the same change (no pull needed). The engine and its tests still call the mechanic Combo internally.

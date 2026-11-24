@@ -503,9 +503,9 @@
     "isEntourage": true
   },
   {
-    "id": "GAME_010",
+    "id": "PRIME_131a",
     "name": "Wolf",
-    "set": "%SET_001%",
+    "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_NONE%",
     "cardClass": "0 %CLASS_RANGER%",
@@ -523,9 +523,9 @@
     "isEntourage": true
   },
   {
-    "id": "GAME_015",
+    "id": "PRIME_109b",
     "name": "Nightmare Surge",
-    "set": "%SET_001%",
+    "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_NONE%",
     "cost": 2,
@@ -649,9 +649,9 @@
     "isEntourage": true
   },
   {
-    "id": "GAME_013",
+    "id": "PRIME_235a",
     "name": "Training Sword",
-    "set": "%SET_001%",
+    "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_NONE%",
     "cardClass": "0 %CLASS_FIGHTER%",
@@ -750,9 +750,9 @@
     "isEntourage": true
   },
   {
-    "id": "GAME_016",
+    "id": "PRIME_109c",
     "name": "Dream Drake",
-    "set": "%SET_001%",
+    "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_NONE%",
     "race": "%RACE_DRAGON%",
@@ -820,9 +820,9 @@
     "isEntourage": true
   },
   {
-    "id": "GAME_017",
+    "id": "PRIME_109d",
     "name": "Dream Sister",
-    "set": "%SET_001%",
+    "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_NONE%",
     "race": "%RACE_NONE%",
@@ -878,9 +878,9 @@
     "isEntourage": true
   },
   {
-    "id": "GAME_012",
+    "id": "PRIME_108a",
     "name": "Whelp",
-    "set": "%SET_001%",
+    "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_NONE%",
     "race": "%RACE_DRAGON%",
@@ -929,9 +929,9 @@
     "isEntourage": true
   },
   {
-    "id": "GAME_011",
+    "id": "PRIME_236a",
     "name": "Practice Blade",
-    "set": "%SET_001%",
+    "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_NONE%",
     "cardClass": "0 %CLASS_FIGHTER%",
@@ -994,9 +994,9 @@
     "isEntourage": true
   },
   {
-    "id": "GAME_014",
+    "id": "PRIME_109a",
     "name": "Waking Dream",
-    "set": "%SET_001%",
+    "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_NONE%",
     "cost": 0,
@@ -1142,9 +1142,9 @@
     "isEntourage": true
   },
   {
-    "id": "GAME_009",
+    "id": "PRIME_271a",
     "name": "Hellspawn",
-    "set": "%SET_001%",
+    "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_NONE%",
     "cardClass": "0 %CLASS_NECROMANCER%",

@@ -284,5 +284,5 @@ describe('PRIME_272', () => {
 it('every PRIME_261 to 272 card is in the catalog', () => {
   for (let id = 261; id <= 272; id++)
     expect(catalog.get(`PRIME_${id}`)).toBeDefined();
-  expect(catalog.get('GAME_009')?.attack).toBe(6);
+  expect(catalog.get('PRIME_271a')?.attack).toBe(6);
 });

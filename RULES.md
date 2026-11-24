@@ -737,10 +737,10 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **265** (Assassin spell): 2 damage to a character; with Combo, 4 instead.
 - **266** (Assassin spell): returns an enemy minion to its owner's hand, costing 1 more. **268** returns every minion on both boards, with no cost change.
 - **267** (Assassin spell): +2 Attack and Poison (`poisonous`, lost to Silence) on a friendly minion.
-- **269** (Necromancer spell): 2 damage to a minion; a Demonic one gets +2/+2 instead. **270**: Rush; discards 2 random cards from your hand. **271**: sets your Health to 15 (up or down) and summons the 6/6 Infernal (`GAME_009`).
+- **269** (Necromancer spell): 2 damage to a minion; a Demonic one gets +2/+2 instead. **270**: Rush; discards 2 random cards from your hand. **271**: sets your Health to 15 (up or down) and summons the 6/6 Infernal (`PRIME_271a`).
 - **272** (Warden spell): destroys any minion; its owner draws 2 cards.
 - **130** (Ranger spell): "can only be played with 2+ minions on board" is read as 2 or more on YOUR side (`CardDef.canPlay`; the card is not offered and `CANT_PLAY` is returned otherwise). It destroys a random visible enemy minion.
-- **131** (Ranger spell): one 1/1 Rush Hound (`GAME_010`) per enemy minion on the board when it is cast ("Charge" in the card text is the game's Rush); a full board stops it.
+- **131** (Ranger spell): one 1/1 Rush Hound (`PRIME_131a`) per enemy minion on the board when it is cast ("Charge" in the card text is the game's Rush); a full board stops it.
 - **134** (Ranger weapon): +1 Durability each time YOUR Mystery is revealed. Weapons can now have triggers.
 - **135**: 5 damage to a minion and 2 to the minions next to it. **145**: the chosen minion and its neighbours each take 1 damage and are Disabled.
 - **153** (Wizard spell, 10): 10 damage to a character you choose. **168** (Crusader spell, 8): heals a character you choose for 8, then you draw 3. **240** (Fighter spell): 4 damage to a character you choose, or 6 if you have 12 or less Health. These three are read as aimed (the text does not say who).
@@ -756,7 +756,7 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **230** (Fighter spell, cost 0): 1 damage to a minion, then +2 Attack on it.
 - **181** (Cleric spell, Shadowform): your hero's skill 1 is replaced for the rest of the game (the author's call) by "Deal 2 damage" to any character, at the same cost and cooldown; played again it becomes 3 damage. `HeroState.shadowform` holds the number and `skillFor` gives the skill a player has right now (the engine rules and the `/play` skill bar use it). Skills 2 and 3 are unchanged.
 - **177** (Cleric minion 3/5): while it is on your board and not silenced, every heal your cards and skills would do (spells, items, the Cleric's skill, minion triggers, lifesteal's heal) deals that much damage to the same target instead (`CardDef.healsAsDamage`, applied in the `heal` primitive). "Heal fully" effects (`healToFull`) are not changed.
-- **236** (Fighter spell): with a weapon, it gets +1 Attack and +1 Durability; without one you equip the token `GAME_011` (1/3 Practice Blade).
+- **236** (Fighter spell): with a weapon, it gets +1 Attack and +1 Durability; without one you equip the token `PRIME_236a` (1/3 Practice Blade).
 
 ### Appendix D: Hero skills (2026-11-13; engine in `engine/heroes/`, ability numbers in the ABILITIES table)
 
