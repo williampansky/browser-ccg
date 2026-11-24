@@ -566,7 +566,7 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_RANGER%",
     "cost": 3,
-    "text": "For each enemy minion, summon a 1/1 Wolf with Charge.",
+    "text": "For each enemy minion, summon a 1/1 Wolf with %RUSH%.",
     "collectible": true,
     "active": true,
     "entourage": "PRIME_131a",
