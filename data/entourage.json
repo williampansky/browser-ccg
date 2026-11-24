@@ -446,7 +446,9 @@
     "health": 1,
     "collectible": false,
     "active": true,
-    "artStatus": "FPO",
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
