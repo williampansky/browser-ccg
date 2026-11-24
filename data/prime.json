@@ -960,7 +960,7 @@
     "cost": 3,
     "attack": 3,
     "health": 3,
-    "text": "<strong>Combo:</strong> Deal 2 damage.",
+    "text": "<strong>%COMBO%:</strong> Deal 2 damage.",
     "mechanics": [
       "%COMBO%"
     ],
@@ -1244,7 +1244,7 @@
     "cost": 2,
     "attack": 2,
     "health": 2,
-    "text": "<strong>Combo:</strong> Summon a 2/1 Defias Bandit.",
+    "text": "<strong>%COMBO%:</strong> Summon a 2/1 Defias Bandit.",
     "mechanics": [
       "%COMBO%"
     ],
@@ -1528,13 +1528,15 @@
     "cost": 3,
     "attack": 2,
     "health": 2,
-    "text": "<strong>%ON_PLAY%:</strong> Deal 1 damage. <strong>Combo:</strong> Deal 2 instead.",
+    "text": "<strong>%ON_PLAY%:</strong> Deal 1 damage. <strong>%COMBO%:</strong> Deal 2 instead.",
     "mechanics": [
       "%COMBO%"
     ],
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_146",
@@ -1933,7 +1935,7 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_ASSASSIN%",
     "cost": 2,
-    "text": "Give a minion +2 Attack. <strong>Combo:</strong> +4 Attack instead.",
+    "text": "Give a minion +2 Attack. <strong>%COMBO%:</strong> +4 Attack instead.",
     "mechanics": [
       "%COMBO%"
     ],
@@ -2578,7 +2580,7 @@
     "rarity": "%RARITY_SUPERIOR%",
     "cardClass": "0 %CLASS_ASSASSIN%",
     "cost": 3,
-    "text": "Deal 2 damage to the enemy hero. <strong>Combo:</strong> Return this to your hand next turn.",
+    "text": "Deal 2 damage to the enemy hero. <strong>%COMBO%:</strong> Return this to your hand next turn.",
     "mechanics": [
       "%COMBO%"
     ],
@@ -5393,7 +5395,7 @@
     "cost": 6,
     "attack": 5,
     "health": 3,
-    "text": "<strong>Combo:</strong> Return a minion to its owner's hand.",
+    "text": "<strong>%COMBO%:</strong> Return a minion to its owner's hand.",
     "mechanics": [
       "%COMBO%"
     ],
@@ -5485,7 +5487,7 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_ASSASSIN%",
     "cost": 2,
-    "text": "Deal %NUM1% damage to a character<br>\n<strong>Combo:</strong> Deal %NUM2% instead",
+    "text": "Deal %NUM1% damage to a character<br>\n<strong>%COMBO%:</strong> Deal %NUM2% instead",
     "mechanics": [
       "%TARGET%",
       "%DAMAGE%",
