@@ -2917,11 +2917,12 @@
   },
   {
     "id": "CORE_109",
+    "name": "Morph",
     "set": "%SET_002%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
     "cost": 3,
-    "text": "<strong>%TRANSFORM%</strong> a minion\ninto a 1/1",
+    "text": "<strong>%TRANSFORM%</strong> a minion\ninto a %NUM1%/%NUM2%",
     "mechanics": [
       "%TRANSFORM%",
       "%TARGET%"

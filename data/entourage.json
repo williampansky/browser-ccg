@@ -284,6 +284,7 @@
   },
   {
     "id": "CORE_109a",
+    "name": "Morphed",
     "set": "%SET_002%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_NONE%",
@@ -502,6 +503,46 @@
     "isEntourage": true
   },
   {
+    "id": "GAME_010",
+    "name": "Wolf",
+    "set": "%SET_001%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_RANGER%",
+    "race": "%RACE_CREATURE%",
+    "cost": 0,
+    "attack": 1,
+    "health": 1,
+    "text": "%RUSH%",
+    "mechanics": [
+      "%RUSH%"
+    ],
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
+    "id": "GAME_015",
+    "name": "Nightmare Surge",
+    "set": "%SET_001%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_NONE%",
+    "cost": 2,
+    "text": "%BUFF% a minion with +%NUM1%/+%NUM1%. It dies at the start of your next turn",
+    "mechanics": [
+      "%TARGET%",
+      "%BUFF%",
+      "%EXPIRATION%"
+    ],
+    "numberPrimary": 4,
+    "playContext": "%BUFF%",
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "CORE_128b",
     "name": "Crude Arakh",
     "set": "%SET_002%",
@@ -608,6 +649,21 @@
     "isEntourage": true
   },
   {
+    "id": "GAME_013",
+    "name": "Training Sword",
+    "set": "%SET_001%",
+    "type": "%TYPE_WEAPON%",
+    "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_FIGHTER%",
+    "cost": 0,
+    "attack": 2,
+    "health": 2,
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "CORE_051a",
     "name": "Orko's Wrath",
     "set": "%SET_002%",
@@ -694,6 +750,21 @@
     "isEntourage": true
   },
   {
+    "id": "GAME_016",
+    "name": "Dream Drake",
+    "set": "%SET_001%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_NONE%",
+    "race": "%RACE_DRAGON%",
+    "cost": 4,
+    "attack": 7,
+    "health": 6,
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "PRIME_169a",
     "name": "Mace of the Shattered Mirror",
     "set": "%SET_003%",
@@ -749,6 +820,25 @@
     "isEntourage": true
   },
   {
+    "id": "GAME_017",
+    "name": "Dream Sister",
+    "set": "%SET_001%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_NONE%",
+    "race": "%RACE_NONE%",
+    "cost": 3,
+    "attack": 3,
+    "health": 5,
+    "text": "Can't be targeted by spells or items",
+    "mechanics": [
+      "%CANT_TARGET%"
+    ],
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "PRIME_111a",
     "name": "Unleashed Potential",
     "set": "%SET_003%",
@@ -788,6 +878,21 @@
     "isEntourage": true
   },
   {
+    "id": "GAME_012",
+    "name": "Whelp",
+    "set": "%SET_001%",
+    "type": "%TYPE_MINION%",
+    "rarity": "%RARITY_NONE%",
+    "race": "%RACE_DRAGON%",
+    "cost": 0,
+    "attack": 1,
+    "health": 1,
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "PRIME_248a",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
@@ -820,6 +925,21 @@
     "playContext": "%DAMAGE%",
     "collectible": false,
     "active": false,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
+    "id": "GAME_011",
+    "name": "Practice Blade",
+    "set": "%SET_001%",
+    "type": "%TYPE_WEAPON%",
+    "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_FIGHTER%",
+    "cost": 0,
+    "attack": 1,
+    "health": 3,
+    "collectible": false,
+    "active": true,
     "artStatus": "FPO",
     "isEntourage": true
   },
@@ -871,6 +991,24 @@
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
     "artStatus": "FINAL",
+    "isEntourage": true
+  },
+  {
+    "id": "GAME_014",
+    "name": "Waking Dream",
+    "set": "%SET_001%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_NONE%",
+    "cost": 0,
+    "text": "%RETURN% a minion to its owner's hand",
+    "mechanics": [
+      "%TARGET%",
+      "%RETURN%"
+    ],
+    "playContext": "%RETURN%",
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
     "isEntourage": true
   },
   {
