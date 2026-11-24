@@ -59,11 +59,28 @@ export const isFiltered = (f: CollectionFilters): boolean =>
 export const setOf = (c: Card): string =>
   c.isToken ? c.id.split('_')[0].toLowerCase() : c.source;
 
+/**
+ * The search box as a list of terms: the whole text plus each comma-separated
+ * piece, so `CORE_076, CORE_010` finds both cards while a name that has a comma
+ * in it still matches as typed. Empty when the box is blank.
+ */
+export const searchTerms = (search: string): string[] => {
+  const whole = search.trim().toLowerCase();
+  const pieces = whole
+    .split(',')
+    .map((piece) => piece.trim())
+    .filter(Boolean);
+
+  if (!pieces.length) return [];
+
+  return Array.from(new Set([whole, ...pieces]));
+};
+
 export const filterCards = (
   cards: readonly Card[],
   f: CollectionFilters,
 ): Card[] => {
-  const q = f.search.trim().toLowerCase();
+  const terms = searchTerms(f.search);
   return cards.filter((c) => {
     if (f.set !== 'both' && setOf(c) !== f.set) return false;
     if (f.type !== 'all' && c.type !== f.type) return false;
@@ -82,12 +99,15 @@ export const filterCards = (
       return false;
     if (f.effect !== 'all' && !effectsOf(c).some((e) => e.symbol === f.effect))
       return false;
-    return (
-      !q ||
-      (c.name ?? '').toLowerCase().includes(q) ||
-      c.id.toLowerCase().includes(q) ||
-      c.text.toLowerCase().includes(q)
-    );
+    if (!terms.length) return true;
+
+    const name = (c.name ?? '').toLowerCase();
+    const id = c.id.toLowerCase();
+    const text = c.text.toLowerCase();
+
+    return terms.some((term) => {
+      return name.includes(term) || id.includes(term) || text.includes(term);
+    });
   });
 };
 

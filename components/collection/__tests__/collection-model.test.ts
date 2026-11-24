@@ -258,3 +258,37 @@ describe('search by id', () => {
     ).toContain(unnamed[0].id);
   });
 });
+
+describe('search with several terms', () => {
+  const idsFor = (search: string) => {
+    return filterCards(cards, f({ search })).map((c) => c.id);
+  };
+
+  it('finds every card named by a comma-separated list of ids', () => {
+    const found = idsFor('CORE_076, core_010 ,PRIME_257');
+
+    expect(found).toEqual(
+      expect.arrayContaining(['CORE_076', 'CORE_010', 'PRIME_257']),
+    );
+  });
+  it('mixes names and ids, and ignores empty pieces', () => {
+    const [named] = cards.filter((c) => c.id === 'CORE_045');
+    const found = idsFor(`${named.name}, ,CORE_076,`);
+
+    expect(found).toEqual(expect.arrayContaining(['CORE_045', 'CORE_076']));
+  });
+  it('shows nothing extra: a list of two ids matches fewer cards than a broad term', () => {
+    expect(idsFor('CORE_076, CORE_010').length).toBeLessThan(10);
+  });
+  it('still matches text that contains a comma, as typed', () => {
+    const withComma = cards.find((c) => c.text.toLowerCase().includes(','));
+    const phrase = withComma!.text
+      .toLowerCase()
+      .slice(0, withComma!.text.indexOf(',') + 3);
+
+    expect(idsFor(phrase)).toContain(withComma!.id);
+  });
+  it('a box of only commas and spaces shows every card', () => {
+    expect(idsFor(' , ,')).toEqual(idsFor(''));
+  });
+});

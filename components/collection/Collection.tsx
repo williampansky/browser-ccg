@@ -137,7 +137,7 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
         <div className={`${styles.filters} ui-controls`}>
           <TextInput
             type="search"
-            placeholder="Search name, id or text"
+            placeholder="Search name, id or text (comma-separate several)"
             aria-label="Search"
             value={filters.search}
             onChange={(e) => set('search', e.target.value)}
