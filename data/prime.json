@@ -119,7 +119,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_074",
@@ -1518,6 +1520,7 @@
   },
   {
     "id": "PRIME_192",
+    "name": "Carved Fang",
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -2119,7 +2122,7 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_RANGER%",
     "cost": 3,
-    "text": "<strong>%DESTROY%</strong> a %RANDOM%<br>\nenemy minion—can only<br>\nbe played with 2+<br>\nminions on board",
+    "text": "If you control 2+ minions, %DESTROY% a %RANDOM% enemy minion",
     "collectible": true,
     "active": true,
     "artStatus": "FPO"
@@ -5582,7 +5585,7 @@
     "entourage": "PRIME_260a",
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
-    "artStatus": "FPO"
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_004",
