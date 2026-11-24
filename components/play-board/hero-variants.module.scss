@@ -902,31 +902,16 @@
   text-shadow: 0 0 8px #9b7bd4;
 }
 
-// A this-turn-only weapon: the picture fills the whole circle, border included,
-// and the dashed ring is drawn over it, so the dashes' gaps show the picture
-// and not the dark socket behind it.
+// A this-turn-only weapon: no border and no dashes, the picture fills the whole
+// circle (border area included).
 .ringWeaponTemp {
   border-color: transparent;
+  box-shadow: none;
 
   img {
     inset: -2px;
     width: calc(100% + 4px);
     height: calc(100% + 4px);
-  }
-
-  .ringStat {
-    z-index: 2;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    z-index: 1;
-    box-sizing: border-box;
-    border: 2px dashed #fff;
-    border-radius: 50%;
-    pointer-events: none;
   }
 }
 
