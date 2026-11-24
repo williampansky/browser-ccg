@@ -8,7 +8,7 @@ import {
 } from '../hero-choice';
 
 describe('hero choice', () => {
-  it('lists Random, the nine heroes and No hero skills', () => {
+  it('lists Random and the nine heroes (no none option)', () => {
     expect(heroOptions().map((o) => o.value)).toEqual([
       HERO_RANDOM,
       'FIGHTER',
@@ -20,7 +20,6 @@ describe('hero choice', () => {
       'MYSTIC',
       'NECROMANCER',
       'WARDEN',
-      HERO_NONE,
     ]);
   });
   it('resolves a named hero, none, and random to a real hero', () => {
@@ -31,6 +30,9 @@ describe('hero choice', () => {
       Array.from({ length: 300 }, () => resolveHero(HERO_RANDOM, rng)),
     );
     expect(seen.size).toBe(9);
+  });
+  it('turns a saved none into Random', () => {
+    expect(normalizeHeroChoice(HERO_NONE)).toBe(HERO_RANDOM);
   });
   it('turns anything unknown into Random', () => {
     expect(normalizeHeroChoice('NOPE')).toBe(HERO_RANDOM);
