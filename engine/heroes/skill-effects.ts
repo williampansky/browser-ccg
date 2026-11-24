@@ -123,16 +123,18 @@ const equipEntourage =
 const REVITALIZE_HEAL = 2;
 const SHAPESHIFT_ATTACK = 1;
 const SHAPESHIFT_ARMOR = 1;
+const CLAWS_ID = 'GAME_008';
 
 /**
  * Shapeshift's Attack: added to the weapon the hero holds, or else a one-turn
- * Claws weapon (a skill has no card of its own to equip).
+ * Claws weapon (the GAME_008 entourage card; a skill has no card of its own
+ * to equip).
  */
 const shapeshiftAttack: Effect = (ctx) => {
   const { weapon } = ctx.g.players[ctx.caster];
   if (weapon) return buffWeaponThisTurn(SHAPESHIFT_ATTACK)(ctx);
 
-  const claws = heroToken('HERO_DRUID_CLAWS');
+  const claws = tokenCard(ctx, CLAWS_ID);
   ctx.g.players[ctx.caster].weapon = {
     instanceId: ctx.g.nextInstanceId++,
     cardId: claws.id,

@@ -949,6 +949,21 @@
     "isEntourage": true
   },
   {
+    "id": "GAME_008",
+    "name": "Claws",
+    "set": "%SET_001%",
+    "type": "%TYPE_WEAPON%",
+    "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_WARDEN%",
+    "cost": 0,
+    "attack": 1,
+    "health": 1,
+    "collectible": false,
+    "active": true,
+    "artStatus": "FPO",
+    "isEntourage": true
+  },
+  {
     "id": "GAME_006",
     "name": "Mending Idol",
     "set": "%SET_001%",

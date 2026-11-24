@@ -43,7 +43,6 @@ export const HERO_TOKENS: Card[] = [
   token('HERO_EXILE_BEAST', 'The Beast', 'minion', 8, 8, ''),
   token('HERO_DRUID_WOLF', 'Spirit Wolf', 'minion', 3, 2, ''),
   token('HERO_DRUID_BEAR', 'Spirit Bear', 'minion', 2, 5, 'Guard', ['BULWARK']),
-  token('HERO_DRUID_CLAWS', 'Claws', 'weapon', 1, 1, 'This turn only'),
   token('HERO_DRUID_HAWK', 'Spirit Hawk', 'minion', 2, 1, 'Stampede', ['RUSH']),
 ];
 

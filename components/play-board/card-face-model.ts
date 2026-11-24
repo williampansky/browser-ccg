@@ -98,6 +98,37 @@ export const artUrl = (
 export const PLACEHOLDER_ART = '/images/sets/PLACEHOLDER.jpg';
 
 /**
+ * The class a token's skill belongs to, for tokens that have no art file of
+ * their own: until one exists the board shows the class's skill 1 icon.
+ */
+const TOKEN_CLASS: Record<string, string> = {
+  GAME_002: 'CRUSADER',
+  GAME_003: 'ASSASSIN',
+  GAME_004: 'MYSTIC',
+  GAME_005: 'MYSTIC',
+  GAME_006: 'MYSTIC',
+  GAME_007: 'MYSTIC',
+  GAME_008: 'WARDEN',
+};
+
+const HERO_TOKEN_CLASS: [RegExp, string][] = [
+  [/^HERO_EXILE_/, 'RANGER'],
+  [/^HERO_DRUID_/, 'WARDEN'],
+];
+
+/** Skill 1 icon layers (`.jpg`, then `.png`) for a skill-made token's id. */
+const tokenSkillIcons = (id?: string): string[] => {
+  const heroClass =
+    (id && TOKEN_CLASS[id]) ??
+    HERO_TOKEN_CLASS.find(([pattern]) => id && pattern.test(id))?.[1];
+  if (!heroClass) return [];
+
+  const base = `/images/heroes/${heroClass}/skill-1`;
+
+  return [`${base}.jpg`, `${base}.png`];
+};
+
+/**
  * A CSS `background-image` for a card: its art, then any `fallbackIds`' art,
  * then the placeholder as the last layer. Layers
  * stack, so a layer whose file is missing (404) shows the next one down; no
@@ -111,7 +142,7 @@ export const artBackground = (
     .filter((x, i, all) => x !== undefined && all.indexOf(x) === i)
     .map((x) => artUrl(x))
     .filter((u): u is string => !!u)
-    .concat(PLACEHOLDER_ART)
+    .concat(tokenSkillIcons(id), PLACEHOLDER_ART)
     .map((u) => `url(${u})`)
     .join(', ');
 
@@ -227,7 +258,12 @@ export const fitScale = (
  * check for the file is needed.
  */
 export const minionArtBackground = (id?: string): string =>
-  [artUrl(id, 'MINION'), artUrl(id, 'CARD'), PLACEHOLDER_ART]
+  [
+    artUrl(id, 'MINION'),
+    artUrl(id, 'CARD'),
+    ...tokenSkillIcons(id),
+    PLACEHOLDER_ART,
+  ]
     .filter((u): u is string => !!u)
     .map((u) => `url(${u})`)
     .join(', ');

@@ -144,6 +144,17 @@ describe('artBackground', () => {
   });
 });
 
+describe('artBackground for skill tokens', () => {
+  it('falls back to the class skill 1 icon before the placeholder', () => {
+    expect(artBackground('GAME_008')).toBe(
+      `url(/images/sets/SET_GAME/008-CARD.jpg), url(/images/heroes/WARDEN/skill-1.jpg), url(/images/heroes/WARDEN/skill-1.png), url(${PLACEHOLDER_ART})`,
+    );
+    expect(artBackground('HERO_EXILE_EAGLE')).toContain(
+      '/images/heroes/RANGER/skill-1.png',
+    );
+  });
+});
+
 describe('minionArtBackground', () => {
   it('layers the -MINION image, then the -CARD art, then the placeholder', () => {
     expect(minionArtBackground('CORE_012a')).toBe(
