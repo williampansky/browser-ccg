@@ -120,6 +120,7 @@ const equipEntourage =
     });
   };
 
+const REVITALIZE_HEAL = 2;
 const SHAPESHIFT_ATTACK = 1;
 const SHAPESHIFT_ARMOR = 1;
 
@@ -245,7 +246,7 @@ export const SKILL_CODE: Record<string, SkillCode[]> = {
     { effects: [lastStand(15, 10)] },
   ],
   CLERIC: [
-    { target: anyCharacter, effects: [heal(chosenTarget(), 3)] },
+    { target: anyCharacter, effects: [heal(chosenTarget(), REVITALIZE_HEAL)] },
     { options: resurrectOptions, effects: [resurrectPicked()] },
     { effects: [resurrect(3)] },
   ],

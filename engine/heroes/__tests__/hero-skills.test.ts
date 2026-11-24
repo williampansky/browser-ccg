@@ -110,7 +110,7 @@ describe('spell damage on skills', () => {
     s = putOnBoard(game('CLERIC'), '0', elder);
     s = produce(s, (g) => void (g.players['0'].health = 10));
     expect(use(s, 0, { kind: 'hero', player: '0' }).players['0'].health).toBe(
-      13,
+      12,
     );
   });
 });
@@ -455,11 +455,11 @@ describe('Assassin', () => {
 });
 
 describe('Cleric (SAGE)', () => {
-  it('Revitalize heals 3', () => {
+  it('Revitalize heals 2', () => {
     const s = produce(game('CLERIC'), (g) => void (g.players['0'].health = 20));
     expect(
       skill(s, 0, { kind: 'hero', player: '0' }).state.players['0'].health,
-    ).toBe(23);
+    ).toBe(22);
   });
   describe('Resurrect: pick a recently dead minion, back with Guard or Bubble', () => {
     const named = (id: string, attack: number, health: number) =>

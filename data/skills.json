@@ -117,7 +117,7 @@
     "numberPrimary": 1
   },
   {
-    "name": "Shapeshift",
+    "name": "Wildform",
     "playContext": "%ARMOR%",
     "type": "%TYPE_SPELL%",
     "playType": "GLOBAL",
@@ -332,8 +332,8 @@
       "%TARGET%",
       "%HEAL%"
     ],
-    "text": "Heal 3 Health",
-    "numberPrimary": 3,
+    "text": "Heal %NUM1% Health",
+    "numberPrimary": 2,
     "targetingArrowText": "Heal 3 Health"
   },
   {

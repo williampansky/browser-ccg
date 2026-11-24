@@ -744,12 +744,12 @@ three skills. Name, cost, cooldown and text come from `data/abilities.json`; wha
   - Wildcaller's ultimate, Stampede of the Wild (cost 8, once per game): summons a Spirit Wolf, Spirit Bear and Spirit Hawk, each with +2/+2 on top of its
     own numbers (the new animals only; other Creatures are not buffed). It replaced True Form (Health to 15, 5/2 claws), whose idea became the Warrior's
     Last Stand. Forsaken Druid was renamed Wildcaller (hero key `WILDCALLER`). (author's call, 2026-11-21)
-  - Warden skill 1 is Shapeshift (2 energy, cooldown 1): +1 Attack this turn and 1 Armor, like the launch Druid (author's call, 2026-11-23). It replaced the
+  - Warden skill 1 is Shapeshift, renamed Wildform in Airtable (2 energy, cooldown 1): +1 Attack this turn and 1 Armor, like the launch Druid (author's call, 2026-11-23). It replaced the
     random Spirit Animal (Spirit Wolf 3/2, Spirit Bear 2/5 Guard, Spirit Hawk 2/1 Rush), which won 85% in the hero sim; those animals now come only from the
     ultimate. With no weapon the hero gets a one-turn 1/1 Claws weapon; with one, it gets +1 Attack. Eagle (Ranger) is 4/2 Rush.
   - Warrior's ultimate is Last Stand (cost 6): it sets Health to 15 (even down from a higher total) and gains 10 armor; it needs no target
     (the data says TARGETED, ignored). Smash! moved to the Warrior-only card PRIME_255 (any minion, damage = armor, armor not spent). (author's call, 2026-11-21)
-  - Violent Strike deals 6 at 12 or less Health, else 4. Lightning Strike, Revitalize and Violent Strike may aim at any character.
+  - Violent Strike deals 6 at 12 or less Health, else 4. Lightning Strike, Revitalize and Violent Strike may aim at any character. Revitalize heals 2 (author's change, 2026-11-23).
   - The Cleric's **Resurrect** (skill 2) is picked from a list: two minions chosen at random from the last five non-token minions that died on
     your side (different cards where possible), each as two options, **with Guard** or **with Bubble**. With a 15% chance one of the two is
     instead the strongest (attack + health) of the enemy's last five dead, if it beats the weaker pick; it comes back on your side and
