@@ -43,7 +43,7 @@ describe('PRIME_125', () => {
     ]);
   });
 
-  it('option 2 summons two 2/2 Treants with Guard', () => {
+  it('PRIME_125 option 2 summons two 2/2 Guard minions', () => {
     const state = choose(1);
     const board = state.players['0'].board;
     expect(board).toHaveLength(4);

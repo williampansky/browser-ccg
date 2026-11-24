@@ -19,13 +19,13 @@
   },
   {
     "id": "PRIME_125b",
-    "name": "Call of the Treants",
+    "name": "Call of the Sentries",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_WARDEN%",
     "cost": 0,
-    "text": "<strong>%SUMMON%</strong> two 2/2 Treants<br>\nwith %BULWARK%",
+    "text": "<strong>%SUMMON%</strong> two 2/2 Wheatwood Sentries<br>\nwith %BULWARK%",
     "mechanics": [
       "%SUMMON%"
     ],
@@ -57,7 +57,7 @@
   },
   {
     "id": "PRIME_125c",
-    "name": "Treant",
+    "name": "Wheatwood Sentry",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -72,7 +72,9 @@
     ],
     "collectible": false,
     "active": true,
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
@@ -491,7 +493,9 @@
     ],
     "collectible": false,
     "active": true,
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {

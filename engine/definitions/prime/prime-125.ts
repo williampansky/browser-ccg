@@ -3,8 +3,8 @@ import { buff, summonEntourage } from '../../effects/primitives';
 import { otherFriendlyMinions } from '../../effects/selectors';
 
 // PRIME_125, Select One: "Give your other minions +2/+2; or Summon two 2/2
-// Treants with Taunt" (the option cards are PRIME_125a and b; b lists the
-// Treant token PRIME_125c, which is summoned by id)
+// Wheatwood Sentries with Guard" (the option cards are PRIME_125a and b; b
+// lists the token PRIME_125c, which is summoned by id)
 export default defineCard('PRIME_125', () => ({
   choices: [
     {
@@ -12,7 +12,7 @@ export default defineCard('PRIME_125', () => ({
       onPlay: [buff(otherFriendlyMinions(), 2, 2)],
     },
     {
-      label: 'Summon two 2/2 Treants with Taunt',
+      label: 'Summon two 2/2 Wheatwood Sentries with Guard',
       onPlay: [summonEntourage('PRIME_125c'), summonEntourage('PRIME_125c')],
     },
   ],

@@ -373,9 +373,9 @@
     "playContext": "%BUFF%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/nordsol",
-    "artistUrl": "https://www.artstation.com/nordsol",
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "description": "Adds an %ON_DEATH% property to your currently active board minions, which %SUMMON%s a %RANDOM% 2-cost %RACE_CREATURE%-race minion upon death."
   },
   {
@@ -467,9 +467,9 @@
     "collectible": true,
     "active": true,
     "flavor": "It's a little cold out here.",
-    "artistName": "https://www.artstation.com/yinyuming",
-    "artistUrl": "https://www.artstation.com/yinyuming",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_062",
@@ -533,9 +533,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_121a, PRIME_121b",
-    "artistName": "J.K (Arthur) Choi",
-    "artistUrl": "https://user-6242.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_088",
@@ -812,9 +812,9 @@
     "collectible": true,
     "active": true,
     "flavor": "It's like a wild gift, but different.",
-    "artistName": "https://www.artstation.com/marinalepus",
-    "artistUrl": "https://www.artstation.com/marinalepus",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_238",
@@ -1382,9 +1382,9 @@
     "collectible": true,
     "active": true,
     "flavor": "Formally worked in HR, but now has found his true calling.",
-    "artistName": "https://www.artstation.com/jameschild",
-    "artistUrl": "https://www.artstation.com/jameschild",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_205",
@@ -1497,9 +1497,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_111a, PRIME_111b",
-    "artistName": "Alexandra Malygina",
-    "artistUrl": "https://fler.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_008",
@@ -2290,6 +2290,7 @@
   },
   {
     "id": "PRIME_118",
+    "name": "Roaring Resolve",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -2298,7 +2299,9 @@
     "text": "Give your hero +4 Attack this turn. Gain 4 Armor.",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_270",
@@ -3339,9 +3342,9 @@
     "active": true,
     "entourage": "PRIME_123a, PRIME_123b",
     "flavor": "Don't mind her RBF; she's actually very helpful. Just don't ask her to \"smile more.\"",
-    "artistName": "https://www.artstation.com/jameschild",
-    "artistUrl": "https://www.artstation.com/jameschild",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_039",
@@ -3410,6 +3413,7 @@
   },
   {
     "id": "PRIME_117",
+    "name": "Rending Reprisal",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -3418,7 +3422,9 @@
     "text": "Deal damage equal to your hero's Attack to a minion.",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_173",
@@ -3511,9 +3517,9 @@
     "playContext": "%CHOOSE_ONE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/jeffchendesigns",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_147",
@@ -4736,6 +4742,7 @@
   },
   {
     "id": "PRIME_122",
+    "name": "Wild Charge",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -4751,7 +4758,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_122a",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_052",
@@ -4821,9 +4830,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_124a, PRIME_125b",
-    "artistName": "Vincent Lefevre",
-    "artistUrl": "https://ptitvinc.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_090",
@@ -4889,9 +4898,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME112a, PRIME_112b",
-    "artistName": "Hoàng Lập (Solan)",
-    "artistUrl": "https://www.artstation.com/hoanglap",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_226",
@@ -5274,6 +5283,7 @@
   },
   {
     "id": "PRIME_125",
+    "name": "Gale-Wing Alpha",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -5282,12 +5292,14 @@
     "cost": 9,
     "attack": 5,
     "health": 8,
-    "text": "<strong>%CHOOSE_ONE%:</strong> Give your other minions +2/+2; or Summon two 2/2 Treants with Taunt.",
+    "text": "<strong>%CHOOSE_ONE%:</strong> Give your other minions +2/+2; or Summon two 2/2 Wheatwood Sentries with %BULWARK%.",
     "collectible": true,
     "active": true,
     "elite": true,
     "entourage": "PRIME_125a, PRIME_125b, PRIME_125c",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_187",
@@ -5519,9 +5531,9 @@
     "collectible": true,
     "active": true,
     "flavor": "Illustration inspired by early spring colds.",
-    "artistName": "https://www.artstation.com/kafis",
-    "artistUrl": "https://www.artstation.com/kafis",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_240",
