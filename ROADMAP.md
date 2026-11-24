@@ -100,6 +100,27 @@ simulator first.
 - [ ] Naming and text pass (duplicate names, typos, "Attack" vs "Deal" wording; see `CARD-AUDIT.md`)
 - [ ] Art match pass (mismatched art listed in `CARD-AUDIT.md` section 5)
 - [ ] Art provenance table: card, artist, source, licence, status; replace temporary art
+  - **Replacing the FPO art, class by class (started 2026-11-24).** The FPO art is the older
+    art ported from `react-ccg-deprecated`, provenance unchecked. Done and FINAL (a-ravlik, art
+    from the purchased packs): **Mystic, Warden, Necromancer**, plus ten PRIME spells, five
+    minions, the Idol tokens and Hellspawn. Left (active cards): **133 cards and 15 tokens**
+    with `artStatus` FPO: neutral 56, Wizard 15, Crusader 14, Assassin 14, Fighter 12, Cleric 12,
+    Ranger 10. Check the live count with the Art filter in `/collection`, or from `data/`.
+  - **The loop that works:** `npm run asset -- <words>` finds an icon by meaning (spells, items,
+    weapons); creatures are cutouts from `CARD CHARACTERS` in Downloads composited onto
+    `CARD BACKGROUNDS` (Characters Pack 07 and the 10-creature packs; about 150 cutouts are
+    still unused). Show three options per card on one board, pick, cut with `npm run art`
+    (`--minion` for board minions), then, with explicit approval for those exact records, write
+    `name`, `artistName`, `artistUrl` and `artStatus` to Airtable, pull, and commit. Check a
+    creature against existing art before using it (template matching; a real match scored 14.6,
+    unrelated art 25 or more). Where each creature and background went is in `ART-LICENSES.md`.
+  - **Loose ends from these passes:** PRIME_218's name "Triton Sorcerery" looks like a typo;
+    PRIME_221 (an Android) shows a stone gargoyle and PRIME_215 (a Sprite) a brain on stalks, so
+    their names or art may want another look; the old name "Ancient Portal" is still in two test
+    titles (`bodies.test.ts`, `cost.test.ts`) and in `balance/`; CORE_109 and PRIME_099a,
+    100a, 107a, 108a, 109a to d, 112a, 112b, 157a, 189a, 248a to c and 169a are tokens or
+    inactive cards with no art yet; "Hellfire Bolt", "Warboss" and other names were not checked
+    against names from other games (the Treant name was caught by the author).
 
 ## Milestone 5: Keywords and mechanics
 
