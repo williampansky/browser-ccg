@@ -728,6 +728,36 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **257** (spell, cost 3): deals 4 to all enemies (the hero and every minion); Overload 2 comes from the data's `numberOvercharge`. **258** (spell, cost 0): +2 Health to your minions of the Idol race (the Mystic's totems). **259** (spell, cost 1): deals 1 to an enemy character and Disables it, as CORE_066 does. **260** is the Mystic's copy of Mutate (3 mana, transforms any minion into its 0/1 Guard entourage token PRIME_260a); **CORE_109** itself stays neutral and now makes a plain 1/1 with no Guard (3 mana, entourage CORE_109a).
 - **212** (weapon 2/8, cost 5): the hero may swing it twice per turn (`CardDef.weaponDoubleAttack`, limit in `weaponSwings`), each swing costing 1 Durability; the two swings come back every turn. Overload 2. Every other weapon is still one swing a turn.
 
+### Class cards added or finished on 2026-11-23 (PRIME_261-272, and the nine class cards that had no definition)
+
+- **261** (Fighter minion): gains 1 Armor whenever any friendly minion takes damage, itself included.
+- **262** (Cleric minion): an enemy minion loses 2 Attack (never below 0) until the start of YOUR next turn, when only what was actually taken comes back (`attackDebuff`).
+- **263** (Cleric minion, 8): destroys any minion (yours too, or itself) and heals your hero for the Health it has at that moment.
+- **264** (Crusader spell): draws until your hand is as big as the opponent's, at most 5, counted after the spell has left your hand.
+- **265** (Assassin spell): 2 damage to a character; with Combo, 4 instead.
+- **266** (Assassin spell): returns an enemy minion to its owner's hand, costing 1 more. **268** returns every minion on both boards, with no cost change.
+- **267** (Assassin spell): +2 Attack and Poison (`poisonous`, lost to Silence) on a friendly minion.
+- **269** (Necromancer spell): 2 damage to a minion; a Demonic one gets +2/+2 instead. **270**: Rush; discards 2 random cards from your hand. **271**: sets your Health to 15 (up or down) and summons the 6/6 Infernal (`GAME_009`).
+- **272** (Warden spell): destroys any minion; its owner draws 2 cards.
+- **130** (Ranger spell): "can only be played with 2+ minions on board" is read as 2 or more on YOUR side (`CardDef.canPlay`; the card is not offered and `CANT_PLAY` is returned otherwise). It destroys a random visible enemy minion.
+- **131** (Ranger spell): one 1/1 Rush Hound (`GAME_010`) per enemy minion on the board when it is cast ("Charge" in the card text is the game's Rush); a full board stops it.
+- **134** (Ranger weapon): +1 Durability each time YOUR Mystery is revealed. Weapons can now have triggers.
+- **135**: 5 damage to a minion and 2 to the minions next to it. **145**: the chosen minion and its neighbours each take 1 damage and are Disabled.
+- **153** (Wizard spell, 10): 10 damage to a character you choose. **168** (Crusader spell, 8): heals a character you choose for 8, then you draw 3. **240** (Fighter spell): 4 damage to a character you choose, or 6 if you have 12 or less Health. These three are read as aimed (the text does not say who).
+- **182** (Cleric spell): a copy of a random minion card from the opponent's deck is summoned on your side; their deck keeps the card, and nothing happens with no minion in it.
+
+### Class cards switched on in Airtable on 2026-11-23
+
+- **133** (Ranger Mystery): reacts when an attack is aimed at your hero; the attack goes to a random character other than your hero and the attacker (it can be a minion of either side, or the attacker's own hero).
+- **138** (Ranger weapon 5/2, cost 7): your hero takes no counter-damage when it attacks a minion with this weapon (`CardDef.heroImmuneWhileAttacking`).
+- **144** (Wizard Mystery): after the opponent plays a minion, a copy of it (its current stats) is summoned on your side.
+- **164** (Crusader spell): draws a card and deals damage equal to its printed cost to a character you choose (read as aimed). The damage counts a card that was burned by a full hand; an empty deck draws nothing (fatigue) and deals 0.
+- **173** (Cleric spell): puts copies of 2 random cards from the opponent's deck into your hand; their deck keeps them.
+- **230** (Fighter spell, cost 0): 1 damage to a minion, then +2 Attack on it.
+- **181** (Cleric spell, Shadowform): your hero's skill 1 is replaced for the rest of the game (the author's call) by "Deal 2 damage" to any character, at the same cost and cooldown; played again it becomes 3 damage. `HeroState.shadowform` holds the number and `skillFor` gives the skill a player has right now (the engine rules and the `/play` skill bar use it). Skills 2 and 3 are unchanged.
+- **177** (Cleric minion 3/5): while it is on your board and not silenced, every heal your cards and skills would do (spells, items, the Cleric's skill, minion triggers, lifesteal's heal) deals that much damage to the same target instead (`CardDef.healsAsDamage`, applied in the `heal` primitive). "Heal fully" effects (`healToFull`) are not changed.
+- **236** (Fighter spell): with a weapon, it gets +1 Attack and +1 Durability; without one you equip the token `GAME_011` (1/3 Practice Blade).
+
 ### Appendix D: Hero skills (2026-11-13; engine in `engine/heroes/`, ability numbers in the ABILITIES table)
 
 Five heroes are playable (the ones marked `active`): Zeus, Wildcaller, Exile, Warrior and the Cleric (`SAGE`). Each has
