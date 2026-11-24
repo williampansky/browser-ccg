@@ -144,6 +144,38 @@ export const settle = (
           }
         }
       }
+      // A weapon's triggers ("whenever ..., gain +1 Durability"); the weapon's
+      // instance id stands in for the minion's.
+      for (const owner of ['0', '1'] as PlayerId[]) {
+        const { weapon } = g.players[owner];
+        const card = weapon && ctx.catalog.get(weapon.cardId);
+        const def = card && defs(card);
+
+        for (const trigger of def?.triggers ?? []) {
+          if (!weapon || trigger.event !== event.type) continue;
+          if (
+            trigger.when &&
+            !trigger.when(event, {
+              state: g,
+              catalog: ctx.catalog,
+              owner,
+              selfId: weapon.instanceId,
+            })
+          )
+            continue;
+          for (const effect of trigger.do) {
+            effect({
+              g,
+              caster: owner,
+              event,
+              rng: ctx.rng,
+              catalog: ctx.catalog,
+              events,
+              sourceCardId: weapon.cardId,
+            });
+          }
+        }
+      }
       continue;
     }
     break;

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { heroArtLayers } from './hero-images';
+import { heroArtLayers, skillIconLayers } from './hero-images';
 import styles from './hero-variants.module.scss';
 import cx from '../../utils/cx';
 import { artBackground, PLACEHOLDER_ART } from './card-face-model';
@@ -96,6 +96,8 @@ export interface FigureSkill {
   spent: boolean;
   selected?: boolean;
   targeted?: boolean;
+  /** A card that replaced this skill mid-game: its art is the icon */
+  artCardId?: string;
 }
 
 export interface FigureLive {
@@ -195,7 +197,7 @@ export const HeroFigure = (
                 k && !k.usable ? styles.off : '',
               )}
               style={{
-                backgroundImage: heroArtLayers(p.heroId, `skill-${n}`),
+                backgroundImage: skillIconLayers(p.heroId, n, k?.artCardId),
               }}
             >
               {k && <b className={styles.figCost}>{k.cost}</b>}
@@ -802,7 +804,7 @@ export const HeroRing = (
             )}
             style={{
               ['--a' as string]: `${slotAngle(r, n)}deg`,
-              backgroundImage: heroArtLayers(p.heroId, `skill-${n}`),
+              backgroundImage: skillIconLayers(p.heroId, n, k?.artCardId),
             }}
           >
             {k && r.showCost && <b className={styles.ringCost}>{k.cost}</b>}

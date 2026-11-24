@@ -22,6 +22,7 @@ import {
   heroes,
   heroSkill,
   skillCard,
+  skillFor,
   withHeroTokens,
   Card,
   classCardsFor,
@@ -101,7 +102,12 @@ import { HeroFigure, HeroRing } from './HeroVariants';
 import { parseRingTune } from './ring-tune';
 import { DeckRowView } from './DeckRowView';
 import { deckRowVars, parseDeckTune } from './deck-row-tune';
-import { heroImage, skillCardArt } from './hero-images';
+import {
+  cardSkillArt,
+  heroImage,
+  skillCardArt,
+  skillIconSrc,
+} from './hero-images';
 import { currentHeroKey } from '../../engine/heroes/classes';
 import {
   aimVector,
@@ -973,13 +979,18 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       if (action.type === 'HeroSkill') {
         /** Every hero skill gets the cast popup, like a spell. */
         const heroId = state.players[state.activePlayer].hero?.id;
-        const skill = heroSkill(heroId, action.skill);
+        const skill = skillFor(
+          state.players[state.activePlayer].hero,
+          action.skill,
+        );
         if (heroId && skill)
           setCastFx({
             card: skillCard(heroId, skill),
             owner: state.activePlayer,
             n: Date.now(),
-            art: skillCardArt(heroId, skill.index),
+            art: skill.artCardId
+              ? cardSkillArt(skill.artCardId)
+              : skillCardArt(heroId, skill.index),
           });
       }
       const summoned = result.events.find((e) => e.type === 'MinionPlayed');
@@ -2057,7 +2068,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
    */
   const skillPick =
     selection?.kind === 'skill'
-      ? heroSkill(state.players[me].hero?.id, selection.index)
+      ? skillFor(state.players[me].hero, selection.index)
       : undefined;
   const skillOptions =
     skillPick?.options && selection?.kind === 'skill'
@@ -2256,6 +2267,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     const aim = isAimable({ kind: 'hero', player: owner });
     const isAi = mode === 'ai' && owner === AI_PLAYER;
     const hero = p.hero && getHero(p.hero.id);
+    const liveSkills = hero
+      ? hero.skills.map((s) => skillFor(p.hero, s.index) ?? s)
+      : [];
     const skillRow = hero && p.hero && (
       <HeroSkills
         heroName={hero.name}
@@ -2263,9 +2277,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         interactive={isMe && !over && myTurn}
         nodeRef={(i) => track(`s${owner}-${i}`)}
         onPick={pickSkill}
-        skills={hero.skills.map((s) => ({
+        skills={liveSkills.map((s) => ({
           index: s.index,
-          icon: heroImage(hero.id, `skill-${s.index + 1}`),
+          icon: skillIconSrc(hero.id, s),
           name: s.name,
           cost: s.cost,
           text: s.text,
@@ -2335,7 +2349,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             aimHover={hover?.kind === 'hero' && hover.player === owner}
             selected={selection?.kind === 'hero' && isMe}
             canAct={isMe && heroCanSwing}
-            skills={hero.skills.map((s) => {
+            skills={liveSkills.map((s) => {
               const cooldownLeft = p.hero!.cooldowns[s.index] ?? 0;
               const spent = !!p.hero!.spent[s.index];
               return {
@@ -2356,6 +2370,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                   isMe &&
                   selection.index === s.index,
                 targeted: !!s.target,
+                artCardId: s.artCardId,
               };
             })}
             dom={{

@@ -1,6 +1,7 @@
 import { loadHsCards } from '../cards/load-hs-cards';
 import {
   buildDeck,
+  hasEffectText,
   isPlayable,
   needsBehaviour,
   playablePool,
@@ -53,6 +54,45 @@ describe('needsBehaviour / isPlayable', () => {
     expect(isPlayable(onPlayMinion, () => undefined)).toBe(false);
     expect(isPlayable(onPlayMinion, () => ({ onPlay: [] }))).toBe(true);
     expect(isPlayable(minionCard('V'), () => undefined)).toBe(true);
+  });
+});
+
+describe('hasEffectText', () => {
+  const withText = (text: string) => ({ ...minionCard('T'), text });
+
+  it('treats a keyword and nothing else as no effect', () => {
+    for (const text of [
+      '',
+      'Guard',
+      'Concealed',
+      'Stampede Bubble',
+      "Can't Attack Guard",
+      '<strong>%BULWARK%</strong>',
+    ])
+      expect(hasEffectText(withText(text))).toBe(false);
+  });
+
+  it('sees an effect in the text even when no mechanic is listed', () => {
+    for (const text of [
+      '+5 Spell Damage',
+      'On Play: Deal 5 damage to your hero.',
+      'Guard, and gain 1 Armor',
+    ])
+      expect(hasEffectText(withText(text))).toBe(true);
+    expect(needsBehaviour(withText('Your heals deal damage'))).toBe(true);
+  });
+
+  it('leaves no playable card that has effect text and no definition', () => {
+    const offenders = cards.filter(
+      (card) =>
+        card.active &&
+        !card.isToken &&
+        hasEffectText(card) &&
+        isPlayable(card) &&
+        !getCardDef(card),
+    );
+
+    expect(offenders.map((card) => card.id)).toEqual([]);
   });
 });
 

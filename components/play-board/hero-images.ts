@@ -1,5 +1,5 @@
 import type { SyntheticEvent } from 'react';
-import { PLACEHOLDER_ART } from './card-face-model';
+import { artUrl, PLACEHOLDER_ART } from './card-face-model';
 
 /**
  * Hero art under `public/images/heroes/<CLASS>/` (`FIGHTER`, `WIZARD`, ...): the
@@ -77,3 +77,32 @@ export const skillArtFor = (cardId: string): string | undefined => {
   const m = /^HERO_SKILL_(.+)_(\d+)$/.exec(cardId);
   return m ? skillCardArt(m[1], +m[2]) : undefined;
 };
+
+/**
+ * The art layers for a skill that a card replaced (`HeroSkill.artCardId`): the
+ * card's own picture, then the placeholder when that file is missing.
+ */
+export const cardSkillArt = (cardId: string): string =>
+  [artUrl(cardId, 'CARD'), PLACEHOLDER_ART]
+    .filter((url): url is string => !!url)
+    .map((url) => `url(${url})`)
+    .join(', ');
+
+/**
+ * The `<img>` source for a skill icon: the class's `skill-<n>` file, or the
+ * replacing card's art (`heroArtFallback` then steps down to the placeholder).
+ */
+export const skillIconSrc = (
+  heroId: string,
+  skill: { index: number; artCardId?: string },
+): string =>
+  (skill.artCardId && artUrl(skill.artCardId, 'CARD')) ||
+  heroImage(heroId, `skill-${skill.index + 1}`);
+
+/** Background layers for a skill icon (the figure and ring hero bars). */
+export const skillIconLayers = (
+  heroId: string,
+  n: number,
+  artCardId?: string,
+): string =>
+  artCardId ? cardSkillArt(artCardId) : heroArtLayers(heroId, `skill-${n}`);

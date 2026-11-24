@@ -68,6 +68,9 @@ export const playCard = (
   );
   if (cost > player.energy.current) return { error: 'CANT_AFFORD' };
 
+  if (def?.canPlay && !def.canPlay({ state, player: me }))
+    return { error: 'CANT_PLAY' };
+
   // A Mystery goes face down; only one at a time.
   if (def?.mystery && player.mystery) return { error: 'MYSTERY_ACTIVE' };
 

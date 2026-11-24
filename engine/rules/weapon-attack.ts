@@ -87,7 +87,8 @@ export const weaponAttack = (
       if (victim) {
         const counter = victim.attack;
         damageMinion(victim, w.attack, events, foe);
-        if (counter > 0) damageHero(g, me, counter, events);
+        if (counter > 0 && !def?.heroImmuneWhileAttacking)
+          damageHero(g, me, counter, events);
       }
     }
     // PRIME_243 wears down in Attack instead of Durability

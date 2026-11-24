@@ -3,7 +3,7 @@ import { getCardDef } from '../definitions';
 import { isComboOn, targetWithCombo } from '../definitions/define-card';
 import type { DefLookup } from '../definitions/define-card';
 import { GameState, PlayerId, TargetRef } from '../state/types';
-import { heroSkill } from '../heroes';
+import { skillFor } from '../heroes';
 import { opponentOf } from './lookup';
 
 export type TargetSource =
@@ -65,7 +65,7 @@ export const legalTargets = (
     ];
   }
   if (source.kind === 'skill') {
-    const filter = heroSkill(state.players[me].hero?.id, source.skill)?.target;
+    const filter = skillFor(state.players[me].hero, source.skill)?.target;
     return filter
       ? visibleCharacters(state).filter((candidate) =>
           filter({ state, caster: me, candidate, catalog }),

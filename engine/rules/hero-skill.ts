@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { heroSkill } from '../heroes';
+import { skillFor } from '../heroes';
 import {
   ActionError,
   GameEvent,
@@ -22,7 +22,7 @@ export const skillReady = (
   skill: number,
 ): boolean => {
   const hero = state.players[player].hero;
-  const def = heroSkill(hero?.id, skill);
+  const def = skillFor(hero, skill);
   if (!hero || !def) return false;
   return def.cooldown === undefined
     ? !hero.spent[skill]
@@ -49,7 +49,7 @@ export const useHeroSkill = (
 ): GameState | ActionError => {
   const me = state.activePlayer;
   const hero = state.players[me].hero;
-  const def = heroSkill(hero?.id, skill);
+  const def = skillFor(hero, skill);
   if (!hero || !def) return { error: 'BAD_SKILL' };
   if (!skillReady(state, me, skill)) return { error: 'SKILL_UNAVAILABLE' };
   if (def.cost > state.players[me].energy.current)

@@ -18,17 +18,51 @@ const KEYWORD_ONLY = [
 ];
 
 /**
+ * The words card text may contain with nothing else behind them: the keywords
+ * themselves (and the data's own names for them).
+ */
+const KEYWORD_WORDS = [
+  'guard',
+  'stampede',
+  'charge',
+  'bubble',
+  'concealed',
+  'onslaught',
+  "can't attack",
+  'can’t attack',
+];
+
+/**
+ * True when the card's text says more than its keywords. The data's `mechanics`
+ * column is blank on many cards, so a card whose text promises an effect must
+ * not be taken for a plain body just because it lists no mechanic.
+ */
+export const hasEffectText = (card: Card): boolean => {
+  const plain = (card.text ?? '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/%[A-Z_0-9]+%/g, ' ')
+    .toLowerCase();
+  const rest = KEYWORD_WORDS.reduce(
+    (text, word) => text.split(word).join(' '),
+    plain,
+  );
+
+  return /[a-z0-9]/.test(rest);
+};
+
+/**
  * True if the card does something its stats and keywords don't capture: every
- * spell and item, and any
- * minion or weapon with a mechanic other than the pure keywords (On Play
- * effect, aura, spell damage, ...).
+ * spell and item, any minion or weapon with a mechanic other than the pure
+ * keywords (On Play effect, aura, spell damage, ...), and any card whose text
+ * says more than a keyword.
  * Erring this way means an unfinished card is refused, never silently played as
  * vanilla.
  */
 export const needsBehaviour = (card: Card): boolean =>
   card.type === 'spell' ||
   card.type === 'item' ||
-  card.mechanics.some((m) => !KEYWORD_ONLY.includes(m));
+  card.mechanics.some((m) => !KEYWORD_ONLY.includes(m)) ||
+  hasEffectText(card);
 
 /**
  * The engine can play this card faithfully: it needs no behaviour, or it has a

@@ -2,11 +2,16 @@ import { damageTarget, healTarget } from '../rules/damage';
 import { drawCard } from '../rules/draw';
 import { findMinion, opponentOf } from '../rules/lookup';
 import { withSpellPower } from '../rules/spell-power';
-import { createMinion } from '../rules/minion';
+import { createMinion, minionDef } from '../rules/minion';
 import { summonMinion } from '../rules/summon';
 import { cardPool } from '../rules/card-pool';
 import type { Card } from '../cards/types';
-import { MAX_ENERGY, MAX_HAND, type MinionKeywords } from '../state/types';
+import {
+  MAX_ENERGY,
+  MAX_HAND,
+  type MinionKeywords,
+  type TargetRef,
+} from '../state/types';
 import type { Effect, Selector } from './types';
 
 /** Deals `amount` damage to everything the selector picks. */
@@ -24,7 +29,14 @@ export const heal =
     const total =
       withSpellPower('heal', amount, ctx.spellDamage) +
       (amount > 0 ? (ctx.spellHealing ?? 0) : 0);
-    for (const t of select(ctx)) healTarget(ctx.g, t, total, ctx.events);
+    const isDamageInstead = ctx.g.players[ctx.caster].board.some(
+      (m) => minionDef(m, ctx.catalog)?.healsAsDamage,
+    );
+
+    for (const t of select(ctx)) {
+      if (isDamageInstead) damageTarget(ctx.g, t, total, ctx.events);
+      else healTarget(ctx.g, t, total, ctx.events);
+    }
   };
 
 /** The caster draws `count` cards (full hand burns, empty deck is fatigue). */
@@ -1224,15 +1236,18 @@ export const healthFloorThisTurn = (): Effect => (ctx) => {
  * weapon).
  */
 export const equipTokenWeapon =
-  (index = 0): Effect =>
+  (which: number | string = 0): Effect =>
   (ctx) => {
     const source = ctx.sourceCardId
       ? ctx.catalog.get(ctx.sourceCardId)
       : undefined;
-    const token = source && ctx.catalog.get(source.entourage[index]);
+    const token =
+      typeof which === 'string'
+        ? ctx.catalog.get(which)
+        : source && ctx.catalog.get(source.entourage[which]);
     if (!token)
       throw new Error(
-        `${ctx.sourceCardId} has no entourage weapon #${index} in the catalog`,
+        `${ctx.sourceCardId} has no entourage weapon ${which} in the catalog`,
       );
     ctx.g.players[ctx.caster].weapon = {
       instanceId: ctx.g.nextInstanceId++,
@@ -1342,3 +1357,135 @@ export const healByTargetHealth: Effect = (ctx) => {
 
   heal(ownHeroRef, found.minion.health)(ctx);
 };
+
+/** Adds Durability to the caster's weapon, if they have one. */
+export const addWeaponDurability =
+  (amount: number): Effect =>
+  (ctx) => {
+    const { weapon } = ctx.g.players[ctx.caster];
+
+    if (weapon) weapon.durability += amount;
+  };
+
+/**
+ * Summons, for the caster, a copy of a random minion card from the opponent's
+ * deck. The deck itself is not changed; with no minion in it, or no room, it
+ * does nothing.
+ */
+export const summonCopyFromEnemyDeck: Effect = (ctx) => {
+  const { deck } = ctx.g.players[opponentOf(ctx.caster)];
+  const minions = deck.flatMap(({ cardId }) => {
+    const card = ctx.catalog.get(cardId);
+
+    return card?.type === 'minion' ? [card] : [];
+  });
+
+  if (minions.length === 0) return;
+
+  const chosen = minions[ctx.rng.int(minions.length)];
+
+  summonMinion(ctx.g, ctx.caster, chosen, ctx.events, ctx.self);
+};
+
+/**
+ * While a Mystery reacts to an attack: the attack goes to a random character
+ * other than the one it was aimed at and the attacker (unchanged if there is
+ * none).
+ */
+export const redirectAttackToRandomOther: Effect = (ctx) => {
+  const { attack } = ctx;
+
+  if (!attack) return;
+
+  const original = JSON.stringify(attack.target);
+  const everyone: TargetRef[] = (['0', '1'] as const).flatMap((player) => [
+    { kind: 'hero' as const, player },
+    ...ctx.g.players[player].board.map((m) => ({
+      kind: 'minion' as const,
+      instanceId: m.instanceId,
+    })),
+  ]);
+  const isAttacker = (target: TargetRef): boolean =>
+    target.kind === 'minion'
+      ? target.instanceId === attack.attackerId
+      : attack.attackerId === undefined &&
+        target.player === attack.attackerPlayer;
+  const options = everyone.filter(
+    (target) => JSON.stringify(target) !== original && !isAttacker(target),
+  );
+
+  if (options.length === 0) return;
+
+  attack.target = options[ctx.rng.int(options.length)];
+};
+
+/**
+ * The caster draws a card, and the selected characters take damage equal to
+ * its printed cost (0 if the deck was empty; a burned card still counts).
+ */
+export const drawThenDamageByCost =
+  (select: Selector): Effect =>
+  (ctx) => {
+    const top = ctx.g.players[ctx.caster].deck[0];
+    const cost = (top && ctx.catalog.get(top.cardId)?.cost) ?? 0;
+
+    draw(1)(ctx);
+    damage(select, cost)(ctx);
+  };
+
+/**
+ * Puts copies of `count` random cards from the opponent's deck into the
+ * caster's hand (their deck keeps them; a full hand burns the copy).
+ */
+export const copyFromEnemyDeck = (count: number): Effect =>
+  computed((ctx) => {
+    const { deck } = ctx.g.players[opponentOf(ctx.caster)];
+    const picks = ctx.rng
+      .shuffle(deck.map((_, i) => i))
+      .slice(0, count)
+      .map((i) => deck[i].cardId);
+
+    return (inner) => {
+      for (const cardId of picks) addCardToHand(cardId)(inner);
+    };
+  });
+
+/** Raises the caster's weapon Attack and Durability. No weapon: nothing. */
+export const buffWeaponStats =
+  (attack: number, durability: number): Effect =>
+  (ctx) => {
+    const { weapon } = ctx.g.players[ctx.caster];
+
+    if (!weapon) return;
+
+    weapon.attack += attack;
+    weapon.durability += durability;
+  };
+
+/**
+ * Shadowform: the caster's hero skill 1 becomes "Deal 2 damage"; played again
+ * it becomes 3 (see `skillFor`). Nothing without a hero.
+ */
+export const enterShadowform: Effect = (ctx) => {
+  const { hero } = ctx.g.players[ctx.caster];
+  const first = 2;
+  const stronger = 3;
+
+  if (!hero) return;
+
+  hero.shadowform = hero.shadowform === undefined ? first : stronger;
+};
+
+/**
+ * Summons the card `cardId` for the caster again and again until their board is
+ * full, right of the running minion.
+ */
+export const summonUntilFull =
+  (cardId: string): Effect =>
+  (ctx) => {
+    const token = ctx.catalog.get(cardId);
+
+    if (!token) throw new Error(`${cardId} is not in the catalog`);
+
+    while (summonMinion(ctx.g, ctx.caster, token, ctx.events, ctx.self));
+  };

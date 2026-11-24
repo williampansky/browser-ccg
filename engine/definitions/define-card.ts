@@ -154,6 +154,11 @@ export interface CardDef {
    */
   poison?: { vs?: string };
   /**
+   * While on its owner's board, the owner's cards and skills that restore
+   * Health deal that much damage instead (PRIME_177)
+   */
+  healsAsDamage?: boolean;
+  /**
    * Spells and items cannot target this minion (On Play effects and attacks
    * still can)
    */
@@ -223,6 +228,8 @@ export interface CardDef {
   wearsAttack?: boolean;
   /** For weapons: the hero may swing twice a turn (Onslaught) */
   weaponDoubleAttack?: boolean;
+  /** For weapons: the hero takes no counter-damage while attacking with it */
+  heroImmuneWhileAttacking?: boolean;
   /**
    * "Choose one" cards: the player picks an option when playing
    * (`PlayCard.choice`), and that option's
@@ -230,6 +237,11 @@ export interface CardDef {
    * `label` for the UI.
    */
   choices?: Choice[];
+  /**
+   * A condition on playing the card at all ("can only be played with 2+
+   * minions on your board"): it cannot be played, or offered, while false
+   */
+  canPlay?: (c: { state: GameState; player: PlayerId }) => boolean;
   /** Which characters the player may aim it at. Omit for a global card. */
   target?: TargetFilter;
   onPlay?: Effect[];

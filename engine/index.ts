@@ -23,6 +23,7 @@ export {
   heroes,
   heroSkill,
   HERO_TOKENS,
+  skillFor,
   skillCard,
   withHeroTokens,
 } from './heroes';

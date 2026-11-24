@@ -6,7 +6,7 @@ import type { DefLookup } from '../definitions/define-card';
 import { Action, GameState, MAX_BOARD, PlayerId } from '../state/types';
 import { effectiveCost } from './cost';
 import { cantAttack } from './attack';
-import { heroSkill } from '../heroes';
+import { skillFor } from '../heroes';
 import { skillReady } from './hero-skill';
 import { legalTargets } from './targeting';
 import { weaponSwings } from './weapon-attack';
@@ -41,6 +41,7 @@ export const legalActions = (
       return;
     const def = defs(card);
     if (!def && needsBehaviour(card)) return;
+    if (def?.canPlay && !def.canPlay({ state, player })) return;
     if (card.type === 'spell' || card.type === 'item') {
       if (!def) return;
       if (def.mystery) {
@@ -125,7 +126,7 @@ export const legalActions = (
   }
 
   me.hero?.cooldowns.forEach((_, skill) => {
-    const def = heroSkill(me.hero?.id, skill);
+    const def = skillFor(me.hero, skill);
     if (
       !def ||
       def.cost > me.energy.current ||

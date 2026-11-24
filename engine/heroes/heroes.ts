@@ -3,6 +3,9 @@ import skillData from '../../data/skills.json';
 import mechanics from '../../data/mechanics.json';
 import constants from '../../data/constants.json';
 import type { TargetFilter, Effect } from '../effects/types';
+import { damage } from '../effects/primitives';
+import { chosenTarget } from '../effects/selectors';
+import type { HeroState } from '../state/types';
 import { CLASS_KEYS, classKey } from './classes';
 import { SKILL_CODE, type SkillCode } from './skill-effects';
 
@@ -30,6 +33,11 @@ export interface HeroSkill {
    */
   options?: SkillCode['options'];
   effects: Effect[];
+  /**
+   * Set while a card has replaced this skill mid-game (Shadowform): the id of
+   * that card, whose art the skill icon and cast popup then use
+   */
+  artCardId?: string;
 }
 
 export interface HeroInfo {
@@ -48,6 +56,9 @@ export interface HeroInfo {
   artistUrl?: string;
   skills: HeroSkill[];
 }
+
+const SHADOWFORM_NAME = 'Shadowform';
+const SHADOWFORM_CARD = 'PRIME_181';
 
 const glossary = new Map<string, string>(
   [
@@ -175,3 +186,31 @@ export const heroSkill = (
   id: string | undefined,
   index: number,
 ): HeroSkill | undefined => getHero(id)?.skills[index];
+
+const FIRST_SKILL = 0;
+
+/**
+ * The skill a player's hero has right now: `heroSkill`, except that Shadowform
+ * (PRIME_181) replaces skill 1 with "Deal N damage" to any character, at the
+ * same cost and cooldown. A replacement names its card in `artCardId`; that is
+ * how any later card that swaps a skill mid-match gets its art on the board.
+ */
+export const skillFor = (
+  hero: HeroState | undefined,
+  index: number,
+): HeroSkill | undefined => {
+  const base = heroSkill(hero?.id, index);
+  const damageDealt = hero?.shadowform;
+
+  if (!base || damageDealt === undefined || index !== FIRST_SKILL) return base;
+
+  return {
+    ...base,
+    name: SHADOWFORM_NAME,
+    text: `Deal ${damageDealt} damage`,
+    target: () => true,
+    options: undefined,
+    effects: [damage(chosenTarget(), damageDealt)],
+    artCardId: SHADOWFORM_CARD,
+  };
+};

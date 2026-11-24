@@ -150,6 +150,11 @@ export interface HeroState {
   cooldowns: number[];
   /** One-use skills (no cooldown in the data) that have been used */
   spent: boolean[];
+  /**
+   * Shadowform (PRIME_181): skill 1 is replaced for the rest of the game by
+   * "Deal N damage", with N = this (2, then 3 when it is played again)
+   */
+  shadowform?: number;
 }
 
 export interface PlayerState {
@@ -272,6 +277,7 @@ export type ActionErrorCode =
   | 'UNKNOWN_CARD'
   | 'UNSUPPORTED_CARD'
   | 'CANT_AFFORD'
+  | 'CANT_PLAY'
   | 'BOARD_FULL'
   | 'UNKNOWN_ATTACKER'
   | 'MINION_CANT_ATTACK'
