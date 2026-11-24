@@ -12,6 +12,8 @@ import type {
   PlayerState,
 } from '../state/types';
 import { getCardDef } from '../definitions';
+import { effectiveCost } from '../rules/cost';
+import { isComboOn } from '../definitions/define-card';
 import { isBadPlay } from './common';
 
 /**
@@ -42,6 +44,11 @@ export interface GreedyWeights {
   mystery: number;
   /** Each energy locked by Overcharge next turn */
   overcharge: number;
+  /**
+   * Switching Combo on while a Combo card in hand is still affordable, per
+   * such card. Without it a one-move lookahead never plays a cheap card first.
+   */
+  combo: number;
 }
 
 export const DEFAULT_WEIGHTS: GreedyWeights = {
@@ -54,6 +61,7 @@ export const DEFAULT_WEIGHTS: GreedyWeights = {
   weapon: 0.8,
   mystery: 3,
   overcharge: 1.5,
+  combo: 2,
 };
 
 /**
@@ -169,9 +177,29 @@ export const chooseGreedyActionWith = (
         },
       }
     : state;
+  const wasComboOn = isComboOn(state.players[me]);
+  const comboSetup = (after: GameState): number => {
+    if (wasComboOn || !isComboOn(after.players[me])) return 0;
+    const { hand, energy } = after.players[me];
+    const ready = hand.filter((inHand) => {
+      const card = catalog.get(inHand.cardId);
+      if (!card || !lookup(card)?.combo) return false;
+      const cost = effectiveCost(
+        after,
+        me,
+        card,
+        catalog,
+        lookup,
+        inHand.costDelta ?? 0,
+      );
+      return cost <= energy.current;
+    });
+    return ready.length * w.combo;
+  };
   const score = (a: Action): number => {
     const r = applyAction(seen, a, { rng: createSeededRng(1), catalog, defs });
-    return 'error' in r ? -Infinity : evaluate(r.state, me, w, isBoardWipe);
+    if ('error' in r) return -Infinity;
+    return evaluate(r.state, me, w, isBoardWipe) + comboSetup(r.state);
   };
   const best = (list: Action[], floor: number): Action | undefined => {
     let top = floor;
