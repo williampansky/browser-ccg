@@ -566,7 +566,7 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_RANGER%",
     "cost": 3,
-    "text": "For each enemy minion, summon a 1/1 Hound with Charge.",
+    "text": "For each enemy minion, summon a 1/1 Wolf with Charge.",
     "collectible": true,
     "active": true,
     "entourage": "PRIME_131a",
@@ -3123,7 +3123,7 @@
     "cost": 9,
     "attack": 3,
     "health": 15,
-    "text": "<strong>%ON_PLAY%:</strong> Set your Health to %NUM1% and %SUMMON% a 6/6 Infernal",
+    "text": "<strong>%ON_PLAY%:</strong> Set your Health to %NUM1% and %SUMMON% a 6/6 Hellspawn",
     "mechanics": [
       "%ON_PLAY%",
       "%SET_VALUE%",
