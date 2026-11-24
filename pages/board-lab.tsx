@@ -24,7 +24,12 @@ import {
   PlayOverlayPanel,
   HandsPanel,
   HeroFiguresPanel,
+  LogBlocksPanel,
+  LogBreaksPanel,
+  LogChipsPanel,
   LogDeckPanel,
+  LogTestPanel,
+  LogTextPanel,
   MinionsPanel,
   RestartPanel,
   ShadowsPanel,
@@ -36,6 +41,7 @@ import {
   one,
 } from '../components/board-lab/lab-model';
 import { BackgroundPanel } from '../components/board-lab/BackgroundPanel';
+import type { LogSample } from '../components/play-board/sample-log';
 import { PresetsPanel } from '../components/board-lab/PresetsPanel';
 import { EndPanel, useEndTuning } from '../components/board-lab/EndPanel';
 import {
@@ -159,6 +165,9 @@ const BoardLab = () => {
       : undefined) as
       'minion' | 'minion-hot' | 'spell' | 'spell-hot' | undefined,
     choosePreview: one(q.lcmpv) === '1',
+    logSample: (['empty', 'typical', 'everything'].includes(one(q.llpv))
+      ? one(q.llpv)
+      : undefined) as LogSample | undefined,
     handHover: (() => {
       const n = parseInt(one(q.lhpv), 10);
       return Number.isNaN(n) || n < 1 ? undefined : n;
@@ -244,7 +253,37 @@ const BoardLab = () => {
       <ChoosePanel {...panel} />,
     ),
     energy: sec('energy', 'Energy bar', 'live', <EnergyPanel {...panel} />),
-    panels: sec('panels', 'Log and deck', 'live', <LogDeckPanel {...panel} />),
+    panels: sec(
+      'panels',
+      'Layout (log and deck)',
+      'live',
+      <LogDeckPanel {...panel} />,
+    ),
+    logtext: sec('logtext', 'Log text', 'live', <LogTextPanel {...panel} />),
+    logblocks: sec(
+      'logblocks',
+      'Log action blocks',
+      'live',
+      <LogBlocksPanel {...panel} />,
+    ),
+    logchips: sec(
+      'logchips',
+      'Log result chips',
+      'live',
+      <LogChipsPanel {...panel} />,
+    ),
+    logbreaks: sec(
+      'logbreaks',
+      'Log turn breaks',
+      'live',
+      <LogBreaksPanel {...panel} />,
+    ),
+    logtest: sec(
+      'logtest',
+      'Test log',
+      'loads sample lines',
+      <LogTestPanel {...panel} />,
+    ),
     heroes: sec(
       'heroes',
       'Hero figures',

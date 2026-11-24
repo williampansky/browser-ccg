@@ -301,6 +301,12 @@ export type GameEvent =
   | { type: 'Fatigue'; player: PlayerId; damage: number }
   | { type: 'HeroDamaged'; player: PlayerId; amount: number }
   | {
+      type: 'TriggerFired';
+      player: PlayerId;
+      cardId: string;
+      isDeath?: boolean;
+    }
+  | {
       type: 'MinionPlayed';
       player: PlayerId;
       instanceId: number;

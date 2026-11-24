@@ -79,6 +79,14 @@ export const settle = (
       }
       for (const { owner, minion } of dead) {
         const def = minionDef(minion, ctx.catalog, defs);
+        if (def?.onDeath?.length) {
+          events.push({
+            type: 'TriggerFired',
+            player: owner,
+            cardId: minion.cardId,
+            isDeath: true,
+          });
+        }
         for (const effect of def?.onDeath ?? []) {
           effect({
             g,
@@ -130,6 +138,11 @@ export const settle = (
             })
           )
             continue;
+          events.push({
+            type: 'TriggerFired',
+            player: owner,
+            cardId: minion.cardId,
+          });
           for (const effect of trigger.do) {
             effect({
               g,
@@ -163,6 +176,11 @@ export const settle = (
             })
           )
             continue;
+          events.push({
+            type: 'TriggerFired',
+            player: owner,
+            cardId: weapon.cardId,
+          });
           for (const effect of trigger.do) {
             effect({
               g,

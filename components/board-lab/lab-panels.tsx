@@ -1,3 +1,4 @@
+import { LOG_SAMPLES } from '../play-board/sample-log';
 import type { ParsedUrlQuery } from 'querystring';
 import type { ReactNode } from 'react';
 import {
@@ -652,6 +653,85 @@ export const LogDeckPanel = ({
     {['joinL', 'joinR'].includes(one(q.lpan) || PLAY_LAYOUT.lpan || '')
       ? sliders(['lsbw', 'lsbh', 'lsbd', 'lgx', 'lgy'])
       : sliders(['lsplit', 'lgw', 'ldw', 'lgx', 'lgy', 'ldx', 'ldy'])}
+  </>
+);
+
+export const LogTextPanel = ({ q, setParams, sliders }: PanelProps) => (
+  <>
+    {sliders(['lgfs', 'lglh', 'lgft', 'lgpd', 'lgrd'])}
+    {['lgbg', 'lgfg'].map((key) => colourPick(q, setParams, key))}
+  </>
+);
+
+export const LogBlocksPanel = ({ q, setParams, sliders }: PanelProps) => (
+  <>
+    <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+      One block per action: a stripe in the acting side&apos;s colour, an icon,
+      and the action&apos;s words. Cards are coloured by whose they are.
+    </small>
+    {sliders(['lgsw', 'lgbr', 'lgbp', 'lgis', 'lgico', 'lgcw'])}
+    {['lgbb', 'lgcc'].map((key) => colourPick(q, setParams, key))}
+  </>
+);
+
+export const LogChipsPanel = ({ q, setParams, sliders }: PanelProps) => (
+  <>
+    <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+      The results under an action: a coloured chip (the number or symbol), the
+      target and a dim note.
+    </small>
+    {sliders(['lgsi', 'lgcm', 'lgcr', 'lgnt'])}
+    {['lgcd', 'lgch', 'lgca', 'lgcx', 'lgcb', 'lgcu', 'lgsc', 'lgnc'].map(
+      (key) => colourPick(q, setParams, key),
+    )}
+  </>
+);
+
+export const LogBreaksPanel = ({ q, setParams, sliders }: PanelProps) => (
+  <>
+    {sliders(['lggp', 'lgbw', 'lgts', 'lgtw', 'lgtu'])}
+    <label style={row}>
+      Break line style{' '}
+      <select
+        value={one(q.lgbs) || PLAY_LAYOUT.lgbs || 'solid'}
+        onChange={(e) => setParams({ lgbs: e.target.value })}
+      >
+        <option value="solid">solid</option>
+        <option value="dashed">dashed</option>
+        <option value="dotted">dotted</option>
+        <option value="double">double</option>
+      </select>
+    </label>
+    {['lgbc', 'lgtc', 'lgtbg'].map((key) => colourPick(q, setParams, key))}
+  </>
+);
+
+export const LogTestPanel = ({ q, setParams }: PanelProps) => (
+  <>
+    <div style={row}>
+      Load{' '}
+      {LOG_SAMPLES.map(({ value, label }) => (
+        <button
+          key={value}
+          onClick={() => setParams({ llpv: value })}
+          style={{
+            marginRight: 4,
+            padding: '3px 10px',
+            borderRadius: 6,
+            border: '1px solid #3a4052',
+            cursor: 'pointer',
+            color: '#fff',
+            background: one(q.llpv) === value ? '#3d5afe' : '#232634',
+          }}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+    <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
+      Replaces the log with sample lines (turn headers, damage, triggers, On
+      Death, Mysteries). A new game clears them.
+    </small>
   </>
 );
 

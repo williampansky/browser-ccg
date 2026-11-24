@@ -144,6 +144,9 @@ import {
   startHoldSound,
   stopHoldSound,
 } from './sounds';
+import type { LogLine } from './log-line';
+import { sampleLog } from './sample-log';
+import type { LogSample } from './sample-log';
 import { targetLinePath, TargetLineStyle } from './target-line';
 import { startDragGhost, DragGhost } from './drag-ghost';
 import { fireEndConfetti } from './end-celebration';
@@ -361,10 +364,12 @@ const HAND_PEEK = 110;
  * player chose that) for the collection's big view.
  */
 const LogCard = ({
+  color,
   name,
   onInspect,
   trigger,
 }: {
+  color?: string;
   name: string;
   onInspect: (card: Card) => void;
   trigger: LogCardTrigger;
@@ -380,11 +385,12 @@ const LogCard = ({
   return (
     <strong
       className={styles.logCard}
+      style={color ? ({ '--who': color } as React.CSSProperties) : undefined}
       {...handlers}
       onClick={trigger === 'click' ? open : undefined}
       onContextMenu={trigger === 'rightClick' ? open : undefined}
     >
-      <em>{name}</em>
+      {name}
       {node}
     </strong>
   );
@@ -465,34 +471,113 @@ const MinionTip = ({
     </button>
   );
 };
-const renderLogLine = (
-  line: string,
-  myName: string,
-  colors: Record<'0' | '1', string>,
-  onInspect: (card: Card) => void,
-  trigger: LogCardTrigger,
-) =>
-  line.split(/(\*\*.+?\*\*|__.+?__)/g).map((part, i) => {
+/**
+ * Groups log lines into blocks: a turn header and an info line stand alone,
+ * and an action takes the result lines under it (a result with no action
+ * above it gets a block of its own).
+ */
+const groupLog = (lines: LogLine[]): LogLine[][] => {
+  const blocks: LogLine[][] = [];
+  for (const line of lines) {
+    const last = blocks[blocks.length - 1];
+    const isOpen = last && last[0].kind === 'action' && line.kind === 'effect';
+    if (isOpen) last.push(line);
+    else blocks.push([line]);
+  }
+  return blocks;
+};
+
+interface LogRenderProps {
+  colors: Record<'0' | '1', string>;
+  myName: string;
+  onInspect: (card: Card) => void;
+  trigger: LogCardTrigger;
+}
+
+/** Log markup (`**Player 1**`, `__0|Card__`) as styled text. */
+const renderLogMarkup = (text: string, props: LogRenderProps) => {
+  const { colors, myName, onInspect, trigger } = props;
+  return text.split(/(\*\*.+?\*\*|__.+?__)/g).map((part, i) => {
     if (part.startsWith('**')) {
-      const text = part.slice(2, -2);
+      const player = part.slice(2, -2);
+      const side = player === 'Player 1' ? '0' : '1';
       return (
         <strong
           key={i}
-          className={text === 'Player 1' ? styles.logMe : styles.logFoe}
-          style={{ color: text === 'Player 1' ? colors['0'] : colors['1'] }}
+          className={side === '0' ? styles.logMe : styles.logFoe}
+          style={{ color: colors[side] }}
         >
-          {logName(text, myName)}
+          {logName(player, myName)}
         </strong>
       );
     }
     if (part.startsWith('__')) {
-      const name = part.slice(2, -2);
+      const [first, rest] = part.slice(2, -2).split('|');
+      const owner = rest === undefined ? undefined : first;
+      const name = rest ?? first;
       return (
-        <LogCard key={i} name={name} onInspect={onInspect} trigger={trigger} />
+        <LogCard
+          key={i}
+          color={owner === '0' || owner === '1' ? colors[owner] : undefined}
+          name={name}
+          onInspect={onInspect}
+          trigger={trigger}
+        />
       );
     }
     return part;
   });
+};
+
+/**
+ * One block of the log. A side's stripe and card colours say whose it is, so
+ * the lines do not repeat the player's name.
+ */
+const renderLogBlock = (block: LogLine[], props: LogRenderProps) => {
+  const [head, ...results] = block;
+  const side = head.actor;
+  const style = {
+    '--who': side ? props.colors[side] : undefined,
+  } as React.CSSProperties;
+  if (head.kind === 'turn' && side) {
+    return (
+      <div className={styles.logTurn} style={style}>
+        <span>{head.text}</span>
+        {renderLogMarkup(`**Player ${Number(side) + 1}**`, props)}
+      </div>
+    );
+  }
+  if (head.kind === 'info') {
+    return (
+      <div className={styles.logInfo}>
+        {head.icon && <span className={styles.logIcon}>{head.icon}</span>}
+        <span>{renderLogMarkup(head.text, props)}</span>
+      </div>
+    );
+  }
+  return (
+    <div className={styles.logBlock} style={style}>
+      {[head, ...results].map((line, i) =>
+        line.kind === 'action' ? (
+          <div key={i} className={styles.logAction}>
+            <span className={styles.logIcon}>{line.icon}</span>
+            <span>{renderLogMarkup(line.text, props)}</span>
+            {line.note && <em className={styles.logNote}>{line.note}</em>}
+          </div>
+        ) : (
+          <div
+            key={i}
+            className={cx(styles.logEffect, styles[`tone_${line.tone}`])}
+          >
+            <span className={styles.logChip}>{line.amount ?? line.icon}</span>
+            <span>{renderLogMarkup(line.text, props)}</span>
+            {line.note && <em className={styles.logNote}>{line.note}</em>}
+          </div>
+        ),
+      )}
+    </div>
+  );
+};
 
 const SIDE_SPLIT_KEY = 'ccg.sideSplit.v1';
 
@@ -714,13 +799,15 @@ export interface LabProps {
    * (`lcm...`) can be tuned
    */
   choosePreview?: boolean;
+  /** Replace the log with a sample (the lab's log test lines) */
+  logSample?: LogSample;
 }
 const LAB_SEED = 20261114;
 
 export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const [state, setState] = useState<GameState | null>(null);
   /** One entry per action, oldest first. */
-  const [log, setLog] = useState<string[][]>([]);
+  const [log, setLog] = useState<LogLine[][]>([]);
   /**
    * Each player's deck list at the start, for the deck tracker on the right.
    */
@@ -873,8 +960,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       g.first === '0' ? ['Player 1', 'Player 2'] : ['Player 2', 'Player 1'];
     setLog([
       [
-        `New game. **${a}** goes first; **${b}** starts with an extra card (__The Orb__).`,
-        `**Player 1** plays **${g.deckNames['0']}**${heroText(g.state, '0')}; **Player 2** plays **${g.deckNames['1']}**${heroText(g.state, '1')}.`,
+        {
+          kind: 'info',
+          text: `New game. **${a}** goes first; **${b}** starts with an extra card (__The Orb__).`,
+        },
+        {
+          kind: 'info',
+          text: `**Player 1** plays ${g.deckNames['0']}${heroText(g.state, '0')}; **Player 2** plays ${g.deckNames['1']}${heroText(g.state, '1')}.`,
+        },
       ],
     ]);
     setSelection(null);
@@ -1151,6 +1244,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const labKey = lab
     ? JSON.stringify([lab.boards, lab.energy, lab.active])
     : '';
+  const logSample = lab?.logSample;
+  useEffect(() => {
+    if (logSample) setLog(sampleLog(logSample));
+  }, [logSample]);
   useEffect(() => {
     if (!lab) return;
     setState((old) => {
@@ -3360,20 +3457,15 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               el.scrollHeight - el.scrollTop - el.clientHeight < 24;
           }}
         >
-          {log.map((lines, i) => (
-            <div key={i} className={styles.logBatch}>
-              {lines.map((l, j) => (
-                <div key={j}>
-                  {renderLogLine(
-                    l,
-                    profile.name,
-                    sideColors,
-                    setInspect,
-                    logCardTrigger,
-                  )}
-                </div>
-              ))}
-            </div>
+          {log.flatMap(groupLog).map((block, i) => (
+            <Fragment key={i}>
+              {renderLogBlock(block, {
+                colors: sideColors,
+                myName: profile.name,
+                onInspect: setInspect,
+                trigger: logCardTrigger,
+              })}
+            </Fragment>
           ))}
         </div>
       </aside>

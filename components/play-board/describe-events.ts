@@ -1,4 +1,6 @@
 import { getCardDef, heroSkill } from '../../engine';
+import type { LogLine } from './log-line';
+import { MAX_HEALTH } from '../../engine/state/types';
 import type {
   CardCatalog,
   GameEvent,
@@ -59,15 +61,39 @@ export const nameOfInstance = (
 };
 
 /**
- * Log markup: `**Player 1**` is a player (coloured by side), `__Card__` is a
- * card name (bold italic).
+ * Log markup: `**Player 1**` is a player (coloured by side), `__0|Card__` is a
+ * card name owned by side 0 (`__Card__` has no owner).
  */
 const who = (p: '0' | '1') => `**Player ${Number(p) + 1}**`;
-const card = (name: string) => `__${name}__`;
+const card = (name: string, owner?: '0' | '1') =>
+  owner ? `__${owner}|${name}__` : `__${name}__`;
 
 /**
- * Turns the events of one action into short log lines. Events with no
- * player-facing meaning are skipped.
+ * The symbol on each kind of log line. Emoji for now; swap them here for
+ * in-theme icons later (nothing else reads these).
+ */
+export const LOG_ICON = {
+  play: '🃏',
+  spell: '✨',
+  skill: '🔆',
+  attack: '⚔️',
+  trigger: '⚡',
+  equip: '🗡️',
+  mystery: '❓',
+  summon: '➕',
+  death: '💀',
+  bubble: '🫧',
+  armor: '🛡️',
+  burn: '🔥',
+  fatigue: '😵',
+  win: '🏆',
+  weaponBreak: '💥',
+} as const;
+
+/**
+ * Turns the events of one action into log lines: a line for what happened
+ * and indented results under it. Events with no player-facing meaning are
+ * skipped.
  */
 export const describeEvents = (
   events: GameEvent[],
@@ -79,9 +105,21 @@ export const describeEvents = (
    * against the AI); null names nobody's, as in hot-seat
    */
   reveal: '0' | '1' | null = null,
-): string[] => {
-  const name = (id: number) => card(nameOfInstance(id, catalog, before, after));
-  const cardName = (id: string) => card(catalog.get(id)?.name ?? id);
+): LogLine[] => {
+  /** Whose minion this is, found in either state (it may have died). */
+  const ownerOf = (id: number): '0' | '1' | undefined => {
+    for (const state of [before, after]) {
+      for (const side of ['0', '1'] as const) {
+        const { board } = state.players[side];
+        if (board.some((m) => m.instanceId === id)) return side;
+      }
+    }
+    return undefined;
+  };
+  const name = (id: number) =>
+    card(nameOfInstance(id, catalog, before, after), ownerOf(id));
+  const cardName = (id: string, owner?: '0' | '1') =>
+    card(catalog.get(id)?.name ?? id, owner);
   const target = (t: TargetRef) =>
     t.kind === 'hero' ? `${who(t.player)}'s hero` : name(t.instanceId);
   /**
@@ -96,46 +134,84 @@ export const describeEvents = (
       const mc = catalog.get(m.cardId);
       return sum + (m.silenced || !mc ? 0 : (getCardDef(mc)?.spellDamage ?? 0));
     }, 0);
-    return bonus > 0 ? ` (+${bonus} Spell Damage)` : '';
+    return bonus > 0 ? `+${bonus} Spell Damage` : '';
   };
-  const lines: string[] = [];
+  // Running health, so a damage line can say what is left. Heroes' armor
+  // soaks damage first, as in the engine.
+  const heroes = {
+    '0': { hp: before.players['0'].health, armor: before.players['0'].armor },
+    '1': { hp: before.players['1'].health, armor: before.players['1'].armor },
+  };
+  const minionHp = new Map<number, { hp: number; max: number }>();
+  for (const side of ['0', '1'] as const) {
+    for (const m of before.players[side].board) {
+      minionHp.set(m.instanceId, { hp: m.health, max: m.maxHealth });
+    }
+  }
+  const lines: LogLine[] = [];
+  const action = (
+    actor: '0' | '1' | undefined,
+    icon: string,
+    text: string,
+    note?: string,
+  ) =>
+    lines.push({ kind: 'action', actor, icon, text, note: note || undefined });
+  const effect = (line: Omit<LogLine, 'kind'>) =>
+    lines.push({ kind: 'effect', ...line });
   for (const e of events) {
     switch (e.type) {
       case 'TurnStarted':
-        lines.push(`--- Turn ${e.turn}: ${who(e.player)} ---`);
+        lines.push({ kind: 'turn', actor: e.player, text: `Turn ${e.turn}` });
         break;
       case 'MinionPlayed':
-        lines.push(
-          `${who(e.player)} plays ${name(e.instanceId)}${e.target ? ` (On Play on ${target(e.target)})` : ''}`,
+        action(
+          e.player,
+          LOG_ICON.play,
+          `plays ${name(e.instanceId)}${e.target ? ` on ${target(e.target)}` : ''}`,
         );
         break;
       case 'CardPlayed':
         if (e.mystery) {
-          lines.push(
+          const category = mysteryCategory(e.cardId, catalog);
+          action(
+            e.player,
+            LOG_ICON.mystery,
             e.player === reveal
-              ? `${who(e.player)} sets a Mystery: ${cardName(e.cardId)} (${mysteryCategory(e.cardId, catalog)})`
-              : `${who(e.player)} sets a Mystery (${mysteryCategory(e.cardId, catalog)})`,
+              ? `sets a Mystery: ${cardName(e.cardId, e.player)}`
+              : 'sets a Mystery',
+            category,
           );
           break;
         }
-        lines.push(
-          `${who(e.player)} casts ${cardName(e.cardId)}${e.target ? ` on ${target(e.target)}` : ''}${spellDamageNote(e.player, e.cardId)}`,
+        action(
+          e.player,
+          LOG_ICON.spell,
+          `casts ${cardName(e.cardId, e.player)}${e.target ? ` on ${target(e.target)}` : ''}`,
+          spellDamageNote(e.player, e.cardId),
         );
         break;
       case 'HeroSkillUsed': {
         const skill = heroSkill(after.players[e.player].hero?.id, e.skill);
-        lines.push(
-          `${who(e.player)} uses ${card(skill?.name ?? 'a hero skill')}${e.target ? ` on ${target(e.target)}` : ''}`,
+        action(
+          e.player,
+          LOG_ICON.skill,
+          `uses ${card(skill?.name ?? 'a hero skill', e.player)}${e.target ? ` on ${target(e.target)}` : ''}`,
         );
         break;
       }
       case 'MysteryRevealed':
-        lines.push(
-          `${who(e.player)}'s Mystery is revealed: ${cardName(e.cardId)}`,
+        action(
+          e.player,
+          LOG_ICON.mystery,
+          `Mystery revealed: ${cardName(e.cardId, e.player)}`,
         );
         break;
       case 'WeaponEquipped':
-        lines.push(`${who(e.player)} equips ${cardName(e.cardId)}`);
+        action(
+          e.player,
+          LOG_ICON.equip,
+          `equips ${cardName(e.cardId, e.player)}`,
+        );
         break;
       case 'MinionSummoned':
         if (
@@ -143,47 +219,141 @@ export const describeEvents = (
             (x) => x.type === 'MinionPlayed' && x.instanceId === e.instanceId,
           )
         ) {
-          lines.push(`${cardName(e.cardId)} is summoned for ${who(e.player)}`);
+          effect({
+            actor: e.player,
+            icon: LOG_ICON.summon,
+            tone: 'note',
+            text: `${cardName(e.cardId, e.player)} summoned`,
+          });
         }
         break;
       case 'MinionAttacked':
-        lines.push(`${name(e.attackerId)} attacks ${target(e.target)}`);
+        action(
+          ownerOf(e.attackerId),
+          LOG_ICON.attack,
+          `${name(e.attackerId)} attacks ${target(e.target)}`,
+        );
         break;
       case 'WeaponAttacked':
-        lines.push(`Hero attacks ${target(e.target)} with its weapon`);
+        action(
+          before.activePlayer,
+          LOG_ICON.attack,
+          `hero attacks ${target(e.target)} with its weapon`,
+        );
         break;
-      case 'MinionDamaged':
-        lines.push(`  ${name(e.instanceId)} takes ${e.amount}`);
+      case 'MinionDamaged': {
+        const known = minionHp.get(e.instanceId);
+        if (known) known.hp = Math.max(0, known.hp - e.amount);
+        effect({
+          actor: e.player,
+          tone: 'damage',
+          amount: `-${e.amount}`,
+          text: name(e.instanceId),
+          note: known && known.hp > 0 ? `${known.hp} left` : undefined,
+        });
         break;
-      case 'HeroDamaged':
-        lines.push(`  ${who(e.player)}'s hero takes ${e.amount}`);
+      }
+      case 'HeroDamaged': {
+        const hero = heroes[e.player];
+        const absorbed = Math.min(hero.armor, e.amount);
+        hero.armor -= absorbed;
+        hero.hp = Math.max(0, hero.hp - (e.amount - absorbed));
+        const notes = [
+          absorbed > 0 ? `${absorbed} absorbed` : '',
+          hero.hp > 0 ? `${hero.hp} left` : 'dead',
+        ].filter(Boolean);
+        effect({
+          actor: e.player,
+          tone: 'damage',
+          amount: `-${e.amount}`,
+          text: `${who(e.player)}'s hero`,
+          note: notes.join(', '),
+        });
         break;
-      case 'Healed':
-        lines.push(`  ${target(e.target)} heals ${e.amount}`);
+      }
+      case 'Healed': {
+        let note: string | undefined;
+        if (e.target.kind === 'hero') {
+          const hero = heroes[e.target.player];
+          hero.hp = Math.min(MAX_HEALTH, hero.hp + e.amount);
+          note = `${hero.hp} left`;
+        } else {
+          const known = minionHp.get(e.target.instanceId);
+          if (known) known.hp = Math.min(known.max, known.hp + e.amount);
+        }
+        effect({
+          actor:
+            e.target.kind === 'hero'
+              ? e.target.player
+              : ownerOf(e.target.instanceId),
+          tone: 'heal',
+          amount: `+${e.amount}`,
+          text: target(e.target),
+          note,
+        });
         break;
+      }
       case 'BubblePopped':
-        lines.push(`  ${name(e.instanceId)}'s Bubble pops`);
+        effect({
+          actor: ownerOf(e.instanceId),
+          icon: LOG_ICON.bubble,
+          tone: 'note',
+          text: `${name(e.instanceId)} Bubble pops`,
+        });
         break;
       case 'Fatigue':
-        lines.push(`${who(e.player)} has no cards left: fatigue ${e.damage}`);
+        action(
+          e.player,
+          LOG_ICON.fatigue,
+          'out of cards: fatigue',
+          `${e.damage}`,
+        );
         break;
       case 'Burned':
-        lines.push(`${who(e.player)}'s hand is full: a card is burned`);
+        action(e.player, LOG_ICON.burn, 'hand is full: a card is burned');
         break;
       case 'Discarded':
-        lines.push(`${who(e.player)} discards a card`);
+        action(e.player, LOG_ICON.burn, 'discards a card');
         break;
       case 'ArmorGained':
-        lines.push(`  ${who(e.player)} gains ${e.amount} armor`);
+        heroes[e.player].armor += e.amount;
+        effect({
+          actor: e.player,
+          tone: 'armor',
+          amount: `+${e.amount}`,
+          text: `${who(e.player)}'s hero`,
+          note: 'armor',
+        });
         break;
       case 'WeaponBroke':
-        lines.push(`${who(e.player)}'s weapon breaks`);
+        effect({
+          actor: e.player,
+          icon: LOG_ICON.weaponBreak,
+          tone: 'death',
+          text: 'weapon breaks',
+        });
+        break;
+      case 'TriggerFired':
+        action(
+          e.player,
+          LOG_ICON.trigger,
+          `${cardName(e.cardId, e.player)} ${e.isDeath ? 'On Death' : 'triggers'}`,
+        );
         break;
       case 'MinionDied':
-        lines.push(`  ${cardName(e.cardId)} dies`);
+        effect({
+          actor: e.player,
+          icon: LOG_ICON.death,
+          tone: 'death',
+          text: `${cardName(e.cardId, e.player)} dies`,
+        });
         break;
       case 'GameOver':
-        lines.push(e.winner === 'draw' ? 'Draw!' : `${who(e.winner)} wins!`);
+        lines.push({
+          kind: 'info',
+          icon: LOG_ICON.win,
+          text: e.winner === 'draw' ? 'Draw!' : `${who(e.winner)} wins!`,
+        });
         break;
       default:
         break;
@@ -209,28 +379,30 @@ const KEYWORD_NAMES: Record<keyof MinionInstance['keywords'], string> = {
 };
 
 /**
- * Lines for minions that changed between two states in ways no event reports.
- * Aura attack is ignored.
+ * Result lines for minions that changed between two states in ways no event
+ * reports. Aura attack is ignored.
  */
 export const describeChanges = (
   before: GameState,
   after: GameState,
   catalog: CardCatalog,
-): string[] => {
-  const lines: string[] = [];
-  for (const p of ['0', '1'] as const) {
-    for (const now of after.players[p].board) {
-      const was = before.players[p].board.find(
+): LogLine[] => {
+  const lines: LogLine[] = [];
+  for (const side of ['0', '1'] as const) {
+    for (const now of after.players[side].board) {
+      const was = before.players[side].board.find(
         (m) => m.instanceId === now.instanceId,
       );
       if (!was) continue;
-      const parts: string[] = [];
+      const notes: string[] = [];
       const atk = now.attack - now.auraAttack - (was.attack - was.auraAttack);
       const hp = now.maxHealth - was.maxHealth;
-      if (atk !== 0 || hp !== 0)
-        parts.push(
-          `${atk >= 0 ? '+' : ''}${atk}/${hp >= 0 ? '+' : ''}${hp} (now ${now.attack}/${now.health})`,
-        );
+      const stats =
+        atk !== 0 || hp !== 0
+          ? `${atk >= 0 ? '+' : ''}${atk}/${hp >= 0 ? '+' : ''}${hp}`
+          : undefined;
+      if (stats) notes.push(`now ${now.attack}/${now.health}`);
+      let isLoss = false;
       for (const k of Object.keys(
         KEYWORD_NAMES,
       ) as (keyof typeof KEYWORD_NAMES)[]) {
@@ -239,32 +411,44 @@ export const describeChanges = (
           !was.keywords[k] &&
           !(k === 'rush' && now.auraRush)
         )
-          parts.push(`gains ${KEYWORD_NAMES[k]}`);
+          notes.push(`gains ${KEYWORD_NAMES[k]}`);
         if (
           !now.keywords[k] &&
           was.keywords[k] &&
           k !== 'hidden' &&
           k !== 'bubble'
-        )
-          parts.push(`loses ${KEYWORD_NAMES[k]}`);
+        ) {
+          notes.push(`loses ${KEYWORD_NAMES[k]}`);
+          isLoss = true;
+        }
       }
-      if (
+      const isDisabled =
         now.disabledOnTurn !== undefined &&
-        now.disabledOnTurn !== was.disabledOnTurn
-      )
-        parts.push('is Disabled');
-      if (parts.length > 0) {
-        lines.push(
-          `  ${card(catalog.get(now.cardId)?.name ?? now.cardId)}: ${parts.join(', ')}`,
-        );
-      }
+        now.disabledOnTurn !== was.disabledOnTurn;
+      if (isDisabled) notes.push('is Disabled');
+      if (notes.length === 0) continue;
+      lines.push({
+        kind: 'effect',
+        actor: side,
+        tone: isLoss || isDisabled ? 'debuff' : 'buff',
+        amount: stats,
+        text: card(catalog.get(now.cardId)?.name ?? now.cardId, side),
+        note: notes.join(', '),
+      });
     }
-    const [h0, h1] = [
-      before.players[p].heroDisabledOnTurn,
-      after.players[p].heroDisabledOnTurn,
+    const [wasOff, isOff] = [
+      before.players[side].heroDisabledOnTurn,
+      after.players[side].heroDisabledOnTurn,
     ];
-    if (h1 !== undefined && h1 !== h0)
-      lines.push(`  ${who(p)}'s hero is Disabled`);
+    if (isOff !== undefined && isOff !== wasOff) {
+      lines.push({
+        kind: 'effect',
+        actor: side,
+        tone: 'debuff',
+        text: `${who(side)}'s hero`,
+        note: 'is Disabled',
+      });
+    }
   }
   return lines;
 };
