@@ -691,6 +691,7 @@
   },
   {
     "id": "PRIME_266",
+    "name": "Sudden Exit",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -706,7 +707,9 @@
     "playContext": "%RETURN%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_139",
@@ -1945,6 +1948,7 @@
   },
   {
     "id": "PRIME_264",
+    "name": "Chalice of Plenty",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -1959,7 +1963,9 @@
     "playContext": "%DRAW_CARD%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_232",
@@ -2222,6 +2228,7 @@
   },
   {
     "id": "PRIME_259",
+    "name": "Chilling Spark",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -2236,7 +2243,10 @@
     "numberPrimary": 1,
     "playContext": "%DAMAGE%",
     "collectible": false,
-    "active": true
+    "active": true,
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_195",
@@ -2311,6 +2321,7 @@
   },
   {
     "id": "PRIME_257",
+    "name": "Tempest Cascade",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -2328,7 +2339,10 @@
     "numberOvercharge": 2,
     "playContext": "%DAMAGE%",
     "collectible": false,
-    "active": true
+    "active": true,
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_166",
@@ -3096,6 +3110,7 @@
   },
   {
     "id": "PRIME_272",
+    "name": "Hard Bargain",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -3111,7 +3126,9 @@
     "playContext": "%DESTROY%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_271",
@@ -3852,6 +3869,7 @@
   },
   {
     "id": "PRIME_267",
+    "name": "Envenomed Edge",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -3867,7 +3885,9 @@
     "playContext": "%BUFF%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_079",
@@ -3936,6 +3956,7 @@
   },
   {
     "id": "PRIME_268",
+    "name": "Sweeping Reset",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -3950,7 +3971,9 @@
     "playContext": "%RETURN%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_098",
@@ -4114,6 +4137,7 @@
   },
   {
     "id": "PRIME_269",
+    "name": "Fiend's Favor",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -4129,7 +4153,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_194",
@@ -4380,6 +4406,7 @@
   },
   {
     "id": "PRIME_258",
+    "name": "Idol Rites",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_FREE%",
@@ -4393,7 +4420,10 @@
     "numberPrimary": 2,
     "playContext": "%BUFF%",
     "collectible": false,
-    "active": true
+    "active": true,
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_014",
@@ -5489,6 +5519,7 @@
   },
   {
     "id": "PRIME_265",
+    "name": "Twin Cut",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -5505,7 +5536,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_196",
