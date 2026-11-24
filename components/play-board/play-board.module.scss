@@ -596,7 +596,7 @@
   display: flex;
   gap: 0.5em;
   align-items: baseline;
-  margin: calc(var(--lg-gap, 6px) * 2) 0 var(--lg-gap, 6px);
+  margin: var(--lg-tg, calc(var(--lg-gap, 6px) * 2)) 0 var(--lg-gap, 6px);
   padding: 0.25rem 0.5rem;
   border-top: var(--lg-brw, 1px) var(--lg-brs, solid) var(--lg-brc, #2a2e3b);
   border-left: var(--lg-sw, 3px) solid var(--who, #555);
@@ -611,6 +611,12 @@
     text-transform: none;
     letter-spacing: 0;
   }
+}
+
+// The first turn bar has no space above it (the space between turns is
+// between one turn and the next).
+.logTurnFirst {
+  margin-top: 0;
 }
 
 .logInfo {

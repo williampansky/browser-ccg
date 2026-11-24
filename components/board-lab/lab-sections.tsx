@@ -67,7 +67,7 @@ export const SECTION_KEYS: Record<string, string[]> = {
     'lpsy',
   ],
   shadows: SHADOW_KEYS,
-  table: ['ls', 'lw', 'lfelt'],
+  table: ['ls', 'lw', 'lbx', 'lfelt'],
   hands: [
     'lhw0',
     'lhw1',
@@ -227,6 +227,7 @@ export const SECTION_KEYS: Record<string, string[]> = {
   ],
   logbreaks: [
     'lggp',
+    'lgtg',
     'lgbw',
     'lgts',
     'lgtw',

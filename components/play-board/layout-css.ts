@@ -36,6 +36,11 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lm: (v) => `${CLS('row')}{--m-h:${v}px !important}`,
   lg: (v) => `${CLS('row')}{gap:${v}px !important}`,
   ls: (v) => `${CLS('table')},${CLS('center')}{gap:${v}px !important}`,
+  // Shifts the whole board (table, hand, hero figures, energy bar: all of them
+  // sit relative to the table) sideways by v px, by padding one side of the
+  // page by twice that. The side panels are fixed and do not move.
+  lbx: (v) =>
+    `${CLS('page')}{padding-${v < 0 ? 'right' : 'left'}:calc(1rem + ${2 * Math.abs(v)}px) !important}`,
   lw: (v) => `${CLS('table')}{max-width:${v}px !important}`,
   lhs: (v) => `${CLS('hand')}{--hand-sink:${v}px !important}`,
   lhw0: (v) => `${CLS('hand')}{--hand-zoom:${v / 144} !important}`,
@@ -121,6 +126,7 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lgts: (v) => `${CLS('page')}{--lg-ts:${v}}`,
   lgtw: (v) => `${CLS('page')}{--lg-tw:${v}}`,
   lgsi: (v) => `${CLS('page')}{--lg-ei:${v}em}`,
+  lgtg: (v) => `${CLS('page')}{--lg-tg:${v}px}`,
   lgsw: (v) => `${CLS('page')}{--lg-sw:${v}px}`,
   lgbr: (v) => `${CLS('page')}{--lg-br:${v}px}`,
   lgbp: (v) => `${CLS('page')}{--lg-bp:${v}px}`,
@@ -874,7 +880,8 @@ const gapEasingCss = (one: (k: string) => string) =>
  * params). A `?l...` param in the /play URL overrides one.
  */
 export const PLAY_LAYOUT: Record<string, string> = {
-  ldw: '310',
+  ldw: '260',
+  lbx: '50',
   ldx: '0',
   les: '0.8',
   lex: '-1095',
@@ -890,7 +897,7 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lry0: '138',
   lrx1: '-98',
   lry1: '12',
-  lgw: '260',
+  lgw: '310',
   lgx: '2',
   lgy: '-4',
   lhw0: '126',
@@ -971,7 +978,7 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lhdp: '2',
   lhs: '46',
   lhoy: '120',
-  lcx: '-252',
+  lcx: '-202',
   lcs: '1.15',
   lcpeak: '1.35',
   lcy: '36',
@@ -1007,6 +1014,13 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lcmg: '24',
   lcmglow: '14',
   lcmc: '0',
+  lgft: '0',
+  lgbp: '8',
+  lggp: '8',
+  lgbw: '8',
+  lgts: '1.2',
+  lgtu: '1',
+  lgtg: '50',
 };
 
 /**

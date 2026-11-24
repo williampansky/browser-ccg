@@ -192,7 +192,7 @@ export const TablePanel = ({
   pick,
 }: PanelProps) => (
   <>
-    {sliders(['ls', 'lw'])}
+    {sliders(['ls', 'lw', 'lbx'])}
     <label style={row}>
       <input
         type="checkbox"
@@ -689,7 +689,7 @@ export const LogChipsPanel = ({ q, setParams, sliders }: PanelProps) => (
 
 export const LogBreaksPanel = ({ q, setParams, sliders }: PanelProps) => (
   <>
-    {sliders(['lggp', 'lgbw', 'lgts', 'lgtw', 'lgtu'])}
+    {sliders(['lggp', 'lgtg', 'lgbw', 'lgts', 'lgtw', 'lgtu'])}
     <label style={row}>
       Break line style{' '}
       <select

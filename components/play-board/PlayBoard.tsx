@@ -533,7 +533,11 @@ const renderLogMarkup = (text: string, props: LogRenderProps) => {
  * One block of the log. A side's stripe and card colours say whose it is, so
  * the lines do not repeat the player's name.
  */
-const renderLogBlock = (block: LogLine[], props: LogRenderProps) => {
+const renderLogBlock = (
+  block: LogLine[],
+  props: LogRenderProps,
+  isFirstTurn: boolean,
+) => {
   const [head, ...results] = block;
   const side = head.actor;
   const style = {
@@ -541,7 +545,10 @@ const renderLogBlock = (block: LogLine[], props: LogRenderProps) => {
   } as React.CSSProperties;
   if (head.kind === 'turn' && side) {
     return (
-      <div className={styles.logTurn} style={style}>
+      <div
+        className={cx(styles.logTurn, isFirstTurn && styles.logTurnFirst)}
+        style={style}
+      >
         <span>{head.text}</span>
         {renderLogMarkup(`**Player ${Number(side) + 1}**`, props)}
       </div>
@@ -843,6 +850,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     '0': themeOf(profile.theme).color,
     '1': foeTheme(profile.theme).color,
   } as Record<'0' | '1', string>;
+  const logBlocks = log.flatMap(groupLog);
+  const firstTurnBlock = logBlocks.findIndex(
+    (block) => block[0].kind === 'turn',
+  );
   /**
    * The "New game" deck picker: null when closed, else the choices being
    * edited.
@@ -3457,14 +3468,18 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               el.scrollHeight - el.scrollTop - el.clientHeight < 24;
           }}
         >
-          {log.flatMap(groupLog).map((block, i) => (
+          {logBlocks.map((block, i) => (
             <Fragment key={i}>
-              {renderLogBlock(block, {
-                colors: sideColors,
-                myName: profile.name,
-                onInspect: setInspect,
-                trigger: logCardTrigger,
-              })}
+              {renderLogBlock(
+                block,
+                {
+                  colors: sideColors,
+                  myName: profile.name,
+                  onInspect: setInspect,
+                  trigger: logCardTrigger,
+                },
+                i === firstTurnBlock,
+              )}
             </Fragment>
           ))}
         </div>

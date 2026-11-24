@@ -269,6 +269,14 @@ export const NUMS: Num[] = [
     read: () => px(cs('center')?.rowGap),
   },
   {
+    key: 'lbx',
+    label: 'Board X shift (px; the side panels stay put)',
+    min: -300,
+    max: 300,
+    css: CSS_FNS.lbx,
+    read: () => 0,
+  },
+  {
     key: 'lw',
     label: 'Table max width (px)',
     min: 300,
@@ -828,6 +836,14 @@ export const NUMS: Num[] = [
     step: 0.1,
     css: CSS_FNS.lgsi,
     read: () => 1.4,
+  },
+  {
+    key: 'lgtg',
+    label: 'Space between turns (px, above each turn bar)',
+    min: 0,
+    max: 80,
+    css: CSS_FNS.lgtg,
+    read: () => 12,
   },
   {
     key: 'lgsw',
