@@ -798,8 +798,8 @@
     z-index: 30;
   }
 
-  &:hover,
-  &:focus-visible {
+  &:not(:disabled):hover,
+  &:not(:disabled):focus-visible {
     filter: brightness(1.2);
   }
 
