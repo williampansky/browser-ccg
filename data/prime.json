@@ -2496,7 +2496,7 @@
       "%COMBO%"
     ],
     "collectible": true,
-    "active": false,
+    "active": true,
     "artStatus": "FPO"
   },
   {
