@@ -2010,6 +2010,7 @@
   },
   {
     "id": "PRIME_138",
+    "name": "Briarfang",
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -2023,7 +2024,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_249",
@@ -3578,6 +3581,7 @@
   },
   {
     "id": "PRIME_212",
+    "name": "Ancestral Hatchet",
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -3593,9 +3597,9 @@
     "numberOvercharge": 2,
     "collectible": true,
     "active": true,
-    "artistName": "Petro Krul",
-    "artistUrl": "https://www.artstation.com/petro15",
-    "artStatus": "FPO"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_023",
@@ -5370,6 +5374,7 @@
   },
   {
     "id": "PRIME_134",
+    "name": "Heavy Arbalest",
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -5383,7 +5388,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_198",
