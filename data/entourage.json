@@ -340,6 +340,7 @@
   },
   {
     "id": "PRIME_207a",
+    "name": "Wardstone Guardian",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -354,6 +355,9 @@
     ],
     "collectible": false,
     "active": true,
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
