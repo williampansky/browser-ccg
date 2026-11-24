@@ -42,7 +42,7 @@ This lists what was bought. It does **not** yet say which asset is used by which
 | [Void Invaders](https://graphicriver.net/item/void-invaders/36722632) | a-ravlik | Regular License | 2022-11-14 | 36722632 |
 | [Walking Zombie](https://graphicriver.net/item/walking-zombie/39062652) | a-ravlik | Regular License | 2022-11-14 | 39062652 |
 
-Also owned by the repo author, but with no certificate in the licenses folder (so no item id or purchase date is recorded here): **Characters Cards Pack 07** (downloaded as `graphicriver-DaR300JS-characters-cards-pack-07`, 100 character cutouts), by a-ravlik, held under the author's own license. It is the creature art for PRIME_261, 262, 263, 270 and 271, composited onto RPG Backgrounds from `CARD BACKGROUNDS` (a-ravlik, listed above): 261 = pack 07 `99` on `02_bg_07`, 262 = `19` on `01_bg_04`, 263 = `83` on `04_bg_03`, 270 = `85` on `04_bg_01`, 271 = `91` on `02_bg_06`.
+Also owned by the repo author, but with no certificate in the licenses folder (so no item id or purchase date is recorded here): **Characters Cards Pack 07** (downloaded as `graphicriver-DaR300JS-characters-cards-pack-07`, 100 character cutouts), by a-ravlik, held under the author's own license. It is the creature art for PRIME_261, 262, 263, 270 and 271, composited onto RPG Backgrounds from `CARD BACKGROUNDS` (a-ravlik, listed above): 261 = pack 07 `99` on `02_bg_07`, 262 = `19` on `01_bg_04`, 263 = `83` on `04_bg_03`, 270 = `85` on `04_bg_01`, 271 = `91` on `02_bg_06`. The Hellspawn token PRIME_271a is the Lava Creatures `09` (listed above) on `04_bg_08`.
 
 ## Where the Vol 14 pack is used (started provenance table)
 
