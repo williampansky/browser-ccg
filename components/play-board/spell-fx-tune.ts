@@ -62,6 +62,10 @@ export interface SpellFxTune {
   spotWidth: number;
   /** Spot: corners of each ring (6 = a hexagon, 48 or so = a circle) */
   spotSides: number;
+  /** Spot: how the rings move (open outward, close inward, or pulse in place) */
+  spotRingsMotion: 'out' | 'in' | 'pulse';
+  /** Spot: the tint inside each ring (0 = none) */
+  spotFillAlpha: number;
   /** Spot: the first ring, and the later rings */
   spotColour: string;
   spotAccentColour: string;
@@ -71,11 +75,29 @@ export interface SpellFxTune {
   /** Spot option: sparks flying out, and how many */
   spotHasSparks: boolean;
   spotSparkCount: number;
+  /** Spot sparks: where they go (rising ones start staggered) */
+  spotSparkMotion: 'outward' | 'rising' | 'inward';
+  /** Spot sparks: speed (px per ms), life (ms), size, start scatter (px) */
+  spotSparkSpeed: number;
+  spotSparkLife: number;
+  spotSparkScale: number;
+  spotSparkSpread: number;
   /** Impact sparks on a hit (travel and strike): how many, life (ms), size */
   burstCount: number;
   burstLife: number;
   burstScale: number;
 }
+
+/**
+ * The fields that pick one of a few words (not a colour), with the words they
+ * take. A string field that is not listed here is a hex colour.
+ */
+export const SPELL_FX_CHOICES: Partial<
+  Record<keyof SpellFxTune, readonly string[]>
+> = {
+  spotRingsMotion: ['out', 'in', 'pulse'],
+  spotSparkMotion: ['outward', 'rising', 'inward'],
+};
 
 export const SPELL_FX_DEFAULTS: SpellFxTune = {
   travelMs: 280,
@@ -113,12 +135,19 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   spotRingGap: 110,
   spotWidth: 6,
   spotSides: 6,
+  spotRingsMotion: 'out',
+  spotFillAlpha: 0.1,
   spotColour: 'cfe3ff',
   spotAccentColour: 'ffd23f',
   spotHasGlow: true,
   spotGlowScale: 3,
   spotHasSparks: true,
   spotSparkCount: 14,
+  spotSparkMotion: 'outward',
+  spotSparkSpeed: 0.22,
+  spotSparkLife: 480,
+  spotSparkScale: 0.5,
+  spotSparkSpread: 0,
   burstCount: 18,
   burstLife: 420,
   burstScale: 0.55,
@@ -131,6 +160,25 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
  * entry plays the defaults.
  */
 export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
+  'CLERIC:1': {
+    spotLife: 1200,
+    spotRadius: 70,
+    spotRings: 1,
+    spotRingGap: 400,
+    spotWidth: 2,
+    spotSides: 48,
+    spotRingsMotion: 'pulse',
+    spotFillAlpha: 0.2,
+    spotColour: 'e2f109',
+    spotAccentColour: 'ffe9a8',
+    spotGlowScale: 6,
+    spotSparkCount: 46,
+    spotSparkMotion: 'rising',
+    spotSparkSpeed: 0.1,
+    spotSparkLife: 1500,
+    spotSparkScale: 0.4,
+    spotSparkSpread: 60,
+  },
   'FIGHTER:1': {
     spotColour: '748ae2',
     spotAccentColour: '139fcd',
@@ -166,7 +214,7 @@ export const tuneForSpell = (key: string | null): SpellFxTune => ({
 /**
  * The tune from a URL query string: `s_<field>` params over `base` (the
  * defaults unless the lab passes a spell's saved look). Numbers, `1` / `0`
- * flags and 6-digit hex colours; anything else is ignored.
+ * flags, listed words and 6-digit hex colours; anything else is ignored.
  */
 export const parseSpellTune = (
   search: string,
@@ -181,7 +229,12 @@ export const parseSpellTune = (
     if (kind === 'boolean') {
       if (raw === '0' || raw === '1') tune[field] = raw === '1';
     } else if (kind === 'string') {
-      if (/^[0-9a-f]{6}$/i.test(raw)) tune[field] = raw.toLowerCase();
+      const words = SPELL_FX_CHOICES[field];
+      if (words) {
+        if (words.includes(raw)) tune[field] = raw;
+      } else if (/^[0-9a-f]{6}$/i.test(raw)) {
+        tune[field] = raw.toLowerCase();
+      }
     } else if (raw !== '' && !Number.isNaN(+raw)) {
       tune[field] = +raw;
     }

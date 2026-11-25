@@ -7,7 +7,7 @@ const { plan } = require('../apply-spell-url.node.js');
 const PLAY = path.join(__dirname, '..', '..', 'components', 'play-board');
 const tuneSrc = fs.readFileSync(path.join(PLAY, 'spell-fx-tune.ts'), 'utf8');
 const fxSrc = fs.readFileSync(path.join(PLAY, 'spell-fx.ts'), 'utf8');
-const classKeys = ['FIGHTER', 'WIZARD'];
+const classKeys = ['CLERIC', 'FIGHTER', 'WIZARD'];
 const run = (url: string, isDefaults = false, texts = { tuneSrc, fxSrc }) =>
   plan({
     url,
@@ -57,6 +57,14 @@ describe('apply-spell-url plan', () => {
     const result = run('s_travelMs=300', true);
     expect(result.tune).toContain('travelMs: 300,');
     expect(result.changes).toEqual(['default travelMs: 280 -> 300']);
+  });
+
+  it('writes a choice word and refuses one that is not listed', () => {
+    const result = run('sp=CLERIC:1&e=spot&s_spotSparkMotion=rising');
+    expect(result.errors).toEqual([]);
+    expect(result.tune).toContain("spotSparkMotion: 'rising',");
+    expect(result.fx).toContain("'CLERIC:1': 'spot',");
+    expect(run('sp=CLERIC:1&s_spotSparkMotion=sideways').errors.length).toBe(1);
   });
 
   it('writes nothing for a bad spell, field or value', () => {

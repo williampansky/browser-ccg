@@ -107,6 +107,19 @@ const replaceBlock = (src, name, text) => {
   return src.slice(0, open - 2) + text + src.slice(close);
 };
 
+/** The words each choice field takes, from `SPELL_FX_CHOICES`. */
+const parseChoices = (src) => {
+  const choices = new Map();
+  const { body } = findBlock(src, 'SPELL_FX_CHOICES');
+  for (const m of body.matchAll(/^\s+(\w+):\s*\[([^\]]*)\]/gm)) {
+    choices.set(
+      m[1],
+      [...m[2].matchAll(/'([^']+)'/g)].map((word) => word[1]),
+    );
+  }
+  return choices;
+};
+
 const hasCard = (id) =>
   fs
     .readdirSync(DATA_DIR)
@@ -121,6 +134,7 @@ const hasCard = (id) =>
  * is nothing to write there).
  */
 const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
+  const choices = parseChoices(tuneSrc);
   const errors = [];
   const changes = [];
   const params = new URL(
@@ -165,6 +179,14 @@ const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
         continue;
       }
       given.set(field, raw === '1');
+    } else if (choices.has(field)) {
+      if (!choices.get(field).includes(raw)) {
+        errors.push(
+          `${param}: expected one of ${choices.get(field).join(', ')}, got "${raw}"`,
+        );
+        continue;
+      }
+      given.set(field, raw);
     } else if (kind === 'string') {
       if (!/^[0-9a-f]{6}$/i.test(raw)) {
         errors.push(`${param}: expected a 6-digit hex colour, got "${raw}"`);

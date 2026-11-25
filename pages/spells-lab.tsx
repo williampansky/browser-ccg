@@ -392,6 +392,47 @@ const SpellsLab = () => {
                   </label>
                 )}
                 {isOn &&
+                  group.choices?.map((choice) => (
+                    <label
+                      key={choice.field}
+                      style={{
+                        display: 'block',
+                        margin: '6px 0',
+                        fontSize: 12,
+                      }}
+                    >
+                      {choice.label}{' '}
+                      <select
+                        value={tune[choice.field]}
+                        onChange={(event) =>
+                          setParams({
+                            [`s_${choice.field}`]: event.target.value,
+                          })
+                        }
+                      >
+                        {choice.options.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      {changed(choice.field) && (
+                        <a
+                          style={{
+                            marginLeft: 6,
+                            cursor: 'pointer',
+                            color: '#7aa2ff',
+                          }}
+                          onClick={() =>
+                            setParams({ [`s_${choice.field}`]: null })
+                          }
+                        >
+                          reset
+                        </a>
+                      )}
+                    </label>
+                  ))}
+                {isOn &&
                   group.knobs.map((knob) => (
                     <label
                       key={knob.field}

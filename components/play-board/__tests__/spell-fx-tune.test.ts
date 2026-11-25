@@ -19,6 +19,15 @@ describe('parseSpellTune', () => {
     expect(tune.travelArc).toBe(SPELL_FX_DEFAULTS.travelArc);
   });
 
+  it('takes a listed word for a choice and refuses any other', () => {
+    expect(parseSpellTune('s_spotSparkMotion=rising').spotSparkMotion).toBe(
+      'rising',
+    );
+    expect(parseSpellTune('s_spotRingsMotion=ff0000')).toEqual(
+      SPELL_FX_DEFAULTS,
+    );
+  });
+
   it('ignores bad values and unknown fields', () => {
     const tune = parseSpellTune(
       's_travelMs=fast&s_travelColour=red&s_nothing=1&s_travelEase=&s_spotHasGlow=2',

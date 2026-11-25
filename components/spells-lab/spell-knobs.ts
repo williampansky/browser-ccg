@@ -5,7 +5,8 @@ type KeyOf<T> = {
   [K in keyof SpellFxTune]: SpellFxTune[K] extends T ? K : never;
 }[keyof SpellFxTune];
 type NumKey = KeyOf<number>;
-type ColourKey = KeyOf<string>;
+type ChoiceKey = 'spotRingsMotion' | 'spotSparkMotion';
+type ColourKey = Exclude<KeyOf<string>, ChoiceKey>;
 type FlagKey = KeyOf<boolean>;
 
 export interface SpellKnob {
@@ -14,6 +15,12 @@ export interface SpellKnob {
   min: number;
   max: number;
   step?: number;
+}
+
+export interface SpellChoice {
+  field: ChoiceKey;
+  label: string;
+  options: { value: string; label: string }[];
 }
 
 export interface SpellGroup {
@@ -27,6 +34,8 @@ export interface SpellGroup {
   flag?: { field: FlagKey; label: string };
   knobs: SpellKnob[];
   colours?: { field: ColourKey; label: string }[];
+  /** Pick-one options (a word, not a number); shown above the sliders */
+  choices?: SpellChoice[];
 }
 
 /**
@@ -213,6 +222,17 @@ export const SPELL_GROUPS: SpellGroup[] = [
   {
     title: 'Rings',
     kinds: ['spot'],
+    choices: [
+      {
+        field: 'spotRingsMotion',
+        label: 'Rings move',
+        options: [
+          { value: 'out', label: 'Open outward' },
+          { value: 'in', label: 'Close inward' },
+          { value: 'pulse', label: 'Pulse in place' },
+        ],
+      },
+    ],
     colours: [
       { field: 'spotColour', label: 'First ring colour' },
       { field: 'spotAccentColour', label: 'Later rings colour' },
@@ -247,6 +267,13 @@ export const SPELL_GROUPS: SpellGroup[] = [
         min: 3,
         max: 48,
       },
+      {
+        field: 'spotFillAlpha',
+        label: 'Tint inside the rings',
+        min: 0,
+        max: 0.6,
+        step: 0.01,
+      },
     ],
   },
   {
@@ -266,8 +293,48 @@ export const SPELL_GROUPS: SpellGroup[] = [
   {
     title: 'Sparks',
     kinds: ['spot'],
-    flag: { field: 'spotHasSparks', label: 'Sparks fly out' },
-    knobs: [{ field: 'spotSparkCount', label: 'Sparks', min: 1, max: 40 }],
+    flag: { field: 'spotHasSparks', label: 'Sparks' },
+    choices: [
+      {
+        field: 'spotSparkMotion',
+        label: 'Sparks go',
+        options: [
+          { value: 'outward', label: 'Outward' },
+          { value: 'rising', label: 'Rising (drifting motes)' },
+          { value: 'inward', label: 'Inward' },
+        ],
+      },
+    ],
+    knobs: [
+      { field: 'spotSparkCount', label: 'Sparks', min: 1, max: 60 },
+      {
+        field: 'spotSparkSpeed',
+        label: 'Speed (px per ms)',
+        min: 0.02,
+        max: 0.6,
+        step: 0.01,
+      },
+      {
+        field: 'spotSparkLife',
+        label: 'Life (ms)',
+        min: 100,
+        max: 1500,
+        step: 10,
+      },
+      {
+        field: 'spotSparkScale',
+        label: 'Size',
+        min: 0.1,
+        max: 1.5,
+        step: 0.05,
+      },
+      {
+        field: 'spotSparkSpread',
+        label: 'Start scatter (px; 0 = one point)',
+        min: 0,
+        max: 200,
+      },
+    ],
   },
   {
     title: 'Impact sparks',
