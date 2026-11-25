@@ -83,6 +83,7 @@ import {
 import { MinionFace } from './MinionFace';
 import { buffedMinionIds, minionOvalHeight } from './minion-model';
 import type { FlashTone } from './motion';
+import { spellFxFor } from './spell-fx';
 import type { PixiFx } from './pixi-fx';
 import minionStyles from './board-minion.module.scss';
 import {
@@ -125,7 +126,7 @@ import {
   IMPACT_MS,
   lunge,
   lungeBy,
-  PROJECTILE_MS,
+  fxMs,
   nudge,
   reducedMotion,
 } from './motion';
@@ -1176,6 +1177,15 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       if (summoned && summoned.type === 'MinionPlayed') {
         landedAt.current.set(summoned.instanceId, Date.now() + 520);
       }
+      /** Which show a spell or skill puts on (the default is the orb). */
+      const castingPlayer = state.players[state.activePlayer];
+      const fxKind = spellFxFor(
+        action,
+        castingPlayer.hero?.id,
+        action.type === 'PlayCard'
+          ? castingPlayer.hand[action.handIndex]?.cardId
+          : undefined,
+      );
       // Attacks are thrown at the target; a big hit jolts the table when it
       // lands.
       if (action.type === 'Attack' || action.type === 'WeaponAttack') {
@@ -1232,7 +1242,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       } else {
         // Anything else that hurts (a spell) uses the default timing, not the
         // hero swing's from the last attack.
-        setImpactMs(projectileOn() ? PROJECTILE_MS : IMPACT_MS);
+        setImpactMs(projectileOn() ? fxMs(fxKind) : IMPACT_MS);
       }
       // A big hit from anything (an attack or a spell) jolts the table when
       // it lands.
@@ -1284,7 +1294,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           const node = key && nodes.current.get(key);
           if (!node) continue;
           if (projectileOn() && caster && caster !== node) {
-            shoot(caster, node);
+            shoot(caster, node, fxKind);
             shot = true;
           }
           const isDead =

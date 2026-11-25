@@ -1,5 +1,7 @@
 import { getSwing } from './hero-swing-tune';
 import type { PixiFx } from './pixi-fx';
+import { SPELL_FX_MS } from './spell-fx';
+import type { SpellFxKind } from './spell-fx';
 import type { HeroSwingSettings, SwingKind } from './hero-swing-tune';
 
 /**
@@ -298,8 +300,8 @@ export const setPixiFx = (fx: PixiFx | null): void => {
   pixiFx = fx;
 };
 
-/** How long a spell's projectile takes to reach its target. */
-export const PROJECTILE_MS = 280;
+/** How long a spell's effect takes to land, by kind. */
+export const fxMs = (kind: SpellFxKind): number => SPELL_FX_MS[kind];
 
 const PROJECTILE_SIZE = 18;
 
@@ -313,16 +315,23 @@ const centerOf = (el: HTMLElement): { x: number; y: number } => {
  * be a hand card) and removes it on arrival. It is a throwaway element outside React, so a re-render
  * cannot cut it short.
  */
-export const shoot = (from: HTMLElement, to: HTMLElement): void => {
+export const shoot = (
+  from: HTMLElement,
+  to: HTMLElement,
+  kind: SpellFxKind = 'orb',
+): void => {
   if (reducedMotion() || !from.animate) return;
   const origin = centerOf(from);
   // A hand card sinks below the window edge: start at the edge, not off it.
   const start = { x: origin.x, y: Math.min(origin.y, window.innerHeight - 20) };
   const end = centerOf(to);
   if (pixiFx) {
-    pixiFx.projectile(start, end, PROJECTILE_MS);
+    if (kind === 'lightning') pixiFx.lightning(end, fxMs(kind));
+    else pixiFx.projectile(start, end, fxMs(kind));
     return;
   }
+  // Without Pixi only the orb has a plain version; the rest just flash.
+  if (kind !== 'orb') return;
   const orb = document.createElement('div');
   Object.assign(orb.style, {
     background:
@@ -347,7 +356,7 @@ export const shoot = (from: HTMLElement, to: HTMLElement): void => {
       { opacity: 0.9, transform: at(start, 0.6) },
       { opacity: 1, transform: at(end, 1.3) },
     ],
-    { duration: PROJECTILE_MS, easing: 'cubic-bezier(0.4, 0, 0.8, 0.6)' },
+    { duration: fxMs(kind), easing: 'cubic-bezier(0.4, 0, 0.8, 0.6)' },
   );
   flight.onfinish = () => orb.remove();
   flight.oncancel = () => orb.remove();
