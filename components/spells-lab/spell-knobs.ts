@@ -354,6 +354,25 @@ export const SPELL_GROUPS: SpellGroup[] = [
     ],
   },
   {
+    title: 'Volley',
+    kinds: ['travel', 'strike', 'spot'],
+    knobs: [
+      {
+        field: 'volleyCount',
+        label: 'Animations per target',
+        min: 1,
+        max: 10,
+      },
+      {
+        field: 'volleyDelay',
+        label: 'Delay between each (ms)',
+        min: 0,
+        max: 600,
+        step: 5,
+      },
+    ],
+  },
+  {
     title: 'Impact sparks',
     kinds: ['travel', 'strike'],
     knobs: [

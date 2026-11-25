@@ -179,6 +179,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 
 ## Things worth knowing
 
+- **A closure inside a loop shares the loop's variable in this build** (Next 12's SWC, ES5 target): a `setTimeout(() => use(target))` in a `for (const target of ...)` sees the last `target` (seen in the spells lab, 2026-11-25). Run delayed work in a `forEach` / `map` callback (or a small function) so each call has its own variables.
 - **Card ids** look like `SET_CORE_010`. Card ids were reassigned between the old repos and
   this one, so match cards across repos by name, not id.
 - **Card art lives in `public/images/sets/SET_<SET>/<num>-CARD.jpg`** and `/play` reads it by card id (`CORE_011` ->

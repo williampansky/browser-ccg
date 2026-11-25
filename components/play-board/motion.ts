@@ -323,19 +323,35 @@ export const shoot = (
   to: HTMLElement,
   kind: SpellFxKind = 'travel',
   tune: SpellFxTune = tuneForSpell(null),
+  delayMs = 0,
 ): void => {
   if (reducedMotion() || !from.animate) return;
   const origin = centerOf(from);
   // A hand card sinks below the window edge: start at the edge, not off it.
   const start = { x: origin.x, y: Math.min(origin.y, window.innerHeight - 20) };
   const end = centerOf(to);
-  if (pixiFx) {
-    if (kind === 'strike') pixiFx.strike(end, fxMs(kind, tune), tune);
-    else pixiFx.travel(start, end, fxMs(kind, tune), tune);
-    return;
-  }
-  // Without Pixi only the orb has a plain version; the rest just flash.
-  if (kind !== 'travel') return;
+  // Both ends are read now (a target may be gone by the time a delayed shot
+  // fires); only the drawing waits.
+  const fire = (): void => {
+    if (pixiFx) {
+      if (kind === 'strike') pixiFx.strike(end, fxMs(kind, tune), tune);
+      else pixiFx.travel(start, end, fxMs(kind, tune), tune);
+      return;
+    }
+    // Without Pixi only the orb has a plain version; the rest just flash.
+    if (kind !== 'travel') return;
+    plainOrb(start, end, fxMs(kind, tune));
+  };
+  if (delayMs > 0) setTimeout(fire, delayMs);
+  else fire();
+};
+
+/** The orb without the Pixi layer: one glowing dot flying across. */
+const plainOrb = (
+  start: { x: number; y: number },
+  end: { x: number; y: number },
+  ms: number,
+): void => {
   const orb = document.createElement('div');
   Object.assign(orb.style, {
     background:
@@ -360,7 +376,7 @@ export const shoot = (
       { opacity: 0.9, transform: at(start, 0.6) },
       { opacity: 1, transform: at(end, 1.3) },
     ],
-    { duration: fxMs(kind, tune), easing: 'cubic-bezier(0.4, 0, 0.8, 0.6)' },
+    { duration: ms, easing: 'cubic-bezier(0.4, 0, 0.8, 0.6)' },
   );
   flight.onfinish = () => orb.remove();
   flight.oncancel = () => orb.remove();
@@ -398,9 +414,13 @@ export const spot = (
   target: HTMLElement,
   tune: SpellFxTune,
   isSettled = false,
+  delayMs = 0,
 ): void => {
-  if (reducedMotion() || !pixiFx) return;
-  pixiFx.spot(isSettled ? layoutCenter(target) : centerOf(target), tune);
+  const fx = pixiFx;
+  if (reducedMotion() || !fx) return;
+  const at = isSettled ? layoutCenter(target) : centerOf(target);
+  if (delayMs > 0) setTimeout(() => fx.spot(at, tune), delayMs);
+  else fx.spot(at, tune);
 };
 
 /** What a flash means: it picks the colour of the glow. */
@@ -421,6 +441,7 @@ export const flashHit = (
   target: HTMLElement,
   tone: FlashTone = 'hit',
   tune?: SpellFxTune,
+  waitMs = 0,
 ): void => {
   if (reducedMotion() || !target.animate) return;
   const body =
@@ -430,7 +451,7 @@ export const flashHit = (
   const fx = pixiFx;
   if (fx) {
     const at = centerOf(target);
-    setTimeout(() => fx.burst(at, tone, tune), getImpactMs());
+    setTimeout(() => fx.burst(at, tone, tune), getImpactMs() + waitMs);
   }
   body.animate(
     [
@@ -438,7 +459,11 @@ export const flashHit = (
       { filter: FLASH_FILTER[tone], offset: 0.25 },
       { filter: 'brightness(1)' },
     ],
-    { duration: HIT_FLASH_MS, delay: getImpactMs(), easing: 'ease-out' },
+    {
+      duration: HIT_FLASH_MS,
+      delay: getImpactMs() + waitMs,
+      easing: 'ease-out',
+    },
   );
 };
 

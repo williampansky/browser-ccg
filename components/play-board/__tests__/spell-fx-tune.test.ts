@@ -22,6 +22,13 @@ describe('parseSpellTune', () => {
     expect(tune.travelArc).toBe(SPELL_FX_DEFAULTS.travelArc);
   });
 
+  it('reads the volley count and delay', () => {
+    const tune = parseSpellTune('s_volleyCount=3&s_volleyDelay=150');
+    expect(tune.volleyCount).toBe(3);
+    expect(tune.volleyDelay).toBe(150);
+    expect(SPELL_FX_DEFAULTS.volleyCount).toBe(1);
+  });
+
   it('takes a listed word for a choice and refuses any other', () => {
     expect(parseSpellTune('s_spotSparkMotion=rising').spotSparkMotion).toBe(
       'rising',

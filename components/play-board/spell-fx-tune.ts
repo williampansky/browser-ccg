@@ -86,6 +86,10 @@ export interface SpellFxTune {
   spotSparkLife: number;
   spotSparkScale: number;
   spotSparkSpread: number;
+  /** Volley (every base): how many times the effect plays per target hit */
+  volleyCount: number;
+  /** Volley: ms between one animation and the next, across targets too */
+  volleyDelay: number;
   /** Impact sparks on a hit (travel and strike): how many, life (ms), size */
   burstCount: number;
   burstLife: number;
@@ -154,6 +158,8 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   spotSparkLife: 480,
   spotSparkScale: 0.5,
   spotSparkSpread: 0,
+  volleyCount: 1,
+  volleyDelay: 120,
   burstCount: 18,
   burstLife: 420,
   burstScale: 0.55,
@@ -199,6 +205,20 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     spotSparkLife: 1500,
     spotSparkScale: 0.4,
     spotSparkSpread: 60,
+  },
+  CORE_063: {
+    travelMs: 690,
+    travelCoreScale: 1,
+    travelColour: 'ff1ff8',
+    travelTrailPerFrame: 8,
+    travelTrailLife: 560,
+    travelTrailSpread: 1,
+    travelTrailDrift: 0.04,
+    travelTrailColour: 'df87f8',
+    volleyDelay: 385,
+    burstCount: 37,
+    burstLife: 570,
+    burstScale: 0.85,
   },
   CORE_093: {
     travelMs: 300,

@@ -33,6 +33,17 @@ import {
  * `pixi-fx.ts`.
  */
 const DEFAULT_SPELL = 'WIZARD:1';
+/** Where the other targets sit, relative to the first (px). */
+const EXTRA_TARGETS = [
+  { x: -150, y: 60 },
+  { x: 150, y: 60 },
+  { x: -80, y: -110 },
+  { x: 80, y: -110 },
+  { x: 0, y: 150 },
+];
+const MIN_TARGETS = 2;
+const MAX_TARGETS = EXTRA_TARGETS.length + 1;
+const DEFAULT_TARGETS = 3;
 /** The stage starts after the sidebar (340) and the page padding and gap. */
 const STAGE_LEFT = 388;
 /** The minion shown as the target, for a sense of scale. */
@@ -116,6 +127,11 @@ const SpellsLab = () => {
   );
   const isMinionShown = q1('minion') === '1';
   const isBoardShown = q1('board') === '1';
+  const isMulti = q1('multi') === '1';
+  const targetCount = Math.min(
+    MAX_TARGETS,
+    Math.max(MIN_TARGETS, Math.round(Number(q1('tc'))) || DEFAULT_TARGETS),
+  );
   const sample = useMemo(() => {
     const card = loadHsCards().byId.get(SAMPLE_MINION);
     return card
@@ -170,15 +186,47 @@ const SpellsLab = () => {
     fxRef.current?.setSpeed(speed);
   }, [speed]);
 
+  /** The first target, then the others when several targets are shown. */
+  const targets = useMemo(() => {
+    if (!points) return [];
+    const extras = isMulti
+      ? EXTRA_TARGETS.slice(0, targetCount - 1).map((offset) => ({
+          x: points.to.x + offset.x,
+          y: points.to.y + offset.y,
+        }))
+      : [];
+    return [points.to, ...extras];
+  }, [isMulti, points, targetCount]);
+  /** Animations in one run: a spot effect plays on the first target only. */
+  const shotCount =
+    Math.max(1, Math.round(tune.volleyCount)) *
+    (kind === 'spot' ? 1 : targets.length);
+
   const play = useCallback((): void => {
     const fx = fxRef.current;
     if (!fx || !points) return;
     fx.setSpeed(speed);
     const ms = spellFxMs(kind, tune);
-    if (kind === 'strike') fx.strike(points.to, ms, tune);
-    else if (kind === 'spot') fx.spot(points.to, tune);
-    else fx.travel(points.from, points.to, ms, tune);
-  }, [kind, points, speed, tune]);
+    const plays = Math.max(1, Math.round(tune.volleyCount));
+    // The game's volley: each target plays `plays` times, and every animation
+    // starts `volleyDelay` after the one before (slow motion stretches it too).
+    const sequence = kind === 'spot' ? [points.to] : targets;
+    // One entry per animation. Each runs in its own callback, so a delayed
+    // shot keeps its own target (a closure over a loop variable would not).
+    const shots = sequence.flatMap((target) =>
+      Array.from({ length: plays }, () => target),
+    );
+    shots.forEach((target, index) => {
+      const wait = (index * tune.volleyDelay) / speed;
+      const fire = (): void => {
+        if (kind === 'strike') fx.strike(target, ms, tune);
+        else if (kind === 'spot') fx.spot(target, tune);
+        else fx.travel(points.from, target, ms, tune);
+      };
+      if (wait > 0) setTimeout(fire, wait);
+      else fire();
+    });
+  }, [kind, points, speed, targets, tune]);
 
   // Space plays; a loop replays after each one has finished.
   useEffect(() => {
@@ -197,11 +245,12 @@ const SpellsLab = () => {
     const gap =
       spellFxMs(kind, tune) +
       LOOP_GAP_MS +
+      shotCount * tune.volleyDelay +
       (kind === 'strike' ? tune.strikeLife : LOOP_TAIL_MS) +
       (kind === 'spot' ? tune.spotLife : 0);
     const timer = setInterval(play, gap / speed);
     return () => clearInterval(timer);
-  }, [isLoop, kind, play, speed, tune]);
+  }, [isLoop, kind, play, shotCount, speed, tune]);
 
   // A change replays the effect, so a slider can be tuned by eye.
   const firstTune = useRef(true);
@@ -429,6 +478,33 @@ const SpellsLab = () => {
           />{' '}
           Show the default board background
         </label>
+        <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
+          <input
+            type="checkbox"
+            checked={isMulti}
+            onChange={(event) =>
+              setParams({ multi: event.target.checked ? '1' : null })
+            }
+          />{' '}
+          Several targets (for a volley or an area spell)
+        </label>
+        {isMulti && (
+          <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
+            <span style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>How many targets</span>
+              <b>{targetCount}</b>
+            </span>
+            <input
+              type="range"
+              min={MIN_TARGETS}
+              max={MAX_TARGETS}
+              step={1}
+              value={targetCount}
+              style={{ width: '100%', margin: 0 }}
+              onChange={(event) => setParams({ tc: event.target.value })}
+            />
+          </label>
+        )}
         <label style={{ display: 'block', fontSize: 12, margin: '6px 0' }}>
           <span style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>Preview speed (slow motion; the effect&apos;s ms stay)</span>
@@ -690,6 +766,40 @@ const SpellsLab = () => {
               >
                 target
               </div>
+            )}
+            {targets.slice(1).map((point, index) =>
+              isMinionShown && sample ? (
+                <div
+                  key={index}
+                  style={{
+                    position: 'fixed',
+                    left: point.x,
+                    top: point.y,
+                    transform: 'translate(-50%, -50%)',
+                    pointerEvents: 'none',
+                  }}
+                >
+                  <div className={minionStyles.slot}>
+                    <MinionFace
+                      card={sample.card}
+                      m={sample.m}
+                      sick={false}
+                      turn={SAMPLE_TURN}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div
+                  key={index}
+                  style={{
+                    ...markerStyle(point, '#ff8a8a'),
+                    cursor: 'default',
+                    pointerEvents: 'none',
+                  }}
+                >
+                  {index + 2}
+                </div>
+              ),
             )}
           </>
         )}

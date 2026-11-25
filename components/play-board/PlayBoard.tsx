@@ -1219,9 +1219,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           spellKey && fxChain(spellKey).includes(SUMMON_FX_KEY)
             ? spellKey
             : SUMMON_FX_KEY;
-        for (const e of result.events) {
-          if (e.type !== 'MinionSummoned' && e.type !== 'MinionPlayed')
-            continue;
+        // Each in its own callback: a delayed closure over a loop variable
+        // would see the last minion (this build shares those variables).
+        result.events.forEach((e) => {
+          if (e.type !== 'MinionSummoned' && e.type !== 'MinionPlayed') return;
           const { instanceId } = e;
           const wait =
             e.type === 'MinionPlayed' ? SUMMON_LANDED_MS : SUMMON_RENDER_MS;
@@ -1229,7 +1230,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             const node = nodes.current.get(`m${instanceId}`);
             if (node) spot(node, tuneForSpell(summonKey), true);
           }, wait);
-        }
+        });
       }
       // Attacks are thrown at the target; a big hit jolts the table when it
       // lands.
@@ -1321,7 +1322,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             ? targetKey(action.target)
             : `h${state.activePlayer}`,
         );
-        if (spotNode) spot(spotNode, fxTune);
+        if (spotNode) {
+          const plays = Math.max(1, Math.round(fxTune.volleyCount));
+          for (let play = 0; play < plays; play++) {
+            spot(spotNode, fxTune, false, play * fxTune.volleyDelay);
+          }
+        }
       }
       /**
        * A spell's orb flies from the caster's hero to each
@@ -1361,6 +1367,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
          * turn), with that card's own look.
          */
         let sourceNode = caster;
+        let shotIndex = 0;
         let sourceKind = fxKind;
         let sourceTune = fxTune;
         for (const e of result.events) {
@@ -1383,13 +1390,20 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           const node = key && nodes.current.get(key);
           if (!node) continue;
           const isTravel = sourceKind !== 'spot';
-          if (isTravel && spellFxOn() && sourceNode && sourceNode !== node) {
-            shoot(sourceNode, node, sourceKind, sourceTune);
-            shot = true;
-          }
           const isDead =
             e.type === 'MinionDamaged' && deadIds.has(e.instanceId);
-          if (spellFxOn() && !isDead) flashHit(node, 'hit', sourceTune);
+          // The volley: each hit plays `volleyCount` times, and every
+          // animation (across targets too) starts `volleyDelay` after the last.
+          const plays = Math.max(1, Math.round(sourceTune.volleyCount));
+          for (let play = 0; play < plays; play++) {
+            const wait = shotIndex * sourceTune.volleyDelay;
+            shotIndex += 1;
+            if (isTravel && sourceNode && sourceNode !== node) {
+              shoot(sourceNode, node, sourceKind, sourceTune, wait);
+              shot = true;
+            }
+            if (!isDead) flashHit(node, 'hit', sourceTune, wait);
+          }
         }
       }
       // Heals flash green and buffs gold (also off with ?fx=off).
