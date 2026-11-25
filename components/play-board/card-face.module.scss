@@ -192,6 +192,61 @@
     font-size: 0.78em;
     opacity: 0.9;
   }
+
+  // The satisfied Flow keyword: a gold glow that breathes.
+  .flowKey {
+    color: #ffe08a;
+    animation: flowKeyPulse 1.6s ease-in-out infinite;
+  }
+}
+
+// A satisfied Flow: a soft gold halo that swells around the card's edge.
+.flowOn {
+  animation: flowCardPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes flowKeyPulse {
+  0%,
+  100% {
+    text-shadow:
+      0 0 0.1em #ffb62e,
+      0 0.06em 0.08em #0009;
+    filter: brightness(1);
+  }
+  50% {
+    text-shadow:
+      0 0 0.35em #ffd45e,
+      0 0 0.7em #ffb62e,
+      0 0.06em 0.08em #0009;
+    filter: brightness(1.25);
+  }
+}
+
+@keyframes flowCardPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 u(1.5) #ffb62e66);
+  }
+  50% {
+    filter: drop-shadow(0 0 u(5) #ffd45ecc);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flowKey,
+  .flowOn {
+    animation: none;
+  }
+
+  .flowKey {
+    text-shadow:
+      0 0 0.3em #ffd45e,
+      0 0.06em 0.08em #0009;
+  }
+
+  .flowOn {
+    filter: drop-shadow(0 0 u(3) #ffd45eaa);
+  }
 }
 
 .attack,

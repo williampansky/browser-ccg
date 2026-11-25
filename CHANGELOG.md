@@ -4,6 +4,7 @@ What changed, newest first. Written from the git history; `git log` has the deta
 
 ## 2026-11-25
 
+- **A satisfied Flow glows in the hand:** when you have already played a card this turn, a playable hand card with a Flow (Combo) effect pulses a soft gold halo, and its bold "Flow:" in the text glows and breathes (`isFlowOn` on `CardFace`, `isComboOn` now exported from the engine). Reduced-motion shows a steady glow instead. Hand cards only so far; not checked in a browser.
 - **Assassin spells and items get new art (the first half of Assassin):** PRIME_185, 186, 187, 188, 190, 191, 194 and 196 use a-ravlik icons from `art-assets/` (hooded cloak, falling coin bag, crossed scimitars, glowing sword, teal curved blade, steel dagger, bomb with pink smoke, cage lantern), cut with `npm run art`. With the author's approval, those eight Airtable `CARDS` records got `artistName` (a-ravlik), `artistUrl` and `artStatus` (FINAL), replacing the old artists' credits (old values saved to `art-inbox/replaced-values-assassin-spells.json`), and four got names to fit the art: PRIME_186 Gift Box is now **Blackmarket Bundle**, 194 Ignition is **Smoke Bomb**, and 188 and 191 (both unnamed) are **Honed Edge** and **Returning Dirk**. `data/prime.json` was pulled. The Assassin minions (189, 193, 195, 197, 198, 199 and the 189a token) are next.
 
 ## 2026-11-24

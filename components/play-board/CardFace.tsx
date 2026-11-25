@@ -66,7 +66,18 @@ interface CardFaceProps {
    * nothing)
    */
   hideCost?: boolean;
+  /**
+   * The card's Combo ("Flow") is satisfied right now: its keyword glows and
+   * the card gives a slow pulse.
+   */
+  isFlowOn?: boolean;
 }
+
+const FLOW_KEYWORD = /^flow:?$/i;
+
+/** Whether a text part is the bold Flow (Combo) keyword. */
+const isFlowKeyword = (part: { kind: string; text?: string }): boolean =>
+  part.kind === 'strong' && FLOW_KEYWORD.test((part.text ?? '').trim());
 
 /**
  * The framed card from `hsclone`: the art sits behind a rarity frame (a PNG
@@ -86,6 +97,7 @@ export const CardFace = ({
   vector = false,
   art,
   hideCost = false,
+  isFlowOn = false,
 }: CardFaceProps) => {
   const stats = showsStats(card.type);
   const label = typeLabel(card);
@@ -137,7 +149,7 @@ export const CardFace = ({
   }, [html, width]);
   return (
     <div
-      className={styles.face}
+      className={`${styles.face} ${isFlowOn ? styles.flowOn : ''}`}
       style={{ ['--u' as string]: `${faceUnit(width)}px` }}
     >
       <div
@@ -231,6 +243,10 @@ export const CardFace = ({
                   <small key={i} className={styles.small}>
                     {part.text}
                   </small>
+                ) : isFlowOn && isFlowKeyword(part) ? (
+                  <strong key={i} className={styles.flowKey}>
+                    {part.text}
+                  </strong>
                 ) : (
                   React.createElement(part.kind, { key: i }, part.text)
                 ),

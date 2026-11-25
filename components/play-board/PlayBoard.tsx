@@ -20,6 +20,7 @@ import {
   getCardDef,
   getHero,
   heroes,
+  isComboOn,
   heroSkill,
   skillCard,
   skillFor,
@@ -2759,6 +2760,11 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           <CardFace
             card={card}
             width={HAND_CARD_WIDTH}
+            isFlowOn={
+              playable &&
+              isComboOn(state.players[viewer]) &&
+              !!getCardDef(card)?.combo
+            }
             spellDamage={mySpellDamage}
             cost={effectiveCost(
               state,

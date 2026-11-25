@@ -18,6 +18,7 @@ export type { EngineContext, ActionResult } from './rules/apply-action';
 export { legalTargets } from './rules/targeting';
 export type { TargetSource } from './rules/targeting';
 export { getCardDef } from './definitions';
+export { isComboOn } from './definitions/define-card';
 export {
   getHero,
   heroes,
