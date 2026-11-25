@@ -166,6 +166,21 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
  * entry plays the defaults.
  */
 export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
+  'ASSASSIN:1': {
+    spotLife: 550,
+    spotRadius: 110,
+    spotRings: 3,
+    spotRingGap: 165,
+    spotSides: 10,
+    spotRingsMotion: 'in',
+    spotFillAlpha: 0.23,
+    spotRingBlurStep: -7,
+    spotAccentColour: 'bdb189',
+    spotGlowScale: 1,
+    spotHasSparks: false,
+    spotSparkMotion: 'inward',
+    spotSparkSpread: 200,
+  },
   'CLERIC:1': {
     spotLife: 1200,
     spotRadius: 70,

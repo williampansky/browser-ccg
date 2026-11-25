@@ -36,6 +36,7 @@ export const spellFxMs = (kind: SpellFxKind, tune: SpellFxTune): number => {
  * skill is 1). A skill never borrows a card's look.
  */
 export const SKILL_FX: Record<string, SpellFxKind> = {
+  'ASSASSIN:1': 'spot',
   'CLERIC:1': 'spot',
   'FIGHTER:1': 'spot',
   'NECROMANCER:1': 'spot',
