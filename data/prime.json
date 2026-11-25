@@ -306,9 +306,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/rawi",
-    "artistUrl": "https://www.artstation.com/rawi",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_132",
@@ -738,6 +738,7 @@
   },
   {
     "id": "PRIME_235",
+    "name": "Armsmaster",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -750,7 +751,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_235a",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_204",
@@ -824,7 +827,7 @@
   },
   {
     "id": "PRIME_238",
-    "name": "Ring of the Lucii",
+    "name": "Deathless Regalia",
     "set": "%SET_003%",
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_MYTHIC%",
@@ -841,9 +844,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "https://www.artstation.com/andiedoesstuff",
-    "artistUrl": "https://www.artstation.com/andiedoesstuff",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_237",
@@ -1987,7 +1990,7 @@
   },
   {
     "id": "PRIME_232",
-    "name": "Blessed Shaman",
+    "name": "Wispbroker",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -2006,9 +2009,9 @@
     "playContext": "%SET_VALUE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_184",
@@ -2946,9 +2949,9 @@
     "active": true,
     "elite": true,
     "flavor": "This DragonMancer Lord carries the skull, and even the presence, of the ancient Death Dragon himself.",
-    "artistName": "https://www.artstation.com/stuharrington",
-    "artistUrl": "https://www.artstation.com/stuharrington",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_085",
@@ -3238,9 +3241,9 @@
     "playContext": "%DRAW_CARD%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/jeffchendesigns",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_234",
@@ -3261,9 +3264,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artistName": "Boyko Julia",
-    "artistUrl": "https://www.artstation.com/jubo",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_247",
@@ -3896,6 +3899,7 @@
   },
   {
     "id": "PRIME_230",
+    "name": "Reckless Strike",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -3904,7 +3908,9 @@
     "text": "Deal 1 damage to a minion and give it +2 Attack. ",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_082",
@@ -5109,6 +5115,7 @@
   },
   {
     "id": "PRIME_236",
+    "name": "Quick Forge",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -5118,7 +5125,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_236a",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_094",
@@ -5142,7 +5151,7 @@
   },
   {
     "id": "PRIME_241",
-    "name": "Outer Beam",
+    "name": "Aegis Discharge",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -5159,9 +5168,9 @@
     "collectible": true,
     "active": true,
     "flavor": "An energy beam with enough power to shape a small portion of the planet to it's liking. I wonder where it came from?",
-    "artistName": "https://www.artstation.com/crabbwalker",
-    "artistUrl": "https://www.artstation.com/crabbwalker",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_199",
@@ -5584,6 +5593,7 @@
   },
   {
     "id": "PRIME_240",
+    "name": "Desperate Cleave",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -5592,7 +5602,9 @@
     "text": "Deal 4 damage. If you have 12 or less Health, deal 6 instead.",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_265",
