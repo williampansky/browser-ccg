@@ -312,7 +312,7 @@ Facts about `data/` [V-data unless tagged]:
   nameless) and 29 active prime cards are nameless; duplicate names "Marauder" and "Frosted Sword";
   54 entourage references with 18 unresolved (including typos like `PRIME112a`); constants has a
   typo "Driod". [V-data]
-- **Correction to an agent claim:** four prime "minions" (PRIME_014 Archery Yard, _104 Perses, _251
+- **Correction to an agent claim:** four prime "minions" (PRIME_014 Archery Yard, _104, _251
   Conquest and Glory, _252 War and Ruin) were reported as lacking attack/health. They have both; they
   carry `%NO_ATTACK%` or special text. [V-data]
 - Heroes: 9 records, only Atlas has `ability1/2/3` strings (`cost(1)\ncooldown(1)\ntype(...)...`);
@@ -607,7 +607,7 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **Keywords the data tags but the card only grants** (066, 054, 115, 124 Guard; 115 Stampede; 160 Bubble): the minion itself does not start with them.
 - **Damage triggers**: 239 reacts to any minion taking damage (either side, itself included); 237 to a *friendly* minion (also when it dies of it);
   016 only to its own damage. `MinionDamaged` now carries the damaged minion's owner.
-- **End/start-of-turn triggers**: "at the end of your turn" fires only on your own turn (210, 102, 061, 046, 052, 176); 104 Perses grows at the end of *every*
+- **End/start-of-turn triggers**: "at the end of your turn" fires only on your own turn (210, 102, 061, 046, 052, 176); 104 grows at the end of *every*
   turn. 059 hits a random enemy (hero included) at the start of your turn.
 - **Random picks** never repeat a target within one effect, and enemy picks include the hero ("enemies"): 167, 202, 059. Random *friendly* picks may
   be the card itself (046, 052).

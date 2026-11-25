@@ -248,7 +248,7 @@ describe('while on the board', () => {
       2, 0,
     ]);
   });
-  it('104 Perses gains +1/+1 at the end of your turn if it attacked, else loses 1/1', () => {
+  it('104 gains +1/+1 at the end of your turn if it attacked, else loses 1/1', () => {
     let s = setup('CORE_043', {
       mine: [[5, 5, 'PRIME_104']],
       theirs: [[1, 50]],

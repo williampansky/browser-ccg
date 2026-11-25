@@ -82,7 +82,7 @@ describe('On Play effects on your own hero or itself', () => {
         .health,
     ).toBe(30);
   });
-  it('PRIME_034 summons its Warpig Mercenary', () => {
+  it('PRIME_034 summons its 2/2 token', () => {
     expect(stats(play(setup('PRIME_034')).state, '0')).toEqual([
       [4, 4],
       [2, 2],

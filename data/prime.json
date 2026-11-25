@@ -961,9 +961,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/xistenceimaginations",
-    "artistUrl": "https://www.artstation.com/xistenceimaginations",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_193",
@@ -1134,9 +1134,9 @@
     "playContext": "%RETURN%",
     "collectible": true,
     "active": true,
-    "artistName": "Nina Galinska",
-    "artistUrl": "https://ninko.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_218",
@@ -1213,6 +1213,7 @@
   },
   {
     "id": "PRIME_065",
+    "name": "Spellward Guard",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -1228,7 +1229,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_174",
@@ -1338,7 +1341,7 @@
   },
   {
     "id": "PRIME_034",
-    "name": "Warpig Knight",
+    "name": "Minotaur Reaver",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -1346,7 +1349,7 @@
     "cost": 5,
     "attack": 4,
     "health": 4,
-    "text": "%SUMMON% a 2/2<br />\nWarpig Mercenary",
+    "text": "%SUMMON% a 2/2<br />\nMinotaur Recruit",
     "mechanics": [
       "%ON_PLAY%",
       "%SUMMON%"
@@ -1355,9 +1358,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_034a",
-    "artistName": "https://www.artstation.com/dianafranco",
-    "artistUrl": "https://www.artstation.com/dianafranco",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_080",
@@ -2454,7 +2457,7 @@
   },
   {
     "id": "PRIME_031",
-    "name": "Mars Lander",
+    "name": "Orbital Sentinel",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -2468,9 +2471,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/alanquiroz",
-    "artistUrl": "https://www.artstation.com/alanquiroz",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_133",
@@ -2829,9 +2832,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/claudiopilia",
-    "artistUrl": "https://www.artstation.com/claudiopilia",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_169",
@@ -3086,9 +3089,9 @@
     "numberPrimary": 2,
     "collectible": true,
     "active": true,
-    "artistName": "George Vostrikov",
-    "artistUrl": "https://georgevostrikov.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_005",
@@ -3326,7 +3329,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_144",
@@ -3368,9 +3373,9 @@
     "playType": "TARGETED",
     "collectible": true,
     "active": true,
-    "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_123",
@@ -4022,7 +4027,7 @@
   },
   {
     "id": "PRIME_066",
-    "name": "Ulan Gladiator",
+    "name": "Pit Champion",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -4040,9 +4045,9 @@
     "collectible": true,
     "active": true,
     "flavor": "One day he earned his freedom because of his great performance in arena. Now he's working as tutor for young gladiators.",
-    "artistName": "Naranbaatar Ganbold",
-    "artistUrl": "https://www.artstation.com/naranbaatars",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_268",
@@ -4127,7 +4132,7 @@
   },
   {
     "id": "PRIME_067",
-    "name": "Android Infiltrator",
+    "name": "Hollow Agent",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -4143,9 +4148,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/jeffchendesigns",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_185",
@@ -4345,9 +4350,9 @@
     "collectible": true,
     "active": true,
     "flavor": "Just a hired gun, axe, thing...",
-    "artistName": "https://www.artstation.com/jameschild",
-    "artistUrl": "https://www.artstation.com/jameschild",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_019",
@@ -4945,9 +4950,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_112",
@@ -5054,9 +5059,9 @@
     "targetingArrowText": "%SILENCE% a minion",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/zezael",
-    "artistUrl": "https://www.artstation.com/zezael",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_097",
@@ -5318,7 +5323,7 @@
   },
   {
     "id": "PRIME_104",
-    "name": "Perses; Titan of Destruction",
+    "name": "Ruinwatcher",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -5336,9 +5341,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "https://www.deviantart.com/cobaltplasma",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_015",
