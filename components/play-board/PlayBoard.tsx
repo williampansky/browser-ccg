@@ -83,7 +83,8 @@ import {
 import { MinionFace } from './MinionFace';
 import { buffedMinionIds, minionOvalHeight } from './minion-model';
 import type { FlashTone } from './motion';
-import { spellFxFor } from './spell-fx';
+import { spellFxFor, spellKeyFor } from './spell-fx';
+import { tuneForSpell } from './spell-fx-tune';
 import type { PixiFx } from './pixi-fx';
 import minionStyles from './board-minion.module.scss';
 import {
@@ -1186,6 +1187,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           ? castingPlayer.hand[action.handIndex]?.cardId
           : undefined,
       );
+      const spellKey = spellKeyFor(
+        action,
+        castingPlayer.hero?.id,
+        action.type === 'PlayCard'
+          ? castingPlayer.hand[action.handIndex]?.cardId
+          : undefined,
+      );
+      const fxTune = tuneForSpell(spellKey);
       // Attacks are thrown at the target; a big hit jolts the table when it
       // lands.
       if (action.type === 'Attack' || action.type === 'WeaponAttack') {
@@ -1242,7 +1251,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       } else {
         // Anything else that hurts (a spell) uses the default timing, not the
         // hero swing's from the last attack.
-        setImpactMs(projectileOn() ? fxMs(fxKind) : IMPACT_MS);
+        setImpactMs(projectileOn() ? fxMs(fxKind, fxTune) : IMPACT_MS);
       }
       // A big hit from anything (an attack or a spell) jolts the table when
       // it lands.
@@ -1294,19 +1303,19 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           const node = key && nodes.current.get(key);
           if (!node) continue;
           if (projectileOn() && caster && caster !== node) {
-            shoot(caster, node, fxKind);
+            shoot(caster, node, fxKind, fxTune);
             shot = true;
           }
           const isDead =
             e.type === 'MinionDamaged' && deadIds.has(e.instanceId);
-          if (hitFlashOn() && !isDead) flashHit(node);
+          if (hitFlashOn() && !isDead) flashHit(node, 'hit', fxTune);
         }
       }
       // Heals flash green and buffs gold (also ?hitflash=1).
       if (isSpellHit && hitFlashOn()) {
         const flashKey = (key: string, tone: FlashTone) => {
           const node = nodes.current.get(key);
-          if (node) flashHit(node, tone);
+          if (node) flashHit(node, tone, fxTune);
         };
         for (const e of result.events) {
           if (e.type !== 'Healed' || e.amount <= 0) continue;

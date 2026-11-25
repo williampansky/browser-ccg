@@ -1,6 +1,8 @@
 import { getSwing } from './hero-swing-tune';
 import type { PixiFx } from './pixi-fx';
-import { SPELL_FX_MS } from './spell-fx';
+import { spellFxMs } from './spell-fx';
+import { tuneForSpell } from './spell-fx-tune';
+import type { SpellFxTune } from './spell-fx-tune';
 import type { SpellFxKind } from './spell-fx';
 import type { HeroSwingSettings, SwingKind } from './hero-swing-tune';
 
@@ -301,7 +303,8 @@ export const setPixiFx = (fx: PixiFx | null): void => {
 };
 
 /** How long a spell's effect takes to land, by kind. */
-export const fxMs = (kind: SpellFxKind): number => SPELL_FX_MS[kind];
+export const fxMs = (kind: SpellFxKind, tune: SpellFxTune): number =>
+  spellFxMs(kind, tune);
 
 const PROJECTILE_SIZE = 18;
 
@@ -319,6 +322,7 @@ export const shoot = (
   from: HTMLElement,
   to: HTMLElement,
   kind: SpellFxKind = 'orb',
+  tune: SpellFxTune = tuneForSpell(null),
 ): void => {
   if (reducedMotion() || !from.animate) return;
   const origin = centerOf(from);
@@ -326,8 +330,8 @@ export const shoot = (
   const start = { x: origin.x, y: Math.min(origin.y, window.innerHeight - 20) };
   const end = centerOf(to);
   if (pixiFx) {
-    if (kind === 'lightning') pixiFx.lightning(end, fxMs(kind));
-    else pixiFx.projectile(start, end, fxMs(kind));
+    if (kind === 'lightning') pixiFx.lightning(end, fxMs(kind, tune), tune);
+    else pixiFx.projectile(start, end, fxMs(kind, tune), tune);
     return;
   }
   // Without Pixi only the orb has a plain version; the rest just flash.
@@ -356,7 +360,7 @@ export const shoot = (
       { opacity: 0.9, transform: at(start, 0.6) },
       { opacity: 1, transform: at(end, 1.3) },
     ],
-    { duration: fxMs(kind), easing: 'cubic-bezier(0.4, 0, 0.8, 0.6)' },
+    { duration: fxMs(kind, tune), easing: 'cubic-bezier(0.4, 0, 0.8, 0.6)' },
   );
   flight.onfinish = () => orb.remove();
   flight.oncancel = () => orb.remove();
@@ -382,6 +386,7 @@ const FLASH_FILTER: Record<FlashTone, string> = {
 export const flashHit = (
   target: HTMLElement,
   tone: FlashTone = 'hit',
+  tune?: SpellFxTune,
 ): void => {
   if (reducedMotion() || !target.animate) return;
   const body =
@@ -391,7 +396,7 @@ export const flashHit = (
   const fx = pixiFx;
   if (fx) {
     const at = centerOf(target);
-    setTimeout(() => fx.burst(at, tone), getImpactMs());
+    setTimeout(() => fx.burst(at, tone, tune), getImpactMs());
   }
   body.animate(
     [
