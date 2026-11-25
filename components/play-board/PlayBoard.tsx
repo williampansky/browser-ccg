@@ -259,12 +259,11 @@ const setDragging = (on: boolean) =>
  */
 const typeClass = (type?: string) =>
   type ? (styles[`type_${type}`] ?? '') : '';
-const projectileOn = (): boolean =>
-  new URLSearchParams(window.location.search).get('projectile') === '1';
+/** Spell effects (Pixi layer, projectiles, flashes) are on; ?fx=off stops them. */
+const spellFxOn = (): boolean =>
+  new URLSearchParams(window.location.search).get('fx') !== 'off';
 const isSpellHitAction = (action: Action): boolean =>
   action.type === 'HeroSkill' || action.type === 'PlayCard';
-const hitFlashOn = (): boolean =>
-  new URLSearchParams(window.location.search).get('hitflash') === '1';
 const targetKey = (t: TargetRef) =>
   t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`;
 const centerOf = (el: HTMLElement) => {
@@ -905,19 +904,23 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   const [soundOn, setSoundOn] = useState(true);
   useEffect(() => setSoundOn(!isMuted()), []);
   /**
-   * ?fx=pixi loads the Pixi effects layer (a separate chunk, so nobody else
-   * pays for it); until it is ready the DOM effects play.
+   * Loads the Pixi effects layer (its own chunk, so the page does not wait
+   * for it); until it is ready, or if it cannot start (no WebGL), the DOM
+   * effects play. ?fx=off skips it and every spell effect.
    */
   useEffect(() => {
-    if (new URLSearchParams(window.location.search).get('fx') !== 'pixi')
-      return;
+    if (!spellFxOn()) return;
     let isCurrent = true;
     let fx: PixiFx | null = null;
     import('./pixi-fx')
       .then(({ createPixiFx }) => {
         if (!isCurrent) return;
-        fx = createPixiFx();
-        setPixiFx(fx);
+        try {
+          fx = createPixiFx();
+          setPixiFx(fx);
+        } catch {
+          setPixiFx(null);
+        }
       })
       .catch(() => setPixiFx(null));
     return () => {
@@ -1254,7 +1257,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       } else {
         // Anything else that hurts (a spell) uses the default timing, not the
         // hero swing's from the last attack.
-        setImpactMs(projectileOn() ? fxMs(fxKind, fxTune) : IMPACT_MS);
+        setImpactMs(spellFxOn() ? fxMs(fxKind, fxTune) : IMPACT_MS);
       }
       // A big hit from anything (an attack or a spell) jolts the table when
       // it lands.
@@ -1268,7 +1271,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       );
       if (dealt >= BIG_HIT_DAMAGE && tableRef.current)
         nudge(tableRef.current, dealt);
-      // A spell's target flashes where it was hit (opt-in: ?hitflash=1). A
+      // A spell's target flashes where it was hit (on unless ?fx=off). A
       // minion that dies gets its death ghost instead.
       const isSpellHit =
         action.type !== 'Attack' && action.type !== 'WeaponAttack';
@@ -1279,7 +1282,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
        */
       if (
         isSpellHitAction(action) &&
-        projectileOn() &&
+        spellFxOn() &&
         fxKind === 'spot' &&
         spellKey
       ) {
@@ -1291,20 +1294,20 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         if (spotNode) spot(spotNode, fxTune);
       }
       /**
-       * With ?projectile=1 a spell's orb flies from the caster's hero to each
+       * A spell's orb flies from the caster's hero to each
        * target, and the hit (flash, numbers, jolt, death) waits for it.
        */
       let shot = false;
-      if (isSpellHit && (hitFlashOn() || projectileOn())) {
+      if (isSpellHit && spellFxOn()) {
         const deadIds = new Set(
           result.events.flatMap((e) =>
             e.type === 'MinionDied' ? [e.instanceId] : [],
           ),
         );
         /**
-         * A spell flies from its card's slot in the viewer's hand; a hero skill
-         * (a ranged one like the Wizard's) and the other seat's cards, whose
-         * hand is face-down backs with no slot, fly from the hero.
+         * A spell flies from its card's slot in the viewer's hand; the other
+         * seat's cards, whose hand is face-down backs with no slot, fly from
+         * the hero. A hero skill is handled below.
          */
         const isViewersCard =
           action.type === 'PlayCard' &&
@@ -1313,7 +1316,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           action.type === 'PlayCard' && isViewersCard
             ? nodes.current.get(`c${action.handIndex}`)
             : undefined;
-        const caster = cardNode ?? nodes.current.get(`h${state.activePlayer}`);
+        // A hero skill starts at its own socket on the hero (any skill number,
+        // so skills 2 and the ultimate need nothing more), else at the hero.
+        const skillNode =
+          action.type === 'HeroSkill'
+            ? nodes.current.get(`s${state.activePlayer}-${action.skill}`)
+            : undefined;
+        const caster =
+          cardNode ?? skillNode ?? nodes.current.get(`h${state.activePlayer}`);
         for (const e of result.events) {
           const key =
             e.type === 'MinionDamaged'
@@ -1324,17 +1334,17 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           const node = key && nodes.current.get(key);
           if (!node) continue;
           const isTravel = fxKind !== 'spot';
-          if (isTravel && projectileOn() && caster && caster !== node) {
+          if (isTravel && spellFxOn() && caster && caster !== node) {
             shoot(caster, node, fxKind, fxTune);
             shot = true;
           }
           const isDead =
             e.type === 'MinionDamaged' && deadIds.has(e.instanceId);
-          if (hitFlashOn() && !isDead) flashHit(node, 'hit', fxTune);
+          if (spellFxOn() && !isDead) flashHit(node, 'hit', fxTune);
         }
       }
-      // Heals flash green and buffs gold (also ?hitflash=1).
-      if (isSpellHit && hitFlashOn()) {
+      // Heals flash green and buffs gold (also off with ?fx=off).
+      if (isSpellHit && spellFxOn()) {
         const flashKey = (key: string, tone: FlashTone) => {
           const node = nodes.current.get(key);
           if (node) flashHit(node, tone, fxTune);

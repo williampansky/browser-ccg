@@ -103,6 +103,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   plays it there. Hover popups are hidden during a drag (`body.dragging`), and drags that aim at a target (attackers, and
   cards with a target) use an invisible drag image (the arrow shows the aim; a ghost would cover the target). Cards
   dropped on the board or play area keep their ghost. It uses native browser drag, so it does not work on touch screens.
+- **Spell effects** (Pixi layer, `components/play-board/pixi-fx.ts`; bases, per-spell looks and the lab are in `spell-fx.ts`, `spell-fx-tune.ts` and `/spells-lab`) are on by default; `?fx=off` switches them all off.
 - **Debug URL params** (read on every "New game" while they are in the URL): `?first=0|1` picks who goes first
   (0 = Player 1); `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand, in order.
   `?b0=CORE_027,CORE_061` and `?b1=...` put ready-to-attack minions on that player's board (no On Play effect or aura runs),

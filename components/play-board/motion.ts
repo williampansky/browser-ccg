@@ -295,7 +295,7 @@ export const lunge = (
 let pixiFx: PixiFx | null = null;
 
 /**
- * Hands over the Pixi effects layer once it has loaded (`?fx=pixi`). While it
+ * Hands over the Pixi effects layer once it has loaded (off with `?fx=off`). While it
  * is null, spells use the DOM orb and flashes below.
  */
 export const setPixiFx = (fx: PixiFx | null): void => {
