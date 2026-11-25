@@ -84,7 +84,7 @@ import { MinionFace } from './MinionFace';
 import { buffedMinionIds, minionOvalHeight } from './minion-model';
 import type { FlashTone } from './motion';
 import { spellFxFor, spellKeyFor } from './spell-fx';
-import { tuneForSpell } from './spell-fx-tune';
+import { fxChain, tuneForSpell } from './spell-fx-tune';
 import type { PixiFx } from './pixi-fx';
 import minionStyles from './board-minion.module.scss';
 import {
@@ -1191,24 +1191,6 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       if (summoned && summoned.type === 'MinionPlayed') {
         landedAt.current.set(summoned.instanceId, Date.now() + 520);
       }
-      /**
-       * Every minion that is summoned or played gets the summon effect, centred
-       * on it once it is on the board (its node exists after the next render,
-       * and a played minion first flies in from the hand).
-       */
-      if (spellFxOn()) {
-        for (const e of result.events) {
-          if (e.type !== 'MinionSummoned' && e.type !== 'MinionPlayed')
-            continue;
-          const { instanceId } = e;
-          const wait =
-            e.type === 'MinionPlayed' ? SUMMON_LANDED_MS : SUMMON_RENDER_MS;
-          setTimeout(() => {
-            const node = nodes.current.get(`m${instanceId}`);
-            if (node) spot(node, tuneForSpell(SUMMON_FX_KEY), true);
-          }, wait);
-        }
-      }
       /** Which show a spell or skill puts on (the default is the orb). */
       const castingPlayer = state.players[state.activePlayer];
       const fxKind = spellFxFor(
@@ -1226,6 +1208,29 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           : undefined,
       );
       const fxTune = tuneForSpell(spellKey);
+      /**
+       * Every minion that is summoned or played gets the summon effect, centred
+       * on it once it is on the board (its node exists after the next render,
+       * and a played minion first flies in from the hand).
+       */
+      if (spellFxOn()) {
+        // A skill or card that starts from the summon look uses its own tweaks.
+        const summonKey =
+          spellKey && fxChain(spellKey).includes(SUMMON_FX_KEY)
+            ? spellKey
+            : SUMMON_FX_KEY;
+        for (const e of result.events) {
+          if (e.type !== 'MinionSummoned' && e.type !== 'MinionPlayed')
+            continue;
+          const { instanceId } = e;
+          const wait =
+            e.type === 'MinionPlayed' ? SUMMON_LANDED_MS : SUMMON_RENDER_MS;
+          setTimeout(() => {
+            const node = nodes.current.get(`m${instanceId}`);
+            if (node) spot(node, tuneForSpell(summonKey), true);
+          }, wait);
+        }
+      }
       // Attacks are thrown at the target; a big hit jolts the table when it
       // lands.
       if (action.type === 'Attack' || action.type === 'WeaponAttack') {

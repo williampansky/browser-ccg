@@ -57,3 +57,10 @@ describe('event effects', () => {
     expect(spellFxForKey('summon')).toBe('spot');
   });
 });
+
+describe('inherited base', () => {
+  it('gives a summoning skill its parent base without an entry of its own', () => {
+    expect(spellFxForKey('CRUSADER:1')).toBe('spot');
+    expect(spellFxForKey('MYSTIC:1')).toBe('spot');
+  });
+});

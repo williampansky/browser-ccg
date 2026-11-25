@@ -1,5 +1,8 @@
 import {
   colourNumber,
+  fxChain,
+  SPELL_FX_PARENTS,
+  tuneForSpell,
   parseSpellTune,
   SPELL_FX_DEFAULTS,
 } from '../spell-fx-tune';
@@ -39,5 +42,20 @@ describe('parseSpellTune', () => {
 describe('colourNumber', () => {
   it('turns a hex string into a number', () => {
     expect(colourNumber('8fb8ff')).toBe(0x8fb8ff);
+  });
+});
+
+describe('parents', () => {
+  it('chains a child after its parent, and a lone key is its own chain', () => {
+    expect(fxChain('CRUSADER:1')).toEqual(['summon', 'CRUSADER:1']);
+    expect(fxChain('WIZARD:1')).toEqual(['WIZARD:1']);
+    expect(fxChain(null)).toEqual([]);
+  });
+
+  it('starts a child from its parent look', () => {
+    expect(SPELL_FX_PARENTS['MYSTIC:1']).toBe('summon');
+    expect(tuneForSpell('MYSTIC:1').spotRadius).toBe(
+      tuneForSpell('summon').spotRadius,
+    );
   });
 });

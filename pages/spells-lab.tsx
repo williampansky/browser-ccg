@@ -18,6 +18,7 @@ import {
 import type { SpellFxKind } from '../components/play-board/spell-fx';
 import {
   parseSpellTune,
+  SPELL_FX_PARENTS,
   tuneForSpell,
 } from '../components/play-board/spell-fx-tune';
 
@@ -321,6 +322,13 @@ const SpellsLab = () => {
             <br />
             {entry.text}
             <br />
+            {SPELL_FX_PARENTS[spellKey] && (
+              <>
+                Starts from the <b>{SPELL_FX_PARENTS[spellKey]}</b> look; your
+                numbers go on top.
+                <br />
+              </>
+            )}
             Assigned effect: <b>{assigned}</b>
             {kind !== assigned && ` (trying ${kind})`}
           </div>

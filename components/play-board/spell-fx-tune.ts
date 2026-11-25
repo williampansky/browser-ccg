@@ -185,11 +185,35 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     spotSparkScale: 0.4,
     spotSparkSpread: 60,
   },
+  'CRUSADER:1': {
+    spotLife: 700,
+    spotRings: 3,
+    spotRingGap: 220,
+    spotRingBlur: 1,
+    spotRingBlurStep: 10,
+    spotAccentColour: 'fffa70',
+    spotGlowScale: 6,
+    spotSparkCount: 20,
+    spotSparkSpeed: 0.2,
+    spotSparkLife: 1000,
+    spotSparkScale: 0.6,
+    spotSparkSpread: 0,
+  },
   'FIGHTER:1': {
     spotColour: '748ae2',
     spotAccentColour: '139fcd',
     spotGlowScale: 8,
     spotSparkCount: 20,
+  },
+  'MYSTIC:1': {
+    spotLife: 890,
+    spotColour: '3dff5d',
+    spotAccentColour: 'b8ffc3',
+    spotSparkCount: 20,
+    spotSparkSpeed: 0.27,
+    spotSparkLife: 790,
+    spotSparkScale: 0.15,
+    spotSparkSpread: 130,
   },
   'NECROMANCER:1': {
     spotLife: 1500,
@@ -247,13 +271,59 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     spotSparkScale: 0.35,
     spotSparkSpread: 50,
   },
+  'WARDEN:1': {
+    spotLife: 1100,
+    spotRadius: 70,
+    spotRingGap: 300,
+    spotWidth: 4,
+    spotSides: 8,
+    spotRingsMotion: 'pulse',
+    spotFillAlpha: 0.12,
+    spotRingBlur: 3,
+    spotColour: '3f8f3a',
+    spotAccentColour: 'ffb347',
+    spotGlowScale: 4,
+    spotSparkCount: 28,
+    spotSparkMotion: 'rising',
+    spotSparkSpeed: 0.09,
+    spotSparkLife: 900,
+    spotSparkScale: 0.3,
+    spotSparkSpread: 60,
+  },
 };
 
-/** The look a spell plays: the defaults with its saved variant on top. */
-export const tuneForSpell = (key: string | null): SpellFxTune => ({
-  ...SPELL_FX_DEFAULTS,
-  ...(key ? SPELL_FX_VARIANTS[key] : undefined),
-});
+/**
+ * Spells whose look starts from another entry's: a skill that summons begins
+ * as the `summon` look and its own saved numbers go on top, so it can be
+ * tweaked from there. The base effect (`travel`, `strike`, `spot`) is
+ * inherited the same way.
+ */
+export const SPELL_FX_PARENTS: Record<string, string> = {
+  'CRUSADER:1': 'summon',
+  'MYSTIC:1': 'summon',
+};
+
+/** A key, then its parent, then that one's parent (the key last). */
+export const fxChain = (key: string | null): string[] => {
+  const chain: string[] = [];
+  let next = key;
+  while (next && !chain.includes(next)) {
+    chain.unshift(next);
+    next = SPELL_FX_PARENTS[next] ?? null;
+  }
+  return chain;
+};
+
+/**
+ * The look a spell plays: the defaults, then each saved variant down its
+ * chain of parents.
+ */
+export const tuneForSpell = (key: string | null): SpellFxTune =>
+  Object.assign(
+    {},
+    SPELL_FX_DEFAULTS,
+    ...fxChain(key).map((link) => SPELL_FX_VARIANTS[link]),
+  );
 
 /**
  * The tune from a URL query string: `s_<field>` params over `base` (the

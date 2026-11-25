@@ -1,5 +1,6 @@
 import type { Action } from '../../engine';
 
+import { SPELL_FX_PARENTS } from './spell-fx-tune';
 import type { SpellFxTune } from './spell-fx-tune';
 
 /**
@@ -38,6 +39,7 @@ export const SKILL_FX: Record<string, SpellFxKind> = {
   'CLERIC:1': 'spot',
   'FIGHTER:1': 'spot',
   'NECROMANCER:1': 'spot',
+  'WARDEN:1': 'spot',
   'WIZARD:1': 'strike',
 };
 
@@ -57,8 +59,12 @@ export const EVENT_FX: Record<string, SpellFxKind> = {
 };
 
 /** The effect a spell plays, by its key (a card id, `CLASS:n` skill or event). */
-export const spellFxForKey = (key: string): SpellFxKind =>
-  SKILL_FX[key] ?? CARD_FX[key] ?? EVENT_FX[key] ?? 'travel';
+export const spellFxForKey = (key: string): SpellFxKind => {
+  const own = SKILL_FX[key] ?? CARD_FX[key] ?? EVENT_FX[key];
+  if (own) return own;
+  const parent = SPELL_FX_PARENTS[key];
+  return parent ? spellFxForKey(parent) : 'travel';
+};
 
 /**
  * The key of the spell an action casts: `<CLASS>:<skill number>` for a hero

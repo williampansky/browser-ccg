@@ -7,7 +7,7 @@ const { plan } = require('../apply-spell-url.node.js');
 const PLAY = path.join(__dirname, '..', '..', 'components', 'play-board');
 const tuneSrc = fs.readFileSync(path.join(PLAY, 'spell-fx-tune.ts'), 'utf8');
 const fxSrc = fs.readFileSync(path.join(PLAY, 'spell-fx.ts'), 'utf8');
-const classKeys = ['CLERIC', 'FIGHTER', 'WIZARD'];
+const classKeys = ['CLERIC', 'CRUSADER', 'FIGHTER', 'WIZARD'];
 const run = (url: string, isDefaults = false, texts = { tuneSrc, fxSrc }) =>
   plan({
     url,
@@ -77,7 +77,7 @@ describe('apply-spell-url plan', () => {
   it('finds an entry whose key prettier left unquoted and merges into it', () => {
     const first = run('sp=summon&s_spotRadius=60&s_spotRings=1');
     const unquoted = first.tune.replace("'summon': {", 'summon: {');
-    expect(unquoted).not.toContain("'summon'");
+    expect(unquoted).not.toContain("'summon': {");
     const second = run('sp=summon&s_spotGlowScale=5', false, {
       tuneSrc: unquoted,
       fxSrc,
@@ -86,6 +86,23 @@ describe('apply-spell-url plan', () => {
     expect(second.tune.match(/'?summon'?: \{/g)).toHaveLength(1);
     expect(second.tune).toContain('spotRadius: 60,');
     expect(second.tune).toContain('spotGlowScale: 5,');
+  });
+
+  it('measures a child against its parent, not the defaults', () => {
+    // CRUSADER:1 starts from the summon look; summon has spotRings 1.
+    const base = run('sp=summon&s_spotRings=1&s_spotSides=48');
+    const parentSrc = { tuneSrc: base.tune, fxSrc };
+    // spotRings=2 is the default but not the inherited value: it must stay.
+    const child = run(
+      'sp=CRUSADER:1&s_spotRings=2&s_spotSides=48&s_spotGlowScale=4',
+      false,
+      parentSrc,
+    );
+    const entry = child.tune.split("'CRUSADER:1': {")[1].split('},')[0];
+    expect(entry).toContain('spotRings: 2,');
+    expect(entry).toContain('spotGlowScale: 4,');
+    // spotSides=48 equals the parent's value: nothing to store.
+    expect(entry).not.toContain('spotSides');
   });
 
   it('writes nothing for a bad spell, field or value', () => {

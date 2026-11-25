@@ -137,6 +137,7 @@ const hasCard = (id) =>
  */
 const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
   const choices = parseChoices(tuneSrc);
+  const parents = parseFlat(findBlock(tuneSrc, 'SPELL_FX_PARENTS').body);
   const eventKeys = [...parseFlat(findBlock(fxSrc, 'EVENT_FX').body).keys()];
   const errors = [];
   const changes = [];
@@ -205,6 +206,9 @@ const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
     }
   }
 
+  const SKILL_FX_NAMES = parseFlat(findBlock(fxSrc, 'SKILL_FX').body);
+  const CARD_FX_NAMES = parseFlat(findBlock(fxSrc, 'CARD_FX').body);
+  const EVENT_FX_NAMES = parseFlat(findBlock(fxSrc, 'EVENT_FX').body);
   const base = params.get('e');
   if (base !== null && !kinds.includes(base)) {
     errors.push(`e: expected one of ${kinds.join(', ')}, got "${base}"`);
@@ -236,11 +240,24 @@ const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
   // This spell's variant: the old entry with the URL over it, minus anything
   // that equals the default.
   const variants = parseVariants(findBlock(tuneSrc, 'SPELL_FX_VARIANTS').body);
+  // What the spell looks like before its own entry: the defaults with each
+  // parent's variant on top (a summoning skill starts as the `summon` look).
+  const inherited = new Map(defaults);
+  const links = [];
+  for (let next = parents.get(key); next && !links.includes(next);) {
+    links.unshift(next);
+    next = parents.get(next);
+  }
+  for (const link of links) {
+    for (const [field, value] of variants.get(link) || []) {
+      inherited.set(field, value);
+    }
+  }
   const before = new Map(variants.get(key) || []);
   const after = new Map(before);
   for (const [field, value] of given) after.set(field, value);
   for (const [field, value] of [...after]) {
-    if (defaults.get(field) === value) after.delete(field);
+    if (inherited.get(field) === value) after.delete(field);
   }
   for (const [field, value] of after) {
     if (before.get(field) !== value) {
@@ -251,7 +268,8 @@ const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
     }
   }
   for (const field of before.keys()) {
-    if (!after.has(field)) changes.push(`${key} ${field}: back to default`);
+    if (!after.has(field))
+      changes.push(`${key} ${field}: back to the inherited look`);
   }
   if (after.size) variants.set(key, after);
   else variants.delete(key);
@@ -270,7 +288,18 @@ const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
         : 'CARD_FX';
     const assigned = parseFlat(findBlock(fxSrc, name).body);
     const old = assigned.get(key);
-    const next = base === DEFAULT_BASE && name === 'CARD_FX' ? undefined : base;
+    // The base the spell would have with no entry: its parent's, else travel.
+    let inheritedBase = DEFAULT_BASE;
+    for (const link of links.slice().reverse()) {
+      const own = [SKILL_FX_NAMES, CARD_FX_NAMES, EVENT_FX_NAMES]
+        .map((table) => table.get(link))
+        .find(Boolean);
+      if (own) {
+        inheritedBase = own;
+        break;
+      }
+    }
+    const next = base === inheritedBase ? undefined : base;
     if (old !== next) {
       changes.push(`${name} ${key}: ${old || 'none'} -> ${next || 'none'}`);
       if (next) assigned.set(key, next);
