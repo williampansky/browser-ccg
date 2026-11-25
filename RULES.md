@@ -716,7 +716,7 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
 - **169 Paladin**: on death gain 5 Armor and equip a 3/2 Mace (PRIME_169a).
 - **Immune** (137, `MinionInstance.immune`): a friendly minion gets +2 Attack and takes no damage until the end of the turn.
 - **238 Ring of the Lucii**: this turn your minions are brought back to 1 Health if they would die; this also stops a "destroy" effect (the engine cannot tell damage from destroy at that point).
-- **089 Sir Jorio**: all the OPPONENT's spells cost 0 during their next turn. **196 Soul Lantern** (cost 1): your next spell this turn costs 2 less, and you draw a card. **155 Crystal of Virtue**: you draw whenever that minion attacks.
+- **089 Lord Verrin**: all the OPPONENT's spells cost 0 during their next turn. **196 Soul Lantern** (cost 1): your next spell this turn costs 2 less, and you draw a card. **155 Crystal of Virtue**: you draw whenever that minion attacks.
 - **056 Portal**: at the start of your turn it swaps itself with a random minion card in your hand (that card takes its slot, summoning sick; Portal goes to your hand). Nothing happens without one.
 - **184 The Sorceress (5/7)**: your spells deal +1 damage and heal +1 (healing, `CardDef.spellHealing`).
 - **Not built**: 248 Ah-Xoc-Xin (a Discover of "ROCKING powers" that the data does not define).

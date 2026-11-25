@@ -221,7 +221,7 @@
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
-    "race": "%RACE_ANDROID%",
+    "race": "%RACE_NONE%",
     "cost": 1,
     "attack": 1,
     "health": 2,
@@ -229,9 +229,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/xistenceimaginations",
-    "artistUrl": "https://www.artstation.com/xistenceimaginations",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_103",
@@ -558,9 +558,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "Angelica Donarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_131",
@@ -1377,9 +1377,9 @@
     "playContext": "%SET_VALUE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/jeffchendesigns",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_119",
@@ -1605,9 +1605,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "Ona Kristensen",
-    "artistUrl": "https://angevere.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_170",
@@ -1893,9 +1893,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artistName": "Conor Burke",
-    "artistUrl": "https://conorburke.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_220",
@@ -2112,9 +2112,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artistName": "angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_186",
@@ -2176,7 +2176,7 @@
   },
   {
     "id": "PRIME_089",
-    "name": "Sir Jorio",
+    "name": "Lord Verrin",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -2192,9 +2192,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_078",
@@ -2749,9 +2749,9 @@
     "collectible": true,
     "active": true,
     "flavor": "Art tutorial available on Patreon at patreon.com/justingerard",
-    "artistName": "https://www.artstation.com/justingerardillustration",
-    "artistUrl": "https://www.artstation.com/justingerardillustration",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_063",
@@ -3701,6 +3701,7 @@
   },
   {
     "id": "PRIME_023",
+    "name": "Shardhide",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -3714,7 +3715,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_108",
@@ -4581,9 +4584,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_051",
@@ -4692,9 +4695,9 @@
     "playContext": "%SET_VALUE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_203",

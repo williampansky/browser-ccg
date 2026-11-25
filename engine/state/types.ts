@@ -188,7 +188,7 @@ export interface PlayerState {
    */
   spellDiscount?: { turn: number; amount: number };
   /**
-   * On this turn number all of this player's spells cost 0 (Sir Jorio, on the
+   * On this turn number all of this player's spells cost 0 (PRIME_089, on the
    * opponent)
    */
   freeSpellsOnTurn?: number;
