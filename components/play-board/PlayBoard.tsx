@@ -114,6 +114,7 @@ import {
 import { currentHeroKey } from '../../engine/heroes/classes';
 import {
   aimVector,
+  flashHit,
   getImpactMs,
   setImpactMs,
   swingImpactMs,
@@ -250,6 +251,8 @@ const setDragging = (on: boolean) =>
  */
 const typeClass = (type?: string) =>
   type ? (styles[`type_${type}`] ?? '') : '';
+const hitFlashOn = (): boolean =>
+  new URLSearchParams(window.location.search).get('hitflash') === '1';
 const targetKey = (t: TargetRef) =>
   t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`;
 const centerOf = (el: HTMLElement) => {
@@ -1214,6 +1217,28 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       );
       if (dealt >= BIG_HIT_DAMAGE && tableRef.current)
         nudge(tableRef.current, dealt);
+      // A spell's target flashes where it was hit (opt-in: ?hitflash=1). A
+      // minion that dies gets its death ghost instead.
+      const isSpellHit =
+        action.type !== 'Attack' && action.type !== 'WeaponAttack';
+      if (isSpellHit && hitFlashOn()) {
+        const deadIds = new Set(
+          result.events.flatMap((e) =>
+            e.type === 'MinionDied' ? [e.instanceId] : [],
+          ),
+        );
+        for (const e of result.events) {
+          if (e.type === 'MinionDamaged' && deadIds.has(e.instanceId)) continue;
+          const key =
+            e.type === 'MinionDamaged'
+              ? `m${e.instanceId}`
+              : e.type === 'HeroDamaged'
+                ? `h${e.player}`
+                : null;
+          const node = key && nodes.current.get(key);
+          if (node) flashHit(node);
+        }
+      }
       const died = result.events.filter(
         (e): e is Extract<GameEvent, { type: 'MinionDied' }> =>
           e.type === 'MinionDied',

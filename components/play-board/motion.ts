@@ -287,6 +287,29 @@ export const lunge = (
   kind: SwingKind = 'minion',
 ): number => lungeBy(attacker, aimVector(attacker, target), kind);
 
+/** How long the flash on a spell's target lasts. */
+const HIT_FLASH_MS = 320;
+
+/**
+ * A quick white-hot flash on a target a spell hit: it brightens and fades back.
+ * It waits for the same impact delay as the table jolt.
+ */
+export const flashHit = (target: HTMLElement): void => {
+  if (reducedMotion() || !target.animate) return;
+  const body =
+    target.querySelector<HTMLElement>(MINION_OVAL) ??
+    target.querySelector<HTMLElement>(FIGURE) ??
+    target;
+  body.animate(
+    [
+      { filter: 'brightness(1)' },
+      { filter: 'brightness(3) saturate(0.4)', offset: 0.25 },
+      { filter: 'brightness(1)' },
+    ],
+    { duration: HIT_FLASH_MS, delay: getImpactMs(), easing: 'ease-out' },
+  );
+};
+
 /** A short jolt of the whole table, for a big hit. */
 export const nudge = (el: HTMLElement, strength: number): void => {
   if (reducedMotion() || !el.animate) return;
