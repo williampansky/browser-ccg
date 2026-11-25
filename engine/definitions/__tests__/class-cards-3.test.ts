@@ -19,7 +19,7 @@ import {
 } from '../../testing/real-cards';
 import { skillFor } from '../../heroes';
 
-// PRIME_181 (Shadowform) and PRIME_236.
+// PRIME_181 (Penumbra) and PRIME_236.
 
 describe('PRIME_236', () => {
   it('equips a 1/3 weapon when you have none', () => {
@@ -112,13 +112,13 @@ describe('PRIME_181', () => {
   it('leaves the other skills alone', () => {
     const state = cast(withHero());
 
-    expect(skillFor(state.players['0'].hero, 1)?.name).not.toBe('Shadowform');
+    expect(skillFor(state.players['0'].hero, 1)?.name).not.toBe('Penumbra');
   });
 
   it('does not touch the other player skill', () => {
     const state = cast(withHero());
 
-    expect(skillFor(state.players['1'].hero, 0)?.name).not.toBe('Shadowform');
+    expect(skillFor(state.players['1'].hero, 0)?.name).not.toBe('Penumbra');
   });
 });
 

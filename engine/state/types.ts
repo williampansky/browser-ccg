@@ -151,10 +151,10 @@ export interface HeroState {
   /** One-use skills (no cooldown in the data) that have been used */
   spent: boolean[];
   /**
-   * Shadowform (PRIME_181): skill 1 is replaced for the rest of the game by
+   * Penumbra (PRIME_181): skill 1 is replaced for the rest of the game by
    * "Deal N damage", with N = this (2, then 3 when it is played again)
    */
-  shadowform?: number;
+  penumbra?: number;
 }
 
 export interface PlayerState {

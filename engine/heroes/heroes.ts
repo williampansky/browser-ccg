@@ -34,7 +34,7 @@ export interface HeroSkill {
   options?: SkillCode['options'];
   effects: Effect[];
   /**
-   * Set while a card has replaced this skill mid-game (Shadowform): the id of
+   * Set while a card has replaced this skill mid-game (Penumbra): the id of
    * that card, whose art the skill icon and cast popup then use
    */
   artCardId?: string;
@@ -57,8 +57,8 @@ export interface HeroInfo {
   skills: HeroSkill[];
 }
 
-const SHADOWFORM_NAME = 'Shadowform';
-const SHADOWFORM_CARD = 'PRIME_181';
+const PENUMBRA_NAME = 'Penumbra';
+const PENUMBRA_CARD = 'PRIME_181';
 
 const glossary = new Map<string, string>(
   [
@@ -190,7 +190,7 @@ export const heroSkill = (
 const FIRST_SKILL = 0;
 
 /**
- * The skill a player's hero has right now: `heroSkill`, except that Shadowform
+ * The skill a player's hero has right now: `heroSkill`, except that Penumbra
  * (PRIME_181) replaces skill 1 with "Deal N damage" to any character, at the
  * same cost and cooldown. A replacement names its card in `artCardId`; that is
  * how any later card that swaps a skill mid-match gets its art on the board.
@@ -200,17 +200,17 @@ export const skillFor = (
   index: number,
 ): HeroSkill | undefined => {
   const base = heroSkill(hero?.id, index);
-  const damageDealt = hero?.shadowform;
+  const damageDealt = hero?.penumbra;
 
   if (!base || damageDealt === undefined || index !== FIRST_SKILL) return base;
 
   return {
     ...base,
-    name: SHADOWFORM_NAME,
+    name: PENUMBRA_NAME,
     text: `Deal ${damageDealt} damage`,
     target: () => true,
     options: undefined,
     effects: [damage(chosenTarget(), damageDealt)],
-    artCardId: SHADOWFORM_CARD,
+    artCardId: PENUMBRA_CARD,
   };
 };

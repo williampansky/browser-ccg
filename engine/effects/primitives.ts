@@ -1463,17 +1463,17 @@ export const buffWeaponStats =
   };
 
 /**
- * Shadowform: the caster's hero skill 1 becomes "Deal 2 damage"; played again
+ * Penumbra: the caster's hero skill 1 becomes "Deal 2 damage"; played again
  * it becomes 3 (see `skillFor`). Nothing without a hero.
  */
-export const enterShadowform: Effect = (ctx) => {
+export const enterPenumbra: Effect = (ctx) => {
   const { hero } = ctx.g.players[ctx.caster];
   const first = 2;
   const stronger = 3;
 
   if (!hero) return;
 
-  hero.shadowform = hero.shadowform === undefined ? first : stronger;
+  hero.penumbra = hero.penumbra === undefined ? first : stronger;
 };
 
 /**
