@@ -20,6 +20,8 @@ export interface SpellFxTune {
   /** Travel: speed-up curve (1 = steady, higher = slow start, fast finish) */
   travelEase: number;
   travelColour: string;
+  /** Travel: stretch the glowing head along its flight (1 = round) */
+  travelStretch: number;
   /** Travel option: fly a picture (a dagger) instead of the orb */
   travelHasSprite: boolean;
   /** Sprite: which picture (see `SPELL_FX_SPRITES`) */
@@ -34,6 +36,23 @@ export interface SpellFxTune {
   /** Sprite: ms it stays stuck in the target, then ms it takes to fade */
   travelSpriteStick: number;
   travelSpriteFade: number;
+  /** Travel option: wispy streamers that flail off behind the head */
+  travelHasStreamers: boolean;
+  /** Streamers: how many, how long (px), how far they wave sideways (px) */
+  travelStreamerCount: number;
+  travelStreamerLength: number;
+  travelStreamerWave: number;
+  /** Streamers: flail speed (1 = slow sway, higher = whipping) */
+  travelStreamerFlail: number;
+  /** Streamers: how far they fan out at their tips (px), width at the base */
+  travelStreamerSpread: number;
+  travelStreamerWidth: number;
+  /** Streamers: opacity (0 to 1), ms to grow out at the start, ms they keep
+   * flailing after the hit */
+  travelStreamerAlpha: number;
+  travelStreamerGrow: number;
+  travelStreamerLinger: number;
+  travelStreamerColour: string;
   /** Travel option: leave a particle trail behind the orb */
   travelHasTrail: boolean;
   /** Trail: puffs per frame, life (ms), size, scatter (px), drift speed */
@@ -137,6 +156,7 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   travelArc: 0.07,
   travelEase: 1.8,
   travelColour: 'ffb347',
+  travelStretch: 1,
   travelHasSprite: false,
   travelSprite: 'dagger-green',
   travelSpriteSize: 64,
@@ -145,6 +165,17 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   travelSpriteScatter: 12,
   travelSpriteStick: 500,
   travelSpriteFade: 400,
+  travelHasStreamers: false,
+  travelStreamerCount: 6,
+  travelStreamerLength: 160,
+  travelStreamerWave: 40,
+  travelStreamerFlail: 1,
+  travelStreamerSpread: 50,
+  travelStreamerWidth: 5,
+  travelStreamerAlpha: 0.55,
+  travelStreamerGrow: 250,
+  travelStreamerLinger: 300,
+  travelStreamerColour: 'ff4fb0',
   travelHasTrail: true,
   travelTrailPerFrame: 3,
   travelTrailLife: 260,
@@ -236,6 +267,24 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     spotSparkScale: 0.4,
     spotSparkSpread: 60,
   },
+  CORE_058: {
+    travelMs: 170,
+    travelHaloScale: 0.95,
+    travelCoreScale: 0.8,
+    travelPulse: 0.07,
+    travelArc: 0,
+    travelEase: 2.5,
+    travelColour: 'ffcd75',
+    travelTrailPerFrame: 6,
+    travelTrailLife: 560,
+    travelTrailScale: 0.25,
+    travelTrailSpread: 2,
+    travelTrailDrift: 0.04,
+    travelTrailColour: '726c65',
+    burstCount: 60,
+    burstLife: 550,
+    burstScale: 0.2,
+  },
   CORE_063: {
     travelMs: 690,
     travelCoreScale: 1,
@@ -249,6 +298,30 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     burstCount: 37,
     burstLife: 570,
     burstScale: 0.85,
+  },
+  CORE_069: {
+    travelMs: 710,
+    travelHaloScale: 0.9,
+    travelCoreScale: 2,
+    travelPulse: 0.6,
+    travelArc: 0,
+    travelEase: 4,
+    travelColour: 'ed35a1',
+    travelHasStreamers: true,
+    travelStreamerCount: 12,
+    travelStreamerLength: 271,
+    travelStreamerWave: 12,
+    travelStreamerFlail: 0.8,
+    travelStreamerWidth: 11,
+    travelStreamerLinger: 600,
+    travelTrailPerFrame: 8,
+    travelTrailLife: 900,
+    travelTrailScale: 0.55,
+    travelTrailDrift: 0.025,
+    travelTrailColour: 'dd88d6',
+    burstCount: 40,
+    burstLife: 680,
+    burstScale: 0.5,
   },
   CORE_093: {
     travelMs: 300,
@@ -351,6 +424,26 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     spotSparkScale: 0.25,
     spotSparkSpread: 70,
   },
+  PRIME_191: {
+    travelMs: 170,
+    travelArc: 0.21,
+    travelHasSprite: true,
+    travelSprite: 'dagger-bone',
+    travelSpriteSize: 80,
+    travelSpriteTurn: -1,
+    travelSpriteDepth: 18,
+    travelSpriteStick: 770,
+    travelSpriteFade: 630,
+    travelTrailPerFrame: 1,
+    travelTrailLife: 490,
+    travelTrailScale: 0.15,
+    travelTrailSpread: 8,
+    travelTrailDrift: 0.12,
+    travelTrailColour: 'bfbfbf',
+    volleyDelay: 100,
+    burstCount: 6,
+    burstScale: 0.4,
+  },
   PRIME_201: {
     strikeMs: 500,
     strikeSegments: 18,
@@ -368,6 +461,25 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     burstCount: 32,
     burstLife: 590,
     burstScale: 0.15,
+  },
+  PRIME_265: {
+    travelMs: 170,
+    travelArc: 0.06,
+    travelHasSprite: true,
+    travelSprite: 'dagger-pale',
+    travelSpriteSize: 60,
+    travelSpriteTurn: -15,
+    travelSpriteDepth: 4,
+    travelTrailPerFrame: 1,
+    travelTrailLife: 490,
+    travelTrailScale: 0.15,
+    travelTrailSpread: 8,
+    travelTrailDrift: 0.12,
+    travelTrailColour: 'bfbfbf',
+    volleyCount: 2,
+    volleyDelay: 400,
+    burstCount: 6,
+    burstScale: 0.4,
   },
   'RANGER:1': {
     travelMs: 300,

@@ -257,6 +257,79 @@ const ringState = (
   return { alpha: 1 - age, radius: SPOT_START_RADIUS + reach * open };
 };
 
+interface StreamerLane {
+  phase: number;
+  reach: number;
+  side: number;
+  speed: number;
+}
+
+const STREAMER_SEGMENTS = 28;
+const STREAMER_WAVE_TURNS = 1.1;
+const STREAMER_FLAIL_RATE = 0.006;
+
+/**
+ * Draws the head's streamers: wavy strands that run back from `head` against
+ * its heading, fan out toward their tips and thin and fade as they go, each
+ * flailing on its own phase.
+ */
+const drawStreamers = (
+  graphics: Graphics,
+  lanes: StreamerLane[],
+  head: FxPoint,
+  heading: number,
+  elapsed: number,
+  fadeOut: number,
+  tune: SpellFxTune,
+): void => {
+  const colour = colourNumber(tune.travelStreamerColour);
+  // They grow out of the head and fade in over the first moments, not pop in.
+  const raw =
+    tune.travelStreamerGrow > 0
+      ? Math.min(1, elapsed / tune.travelStreamerGrow)
+      : 1;
+  const grown = 1 - Math.pow(1 - raw, 2);
+  const backX = -Math.cos(heading);
+  const backY = -Math.sin(heading);
+  const sideX = -backY;
+  const sideY = backX;
+  graphics.clear();
+  for (const lane of lanes) {
+    const length = tune.travelStreamerLength * lane.reach * grown;
+    const point = (along: number): FxPoint => {
+      const sway =
+        Math.sin(
+          lane.phase +
+            elapsed *
+              STREAMER_FLAIL_RATE *
+              tune.travelStreamerFlail *
+              lane.speed -
+            along * Math.PI * 2 * STREAMER_WAVE_TURNS,
+        ) *
+        tune.travelStreamerWave *
+        along;
+      const sideways = lane.side * tune.travelStreamerSpread * along + sway;
+      return {
+        x: head.x + backX * length * along + sideX * sideways,
+        y: head.y + backY * length * along + sideY * sideways,
+      };
+    };
+    for (let segment = 0; segment < STREAMER_SEGMENTS; segment++) {
+      const from = segment / STREAMER_SEGMENTS;
+      const start = point(from);
+      const finish = point((segment + 1) / STREAMER_SEGMENTS);
+      graphics.lineStyle({
+        alpha: tune.travelStreamerAlpha * (1 - from) * fadeOut * grown,
+        cap: LINE_CAP.BUTT,
+        color: colour,
+        width: Math.max(0.5, tune.travelStreamerWidth * (1 - from)),
+      });
+      graphics.moveTo(start.x, start.y);
+      graphics.lineTo(finish.x, finish.y);
+    }
+  }
+};
+
 /** Creates the overlay canvas and its particle systems. */
 export const createPixiFx = (): PixiFx => {
   const app = new Application({
@@ -403,6 +476,21 @@ export const createPixiFx = (): PixiFx => {
     // A gentle sideways arc, so a shot is not a ruler line.
     const arcX = (-dy / distance) * distance * tune.travelArc;
     const arcY = (dx / distance) * distance * tune.travelArc;
+    // Wispy streamers that flail off behind the head (drawn fresh each frame).
+    const streamers = tune.travelHasStreamers ? new Graphics() : null;
+    if (streamers) {
+      streamers.blendMode = BLEND_MODES.ADD;
+      app.stage.addChild(streamers as never);
+    }
+    const lanes = Array.from(
+      { length: Math.round(tune.travelStreamerCount) },
+      () => ({
+        phase: Math.random() * Math.PI * 2,
+        reach: 0.55 + Math.random() * 0.45,
+        side: Math.random() * 2 - 1,
+        speed: 0.7 + Math.random() * 0.6,
+      }),
+    );
     let elapsed = 0;
     let last = from;
     let heading = Math.atan2(dy, dx);
@@ -416,69 +504,91 @@ export const createPixiFx = (): PixiFx => {
         x: from.x + dx * eased + arcX * bend,
         y: from.y + dy * eased + arcY * bend,
       };
-      if (isSprite) {
-        // The point leads: turn along the way the picture is moving.
-        if (Math.hypot(at.x - last.x, at.y - last.y) > SPRITE_TURN_MIN) {
-          heading = Math.atan2(at.y - last.y, at.x - last.x);
-        }
-        picture.position.set(at.x, at.y);
-        picture.rotation = heading - tipRadians;
-        picture.width = size;
-        picture.height = size;
-      } else {
-        const pulse =
-          1 + tune.travelPulse * Math.sin(elapsed * TRAVEL_PULSE_RATE);
-        halo.position.set(at.x, at.y);
-        core.position.set(at.x, at.y);
-        halo.scale.set(tune.travelHaloScale * pulse);
-        core.scale.set(tune.travelCoreScale * pulse);
+      // The point leads: face the way the head is moving.
+      if (Math.hypot(at.x - last.x, at.y - last.y) > SPRITE_TURN_MIN) {
+        heading = Math.atan2(at.y - last.y, at.x - last.x);
       }
-      const puffs =
-        tune.travelHasTrail && arrivedAt === null
+      if (arrivedAt === null) {
+        if (isSprite) {
+          picture.position.set(at.x, at.y);
+          picture.rotation = heading - tipRadians;
+          picture.width = size;
+          picture.height = size;
+        } else {
+          const pulse =
+            1 + tune.travelPulse * Math.sin(elapsed * TRAVEL_PULSE_RATE);
+          halo.position.set(at.x, at.y);
+          core.position.set(at.x, at.y);
+          // A stretched head turns along the flight, like a beam's point.
+          halo.rotation = heading;
+          core.rotation = heading;
+          halo.scale.set(
+            tune.travelHaloScale * pulse * tune.travelStretch,
+            tune.travelHaloScale * pulse,
+          );
+          core.scale.set(
+            tune.travelCoreScale * pulse * tune.travelStretch,
+            tune.travelCoreScale * pulse,
+          );
+        }
+        const puffs = tune.travelHasTrail
           ? Math.round(tune.travelTrailPerFrame)
           : 0;
-      for (let puff = 0; puff < puffs; puff++) {
-        const jitter = () => (Math.random() - 0.5) * tune.travelTrailSpread;
-        const drift = () => (Math.random() - 0.5) * tune.travelTrailDrift;
-        // Spread the puffs along the way since the last frame, so a fast
-        // orb leaves a stream and not a row of dots.
-        const behind = puff / Math.max(1, puffs);
-        const origin = {
-          x: at.x + (last.x - at.x) * behind + jitter(),
-          y: at.y + (last.y - at.y) * behind + jitter(),
-        };
-        spawn(
-          origin,
-          colourNumber(tune.travelTrailColour),
-          tune.travelTrailScale,
-          tune.travelTrailLife,
-          drift(),
-          drift(),
-        );
+        for (let puff = 0; puff < puffs; puff++) {
+          const jitter = () => (Math.random() - 0.5) * tune.travelTrailSpread;
+          const drift = () => (Math.random() - 0.5) * tune.travelTrailDrift;
+          // Spread the puffs along the way since the last frame, so a fast
+          // orb leaves a stream and not a row of dots.
+          const behind = puff / Math.max(1, puffs);
+          const origin = {
+            x: at.x + (last.x - at.x) * behind + jitter(),
+            y: at.y + (last.y - at.y) * behind + jitter(),
+          };
+          spawn(
+            origin,
+            colourNumber(tune.travelTrailColour),
+            tune.travelTrailScale,
+            tune.travelTrailLife,
+            drift(),
+            drift(),
+          );
+        }
+        last = at;
       }
-      last = at;
-      if (linear < 1) return true;
-      if (!isSprite) {
-        halo.destroy();
-        core.destroy();
-        burstWith(to, 'hit', tune);
-        return false;
-      }
-      // A picture sticks in the target, stays a moment, then fades away.
-      if (arrivedAt === null) {
+      if (linear >= 1 && arrivedAt === null) {
         arrivedAt = elapsed;
         halo.destroy();
         core.destroy();
         burstWith(hit, 'hit', tune);
       }
-      const held = elapsed - arrivedAt;
-      const fade = Math.max(1, tune.travelSpriteFade);
-      picture.alpha =
-        held <= tune.travelSpriteStick
-          ? 1
-          : Math.max(0, 1 - (held - tune.travelSpriteStick) / fade);
-      if (held < tune.travelSpriteStick + tune.travelSpriteFade) return true;
+      const held = arrivedAt === null ? 0 : elapsed - arrivedAt;
+      // A picture sticks in the target, stays a moment, then fades away.
+      const pictureLeft = isSprite
+        ? tune.travelSpriteStick + tune.travelSpriteFade - held
+        : 0;
+      if (isSprite && arrivedAt !== null) {
+        const fade = Math.max(1, tune.travelSpriteFade);
+        picture.alpha =
+          held <= tune.travelSpriteStick
+            ? 1
+            : Math.max(0, 1 - (held - tune.travelSpriteStick) / fade);
+      }
+      // The streamers keep flailing a moment after the hit, fading out.
+      const streamersLeft = streamers ? tune.travelStreamerLinger - held : 0;
+      if (streamers) {
+        const fadeOut =
+          arrivedAt === null
+            ? 1
+            : Math.max(
+                0,
+                streamersLeft / Math.max(1, tune.travelStreamerLinger),
+              );
+        drawStreamers(streamers, lanes, at, heading, elapsed, fadeOut, tune);
+      }
+      if (arrivedAt === null) return true;
+      if (pictureLeft > 0 || streamersLeft > 0) return true;
       picture.destroy();
+      streamers?.destroy();
       return false;
     });
     wake();
