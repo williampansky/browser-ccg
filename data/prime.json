@@ -2277,6 +2277,7 @@
   },
   {
     "id": "PRIME_195",
+    "name": "Cloak Broker",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
