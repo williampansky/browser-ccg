@@ -3724,7 +3724,10 @@
     "playType": "GLOBAL",
     "playContext": "%SILENCE%",
     "collectible": true,
-    "active": true
+    "active": true,
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_084",
