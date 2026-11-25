@@ -66,3 +66,17 @@ describe('parents', () => {
     );
   });
 });
+
+describe('area choices', () => {
+  it('takes the listed words for the style, region and direction only', () => {
+    const tune = parseSpellTune(
+      's_areaStyle=sweep&s_areaRegion=both&s_areaDirection=out',
+    );
+    expect([tune.areaStyle, tune.areaRegion, tune.areaDirection]).toEqual([
+      'sweep',
+      'both',
+      'out',
+    ]);
+    expect(parseSpellTune('s_areaStyle=spiral').areaStyle).toBe('swirl');
+  });
+});

@@ -41,6 +41,7 @@ const EXTRA_TARGETS = [
   { x: 80, y: -110 },
   { x: 0, y: 150 },
 ];
+const MIN_REGION_SIDE = 220;
 const MIN_TARGETS = 2;
 const MAX_TARGETS = EXTRA_TARGETS.length + 1;
 const DEFAULT_TARGETS = 3;
@@ -197,10 +198,33 @@ const SpellsLab = () => {
       : [];
     return [points.to, ...extras];
   }, [isMulti, points, targetCount]);
-  /** Animations in one run: a spot effect plays on the first target only. */
+  /**
+   * The region an area effect covers in the lab: the box around the targets
+   * (as the game uses the minions it covers), grown by the padding.
+   */
+  const areaRect = useMemo(() => {
+    const pad = tune.areaPad;
+    const left =
+      Math.min(...targets.map((target) => target.x)) - MARKER_SIZE / 2 - pad;
+    const right =
+      Math.max(...targets.map((target) => target.x)) + MARKER_SIZE / 2 + pad;
+    const top =
+      Math.min(...targets.map((target) => target.y)) - MARKER_SIZE / 2 - pad;
+    const bottom =
+      Math.max(...targets.map((target) => target.y)) + MARKER_SIZE / 2 + pad;
+    const width = Math.max(MIN_REGION_SIDE, right - left);
+    const height = Math.max(MIN_REGION_SIDE, bottom - top);
+    return {
+      x: (left + right) / 2 - width / 2,
+      y: (top + bottom) / 2 - height / 2,
+      width,
+      height,
+    };
+  }, [targets, tune.areaPad]);
+  /** Animations in one run: a spot or area effect plays once, not per target. */
   const shotCount =
     Math.max(1, Math.round(tune.volleyCount)) *
-    (kind === 'spot' ? 1 : targets.length);
+    (kind === 'spot' || kind === 'area' ? 1 : targets.length);
 
   const play = useCallback((): void => {
     const fx = fxRef.current;
@@ -210,7 +234,7 @@ const SpellsLab = () => {
     const plays = Math.max(1, Math.round(tune.volleyCount));
     // The game's volley: each target plays `plays` times, and every animation
     // starts `volleyDelay` after the one before (slow motion stretches it too).
-    const sequence = kind === 'spot' ? [points.to] : targets;
+    const sequence = kind === 'spot' || kind === 'area' ? [points.to] : targets;
     // One entry per animation. Each runs in its own callback, so a delayed
     // shot keeps its own target (a closure over a loop variable would not).
     const shots = sequence.flatMap((target) =>
@@ -221,12 +245,13 @@ const SpellsLab = () => {
       const fire = (): void => {
         if (kind === 'strike') fx.strike(target, ms, tune);
         else if (kind === 'spot') fx.spot(target, tune);
+        else if (kind === 'area') fx.area(areaRect, tune);
         else fx.travel(points.from, target, ms, tune);
       };
       if (wait > 0) setTimeout(fire, wait);
       else fire();
     });
-  }, [kind, points, speed, targets, tune]);
+  }, [areaRect, kind, points, speed, targets, tune]);
 
   // Space plays; a loop replays after each one has finished.
   useEffect(() => {
@@ -247,7 +272,8 @@ const SpellsLab = () => {
       LOOP_GAP_MS +
       shotCount * tune.volleyDelay +
       (kind === 'strike' ? tune.strikeLife : LOOP_TAIL_MS) +
-      (kind === 'spot' ? tune.spotLife : 0);
+      (kind === 'spot' ? tune.spotLife : 0) +
+      (kind === 'area' ? tune.areaMs : 0);
     const timer = setInterval(play, gap / speed);
     return () => clearInterval(timer);
   }, [isLoop, kind, play, shotCount, speed, tune]);
@@ -732,6 +758,21 @@ const SpellsLab = () => {
         </p>
         {points && (
           <>
+            {kind === 'area' && (
+              <div
+                aria-hidden="true"
+                style={{
+                  position: 'fixed',
+                  left: areaRect.x,
+                  top: areaRect.y,
+                  width: areaRect.width,
+                  height: areaRect.height,
+                  border: '1px dashed rgba(255,255,255,0.25)',
+                  borderRadius: 12,
+                  pointerEvents: 'none',
+                }}
+              />
+            )}
             <div
               onPointerDown={drag('from')}
               style={markerStyle(points.from, '#7ad9a2')}

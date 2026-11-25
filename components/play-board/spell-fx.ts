@@ -12,23 +12,28 @@ import type { SpellFxTune } from './spell-fx-tune';
  * - `strike`: falls from above onto each target the spell damages.
  * - `spot`: plays once, centred on the spell's target or, with none, on the
  *   caster's hero, and needs no damage to happen (armor, a summon, a buff).
+ * - `area`: plays once over a side of the board (or both), for a global spell
+ *   such as a damage-all.
  *
  * Add a base here, in `pixi-fx.ts` (its drawing) and in `spellFxMs`.
  */
-export type SpellFxKind = 'travel' | 'strike' | 'spot';
+export type SpellFxKind = 'travel' | 'strike' | 'spot' | 'area';
 
 /** Every base, in the order the lab lists them. */
 export const SPELL_FX_KINDS: { kind: SpellFxKind; label: string }[] = [
   { kind: 'travel', label: 'Travel (caster to target)' },
   { kind: 'strike', label: 'Strike (from above)' },
   { kind: 'spot', label: 'Spot (centred on a place)' },
+  { kind: 'area', label: 'Area (over a side of the board)' },
 ];
 
 /** Milliseconds from the cast to the hit landing, per kind (from the tune). */
 export const spellFxMs = (kind: SpellFxKind, tune: SpellFxTune): number => {
   if (kind === 'strike') return tune.strikeMs;
   // A spot effect starts at the cast, so there is nothing to wait for.
-  return kind === 'spot' ? 0 : tune.travelMs;
+  if (kind === 'spot') return 0;
+  // An area effect lands its damage part-way through.
+  return kind === 'area' ? tune.areaImpactMs : tune.travelMs;
 };
 
 /**
@@ -49,6 +54,7 @@ export const SKILL_FX: Record<string, SpellFxKind> = {
  * card falls back to the travel base.
  */
 export const CARD_FX: Record<string, SpellFxKind> = {
+  CORE_098: 'area',
   CORE_115: 'spot',
   PRIME_201: 'strike',
 };

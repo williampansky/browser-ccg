@@ -119,6 +119,33 @@ export interface SpellFxTune {
   spotSparkLife: number;
   spotSparkScale: number;
   spotSparkSpread: number;
+  /** Area: the look (swirl or sweep), and which side of the board it covers */
+  areaStyle: 'swirl' | 'sweep';
+  areaRegion: 'enemy' | 'mine' | 'both';
+  /** Area: how long it plays (ms), and when its damage lands (ms in) */
+  areaMs: number;
+  areaImpactMs: number;
+  /** Area: padding around the minions it covers (px) */
+  areaPad: number;
+  /** Area: the body colour and the bright edge colour */
+  areaColour: string;
+  areaAccentColour: string;
+  /** Area: softness (blur in px, 0 = crisp) */
+  areaBlur: number;
+  /** Area: embers per second riding the effect, and the table shake (0 = none) */
+  areaEmbers: number;
+  areaShake: number;
+  /** Area option: a flash of the edge colour across the screen */
+  areaHasFlash: boolean;
+  areaFlash: number;
+  /** Swirl: arms, turns of each arm, spin (turns per second), band width (px) */
+  areaArms: number;
+  areaTurns: number;
+  areaSpin: number;
+  areaWidth: number;
+  /** Sweep: which way the wave runs, and how wide it is (px) */
+  areaDirection: 'right' | 'left' | 'out';
+  areaWaveWidth: number;
   /** Volley (every base): how many times the effect plays per target hit */
   volleyCount: number;
   /** Volley: ms between one animation and the next, across targets too */
@@ -144,6 +171,9 @@ export const SPELL_FX_CHOICES: Partial<
     'dagger-orange',
     'dagger-bone',
   ],
+  areaStyle: ['swirl', 'sweep'],
+  areaRegion: ['enemy', 'mine', 'both'],
+  areaDirection: ['right', 'left', 'out'],
   spotRingsMotion: ['out', 'in', 'pulse'],
   spotSparkMotion: ['outward', 'rising', 'inward'],
 };
@@ -219,6 +249,24 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   spotSparkLife: 480,
   spotSparkScale: 0.5,
   spotSparkSpread: 0,
+  areaStyle: 'swirl',
+  areaRegion: 'enemy',
+  areaMs: 1000,
+  areaImpactMs: 380,
+  areaPad: 90,
+  areaColour: 'ff6a14',
+  areaAccentColour: 'ffe14d',
+  areaBlur: 6,
+  areaEmbers: 60,
+  areaShake: 4,
+  areaHasFlash: true,
+  areaFlash: 0.2,
+  areaArms: 3,
+  areaTurns: 1.5,
+  areaSpin: 0.9,
+  areaWidth: 34,
+  areaDirection: 'right',
+  areaWaveWidth: 110,
   volleyCount: 1,
   volleyDelay: 120,
   burstCount: 18,
@@ -340,6 +388,13 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     burstCount: 20,
     burstLife: 700,
     burstScale: 0.2,
+  },
+  CORE_098: {
+    areaImpactMs: 1060,
+    areaPad: 70,
+    areaTurns: 0.9,
+    areaSpin: 0.6,
+    burstCount: 35,
   },
   CORE_115: {
     spotLife: 550,

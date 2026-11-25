@@ -124,6 +124,7 @@ import {
   setPixiFx,
   shoot,
   spot,
+  area,
   swingImpactMs,
   IMPACT_MS,
   lunge,
@@ -1330,6 +1331,39 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         }
       }
       /**
+       * An area effect (a global spell) plays once over the minions on the side
+       * it covers, whether or not anything is damaged.
+       */
+      if (
+        isSpellHitAction(action) &&
+        spellFxOn() &&
+        fxKind === 'area' &&
+        spellKey
+      ) {
+        const foe = state.activePlayer === '0' ? '1' : '0';
+        const sides =
+          fxTune.areaRegion === 'mine'
+            ? [state.activePlayer]
+            : fxTune.areaRegion === 'both'
+              ? ['0', '1']
+              : [foe];
+        const covered = sides.flatMap((side) =>
+          state.players[side as PlayerId].board.map((minion) =>
+            nodes.current.get(`m${minion.instanceId}`),
+          ),
+        );
+        const els = covered.filter((el): el is HTMLElement => !!el);
+        if (els.length > 0) {
+          const plays = Math.max(1, Math.round(fxTune.volleyCount));
+          for (let play = 0; play < plays; play++) {
+            area(els, fxTune, play * fxTune.volleyDelay);
+          }
+          if (fxTune.areaShake > 0 && tableRef.current) {
+            nudge(tableRef.current, fxTune.areaShake);
+          }
+        }
+      }
+      /**
        * A spell's orb flies from the caster's hero to each
        * target, and the hit (flash, numbers, jolt, death) waits for it.
        */
@@ -1389,7 +1423,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                 : null;
           const node = key && nodes.current.get(key);
           if (!node) continue;
-          const isTravel = sourceKind !== 'spot';
+          const isTravel = sourceKind === 'travel' || sourceKind === 'strike';
           const isDead =
             e.type === 'MinionDamaged' && deadIds.has(e.instanceId);
           // The volley: each hit plays `volleyCount` times, and every

@@ -64,3 +64,12 @@ describe('inherited base', () => {
     expect(spellFxForKey('MYSTIC:1')).toBe('spot');
   });
 });
+
+describe('the area base', () => {
+  it('is assigned to CORE_098 and lands its damage part-way through', () => {
+    expect(spellFxForKey('CORE_098')).toBe('area');
+    expect(spellFxMs('area', SPELL_FX_DEFAULTS)).toBe(
+      SPELL_FX_DEFAULTS.areaImpactMs,
+    );
+  });
+});

@@ -5,7 +5,13 @@ type KeyOf<T> = {
   [K in keyof SpellFxTune]: SpellFxTune[K] extends T ? K : never;
 }[keyof SpellFxTune];
 type NumKey = KeyOf<number>;
-type ChoiceKey = 'spotRingsMotion' | 'spotSparkMotion' | 'travelSprite';
+type ChoiceKey =
+  | 'areaDirection'
+  | 'areaRegion'
+  | 'areaStyle'
+  | 'spotRingsMotion'
+  | 'spotSparkMotion'
+  | 'travelSprite';
 type ColourKey = Exclude<KeyOf<string>, ChoiceKey>;
 type FlagKey = KeyOf<boolean>;
 
@@ -492,8 +498,136 @@ export const SPELL_GROUPS: SpellGroup[] = [
     ],
   },
   {
+    title: 'Region and timing',
+    kinds: ['area'],
+    choices: [
+      {
+        field: 'areaRegion',
+        label: 'Covers',
+        options: [
+          { value: 'enemy', label: "The enemy's side" },
+          { value: 'mine', label: 'Your side' },
+          { value: 'both', label: 'Both sides' },
+        ],
+      },
+    ],
+    knobs: [
+      {
+        field: 'areaMs',
+        label: 'Plays for (ms)',
+        min: 200,
+        max: 4000,
+        step: 10,
+      },
+      {
+        field: 'areaImpactMs',
+        label: 'Damage lands after (ms)',
+        min: 0,
+        max: 3000,
+        step: 10,
+      },
+      {
+        field: 'areaPad',
+        label: 'Extends past the minions by (px)',
+        min: 0,
+        max: 300,
+      },
+    ],
+  },
+  {
+    title: 'Look',
+    kinds: ['area'],
+    choices: [
+      {
+        field: 'areaStyle',
+        label: 'Style',
+        options: [
+          { value: 'swirl', label: 'Swirl (a cyclone)' },
+          { value: 'sweep', label: 'Sweep (a wave front)' },
+        ],
+      },
+    ],
+    colours: [
+      { field: 'areaColour', label: 'Body colour' },
+      { field: 'areaAccentColour', label: 'Bright edge and embers' },
+    ],
+    knobs: [
+      {
+        field: 'areaBlur',
+        label: 'Softness (blur px, 0 = crisp)',
+        min: 0,
+        max: 24,
+        step: 0.5,
+      },
+      { field: 'areaEmbers', label: 'Embers per second', min: 0, max: 300 },
+    ],
+  },
+  {
+    title: 'Swirl',
+    kinds: ['area'],
+    when: (tune) => tune.areaStyle === 'swirl',
+    knobs: [
+      { field: 'areaArms', label: 'Arms', min: 1, max: 8 },
+      {
+        field: 'areaTurns',
+        label: 'Turns of each arm',
+        min: 0.2,
+        max: 4,
+        step: 0.1,
+      },
+      {
+        field: 'areaSpin',
+        label: 'Spin (turns per second)',
+        min: -3,
+        max: 3,
+        step: 0.1,
+      },
+      { field: 'areaWidth', label: 'Band width (px)', min: 4, max: 120 },
+    ],
+  },
+  {
+    title: 'Sweep',
+    kinds: ['area'],
+    when: (tune) => tune.areaStyle === 'sweep',
+    choices: [
+      {
+        field: 'areaDirection',
+        label: 'Runs',
+        options: [
+          { value: 'right', label: 'Left to right' },
+          { value: 'left', label: 'Right to left' },
+          { value: 'out', label: 'Out from the middle' },
+        ],
+      },
+    ],
+    knobs: [
+      { field: 'areaWaveWidth', label: 'Wave width (px)', min: 20, max: 400 },
+    ],
+  },
+  {
+    title: 'Shake and flash',
+    kinds: ['area'],
+    flag: { field: 'areaHasFlash', label: 'Flash the screen' },
+    knobs: [
+      {
+        field: 'areaFlash',
+        label: 'Flash strength',
+        min: 0.02,
+        max: 1,
+        step: 0.01,
+      },
+      {
+        field: 'areaShake',
+        label: 'Table shake (0 = none)',
+        min: 0,
+        max: 8,
+        step: 0.5,
+      },
+    ],
+  },
+  {
     title: 'Volley',
-    kinds: ['travel', 'strike', 'spot'],
+    kinds: ['travel', 'strike', 'spot', 'area'],
     knobs: [
       {
         field: 'volleyCount',
@@ -512,7 +646,7 @@ export const SPELL_GROUPS: SpellGroup[] = [
   },
   {
     title: 'Impact sparks',
-    kinds: ['travel', 'strike'],
+    kinds: ['travel', 'strike', 'area'],
     knobs: [
       { field: 'burstCount', label: 'Sparks', min: 0, max: 60 },
       {

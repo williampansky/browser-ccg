@@ -423,6 +423,48 @@ export const spot = (
   else fx.spot(at, tune);
 };
 
+/**
+ * The box that holds `els` (minions), grown by `pad` px each way and never
+ * smaller than a minimum side, centred on them.
+ */
+export const regionRect = (
+  els: HTMLElement[],
+  pad: number,
+): { x: number; y: number; width: number; height: number } => {
+  const boxes = els.map((el) => el.getBoundingClientRect());
+  const left = Math.min(...boxes.map((box) => box.left)) - pad;
+  const top = Math.min(...boxes.map((box) => box.top)) - pad;
+  const right = Math.max(...boxes.map((box) => box.right)) + pad;
+  const bottom = Math.max(...boxes.map((box) => box.bottom)) + pad;
+  const width = Math.max(MIN_REGION_SIDE, right - left);
+  const height = Math.max(MIN_REGION_SIDE, bottom - top);
+  return {
+    x: (left + right) / 2 - width / 2,
+    y: (top + bottom) / 2 - height / 2,
+    width,
+    height,
+  };
+};
+
+/** The least a region may measure on a side, so a lone minion still gets one. */
+export const MIN_REGION_SIDE = 220;
+
+/**
+ * Plays an area effect over the minions `els` (a global spell): the region is
+ * read now, only the drawing waits.
+ */
+export const area = (
+  els: HTMLElement[],
+  tune: SpellFxTune,
+  delayMs = 0,
+): void => {
+  const fx = pixiFx;
+  if (reducedMotion() || !fx || els.length === 0) return;
+  const rect = regionRect(els, tune.areaPad);
+  if (delayMs > 0) setTimeout(() => fx.area(rect, tune), delayMs);
+  else fx.area(rect, tune);
+};
+
 /** What a flash means: it picks the colour of the glow. */
 export type FlashTone = 'hit' | 'heal' | 'buff';
 

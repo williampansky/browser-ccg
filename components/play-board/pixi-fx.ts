@@ -20,6 +20,14 @@ export interface FxPoint {
   y: number;
 }
 
+/** A rectangle in screen pixels (top-left corner and size). */
+export interface FxRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 /**
  * The effects layer: one transparent canvas over the whole page, drawing
  * particles. Everything here is cosmetic; the DOM versions in `motion.ts` are
@@ -32,6 +40,8 @@ export interface PixiFx {
   strike: (to: FxPoint, ms: number, tune: SpellFxTune) => void;
   /** Rings opening around `at`: an effect centred on a place. */
   spot: (at: FxPoint, tune: SpellFxTune) => void;
+  /** A swirl or sweep over a region of the board (a global spell). */
+  area: (rect: FxRect, tune: SpellFxTune) => void;
   /** A ring of sparks at `at`, coloured by `tone`. */
   burst: (at: FxPoint, tone: FlashTone, tune?: SpellFxTune) => void;
   /**
@@ -67,6 +77,22 @@ const BURST_SPEED_RANGE = 0.18;
 const SPRITE_REACH = 0.7;
 /** The least a picture must move in a frame before it turns to face it. */
 const SPRITE_TURN_MIN = 0.5;
+const AREA_SEGMENTS = 44;
+const AREA_FADE_IN = 0.2;
+const AREA_FADE_OUT = 0.3;
+/** How much of an arm, from its rim end, fades in. */
+const AREA_RIM_FADE = 0.14;
+const AREA_GROW_FROM = 0.55;
+const AREA_GROW_BY = 0.35;
+const AREA_GLOW_WIDTH = 2.4;
+const AREA_GLOW_ALPHA = 0.3;
+const AREA_EMBER_LIFE_MS = 520;
+const AREA_EMBER_SCALE = 0.32;
+const AREA_EMBER_DRIFT = 0.05;
+const AREA_WAVE_EDGE = 14;
+const AREA_WAVE_RIPPLE = 0.045;
+const AREA_WAVE_SPEED = 0.012;
+const AREA_MIN_SIDE = 220;
 const SPOT_START_RADIUS = 16;
 const SPOT_RING_FADE = 0.7;
 const SPOT_GLOW_ALPHA = 0.8;
@@ -255,6 +281,149 @@ const ringState = (
     };
   }
   return { alpha: 1 - age, radius: SPOT_START_RADIUS + reach * open };
+};
+
+/** A colour part way from `a` to `b` (0 = a, 1 = b). */
+const mixColour = (a: number, b: number, t: number): number => {
+  const channel = (shift: number): number => {
+    const from = (a >> shift) & 0xff;
+    const to = (b >> shift) & 0xff;
+    return Math.round(from + (to - from) * t);
+  };
+  return (channel(16) << 16) | (channel(8) << 8) | channel(0);
+};
+
+/**
+ * The effect's strength over its life: it fades in, holds, then fades out
+ * (`age` runs 0 to 1).
+ */
+const areaEnvelope = (age: number): number =>
+  Math.max(0, Math.min(1, age / AREA_FADE_IN, (1 - age) / AREA_FADE_OUT));
+
+/** A point on a swirl arm: `t` 0 at the rim, 1 at the eye. */
+const swirlPoint = (
+  rect: FxRect,
+  arm: number,
+  t: number,
+  grow: number,
+  spin: number,
+  tune: SpellFxTune,
+): FxPoint => {
+  const angle =
+    (arm / Math.max(1, Math.round(tune.areaArms))) * Math.PI * 2 +
+    spin +
+    t * tune.areaTurns * Math.PI * 2;
+  const reach = (1 - t) * grow;
+  return {
+    x: rect.x + rect.width / 2 + Math.cos(angle) * (rect.width / 2) * reach,
+    y: rect.y + rect.height / 2 + Math.sin(angle) * (rect.height / 2) * reach,
+  };
+};
+
+/** Draws one frame of the swirl: arms of fire spiralling in to the eye. */
+const drawSwirl = (
+  graphics: Graphics,
+  rect: FxRect,
+  age: number,
+  elapsedMs: number,
+  tune: SpellFxTune,
+): void => {
+  const body = colourNumber(tune.areaColour);
+  const edge = colourNumber(tune.areaAccentColour);
+  const envelope = areaEnvelope(age);
+  const grow =
+    AREA_GROW_FROM +
+    AREA_GROW_BY * (1 - Math.pow(1 - Math.min(1, age / AREA_GROW_BY), 3));
+  const spin = (elapsedMs / 1000) * tune.areaSpin * Math.PI * 2;
+  graphics.clear();
+  const arms = Math.max(1, Math.round(tune.areaArms));
+  for (let arm = 0; arm < arms; arm++) {
+    for (let segment = 0; segment < AREA_SEGMENTS; segment++) {
+      const from = segment / AREA_SEGMENTS;
+      const start = swirlPoint(rect, arm, from, grow, spin, tune);
+      const finish = swirlPoint(
+        rect,
+        arm,
+        (segment + 1) / AREA_SEGMENTS,
+        grow,
+        spin,
+        tune,
+      );
+      const width = tune.areaWidth * (0.3 + 0.7 * (1 - from));
+      const colour = mixColour(edge, body, from);
+      // Each arm fades in from its rim end, so it has no hard cut-off.
+      const soften = Math.min(1, from / AREA_RIM_FADE);
+      const alpha = envelope * soften * (0.25 + 0.75 * (1 - from));
+      for (const layer of [
+        { alpha: alpha * AREA_GLOW_ALPHA, width: width * AREA_GLOW_WIDTH },
+        { alpha, width },
+      ]) {
+        graphics.lineStyle({
+          alpha: layer.alpha,
+          cap: LINE_CAP.BUTT,
+          color: colour,
+          width: layer.width,
+        });
+        graphics.moveTo(start.x, start.y);
+        graphics.lineTo(finish.x, finish.y);
+      }
+    }
+  }
+};
+
+/** Draws one frame of the sweep: a wavy band of fire crossing the region. */
+const drawSweep = (
+  graphics: Graphics,
+  rect: FxRect,
+  age: number,
+  elapsedMs: number,
+  tune: SpellFxTune,
+): void => {
+  const body = colourNumber(tune.areaColour);
+  const edge = colourNumber(tune.areaAccentColour);
+  const envelope = areaEnvelope(age);
+  graphics.clear();
+  const fronts: number[] =
+    tune.areaDirection === 'out'
+      ? [
+          rect.x + rect.width / 2 + (age * rect.width) / 2,
+          rect.x + rect.width / 2 - (age * rect.width) / 2,
+        ]
+      : [
+          tune.areaDirection === 'left'
+            ? rect.x + rect.width * (1 - age)
+            : rect.x + rect.width * age,
+        ];
+  for (const front of fronts) {
+    for (const layer of [
+      { alpha: 0.2, colour: body, width: tune.areaWaveWidth * 2.2 },
+      {
+        alpha: 0.45,
+        colour: mixColour(body, edge, 0.5),
+        width: tune.areaWaveWidth * 1.2,
+      },
+      { alpha: 0.85, colour: edge, width: tune.areaWaveWidth * 0.45 },
+    ]) {
+      const rows = 24;
+      const left: FxPoint[] = [];
+      const right: FxPoint[] = [];
+      for (let row = 0; row <= rows; row++) {
+        const y = rect.y + (rect.height * row) / rows;
+        const ripple =
+          Math.sin(y * AREA_WAVE_RIPPLE + elapsedMs * AREA_WAVE_SPEED) *
+          AREA_WAVE_EDGE;
+        left.push({ x: front - layer.width / 2 + ripple, y });
+        right.push({ x: front + layer.width / 2 - ripple, y });
+      }
+      graphics.beginFill(layer.colour, layer.alpha * envelope);
+      graphics.moveTo(left[0].x, left[0].y);
+      for (const point of left.slice(1)) graphics.lineTo(point.x, point.y);
+      for (const point of right.slice().reverse())
+        graphics.lineTo(point.x, point.y);
+      graphics.closePath();
+      graphics.endFill();
+    }
+  }
 };
 
 interface StreamerLane {
@@ -747,10 +916,10 @@ export const createPixiFx = (): PixiFx => {
   };
 
   /** A sheet of white across the whole screen that fades in a blink. */
-  const flashScreen = (strength: number): void => {
+  const flashScreen = (strength: number, colour = 0xcfe0ff): void => {
     if (strength <= 0) return;
     const sheet = new Graphics();
-    sheet.beginFill(0xcfe0ff, 1);
+    sheet.beginFill(colour, 1);
     sheet.drawRect(0, 0, window.innerWidth, window.innerHeight);
     sheet.endFill();
     sheet.blendMode = BLEND_MODES.ADD;
@@ -772,6 +941,61 @@ export const createPixiFx = (): PixiFx => {
     tune: SpellFxTune = SPELL_FX_DEFAULTS,
   ): void => burstWith(at, tone, tune);
 
+  const area = (rect: FxRect, tune: SpellFxTune): void => {
+    const graphics = new Graphics();
+    graphics.blendMode = BLEND_MODES.ADD;
+    app.stage.addChild(graphics as never);
+    const softener = tune.areaBlur > 0 ? new BlurFilter(tune.areaBlur) : null;
+    if (softener) graphics.filters = [softener];
+    const edge = colourNumber(tune.areaAccentColour);
+    if (tune.areaHasFlash) flashScreen(tune.areaFlash, edge);
+    let elapsed = 0;
+    let owed = 0;
+    jobs.add((deltaMs) => {
+      elapsed += deltaMs;
+      const age = Math.min(1, elapsed / tune.areaMs);
+      if (tune.areaStyle === 'sweep')
+        drawSweep(graphics, rect, age, elapsed, tune);
+      else drawSwirl(graphics, rect, age, elapsed, tune);
+      // Embers ride the effect: a few new ones each frame, on the arms or in
+      // the band.
+      owed += (tune.areaEmbers * deltaMs) / 1000;
+      const envelope = areaEnvelope(age);
+      while (owed >= 1 && envelope > 0) {
+        owed -= 1;
+        const origin =
+          tune.areaStyle === 'sweep'
+            ? {
+                x: rect.x + Math.random() * rect.width,
+                y: rect.y + Math.random() * rect.height,
+              }
+            : swirlPoint(
+                rect,
+                Math.floor(
+                  Math.random() * Math.max(1, Math.round(tune.areaArms)),
+                ),
+                Math.random(),
+                1,
+                (elapsed / 1000) * tune.areaSpin * Math.PI * 2,
+                tune,
+              );
+        spawn(
+          origin,
+          edge,
+          AREA_EMBER_SCALE,
+          AREA_EMBER_LIFE_MS,
+          (Math.random() - 0.5) * AREA_EMBER_DRIFT,
+          (Math.random() - 0.5) * AREA_EMBER_DRIFT,
+        );
+      }
+      if (age < 1) return true;
+      graphics.destroy();
+      softener?.destroy();
+      return false;
+    });
+    wake();
+  };
+
   const destroy = (): void => {
     app.destroy(true, { children: true, texture: true });
   };
@@ -780,5 +1004,5 @@ export const createPixiFx = (): PixiFx => {
     playbackSpeed = speed;
   };
 
-  return { burst, destroy, setSpeed, spot, strike, travel };
+  return { area, burst, destroy, setSpeed, spot, strike, travel };
 };
