@@ -102,10 +102,9 @@ simulator first.
 - [ ] Art provenance table: card, artist, source, licence, status; replace temporary art
   - **Replacing the FPO art, class by class (started 2026-11-24).** The FPO art is the older
     art ported from `react-ccg-deprecated`, provenance unchecked. Done and FINAL (a-ravlik, art
-    from the purchased packs): **Mystic, Warden, Necromancer**, plus ten PRIME spells, five
-    minions, the Idol tokens and Hellspawn. Left (active cards): **133 cards and 15 tokens**
-    with `artStatus` FPO: neutral 56, Wizard 15, Crusader 14, Assassin 14, Fighter 12, Cleric 12,
-    Ranger 10. Check the live count with the Art filter in `/collection`, or from `data/`.
+    from the purchased packs): **Mystic, Warden, Necromancer, Ranger**, plus ten PRIME spells, five
+    minions, the Idol tokens and Hellspawn. Left (active cards): **123 cards and 14 tokens**
+    with `artStatus` FPO: neutral 56, Wizard 15, Crusader 14, Assassin 14, Fighter 12, Cleric 12. Check the live count with the Art filter in `/collection`, or from `data/`.
   - **The loop that works:** `npm run asset -- <words>` finds an icon by meaning (spells, items,
     weapons); creatures are cutouts from `CARD CHARACTERS` in Downloads composited onto
     `CARD BACKGROUNDS` (Characters Pack 07 and the 10-creature packs; about 150 cutouts are

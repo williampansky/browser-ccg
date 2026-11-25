@@ -1,38 +1,47 @@
 [
   {
     "name": "Wizard",
-    "symbol": "%CLASS_WIZARD%"
+    "symbol": "%CLASS_WIZARD%",
+    "active": true
   },
   {
     "name": "Crusader",
-    "symbol": "%CLASS_CRUSADER%"
+    "symbol": "%CLASS_CRUSADER%",
+    "active": true
   },
   {
     "name": "Mystic",
-    "symbol": "%CLASS_MYSTIC%"
+    "symbol": "%CLASS_MYSTIC%",
+    "active": true
   },
   {
     "name": "Assassin",
-    "symbol": "%CLASS_ASSASSIN%"
+    "symbol": "%CLASS_ASSASSIN%",
+    "active": true
   },
   {
     "name": "Ranger",
-    "symbol": "%CLASS_RANGER%"
+    "symbol": "%CLASS_RANGER%",
+    "active": true
   },
   {
     "name": "Cleric",
-    "symbol": "%CLASS_CLERIC%"
+    "symbol": "%CLASS_CLERIC%",
+    "active": true
   },
   {
     "name": "Fighter",
-    "symbol": "%CLASS_FIGHTER%"
+    "symbol": "%CLASS_FIGHTER%",
+    "active": true
   },
   {
     "name": "Necromancer",
-    "symbol": "%CLASS_NECROMANCER%"
+    "symbol": "%CLASS_NECROMANCER%",
+    "active": true
   },
   {
     "name": "Warden",
-    "symbol": "%CLASS_WARDEN%"
+    "symbol": "%CLASS_WARDEN%",
+    "active": true
   }
 ]
