@@ -267,7 +267,7 @@
   },
   {
     "id": "PRIME_142",
-    "name": "Demon Sorcerer",
+    "name": "Crimson Hexer",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -283,9 +283,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/openanewworld",
-    "artistUrl": "https://www.artstation.com/openanewworld",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_239",
@@ -1066,9 +1066,9 @@
     "playType": "GLOBAL",
     "collectible": true,
     "active": true,
-    "artistName": "Ben Lo",
-    "artistUrl": "https://benlo.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_001",
@@ -1102,9 +1102,9 @@
     "playType": "GLOBAL",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/nordsol",
-    "artistUrl": "https://www.artstation.com/nordsol",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_026",
@@ -1566,9 +1566,9 @@
     "playType": "GLOBAL",
     "collectible": true,
     "active": true,
-    "artistName": "Thomas Karlsson",
-    "artistUrl": "https://www.artstation.com/thomaskarlsson",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_093",
@@ -2384,6 +2384,7 @@
   },
   {
     "id": "PRIME_145",
+    "name": "Rime Burst",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -2398,7 +2399,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_077",
@@ -2591,9 +2594,9 @@
     "active": true,
     "elite": true,
     "flavor": "Don't let your guard down.",
-    "artistName": "Kevin T. Chin",
-    "artistUrl": "https://www.artstation.com/kevinchinart",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_197",
@@ -3297,6 +3300,7 @@
   },
   {
     "id": "PRIME_144",
+    "name": "Borrowed Form",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -3310,7 +3314,9 @@
     "playType": "GLOBAL",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_028",
@@ -3499,9 +3505,9 @@
     "collectible": true,
     "active": true,
     "flavor": "The character of between. The one who leads the victim souls of dead. Dead of because nuclear reactions liberated.",
-    "artistName": "Aion Harmonaut",
-    "artistUrl": "https://vanko.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_042",
@@ -3559,9 +3565,9 @@
     "numberPrimary": 0,
     "collectible": true,
     "active": true,
-    "artistName": "Dzhovanna Sallama",
-    "artistUrl": "https://www.artstation.com/jovannasallama",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_154",
@@ -3587,13 +3593,13 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "Thomas Karlsson",
-    "artistUrl": "https://www.artstation.com/thomaskarlsson",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_150",
-    "name": "Firefall",
+    "name": "Firestorm",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -3609,9 +3615,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/dreyan",
-    "artistUrl": "https://www.artstation.com/dreyan",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_207",
@@ -3855,7 +3861,7 @@
   },
   {
     "id": "PRIME_141",
-    "name": "Fierce Gremlin",
+    "name": "Bloomeye",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -3872,9 +3878,9 @@
     "numberPrimary": 1,
     "collectible": true,
     "active": true,
-    "artistName": "Alexandra Malygina",
-    "artistUrl": "https://fler.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_230",
@@ -4688,7 +4694,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_012",
@@ -5493,6 +5501,7 @@
   },
   {
     "id": "PRIME_153",
+    "name": "Doom Comet",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_MYTHIC%",
@@ -5507,7 +5516,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_155",
