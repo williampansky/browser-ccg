@@ -1856,7 +1856,7 @@
     "cost": 7,
     "attack": 7,
     "health": 1,
-    "text": "When attacking minions, lose 1 Attack each time; uses against heroes uses ALL Attack and destroys it",
+    "text": "Degrades by 1 each use on minions; unleashed against heroes",
     "collectible": true,
     "active": true,
     "artistName": "a-ravlik",
