@@ -137,6 +137,24 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     spotGlowScale: 8,
     spotSparkCount: 20,
   },
+  'RANGER:1': {
+    travelMs: 300,
+    travelHaloScale: 0.5,
+    travelCoreScale: 0.8,
+    travelPulse: 0,
+    travelArc: 0,
+    travelEase: 4,
+    travelColour: 'ffffff',
+    travelTrailPerFrame: 6,
+    travelTrailLife: 560,
+    travelTrailScale: 0.5,
+    travelTrailSpread: 8,
+    travelTrailDrift: 0.1,
+    travelTrailColour: '302b27',
+    burstCount: 40,
+    burstLife: 900,
+    burstScale: 0.2,
+  },
 };
 
 /** The look a spell plays: the defaults with its saved variant on top. */
