@@ -1,4 +1,5 @@
 import { getSwing } from './hero-swing-tune';
+import type { PixiFx } from './pixi-fx';
 import type { HeroSwingSettings, SwingKind } from './hero-swing-tune';
 
 /**
@@ -287,6 +288,16 @@ export const lunge = (
   kind: SwingKind = 'minion',
 ): number => lungeBy(attacker, aimVector(attacker, target), kind);
 
+let pixiFx: PixiFx | null = null;
+
+/**
+ * Hands over the Pixi effects layer once it has loaded (`?fx=pixi`). While it
+ * is null, spells use the DOM orb and flashes below.
+ */
+export const setPixiFx = (fx: PixiFx | null): void => {
+  pixiFx = fx;
+};
+
 /** How long a spell's projectile takes to reach its target. */
 export const PROJECTILE_MS = 280;
 
@@ -308,6 +319,10 @@ export const shoot = (from: HTMLElement, to: HTMLElement): void => {
   // A hand card sinks below the window edge: start at the edge, not off it.
   const start = { x: origin.x, y: Math.min(origin.y, window.innerHeight - 20) };
   const end = centerOf(to);
+  if (pixiFx) {
+    pixiFx.projectile(start, end, PROJECTILE_MS);
+    return;
+  }
   const orb = document.createElement('div');
   Object.assign(orb.style, {
     background:
@@ -364,6 +379,11 @@ export const flashHit = (
     target.querySelector<HTMLElement>(MINION_OVAL) ??
     target.querySelector<HTMLElement>(FIGURE) ??
     target;
+  const fx = pixiFx;
+  if (fx) {
+    const at = centerOf(target);
+    setTimeout(() => fx.burst(at, tone), getImpactMs());
+  }
   body.animate(
     [
       { filter: 'brightness(1)' },

@@ -83,6 +83,7 @@ import {
 import { MinionFace } from './MinionFace';
 import { buffedMinionIds, minionOvalHeight } from './minion-model';
 import type { FlashTone } from './motion';
+import type { PixiFx } from './pixi-fx';
 import minionStyles from './board-minion.module.scss';
 import {
   artBackground,
@@ -118,6 +119,7 @@ import {
   flashHit,
   getImpactMs,
   setImpactMs,
+  setPixiFx,
   shoot,
   swingImpactMs,
   IMPACT_MS,
@@ -897,6 +899,28 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   } | null>(null);
   const [soundOn, setSoundOn] = useState(true);
   useEffect(() => setSoundOn(!isMuted()), []);
+  /**
+   * ?fx=pixi loads the Pixi effects layer (a separate chunk, so nobody else
+   * pays for it); until it is ready the DOM effects play.
+   */
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('fx') !== 'pixi')
+      return;
+    let isCurrent = true;
+    let fx: PixiFx | null = null;
+    import('./pixi-fx')
+      .then(({ createPixiFx }) => {
+        if (!isCurrent) return;
+        fx = createPixiFx();
+        setPixiFx(fx);
+      })
+      .catch(() => setPixiFx(null));
+    return () => {
+      isCurrent = false;
+      setPixiFx(null);
+      fx?.destroy();
+    };
+  }, []);
   /** Accessibility mode (one menu option for now): hover titles, a visible focus outline and explicit "Play" buttons after
    *  selecting a card. Off by default; saved. More settings will be split out of it later. */
   const [a11y, setA11y] = useState(false);
