@@ -1034,6 +1034,12 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lxga: '12',
   lxgd: '2400',
   lxgk: '50',
+  lswt: '1400',
+  lswi: '700',
+  lswl: '600',
+  lswk: '55',
+  lswh: '140',
+  lswsb: '12',
 };
 
 /**

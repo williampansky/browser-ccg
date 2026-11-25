@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { Card, MinionInstance } from '../../engine';
 import { minionArtBackground } from './card-face-model';
+import { getImpactMs } from './motion';
 import { isDamaged, statTone, statusBadges, StatusBadge } from './minion-model';
 import { FloatDelta } from './FloatDelta';
 import styles from './board-minion.module.scss';
@@ -27,9 +28,14 @@ const GLYPH: Record<StatusBadge['kind'], string> = {
   silenced: '∅',
 };
 
+/** How long the shake itself runs (`minionShake` in board-minion.module.scss) */
+const SHAKE_MS = 500;
+
 /**
- * True for half a second after the minion's Health goes down, so it can shake
- * (hsclone's "was attacked").
+ * True while the minion shakes after its Health goes down (hsclone's "was
+ * attacked"): from the drop until the shake, which waits for the attacker's
+ * strike, has run. A hero's slam lands later than a minion's lunge, so the
+ * wait is read from `getImpactMs()` each time.
  */
 const useHurtFlash = (health: number): boolean => {
   const last = useRef(health);
@@ -39,7 +45,7 @@ const useHurtFlash = (health: number): boolean => {
     last.current = health;
     if (health >= before) return;
     setFlash(true);
-    const t = setTimeout(() => setFlash(false), 500);
+    const t = setTimeout(() => setFlash(false), getImpactMs() + SHAKE_MS);
     return () => clearTimeout(t);
   }, [health]);
   return flash;
@@ -100,78 +106,88 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
     <>
       <span className={styles.dust} aria-hidden="true" />
       <FloatDelta value={m.health} />
-      {card?.rarity === 'MYTHIC' && (
-        <img
-          alt=""
-          className={styles.mythicFrame}
-          draggable={false}
-          src="/images/minion-frames/MYTHIC.png"
-        />
-      )}
-      {m.keywords.guard && <GuardShield />}
-      <span
-        className={cx(
-          styles.oval,
-          hurt ? styles.shake : '',
-          m.keywords.hidden ? styles.veiled : '',
-          m.silenced ? styles.muted : '',
-          doomed ? styles.doomedPortrait : '',
+      {/* Everything that is part of the minion's body shakes as one piece. */}
+      <span className={cx(styles.body, hurt ? styles.shake : '')}>
+        {card?.rarity === 'MYTHIC' && (
+          <img
+            alt=""
+            className={styles.mythicFrame}
+            draggable={false}
+            src="/images/minion-frames/MYTHIC.png"
+          />
         )}
-      >
-        {/* The picture is its own layer inside the oval (which clips it), so it can scale on hover without scaling the frame. */}
+        {m.keywords.guard && <GuardShield />}
         <span
-          className={styles.portrait}
-          style={{ backgroundImage: minionArtBackground(m.cardId) }}
-        />
-      </span>
-      {doomed && (
-        <span className={styles.doomedIcon} role="img" aria-label="Would die">
-          ☠
+          className={cx(
+            styles.oval,
+            m.keywords.hidden ? styles.veiled : '',
+            m.silenced ? styles.muted : '',
+            doomed ? styles.doomedPortrait : '',
+          )}
+        >
+          {/* The picture is its own layer inside the oval (which clips it), so it can scale on hover without scaling the frame. */}
+          <span
+            className={styles.portrait}
+            style={{ backgroundImage: minionArtBackground(m.cardId) }}
+          />
         </span>
-      )}
-      {m.keywords.hidden && (
-        <img
-          className={styles.hiddenMark}
-          src="/images/mechanics/HIDDEN.png"
-          alt=""
-          draggable={false}
-        />
-      )}
-      {m.keywords.bubble && <span className={styles.bubble} />}
-      {badges.length > 0 && (
-        <span className={styles.badges}>
-          {badges.map((b) => (
-            <span
-              key={b.kind}
-              className={cx(
-                styles.badge,
-                styles[`badge_${b.kind}`],
-                b.fades ? styles.badgeFade : '',
-              )}
-              onAnimationEnd={b.fades ? () => setRushGone(true) : undefined}
-              title={b.label}
-              aria-label={b.label}
-            >
-              {GLYPH[b.kind]}
-            </span>
-          ))}
+        {doomed && (
+          <span className={styles.doomedIcon} role="img" aria-label="Would die">
+            ☠
+          </span>
+        )}
+        {m.keywords.hidden && (
+          <img
+            className={styles.hiddenMark}
+            src="/images/mechanics/HIDDEN.png"
+            alt=""
+            draggable={false}
+          />
+        )}
+        {m.keywords.bubble && <span className={styles.bubble} />}
+        {badges.length > 0 && (
+          <span className={styles.badges}>
+            {badges.map((b) => (
+              <span
+                key={b.kind}
+                className={cx(
+                  styles.badge,
+                  styles[`badge_${b.kind}`],
+                  b.fades ? styles.badgeFade : '',
+                )}
+                onAnimationEnd={b.fades ? () => setRushGone(true) : undefined}
+                title={b.label}
+                aria-label={b.label}
+              >
+                {GLYPH[b.kind]}
+              </span>
+            ))}
+          </span>
+        )}
+        <span
+          className={cx(
+            styles.stat,
+            styles.attack,
+            styles[`tone_${attackTone}`],
+          )}
+          aria-label={`Attack ${m.attack}`}
+        >
+          <img src="/images/ui/stat-attack.png" alt="" draggable={false} />
+          <b>{m.attack}</b>
         </span>
-      )}
-      <span
-        className={cx(styles.stat, styles.attack, styles[`tone_${attackTone}`])}
-        aria-label={`Attack ${m.attack}`}
-      >
-        <img src="/images/ui/stat-attack.png" alt="" draggable={false} />
-        <b>{m.attack}</b>
+        <span
+          className={cx(
+            styles.stat,
+            styles.health,
+            styles[`tone_${healthTone}`],
+          )}
+          aria-label={`Health ${m.health}`}
+        >
+          <img src="/images/ui/stat-health.png" alt="" draggable={false} />
+          <b>{m.health}</b>
+        </span>
+        <span className={styles.caption}>{card?.name ?? m.cardId}</span>
       </span>
-      <span
-        className={cx(styles.stat, styles.health, styles[`tone_${healthTone}`])}
-        aria-label={`Health ${m.health}`}
-      >
-        <img src="/images/ui/stat-health.png" alt="" draggable={false} />
-        <b>{m.health}</b>
-      </span>
-      <span className={styles.caption}>{card?.name ?? m.cardId}</span>
     </>
   );
 };

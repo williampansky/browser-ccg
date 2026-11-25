@@ -1,3 +1,6 @@
+import { getHeroSwing } from './hero-swing-tune';
+import type { HeroSwingSettings } from './hero-swing-tune';
+
 /**
  * Motion that gives the board weight: things are thrown, land and hit rather
  * than just changing state. Everything here is
@@ -14,7 +17,7 @@ export const reducedMotion = (): boolean =>
  */
 export const IMPACT_MS = 190;
 /** When a hero's slam lands (see `heroSwingFrames`). */
-export const HERO_IMPACT_MS = 420;
+export const heroImpactMs = (): number => getHeroSwing().impactMs;
 
 let currentImpactMs = IMPACT_MS;
 
@@ -31,8 +34,6 @@ export const setImpactMs = (ms: number): void => {
     document.documentElement.style.setProperty('--impact-ms', `${ms}ms`);
 };
 const LUNGE_MS = 520;
-/** The hero's heavier swing is slower: a long lift, a fast slam, a settle. */
-const HERO_SWING_MS = 900;
 
 export interface Point {
   x: number;
@@ -72,41 +73,103 @@ export const lungeFrames = (to: Point): Keyframe[] => {
   ];
 };
 
-const SHADOW_REST = 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35))';
-const SHADOW_LIFTED = 'drop-shadow(0 26px 16px rgba(0, 0, 0, 0.3))';
-const SHADOW_SLAM = 'drop-shadow(0 2px 3px rgba(0, 0, 0, 0.55))';
+/** How far through the time after the hold the drift home and the settle are. */
+const DRIFT_FRACTION = 0.56;
+const SETTLE_FRACTION = 0.8;
+const HOVER_OFFSET = 6;
+const DRIFT_SCALE = 1.04;
+const HOLD_WIDEN = 0.02;
+const SETTLE_SQUASH_X = 1.03;
+/** Pressed into the target: a tight, dark contact shadow. */
+const SLAM_SHADOW = 'drop-shadow(0 2px 3px rgba(0, 0, 0, 0.55))';
+const DROP_SHADOW = /drop-shadow\((?:[^()]|\([^()]*\))*\)/g;
 
 /**
- * A hero's swing, with weight: it rises toward the viewer (bigger, its shadow
- * dropping further away and softening), hangs for a beat, slams into the
- * target at `HERO_SLAM_MS`, then drifts home and settles with a small squash.
+ * The moments of a swing in ms, clamped so they always stay in order. Both the
+ * movement and the shadow follow them.
  */
-export const heroSwingFrames = (to: Point): Keyframe[] => {
+const swingTimes = (swing: HeroSwingSettings) => {
+  const { totalMs } = swing;
+  const impact = Math.min(swing.impactMs, totalMs - 1);
+  const slamStart = Math.max(1, impact - swing.slamMs);
+  const lift = Math.min(swing.liftMs, slamStart);
+  const hold = Math.min(impact + swing.holdMs, totalMs - 1);
+  const drift = hold + (totalMs - hold) * DRIFT_FRACTION;
+  const settle = hold + (totalMs - hold) * SETTLE_FRACTION;
+  return { totalMs, impact, slamStart, lift, hold, drift, settle };
+};
+
+/**
+ * A hero's swing, with weight: it rises toward the viewer (bigger), hangs for
+ * a beat, slams into the target at `impactMs`, then drifts home and settles
+ * with a small squash. The shadow is animated separately
+ * (`heroShadowFrames`).
+ */
+export const heroSwingFrames = (
+  to: Point,
+  swing: HeroSwingSettings = getHeroSwing(),
+): Keyframe[] => {
+  const { totalMs, impact, slamStart, lift, hold, drift, settle } =
+    swingTimes(swing);
+  const hit = { x: to.x * swing.reach, y: to.y * swing.reach };
   const t = (x: number, y: number, scaleX: number, scaleY = scaleX) =>
     `translate(${x}px, ${y}px) scale(${scaleX}, ${scaleY})`;
-  const hit = { x: to.x * 0.85, y: to.y * 0.85 };
-  const lift = HERO_SWING_MS * 0.3;
-  const slam = HERO_IMPACT_MS;
-  const frame = (
-    transform: string,
-    filter: string,
-    ms: number,
-    easing?: string,
-  ): Keyframe => ({ transform, filter, offset: ms / HERO_SWING_MS, easing });
+  const frame = (transform: string, ms: number, easing?: string): Keyframe => ({
+    transform,
+    offset: ms / totalMs,
+    easing,
+  });
+  const top = t(0, -swing.liftY, swing.liftScale);
   return [
-    frame(t(0, 0, 1), SHADOW_REST, 0, 'cubic-bezier(0.2, 0.7, 0.3, 1)'),
-    frame(t(0, -22, 1.16), SHADOW_LIFTED, lift, 'ease-in-out'),
+    frame(t(0, 0, 1), 0, 'cubic-bezier(0.2, 0.7, 0.3, 1)'),
+    frame(top, lift, 'ease-in-out'),
+    frame(top, slamStart, 'cubic-bezier(0.7, 0, 1, 0.5)'),
+    frame(t(hit.x, hit.y, swing.hitScale), impact, 'ease-out'),
     frame(
-      t(0, -26, 1.18),
-      SHADOW_LIFTED,
-      slam - 90,
-      'cubic-bezier(0.7, 0, 1, 0.5)',
+      t(
+        hit.x,
+        hit.y,
+        swing.hitScale + HOLD_WIDEN,
+        swing.hitScale * DRIFT_SCALE,
+      ),
+      hold,
+      'ease-in-out',
     ),
-    frame(t(hit.x, hit.y, 1.1), SHADOW_SLAM, slam, 'ease-out'),
-    frame(t(hit.x, hit.y, 1.12, 1.04), SHADOW_SLAM, slam + 70, 'ease-in-out'),
-    frame(t(0, -6, 1.04), SHADOW_LIFTED, HERO_SWING_MS * 0.8, 'ease-in-out'),
-    frame(t(0, 0, 1.03, 0.96), SHADOW_REST, HERO_SWING_MS * 0.92, 'ease-out'),
-    frame(t(0, 0, 1), SHADOW_REST, HERO_SWING_MS),
+    frame(t(0, -HOVER_OFFSET, DRIFT_SCALE), drift, 'ease-in-out'),
+    frame(t(0, 0, SETTLE_SQUASH_X, swing.squash), settle, 'ease-out'),
+    frame(t(0, 0, 1), totalMs),
+  ];
+};
+
+/**
+ * The hero's own shadow through the swing. `filter` is the figure's current
+ * computed filter: any glow in front of the last drop-shadow is kept, and that
+ * last one (the default dark shadow) is what lifts away, so the swing starts
+ * and ends exactly on the default and never stacks a second shadow.
+ */
+export const heroShadowFrames = (
+  filter: string,
+  swing: HeroSwingSettings = getHeroSwing(),
+): Keyframe[] => {
+  const { totalMs, impact, slamStart, lift, hold, drift, settle } =
+    swingTimes(swing);
+  const shadows = filter.match(DROP_SHADOW) ?? [];
+  const rest = shadows.length > 0 ? shadows[shadows.length - 1] : 'none';
+  const glow = shadows.slice(0, -1).join(' ');
+  const lifted = `drop-shadow(0 ${swing.shadowY}px ${swing.shadowBlur}px rgba(0, 0, 0, ${swing.shadowAlpha}))`;
+  const frame = (shadow: string, ms: number): Keyframe => ({
+    filter: `${glow} ${shadow}`.trim(),
+    offset: ms / totalMs,
+  });
+  return [
+    frame(rest, 0),
+    frame(lifted, lift),
+    frame(lifted, slamStart),
+    frame(SLAM_SHADOW, impact),
+    frame(SLAM_SHADOW, hold),
+    frame(lifted, drift),
+    frame(rest, settle),
+    frame(rest, totalMs),
   ];
 };
 
@@ -140,14 +203,34 @@ export const lungeBy = (
   if (reducedMotion() || !attacker.animate || !attacker.isConnected) return;
   const prev = attacker.style.zIndex;
   attacker.style.zIndex = '60';
+  const swing = getHeroSwing();
   const anim = isHero
-    ? attacker.animate(heroSwingFrames(to), { duration: HERO_SWING_MS })
+    ? attacker.animate(heroSwingFrames(to, swing), {
+        duration: swing.totalMs,
+      })
     : attacker.animate(lungeFrames(to), { duration: LUNGE_MS });
+  if (isHero) animateHeroShadow(attacker, swing);
   const done = () => {
     attacker.style.zIndex = prev;
   };
   anim.onfinish = done;
   anim.oncancel = done;
+};
+
+const FIGURE = '[class*="hero-variants_figure__"]';
+
+/**
+ * Runs the shadow animation on the figure inside the hero (where its default
+ * shadow lives), or on the hero itself when it has no figure.
+ */
+const animateHeroShadow = (
+  hero: HTMLElement,
+  swing: HeroSwingSettings,
+): void => {
+  const figure = hero.querySelector<HTMLElement>(FIGURE) ?? hero;
+  figure.animate(heroShadowFrames(getComputedStyle(figure).filter, swing), {
+    duration: swing.totalMs,
+  });
 };
 
 /** Throws `attacker` at `target` (both on screen) and back. */

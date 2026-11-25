@@ -8,9 +8,10 @@ import {
   useMeasuredDefaults,
 } from '../components/board-lab/LabSliders';
 import {
-  LAB_TABS,
   LabSection,
+  LabSubTabBar,
   LabTabBar,
+  sectionsFor,
   SECTION_KEYS,
   useLabSections,
   useLabTab,
@@ -43,6 +44,11 @@ import {
 import { BackgroundPanel } from '../components/board-lab/BackgroundPanel';
 import type { LogSample } from '../components/play-board/sample-log';
 import { PresetsPanel } from '../components/board-lab/PresetsPanel';
+import {
+  HeroSwingPanel,
+  HeroSwingPreviewPanel,
+  useHeroSwingTuning,
+} from '../components/board-lab/AnimationsPanel';
 import { EndPanel, useEndTuning } from '../components/board-lab/EndPanel';
 import {
   HoverGapPanel,
@@ -82,10 +88,11 @@ const BoardLab = () => {
   const router = useRouter();
   const q = router.query;
   const { sections, setAllSections, toggleSection } = useLabSections();
-  const { tab, setTab } = useLabTab();
+  const { tab, setTab, subtab, setSubtab } = useLabTab();
   const defaults = useMeasuredDefaults(q);
   useSoundTuning(q);
   useEndTuning(q);
+  useHeroSwingTuning(q);
 
   // A stable list of real CORE minions to build boards from.
   const minionIds = useMemo(
@@ -292,6 +299,18 @@ const BoardLab = () => {
       'live',
       <HeroFiguresPanel {...panel} />,
     ),
+    'hero-swing-preview': sec(
+      'hero-swing-preview',
+      'Preview',
+      'plays the swing now',
+      <HeroSwingPreviewPanel {...panel} />,
+    ),
+    'hero-swing': sec(
+      'hero-swing',
+      'Hero attack swing',
+      'live; baked into /play with npm run board',
+      <HeroSwingPanel {...panel} />,
+    ),
     'snd-cardPlay': sec(
       'snd-cardPlay',
       'Card play',
@@ -329,7 +348,8 @@ const BoardLab = () => {
       <PlayBoard key={boardKey} lab={lab} />
       <LabOverlay onSetAll={setAllSections}>
         <LabTabBar tab={tab} onTab={setTab} />
-        {LAB_TABS.find((t) => t.id === tab)?.sections.map((id) => panels[id])}
+        <LabSubTabBar tab={tab} subtab={subtab} onSubtab={setSubtab} />
+        {sectionsFor(tab, subtab).map((id) => panels[id])}
       </LabOverlay>
     </>
   );

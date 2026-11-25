@@ -486,7 +486,18 @@
       rgba(0, 0, 0, var(--sh-hov-a, 0));
 }
 
-// hsclone's "was attacked": a short shake when Health drops.
+// The minion's body: every layer except the dust and the floating numbers,
+// grouped so they can shake as one piece. It fills the slot, so the layers keep
+// their places.
+.body {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 85%;
+}
+
+// hsclone's "was attacked": a short shake when Health drops. It moves the body
+// with the individual `translate` and `rotate` properties, so the layers'
+// own transforms and nudges are left alone.
 .shake {
   // Waits for the attacker's strike to arrive (IMPACT_MS in motion.ts).
   animation: minionShake 500ms var(--impact-ms, 190ms) ease-out both;
@@ -495,19 +506,23 @@
 @keyframes minionShake {
   0%,
   100% {
-    transform: translateX(-50%);
+    translate: 0 0;
+    rotate: 0deg;
   }
   15% {
-    transform: translateX(calc(-50% - 7px)) rotate(-2deg);
+    translate: -7px 0;
+    rotate: -2deg;
   }
   35% {
-    transform: translateX(calc(-50% + 6px)) rotate(1.5deg);
+    translate: 6px 0;
+    rotate: 1.5deg;
   }
   55% {
-    transform: translateX(calc(-50% - 4px));
+    translate: -4px 0;
+    rotate: 0deg;
   }
   75% {
-    transform: translateX(calc(-50% + 2px));
+    translate: 2px 0;
   }
 }
 

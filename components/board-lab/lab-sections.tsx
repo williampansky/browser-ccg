@@ -1,6 +1,7 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
 import { END_KNOBS } from '../play-board/end-celebration';
+import { HERO_SWING_KNOBS } from '../play-board/hero-swing-tune';
 import {
   ENERGY_COLOURS,
   MID_KNOBS,
@@ -26,7 +27,9 @@ const MID_KEYS = [
   'lmdba',
   'lmdta',
 ];
+const SWING_KEYS = HERO_SWING_KNOBS.map((k) => k.key);
 export const SECTION_KEYS: Record<string, string[]> = {
+  'hero-swing': SWING_KEYS,
   endgame: [
     'leno',
     'lenf',
@@ -447,8 +450,23 @@ export const LabSection = ({
   );
 };
 
-/** The top-level groups: a tab each, with the accordion sections inside it. */
-export const LAB_TABS: { id: string; label: string; sections: string[] }[] = [
+export interface LabSubTab {
+  id: string;
+  label: string;
+  sections: string[];
+}
+
+/**
+ * The top-level groups: a tab each, with the accordion sections inside it. A
+ * tab with `subtabs` shows a second row of buttons and the sections of the
+ * chosen sub-tab instead.
+ */
+export const LAB_TABS: {
+  id: string;
+  label: string;
+  sections: string[];
+  subtabs?: LabSubTab[];
+}[] = [
   { id: 'setup', label: 'Setup', sections: ['presets', 'board', 'restart'] },
   {
     id: 'board',
@@ -469,6 +487,18 @@ export const LAB_TABS: { id: string; label: string; sections: string[] }[] = [
     ],
   },
   { id: 'heroes', label: 'Heroes', sections: ['heroes'] },
+  {
+    id: 'animations',
+    label: 'Animations',
+    sections: [],
+    subtabs: [
+      {
+        id: 'hero-attack',
+        label: 'Hero attack',
+        sections: ['hero-swing-preview', 'hero-swing'],
+      },
+    ],
+  },
   { id: 'end', label: 'End game', sections: ['endgame'] },
   {
     id: 'sounds',
@@ -486,15 +516,81 @@ export const LAB_TABS: { id: string; label: string; sections: string[] }[] = [
 /** Which tab is showing; remembered in localStorage. */
 export const useLabTab = () => {
   const [tab, setTabState] = useState('setup');
+  const [subtab, setSubtabState] = useState('');
   useEffect(() => {
     const saved = window.localStorage.getItem('ccg.boardlab.tab');
     if (saved && LAB_TABS.some((t) => t.id === saved)) setTabState(saved);
+    setSubtabState(window.localStorage.getItem('ccg.boardlab.subtab') ?? '');
   }, []);
   const setTab = (id: string) => {
     setTabState(id);
     window.localStorage.setItem('ccg.boardlab.tab', id);
   };
-  return { tab, setTab };
+  const setSubtab = (id: string) => {
+    setSubtabState(id);
+    window.localStorage.setItem('ccg.boardlab.subtab', id);
+  };
+  return { tab, setTab, subtab, setSubtab };
+};
+
+/**
+ * The sections to show for a tab: its own, or, for a tab with sub-tabs, those
+ * of the chosen sub-tab (the first one if the saved choice no longer exists).
+ */
+export const sectionsFor = (tabId: string, subtabId: string): string[] => {
+  const tab = LAB_TABS.find((t) => t.id === tabId);
+  if (!tab?.subtabs) return tab?.sections ?? [];
+  const subtab = tab.subtabs.find((s) => s.id === subtabId) ?? tab.subtabs[0];
+  return subtab.sections;
+};
+
+/** The second row of buttons for a tab with sub-tabs (nothing otherwise). */
+export const LabSubTabBar = ({
+  tab,
+  subtab,
+  onSubtab,
+}: {
+  tab: string;
+  subtab: string;
+  onSubtab: (id: string) => void;
+}) => {
+  const subtabs = LAB_TABS.find((t) => t.id === tab)?.subtabs;
+  if (!subtabs) return null;
+  const current = subtabs.some((s) => s.id === subtab) ? subtab : subtabs[0].id;
+  return (
+    <div
+      role="tablist"
+      aria-label="Sub-tabs"
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 4,
+        margin: '-2px 0 8px 12px',
+        paddingLeft: 8,
+        borderLeft: '2px solid #3d5afe',
+      }}
+    >
+      {subtabs.map((s) => (
+        <button
+          key={s.id}
+          role="tab"
+          aria-selected={current === s.id}
+          onClick={() => onSubtab(s.id)}
+          style={{
+            padding: '2px 9px',
+            borderRadius: 12,
+            border: '1px solid #3a4052',
+            cursor: 'pointer',
+            color: '#fff',
+            fontSize: 12,
+            background: current === s.id ? '#3d5afe' : '#232634',
+          }}
+        >
+          {s.label}
+        </button>
+      ))}
+    </div>
+  );
 };
 
 export const LabTabBar = ({

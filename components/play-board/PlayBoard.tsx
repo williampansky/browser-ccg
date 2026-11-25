@@ -114,7 +114,7 @@ import {
   aimVector,
   getImpactMs,
   setImpactMs,
-  HERO_IMPACT_MS,
+  heroImpactMs,
   IMPACT_MS,
   lunge,
   lungeBy,
@@ -1121,7 +1121,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         const to = action.target && nodes.current.get(targetKey(action.target));
         // A hero swings heavier than a minion lunges, so its hit lands later.
         const isHeroSwing = action.type === 'WeaponAttack';
-        setImpactMs(isHeroSwing ? HERO_IMPACT_MS : IMPACT_MS);
+        setImpactMs(isHeroSwing ? heroImpactMs() : IMPACT_MS);
         /**
          * A minion that attacks (Stampede) before it has landed would lunge
          * unseen: wait for it to land.
@@ -1165,6 +1165,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           0,
         );
         if (dealt >= 4 && tableRef.current) nudge(tableRef.current, dealt);
+      } else {
+        // Anything else that hurts (a spell) uses the default timing, not the
+        // hero swing's from the last attack.
+        setImpactMs(IMPACT_MS);
       }
       const died = result.events.filter(
         (e): e is Extract<GameEvent, { type: 'MinionDied' }> =>
