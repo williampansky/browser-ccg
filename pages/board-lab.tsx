@@ -68,7 +68,7 @@ const PlayBoard = dynamic(
  *  - layout (CSS overrides over the real stylesheet): lm minion height px, lg minion gap px, lml/lms clicked-minion lift px / scale, lmh aimed-at target scale, lmpv=1 previews it on your first minion, ls section gap px, lw table max width px,
  *    lhs hand sink px, lhw0 / lhw1 my hand / enemy hand card width px, lfw0 / lfw1 my / enemy hero figure width px, lfs hero figure side (left|right), lfx0/lfy0/lfx1/lfy1 hero figure X/Y offsets px,
  *    lhrt/lhdp fan tilt/drop (x), lhol card overlap px, lhov/lhoy/lhot hover scale/lift px/tilt deg, lhom hover ms, lhpa/lhpb/lhpm parting px (adjacent / further out) and ms, lhha/lhhs/lhfl/lhsm hover halo opacity/swell, flash brightness, sheen ms, lhst settle ms, lhdr draw-in ms, lhpv=N holds card N in its hover look, hn0/hn1 cards dealt to each hand (setup, not baked),
- *    lxgh/lxgb/lxga/lxgo/lxgd/lxgk/lxgg flow glow hue deg, card halo rest/peak (card units) and opacity, pulse ms, keyword glow size % and peak brightness, lxgpv=1 treats Combo as on (give p0 a Flow card like PRIME_189 and e0=10),
+ *    lxgh/lxgb/lxga/lxgo/lxgd/lxgk/lxgg flow glow hue deg, card halo rest/peak (card units) and opacity, pulse ms, keyword glow size % and peak brightness, lxgpv=1 treats Combo as on (ticking it puts PRIME_189 in your hand and sets e0=10),
  *    lsel clicked-card scale, lpv=1 previews it on the first card, lpan log/deck arrangement (swap|stackL|stackR), lsplit stacked log share %,
  *    lgw/ldw log/deck width px, les energy bar scale, lex/ley its X/Y offsets px, leo=h horizontal energy bar, lgx/lgy/ldx/ldy their X/Y offsets px, lfelt=0 hides the felt panel
  * Changing a setup param restarts the board (it is a fresh game each time, not

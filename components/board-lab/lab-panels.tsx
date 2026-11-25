@@ -19,6 +19,17 @@ export interface PanelProps {
   pick: (n: number, offset: number) => string;
 }
 
+/** The Flow card the preview puts in your hand */
+const FLOW_PREVIEW_CARD = 'PRIME_189';
+
+/** Your hand ids with the Flow preview card in front, unless already there. */
+const withFlowCard = (hand: string): string => {
+  const ids = hand ? hand.split(',') : [];
+  return ids.includes(FLOW_PREVIEW_CARD)
+    ? hand
+    : [FLOW_PREVIEW_CARD, ...ids].join(',');
+};
+
 export const BoardPanel = ({
   q,
   setParams,
@@ -334,10 +345,19 @@ export const HandsPanel = ({
       <input
         type="checkbox"
         checked={'lxgpv' in q}
-        onChange={(e) => setParams({ lxgpv: e.target.checked ? '1' : null })}
+        onChange={(e) =>
+          setParams(
+            e.target.checked
+              ? {
+                  lxgpv: '1',
+                  p0: withFlowCard(one(q.p0)),
+                  ...(one(q.e0) ? {} : { e0: '10' }),
+                }
+              : { lxgpv: null },
+          )
+        }
       />{' '}
-      Preview: treat Combo as on (needs a Flow card in hand, e.g.
-      p0=PRIME_189,PRIME_193 and e0=10)
+      Preview: treat Combo as on (adds a Flow card to your hand)
     </label>
   </>
 );
