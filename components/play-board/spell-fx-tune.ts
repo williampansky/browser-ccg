@@ -20,6 +20,20 @@ export interface SpellFxTune {
   /** Travel: speed-up curve (1 = steady, higher = slow start, fast finish) */
   travelEase: number;
   travelColour: string;
+  /** Travel option: fly a picture (a dagger) instead of the orb */
+  travelHasSprite: boolean;
+  /** Sprite: which picture (see `SPELL_FX_SPRITES`) */
+  travelSprite: string;
+  /** Sprite: width of the picture (px), and an extra turn (degrees) */
+  travelSpriteSize: number;
+  travelSpriteTurn: number;
+  /** Sprite: how far the point sinks into the target past its centre (px) */
+  travelSpriteDepth: number;
+  /** Sprite: how far from the centre each lands, at random (px) */
+  travelSpriteScatter: number;
+  /** Sprite: ms it stays stuck in the target, then ms it takes to fade */
+  travelSpriteStick: number;
+  travelSpriteFade: number;
   /** Travel option: leave a particle trail behind the orb */
   travelHasTrail: boolean;
   /** Trail: puffs per frame, life (ms), size, scatter (px), drift speed */
@@ -103,6 +117,14 @@ export interface SpellFxTune {
 export const SPELL_FX_CHOICES: Partial<
   Record<keyof SpellFxTune, readonly string[]>
 > = {
+  travelSprite: [
+    'dagger-green',
+    'dagger-purple',
+    'dagger-cyan',
+    'dagger-pale',
+    'dagger-orange',
+    'dagger-bone',
+  ],
   spotRingsMotion: ['out', 'in', 'pulse'],
   spotSparkMotion: ['outward', 'rising', 'inward'],
 };
@@ -115,6 +137,14 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   travelArc: 0.07,
   travelEase: 1.8,
   travelColour: 'ffb347',
+  travelHasSprite: false,
+  travelSprite: 'dagger-green',
+  travelSpriteSize: 64,
+  travelSpriteTurn: 0,
+  travelSpriteDepth: 8,
+  travelSpriteScatter: 12,
+  travelSpriteStick: 500,
+  travelSpriteFade: 400,
   travelHasTrail: true,
   travelTrailPerFrame: 3,
   travelTrailLife: 260,
@@ -253,6 +283,24 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     spotHasSparks: false,
     spotSparkMotion: 'inward',
     spotSparkSpread: 200,
+  },
+  CORE_125: {
+    travelMs: 170,
+    travelArc: 0.06,
+    travelHasSprite: true,
+    travelSprite: 'dagger-bone',
+    travelSpriteSize: 45,
+    travelSpriteTurn: -15,
+    travelSpriteDepth: 4,
+    travelTrailPerFrame: 1,
+    travelTrailLife: 490,
+    travelTrailScale: 0.15,
+    travelTrailSpread: 8,
+    travelTrailDrift: 0.12,
+    travelTrailColour: 'bfbfbf',
+    volleyDelay: 100,
+    burstCount: 6,
+    burstScale: 0.4,
   },
   'CRUSADER:1': {
     spotLife: 700,

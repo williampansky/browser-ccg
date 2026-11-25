@@ -10,6 +10,7 @@ import {
 } from 'pixi.js';
 
 import type { FlashTone } from './motion';
+import { SPELL_FX_SPRITES, spriteById, spriteUrl } from './spell-fx-sprites';
 import { colourNumber, SPELL_FX_DEFAULTS } from './spell-fx-tune';
 import type { SpellFxTune } from './spell-fx-tune';
 
@@ -62,6 +63,10 @@ const GLOW_ALPHA = 0.12;
 const TRAVEL_PULSE_RATE = 0.035;
 const BURST_SPEED_MIN = 0.12;
 const BURST_SPEED_RANGE = 0.18;
+/** How far from a picture's centre its point is, as a fraction of its width. */
+const SPRITE_REACH = 0.7;
+/** The least a picture must move in a frame before it turns to face it. */
+const SPRITE_TURN_MIN = 0.5;
 const SPOT_START_RADIUS = 16;
 const SPOT_RING_FADE = 0.7;
 const SPOT_GLOW_ALPHA = 0.8;
@@ -271,6 +276,8 @@ export const createPixiFx = (): PixiFx => {
   });
   document.body.appendChild(canvas);
   const texture = softTexture(app);
+  // Load the pictures now so the first cast does not wait for them.
+  for (const art of SPELL_FX_SPRITES) Texture.from(spriteUrl(art.id));
   const particles: Particle[] = [];
   let playbackSpeed = 1;
   /** Runs per-frame jobs (an orb in flight); the ticker sleeps with none. */
@@ -354,23 +361,52 @@ export const createPixiFx = (): PixiFx => {
     ms: number,
     tune: SpellFxTune,
   ): void => {
+    const isSprite = tune.travelHasSprite;
+    const art = spriteById(tune.travelSprite);
+    const size = tune.travelSpriteSize;
+    const tipRadians = ((art.tip + tune.travelSpriteTurn) * Math.PI) / 180;
+    // A picture lands a little off the target's centre, point first: the path
+    // ends where its centre will be, a blade's length back from the spot.
+    const scatterAngle = Math.random() * Math.PI * 2;
+    const scatterRadius = tune.travelSpriteScatter * Math.sqrt(Math.random());
+    const hit = isSprite
+      ? {
+          x: to.x + Math.cos(scatterAngle) * scatterRadius,
+          y: to.y + Math.sin(scatterAngle) * scatterRadius,
+        }
+      : to;
+    const aimX = hit.x - from.x;
+    const aimY = hit.y - from.y;
+    const aimLength = Math.hypot(aimX, aimY) || 1;
+    const back = isSprite ? tune.travelSpriteDepth - size * SPRITE_REACH : 0;
+    const end = {
+      x: hit.x + (aimX / aimLength) * back,
+      y: hit.y + (aimY / aimLength) * back,
+    };
     const halo = new Sprite(texture);
     const core = new Sprite(texture);
     halo.tint = colourNumber(tune.travelColour);
     core.tint = 0xffffff;
-    for (const part of [halo, core]) {
-      part.anchor.set(0.5);
-      part.blendMode = BLEND_MODES.ADD;
+    const picture = new Sprite(Texture.from(spriteUrl(art.id)));
+    picture.anchor.set(0.5);
+    const heads = isSprite ? [picture] : [halo, core];
+    for (const part of heads) {
+      if (part !== picture) {
+        part.anchor.set(0.5);
+        part.blendMode = BLEND_MODES.ADD;
+      }
       addToStage(part);
     }
-    const dx = to.x - from.x;
-    const dy = to.y - from.y;
+    const dx = end.x - from.x;
+    const dy = end.y - from.y;
     const distance = Math.hypot(dx, dy) || 1;
     // A gentle sideways arc, so a shot is not a ruler line.
     const arcX = (-dy / distance) * distance * tune.travelArc;
     const arcY = (dx / distance) * distance * tune.travelArc;
     let elapsed = 0;
     let last = from;
+    let heading = Math.atan2(dy, dx);
+    let arrivedAt: number | null = null;
     jobs.add((deltaMs) => {
       elapsed += deltaMs;
       const linear = Math.min(1, elapsed / ms);
@@ -380,24 +416,36 @@ export const createPixiFx = (): PixiFx => {
         x: from.x + dx * eased + arcX * bend,
         y: from.y + dy * eased + arcY * bend,
       };
-      const pulse =
-        1 + tune.travelPulse * Math.sin(elapsed * TRAVEL_PULSE_RATE);
-      halo.position.set(at.x, at.y);
-      core.position.set(at.x, at.y);
-      halo.scale.set(tune.travelHaloScale * pulse);
-      core.scale.set(tune.travelCoreScale * pulse);
-      const puffs = tune.travelHasTrail
-        ? Math.round(tune.travelTrailPerFrame)
-        : 0;
+      if (isSprite) {
+        // The point leads: turn along the way the picture is moving.
+        if (Math.hypot(at.x - last.x, at.y - last.y) > SPRITE_TURN_MIN) {
+          heading = Math.atan2(at.y - last.y, at.x - last.x);
+        }
+        picture.position.set(at.x, at.y);
+        picture.rotation = heading - tipRadians;
+        picture.width = size;
+        picture.height = size;
+      } else {
+        const pulse =
+          1 + tune.travelPulse * Math.sin(elapsed * TRAVEL_PULSE_RATE);
+        halo.position.set(at.x, at.y);
+        core.position.set(at.x, at.y);
+        halo.scale.set(tune.travelHaloScale * pulse);
+        core.scale.set(tune.travelCoreScale * pulse);
+      }
+      const puffs =
+        tune.travelHasTrail && arrivedAt === null
+          ? Math.round(tune.travelTrailPerFrame)
+          : 0;
       for (let puff = 0; puff < puffs; puff++) {
         const jitter = () => (Math.random() - 0.5) * tune.travelTrailSpread;
         const drift = () => (Math.random() - 0.5) * tune.travelTrailDrift;
         // Spread the puffs along the way since the last frame, so a fast
         // orb leaves a stream and not a row of dots.
-        const back = puff / Math.max(1, puffs);
+        const behind = puff / Math.max(1, puffs);
         const origin = {
-          x: at.x + (last.x - at.x) * back + jitter(),
-          y: at.y + (last.y - at.y) * back + jitter(),
+          x: at.x + (last.x - at.x) * behind + jitter(),
+          y: at.y + (last.y - at.y) * behind + jitter(),
         };
         spawn(
           origin,
@@ -410,9 +458,27 @@ export const createPixiFx = (): PixiFx => {
       }
       last = at;
       if (linear < 1) return true;
-      halo.destroy();
-      core.destroy();
-      burstWith(to, 'hit', tune);
+      if (!isSprite) {
+        halo.destroy();
+        core.destroy();
+        burstWith(to, 'hit', tune);
+        return false;
+      }
+      // A picture sticks in the target, stays a moment, then fades away.
+      if (arrivedAt === null) {
+        arrivedAt = elapsed;
+        halo.destroy();
+        core.destroy();
+        burstWith(hit, 'hit', tune);
+      }
+      const held = elapsed - arrivedAt;
+      const fade = Math.max(1, tune.travelSpriteFade);
+      picture.alpha =
+        held <= tune.travelSpriteStick
+          ? 1
+          : Math.max(0, 1 - (held - tune.travelSpriteStick) / fade);
+      if (held < tune.travelSpriteStick + tune.travelSpriteFade) return true;
+      picture.destroy();
       return false;
     });
     wake();

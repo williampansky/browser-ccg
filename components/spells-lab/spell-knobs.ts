@@ -5,7 +5,7 @@ type KeyOf<T> = {
   [K in keyof SpellFxTune]: SpellFxTune[K] extends T ? K : never;
 }[keyof SpellFxTune];
 type NumKey = KeyOf<number>;
-type ChoiceKey = 'spotRingsMotion' | 'spotSparkMotion';
+type ChoiceKey = 'spotRingsMotion' | 'spotSparkMotion' | 'travelSprite';
 type ColourKey = Exclude<KeyOf<string>, ChoiceKey>;
 type FlagKey = KeyOf<boolean>;
 
@@ -29,6 +29,8 @@ export interface SpellGroup {
   title: string;
   /** The bases that can use this group; the lab shows it only for those */
   kinds: SpellFxKind[];
+  /** Hide the whole group while this is false (the orb's look with a picture) */
+  when?: (tune: SpellFxTune) => boolean;
   /**
    * An option that switches the group on: its sliders and colours show only
    * while the box is ticked (the box itself always shows).
@@ -49,7 +51,6 @@ export const SPELL_GROUPS: SpellGroup[] = [
   {
     title: 'Flight',
     kinds: ['travel'],
-    colours: [{ field: 'travelColour', label: 'Glow colour' }],
     knobs: [
       {
         field: 'travelMs',
@@ -72,6 +73,14 @@ export const SPELL_GROUPS: SpellGroup[] = [
         max: 4,
         step: 0.1,
       },
+    ],
+  },
+  {
+    title: 'Orb',
+    kinds: ['travel'],
+    when: (tune) => !tune.travelHasSprite,
+    colours: [{ field: 'travelColour', label: 'Glow colour' }],
+    knobs: [
       {
         field: 'travelHaloScale',
         label: 'Glow size',
@@ -87,6 +96,63 @@ export const SPELL_GROUPS: SpellGroup[] = [
         step: 0.05,
       },
       { field: 'travelPulse', label: 'Pulse', min: 0, max: 0.6, step: 0.01 },
+    ],
+  },
+  {
+    title: 'Picture',
+    kinds: ['travel'],
+    flag: {
+      field: 'travelHasSprite',
+      label: 'Fly a picture instead of the orb',
+    },
+    choices: [
+      {
+        field: 'travelSprite',
+        label: 'Picture',
+        options: [
+          { value: 'dagger-green', label: 'Green dagger' },
+          { value: 'dagger-purple', label: 'Purple dagger' },
+          { value: 'dagger-cyan', label: 'Cyan curved dagger' },
+          { value: 'dagger-pale', label: 'Pale curved dagger' },
+          { value: 'dagger-orange', label: 'Orange dagger' },
+          { value: 'dagger-bone', label: 'Bone dagger' },
+        ],
+      },
+    ],
+    knobs: [
+      { field: 'travelSpriteSize', label: 'Size (px)', min: 16, max: 192 },
+      {
+        field: 'travelSpriteTurn',
+        label: 'Turn (degrees, if it points off)',
+        min: -180,
+        max: 180,
+      },
+      {
+        field: 'travelSpriteDepth',
+        label: 'How far the point sinks in (px)',
+        min: -20,
+        max: 40,
+      },
+      {
+        field: 'travelSpriteScatter',
+        label: 'Lands off-centre by up to (px)',
+        min: 0,
+        max: 60,
+      },
+      {
+        field: 'travelSpriteStick',
+        label: 'Stays stuck for (ms)',
+        min: 0,
+        max: 2000,
+        step: 10,
+      },
+      {
+        field: 'travelSpriteFade',
+        label: 'Then fades over (ms)',
+        min: 0,
+        max: 2000,
+        step: 10,
+      },
     ],
   },
   {

@@ -529,182 +529,183 @@ const SpellsLab = () => {
           Drag the two circles. The setup is in the page URL (<code>s_...</code>
           ); it is not baked into the game&apos;s defaults yet.
         </small>
-        {SPELL_GROUPS.filter((group) => group.kinds.includes(kind)).map(
-          (group) => {
-            const isOn = !group.flag || tune[group.flag.field];
-            return (
-              <details
-                key={group.title}
-                open
-                style={{ borderTop: '1px solid #2a2f3d' }}
+        {SPELL_GROUPS.filter(
+          (group) =>
+            group.kinds.includes(kind) && (!group.when || group.when(tune)),
+        ).map((group) => {
+          const isOn = !group.flag || tune[group.flag.field];
+          return (
+            <details
+              key={group.title}
+              open
+              style={{ borderTop: '1px solid #2a2f3d' }}
+            >
+              <summary
+                style={{
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  padding: '6px 0',
+                }}
               >
-                <summary
-                  style={{
-                    cursor: 'pointer',
-                    fontWeight: 600,
-                    padding: '6px 0',
-                  }}
+                {group.title}
+              </summary>
+              {group.flag && (
+                <label
+                  style={{ display: 'block', margin: '6px 0', fontSize: 12 }}
                 >
-                  {group.title}
-                </summary>
-                {group.flag && (
+                  <input
+                    type="checkbox"
+                    checked={tune[group.flag.field]}
+                    onChange={(event) =>
+                      setParams({
+                        [`s_${group.flag?.field}`]: event.target.checked
+                          ? '1'
+                          : '0',
+                      })
+                    }
+                  />{' '}
+                  {group.flag.label}
+                </label>
+              )}
+              {isOn &&
+                group.choices?.map((choice) => (
                   <label
-                    style={{ display: 'block', margin: '6px 0', fontSize: 12 }}
+                    key={choice.field}
+                    style={{
+                      display: 'block',
+                      margin: '6px 0',
+                      fontSize: 12,
+                    }}
                   >
-                    <input
-                      type="checkbox"
-                      checked={tune[group.flag.field]}
+                    {choice.label}{' '}
+                    <select
+                      value={tune[choice.field]}
                       onChange={(event) =>
                         setParams({
-                          [`s_${group.flag?.field}`]: event.target.checked
-                            ? '1'
-                            : '0',
+                          [`s_${choice.field}`]: event.target.value,
                         })
                       }
-                    />{' '}
-                    {group.flag.label}
+                    >
+                      {choice.options.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    {changed(choice.field) && (
+                      <a
+                        style={{
+                          marginLeft: 6,
+                          cursor: 'pointer',
+                          color: '#7aa2ff',
+                        }}
+                        onClick={() =>
+                          setParams({ [`s_${choice.field}`]: null })
+                        }
+                      >
+                        reset
+                      </a>
+                    )}
                   </label>
-                )}
-                {isOn &&
-                  group.choices?.map((choice) => (
+                ))}
+              {isOn &&
+                group.knobs
+                  .filter((knob) => !knob.when || knob.when(tune))
+                  .map((knob) => (
                     <label
-                      key={choice.field}
+                      key={knob.field}
                       style={{
                         display: 'block',
                         margin: '6px 0',
                         fontSize: 12,
                       }}
                     >
-                      {choice.label}{' '}
-                      <select
-                        value={tune[choice.field]}
-                        onChange={(event) =>
-                          setParams({
-                            [`s_${choice.field}`]: event.target.value,
-                          })
-                        }
-                      >
-                        {choice.options.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                      {changed(choice.field) && (
-                        <a
-                          style={{
-                            marginLeft: 6,
-                            cursor: 'pointer',
-                            color: '#7aa2ff',
-                          }}
-                          onClick={() =>
-                            setParams({ [`s_${choice.field}`]: null })
-                          }
-                        >
-                          reset
-                        </a>
-                      )}
-                    </label>
-                  ))}
-                {isOn &&
-                  group.knobs
-                    .filter((knob) => !knob.when || knob.when(tune))
-                    .map((knob) => (
-                      <label
-                        key={knob.field}
+                      <span
                         style={{
-                          display: 'block',
-                          margin: '6px 0',
-                          fontSize: 12,
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          gap: 8,
                         }}
                       >
                         <span
                           style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            gap: 8,
+                            color: changed(knob.field) ? '#fff' : '#9aa3b8',
                           }}
                         >
-                          <span
-                            style={{
-                              color: changed(knob.field) ? '#fff' : '#9aa3b8',
-                            }}
-                          >
-                            {knob.label}
-                          </span>
-                          <span>
-                            <b>{tune[knob.field]}</b>
-                            {changed(knob.field) && (
-                              <a
-                                style={{
-                                  marginLeft: 6,
-                                  cursor: 'pointer',
-                                  color: '#7aa2ff',
-                                }}
-                                onClick={() =>
-                                  setParams({ [`s_${knob.field}`]: null })
-                                }
-                              >
-                                reset
-                              </a>
-                            )}
-                          </span>
+                          {knob.label}
                         </span>
-                        <input
-                          type="range"
-                          min={knob.min}
-                          max={knob.max}
-                          step={knob.step ?? 1}
-                          value={tune[knob.field]}
-                          style={{ width: '100%', margin: 0 }}
-                          onChange={(event) =>
-                            setParams({
-                              [`s_${knob.field}`]: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                    ))}
-                {isOn &&
-                  group.colours?.map((colour) => (
-                    <label
-                      key={colour.field}
-                      style={{
-                        display: 'block',
-                        margin: '6px 0',
-                        fontSize: 12,
-                      }}
-                    >
+                        <span>
+                          <b>{tune[knob.field]}</b>
+                          {changed(knob.field) && (
+                            <a
+                              style={{
+                                marginLeft: 6,
+                                cursor: 'pointer',
+                                color: '#7aa2ff',
+                              }}
+                              onClick={() =>
+                                setParams({ [`s_${knob.field}`]: null })
+                              }
+                            >
+                              reset
+                            </a>
+                          )}
+                        </span>
+                      </span>
                       <input
-                        type="color"
-                        value={`#${tune[colour.field]}`}
+                        type="range"
+                        min={knob.min}
+                        max={knob.max}
+                        step={knob.step ?? 1}
+                        value={tune[knob.field]}
+                        style={{ width: '100%', margin: 0 }}
                         onChange={(event) =>
                           setParams({
-                            [`s_${colour.field}`]: event.target.value.slice(1),
+                            [`s_${knob.field}`]: event.target.value,
                           })
                         }
-                      />{' '}
-                      {colour.label}
-                      {changed(colour.field) && (
-                        <a
-                          style={{
-                            marginLeft: 6,
-                            cursor: 'pointer',
-                            color: '#7aa2ff',
-                          }}
-                          onClick={() =>
-                            setParams({ [`s_${colour.field}`]: null })
-                          }
-                        >
-                          reset
-                        </a>
-                      )}
+                      />
                     </label>
                   ))}
-              </details>
-            );
-          },
-        )}
+              {isOn &&
+                group.colours?.map((colour) => (
+                  <label
+                    key={colour.field}
+                    style={{
+                      display: 'block',
+                      margin: '6px 0',
+                      fontSize: 12,
+                    }}
+                  >
+                    <input
+                      type="color"
+                      value={`#${tune[colour.field]}`}
+                      onChange={(event) =>
+                        setParams({
+                          [`s_${colour.field}`]: event.target.value.slice(1),
+                        })
+                      }
+                    />{' '}
+                    {colour.label}
+                    {changed(colour.field) && (
+                      <a
+                        style={{
+                          marginLeft: 6,
+                          cursor: 'pointer',
+                          color: '#7aa2ff',
+                        }}
+                        onClick={() =>
+                          setParams({ [`s_${colour.field}`]: null })
+                        }
+                      >
+                        reset
+                      </a>
+                    )}
+                  </label>
+                ))}
+            </details>
+          );
+        })}
         {JSON.stringify(tune) === JSON.stringify(base) ? null : (
           <p style={{ color: '#9aa3b8', fontSize: 12 }}>
             Differs from this spell's saved look.
