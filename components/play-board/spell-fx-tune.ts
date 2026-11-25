@@ -127,10 +127,17 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
 /**
  * Saved per-spell looks, keyed by spell (a card id, or `<CLASS>:<skill
  * number>` for a hero skill): only the numbers that differ from the defaults.
- * Empty until the spells lab can bake into it; a spell without an entry
- * plays the defaults.
+ * `npm run spell -- "<spells-lab url>"` writes into it; a spell without an
+ * entry plays the defaults.
  */
-export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {};
+export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
+  'FIGHTER:1': {
+    spotColour: '748ae2',
+    spotAccentColour: '139fcd',
+    spotGlowScale: 8,
+    spotSparkCount: 20,
+  },
+};
 
 /** The look a spell plays: the defaults with its saved variant on top. */
 export const tuneForSpell = (key: string | null): SpellFxTune => ({
