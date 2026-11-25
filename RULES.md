@@ -627,7 +627,7 @@ Readings I chose while giving PRIME cards definitions (`engine/definitions/prime
   case the attack does not happen). Others run after their event (a minion played, the hero damaged, a minion died).
 - **Rewritten cards**: 143 Armor = max(4, 2 x attacker's Attack), after which the hit lands; 127 the attacker is Disabled and loses 2 Attack *before* it hits
   (the attack still happens, weaker); 148 damage = your hero's missing Health (30 - health, armor ignored); 126 your weapon hits the attacker first for its
-  Attack without losing durability, needs a weapon; 157 two Guard Mice, the attack goes to one (works on a hero weapon attack too); 152 a targeted
+  Attack without losing durability, needs a weapon; 157 two Bulwark Sentry Recruits, the attack goes to one (works on a hero weapon attack too); 152 a targeted
   enemy spell hits a random minion its caster controls (unchanged if they have none); 146 copies the spell to your hand (spells only, never items or a placed
   Mystery); 159 halves Health (rounded up) and Disables; 129 damage = the minion's Cost; 158 returns your dying minion (never a token) to your hand, 1 cheaper
   (`CardInstance.costDelta`); 156 on 5 or more damage in one hit: heal 5 and draw.

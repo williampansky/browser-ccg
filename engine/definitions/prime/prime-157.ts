@@ -5,9 +5,9 @@ import {
 } from '../../effects/primitives';
 
 // PRIME_157 The Wrong Door, Mystery (Attack): "When an enemy attacks, summon
-// two 1/1 Mice with Guard; the attack hits a Mouse"
-// (any enemy attack: a minion's or the hero's weapon; with no room for a Mouse
-// the attack is not redirected)
+// two 1/1 Sentry Recruits with Bulwark; the attack hits a Recruit"
+// (any enemy attack: a minion's or the hero's weapon; with no room for a
+// Recruit the attack is not redirected)
 export default defineCard('PRIME_157', () => ({
   mystery: {
     category: 'attack',

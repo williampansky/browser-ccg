@@ -4545,7 +4545,7 @@
     "rarity": "%RARITY_COMMON%",
     "cardClass": "0 %CLASS_CRUSADER%",
     "cost": 1,
-    "text": "<strong>%MYSTERY%</strong><br>\nWhen an enemy attacks,<br>\n%SUMMON% two 1/1 Mice with<br>\n%BULWARK%; the attack hits a Mouse",
+    "text": "<strong>%MYSTERY%</strong><br>\nWhen an enemy attacks,<br>\n%SUMMON% two 1/1 Sentry Recruits<br>\nwith %BULWARK%; the attack<br>\nhits a Recruit",
     "mechanics": [
       "%MYSTERY%",
       "%EVENT%",

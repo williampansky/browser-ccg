@@ -807,7 +807,7 @@
   },
   {
     "id": "PRIME_157a",
-    "name": "Doorway Mouse",
+    "name": "Sentry Recruit",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -821,7 +821,9 @@
     ],
     "collectible": false,
     "active": true,
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
