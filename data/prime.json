@@ -1954,6 +1954,7 @@
   },
   {
     "id": "PRIME_188",
+    "name": "Honed Edge",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -1965,7 +1966,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_264",
@@ -2106,7 +2109,7 @@
   },
   {
     "id": "PRIME_186",
-    "name": "Gift Box",
+    "name": "Blackmarket Bundle",
     "set": "%SET_003%",
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_COMMON%",
@@ -2123,9 +2126,9 @@
     "collectible": true,
     "active": true,
     "flavor": "\"Life's like a box of chocolates...\"",
-    "artistName": "https://www.artstation.com/marinalepus",
-    "artistUrl": "https://www.artstation.com/marinalepus",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_206",
@@ -2628,6 +2631,7 @@
   },
   {
     "id": "PRIME_191",
+    "name": "Returning Dirk",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -2639,7 +2643,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_129",
@@ -4141,9 +4147,9 @@
     "playContext": "%RETURN%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/lightwave",
-    "artistUrl": "https://www.artstation.com/lightwave",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_164",
@@ -4225,7 +4231,7 @@
   },
   {
     "id": "PRIME_194",
-    "name": "Ignition",
+    "name": "Smoke Bomb",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -4240,9 +4246,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artistName": "Emir Raşit Gökçe",
-    "artistUrl": "https://www.artstation.com/vengam",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_025",
@@ -4982,9 +4988,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.deviantart.com/cobaltplasma",
-    "artistUrl": "https://www.deviantart.com/cobaltplasma",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_096",
@@ -5371,9 +5377,9 @@
     "collectible": true,
     "active": true,
     "flavor": "Who pays the bar tab?",
-    "artistName": "https://www.artstation.com/maximlingert",
-    "artistUrl": "https://www.artstation.com/maximlingert",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_040",
@@ -5643,9 +5649,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "https://www.artstation.com/mattdemino",
-    "artistUrl": "https://www.artstation.com/mattdemino",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_224",
