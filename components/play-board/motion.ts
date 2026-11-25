@@ -287,6 +287,55 @@ export const lunge = (
   kind: SwingKind = 'minion',
 ): number => lungeBy(attacker, aimVector(attacker, target), kind);
 
+/** How long a spell's projectile takes to reach its target. */
+export const PROJECTILE_MS = 280;
+
+const PROJECTILE_SIZE = 18;
+
+const centerOf = (el: HTMLElement): { x: number; y: number } => {
+  const rect = el.getBoundingClientRect();
+  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+};
+
+/**
+ * Throws a small glowing orb from `from` to `to` (both on screen) and removes
+ * it on arrival. It is a throwaway element outside React, so a re-render
+ * cannot cut it short.
+ */
+export const shoot = (from: HTMLElement, to: HTMLElement): void => {
+  if (reducedMotion() || !from.animate) return;
+  const start = centerOf(from);
+  const end = centerOf(to);
+  const orb = document.createElement('div');
+  Object.assign(orb.style, {
+    background:
+      'radial-gradient(circle, #fff 0%, #ffe9a8 35%, rgba(255,170,60,0) 72%)',
+    borderRadius: '50%',
+    boxShadow: '0 0 14px 6px rgba(255,190,80,0.75)',
+    height: `${PROJECTILE_SIZE}px`,
+    left: '0',
+    pointerEvents: 'none',
+    position: 'fixed',
+    top: '0',
+    width: `${PROJECTILE_SIZE}px`,
+    zIndex: '9000',
+  });
+  const at = (point: { x: number; y: number }, scale: number) =>
+    `translate(${point.x - PROJECTILE_SIZE / 2}px, ${
+      point.y - PROJECTILE_SIZE / 2
+    }px) scale(${scale})`;
+  document.body.appendChild(orb);
+  const flight = orb.animate(
+    [
+      { opacity: 0.9, transform: at(start, 0.6) },
+      { opacity: 1, transform: at(end, 1.3) },
+    ],
+    { duration: PROJECTILE_MS, easing: 'cubic-bezier(0.4, 0, 0.8, 0.6)' },
+  );
+  flight.onfinish = () => orb.remove();
+  flight.oncancel = () => orb.remove();
+};
+
 /** How long the flash on a spell's target lasts. */
 const HIT_FLASH_MS = 320;
 

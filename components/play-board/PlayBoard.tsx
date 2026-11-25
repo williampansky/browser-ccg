@@ -117,10 +117,12 @@ import {
   flashHit,
   getImpactMs,
   setImpactMs,
+  shoot,
   swingImpactMs,
   IMPACT_MS,
   lunge,
   lungeBy,
+  PROJECTILE_MS,
   nudge,
   reducedMotion,
 } from './motion';
@@ -251,6 +253,8 @@ const setDragging = (on: boolean) =>
  */
 const typeClass = (type?: string) =>
   type ? (styles[`type_${type}`] ?? '') : '';
+const projectileOn = (): boolean =>
+  new URLSearchParams(window.location.search).get('projectile') === '1';
 const hitFlashOn = (): boolean =>
   new URLSearchParams(window.location.search).get('hitflash') === '1';
 const targetKey = (t: TargetRef) =>
@@ -1203,7 +1207,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       } else {
         // Anything else that hurts (a spell) uses the default timing, not the
         // hero swing's from the last attack.
-        setImpactMs(IMPACT_MS);
+        setImpactMs(projectileOn() ? PROJECTILE_MS : IMPACT_MS);
       }
       // A big hit from anything (an attack or a spell) jolts the table when
       // it lands.
@@ -1221,14 +1225,19 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       // minion that dies gets its death ghost instead.
       const isSpellHit =
         action.type !== 'Attack' && action.type !== 'WeaponAttack';
-      if (isSpellHit && hitFlashOn()) {
+      /**
+       * With ?projectile=1 a spell's orb flies from the caster's hero to each
+       * target, and the hit (flash, numbers, jolt, death) waits for it.
+       */
+      let shot = false;
+      if (isSpellHit && (hitFlashOn() || projectileOn())) {
         const deadIds = new Set(
           result.events.flatMap((e) =>
             e.type === 'MinionDied' ? [e.instanceId] : [],
           ),
         );
+        const caster = nodes.current.get(`h${state.activePlayer}`);
         for (const e of result.events) {
-          if (e.type === 'MinionDamaged' && deadIds.has(e.instanceId)) continue;
           const key =
             e.type === 'MinionDamaged'
               ? `m${e.instanceId}`
@@ -1236,7 +1245,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                 ? `h${e.player}`
                 : null;
           const node = key && nodes.current.get(key);
-          if (node) flashHit(node);
+          if (!node) continue;
+          if (projectileOn() && caster && caster !== node) {
+            shoot(caster, node);
+            shot = true;
+          }
+          const isDead =
+            e.type === 'MinionDamaged' && deadIds.has(e.instanceId);
+          if (hitFlashOn() && !isDead) flashHit(node);
         }
       }
       const died = result.events.filter(
@@ -1256,7 +1272,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               index,
               m: state.players[e.player].board[index],
               delay:
-                action.type === 'Attack' || action.type === 'WeaponAttack'
+                action.type === 'Attack' ||
+                action.type === 'WeaponAttack' ||
+                shot
                   ? getImpactMs()
                   : 0,
             });
