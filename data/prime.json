@@ -964,6 +964,7 @@
   },
   {
     "id": "PRIME_193",
+    "name": "Hooded Cutter",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -978,7 +979,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_251",
@@ -1248,6 +1251,7 @@
   },
   {
     "id": "PRIME_189",
+    "name": "Lanternbearer",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -1263,7 +1267,9 @@
     "collectible": true,
     "active": true,
     "entourage": "PRIME_189a",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_126",
@@ -2289,7 +2295,9 @@
     "text": "<strong>%ON_PLAY%:</strong> Give a friendly minion <strong>Stealth</strong> until your next turn.",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_128",
@@ -2610,7 +2618,7 @@
   },
   {
     "id": "PRIME_197",
-    "name": "Kabuki Warrior",
+    "name": "Horned Skirmisher",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -2626,9 +2634,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/angelicadonarini",
-    "artistUrl": "https://www.artstation.com/angelicadonarini",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_191",
@@ -5181,6 +5189,7 @@
   },
   {
     "id": "PRIME_199",
+    "name": "Frenzied Stalker",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -5198,9 +5207,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "https://www.artstation.com/dianafranco",
-    "artistUrl": "https://www.artstation.com/dianafranco",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_254",
@@ -5514,6 +5523,7 @@
   },
   {
     "id": "PRIME_198",
+    "name": "Gravehook",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -5528,7 +5538,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_153",

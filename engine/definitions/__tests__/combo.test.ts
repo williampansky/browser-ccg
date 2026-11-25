@@ -97,7 +97,7 @@ describe('PRIME_199', () => {
 });
 
 describe('PRIME_189', () => {
-  it('summons a 2/1 Defias Bandit only with Combo', () => {
+  it('PRIME_189 summons its 2/1 token only with Combo', () => {
     const plain = play(setup('PRIME_189', {})).state;
     const withCombo = play(afterOneCard(setup('PRIME_189', {}))).state;
 
