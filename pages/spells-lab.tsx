@@ -8,6 +8,7 @@ import { loadHsCards } from '../engine';
 import { createMinion } from '../engine/rules/minion';
 import minionStyles from '../components/play-board/board-minion.module.scss';
 import { MinionFace } from '../components/play-board/MinionFace';
+import { copyLookParams } from '../components/spells-lab/copy-look';
 import { spellEntries } from '../components/spells-lab/spell-list';
 import type { PixiFx } from '../components/play-board/pixi-fx';
 import {
@@ -19,6 +20,7 @@ import type { SpellFxKind } from '../components/play-board/spell-fx';
 import {
   parseSpellTune,
   SPELL_FX_PARENTS,
+  SPELL_FX_VARIANTS,
   tuneForSpell,
 } from '../components/play-board/spell-fx-tune';
 
@@ -230,6 +232,23 @@ const SpellsLab = () => {
     const next = entries[(entryIndex + by + entries.length) % entries.length];
     if (next) pickSpell(next.key);
   };
+  /**
+   * Copies another spell's saved look (and its base effect) onto this spell as
+   * unsaved changes, to tweak and bake: an independent copy, not a link.
+   */
+  const copyLookFrom = (sourceKey: string): void => {
+    const changes: Record<string, string | null> = {};
+    Object.keys(router.query)
+      .filter((param) => param.startsWith('s_') || param === 'e')
+      .forEach((param) => (changes[param] = null));
+    Object.assign(
+      changes,
+      copyLookParams(tuneForSpell(sourceKey), tuneForSpell(spellKey)),
+    );
+    const sourceFx = spellFxForKey(sourceKey);
+    if (sourceFx !== assigned) changes.e = sourceFx;
+    setParams(changes);
+  };
   const onType = (value: string): void => {
     setTyped(value);
     const match = entries.find((candidate) => candidate.label === value);
@@ -315,6 +334,25 @@ const SpellsLab = () => {
             Carry my numbers
           </label>
         </div>
+        <label style={{ display: 'block', fontSize: 12, margin: '6px 0' }}>
+          Copy a look from another spell{' '}
+          <select
+            value=""
+            onChange={(event) => {
+              if (event.target.value) copyLookFrom(event.target.value);
+            }}
+          >
+            <option value="">choose a spell...</option>
+            {Object.keys(SPELL_FX_VARIANTS)
+              .filter((key) => key !== spellKey)
+              .map((key) => (
+                <option key={key} value={key}>
+                  {entries.find((candidate) => candidate.key === key)?.label ??
+                    key}
+                </option>
+              ))}
+          </select>
+        </label>
         {entry && (
           <div style={{ fontSize: 12, color: '#9aa3b8', margin: '6px 0' }}>
             <b style={{ color: '#e8eaf2' }}>{entry.name}</b> · {entry.group} ·
