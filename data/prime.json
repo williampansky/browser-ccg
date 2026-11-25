@@ -47,6 +47,7 @@
   },
   {
     "id": "PRIME_168",
+    "name": "Moment of Grace",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -62,7 +63,9 @@
     "playContext": "%HEAL%",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_101",
@@ -161,9 +164,9 @@
     "playContext": "%BUFF%",
     "collectible": true,
     "active": true,
-    "artistName": "Jason O Toole",
-    "artistUrl": "https://www.artstation.com/ambit3d",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_255",
@@ -191,7 +194,7 @@
   },
   {
     "id": "PRIME_162",
-    "name": "Ready to Rumble",
+    "name": "Great Equalizer",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -208,9 +211,9 @@
     "collectible": true,
     "active": true,
     "flavor": "The Demons were very strong, there were many bloody battles, many villages and towns were destroyed.",
-    "artistName": "Ashot Avetisyan",
-    "artistUrl": "https://ashotavetisyan.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_043",
@@ -2388,6 +2391,7 @@
   },
   {
     "id": "PRIME_166",
+    "name": "Conscript's Cudgel",
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -2398,7 +2402,9 @@
     "text": "After you summon a minion, give it +1/+1 and this loses 1 Durability.",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_145",
@@ -2552,9 +2558,9 @@
     "collectible": true,
     "active": true,
     "flavor": "<em>*Shivers*</em>",
-    "artistName": "https://www.artstation.com/simon_gander",
-    "artistUrl": "https://www.artstation.com/simon_gander",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_172",
@@ -2787,9 +2793,9 @@
     "playType": "GLOBAL",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/stuharrington",
-    "artistUrl": "https://www.artstation.com/stuharrington",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_181",
@@ -2901,7 +2907,7 @@
   },
   {
     "id": "PRIME_167",
-    "name": "Sorcerer's Dance",
+    "name": "Radiant Barrage",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -2917,9 +2923,9 @@
     "playContext": "%DAMAGE%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/mrdream",
-    "artistUrl": "https://www.artstation.com/mrdream",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_163",
@@ -2938,9 +2944,9 @@
     "playContext": "%SET_VALUE%",
     "collectible": true,
     "active": true,
-    "artistName": "Alex Figini",
-    "artistUrl": "https://www.artstation.com/alexfigini",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_244",
@@ -4162,6 +4168,7 @@
   },
   {
     "id": "PRIME_164",
+    "name": "Fortune's Edge",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -4170,7 +4177,9 @@
     "text": "Draw a card and deal damage equal to its cost.",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_092",
@@ -4548,9 +4557,9 @@
     "active": true,
     "entourage": "PRIME_157a",
     "flavor": "\"Oh, <em>s#!t</em>...\"",
-    "artistName": "https://www.artstation.com/justingerardillustration",
-    "artistUrl": "https://www.artstation.com/justingerardillustration",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_087",
@@ -5475,9 +5484,9 @@
     "playContext": "%MYSTERY%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/fler",
-    "artistUrl": "https://www.artstation.com/fler",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_211",
