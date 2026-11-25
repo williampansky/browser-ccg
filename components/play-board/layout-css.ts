@@ -1030,6 +1030,10 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lgts: '1.2',
   lgtu: '1',
   lgtg: '50',
+  lxgh: '315',
+  lxga: '12',
+  lxgd: '2400',
+  lxgk: '50',
 };
 
 /**
