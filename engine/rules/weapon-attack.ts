@@ -91,8 +91,9 @@ export const weaponAttack = (
           damageHero(g, me, counter, events);
       }
     }
-    // PRIME_243 wears down in Attack instead of Durability
-    if (def?.wearsAttack) w.attack -= 1;
+    // PRIME_243 wears down in Attack instead of Durability; hitting a hero
+    // spends all of its Attack, so it is gone.
+    if (def?.wearsAttack) w.attack = target.kind === 'hero' ? 0 : w.attack - 1;
     else w.durability -= 1;
     if (w.durability <= 0 || w.attack <= 0) {
       p.weapon = null;

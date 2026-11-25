@@ -282,7 +282,7 @@ describe('overload cards', () => {
       'error' in face ? null : face.state.players['1'].heroDisabledOnTurn,
     ).toBeDefined();
   });
-  it('PRIME_243 (7/1) loses 1 Attack per swing instead of Durability, and breaks at 0 Attack', () => {
+  it('PRIME_243 (7/1) loses 1 Attack per swing at a minion, and breaks when it hits a hero', () => {
     const s = play(setup('PRIME_243', { theirs: [[1, 9]] })).state;
     const hit = run(s, {
       type: 'WeaponAttack',
@@ -297,26 +297,7 @@ describe('overload cards', () => {
     const face = run(s, { type: 'WeaponAttack', target: hero('1') } as Action);
     if ('error' in face) throw new Error(face.error);
     expect(face.state.players['1'].health).toBe(23);
-    expect(face.state.players['0'].weapon).toMatchObject({
-      attack: 6,
-      durability: 1,
-    });
-    let t = s;
-    for (let i = 7; i >= 1; i--) {
-      expect(t.players['0'].weapon).toMatchObject({ attack: i });
-      const r = run(t, { type: 'WeaponAttack', target: hero('1') } as Action);
-      if ('error' in r) throw new Error(r.error);
-      t = {
-        ...r.state,
-        players: {
-          ...r.state.players,
-          '0': { ...r.state.players['0'], weaponAttacksThisTurn: 0 },
-        },
-      };
-    }
-    expect(t.players['1'].health).toBe(30 - 28);
-    const done = { state: t };
-    expect(done.state.players['0'].weapon).toBeNull();
+    expect(face.state.players['0'].weapon).toBeNull(); // a hero hit uses it all
   });
   it('PRIME_200 (2/1 Onslaught) dies at the end of your turn only if it attacked twice', () => {
     let s = setup('CORE_043', {
