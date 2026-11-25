@@ -2,6 +2,10 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-25
+
+- **Assassin spells and items get new art (the first half of Assassin):** PRIME_185, 186, 187, 188, 190, 191, 194 and 196 use a-ravlik icons from `art-assets/` (hooded cloak, falling coin bag, crossed scimitars, glowing sword, teal curved blade, steel dagger, bomb with pink smoke, cage lantern), cut with `npm run art`. Airtable is not changed yet: the names (186, 188, 191, 194 need new ones to fit the art) and the `artistName` / `artistUrl` / `artStatus` credits wait for the author's approval. The Assassin minions (189, 193, 195, 197, 198, 199 and the 189a token) are next.
+
 ## 2026-11-24
 
 - **PRIME_243 (Glacial Crescent) is destroyed by a hero hit:** a bot hit the player's hero and the weapon only lost 1 Attack. A swing at a minion still costs 1 Attack, but a swing at a hero now uses all of it and breaks the weapon (`weapon-attack.ts`, `RULES.md` Appendix C, test updated). With the author's approval, that one Airtable `CARDS` record's `text` now reads "Degrades by 1 each use on minions; unleashed against heroes" (first tried "When attacking minions, lose 1 Attack each time; uses against heroes uses ALL Attack and destroys it") (it was "When used, lose 1 attack instead of 1 %DURABILITY%"); `data/prime.json` was edited by hand to match, with no pull.
