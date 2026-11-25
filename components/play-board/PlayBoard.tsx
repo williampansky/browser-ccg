@@ -807,6 +807,11 @@ export interface LabProps {
    * (`lcm...`) can be tuned
    */
   choosePreview?: boolean;
+  /**
+   * Treat Combo as on, so the Flow glow on hand cards can be tuned without
+   * playing a card first
+   */
+  flowPreview?: boolean;
   /** Replace the log with a sample (the lab's log test lines) */
   logSample?: LogSample;
 }
@@ -2762,7 +2767,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             width={HAND_CARD_WIDTH}
             isFlowOn={
               playable &&
-              isComboOn(state.players[viewer]) &&
+              (isComboOn(state.players[viewer]) || !!lab?.flowPreview) &&
               !!getCardDef(card)?.combo
             }
             spellDamage={mySpellDamage}

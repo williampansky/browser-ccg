@@ -193,42 +193,49 @@
     opacity: 0.9;
   }
 
-  // The satisfied Flow keyword: a gold glow that breathes.
+  // The satisfied Flow keyword: a glow that breathes. The board lab's flow
+  // knobs (`lfl...`) set the --fl-* variables on the page.
   .flowKey {
-    color: #ffe08a;
-    animation: flowKeyPulse 1.6s ease-in-out infinite;
+    color: hsl(var(--fl-h, 43) 100% 77%);
+    animation: flowKeyPulse var(--fl-ms, 1600ms) ease-in-out infinite;
   }
 }
 
-// A satisfied Flow: a soft gold halo that swells around the card's edge.
+// A satisfied Flow: a soft halo that swells around the card's edge.
 .flowOn {
-  animation: flowCardPulse 1.6s ease-in-out infinite;
+  animation: flowCardPulse var(--fl-ms, 1600ms) ease-in-out infinite;
 }
 
 @keyframes flowKeyPulse {
   0%,
   100% {
     text-shadow:
-      0 0 0.1em #ffb62e,
+      0 0 calc(var(--fl-kg, 0.35em) * 0.3) hsl(var(--fl-h, 43) 100% 59%),
       0 0.06em 0.08em #0009;
     filter: brightness(1);
   }
   50% {
     text-shadow:
-      0 0 0.35em #ffd45e,
-      0 0 0.7em #ffb62e,
+      0 0 var(--fl-kg, 0.35em) hsl(var(--fl-h, 43) 100% 68%),
+      0 0 calc(var(--fl-kg, 0.35em) * 2) hsl(var(--fl-h, 43) 100% 59%),
       0 0.06em 0.08em #0009;
-    filter: brightness(1.25);
+    filter: brightness(var(--fl-kb, 1.25));
   }
 }
 
 @keyframes flowCardPulse {
   0%,
   100% {
-    filter: drop-shadow(0 0 u(1.5) #ffb62e66);
+    filter: drop-shadow(
+      0 0 calc(var(--fl-rest, 1.5) * var(--u, 1px))
+        hsl(var(--fl-h, 43) 100% 59% / calc(var(--fl-op, 0.8) * 0.4))
+    );
   }
   50% {
-    filter: drop-shadow(0 0 u(5) #ffd45ecc);
+    filter: drop-shadow(
+      0 0 calc(var(--fl-peak, 5) * var(--u, 1px))
+        hsl(var(--fl-h, 43) 100% 68% / var(--fl-op, 0.8))
+    );
   }
 }
 
@@ -240,12 +247,15 @@
 
   .flowKey {
     text-shadow:
-      0 0 0.3em #ffd45e,
+      0 0 var(--fl-kg, 0.35em) hsl(var(--fl-h, 43) 100% 68%),
       0 0.06em 0.08em #0009;
   }
 
   .flowOn {
-    filter: drop-shadow(0 0 u(3) #ffd45eaa);
+    filter: drop-shadow(
+      0 0 calc(var(--fl-peak, 5) * 0.6 * var(--u, 1px))
+        hsl(var(--fl-h, 43) 100% 68% / var(--fl-op, 0.8))
+    );
   }
 }
 

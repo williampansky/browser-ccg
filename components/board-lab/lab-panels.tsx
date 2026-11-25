@@ -326,6 +326,19 @@ export const HandsPanel = ({
       />{' '}
       Preview clicked card (first card)
     </label>
+    <div style={groupStyle}>
+      <b>Flow glow (a satisfied Combo)</b>
+    </div>
+    {sliders(['lxgh', 'lxgb', 'lxga', 'lxgo', 'lxgd', 'lxgk', 'lxgg'])}
+    <label style={row}>
+      <input
+        type="checkbox"
+        checked={'lxgpv' in q}
+        onChange={(e) => setParams({ lxgpv: e.target.checked ? '1' : null })}
+      />{' '}
+      Preview: treat Combo as on (needs a Flow card in hand, e.g.
+      p0=PRIME_189,PRIME_193 and e0=10)
+    </label>
   </>
 );
 

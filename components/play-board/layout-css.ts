@@ -104,6 +104,15 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lhhs: (v) => `${CLS('hand')}{--h-halo-swell:${v}}`,
   lhfl: (v) => `${CLS('hand')}{--h-flash:${v}}`,
   lhsm: (v) => `${CLS('hand')}{--h-sheen-ms:${v}ms}`,
+  // Flow glow (a satisfied Combo): variables on the page, read by the card
+  // face (`.flowOn`, `.flowKey` in card-face.module.scss).
+  lxgh: (v) => `${CLS('page')}{--fl-h:${v}}`,
+  lxga: (v) => `${CLS('page')}{--fl-peak:${v}}`,
+  lxgb: (v) => `${CLS('page')}{--fl-rest:${v}}`,
+  lxgo: (v) => `${CLS('page')}{--fl-op:${v}}`,
+  lxgd: (v) => `${CLS('page')}{--fl-ms:${v}ms}`,
+  lxgk: (v) => `${CLS('page')}{--fl-kg:${v / 100}em}`,
+  lxgg: (v) => `${CLS('page')}{--fl-kb:${v}}`,
   lsplit: () => '',
   // Connected sidebar: its width and the thickness of the drag bar between log
   // and deck.

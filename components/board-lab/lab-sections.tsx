@@ -128,6 +128,13 @@ export const SECTION_KEYS: Record<string, string[]> = {
     'lhsm',
     'lhst',
     'lhdr',
+    'lxgh',
+    'lxgb',
+    'lxga',
+    'lxgo',
+    'lxgd',
+    'lxgk',
+    'lxgg',
   ],
   play: [
     'lpoc',
