@@ -13,6 +13,7 @@ import cx from '../utils/cx';
  * overall shape and for where each element sits. Static, like /hero-lab.
  * Everything is in the URL, so a look can be shared:
  *  - shape: lm height px, la aspect (height / width), lr corner radius %, lbw border px, lot oval Y offset px, lgs guard shield scale
+ *  - mythic frame: lfx / lfy offset px, lfs scale
  *  - attack badge: lax / lay offset px, las size px, lanf numeral font size px, lanx / lany numeral position inside the badge px
  *  - health badge: lhx / lhy offset px, lhs size px, lhnf numeral font size px, lhnx / lhny numeral position inside the badge px
  *  - caption (name): lcx / lcy offset px, lcf font size px, lcshow=1 shows it (it is hidden by default);  keyword icons: lkx / lky offset px, lks scale
@@ -33,6 +34,9 @@ const SLIDER_MAX = {
   lbw: 12,
   lot: 60,
   lgs: 1.8,
+  lfx: 120,
+  lfy: 120,
+  lfs: 2,
   lax: 80,
   lay: 80,
   las: 90,
@@ -63,6 +67,7 @@ const sel = (name: string) => `[class*="board-minion_${name}__"]`;
 const SLOT = sel('slot');
 const OVAL = sel('oval');
 const SHIELD = sel('guardShield');
+const MYTHIC = sel('mythicFrame');
 const ATTACK = `${sel('stat')}${sel('attack')}`;
 const HEALTH = `${sel('stat')}${sel('health')}`;
 const CAPTION = sel('caption');
@@ -160,6 +165,27 @@ const KNOBS: Knob[] = [
     min: 0.5,
     step: 0.01,
     css: (v) => `${SHIELD}{scale:${v}}`,
+    read: () => 1,
+  },
+  // Mythic frame
+  {
+    key: 'lfx',
+    label: 'Mythic frame X offset (px)',
+    css: (v) => `${MYTHIC}{margin-left:${v}px}`,
+    read: () => 0,
+  },
+  {
+    key: 'lfy',
+    label: 'Mythic frame Y offset (px)',
+    css: (v) => `${MYTHIC}{margin-top:${v}px}`,
+    read: () => 0,
+  },
+  {
+    key: 'lfs',
+    label: 'Mythic frame scale (x)',
+    min: 0.5,
+    step: 0.01,
+    css: (v) => `${MYTHIC}{scale:${v}}`,
     read: () => 1,
   },
   // Attack badge (sword)
@@ -401,6 +427,11 @@ const GROUPS: { id: string; title: string; keys: string[] }[] = [
     keys: ['lm', 'la', 'lr', 'lbw', 'lot', 'lgs'],
   },
   {
+    id: 'mythic',
+    title: 'Mythic frame',
+    keys: ['lfx', 'lfy', 'lfs'],
+  },
+  {
     id: 'attack',
     title: 'Attack badge',
     keys: ['lax', 'lay', 'las', 'lanf', 'lanx', 'lany'],
@@ -447,17 +478,33 @@ const buildSamples = (): Sample[] => {
       c.name &&
       (c.attack ?? 0) > 0,
   );
-  const make = (i: number): { card: Card; m: MinionInstance } => {
-    const card = pool[(i * 9 + 4) % pool.length];
+  const mythic = cards.find(
+    (c) => c.rarity === 'MYTHIC' && c.type === 'minion' && !c.isToken && c.name,
+  );
+  const make = (
+    i: number,
+    forced?: Card,
+  ): { card: Card; m: MinionInstance } => {
+    const card = forced ?? pool[(i * 9 + 4) % pool.length];
     return { card, m: createMinion(card, 900 + i, 3, 900 + i) };
   };
-  const tweak = (i: number, f: (m: MinionInstance) => void) => {
-    const s = make(i);
+  const tweak = (i: number, f: (m: MinionInstance) => void, forced?: Card) => {
+    const s = make(i, forced);
     f(s.m);
     return s;
   };
   return [
     { label: 'Plain', ...make(0), sick: false },
+    {
+      label: 'Mythic',
+      ...tweak(0, () => undefined, mythic),
+      sick: false,
+    },
+    {
+      label: 'Mythic + Guard',
+      ...tweak(1, (m) => (m.keywords.guard = true), mythic),
+      sick: false,
+    },
     {
       label: 'Guard',
       ...tweak(1, (m) => (m.keywords.guard = true)),

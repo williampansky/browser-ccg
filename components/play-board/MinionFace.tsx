@@ -100,6 +100,14 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
     <>
       <span className={styles.dust} aria-hidden="true" />
       <FloatDelta value={m.health} />
+      {card?.rarity === 'MYTHIC' && (
+        <img
+          alt=""
+          className={styles.mythicFrame}
+          draggable={false}
+          src="/images/minion-frames/MYTHIC.png"
+        />
+      )}
       {m.keywords.guard && <GuardShield />}
       <span
         className={cx(

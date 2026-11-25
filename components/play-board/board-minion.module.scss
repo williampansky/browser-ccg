@@ -182,6 +182,23 @@
   pointer-events: none;
 }
 
+// Mythic: the crest and wing spikes of the red rarity frame (cut from the card
+// frame art) rise behind the oval. Sized so the frame's own window lines up
+// with the oval, which hides the middle.
+.mythicFrame {
+  position: absolute;
+  left: 50%;
+  top: calc(
+    0.45rem - var(--m-h, 128px) * 0.4 + 12px
+  ); // lfy=12 from the minion lab
+  width: calc(var(--m-w) * 1.74);
+  transform: translateX(-50%);
+  transform-origin: 50% 40%;
+  z-index: 0;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+}
+
 // Guard: a steel shield standing a little bigger than the oval, behind it.
 .guardShield {
   position: absolute;
@@ -472,7 +489,7 @@
 // hsclone's "was attacked": a short shake when Health drops.
 .shake {
   // Waits for the attacker's strike to arrive (IMPACT_MS in motion.ts).
-  animation: minionShake 500ms 190ms ease-out both;
+  animation: minionShake 500ms var(--impact-ms, 190ms) ease-out both;
 }
 
 @keyframes minionShake {

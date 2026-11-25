@@ -3,7 +3,7 @@ import { heroArtLayers, skillIconLayers } from './hero-images';
 import styles from './hero-variants.module.scss';
 import cx from '../../utils/cx';
 import { artBackground, PLACEHOLDER_ART } from './card-face-model';
-import { IMPACT_MS, reducedMotion } from './motion';
+import { getImpactMs, IMPACT_MS, reducedMotion } from './motion';
 
 /**
  * PROTOTYPE hero displays 2 to 4 (option 1 is HeroBust): the standing figure,
@@ -627,11 +627,11 @@ const useRingHit = (health: number, armor: number, r: RingTune) => {
           if (lost > 0) setHits((n) => n + 1);
           setPops((old) => [...old, { id, amount }]);
         },
-        lost > 0 ? r.hitDelay : 0,
+        lost > 0 ? getImpactMs() : 0,
       ),
       setTimeout(
         () => setPops((old) => old.filter((x) => x.id !== id)),
-        (lost > 0 ? r.hitDelay : 0) + r.popMs + 50,
+        (lost > 0 ? getImpactMs() : 0) + r.popMs + 50,
       ),
     ];
     return () => timers.forEach(clearTimeout);

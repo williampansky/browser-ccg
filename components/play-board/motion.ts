@@ -13,7 +13,26 @@ export const reducedMotion = (): boolean =>
  * and damage numbers wait for this.
  */
 export const IMPACT_MS = 190;
+/** When a hero's slam lands (see `heroSwingFrames`). */
+export const HERO_IMPACT_MS = 420;
+
+let currentImpactMs = IMPACT_MS;
+
+/**
+ * The impact time of the attack in flight: the target's shake, damage numbers
+ * and sounds wait this long. A hero's heavier swing lands later than a
+ * minion's lunge. The CSS reads it as `--impact-ms`.
+ */
+export const getImpactMs = (): number => currentImpactMs;
+
+export const setImpactMs = (ms: number): void => {
+  currentImpactMs = ms;
+  if (typeof document !== 'undefined')
+    document.documentElement.style.setProperty('--impact-ms', `${ms}ms`);
+};
 const LUNGE_MS = 520;
+/** The hero's heavier swing is slower: a long lift, a fast slam, a settle. */
+const HERO_SWING_MS = 900;
 
 export interface Point {
   x: number;
@@ -53,6 +72,44 @@ export const lungeFrames = (to: Point): Keyframe[] => {
   ];
 };
 
+const SHADOW_REST = 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35))';
+const SHADOW_LIFTED = 'drop-shadow(0 26px 16px rgba(0, 0, 0, 0.3))';
+const SHADOW_SLAM = 'drop-shadow(0 2px 3px rgba(0, 0, 0, 0.55))';
+
+/**
+ * A hero's swing, with weight: it rises toward the viewer (bigger, its shadow
+ * dropping further away and softening), hangs for a beat, slams into the
+ * target at `HERO_SLAM_MS`, then drifts home and settles with a small squash.
+ */
+export const heroSwingFrames = (to: Point): Keyframe[] => {
+  const t = (x: number, y: number, scaleX: number, scaleY = scaleX) =>
+    `translate(${x}px, ${y}px) scale(${scaleX}, ${scaleY})`;
+  const hit = { x: to.x * 0.85, y: to.y * 0.85 };
+  const lift = HERO_SWING_MS * 0.3;
+  const slam = HERO_IMPACT_MS;
+  const frame = (
+    transform: string,
+    filter: string,
+    ms: number,
+    easing?: string,
+  ): Keyframe => ({ transform, filter, offset: ms / HERO_SWING_MS, easing });
+  return [
+    frame(t(0, 0, 1), SHADOW_REST, 0, 'cubic-bezier(0.2, 0.7, 0.3, 1)'),
+    frame(t(0, -22, 1.16), SHADOW_LIFTED, lift, 'ease-in-out'),
+    frame(
+      t(0, -26, 1.18),
+      SHADOW_LIFTED,
+      slam - 90,
+      'cubic-bezier(0.7, 0, 1, 0.5)',
+    ),
+    frame(t(hit.x, hit.y, 1.1), SHADOW_SLAM, slam, 'ease-out'),
+    frame(t(hit.x, hit.y, 1.12, 1.04), SHADOW_SLAM, slam + 70, 'ease-in-out'),
+    frame(t(0, -6, 1.04), SHADOW_LIFTED, HERO_SWING_MS * 0.8, 'ease-in-out'),
+    frame(t(0, 0, 1.03, 0.96), SHADOW_REST, HERO_SWING_MS * 0.92, 'ease-out'),
+    frame(t(0, 0, 1), SHADOW_REST, HERO_SWING_MS),
+  ];
+};
+
 const centre = (el: HTMLElement): Point => {
   const r = el.getBoundingClientRect();
   return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
@@ -75,11 +132,17 @@ export const aimVector = (
  * Throws `attacker` along `to` (see `aimVector`) and back. Raises it above its
  * neighbours for the duration.
  */
-export const lungeBy = (attacker: HTMLElement, to: Point): void => {
+export const lungeBy = (
+  attacker: HTMLElement,
+  to: Point,
+  isHero = false,
+): void => {
   if (reducedMotion() || !attacker.animate || !attacker.isConnected) return;
   const prev = attacker.style.zIndex;
   attacker.style.zIndex = '60';
-  const anim = attacker.animate(lungeFrames(to), { duration: LUNGE_MS });
+  const anim = isHero
+    ? attacker.animate(heroSwingFrames(to), { duration: HERO_SWING_MS })
+    : attacker.animate(lungeFrames(to), { duration: LUNGE_MS });
   const done = () => {
     attacker.style.zIndex = prev;
   };
@@ -103,7 +166,7 @@ export const nudge = (el: HTMLElement, strength: number): void => {
       { transform: `translate(${-s * 0.4}px, ${s * 0.2}px)`, offset: 0.7 },
       { transform: 'translate(0, 0)' },
     ],
-    { duration: 260, delay: IMPACT_MS, easing: 'ease-out' },
+    { duration: 260, delay: getImpactMs(), easing: 'ease-out' },
   );
 };
 

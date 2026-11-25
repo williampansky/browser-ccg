@@ -112,6 +112,9 @@ import {
 import { currentHeroKey } from '../../engine/heroes/classes';
 import {
   aimVector,
+  getImpactMs,
+  setImpactMs,
+  HERO_IMPACT_MS,
   IMPACT_MS,
   lunge,
   lungeBy,
@@ -1116,6 +1119,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             : `h${state.activePlayer}`,
         );
         const to = action.target && nodes.current.get(targetKey(action.target));
+        // A hero swings heavier than a minion lunges, so its hit lands later.
+        const isHeroSwing = action.type === 'WeaponAttack';
+        setImpactMs(isHeroSwing ? HERO_IMPACT_MS : IMPACT_MS);
         /**
          * A minion that attacks (Stampede) before it has landed would lunge
          * unseen: wait for it to land.
@@ -1146,8 +1152,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               const ghost = nodes.current.get(`g${id}`);
               if (ghost) lungeBy(ghost, vec);
             }, 30);
-          } else if (wait > 0) setTimeout(() => lungeBy(from, vec), wait);
-          else lungeBy(from, vec);
+          } else if (wait > 0)
+            setTimeout(() => lungeBy(from, vec, isHeroSwing), wait);
+          else lungeBy(from, vec, isHeroSwing);
         }
         const dealt = result.events.reduce(
           (n, e) =>
@@ -1177,14 +1184,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               m: state.players[e.player].board[index],
               delay:
                 action.type === 'Attack' || action.type === 'WeaponAttack'
-                  ? IMPACT_MS
+                  ? getImpactMs()
                   : 0,
             });
         }
         setGhosts((old) => [...old, ...fresh]);
         setTimeout(
           () => setGhosts((old) => old.filter((g) => !fresh.includes(g))),
-          DEATH_MS + IMPACT_MS + 50,
+          DEATH_MS + getImpactMs() + 50,
         );
       }
       setState(result.state);
@@ -1193,7 +1200,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         action.type === 'Attack' || action.type === 'WeaponAttack';
       playSounds(
         soundsFor(result.events),
-        reducedMotion() ? 0 : isAttack ? IMPACT_MS / 1000 : 0,
+        reducedMotion() ? 0 : isAttack ? getImpactMs() / 1000 : 0,
       );
       setLog((old) =>
         [

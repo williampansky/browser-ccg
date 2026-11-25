@@ -116,15 +116,15 @@ const BoardLab = () => {
     });
   };
 
-  // First visit with no setup in the URL: a full-looking board, you going
-  // first, the figure heroes.
+  // First visit with no setup in the URL: a full-looking board with a mythic
+  // minion on each side, you going first, the figure heroes.
   useEffect(() => {
     if (!router.isReady) return;
     if (SETUP_KEYS.some((k) => k in router.query)) return;
     setParams({
       first: '0',
-      b0: pick(4, 1),
-      b1: pick(3, 2),
+      b0: `PRIME_250,${pick(3, 1)}`,
+      b1: `PRIME_101,${pick(2, 2)}`,
       h0: heroes()[0].id,
       h1: heroes()[1].id,
       herofig: '1',

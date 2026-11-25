@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { IMPACT_MS, reducedMotion } from './motion';
+import { getImpactMs, reducedMotion } from './motion';
 import styles from './float-delta.module.scss';
 import cx from '../../utils/cx';
 
@@ -32,11 +32,11 @@ export const FloatDelta = ({
     const timers = [
       setTimeout(
         () => setPops((p) => [...p, { id, amount: diff }]),
-        diff < 0 ? IMPACT_MS : 0,
+        diff < 0 ? getImpactMs() : 0,
       ),
       setTimeout(
         () => setPops((p) => p.filter((x) => x.id !== id)),
-        (diff < 0 ? IMPACT_MS : 0) + 1000,
+        (diff < 0 ? getImpactMs() : 0) + 1000,
       ),
     ];
     return () => timers.forEach(clearTimeout);
