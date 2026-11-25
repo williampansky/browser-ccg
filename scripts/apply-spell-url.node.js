@@ -3,15 +3,15 @@
  *
  * Paste the whole URL from the lab. What it writes:
  *
- * - `sp=<key>` (a card id such as `CORE_069`, or `FIGHTER:1` for a hero
- *   skill) names the spell. Its `s_<field>` params go into that spell's entry
+ * - `sp=<key>` (a card id such as `CORE_069`, `FIGHTER:1` for a hero
+ *   skill, or an event such as `summon`) names the spell. Its `s_<field>` params go into that spell's entry
  *   in `SPELL_FX_VARIANTS` (components/play-board/spell-fx-tune.ts), merged
  *   over the entry already there. A value equal to the default in
  *   `SPELL_FX_DEFAULTS` is left out (and removes an older override), so a
  *   later change of the defaults still reaches every spell that did not
  *   override it.
  * - `e=<base>` (`travel`, `strike` or `spot`) assigns the spell's base
- *   effect in `SKILL_FX` (a skill) or `CARD_FX` (a card) in
+ *   effect in `SKILL_FX` (a skill), `CARD_FX` (a card) or `EVENT_FX` (an event) in
  *   components/play-board/spell-fx.ts. Leave it out to keep the assignment;
  *   `travel` is the default, so it removes an entry.
  * - With `--defaults` there is no spell: the `s_<field>` params are written
@@ -75,8 +75,10 @@ const parseFlat = (body) => {
 /** The variants literal: `'KEY': { field: value, ... },` entries. */
 const parseVariants = (body) => {
   const variants = new Map();
-  for (const m of body.matchAll(/'([^']+)':\s*\{([^}]*)\}/g)) {
-    variants.set(m[1], parseFlat(m[2]));
+  // Prettier drops the quotes from a key that is a plain word (`summon:`), so
+  // an entry may be written either way.
+  for (const m of body.matchAll(/(?:'([^']+)'|(\w+)):\s*\{([^}]*)\}/g)) {
+    variants.set(m[1] ?? m[2], parseFlat(m[3]));
   }
   return variants;
 };
@@ -135,6 +137,7 @@ const hasCard = (id) =>
  */
 const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
   const choices = parseChoices(tuneSrc);
+  const eventKeys = [...parseFlat(findBlock(fxSrc, 'EVENT_FX').body).keys()];
   const errors = [];
   const changes = [];
   const params = new URL(
@@ -155,7 +158,9 @@ const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
     errors.push('No sp=<spell> in that URL (use --defaults for the defaults)');
   } else {
     const skill = key.match(SKILL_KEY);
-    if (skill) {
+    if (eventKeys.includes(key)) {
+      // An event (such as `summon`), listed in EVENT_FX.
+    } else if (skill) {
       if (!classKeys.includes(skill[1]))
         errors.push(`sp: no class ${skill[1]}`);
     } else if (!CARD_KEY.test(key) || !cardExists(key)) {
@@ -258,7 +263,11 @@ const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
 
   // The base effect assignment.
   if (base !== null) {
-    const name = SKILL_KEY.test(key) ? 'SKILL_FX' : 'CARD_FX';
+    const name = eventKeys.includes(key)
+      ? 'EVENT_FX'
+      : SKILL_KEY.test(key)
+        ? 'SKILL_FX'
+        : 'CARD_FX';
     const assigned = parseFlat(findBlock(fxSrc, name).body);
     const old = assigned.get(key);
     const next = base === DEFAULT_BASE && name === 'CARD_FX' ? undefined : base;

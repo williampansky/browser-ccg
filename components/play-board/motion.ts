@@ -370,12 +370,37 @@ export const shoot = (
 const HIT_FLASH_MS = 320;
 
 /**
- * Plays a spot effect  centred on `target`, for a spell that has no
- * flight: it starts at once. Without the Pixi layer there is nothing to draw.
+ * Where an element sits in the layout, ignoring transforms on it: a minion
+ * that is still dropping in reports a moved box, but this is its final spot.
  */
-export const spot = (target: HTMLElement, tune: SpellFxTune): void => {
+const layoutCenter = (el: HTMLElement): { x: number; y: number } => {
+  const parent = el.offsetParent as HTMLElement | null;
+  if (!parent || !parent.offsetWidth) return centerOf(el);
+  const rect = parent.getBoundingClientRect();
+  const scale = rect.width / parent.offsetWidth;
+  return {
+    x:
+      rect.left +
+      (parent.clientLeft + el.offsetLeft + el.offsetWidth / 2) * scale,
+    y:
+      rect.top +
+      (parent.clientTop + el.offsetTop + el.offsetHeight / 2) * scale,
+  };
+};
+
+/**
+ * Plays a spot effect centred on `target`, for a spell that has no flight: it
+ * starts at once. With `isSettled` the centre is where `target` will rest, not
+ * where an animation has it now. Without the Pixi layer there is nothing to
+ * draw.
+ */
+export const spot = (
+  target: HTMLElement,
+  tune: SpellFxTune,
+  isSettled = false,
+): void => {
   if (reducedMotion() || !pixiFx) return;
-  pixiFx.spot(centerOf(target), tune);
+  pixiFx.spot(isSettled ? layoutCenter(target) : centerOf(target), tune);
 };
 
 /** What a flash means: it picks the colour of the glow. */

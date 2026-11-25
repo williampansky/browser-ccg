@@ -6,6 +6,7 @@ describe('spellEntries', () => {
   it('lists the Wizard first skill and spell cards, neutral and class', () => {
     const keys = entries.map((entry) => entry.key);
     expect(keys).toContain('WIZARD:1');
+    expect(keys).toContain('summon');
     expect(keys).toContain('CORE_069');
     expect(entries.some((e) => e.group === 'Neutral cards')).toBe(true);
     expect(entries.some((e) => e.group === 'Wizard cards')).toBe(true);

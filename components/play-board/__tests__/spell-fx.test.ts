@@ -51,3 +51,9 @@ describe('the spot kind', () => {
     );
   });
 });
+
+describe('event effects', () => {
+  it('gives every summon the spot base', () => {
+    expect(spellFxForKey('summon')).toBe('spot');
+  });
+});

@@ -1,6 +1,7 @@
 import {
   Application,
   BLEND_MODES,
+  BlurFilter,
   Graphics,
   LINE_CAP,
   LINE_JOIN,
@@ -491,9 +492,20 @@ export const createPixiFx = (): PixiFx => {
     glow.blendMode = BLEND_MODES.ADD;
     glow.position.set(at.x, at.y);
     addToStage(glow);
-    const drawing = new Graphics();
-    drawing.blendMode = BLEND_MODES.ADD;
-    app.stage.addChild(drawing as never);
+    // One layer per ring, so each can have its own blur (the first ring's plus
+    // a step per later ring). No blur skips the filter's cost.
+    const layers = Array.from({ length: rings }, (_, ring) => {
+      const layer = new Graphics();
+      layer.blendMode = BLEND_MODES.ADD;
+      app.stage.addChild(layer as never);
+      const blur = Math.max(
+        0,
+        tune.spotRingBlur + ring * tune.spotRingBlurStep,
+      );
+      const softener = blur > 0 ? new BlurFilter(blur) : null;
+      if (softener) layer.filters = [softener];
+      return { layer, softener };
+    });
     const sparkCount = tune.spotHasSparks ? Math.round(tune.spotSparkCount) : 0;
     const sparks = makeSparks(at, tune, sparkCount);
     let sparkIndex = 0;
@@ -521,15 +533,19 @@ export const createPixiFx = (): PixiFx => {
       }
       if (elapsed >= total && sparkIndex >= sparks.length) {
         glow.destroy();
-        drawing.destroy();
+        for (const { layer, softener } of layers) {
+          layer.destroy();
+          softener?.destroy();
+        }
         return false;
       }
       const first = Math.min(1, elapsed / tune.spotLife);
       const opening = 1 - Math.pow(1 - first, 3);
       glow.scale.set(tune.spotGlowScale * (0.4 + 0.6 * opening));
       glow.alpha = tune.spotHasGlow ? SPOT_GLOW_ALPHA * (1 - first) : 0;
-      drawing.clear();
       for (let ring = 0; ring < rings; ring++) {
+        const drawing = layers[ring].layer;
+        drawing.clear();
         const age = (elapsed - ring * tune.spotRingGap) / tune.spotLife;
         if (age <= 0 || age >= 1) continue;
         const { alpha, radius } = ringState(age, tune);

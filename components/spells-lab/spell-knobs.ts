@@ -11,6 +11,8 @@ type FlagKey = KeyOf<boolean>;
 
 export interface SpellKnob {
   field: NumKey;
+  /** Show the slider only while this holds (a knob that needs 2+ rings) */
+  when?: (tune: SpellFxTune) => boolean;
   label: string;
   min: number;
   max: number;
@@ -266,6 +268,21 @@ export const SPELL_GROUPS: SpellGroup[] = [
         label: 'Corners (6 = hexagon, 48 = circle)',
         min: 3,
         max: 48,
+      },
+      {
+        field: 'spotRingBlur',
+        label: 'Softness (blur px, 0 = crisp)',
+        min: 0,
+        max: 20,
+        step: 0.5,
+      },
+      {
+        field: 'spotRingBlurStep',
+        label: 'Extra blur for each later ring (px)',
+        min: -10,
+        max: 10,
+        step: 0.5,
+        when: (tune) => tune.spotRings > 1,
       },
       {
         field: 'spotFillAlpha',

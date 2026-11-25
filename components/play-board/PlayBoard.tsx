@@ -128,6 +128,7 @@ import {
   IMPACT_MS,
   lunge,
   lungeBy,
+  FLIGHT_MS,
   fxMs,
   nudge,
   reducedMotion,
@@ -262,6 +263,12 @@ const typeClass = (type?: string) =>
 /** Spell effects (Pixi layer, projectiles, flashes) are on; ?fx=off stops them. */
 const spellFxOn = (): boolean =>
   new URLSearchParams(window.location.search).get('fx') !== 'off';
+/** The key of the summon effect in `EVENT_FX` / `SPELL_FX_VARIANTS`. */
+const SUMMON_FX_KEY = 'summon';
+/** A summoned minion needs a render before its node exists. */
+const SUMMON_RENDER_MS = 80;
+/** A played minion's card flies in first; the effect starts as it arrives. */
+const SUMMON_LANDED_MS = FLIGHT_MS;
 const isSpellHitAction = (action: Action): boolean =>
   action.type === 'HeroSkill' || action.type === 'PlayCard';
 const targetKey = (t: TargetRef) =>
@@ -1183,6 +1190,24 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       const summoned = result.events.find((e) => e.type === 'MinionPlayed');
       if (summoned && summoned.type === 'MinionPlayed') {
         landedAt.current.set(summoned.instanceId, Date.now() + 520);
+      }
+      /**
+       * Every minion that is summoned or played gets the summon effect, centred
+       * on it once it is on the board (its node exists after the next render,
+       * and a played minion first flies in from the hand).
+       */
+      if (spellFxOn()) {
+        for (const e of result.events) {
+          if (e.type !== 'MinionSummoned' && e.type !== 'MinionPlayed')
+            continue;
+          const { instanceId } = e;
+          const wait =
+            e.type === 'MinionPlayed' ? SUMMON_LANDED_MS : SUMMON_RENDER_MS;
+          setTimeout(() => {
+            const node = nodes.current.get(`m${instanceId}`);
+            if (node) spot(node, tuneForSpell(SUMMON_FX_KEY), true);
+          }, wait);
+        }
       }
       /** Which show a spell or skill puts on (the default is the orb). */
       const castingPlayer = state.players[state.activePlayer];

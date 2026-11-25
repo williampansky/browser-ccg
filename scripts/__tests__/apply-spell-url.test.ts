@@ -67,6 +67,27 @@ describe('apply-spell-url plan', () => {
     expect(run('sp=CLERIC:1&s_spotSparkMotion=sideways').errors.length).toBe(1);
   });
 
+  it('accepts an event key such as summon', () => {
+    const result = run('sp=summon&s_spotRadius=60');
+    expect(result.errors).toEqual([]);
+    expect(result.tune).toContain("'summon': {");
+    expect(run('sp=summon&e=strike').fx).toContain("'summon': 'strike'");
+  });
+
+  it('finds an entry whose key prettier left unquoted and merges into it', () => {
+    const first = run('sp=summon&s_spotRadius=60&s_spotRings=1');
+    const unquoted = first.tune.replace("'summon': {", 'summon: {');
+    expect(unquoted).not.toContain("'summon'");
+    const second = run('sp=summon&s_spotGlowScale=5', false, {
+      tuneSrc: unquoted,
+      fxSrc,
+    });
+    expect(second.errors).toEqual([]);
+    expect(second.tune.match(/'?summon'?: \{/g)).toHaveLength(1);
+    expect(second.tune).toContain('spotRadius: 60,');
+    expect(second.tune).toContain('spotGlowScale: 5,');
+  });
+
   it('writes nothing for a bad spell, field or value', () => {
     expect(run('sp=NOPE_1&s_travelMs=1').errors.length).toBeGreaterThan(0);
     expect(run('sp=CORE_069&s_travelNope=1').errors.length).toBeGreaterThan(0);

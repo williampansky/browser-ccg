@@ -37,6 +37,7 @@ export const spellFxMs = (kind: SpellFxKind, tune: SpellFxTune): number => {
 export const SKILL_FX: Record<string, SpellFxKind> = {
   'CLERIC:1': 'spot',
   'FIGHTER:1': 'spot',
+  'NECROMANCER:1': 'spot',
   'WIZARD:1': 'strike',
 };
 
@@ -46,9 +47,18 @@ export const SKILL_FX: Record<string, SpellFxKind> = {
  */
 export const CARD_FX: Record<string, SpellFxKind> = {};
 
-/** The effect a spell plays, by its key (a card id or `CLASS:n` skill). */
+/**
+ * Effects for things that happen, not for one spell, keyed by event: `summon`
+ * plays on every minion that is summoned or played (a skill's recruit, a
+ * token, a minion from hand).
+ */
+export const EVENT_FX: Record<string, SpellFxKind> = {
+  summon: 'spot',
+};
+
+/** The effect a spell plays, by its key (a card id, `CLASS:n` skill or event). */
 export const spellFxForKey = (key: string): SpellFxKind =>
-  SKILL_FX[key] ?? CARD_FX[key] ?? 'travel';
+  SKILL_FX[key] ?? CARD_FX[key] ?? EVENT_FX[key] ?? 'travel';
 
 /**
  * The key of the spell an action casts: `<CLASS>:<skill number>` for a hero

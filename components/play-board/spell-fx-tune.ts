@@ -66,6 +66,10 @@ export interface SpellFxTune {
   spotRingsMotion: 'out' | 'in' | 'pulse';
   /** Spot: the tint inside each ring (0 = none) */
   spotFillAlpha: number;
+  /** Spot: how soft the first ring is (blur in px, 0 = crisp lines) */
+  spotRingBlur: number;
+  /** Spot: blur added to each later ring (can be negative; never below 0) */
+  spotRingBlurStep: number;
   /** Spot: the first ring, and the later rings */
   spotColour: string;
   spotAccentColour: string;
@@ -137,6 +141,8 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   spotSides: 6,
   spotRingsMotion: 'out',
   spotFillAlpha: 0.1,
+  spotRingBlur: 0,
+  spotRingBlurStep: 0,
   spotColour: 'cfe3ff',
   spotAccentColour: 'ffd23f',
   spotHasGlow: true,
@@ -185,6 +191,25 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     spotGlowScale: 8,
     spotSparkCount: 20,
   },
+  'NECROMANCER:1': {
+    spotLife: 1500,
+    spotRadius: 65,
+    spotRings: 1,
+    spotWidth: 3,
+    spotSides: 48,
+    spotRingsMotion: 'in',
+    spotFillAlpha: 0.6,
+    spotRingBlur: 10,
+    spotColour: 'f5d1ff',
+    spotAccentColour: 'fc3dff',
+    spotGlowScale: 6,
+    spotSparkCount: 25,
+    spotSparkMotion: 'inward',
+    spotSparkSpeed: 0.15,
+    spotSparkLife: 900,
+    spotSparkScale: 0.25,
+    spotSparkSpread: 70,
+  },
   'RANGER:1': {
     travelMs: 300,
     travelHaloScale: 0.5,
@@ -202,6 +227,25 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     burstCount: 40,
     burstLife: 900,
     burstScale: 0.2,
+  },
+  summon: {
+    spotLife: 450,
+    spotRadius: 55,
+    spotRings: 1,
+    spotWidth: 2,
+    spotSides: 48,
+    spotRingsMotion: 'in',
+    spotFillAlpha: 0.06,
+    spotRingBlur: 5,
+    spotColour: 'f3e9c6',
+    spotAccentColour: 'cfe3ff',
+    spotGlowScale: 5.1,
+    spotSparkCount: 10,
+    spotSparkMotion: 'inward',
+    spotSparkSpeed: 0.1,
+    spotSparkLife: 420,
+    spotSparkScale: 0.35,
+    spotSparkSpread: 50,
   },
 };
 

@@ -7,7 +7,7 @@ export interface SpellEntry {
   key: string;
   /** What the picker shows and matches typing against */
   label: string;
-  /** `Hero skills`, `Neutral cards` or `<Class> cards` */
+  /** `Events`, `Hero skills`, `Neutral cards` or `<Class> cards` */
   group: string;
   name: string;
   cost: number;
@@ -58,5 +58,16 @@ export const spellEntries = (): SpellEntry[] => {
       text: card.text,
       isSkill: false,
     }));
-  return [...skills, ...cards];
+  const events: SpellEntry[] = [
+    {
+      key: 'summon',
+      label: 'Minion summoned (every summon, event)',
+      group: 'Events',
+      name: 'Minion summoned',
+      cost: 0,
+      text: 'Plays on every minion that is summoned or played, centred on it.',
+      isSkill: false,
+    },
+  ];
+  return [...events, ...skills, ...cards];
 };

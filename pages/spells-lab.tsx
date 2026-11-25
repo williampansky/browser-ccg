@@ -2,7 +2,12 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 
+import { PLAY_LAYOUT } from '../components/play-board/layout-css';
 import { SPELL_GROUPS } from '../components/spells-lab/spell-knobs';
+import { loadHsCards } from '../engine';
+import { createMinion } from '../engine/rules/minion';
+import minionStyles from '../components/play-board/board-minion.module.scss';
+import { MinionFace } from '../components/play-board/MinionFace';
 import { spellEntries } from '../components/spells-lab/spell-list';
 import type { PixiFx } from '../components/play-board/pixi-fx';
 import {
@@ -25,6 +30,12 @@ import {
  * `pixi-fx.ts`.
  */
 const DEFAULT_SPELL = 'WIZARD:1';
+/** The stage starts after the sidebar (340) and the page padding and gap. */
+const STAGE_LEFT = 388;
+/** The minion shown as the target, for a sense of scale. */
+const SAMPLE_MINION = 'CORE_027';
+const SAMPLE_TURN = 3;
+const SAMPLE_ID = 900;
 const MIN_SPEED = 0.05;
 const MAX_SPEED = 2;
 const MARKER_SIZE = 56;
@@ -64,6 +75,19 @@ const markerStyle = (
 
 type Point = { x: number; y: number };
 
+/**
+ * The board's saved background (the board lab's Background section, as baked
+ * into `PLAY_LAYOUT`): the paper image darkened by `lbgd`, covering the stage.
+ */
+const boardBackground = (): string => {
+  const { lbgd, lbgf } = PLAY_LAYOUT;
+  const dark = Math.min(1, Math.max(0, +lbgd || 0));
+  const shade = `linear-gradient(rgba(0,0,0,${dark}),rgba(0,0,0,${dark}))`;
+  return /^\/[\w./-]+$/.test(lbgf)
+    ? `${shade}, url(${lbgf}) center / cover no-repeat`
+    : '#14161c';
+};
+
 const SpellsLab = () => {
   const router = useRouter();
   const search = router.isReady ? (router.asPath.split('?')[1] ?? '') : '';
@@ -87,6 +111,14 @@ const SpellsLab = () => {
     MAX_SPEED,
     Math.max(MIN_SPEED, Number(q1('speed')) || 1),
   );
+  const isMinionShown = q1('minion') === '1';
+  const isBoardShown = q1('board') === '1';
+  const sample = useMemo(() => {
+    const card = loadHsCards().byId.get(SAMPLE_MINION);
+    return card
+      ? { card, m: createMinion(card, SAMPLE_ID, SAMPLE_TURN, SAMPLE_ID) }
+      : null;
+  }, []);
   const kind: SpellFxKind =
     SPELL_FX_KINDS.find((effect) => effect.kind === override)?.kind ?? assigned;
   const base = useMemo(() => tuneForSpell(spellKey), [spellKey]);
@@ -331,6 +363,26 @@ const SpellsLab = () => {
           />{' '}
           Replay when a number changes
         </label>
+        <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
+          <input
+            type="checkbox"
+            checked={isMinionShown}
+            onChange={(event) =>
+              setParams({ minion: event.target.checked ? '1' : null })
+            }
+          />{' '}
+          Show a sample minion as the target
+        </label>
+        <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
+          <input
+            type="checkbox"
+            checked={isBoardShown}
+            onChange={(event) =>
+              setParams({ board: event.target.checked ? '1' : null })
+            }
+          />{' '}
+          Show the default board background
+        </label>
         <label style={{ display: 'block', fontSize: 12, margin: '6px 0' }}>
           <span style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>Preview speed (slow motion; the effect&apos;s ms stay)</span>
@@ -433,60 +485,64 @@ const SpellsLab = () => {
                     </label>
                   ))}
                 {isOn &&
-                  group.knobs.map((knob) => (
-                    <label
-                      key={knob.field}
-                      style={{
-                        display: 'block',
-                        margin: '6px 0',
-                        fontSize: 12,
-                      }}
-                    >
-                      <span
+                  group.knobs
+                    .filter((knob) => !knob.when || knob.when(tune))
+                    .map((knob) => (
+                      <label
+                        key={knob.field}
                         style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          gap: 8,
+                          display: 'block',
+                          margin: '6px 0',
+                          fontSize: 12,
                         }}
                       >
                         <span
                           style={{
-                            color: changed(knob.field) ? '#fff' : '#9aa3b8',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            gap: 8,
                           }}
                         >
-                          {knob.label}
+                          <span
+                            style={{
+                              color: changed(knob.field) ? '#fff' : '#9aa3b8',
+                            }}
+                          >
+                            {knob.label}
+                          </span>
+                          <span>
+                            <b>{tune[knob.field]}</b>
+                            {changed(knob.field) && (
+                              <a
+                                style={{
+                                  marginLeft: 6,
+                                  cursor: 'pointer',
+                                  color: '#7aa2ff',
+                                }}
+                                onClick={() =>
+                                  setParams({ [`s_${knob.field}`]: null })
+                                }
+                              >
+                                reset
+                              </a>
+                            )}
+                          </span>
                         </span>
-                        <span>
-                          <b>{tune[knob.field]}</b>
-                          {changed(knob.field) && (
-                            <a
-                              style={{
-                                marginLeft: 6,
-                                cursor: 'pointer',
-                                color: '#7aa2ff',
-                              }}
-                              onClick={() =>
-                                setParams({ [`s_${knob.field}`]: null })
-                              }
-                            >
-                              reset
-                            </a>
-                          )}
-                        </span>
-                      </span>
-                      <input
-                        type="range"
-                        min={knob.min}
-                        max={knob.max}
-                        step={knob.step ?? 1}
-                        value={tune[knob.field]}
-                        style={{ width: '100%', margin: 0 }}
-                        onChange={(event) =>
-                          setParams({ [`s_${knob.field}`]: event.target.value })
-                        }
-                      />
-                    </label>
-                  ))}
+                        <input
+                          type="range"
+                          min={knob.min}
+                          max={knob.max}
+                          step={knob.step ?? 1}
+                          value={tune[knob.field]}
+                          style={{ width: '100%', margin: 0 }}
+                          onChange={(event) =>
+                            setParams({
+                              [`s_${knob.field}`]: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                    ))}
                 {isOn &&
                   group.colours?.map((colour) => (
                     <label
@@ -534,6 +590,17 @@ const SpellsLab = () => {
         )}
       </aside>
       <section style={{ flex: 1, minWidth: 0 }}>
+        {isBoardShown && (
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'fixed',
+              inset: `0 0 0 ${STAGE_LEFT}px`,
+              background: boardBackground(),
+              pointerEvents: 'none',
+            }}
+          />
+        )}
         <p style={{ color: '#9aa3b8', maxWidth: 560, marginTop: 0 }}>
           A blank stage. The caster circle is where the effect starts (a strike
           ignores it and comes from the top, and a spot effect opens on the
@@ -548,12 +615,36 @@ const SpellsLab = () => {
             >
               caster
             </div>
-            <div
-              onPointerDown={drag('to')}
-              style={markerStyle(points.to, '#ff8a8a')}
-            >
-              target
-            </div>
+            {isMinionShown && sample ? (
+              <div
+                onPointerDown={drag('to')}
+                style={{
+                  position: 'fixed',
+                  left: points.to.x,
+                  top: points.to.y,
+                  transform: 'translate(-50%, -50%)',
+                  cursor: 'grab',
+                  touchAction: 'none',
+                  userSelect: 'none',
+                }}
+              >
+                <div className={minionStyles.slot}>
+                  <MinionFace
+                    card={sample.card}
+                    m={sample.m}
+                    sick={false}
+                    turn={SAMPLE_TURN}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div
+                onPointerDown={drag('to')}
+                style={markerStyle(points.to, '#ff8a8a')}
+              >
+                target
+              </div>
+            )}
           </>
         )}
       </section>
