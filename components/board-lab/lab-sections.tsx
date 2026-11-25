@@ -1,7 +1,7 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
 import { END_KNOBS } from '../play-board/end-celebration';
-import { HERO_SWING_KNOBS } from '../play-board/hero-swing-tune';
+import { SWINGS } from '../play-board/hero-swing-tune';
 import {
   ENERGY_COLOURS,
   MID_KNOBS,
@@ -27,9 +27,11 @@ const MID_KEYS = [
   'lmdba',
   'lmdta',
 ];
-const SWING_KEYS = HERO_SWING_KNOBS.map((k) => k.key);
+const swingKeys = (kind: 'hero' | 'minion') =>
+  SWINGS[kind].knobs.map((k) => k.key);
 export const SECTION_KEYS: Record<string, string[]> = {
-  'hero-swing': SWING_KEYS,
+  'hero-swing': swingKeys('hero'),
+  'minion-swing': swingKeys('minion'),
   endgame: [
     'leno',
     'lenf',
@@ -496,6 +498,11 @@ export const LAB_TABS: {
         id: 'hero-attack',
         label: 'Hero attack',
         sections: ['hero-swing-preview', 'hero-swing'],
+      },
+      {
+        id: 'minion-attack',
+        label: 'Minion attack',
+        sections: ['minion-swing-preview', 'minion-swing'],
       },
     ],
   },

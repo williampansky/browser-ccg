@@ -1,5 +1,5 @@
-import { getHeroSwing } from './hero-swing-tune';
-import type { HeroSwingSettings } from './hero-swing-tune';
+import { getSwing } from './hero-swing-tune';
+import type { HeroSwingSettings, SwingKind } from './hero-swing-tune';
 
 /**
  * Motion that gives the board weight: things are thrown, land and hit rather
@@ -16,8 +16,9 @@ export const reducedMotion = (): boolean =>
  * and damage numbers wait for this.
  */
 export const IMPACT_MS = 190;
-/** When a hero's slam lands (see `heroSwingFrames`). */
-export const heroImpactMs = (): number => getHeroSwing().impactMs;
+/** When the strike of an attack by this kind of attacker lands. */
+export const swingImpactMs = (kind: SwingKind): number =>
+  getSwing(kind).impactMs;
 
 let currentImpactMs = IMPACT_MS;
 
@@ -33,45 +34,11 @@ export const setImpactMs = (ms: number): void => {
   if (typeof document !== 'undefined')
     document.documentElement.style.setProperty('--impact-ms', `${ms}ms`);
 };
-const LUNGE_MS = 520;
 
 export interface Point {
   x: number;
   y: number;
 }
-
-/**
- * The keyframes of an attack, as offsets from the attacker's place: pull back a
- * little (the wind-up), strike most of the way to
- * the target and hit it at `IMPACT_MS`, then ease home. `to` is the vector from
- * attacker to target centre.
- */
-export const lungeFrames = (to: Point): Keyframe[] => {
-  const len = Math.hypot(to.x, to.y) || 1;
-  const back = { x: (-to.x / len) * 14, y: (-to.y / len) * 14 };
-  const hit = { x: to.x * 0.82, y: to.y * 0.82 };
-  const t = (p: Point, scale: number) =>
-    `translate(${p.x}px, ${p.y}px) scale(${scale})`;
-  return [
-    { transform: t({ x: 0, y: 0 }, 1), offset: 0, easing: 'ease-out' },
-    {
-      transform: t(back, 1.06),
-      offset: 0.2,
-      easing: 'cubic-bezier(0.55, 0, 1, 0.45)',
-    },
-    {
-      transform: t(hit, 1.14),
-      offset: IMPACT_MS / LUNGE_MS,
-      easing: 'ease-out',
-    },
-    {
-      transform: t({ x: hit.x * 1.02, y: hit.y * 1.02 }, 1.14),
-      offset: 0.42,
-      easing: 'cubic-bezier(0.19, 1, 0.22, 1)',
-    },
-    { transform: t({ x: 0, y: 0 }, 1), offset: 1 },
-  ];
-};
 
 /** How far through the time after the hold the drift home and the settle are. */
 const DRIFT_FRACTION = 0.56;
@@ -82,6 +49,7 @@ const HOLD_WIDEN = 0.02;
 const SETTLE_SQUASH_X = 1.03;
 /** Pressed into the target: a tight, dark contact shadow. */
 const SLAM_SHADOW = 'drop-shadow(0 2px 3px rgba(0, 0, 0, 0.55))';
+const MINION_SLAM_SHADOW = 'rgba(0, 0, 0, 0.55) 0px 2px 3px 0px';
 const DROP_SHADOW = /drop-shadow\((?:[^()]|\([^()]*\))*\)/g;
 
 /**
@@ -100,14 +68,15 @@ const swingTimes = (swing: HeroSwingSettings) => {
 };
 
 /**
- * A hero's swing, with weight: it rises toward the viewer (bigger), hangs for
- * a beat, slams into the target at `impactMs`, then drifts home and settles
- * with a small squash. The shadow is animated separately
- * (`heroShadowFrames`).
+ * An attack swing, with weight: the attacker rises toward the viewer (bigger),
+ * hangs for a beat, slams into the target at `impactMs`, then drifts home and
+ * settles with a small squash. The shadow is animated separately
+ * (`heroShadowFrames`, `minionShadowFrames`). `to` is the vector from the
+ * attacker to the target centre.
  */
-export const heroSwingFrames = (
+export const swingFrames = (
   to: Point,
-  swing: HeroSwingSettings = getHeroSwing(),
+  swing: HeroSwingSettings = getSwing('hero'),
 ): Keyframe[] => {
   const { totalMs, impact, slamStart, lift, hold, drift, settle } =
     swingTimes(swing);
@@ -142,35 +111,102 @@ export const heroSwingFrames = (
 };
 
 /**
- * The hero's own shadow through the swing. `filter` is the figure's current
- * computed filter: any glow in front of the last drop-shadow is kept, and that
- * last one (the default dark shadow) is what lifts away, so the swing starts
- * and ends exactly on the default and never stacks a second shadow.
+ * The shadow through the swing, given the layers of the element's current
+ * shadow and which one is the dark default that lifts away (the others, such
+ * as a glow or a ring, stay). `join` puts the layers back together in the
+ * property's own syntax. The swing starts and ends exactly on the default, so
+ * a second shadow is never stacked on it.
  */
-export const heroShadowFrames = (
-  filter: string,
-  swing: HeroSwingSettings = getHeroSwing(),
+const shadowTimeline = (
+  swing: HeroSwingSettings,
+  layers: string[],
+  dropAt: number,
+  lifted: string,
+  slam: string,
+  join: (layers: string[]) => string,
 ): Keyframe[] => {
   const { totalMs, impact, slamStart, lift, hold, drift, settle } =
     swingTimes(swing);
-  const shadows = filter.match(DROP_SHADOW) ?? [];
-  const rest = shadows.length > 0 ? shadows[shadows.length - 1] : 'none';
-  const glow = shadows.slice(0, -1).join(' ');
-  const lifted = `drop-shadow(0 ${swing.shadowY}px ${swing.shadowBlur}px rgba(0, 0, 0, ${swing.shadowAlpha}))`;
+  const withDrop = (drop: string) =>
+    join(layers.map((layer, index) => (index === dropAt ? drop : layer)));
+  const rest = join(layers);
   const frame = (shadow: string, ms: number): Keyframe => ({
-    filter: `${glow} ${shadow}`.trim(),
     offset: ms / totalMs,
+    shadow,
   });
   return [
     frame(rest, 0),
-    frame(lifted, lift),
-    frame(lifted, slamStart),
-    frame(SLAM_SHADOW, impact),
-    frame(SLAM_SHADOW, hold),
-    frame(lifted, drift),
+    frame(withDrop(lifted), lift),
+    frame(withDrop(lifted), slamStart),
+    frame(withDrop(slam), impact),
+    frame(withDrop(slam), hold),
+    frame(withDrop(lifted), drift),
     frame(rest, settle),
     frame(rest, totalMs),
   ];
+};
+
+/**
+ * A hero's own shadow through the swing. `filter` is the figure's current
+ * computed filter: any glow in front of the last drop-shadow is kept, and that
+ * last one (the default dark shadow) is what lifts away.
+ */
+export const heroShadowFrames = (
+  filter: string,
+  swing: HeroSwingSettings = getSwing('hero'),
+): Keyframe[] => {
+  const layers = filter.match(DROP_SHADOW) ?? ['none'];
+  const lifted = `drop-shadow(0 ${swing.shadowY}px ${swing.shadowBlur}px rgba(0, 0, 0, ${swing.shadowAlpha}))`;
+  return shadowTimeline(
+    swing,
+    layers,
+    layers.length - 1,
+    lifted,
+    SLAM_SHADOW,
+    (parts) => parts.join(' ').trim(),
+  ).map(({ offset, shadow }) => ({ offset, filter: shadow }));
+};
+
+/** Splits a `box-shadow` value at its top-level commas. */
+const splitShadows = (boxShadow: string): string[] => {
+  const layers: string[] = [];
+  let depth = 0;
+  let start = 0;
+  Array.from(boxShadow).forEach((char, index) => {
+    if (char === '(') depth++;
+    if (char === ')') depth--;
+    if (char === ',' && depth === 0) {
+      layers.push(boxShadow.slice(start, index).trim());
+      start = index + 1;
+    }
+  });
+  layers.push(boxShadow.slice(start).trim());
+  return layers;
+};
+
+/**
+ * A minion's shadow lives in the box-shadow of its oval. `boxShadow` is its
+ * current computed value: the last layer that is not an inset is the dark
+ * default that lifts away; rings and the inset edge stay.
+ */
+export const minionShadowFrames = (
+  boxShadow: string,
+  swing: HeroSwingSettings = getSwing('minion'),
+): Keyframe[] => {
+  if (boxShadow === 'none' || boxShadow === '') return [];
+  const layers = splitShadows(boxShadow);
+  const isOutset = (layer: string) => !layer.includes('inset');
+  const dropAt = layers.map(isOutset).lastIndexOf(true);
+  if (dropAt < 0) return [];
+  const lifted = `rgba(0, 0, 0, ${swing.shadowAlpha}) 0px ${swing.shadowY}px ${swing.shadowBlur}px 0px`;
+  return shadowTimeline(
+    swing,
+    layers,
+    dropAt,
+    lifted,
+    MINION_SLAM_SHADOW,
+    (parts) => parts.join(', '),
+  ).map(({ offset, shadow }) => ({ offset, boxShadow: shadow }));
 };
 
 const centre = (el: HTMLElement): Point => {
@@ -192,50 +228,64 @@ export const aimVector = (
 };
 
 /**
- * Throws `attacker` along `to` (see `aimVector`) and back. Raises it above its
- * neighbours for the duration.
+ * Throws `attacker` along `to` (see `aimVector`) with the swing of its `kind`:
+ * a lift, a slam and a settle, its shadow lifting with it. Raises it above its
+ * neighbours for the duration. Returns how long that takes (0 if nothing
+ * played).
  */
 export const lungeBy = (
   attacker: HTMLElement,
   to: Point,
-  isHero = false,
-): void => {
-  if (reducedMotion() || !attacker.animate || !attacker.isConnected) return;
+  kind: SwingKind = 'minion',
+): number => {
+  if (reducedMotion() || !attacker.animate || !attacker.isConnected) return 0;
   const prev = attacker.style.zIndex;
   attacker.style.zIndex = '60';
-  const swing = getHeroSwing();
-  const anim = isHero
-    ? attacker.animate(heroSwingFrames(to, swing), {
-        duration: swing.totalMs,
-      })
-    : attacker.animate(lungeFrames(to), { duration: LUNGE_MS });
-  if (isHero) animateHeroShadow(attacker, swing);
+  const swing = getSwing(kind);
+  const anim = attacker.animate(swingFrames(to, swing), {
+    duration: swing.totalMs,
+  });
+  animateShadow(attacker, kind, swing);
   const done = () => {
     attacker.style.zIndex = prev;
   };
   anim.onfinish = done;
   anim.oncancel = done;
+  return swing.totalMs;
 };
 
 const FIGURE = '[class*="hero-variants_figure__"]';
+const MINION_OVAL = '[class*="board-minion_oval__"]';
 
 /**
- * Runs the shadow animation on the figure inside the hero (where its default
- * shadow lives), or on the hero itself when it has no figure.
+ * Runs the shadow animation where the attacker's default shadow lives: on the
+ * figure inside a hero (or the hero itself when it has no figure), or on the
+ * oval of a minion.
  */
-const animateHeroShadow = (
-  hero: HTMLElement,
+const animateShadow = (
+  attacker: HTMLElement,
+  kind: SwingKind,
   swing: HeroSwingSettings,
 ): void => {
-  const figure = hero.querySelector<HTMLElement>(FIGURE) ?? hero;
-  figure.animate(heroShadowFrames(getComputedStyle(figure).filter, swing), {
-    duration: swing.totalMs,
-  });
+  if (kind === 'hero') {
+    const figure = attacker.querySelector<HTMLElement>(FIGURE) ?? attacker;
+    figure.animate(heroShadowFrames(getComputedStyle(figure).filter, swing), {
+      duration: swing.totalMs,
+    });
+    return;
+  }
+  const oval = attacker.querySelector<HTMLElement>(MINION_OVAL);
+  if (!oval) return;
+  const frames = minionShadowFrames(getComputedStyle(oval).boxShadow, swing);
+  if (frames.length > 0) oval.animate(frames, { duration: swing.totalMs });
 };
 
 /** Throws `attacker` at `target` (both on screen) and back. */
-export const lunge = (attacker: HTMLElement, target: HTMLElement): void =>
-  lungeBy(attacker, aimVector(attacker, target));
+export const lunge = (
+  attacker: HTMLElement,
+  target: HTMLElement,
+  kind: SwingKind = 'minion',
+): number => lungeBy(attacker, aimVector(attacker, target), kind);
 
 /** A short jolt of the whole table, for a big hit. */
 export const nudge = (el: HTMLElement, strength: number): void => {

@@ -1,11 +1,7 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { useEffect, useRef } from 'react';
-import {
-  getHeroSwing,
-  HERO_SWING_KNOBS,
-  setHeroSwingTuning,
-  swingFromQuery,
-} from '../play-board/hero-swing-tune';
+import { getSwing, SWINGS } from '../play-board/hero-swing-tune';
+import type { SwingKind } from '../play-board/hero-swing-tune';
 import { aimVector, lungeBy, nudge, setImpactMs } from '../play-board/motion';
 import type { PanelProps } from './lab-panels';
 import { one, row } from './lab-model';
@@ -21,17 +17,22 @@ export const SWING_TARGET_KEY = 'lswpv';
 const SWING_LOOP_KEY = 'lswlpv';
 const SWING_DAMAGE_KEY = 'lswdpv';
 
-const SWING_KEYS = HERO_SWING_KNOBS.map((knob) => knob.key);
+const KINDS: SwingKind[] = ['hero', 'minion'];
+const ALL_KEYS = KINDS.flatMap((kind) =>
+  SWINGS[kind].knobs.map((knob) => knob.key),
+);
 
 /**
- * Hands the URL's hero swing numbers to the board (the page runs it always, so
- * a real attack on the lab's board uses them too).
+ * Hands the URL's swing numbers (hero and minion) to the board (the page runs
+ * it always, so a real attack on the lab's board uses them too).
  */
-export const useHeroSwingTuning = (q: ParsedUrlQuery): void => {
-  const key = SWING_KEYS.map((k) => one(q[k])).join('|');
+export const useSwingTuning = (q: ParsedUrlQuery): void => {
+  const key = ALL_KEYS.map((k) => one(q[k])).join('|');
   useEffect(() => {
-    setHeroSwingTuning(swingFromQuery((k) => one(q[k])));
-    return () => setHeroSwingTuning(undefined);
+    KINDS.forEach((kind) =>
+      SWINGS[kind].setTuning(SWINGS[kind].fromQuery((k) => one(q[k]))),
+    );
+    return () => KINDS.forEach((kind) => SWINGS[kind].setTuning(undefined));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 };
@@ -96,35 +97,53 @@ const popDamage = (target: HTMLElement, damage: number): void => {
   setTimeout(() => pop.remove(), POP_MS);
 };
 
+/** Rows of minion slots closer than this share a side of the board. */
+const ROW_TOLERANCE_PX = 20;
+
 /**
- * Plays the swing of the player's hero (the lower one on the board) at the
- * chosen target, and what it does on contact: the target shakes, a damage
- * number floats up and a big hit jolts the table. Nothing in the game state
- * changes. Returns how long the swing lasts, or 0 if there was nothing to
- * play.
+ * The minions on each side of the board: the upper row is the enemy's, the
+ * lower row is yours.
  */
-const playSwing = (isMinionTarget: boolean, damage: number): number => {
+const minionRows = (): { mine: HTMLElement[]; foe: HTMLElement[] } => {
+  const slots = Array.from(document.querySelectorAll<HTMLElement>(MINION_SLOT));
+  const tops = slots.map((slot) => slot.getBoundingClientRect().top);
+  const upper = Math.min(...tops);
+  const lower = Math.max(...tops);
+  const isInRow = (row: number) => (slot: HTMLElement) =>
+    Math.abs(slot.getBoundingClientRect().top - row) < ROW_TOLERANCE_PX;
+  if (upper === lower) return { mine: [], foe: [] };
+  return {
+    mine: slots.filter(isInRow(lower)),
+    foe: slots.filter(isInRow(upper)),
+  };
+};
+
+/**
+ * Plays the swing of your hero or of your first minion at the chosen target,
+ * and what it does on contact: the target shakes, a damage number floats up
+ * and a big hit jolts the table. Nothing in the game state changes. Returns
+ * how long the swing lasts, or 0 if there was nothing to play.
+ */
+const playSwing = (
+  kind: SwingKind,
+  isMinionTarget: boolean,
+  damage: number,
+): number => {
   const heroes = Array.from(document.querySelectorAll<HTMLElement>(HERO_ROOT));
   if (heroes.length < 2) return 0;
   const byTop = [...heroes].sort(
     (a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top,
   );
-  const mine = byTop[byTop.length - 1];
   const foeHero = byTop[0];
-  const myTop = mine.getBoundingClientRect().top;
-  const foeTop = foeHero.getBoundingClientRect().top;
-  const isOnFoeSide = (slot: HTMLElement): boolean => {
-    const { top } = slot.getBoundingClientRect();
-    return top > foeTop && top < myTop;
-  };
-  const foeMinion = Array.from(
-    document.querySelectorAll<HTMLElement>(MINION_SLOT),
-  ).find(isOnFoeSide);
+  const rows = minionRows();
+  const attacker = kind === 'hero' ? byTop[byTop.length - 1] : rows.mine[0];
+  if (!attacker) return 0;
+  const foeMinion = rows.foe[0];
   const isMinion = isMinionTarget && !!foeMinion;
   const target = isMinion && foeMinion ? foeMinion : foeHero;
-  const { impactMs, totalMs } = getHeroSwing();
+  const { impactMs, totalMs } = getSwing(kind);
   setImpactMs(impactMs);
-  lungeBy(mine, aimVector(mine, target), true);
+  lungeBy(attacker, aimVector(attacker, target), kind);
   // `nudge` waits for the impact time by itself.
   const table = document.querySelector<HTMLElement>(TABLE);
   if (table && damage >= JOLT_FROM) nudge(table, damage);
@@ -140,19 +159,24 @@ const playSwing = (isMinionTarget: boolean, damage: number): number => {
  * Plays the hero swing now, and what it aims at, with a box for the example
  * damage and a switch to repeat it for as long as you like.
  */
-export const HeroSwingPreviewPanel = ({ q, setParams }: PanelProps) => {
+export const SwingPreviewPanel = ({
+  q,
+  setParams,
+  kind,
+}: PanelProps & { kind: SwingKind }) => {
   const isMinionTarget = one(q[SWING_TARGET_KEY]) === 'minion';
   const isLooping = one(q[SWING_LOOP_KEY]) === '1';
   const rawDamage = one(q[SWING_DAMAGE_KEY]);
   const damage = rawDamage === '' ? DEFAULT_DAMAGE : Math.max(0, +rawDamage);
-  const latest = useRef({ isMinionTarget, damage });
-  latest.current = { isMinionTarget, damage };
+  const latest = useRef({ isMinionTarget, damage, kind });
+  latest.current = { isMinionTarget, damage, kind };
 
   useEffect(() => {
     if (!isLooping) return;
     let timer: ReturnType<typeof setTimeout>;
     const again = () => {
       const lasted = playSwing(
+        latest.current.kind,
         latest.current.isMinionTarget,
         latest.current.damage,
       );
@@ -165,16 +189,18 @@ export const HeroSwingPreviewPanel = ({ q, setParams }: PanelProps) => {
   return (
     <>
       <small style={{ display: 'block', color: '#9aa3b8', fontSize: 11 }}>
-        Plays your hero's attack swing on this board. On contact the target
-        shakes, a damage number floats up and a big hit jolts the table, but no
-        damage is dealt. The sliders below change it as you go; with "Repeat"
-        on, the next round picks them up. Needs the figure heroes (Setup, Heroes
-        and hand).
+        {kind === 'hero'
+          ? "Plays your hero's attack swing"
+          : "Plays your first minion's attack swing"}{' '}
+        on this board. On contact the target shakes, a damage number floats up
+        and a big hit jolts the table, but no damage is dealt. The sliders below
+        change it as you go; with "Repeat" on, the next round picks them up.
+        Needs the figure heroes (Setup, Heroes and hand).
       </small>
       <div style={row}>
         <button
           style={button(false)}
-          onClick={() => playSwing(isMinionTarget, damage)}
+          onClick={() => playSwing(kind, isMinionTarget, damage)}
         >
           Play swing
         </button>
@@ -221,14 +247,21 @@ export const HeroSwingPreviewPanel = ({ q, setParams }: PanelProps) => {
   );
 };
 
-/** The sliders for the swing, in groups. */
-export const HeroSwingPanel = ({ sliders }: PanelProps) => (
-  <>
-    <b>Timing</b>
-    {sliders(['lswt', 'lswi', 'lswl', 'lswk', 'lswh'])}
-    <b>Motion</b>
-    {sliders(['lswy', 'lsws', 'lswx', 'lswr', 'lswq'])}
-    <b>Shadow when lifted</b>
-    {sliders(['lswsy', 'lswsb', 'lswsa'])}
-  </>
-);
+/** The sliders for a swing, in groups. */
+export const SwingPanel = ({
+  sliders,
+  kind,
+}: PanelProps & { kind: SwingKind }) => {
+  const keys = SWINGS[kind].knobs.map((knob) => knob.key);
+  const at = (from: number, to: number) => sliders(keys.slice(from, to));
+  return (
+    <>
+      <b>Timing</b>
+      {at(0, 5)}
+      <b>Motion</b>
+      {at(5, 10)}
+      <b>Shadow when lifted</b>
+      {at(10, 13)}
+    </>
+  );
+};

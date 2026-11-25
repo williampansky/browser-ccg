@@ -45,9 +45,9 @@ import { BackgroundPanel } from '../components/board-lab/BackgroundPanel';
 import type { LogSample } from '../components/play-board/sample-log';
 import { PresetsPanel } from '../components/board-lab/PresetsPanel';
 import {
-  HeroSwingPanel,
-  HeroSwingPreviewPanel,
-  useHeroSwingTuning,
+  SwingPanel,
+  SwingPreviewPanel,
+  useSwingTuning,
 } from '../components/board-lab/AnimationsPanel';
 import { EndPanel, useEndTuning } from '../components/board-lab/EndPanel';
 import {
@@ -92,7 +92,7 @@ const BoardLab = () => {
   const defaults = useMeasuredDefaults(q);
   useSoundTuning(q);
   useEndTuning(q);
-  useHeroSwingTuning(q);
+  useSwingTuning(q);
 
   // A stable list of real CORE minions to build boards from.
   const minionIds = useMemo(
@@ -303,13 +303,25 @@ const BoardLab = () => {
       'hero-swing-preview',
       'Preview',
       'plays the swing now',
-      <HeroSwingPreviewPanel {...panel} />,
+      <SwingPreviewPanel {...panel} kind="hero" />,
     ),
     'hero-swing': sec(
       'hero-swing',
       'Hero attack swing',
       'live; baked into /play with npm run board',
-      <HeroSwingPanel {...panel} />,
+      <SwingPanel {...panel} kind="hero" />,
+    ),
+    'minion-swing-preview': sec(
+      'minion-swing-preview',
+      'Preview',
+      'plays the swing now',
+      <SwingPreviewPanel {...panel} kind="minion" />,
+    ),
+    'minion-swing': sec(
+      'minion-swing',
+      'Minion attack swing',
+      'live; baked into /play with npm run board',
+      <SwingPanel {...panel} kind="minion" />,
     ),
     'snd-cardPlay': sec(
       'snd-cardPlay',

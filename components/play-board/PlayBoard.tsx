@@ -40,10 +40,12 @@ import {
   PlayerId,
   Rng,
   TargetRef,
+  WeaponInstance,
   effectiveCost,
   MAX_HAND,
 } from '../../engine';
 import { gapIndex } from './board-position';
+import { getSwing } from './hero-swing-tune';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
 import {
   LogCardTrigger,
@@ -114,7 +116,7 @@ import {
   aimVector,
   getImpactMs,
   setImpactMs,
-  heroImpactMs,
+  swingImpactMs,
   IMPACT_MS,
   lunge,
   lungeBy,
@@ -173,6 +175,8 @@ type Mode = 'ai' | 'hotseat';
 type PlayAction = Extract<Action, { type: 'PlayCard' }>;
 const AI_PLAYER: PlayerId = '1';
 const AI_DELAY_MS = 800;
+/** The gap between one attacker and the next when "Attack hero" swings all */
+const NUKE_STAGGER_MS = 320;
 /** How long the AI's aiming arrow shows before a targeted action happens. */
 const AI_AIM_MS = 1100;
 /** 'curve' or 'straight'; both are supported by `targetLinePath`. */
@@ -950,6 +954,31 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
    * then the row closes up.
    */
   const [ghosts, setGhosts] = useState<Ghost[]>([]);
+  /**
+   * A weapon that broke on its last use stays on the hero bar until the swing
+   * that broke it is over (state drops it at once).
+   */
+  const [heldWeapons, setHeldWeapons] = useState<
+    Partial<Record<PlayerId, WeaponInstance>>
+  >({});
+  const holdBrokenWeapon = (
+    owner: PlayerId,
+    weapon: WeaponInstance,
+    delayMs = 0,
+  ): void => {
+    if (reducedMotion()) return;
+    const broken = { ...weapon, durability: 0 };
+    setHeldWeapons((old) => ({ ...old, [owner]: broken }));
+    setTimeout(
+      () =>
+        setHeldWeapons((old) => {
+          const next = { ...old };
+          delete next[owner];
+          return next;
+        }),
+      delayMs + getSwing('hero').totalMs,
+    );
+  };
   // A minion played from your hand: its card flies from the hand to the slot,
   // and the minion's landing waits for it.
   /**
@@ -1120,8 +1149,16 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         );
         const to = action.target && nodes.current.get(targetKey(action.target));
         // A hero swings heavier than a minion lunges, so its hit lands later.
-        const isHeroSwing = action.type === 'WeaponAttack';
-        setImpactMs(isHeroSwing ? heroImpactMs() : IMPACT_MS);
+        const kind = action.type === 'WeaponAttack' ? 'hero' : 'minion';
+        setImpactMs(swingImpactMs(kind));
+        const owner = state.activePlayer;
+        const weaponBefore = state.players[owner].weapon;
+        if (
+          kind === 'hero' &&
+          weaponBefore &&
+          !result.state.players[owner].weapon
+        )
+          holdBrokenWeapon(owner, weaponBefore);
         /**
          * A minion that attacks (Stampede) before it has landed would lunge
          * unseen: wait for it to land.
@@ -1150,11 +1187,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             const id = action.attackerId;
             setTimeout(() => {
               const ghost = nodes.current.get(`g${id}`);
-              if (ghost) lungeBy(ghost, vec);
+              if (ghost) lungeBy(ghost, vec, kind);
             }, 30);
-          } else if (wait > 0)
-            setTimeout(() => lungeBy(from, vec, isHeroSwing), wait);
-          else lungeBy(from, vec, isHeroSwing);
+          } else if (wait > 0) setTimeout(() => lungeBy(from, vec, kind), wait);
+          else lungeBy(from, vec, kind);
         }
         const dealt = result.events.reduce(
           (n, e) =>
@@ -1942,6 +1978,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       const swings = heard.filter(
         (e) => e.type === 'MinionAttacked' || e.type === 'WeaponAttacked',
       );
+      const weaponBefore = state.players[me].weapon;
+      const weaponSwing = swings.findIndex((e) => e.type === 'WeaponAttacked');
+      if (weaponBefore && weaponSwing >= 0 && !cur.players[me].weapon)
+        holdBrokenWeapon(me, weaponBefore, weaponSwing * NUKE_STAGGER_MS);
       swings.forEach((e, i) => {
         setTimeout(() => {
           const from = nodes.current.get(
@@ -1950,8 +1990,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           const to = nodes.current.get(
             targetKey((e as { target: TargetRef }).target),
           );
-          if (from && to) lunge(from, to);
-        }, i * 320);
+          if (from && to)
+            lunge(from, to, e.type === 'WeaponAttacked' ? 'hero' : 'minion');
+        }, i * NUKE_STAGGER_MS);
       });
     }
     setState(cur);
@@ -2388,7 +2429,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
 
   const renderHero = (owner: PlayerId, isMe: boolean) => {
     const p = state.players[owner];
-    const weapon = p.weapon && byId.get(p.weapon.cardId);
+    const shownWeapon = p.weapon ?? heldWeapons[owner];
+    const weapon = shownWeapon && byId.get(shownWeapon.cardId);
     const aim = isAimable({ kind: 'hero', player: owner });
     const isAi = mode === 'ai' && owner === AI_PLAYER;
     const hero = p.hero && getHero(p.hero.id);
@@ -2451,7 +2493,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             health={p.health}
             armor={p.armor}
             weapon={
-              weapon && p.weapon
+              weapon && shownWeapon
                 ? {
                     name: weapon.name,
                     fallbacks: tokenSkillIcons(weapon.id),
@@ -2459,9 +2501,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                       (/^(CORE|PRIME|GAME)_/.test(weapon.id)
                         ? artUrl(weapon.id)
                         : undefined) ?? PLACEHOLDER_ART,
-                    attack: p.weapon.attack,
-                    durability: p.weapon.durability,
-                    temporary: p.weapon.temporary,
+                    attack: shownWeapon.attack,
+                    durability: shownWeapon.durability,
+                    temporary: shownWeapon.temporary,
                   }
                 : undefined
             }
@@ -2551,11 +2593,11 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         deck={p.deck.length}
         hand={p.hand.length}
         weapon={
-          weapon && p.weapon
+          weapon && shownWeapon
             ? {
                 name: weapon.name ?? 'Weapon',
-                attack: p.weapon.attack,
-                durability: p.weapon.durability,
+                attack: shownWeapon.attack,
+                durability: shownWeapon.durability,
               }
             : null
         }

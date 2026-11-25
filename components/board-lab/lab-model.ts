@@ -1,6 +1,6 @@
 import { heroes } from '../../engine';
 import { END_DEFAULTS, END_KNOBS } from '../play-board/end-celebration';
-import { getHeroSwing, HERO_SWING_KNOBS } from '../play-board/hero-swing-tune';
+import { getSwing, SWINGS } from '../play-board/hero-swing-tune';
 import {
   CSS_FNS,
   MID_KNOBS,
@@ -1633,18 +1633,20 @@ NUMS.push(
   })),
 );
 
-// The hero attack swing (Animations tab): numbers read by the swing itself,
+// The hero and minion attack swings (Animations tab): numbers read by the swing itself,
 // not by CSS. The default shown is what /play uses (baked values included).
-NUMS.push(
-  ...HERO_SWING_KNOBS.map((k) => ({
-    key: k.key,
-    label: k.label,
-    min: k.min,
-    max: k.max,
-    step: k.step,
-    css: () => '',
-    read: () => getHeroSwing()[k.field],
-  })),
+(['hero', 'minion'] as const).forEach((kind) =>
+  NUMS.push(
+    ...SWINGS[kind].knobs.map((k) => ({
+      key: k.key,
+      label: k.label,
+      min: k.min,
+      max: k.max,
+      step: k.step,
+      css: () => '',
+      read: () => getSwing(kind)[k.field],
+    })),
+  ),
 );
 
 export const SETUP_KEYS = [
