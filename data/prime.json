@@ -2835,7 +2835,7 @@
   },
   {
     "id": "PRIME_169",
-    "name": "Paladin of the Shattered Mirror",
+    "name": "Lyra, Keeper of the Shattered Crown",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -2844,7 +2844,7 @@
     "cost": 8,
     "attack": 6,
     "health": 6,
-    "text": "<strong>%BUBBLE%, %BULWARK%</strong><br>\n<strong>%ON_DEATH%:</strong> Gain 5 %ARMOR%<br>\nand equip a 3/2 Mace",
+    "text": "<strong>%BUBBLE%, %BULWARK%</strong><br>\n<strong>%ON_DEATH%:</strong> Gain 5 %ARMOR%<br>\nand equip The Broken Pendulum",
     "mechanics": [
       "%BUBBLE%",
       "%BULWARK%",
@@ -2855,9 +2855,9 @@
     "elite": true,
     "entourage": "PRIME_169a",
     "flavor": "I have no friends, no family, no mercy, I am the wrath of the divine.",
-    "artistName": "Maxence Burgel",
-    "artistUrl": "https://inexam.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_175",

@@ -792,17 +792,19 @@
   },
   {
     "id": "PRIME_169a",
-    "name": "Mace of the Shattered Mirror",
+    "name": "The Broken Pendulum",
     "set": "%SET_003%",
     "type": "%TYPE_WEAPON%",
-    "rarity": "%RARITY_COMMON%",
+    "rarity": "%RARITY_MYTHIC%",
     "cardClass": "0 %CLASS_CRUSADER%",
     "cost": 2,
     "attack": 3,
     "health": 2,
     "collectible": false,
-    "active": false,
-    "artStatus": "FPO",
+    "active": true,
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "isEntourage": true
   },
   {
