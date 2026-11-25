@@ -1,12 +1,12 @@
 import type { SpellFxKind } from '../play-board/spell-fx';
 import type { SpellFxTune } from '../play-board/spell-fx-tune';
 
-type NumKey = {
-  [K in keyof SpellFxTune]: SpellFxTune[K] extends number ? K : never;
+type KeyOf<T> = {
+  [K in keyof SpellFxTune]: SpellFxTune[K] extends T ? K : never;
 }[keyof SpellFxTune];
-type ColourKey = {
-  [K in keyof SpellFxTune]: SpellFxTune[K] extends string ? K : never;
-}[keyof SpellFxTune];
+type NumKey = KeyOf<number>;
+type ColourKey = KeyOf<string>;
+type FlagKey = KeyOf<boolean>;
 
 export interface SpellKnob {
   field: NumKey;
@@ -16,89 +16,97 @@ export interface SpellKnob {
   step?: number;
 }
 
-/**
- * The spells lab's sliders, by section. Each lives in the URL as `s_<field>`.
- * `kind` is the effect the section belongs to (the lab opens that effect's
- * sections); the sparks section is shared by every effect.
- */
-export const SPELL_GROUPS: {
+export interface SpellGroup {
   title: string;
-  kind: SpellFxKind | 'all';
+  /** The bases that can use this group; the lab shows it only for those */
+  kinds: SpellFxKind[];
+  /**
+   * An option that switches the group on: its sliders and colours show only
+   * while the box is ticked (the box itself always shows).
+   */
+  flag?: { field: FlagKey; label: string };
   knobs: SpellKnob[];
   colours?: { field: ColourKey; label: string }[];
-}[] = [
+}
+
+/**
+ * The spells lab's sections. Each value lives in the URL as `s_<field>`. A
+ * section appears only for the bases that can use it, and an option's numbers
+ * only appear while it is on, so a base never shows a knob it cannot use.
+ */
+export const SPELL_GROUPS: SpellGroup[] = [
   {
-    title: 'Orb: flight',
-    kind: 'orb',
+    title: 'Flight',
+    kinds: ['travel'],
+    colours: [{ field: 'travelColour', label: 'Glow colour' }],
     knobs: [
       {
-        field: 'orbMs',
+        field: 'travelMs',
         label: 'Flight time (ms)',
         min: 80,
         max: 1200,
         step: 10,
       },
       {
-        field: 'orbArc',
+        field: 'travelArc',
         label: 'Sideways bow (fraction of length)',
         min: 0,
         max: 0.4,
         step: 0.01,
       },
       {
-        field: 'orbEase',
+        field: 'travelEase',
         label: 'Speed-up (1 = steady)',
         min: 0.5,
         max: 4,
         step: 0.1,
       },
-    ],
-  },
-  {
-    title: 'Orb: look',
-    kind: 'orb',
-    colours: [{ field: 'orbHaloColour', label: 'Glow colour' }],
-    knobs: [
       {
-        field: 'orbHaloScale',
+        field: 'travelHaloScale',
         label: 'Glow size',
         min: 0.3,
         max: 3,
         step: 0.05,
       },
       {
-        field: 'orbCoreScale',
+        field: 'travelCoreScale',
         label: 'White core size',
         min: 0.1,
         max: 2,
         step: 0.05,
       },
-      { field: 'orbPulse', label: 'Pulse', min: 0, max: 0.6, step: 0.01 },
+      { field: 'travelPulse', label: 'Pulse', min: 0, max: 0.6, step: 0.01 },
     ],
   },
   {
-    title: 'Orb: trail',
-    kind: 'orb',
-    colours: [{ field: 'orbTrailColour', label: 'Trail colour' }],
+    title: 'Trail',
+    kinds: ['travel'],
+    flag: { field: 'travelHasTrail', label: 'Leave a trail' },
+    colours: [{ field: 'travelTrailColour', label: 'Trail colour' }],
     knobs: [
-      { field: 'orbTrailPerFrame', label: 'Puffs per frame', min: 0, max: 8 },
       {
-        field: 'orbTrailLife',
+        field: 'travelTrailPerFrame',
+        label: 'Puffs per frame',
+        min: 1,
+        max: 8,
+      },
+      {
+        field: 'travelTrailLife',
         label: 'Puff life (ms)',
         min: 60,
         max: 900,
         step: 10,
       },
       {
-        field: 'orbTrailScale',
+        field: 'travelTrailScale',
         label: 'Puff size',
         min: 0.1,
         max: 1.5,
         step: 0.05,
       },
-      { field: 'orbTrailSpread', label: 'Scatter (px)', min: 0, max: 24 },
+      { field: 'travelTrailSpread', label: 'Scatter (px)', min: 0, max: 24 },
       {
-        field: 'orbTrailDrift',
+        field: 'travelTrailDrift',
         label: 'Drift speed',
         min: 0,
         max: 0.2,
@@ -107,32 +115,32 @@ export const SPELL_GROUPS: {
     ],
   },
   {
-    title: 'Lightning: timing',
-    kind: 'lightning',
+    title: 'Timing',
+    kinds: ['strike'],
     knobs: [
       {
-        field: 'lightningMs',
-        label: 'Charge-up before the strike (ms)',
+        field: 'strikeMs',
+        label: 'Charge-up before the hit (ms)',
         min: 0,
         max: 800,
         step: 10,
       },
       {
-        field: 'lightningLife',
+        field: 'strikeLife',
         label: 'Bolt lasts (ms)',
         min: 80,
         max: 900,
         step: 10,
       },
       {
-        field: 'lightningReroll',
+        field: 'strikeReroll',
         label: 'Re-forms every (ms)',
         min: 30,
         max: 400,
         step: 5,
       },
       {
-        field: 'lightningDropout',
+        field: 'strikeDropout',
         label: 'Flicker (chance a frame dims)',
         min: 0,
         max: 1,
@@ -141,33 +149,47 @@ export const SPELL_GROUPS: {
     ],
   },
   {
-    title: 'Lightning: bolt',
-    kind: 'lightning',
-    colours: [{ field: 'lightningColour', label: 'Bolt colour' }],
+    title: 'Bolt',
+    kinds: ['strike'],
+    colours: [{ field: 'strikeColour', label: 'Bolt colour' }],
     knobs: [
       {
-        field: 'lightningWidth',
+        field: 'strikeWidth',
         label: 'Thickness',
         min: 0.3,
         max: 3,
         step: 0.05,
       },
-      { field: 'lightningSegments', label: 'Bends', min: 3, max: 30 },
+      { field: 'strikeSegments', label: 'Bends', min: 3, max: 30 },
       {
-        field: 'lightningJitter',
+        field: 'strikeJitter',
         label: 'Kick of each bend (px)',
         min: 0,
         max: 100,
       },
       {
-        field: 'lightningSway',
+        field: 'strikeSway',
         label: 'Start off to the side (px)',
         min: 0,
         max: 400,
       },
-      { field: 'lightningBranches', label: 'Forks', min: 0, max: 8 },
       {
-        field: 'lightningBranchReach',
+        field: 'strikeGlowScale',
+        label: 'Charge-up glow size',
+        min: 0,
+        max: 8,
+        step: 0.1,
+      },
+    ],
+  },
+  {
+    title: 'Forks',
+    kinds: ['strike'],
+    flag: { field: 'strikeHasForks', label: 'Side forks' },
+    knobs: [
+      { field: 'strikeBranches', label: 'Forks', min: 1, max: 8 },
+      {
+        field: 'strikeBranchReach',
         label: 'Fork reach (px)',
         min: 20,
         max: 400,
@@ -175,39 +197,92 @@ export const SPELL_GROUPS: {
     ],
   },
   {
-    title: 'Lightning: glow and flash',
-    kind: 'lightning',
+    title: 'Screen flash',
+    kinds: ['strike'],
+    flag: { field: 'strikeHasFlash', label: 'Flash the screen' },
     knobs: [
       {
-        field: 'lightningGlowScale',
-        label: 'Charge-up glow size',
-        min: 0,
-        max: 8,
-        step: 0.1,
-      },
-      {
-        field: 'lightningScreenFlash',
-        label: 'Screen flash strength',
-        min: 0,
+        field: 'strikeScreenFlash',
+        label: 'Strength',
+        min: 0.02,
         max: 1,
         step: 0.01,
       },
     ],
   },
   {
-    title: 'Impact sparks (every effect)',
-    kind: 'all',
+    title: 'Rings',
+    kinds: ['spot'],
+    colours: [
+      { field: 'spotColour', label: 'First ring colour' },
+      { field: 'spotAccentColour', label: 'Later rings colour' },
+    ],
     knobs: [
-      { field: 'orbBurstCount', label: 'Sparks', min: 0, max: 60 },
       {
-        field: 'orbBurstLife',
+        field: 'spotLife',
+        label: 'Each ring opens in (ms)',
+        min: 100,
+        max: 1500,
+        step: 10,
+      },
+      { field: 'spotRadius', label: 'Reach (px)', min: 30, max: 400 },
+      { field: 'spotRings', label: 'Rings', min: 1, max: 5 },
+      {
+        field: 'spotRingGap',
+        label: 'Gap between rings (ms)',
+        min: 0,
+        max: 400,
+        step: 5,
+      },
+      {
+        field: 'spotWidth',
+        label: 'Line thickness (px)',
+        min: 1,
+        max: 20,
+        step: 0.5,
+      },
+      {
+        field: 'spotSides',
+        label: 'Corners (6 = hexagon, 48 = circle)',
+        min: 3,
+        max: 48,
+      },
+    ],
+  },
+  {
+    title: 'Glow',
+    kinds: ['spot'],
+    flag: { field: 'spotHasGlow', label: 'Soft glow behind' },
+    knobs: [
+      {
+        field: 'spotGlowScale',
+        label: 'Glow size',
+        min: 0.5,
+        max: 8,
+        step: 0.1,
+      },
+    ],
+  },
+  {
+    title: 'Sparks',
+    kinds: ['spot'],
+    flag: { field: 'spotHasSparks', label: 'Sparks fly out' },
+    knobs: [{ field: 'spotSparkCount', label: 'Sparks', min: 1, max: 40 }],
+  },
+  {
+    title: 'Impact sparks',
+    kinds: ['travel', 'strike'],
+    knobs: [
+      { field: 'burstCount', label: 'Sparks', min: 0, max: 60 },
+      {
+        field: 'burstLife',
         label: 'Spark life (ms)',
         min: 80,
         max: 1200,
         step: 10,
       },
       {
-        field: 'orbBurstScale',
+        field: 'burstScale',
         label: 'Spark size',
         min: 0.1,
         max: 2,

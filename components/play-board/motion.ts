@@ -321,7 +321,7 @@ const centerOf = (el: HTMLElement): { x: number; y: number } => {
 export const shoot = (
   from: HTMLElement,
   to: HTMLElement,
-  kind: SpellFxKind = 'orb',
+  kind: SpellFxKind = 'travel',
   tune: SpellFxTune = tuneForSpell(null),
 ): void => {
   if (reducedMotion() || !from.animate) return;
@@ -330,12 +330,12 @@ export const shoot = (
   const start = { x: origin.x, y: Math.min(origin.y, window.innerHeight - 20) };
   const end = centerOf(to);
   if (pixiFx) {
-    if (kind === 'lightning') pixiFx.lightning(end, fxMs(kind, tune), tune);
-    else pixiFx.projectile(start, end, fxMs(kind, tune), tune);
+    if (kind === 'strike') pixiFx.strike(end, fxMs(kind, tune), tune);
+    else pixiFx.travel(start, end, fxMs(kind, tune), tune);
     return;
   }
   // Without Pixi only the orb has a plain version; the rest just flash.
-  if (kind !== 'orb') return;
+  if (kind !== 'travel') return;
   const orb = document.createElement('div');
   Object.assign(orb.style, {
     background:
@@ -368,6 +368,15 @@ export const shoot = (
 
 /** How long the flash on a spell's target lasts. */
 const HIT_FLASH_MS = 320;
+
+/**
+ * Plays a spot effect  centred on `target`, for a spell that has no
+ * flight: it starts at once. Without the Pixi layer there is nothing to draw.
+ */
+export const spot = (target: HTMLElement, tune: SpellFxTune): void => {
+  if (reducedMotion() || !pixiFx) return;
+  pixiFx.spot(centerOf(target), tune);
+};
 
 /** What a flash means: it picks the colour of the glow. */
 export type FlashTone = 'hit' | 'heal' | 'buff';

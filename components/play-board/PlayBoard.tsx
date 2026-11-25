@@ -123,6 +123,7 @@ import {
   setImpactMs,
   setPixiFx,
   shoot,
+  spot,
   swingImpactMs,
   IMPACT_MS,
   lunge,
@@ -260,6 +261,8 @@ const typeClass = (type?: string) =>
   type ? (styles[`type_${type}`] ?? '') : '';
 const projectileOn = (): boolean =>
   new URLSearchParams(window.location.search).get('projectile') === '1';
+const isSpellHitAction = (action: Action): boolean =>
+  action.type === 'HeroSkill' || action.type === 'PlayCard';
 const hitFlashOn = (): boolean =>
   new URLSearchParams(window.location.search).get('hitflash') === '1';
 const targetKey = (t: TargetRef) =>
@@ -1270,6 +1273,24 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       const isSpellHit =
         action.type !== 'Attack' && action.type !== 'WeaponAttack';
       /**
+       * A spot effect (a nova) plays once, centred on the spell's target or
+       * on the caster's hero, whether or not anything was damaged (an armor
+       * skill damages nothing).
+       */
+      if (
+        isSpellHitAction(action) &&
+        projectileOn() &&
+        fxKind === 'spot' &&
+        spellKey
+      ) {
+        const spotNode = nodes.current.get(
+          'target' in action && action.target
+            ? targetKey(action.target)
+            : `h${state.activePlayer}`,
+        );
+        if (spotNode) spot(spotNode, fxTune);
+      }
+      /**
        * With ?projectile=1 a spell's orb flies from the caster's hero to each
        * target, and the hit (flash, numbers, jolt, death) waits for it.
        */
@@ -1302,7 +1323,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                 : null;
           const node = key && nodes.current.get(key);
           if (!node) continue;
-          if (projectileOn() && caster && caster !== node) {
+          const isTravel = fxKind !== 'spot';
+          if (isTravel && projectileOn() && caster && caster !== node) {
             shoot(caster, node, fxKind, fxTune);
             shot = true;
           }

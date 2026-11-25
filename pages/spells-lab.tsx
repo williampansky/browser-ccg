@@ -5,7 +5,11 @@ import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 import { SPELL_GROUPS } from '../components/spells-lab/spell-knobs';
 import { spellEntries } from '../components/spells-lab/spell-list';
 import type { PixiFx } from '../components/play-board/pixi-fx';
-import { spellFxForKey, spellFxMs } from '../components/play-board/spell-fx';
+import {
+  SPELL_FX_KINDS,
+  spellFxForKey,
+  spellFxMs,
+} from '../components/play-board/spell-fx';
 import type { SpellFxKind } from '../components/play-board/spell-fx';
 import {
   parseSpellTune,
@@ -20,11 +24,9 @@ import {
  * to the picker by adding its kind to `EFFECTS` here and its drawing in
  * `pixi-fx.ts`.
  */
-const EFFECTS: { kind: SpellFxKind; label: string }[] = [
-  { kind: 'orb', label: 'Orb' },
-  { kind: 'lightning', label: 'Lightning strike' },
-];
 const DEFAULT_SPELL = 'WIZARD:1';
+const MIN_SPEED = 0.05;
+const MAX_SPEED = 2;
 const MARKER_SIZE = 56;
 const REPLAY_DEBOUNCE_MS = 180;
 const LOOP_GAP_MS = 700;
@@ -81,8 +83,12 @@ const SpellsLab = () => {
   );
   const assigned = spellFxForKey(spellKey);
   const override = q1('e');
+  const speed = Math.min(
+    MAX_SPEED,
+    Math.max(MIN_SPEED, Number(q1('speed')) || 1),
+  );
   const kind: SpellFxKind =
-    override === 'lightning' || override === 'orb' ? override : assigned;
+    SPELL_FX_KINDS.find((effect) => effect.kind === override)?.kind ?? assigned;
   const base = useMemo(() => tuneForSpell(spellKey), [spellKey]);
   const tune = useMemo(() => parseSpellTune(search, base), [search, base]);
   const changed = (field: string) => q1(`s_${field}`) !== '';
@@ -124,13 +130,20 @@ const SpellsLab = () => {
     };
   }, []);
 
+  // The preview's slow motion: the fx layer scales time, not the effects' ms.
+  useEffect(() => {
+    fxRef.current?.setSpeed(speed);
+  }, [speed]);
+
   const play = useCallback((): void => {
     const fx = fxRef.current;
     if (!fx || !points) return;
+    fx.setSpeed(speed);
     const ms = spellFxMs(kind, tune);
-    if (kind === 'lightning') fx.lightning(points.to, ms, tune);
-    else fx.projectile(points.from, points.to, ms, tune);
-  }, [kind, points, tune]);
+    if (kind === 'strike') fx.strike(points.to, ms, tune);
+    else if (kind === 'spot') fx.spot(points.to, tune);
+    else fx.travel(points.from, points.to, ms, tune);
+  }, [kind, points, speed, tune]);
 
   // Space plays; a loop replays after each one has finished.
   useEffect(() => {
@@ -149,10 +162,11 @@ const SpellsLab = () => {
     const gap =
       spellFxMs(kind, tune) +
       LOOP_GAP_MS +
-      (kind === 'lightning' ? tune.lightningLife : LOOP_TAIL_MS);
-    const timer = setInterval(play, gap);
+      (kind === 'strike' ? tune.strikeLife : LOOP_TAIL_MS) +
+      (kind === 'spot' ? tune.spotLife : 0);
+    const timer = setInterval(play, gap / speed);
     return () => clearInterval(timer);
-  }, [isLoop, kind, play, tune]);
+  }, [isLoop, kind, play, speed, tune]);
 
   // A change replays the effect, so a slider can be tuned by eye.
   const firstTune = useRef(true);
@@ -280,7 +294,7 @@ const SpellsLab = () => {
           </div>
         )}
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          {EFFECTS.map((effect) => (
+          {SPELL_FX_KINDS.map((effect) => (
             <button
               key={effect.kind}
               onClick={() => setParams({ e: effect.kind })}
@@ -317,98 +331,161 @@ const SpellsLab = () => {
           />{' '}
           Replay when a number changes
         </label>
+        <label style={{ display: 'block', fontSize: 12, margin: '6px 0' }}>
+          <span style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span>Preview speed (slow motion; the effect&apos;s ms stay)</span>
+            <b>{Math.round(speed * 100)}%</b>
+          </span>
+          <input
+            type="range"
+            min={MIN_SPEED}
+            max={MAX_SPEED}
+            step={0.05}
+            value={speed}
+            style={{ width: '100%', margin: 0 }}
+            onChange={(event) =>
+              setParams({
+                speed:
+                  Number(event.target.value) === 1 ? null : event.target.value,
+              })
+            }
+          />
+        </label>
         <small style={{ color: '#9aa3b8', display: 'block', margin: '6px 0' }}>
           Drag the two circles. The setup is in the page URL (<code>s_...</code>
           ); it is not baked into the game&apos;s defaults yet.
         </small>
-        {SPELL_GROUPS.map((group) => (
-          <details
-            key={group.title}
-            open={group.kind === kind || group.kind === 'all'}
-            style={{ borderTop: '1px solid #2a2f3d' }}
-          >
-            <summary
-              style={{ cursor: 'pointer', fontWeight: 600, padding: '6px 0' }}
-            >
-              {group.title}
-            </summary>
-            {group.knobs.map((knob) => (
-              <label
-                key={knob.field}
-                style={{ display: 'block', margin: '6px 0', fontSize: 12 }}
+        {SPELL_GROUPS.filter((group) => group.kinds.includes(kind)).map(
+          (group) => {
+            const isOn = !group.flag || tune[group.flag.field];
+            return (
+              <details
+                key={group.title}
+                open
+                style={{ borderTop: '1px solid #2a2f3d' }}
               >
-                <span
+                <summary
                   style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 8,
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    padding: '6px 0',
                   }}
                 >
-                  <span
-                    style={{ color: changed(knob.field) ? '#fff' : '#9aa3b8' }}
+                  {group.title}
+                </summary>
+                {group.flag && (
+                  <label
+                    style={{ display: 'block', margin: '6px 0', fontSize: 12 }}
                   >
-                    {knob.label}
-                  </span>
-                  <span>
-                    <b>{tune[knob.field]}</b>
-                    {changed(knob.field) && (
-                      <a
-                        style={{
-                          marginLeft: 6,
-                          cursor: 'pointer',
-                          color: '#7aa2ff',
-                        }}
-                        onClick={() => setParams({ [`s_${knob.field}`]: null })}
-                      >
-                        reset
-                      </a>
-                    )}
-                  </span>
-                </span>
-                <input
-                  type="range"
-                  min={knob.min}
-                  max={knob.max}
-                  step={knob.step ?? 1}
-                  value={tune[knob.field]}
-                  style={{ width: '100%', margin: 0 }}
-                  onChange={(event) =>
-                    setParams({ [`s_${knob.field}`]: event.target.value })
-                  }
-                />
-              </label>
-            ))}
-            {group.colours?.map((colour) => (
-              <label
-                key={colour.field}
-                style={{ display: 'block', margin: '6px 0', fontSize: 12 }}
-              >
-                <input
-                  type="color"
-                  value={`#${tune[colour.field]}`}
-                  onChange={(event) =>
-                    setParams({
-                      [`s_${colour.field}`]: event.target.value.slice(1),
-                    })
-                  }
-                />{' '}
-                {colour.label}
-                {changed(colour.field) && (
-                  <a
-                    style={{
-                      marginLeft: 6,
-                      cursor: 'pointer',
-                      color: '#7aa2ff',
-                    }}
-                    onClick={() => setParams({ [`s_${colour.field}`]: null })}
-                  >
-                    reset
-                  </a>
+                    <input
+                      type="checkbox"
+                      checked={tune[group.flag.field]}
+                      onChange={(event) =>
+                        setParams({
+                          [`s_${group.flag?.field}`]: event.target.checked
+                            ? '1'
+                            : '0',
+                        })
+                      }
+                    />{' '}
+                    {group.flag.label}
+                  </label>
                 )}
-              </label>
-            ))}
-          </details>
-        ))}
+                {isOn &&
+                  group.knobs.map((knob) => (
+                    <label
+                      key={knob.field}
+                      style={{
+                        display: 'block',
+                        margin: '6px 0',
+                        fontSize: 12,
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          gap: 8,
+                        }}
+                      >
+                        <span
+                          style={{
+                            color: changed(knob.field) ? '#fff' : '#9aa3b8',
+                          }}
+                        >
+                          {knob.label}
+                        </span>
+                        <span>
+                          <b>{tune[knob.field]}</b>
+                          {changed(knob.field) && (
+                            <a
+                              style={{
+                                marginLeft: 6,
+                                cursor: 'pointer',
+                                color: '#7aa2ff',
+                              }}
+                              onClick={() =>
+                                setParams({ [`s_${knob.field}`]: null })
+                              }
+                            >
+                              reset
+                            </a>
+                          )}
+                        </span>
+                      </span>
+                      <input
+                        type="range"
+                        min={knob.min}
+                        max={knob.max}
+                        step={knob.step ?? 1}
+                        value={tune[knob.field]}
+                        style={{ width: '100%', margin: 0 }}
+                        onChange={(event) =>
+                          setParams({ [`s_${knob.field}`]: event.target.value })
+                        }
+                      />
+                    </label>
+                  ))}
+                {isOn &&
+                  group.colours?.map((colour) => (
+                    <label
+                      key={colour.field}
+                      style={{
+                        display: 'block',
+                        margin: '6px 0',
+                        fontSize: 12,
+                      }}
+                    >
+                      <input
+                        type="color"
+                        value={`#${tune[colour.field]}`}
+                        onChange={(event) =>
+                          setParams({
+                            [`s_${colour.field}`]: event.target.value.slice(1),
+                          })
+                        }
+                      />{' '}
+                      {colour.label}
+                      {changed(colour.field) && (
+                        <a
+                          style={{
+                            marginLeft: 6,
+                            cursor: 'pointer',
+                            color: '#7aa2ff',
+                          }}
+                          onClick={() =>
+                            setParams({ [`s_${colour.field}`]: null })
+                          }
+                        >
+                          reset
+                        </a>
+                      )}
+                    </label>
+                  ))}
+              </details>
+            );
+          },
+        )}
         {JSON.stringify(tune) === JSON.stringify(base) ? null : (
           <p style={{ color: '#9aa3b8', fontSize: 12 }}>
             Differs from this spell's saved look.
@@ -417,9 +494,10 @@ const SpellsLab = () => {
       </aside>
       <section style={{ flex: 1, minWidth: 0 }}>
         <p style={{ color: '#9aa3b8', maxWidth: 560, marginTop: 0 }}>
-          A blank stage. The caster circle is where the effect starts (a
-          lightning strike ignores it and comes from the top); the target circle
-          is where it lands. Press Space or Play, or change a number.
+          A blank stage. The caster circle is where the effect starts (a strike
+          ignores it and comes from the top, and a spot effect opens on the
+          target circle); the target circle is where it lands. Press Space or
+          Play, or change a number.
         </p>
         {points && (
           <>

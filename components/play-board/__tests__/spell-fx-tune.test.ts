@@ -9,16 +9,19 @@ describe('parseSpellTune', () => {
     expect(parseSpellTune('')).toEqual(SPELL_FX_DEFAULTS);
   });
 
-  it('applies numbers and hex colours over the defaults', () => {
-    const tune = parseSpellTune('s_orbMs=500&s_lightningColour=FF0000');
-    expect(tune.orbMs).toBe(500);
-    expect(tune.lightningColour).toBe('ff0000');
-    expect(tune.orbArc).toBe(SPELL_FX_DEFAULTS.orbArc);
+  it('applies numbers, flags and hex colours over the defaults', () => {
+    const tune = parseSpellTune(
+      's_travelMs=500&s_strikeColour=FF0000&s_travelHasTrail=0',
+    );
+    expect(tune.travelMs).toBe(500);
+    expect(tune.strikeColour).toBe('ff0000');
+    expect(tune.travelHasTrail).toBe(false);
+    expect(tune.travelArc).toBe(SPELL_FX_DEFAULTS.travelArc);
   });
 
   it('ignores bad values and unknown fields', () => {
     const tune = parseSpellTune(
-      's_orbMs=fast&s_orbHaloColour=red&s_nothing=1&s_orbEase=',
+      's_travelMs=fast&s_travelColour=red&s_nothing=1&s_travelEase=&s_spotHasGlow=2',
     );
     expect(tune).toEqual(SPELL_FX_DEFAULTS);
   });

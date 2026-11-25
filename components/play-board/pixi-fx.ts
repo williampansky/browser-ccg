@@ -25,16 +25,18 @@ export interface FxPoint {
  */
 export interface PixiFx {
   /** An orb with a particle trail flying `from` to `to` in `ms`. */
-  projectile: (
-    from: FxPoint,
-    to: FxPoint,
-    ms: number,
-    tune: SpellFxTune,
-  ) => void;
+  travel: (from: FxPoint, to: FxPoint, ms: number, tune: SpellFxTune) => void;
   /** A bolt from the top of the screen striking `to` after `ms`. */
-  lightning: (to: FxPoint, ms: number, tune: SpellFxTune) => void;
+  strike: (to: FxPoint, ms: number, tune: SpellFxTune) => void;
+  /** Rings opening around `at`: an effect centred on a place. */
+  spot: (at: FxPoint, tune: SpellFxTune) => void;
   /** A ring of sparks at `at`, coloured by `tone`. */
   burst: (at: FxPoint, tone: FlashTone, tune?: SpellFxTune) => void;
+  /**
+   * Plays everything at this fraction of real time (1 = normal): for the lab's
+   * slow-motion preview. The effects' own milliseconds do not change.
+   */
+  setSpeed: (speed: number) => void;
   /** Removes the canvas and frees the GPU resources. */
   destroy: () => void;
 }
@@ -56,9 +58,16 @@ const TONE_COLOUR: Record<FlashTone, number> = {
 const SOFT_TEXTURE_SIZE = 32;
 const SOFT_RINGS = 8;
 const GLOW_ALPHA = 0.12;
-const ORB_PULSE_RATE = 0.035;
+const TRAVEL_PULSE_RATE = 0.035;
 const BURST_SPEED_MIN = 0.12;
 const BURST_SPEED_RANGE = 0.18;
+const SPOT_START_RADIUS = 16;
+const SPOT_RING_FADE = 0.7;
+const SPOT_FILL_ALPHA = 0.1;
+const SPOT_SPARK_SPEED = 0.22;
+const SPOT_SPARK_LIFE_MS = 480;
+const SPOT_SPARK_SCALE = 0.5;
+const SPOT_GLOW_ALPHA = 0.8;
 const Z_INDEX = 8999;
 
 /** A soft white dot, built from stacked translucent circles. */
@@ -73,8 +82,8 @@ const softTexture = (app: Application): Texture => {
   return app.renderer.generateTexture(dot);
 };
 
-const LIGHTNING_CORE = 0xffffff;
-const LIGHTNING_OVERSHOOT = 30;
+const STRIKE_CORE = 0xffffff;
+const STRIKE_OVERSHOOT = 30;
 const BRANCH_SEGMENTS = 5;
 const BRANCH_WIDTH = 0.45;
 const SCREEN_FLASH_MS = 140;
@@ -110,18 +119,33 @@ const jaggedPath = (
 
 /** A few short forks that leave the main bolt and wander downward. */
 const makeBranches = (path: FxPoint[], tune: SpellFxTune): FxPoint[][] => {
-  const { lightningBranches, lightningBranchReach, lightningJitter } = tune;
+  const { strikeBranches, strikeBranchReach, strikeJitter } = tune;
+  if (!tune.strikeHasForks) return [];
   const branches: FxPoint[][] = [];
-  for (let index = 0; index < Math.round(lightningBranches); index++) {
+  for (let index = 0; index < Math.round(strikeBranches); index++) {
     const fork = path[2 + Math.floor(Math.random() * (path.length - 5))];
     const side = Math.random() < 0.5 ? -1 : 1;
     const end = {
-      x: fork.x + side * (lightningBranchReach * (0.4 + Math.random() * 0.6)),
-      y: fork.y + lightningBranchReach * (0.3 + Math.random() * 0.6),
+      x: fork.x + side * (strikeBranchReach * (0.4 + Math.random() * 0.6)),
+      y: fork.y + strikeBranchReach * (0.3 + Math.random() * 0.6),
     };
-    branches.push(jaggedPath(fork, end, BRANCH_SEGMENTS, lightningJitter / 2));
+    branches.push(jaggedPath(fork, end, BRANCH_SEGMENTS, strikeJitter / 2));
   }
   return branches;
+};
+
+/** The corners of a regular polygon, one point up. */
+const polygon = (at: FxPoint, radius: number, sides: number): FxPoint[] => {
+  const corners = Math.max(3, Math.round(sides));
+  const points: FxPoint[] = [];
+  for (let corner = 0; corner < corners; corner++) {
+    const angle = (corner / corners) * Math.PI * 2 - Math.PI / 2;
+    points.push({
+      x: at.x + Math.cos(angle) * radius,
+      y: at.y + Math.sin(angle) * radius,
+    });
+  }
+  return points;
 };
 
 /** Strokes a path in glow layers, widest and faintest first. */
@@ -132,14 +156,14 @@ const drawBolt = (
   alpha: number,
   tune: SpellFxTune,
 ): void => {
-  const { lightningColour, lightningWidth } = tune;
+  const { strikeColour, strikeWidth } = tune;
   for (const layer of BOLT_LAYERS) {
     graphics.lineStyle({
       alpha: layer.alpha * alpha,
       cap: LINE_CAP.ROUND,
-      color: layer.isCore ? LIGHTNING_CORE : colourNumber(lightningColour),
+      color: layer.isCore ? STRIKE_CORE : colourNumber(strikeColour),
       join: LINE_JOIN.ROUND,
-      width: layer.width * widthScale * lightningWidth,
+      width: layer.width * widthScale * strikeWidth,
     });
     graphics.moveTo(path[0].x, path[0].y);
     for (const point of path.slice(1)) graphics.lineTo(point.x, point.y);
@@ -166,6 +190,7 @@ export const createPixiFx = (): PixiFx => {
   document.body.appendChild(canvas);
   const texture = softTexture(app);
   const particles: Particle[] = [];
+  let playbackSpeed = 1;
   /** Runs per-frame jobs (an orb in flight); the ticker sleeps with none. */
   const jobs = new Set<(deltaMs: number) => boolean>();
 
@@ -200,7 +225,7 @@ export const createPixiFx = (): PixiFx => {
   };
 
   const step = (): void => {
-    const deltaMs = app.ticker.deltaMS;
+    const deltaMs = app.ticker.deltaMS * playbackSpeed;
     for (const job of Array.from(jobs)) if (!job(deltaMs)) jobs.delete(job);
     for (let index = particles.length - 1; index >= 0; index--) {
       const particle = particles[index];
@@ -228,20 +253,20 @@ export const createPixiFx = (): PixiFx => {
     tune: SpellFxTune,
     override?: number,
   ): void => {
-    const { orbBurstCount, orbBurstLife, orbBurstScale } = tune;
+    const { burstCount, burstLife, burstScale } = tune;
     const colour = override ?? TONE_COLOUR[tone];
-    const count = Math.round(orbBurstCount);
+    const count = Math.round(burstCount);
     for (let spark = 0; spark < count; spark++) {
       const angle = (spark / count) * Math.PI * 2 + Math.random();
       const speed = BURST_SPEED_MIN + Math.random() * BURST_SPEED_RANGE;
       const vx = Math.cos(angle) * speed;
       const vy = Math.sin(angle) * speed;
-      spawn(at, colour, orbBurstScale, orbBurstLife, vx, vy);
+      spawn(at, colour, burstScale, burstLife, vx, vy);
     }
     wake();
   };
 
-  const projectile = (
+  const travel = (
     from: FxPoint,
     to: FxPoint,
     ms: number,
@@ -249,7 +274,7 @@ export const createPixiFx = (): PixiFx => {
   ): void => {
     const halo = new Sprite(texture);
     const core = new Sprite(texture);
-    halo.tint = colourNumber(tune.orbHaloColour);
+    halo.tint = colourNumber(tune.travelColour);
     core.tint = 0xffffff;
     for (const part of [halo, core]) {
       part.anchor.set(0.5);
@@ -260,39 +285,43 @@ export const createPixiFx = (): PixiFx => {
     const dy = to.y - from.y;
     const distance = Math.hypot(dx, dy) || 1;
     // A gentle sideways arc, so a shot is not a ruler line.
-    const arcX = (-dy / distance) * distance * tune.orbArc;
-    const arcY = (dx / distance) * distance * tune.orbArc;
+    const arcX = (-dy / distance) * distance * tune.travelArc;
+    const arcY = (dx / distance) * distance * tune.travelArc;
     let elapsed = 0;
     let last = from;
     jobs.add((deltaMs) => {
       elapsed += deltaMs;
       const linear = Math.min(1, elapsed / ms);
-      const eased = Math.pow(linear, tune.orbEase);
+      const eased = Math.pow(linear, tune.travelEase);
       const bend = Math.sin(Math.PI * eased);
       const at = {
         x: from.x + dx * eased + arcX * bend,
         y: from.y + dy * eased + arcY * bend,
       };
-      const pulse = 1 + tune.orbPulse * Math.sin(elapsed * ORB_PULSE_RATE);
+      const pulse =
+        1 + tune.travelPulse * Math.sin(elapsed * TRAVEL_PULSE_RATE);
       halo.position.set(at.x, at.y);
       core.position.set(at.x, at.y);
-      halo.scale.set(tune.orbHaloScale * pulse);
-      core.scale.set(tune.orbCoreScale * pulse);
-      for (let puff = 0; puff < Math.round(tune.orbTrailPerFrame); puff++) {
-        const jitter = () => (Math.random() - 0.5) * tune.orbTrailSpread;
-        const drift = () => (Math.random() - 0.5) * tune.orbTrailDrift;
+      halo.scale.set(tune.travelHaloScale * pulse);
+      core.scale.set(tune.travelCoreScale * pulse);
+      const puffs = tune.travelHasTrail
+        ? Math.round(tune.travelTrailPerFrame)
+        : 0;
+      for (let puff = 0; puff < puffs; puff++) {
+        const jitter = () => (Math.random() - 0.5) * tune.travelTrailSpread;
+        const drift = () => (Math.random() - 0.5) * tune.travelTrailDrift;
         // Spread the puffs along the way since the last frame, so a fast
         // orb leaves a stream and not a row of dots.
-        const back = puff / Math.max(1, Math.round(tune.orbTrailPerFrame));
+        const back = puff / Math.max(1, puffs);
         const origin = {
           x: at.x + (last.x - at.x) * back + jitter(),
           y: at.y + (last.y - at.y) * back + jitter(),
         };
         spawn(
           origin,
-          colourNumber(tune.orbTrailColour),
-          tune.orbTrailScale,
-          tune.orbTrailLife,
+          colourNumber(tune.travelTrailColour),
+          tune.travelTrailScale,
+          tune.travelTrailLife,
           drift(),
           drift(),
         );
@@ -307,14 +336,14 @@ export const createPixiFx = (): PixiFx => {
     wake();
   };
 
-  const lightning = (to: FxPoint, ms: number, tune: SpellFxTune): void => {
-    const colour = colourNumber(tune.lightningColour);
+  const strike = (to: FxPoint, ms: number, tune: SpellFxTune): void => {
+    const colour = colourNumber(tune.strikeColour);
     const newPath = (startX: number): FxPoint[] =>
       jaggedPath(
-        { x: startX, y: -LIGHTNING_OVERSHOOT },
+        { x: startX, y: -STRIKE_OVERSHOOT },
         to,
-        Math.round(tune.lightningSegments),
-        tune.lightningJitter,
+        Math.round(tune.strikeSegments),
+        tune.strikeJitter,
       );
     const bolt = new Graphics();
     bolt.blendMode = BLEND_MODES.ADD;
@@ -325,7 +354,7 @@ export const createPixiFx = (): PixiFx => {
     glow.blendMode = BLEND_MODES.ADD;
     glow.position.set(to.x, to.y);
     addToStage(glow);
-    const startX = to.x + (Math.random() - 0.5) * tune.lightningSway;
+    const startX = to.x + (Math.random() - 0.5) * tune.strikeSway;
     let path = newPath(startX);
     let branches = makeBranches(path, tune);
     let elapsed = 0;
@@ -335,17 +364,17 @@ export const createPixiFx = (): PixiFx => {
       elapsed += deltaMs;
       // Before the strike a blue glow gathers where it will land.
       if (elapsed < ms) {
-        glow.scale.set(tune.lightningGlowScale * (elapsed / ms));
+        glow.scale.set(tune.strikeGlowScale * (elapsed / ms));
         glow.alpha = elapsed / ms;
         return true;
       }
       if (!isStruck) {
         isStruck = true;
         burstWith(to, 'hit', tune, colour);
-        flashScreen(tune.lightningScreenFlash);
+        if (tune.strikeHasFlash) flashScreen(tune.strikeScreenFlash);
       }
       const since = elapsed - ms;
-      const life = 1 - since / tune.lightningLife;
+      const life = 1 - since / tune.strikeLife;
       if (life <= 0) {
         bolt.destroy();
         glow.destroy();
@@ -353,18 +382,79 @@ export const createPixiFx = (): PixiFx => {
       }
       // The bolt re-forms a few times, like a real flicker.
       if (since > reroll) {
-        reroll += tune.lightningReroll;
+        reroll += tune.strikeReroll;
         path = newPath(startX);
         branches = makeBranches(path, tune);
       }
-      const flicker = Math.random() < tune.lightningDropout ? 0.35 : 1;
+      const flicker = Math.random() < tune.strikeDropout ? 0.35 : 1;
       const alpha = life * flicker;
-      glow.scale.set(tune.lightningGlowScale * (1 + (1 - life)));
+      glow.scale.set(tune.strikeGlowScale * (1 + (1 - life)));
       glow.alpha = alpha;
       bolt.clear();
       drawBolt(bolt, path, 1, alpha, tune);
       for (const branch of branches)
         drawBolt(bolt, branch, BRANCH_WIDTH, alpha, tune);
+      return true;
+    });
+    wake();
+  };
+
+  const spot = (at: FxPoint, tune: SpellFxTune): void => {
+    const steel = colourNumber(tune.spotColour);
+    const gold = colourNumber(tune.spotAccentColour);
+    const rings = Math.max(1, Math.round(tune.spotRings));
+    const total = tune.spotLife + (rings - 1) * tune.spotRingGap;
+    const glow = new Sprite(texture);
+    glow.anchor.set(0.5);
+    glow.tint = steel;
+    glow.blendMode = BLEND_MODES.ADD;
+    glow.position.set(at.x, at.y);
+    addToStage(glow);
+    const drawing = new Graphics();
+    drawing.blendMode = BLEND_MODES.ADD;
+    app.stage.addChild(drawing as never);
+    const sparks = Math.round(tune.spotSparkCount);
+    for (let spark = 0; spark < sparks; spark++) {
+      const angle = (spark / sparks) * Math.PI * 2;
+      const vx = Math.cos(angle) * SPOT_SPARK_SPEED;
+      const vy = Math.sin(angle) * SPOT_SPARK_SPEED;
+      spawn(at, gold, SPOT_SPARK_SCALE, SPOT_SPARK_LIFE_MS, vx, vy);
+    }
+    let elapsed = 0;
+    jobs.add((deltaMs) => {
+      elapsed += deltaMs;
+      if (elapsed >= total) {
+        glow.destroy();
+        drawing.destroy();
+        return false;
+      }
+      const first = Math.min(1, elapsed / tune.spotLife);
+      const opening = 1 - Math.pow(1 - first, 3);
+      glow.scale.set(tune.spotGlowScale * (0.4 + 0.6 * opening));
+      glow.alpha = tune.spotHasGlow ? SPOT_GLOW_ALPHA * (1 - first) : 0;
+      drawing.clear();
+      for (let ring = 0; ring < rings; ring++) {
+        const age = (elapsed - ring * tune.spotRingGap) / tune.spotLife;
+        if (age <= 0 || age >= 1) continue;
+        const open = 1 - Math.pow(1 - age, 3);
+        const radius =
+          SPOT_START_RADIUS + (tune.spotRadius - SPOT_START_RADIUS) * open;
+        const colour = ring === 0 ? steel : gold;
+        const corners = polygon(at, radius, tune.spotSides);
+        drawing.lineStyle({
+          alpha: 1 - age,
+          cap: LINE_CAP.ROUND,
+          color: colour,
+          join: LINE_JOIN.ROUND,
+          width: tune.spotWidth * (1 - age * SPOT_RING_FADE),
+        });
+        drawing.beginFill(colour, SPOT_FILL_ALPHA * (1 - age));
+        drawing.moveTo(corners[0].x, corners[0].y);
+        for (const corner of corners.slice(1))
+          drawing.lineTo(corner.x, corner.y);
+        drawing.closePath();
+        drawing.endFill();
+      }
       return true;
     });
     wake();
@@ -400,5 +490,9 @@ export const createPixiFx = (): PixiFx => {
     app.destroy(true, { children: true, texture: true });
   };
 
-  return { burst, destroy, lightning, projectile };
+  const setSpeed = (speed: number): void => {
+    playbackSpeed = speed;
+  };
+
+  return { burst, destroy, setSpeed, spot, strike, travel };
 };
