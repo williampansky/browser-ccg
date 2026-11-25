@@ -2781,7 +2781,7 @@
     "rarity": "%RARITY_REMARKABLE%",
     "cardClass": "0 %CLASS_CLERIC%",
     "cost": 3,
-    "text": "Your Hero Power becomes 'Deal 2 damage'. If already in Shadowform: 3 damage.",
+    "text": "Your Class Skill becomes 'Deal 2 damage'. If already in Penumbra: 3 damage.",
     "collectible": true,
     "active": true,
     "artistName": "a-ravlik",
