@@ -2893,10 +2893,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       playable &&
       setSelection(selected ? null : { kind: 'hand', index });
     /**
-     * A quick double-click plays a minion at the far right of your board. (The
-     * two clicks before it select and deselect the card,
-     * so a minion that needs aiming, or a choose-one card, is left selected for
-     * the normal flow.)
+     * A quick double-click plays a minion at the far right of your board, or
+     * casts a spell or item that needs no aim. (The two clicks before it select
+     * and deselect the card, so a card that needs aiming, or a choose-one card,
+     * is left selected for the normal flow.)
      */
     const doubleClick = () => {
       if (over || !playable) return;
@@ -2916,6 +2916,19 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             (y.boardIndex ?? 0) > (x.boardIndex ?? 0) ? y : x,
           ),
         );
+        return;
+      }
+      // A spell or item that needs no aim (a global one) is cast at once.
+      const isCastable = card?.type === 'spell' || card?.type === 'item';
+      const global = plays.filter(
+        (x) =>
+          isCastable &&
+          x.boardIndex === undefined &&
+          !x.target &&
+          x.choice === undefined,
+      );
+      if (global.length === 1) {
+        dispatch(global[0]);
         return;
       }
       setSelection({ kind: 'hand', index });

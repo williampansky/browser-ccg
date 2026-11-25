@@ -94,7 +94,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - **Drag and drop is the main way to act; click is the fallback.** Drag a hand card onto your board (it lands in the
   gap nearest the pointer), onto a legal target, or onto the play area (untargeted spells). Drag a ready minion or your
   hero onto an enemy to attack. Untargeted spells and items cast from anywhere on the board above the player bar (the dashed
-  `castArea` overlay; drop or click there). **Space** ends the turn; **Shift+Space** is "Attack hero" (only when that button is
+  `castArea` overlay; drop or click there). A double-click on such a card in the hand casts it at once (a minion: plays at the far right). **Space** ends the turn; **Shift+Space** is "Attack hero" (only when that button is
   available). The weapon glows green when it can attack.
   **Accessibility mode** (one menu option, saved in localStorage; `accessibility.ts`) turns on the hover `title` tooltips (off by
   default, use `titleIf`), a keyboard focus outline and the explicit "Play" buttons; it is a start, not a full WCAG pass. Dragging just selects, so the highlights and arrow match click-to-select, and a drop
