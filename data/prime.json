@@ -577,7 +577,7 @@
   },
   {
     "id": "PRIME_140",
-    "name": "Tome of Spells",
+    "name": "Scroll of Spells",
     "set": "%SET_003%",
     "type": "%TYPE_ITEM%",
     "rarity": "%RARITY_COMMON%",
@@ -594,9 +594,9 @@
     "playContext": "%ADD_CARD%",
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/petro15",
-    "artistUrl": "https://www.artstation.com/petro15",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_056",
