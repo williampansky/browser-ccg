@@ -83,7 +83,7 @@ import {
 import { MinionFace } from './MinionFace';
 import { buffedMinionIds, minionOvalHeight } from './minion-model';
 import type { FlashTone } from './motion';
-import { spellFxFor, spellKeyFor } from './spell-fx';
+import { spellFxFor, spellFxForKey, spellKeyFor } from './spell-fx';
 import { fxChain, tuneForSpell } from './spell-fx-tune';
 import type { PixiFx } from './pixi-fx';
 import minionStyles from './board-minion.module.scss';
@@ -1354,7 +1354,26 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             : undefined;
         const caster =
           cardNode ?? skillNode ?? nodes.current.get(`h${state.activePlayer}`);
+        /**
+         * Damage comes from the action's own source (the hand slot, the skill
+         * socket or the hero) until a trigger fires; the damage after that
+         * comes from the minion whose trigger it is (Jotunn at the end of the
+         * turn), with that card's own look.
+         */
+        let sourceNode = caster;
+        let sourceKind = fxKind;
+        let sourceTune = fxTune;
         for (const e of result.events) {
+          if (e.type === 'TriggerFired') {
+            const own =
+              e.instanceId === undefined
+                ? undefined
+                : nodes.current.get(`m${e.instanceId}`);
+            sourceNode = own ?? nodes.current.get(`h${e.player}`);
+            sourceKind = spellFxForKey(e.cardId);
+            sourceTune = tuneForSpell(e.cardId);
+            continue;
+          }
           const key =
             e.type === 'MinionDamaged'
               ? `m${e.instanceId}`
@@ -1363,14 +1382,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                 : null;
           const node = key && nodes.current.get(key);
           if (!node) continue;
-          const isTravel = fxKind !== 'spot';
-          if (isTravel && spellFxOn() && caster && caster !== node) {
-            shoot(caster, node, fxKind, fxTune);
+          const isTravel = sourceKind !== 'spot';
+          if (isTravel && spellFxOn() && sourceNode && sourceNode !== node) {
+            shoot(sourceNode, node, sourceKind, sourceTune);
             shot = true;
           }
           const isDead =
             e.type === 'MinionDamaged' && deadIds.has(e.instanceId);
-          if (spellFxOn() && !isDead) flashHit(node, 'hit', fxTune);
+          if (spellFxOn() && !isDead) flashHit(node, 'hit', sourceTune);
         }
       }
       // Heals flash green and buffs gold (also off with ?fx=off).

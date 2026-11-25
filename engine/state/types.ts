@@ -308,6 +308,11 @@ export type GameEvent =
       type: 'TriggerFired';
       player: PlayerId;
       cardId: string;
+      /**
+       * The minion (or weapon) whose trigger fired, so the board can show the
+       * effects that follow as coming from it
+       */
+      instanceId?: number;
       isDeath?: boolean;
     }
   | {

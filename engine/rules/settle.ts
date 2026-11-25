@@ -84,6 +84,7 @@ export const settle = (
             type: 'TriggerFired',
             player: owner,
             cardId: minion.cardId,
+            instanceId: minion.instanceId,
             isDeath: true,
           });
         }
@@ -142,6 +143,7 @@ export const settle = (
             type: 'TriggerFired',
             player: owner,
             cardId: minion.cardId,
+            instanceId: minion.instanceId,
           });
           for (const effect of trigger.do) {
             effect({
@@ -180,6 +182,7 @@ export const settle = (
             type: 'TriggerFired',
             player: owner,
             cardId: weapon.cardId,
+            instanceId: weapon.instanceId,
           });
           for (const effect of trigger.do) {
             effect({
