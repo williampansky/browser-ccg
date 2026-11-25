@@ -664,9 +664,9 @@
     "collectible": true,
     "active": true,
     "flavor": "The original apple tree.",
-    "artistName": "https://www.artstation.com/zezael",
-    "artistUrl": "https://www.artstation.com/zezael",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_102",
@@ -1239,9 +1239,9 @@
     ],
     "collectible": true,
     "active": true,
-    "artistName": "https://www.artstation.com/marcus_lw",
-    "artistUrl": "https://www.artstation.com/marcus_lw",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_189",
@@ -1320,9 +1320,9 @@
     "collectible": true,
     "active": true,
     "flavor": "Since they appeared people are fearing them because it is known that they can control anything that is digital: computer, hover-cars, lift, even neural implants. As much it is unknown about them - what people know is that they are sent by usurper Taldan to control the masses.",
-    "artistName": "https://www.artstation.com/xistenceimaginations",
-    "artistUrl": "https://www.artstation.com/xistenceimaginations",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_034",
@@ -1616,9 +1616,9 @@
     "collectible": true,
     "active": true,
     "flavor": "May the light be with you.",
-    "artistName": "Bayard Wu",
-    "artistUrl": "https://bayardwu.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_086",
@@ -1688,6 +1688,7 @@
   },
   {
     "id": "PRIME_177",
+    "name": "Tablet Wight",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -1699,7 +1700,9 @@
     "text": "Your cards and powers that restore Health now deal damage instead.",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_215",
@@ -1744,9 +1747,9 @@
     "playContext": "%HEAL%",
     "collectible": true,
     "active": true,
-    "artistName": "J.K (Arthur) Choi",
-    "artistUrl": "https://user-6242.artstation.com/",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_161",
@@ -2025,9 +2028,9 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "https://www.artstation.com/jeffchendesigns",
-    "artistUrl": "https://www.artstation.com/jeffchendesigns",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_138",
@@ -2772,6 +2775,7 @@
   },
   {
     "id": "PRIME_181",
+    "name": "Shadow Pact",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -2780,7 +2784,9 @@
     "text": "Your Hero Power becomes 'Deal 2 damage'. If already in Shadowform: 3 damage.",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_027",
@@ -2850,9 +2856,9 @@
     "collectible": true,
     "active": true,
     "flavor": "Where do the Buffalo Roam?",
-    "artistName": "https://www.artstation.com/taraiphillips",
-    "artistUrl": "https://www.artstation.com/taraiphillips",
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_060",
@@ -3452,6 +3458,7 @@
   },
   {
     "id": "PRIME_173",
+    "name": "Mind Siphon",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_COMMON%",
@@ -3460,7 +3467,9 @@
     "text": "Copy 2 cards from your opponent's deck and put them into your hand.",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_228",
@@ -5057,6 +5066,7 @@
   },
   {
     "id": "PRIME_182",
+    "name": "Stolen Echo",
     "set": "%SET_003%",
     "type": "%TYPE_SPELL%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -5065,7 +5075,9 @@
     "text": "Put a copy of a random minion from your opponent's deck into the battlefield.",
     "collectible": true,
     "active": true,
-    "artStatus": "FPO"
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL"
   },
   {
     "id": "PRIME_091",
@@ -5844,9 +5856,9 @@
     "playContext": "%STEAL%",
     "collectible": true,
     "active": true,
-    "artistName": "João Florencio",
-    "artistUrl": "https://joaoflorencio.artstation.com/",
-    "artStatus": "FPO",
+    "artistName": "a-ravlik",
+    "artistUrl": "https://graphicriver.net/user/a-ravlik",
+    "artStatus": "FINAL",
     "description": "You retain control of any %ON_DEATH% effects activated while this card is active."
   }
 ]
