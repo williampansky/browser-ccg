@@ -177,6 +177,8 @@ const AI_PLAYER: PlayerId = '1';
 const AI_DELAY_MS = 800;
 /** The gap between one attacker and the next when "Attack hero" swings all */
 const NUKE_STAGGER_MS = 320;
+/** Damage dealt by one action from which the whole table jolts */
+const BIG_HIT_DAMAGE = 4;
 /** How long the AI's aiming arrow shows before a targeted action happens. */
 const AI_AIM_MS = 1100;
 /** 'curve' or 'straight'; both are supported by `targetLinePath`. */
@@ -1195,20 +1197,23 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           } else if (wait > 0) setTimeout(() => lungeBy(from, vec, kind), wait);
           else lungeBy(from, vec, kind);
         }
-        const dealt = result.events.reduce(
-          (n, e) =>
-            n +
-            (e.type === 'MinionDamaged' || e.type === 'HeroDamaged'
-              ? e.amount
-              : 0),
-          0,
-        );
-        if (dealt >= 4 && tableRef.current) nudge(tableRef.current, dealt);
       } else {
         // Anything else that hurts (a spell) uses the default timing, not the
         // hero swing's from the last attack.
         setImpactMs(IMPACT_MS);
       }
+      // A big hit from anything (an attack or a spell) jolts the table when
+      // it lands.
+      const dealt = result.events.reduce(
+        (n, e) =>
+          n +
+          (e.type === 'MinionDamaged' || e.type === 'HeroDamaged'
+            ? e.amount
+            : 0),
+        0,
+      );
+      if (dealt >= BIG_HIT_DAMAGE && tableRef.current)
+        nudge(tableRef.current, dealt);
       const died = result.events.filter(
         (e): e is Extract<GameEvent, { type: 'MinionDied' }> =>
           e.type === 'MinionDied',
