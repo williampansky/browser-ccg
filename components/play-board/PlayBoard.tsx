@@ -81,7 +81,8 @@ import {
   themeOf,
 } from '../player-profile/profile';
 import { MinionFace } from './MinionFace';
-import { minionOvalHeight } from './minion-model';
+import { buffedMinionIds, minionOvalHeight } from './minion-model';
+import type { FlashTone } from './motion';
 import minionStyles from './board-minion.module.scss';
 import {
   artBackground,
@@ -1236,7 +1237,19 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             e.type === 'MinionDied' ? [e.instanceId] : [],
           ),
         );
-        const caster = nodes.current.get(`h${state.activePlayer}`);
+        /**
+         * A spell flies from its card's slot in the viewer's hand; a hero skill
+         * (a ranged one like the Wizard's) and the other seat's cards, whose
+         * hand is face-down backs with no slot, fly from the hero.
+         */
+        const isViewersCard =
+          action.type === 'PlayCard' &&
+          state.activePlayer === viewerRef.current;
+        const cardNode =
+          action.type === 'PlayCard' && isViewersCard
+            ? nodes.current.get(`c${action.handIndex}`)
+            : undefined;
+        const caster = cardNode ?? nodes.current.get(`h${state.activePlayer}`);
         for (const e of result.events) {
           const key =
             e.type === 'MinionDamaged'
@@ -1253,6 +1266,24 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           const isDead =
             e.type === 'MinionDamaged' && deadIds.has(e.instanceId);
           if (hitFlashOn() && !isDead) flashHit(node);
+        }
+      }
+      // Heals flash green and buffs gold (also ?hitflash=1).
+      if (isSpellHit && hitFlashOn()) {
+        const flashKey = (key: string, tone: FlashTone) => {
+          const node = nodes.current.get(key);
+          if (node) flashHit(node, tone);
+        };
+        for (const e of result.events) {
+          if (e.type !== 'Healed' || e.amount <= 0) continue;
+          flashKey(targetKey(e.target), 'heal');
+        }
+        for (const player of ['0', '1'] as const) {
+          const buffed = buffedMinionIds(
+            state.players[player].board,
+            result.state.players[player].board,
+          );
+          for (const id of buffed) flashKey(`m${id}`, 'buff');
         }
       }
       const died = result.events.filter(

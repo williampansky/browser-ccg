@@ -298,13 +298,15 @@ const centerOf = (el: HTMLElement): { x: number; y: number } => {
 };
 
 /**
- * Throws a small glowing orb from `from` to `to` (both on screen) and removes
- * it on arrival. It is a throwaway element outside React, so a re-render
+ * Throws a small glowing orb from `from` to `to` (both on screen, `from` may
+ * be a hand card) and removes it on arrival. It is a throwaway element outside React, so a re-render
  * cannot cut it short.
  */
 export const shoot = (from: HTMLElement, to: HTMLElement): void => {
   if (reducedMotion() || !from.animate) return;
-  const start = centerOf(from);
+  const origin = centerOf(from);
+  // A hand card sinks below the window edge: start at the edge, not off it.
+  const start = { x: origin.x, y: Math.min(origin.y, window.innerHeight - 20) };
   const end = centerOf(to);
   const orb = document.createElement('div');
   Object.assign(orb.style, {
@@ -339,11 +341,24 @@ export const shoot = (from: HTMLElement, to: HTMLElement): void => {
 /** How long the flash on a spell's target lasts. */
 const HIT_FLASH_MS = 320;
 
+/** What a flash means: it picks the colour of the glow. */
+export type FlashTone = 'hit' | 'heal' | 'buff';
+
+const FLASH_FILTER: Record<FlashTone, string> = {
+  hit: 'brightness(3) saturate(0.4)',
+  heal: 'brightness(1.7) drop-shadow(0 0 10px #4dff7a)',
+  buff: 'brightness(1.7) drop-shadow(0 0 10px #ffd23f)',
+};
+
 /**
- * A quick white-hot flash on a target a spell hit: it brightens and fades back.
- * It waits for the same impact delay as the table jolt.
+ * A quick flash on a target a spell touched: it brightens and fades back, white
+ * for a hit, green for a heal, gold for a buff. It waits for the same impact
+ * delay as the table jolt.
  */
-export const flashHit = (target: HTMLElement): void => {
+export const flashHit = (
+  target: HTMLElement,
+  tone: FlashTone = 'hit',
+): void => {
   if (reducedMotion() || !target.animate) return;
   const body =
     target.querySelector<HTMLElement>(MINION_OVAL) ??
@@ -352,7 +367,7 @@ export const flashHit = (target: HTMLElement): void => {
   body.animate(
     [
       { filter: 'brightness(1)' },
-      { filter: 'brightness(3) saturate(0.4)', offset: 0.25 },
+      { filter: FLASH_FILTER[tone], offset: 0.25 },
       { filter: 'brightness(1)' },
     ],
     { duration: HIT_FLASH_MS, delay: getImpactMs(), easing: 'ease-out' },

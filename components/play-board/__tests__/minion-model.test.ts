@@ -1,4 +1,5 @@
 import {
+  buffedMinionIds,
   isDamaged,
   MINION_OVAL_MAX,
   MINION_OVAL_MIN,
@@ -111,5 +112,23 @@ describe('minionOvalHeight', () => {
       if (h > MINION_OVAL_MIN)
         expect(7 * slot + 6 * 4).toBeLessThanOrEqual(width + 1);
     }
+  });
+});
+
+describe('buffedMinionIds', () => {
+  const minion = (instanceId: number, attack: number, maxHealth: number) =>
+    ({ instanceId, attack, health: maxHealth, maxHealth }) as MinionInstance;
+
+  it('lists minions with more Attack or maximum Health', () => {
+    const before = [minion(1, 2, 2), minion(2, 3, 3), minion(3, 1, 1)];
+    const after = [minion(1, 4, 2), minion(2, 3, 5), minion(3, 1, 1)];
+    expect(buffedMinionIds(before, after)).toEqual([1, 2]);
+  });
+
+  it('ignores new minions, heals and lost stats', () => {
+    const before = [minion(1, 2, 2), minion(2, 3, 3)];
+    const hurt = { ...minion(1, 2, 2), health: 1 };
+    const after = [hurt, minion(2, 1, 1), minion(9, 5, 5)];
+    expect(buffedMinionIds(before, after)).toEqual([]);
   });
 });

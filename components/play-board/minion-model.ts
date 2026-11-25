@@ -104,3 +104,20 @@ export const minionOvalHeight = (boardWidth: number): number => {
     Math.min(MINION_OVAL_MAX, Math.max(MINION_OVAL_MIN, ovalWidth * 1.25)),
   );
 };
+
+/**
+ * The ids of minions that were on the board before and have more Attack or
+ * more maximum Health after (a buff or an aura), for the buff flash. A new
+ * minion is not a buff, and neither is a heal (it leaves `maxHealth` alone).
+ */
+export const buffedMinionIds = (
+  before: MinionInstance[],
+  after: MinionInstance[],
+): number[] => {
+  const wasBuffed = (minion: MinionInstance): boolean => {
+    const old = before.find((m) => m.instanceId === minion.instanceId);
+    if (!old) return false;
+    return minion.attack > old.attack || minion.maxHealth > old.maxHealth;
+  };
+  return after.filter(wasBuffed).map((minion) => minion.instanceId);
+};
