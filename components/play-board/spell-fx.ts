@@ -48,7 +48,10 @@ export const SKILL_FX: Record<string, SpellFxKind> = {
  * One-off effects for a single card, keyed by card id. Empty for now: every
  * card falls back to the travel base.
  */
-export const CARD_FX: Record<string, SpellFxKind> = {};
+export const CARD_FX: Record<string, SpellFxKind> = {
+  CORE_115: 'spot',
+  PRIME_201: 'strike',
+};
 
 /**
  * Effects for things that happen, not for one spell, keyed by event: `summon`
