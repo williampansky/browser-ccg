@@ -1101,7 +1101,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         catalog: byId,
       });
       if ('error' in result) {
-        setMessage(`Not allowed: ${result.error}`);
+        // An action that arrives after the game ended (the AI's queued move
+        // when you concede on its turn) is dropped without a message.
+        if (result.error !== 'GAME_OVER')
+          setMessage(`Not allowed: ${result.error}`);
         return;
       }
       setMessage('');
@@ -2850,6 +2853,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         onMouseEnter={enterSlot}
         onMouseLeave={leaveSlot}
         onClick={toggleSelect}
+        // Right-click shows the card in the collection's big view, playable
+        // or not (while something is selected, right-click cancels it
+        // instead).
+        onContextMenu={(e: React.MouseEvent) => {
+          if (hasSelection || !card) return;
+          e.preventDefault();
+          setInspect(card);
+        }}
         onDoubleClick={doubleClick}
         draggable={draggable}
         onDragStart={dragStart}
@@ -3015,20 +3026,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               </Button>
               <Button
                 variant="danger"
-                disabled={over || !myTurn}
+                disabled={over}
                 onClick={() => {
                   setMenuOpen(false);
-                  dispatch({ type: 'Concede' });
+                  dispatch({ type: 'Concede', player: viewer });
                 }}
               >
                 Concede
-                <small>
-                  {over
-                    ? 'game is over'
-                    : myTurn
-                      ? 'give up this game'
-                      : 'on your turn'}
-                </small>
+                <small>{over ? 'game is over' : 'give up this game'}</small>
               </Button>
             </div>
 

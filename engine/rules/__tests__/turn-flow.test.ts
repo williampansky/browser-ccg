@@ -180,6 +180,19 @@ describe('winning', () => {
     expect(res.state).toMatchObject({ status: 'over', winner: '1' });
     expect(res.events).toContainEqual({ type: 'GameOver', winner: '1' });
   });
+  it('lets the player who is not on turn concede, and they lose', () => {
+    const res = applyAction(newGame(), { type: 'Concede', player: '1' }, ctx());
+    if ('error' in res) throw new Error(res.error);
+    expect(res.state).toMatchObject({ status: 'over', winner: '0' });
+    expect(res.events).toContainEqual({ type: 'GameOver', winner: '0' });
+  });
+  it('says who conceded, before the game is over', () => {
+    const res = applyAction(newGame(), { type: 'Concede', player: '1' }, ctx());
+    if ('error' in res) throw new Error(res.error);
+    const types = res.events.map((event) => event.type);
+    expect(res.events).toContainEqual({ type: 'Conceded', player: '1' });
+    expect(types.indexOf('Conceded')).toBeLessThan(types.indexOf('GameOver'));
+  });
   it('rejects every action after the game is over', () => {
     const over = end(lowHealth('1', 1));
     expect(applyAction(over, { type: 'EndTurn' }, ctx())).toEqual({

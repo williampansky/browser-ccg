@@ -73,16 +73,19 @@ export const applyAction = (
           events,
         };
       }
-      case 'Concede':
+      case 'Concede': {
+        const conceder = action.player ?? me;
+        events.push({ type: 'Conceded', player: conceder });
         return {
           state: settled(
             produce(state, (g) => {
-              g.players[me].health = 0;
+              g.players[conceder].health = 0;
             }),
-            0,
+            events.length,
           ),
           events,
         };
+      }
       case 'PlayCard':
       case 'Attack':
       case 'WeaponAttack':

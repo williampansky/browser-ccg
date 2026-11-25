@@ -28,6 +28,23 @@ const state = () =>
   );
 
 describe('describeEvents', () => {
+  it('logs a concede before the win it causes', () => {
+    const s = state();
+    const lines = describeEvents(
+      [
+        { type: 'Conceded', player: '1' },
+        { type: 'GameOver', winner: '0' },
+      ],
+      catalog,
+      s,
+      s,
+    );
+    expect(lines.map((line) => plainLogText(line))).toEqual([
+      'Player 2 conceded',
+      'Player 1 wins!',
+    ]);
+  });
+
   it('names the card behind a trigger or an On Death effect', () => {
     const lines = describeEvents(
       [

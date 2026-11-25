@@ -87,6 +87,7 @@ export const LOG_ICON = {
   burn: '🔥',
   fatigue: '😵',
   win: '🏆',
+  concede: '🏳️',
   weaponBreak: '💥',
 } as const;
 
@@ -346,6 +347,13 @@ export const describeEvents = (
           icon: LOG_ICON.death,
           tone: 'death',
           text: `${cardName(e.cardId, e.player)} dies`,
+        });
+        break;
+      case 'Conceded':
+        lines.push({
+          kind: 'info',
+          icon: LOG_ICON.concede,
+          text: `${who(e.player)} conceded`,
         });
         break;
       case 'GameOver':

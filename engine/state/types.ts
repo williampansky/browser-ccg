@@ -254,7 +254,11 @@ export type TargetRef =
 
 export type Action =
   | { type: 'EndTurn' }
-  | { type: 'Concede' }
+  /**
+   * Gives up the game. `player` defaults to the active player; a player may
+   * also concede on the opponent's turn.
+   */
+  | { type: 'Concede'; player?: PlayerId }
   | {
       type: 'PlayCard';
       handIndex: number;
@@ -358,6 +362,7 @@ export type GameEvent =
       cardId: string;
     }
   | { type: 'MinionDied'; player: PlayerId; instanceId: number; cardId: string }
+  | { type: 'Conceded'; player: PlayerId }
   | { type: 'GameOver'; winner: PlayerId | 'draw' };
 
 export interface GameSetup {
