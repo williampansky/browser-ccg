@@ -16,6 +16,7 @@ import type { BotKind, SeatInfo } from './match';
 import { Match } from './match';
 import { Matchmaker } from './matchmaker';
 import type { MatchmakerConfig } from './matchmaker';
+import { redactEvents } from './redact';
 import type { ClientMessage, ServerMessage } from './protocol';
 
 /** The part of a WebSocket the lobby uses, so tests can pass a fake. */
@@ -98,7 +99,7 @@ export class Lobby {
     this.sessions.set(id, session);
     session.connection = connection;
     delete session.droppedAt;
-    if (session.game && session.seat) this.sendMatched(session);
+    if (session.game && session.seat) this.sendMatched(session, Date.now());
     else if (this.matchmaker.has(id)) {
       connection.send({ t: 'queued', since: Date.now() });
     }
@@ -181,7 +182,7 @@ export class Lobby {
     if (!game || !seat) return this.fail(session, 'NOT_IN_GAME');
     const step = game.match.submit(seat, action, now);
     if ('error' in step) return this.fail(session, step.error);
-    this.broadcast(game, step.events, now);
+    this.broadcast(game, step, now);
   }
 
   private start(
@@ -222,7 +223,7 @@ export class Lobby {
       session.seat = seat;
       delete session.droppedAt;
       game.sessions[seat] = id;
-      this.sendMatched(session);
+      this.sendMatched(session, now);
     });
   }
 
@@ -242,25 +243,30 @@ export class Lobby {
     };
   }
 
-  private sendMatched(session: Session): void {
+  private sendMatched(session: Session, now: number): void {
     const { game, seat, connection } = session;
     if (!game || !seat || !connection) return;
     connection.send({
       t: 'matched',
       opponent: game.match.opponentOf(seat),
-      view: game.match.viewFor(seat),
+      view: game.match.viewFor(seat, now),
     });
   }
 
-  private broadcast(game: Game, events: GameEvent[], now: number): void {
+  private broadcast(
+    game: Game,
+    { action, events }: { action: Action; events: GameEvent[] },
+    now: number,
+  ): void {
     (['0', '1'] as PlayerId[]).forEach((seat) => {
       const id = game.sessions[seat];
       const connection = id && this.sessions.get(id)?.connection;
       if (!connection) return;
       connection.send({
         t: 'update',
-        events,
-        view: game.match.viewFor(seat),
+        action,
+        events: redactEvents(events, seat),
+        view: game.match.viewFor(seat, now),
       });
     });
     if (game.match.isOver && game.overAt === undefined) game.overAt = now;
@@ -271,13 +277,13 @@ export class Lobby {
     if (match.isOver) return this.sweep(game, now);
     const timedOut = match.tick(now);
     if (timedOut && 'events' in timedOut)
-      return this.broadcast(game, timedOut.events, now);
+      return this.broadcast(game, timedOut, now);
     this.concedeForDropped(game, now);
     if (match.isOver || now < game.nextBotAt) return;
     const step = match.botStep(now);
     if (step && 'events' in step) {
       game.nextBotAt = now + this.deps.config.botDelayMs;
-      this.broadcast(game, step.events, now);
+      this.broadcast(game, step, now);
     }
   }
 
@@ -288,7 +294,7 @@ export class Lobby {
       if (droppedAt === undefined || game.match.isOver) return;
       if (now - droppedAt < this.deps.config.graceMs) return;
       const step = game.match.submit(seat, { type: 'Concede' }, now);
-      if ('events' in step) this.broadcast(game, step.events, now);
+      if ('events' in step) this.broadcast(game, step, now);
     });
   }
 

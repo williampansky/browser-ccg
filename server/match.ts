@@ -38,7 +38,7 @@ export interface MatchSetup {
   bonusCard: string;
 }
 
-export type Step = { events: GameEvent[] } | ActionError;
+export type Step = { action: Action; events: GameEvent[] } | ActionError;
 
 /**
  * One game on the server: the only copy of the state. It checks whose move
@@ -82,12 +82,12 @@ export class Match {
     return { name, color, isBot: !!bot };
   }
 
-  viewFor(seat: PlayerId): GameView {
+  viewFor(seat: PlayerId, now: number): GameView {
     return {
       state: redactFor(this.state, seat),
       seat,
       foeMysteryCategory: foeMysteryCategory(this.state, seat, this.catalog),
-      deadline: this.deadline,
+      msLeft: Math.max(0, this.deadline - now),
     };
   }
 
@@ -143,7 +143,7 @@ export class Match {
       result.state.activePlayer !== before.activePlayer;
     if (isNewTurn) this.resetClock(now);
 
-    return { events: result.events };
+    return { action, events: result.events };
   }
 
   private resetClock(now: number): void {

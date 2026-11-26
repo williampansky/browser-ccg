@@ -12,6 +12,7 @@ import {
 } from 'react';
 import {
   Action,
+  ActionResult,
   applyAction,
   buildDeck,
   chooseGreedyAction,
@@ -45,6 +46,8 @@ import {
   MAX_HAND,
 } from '../../engine';
 import { gapIndex } from './board-position';
+import type { OnlineGame } from './online/types';
+import { SupportLink } from '../site-components/SupportLink';
 import { getSwing } from './hero-swing-tune';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
 import {
@@ -182,7 +185,7 @@ let activeGhost: DragGhost | null = null; // the opaque card that follows the po
 const clearDraggedHandWhenLanded = (set: (v: null) => void) =>
   activeGhost ? activeGhost.whenDone(() => set(null)) : set(null);
 
-type Mode = 'ai' | 'hotseat';
+type Mode = 'ai' | 'hotseat' | 'online';
 type PlayAction = Extract<Action, { type: 'PlayCard' }>;
 const AI_PLAYER: PlayerId = '1';
 const AI_DELAY_MS = 800;
@@ -848,7 +851,13 @@ export interface LabProps {
 }
 const LAB_SEED = 20261114;
 
-export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
+export const PlayBoard = ({
+  lab,
+  online,
+}: {
+  lab?: LabProps;
+  online?: OnlineGame;
+}) => {
   const [state, setState] = useState<GameState | null>(null);
   /** One entry per action, oldest first. */
   const [log, setLog] = useState<LogLine[][]>([]);
@@ -867,9 +876,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   /** The card whose big view is open (right-click on a minion) */
   const [inspect, setInspect] = useState<Card | null>(null);
   const [message, setMessage] = useState('');
-  const [mode, setMode] = useState<Mode>('ai');
+  const [mode, setMode] = useState<Mode>(online ? 'online' : 'ai');
   const [smartAi, setSmartAi] = useState(true);
-  const modeRef = useRef<Mode>('ai');
+  const modeRef = useRef<Mode>(online ? 'online' : 'ai');
   const viewerRef = useRef<PlayerId>('0');
   modeRef.current = mode;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -883,9 +892,13 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
    * Each side's colour: yours is your theme; the other seat is red (blue if you
    * chose red).
    */
+  const foeColor =
+    online && themeOf(online.opponent.color).id !== themeOf(profile.theme).id
+      ? themeOf(online.opponent.color).color
+      : foeTheme(profile.theme).color;
   const sideColors = {
     '0': themeOf(profile.theme).color,
-    '1': foeTheme(profile.theme).color,
+    '1': foeColor,
   } as Record<'0' | '1', string>;
   const logBlocks = log.flatMap(groupLog);
   const firstTurnBlock = logBlocks.findIndex(
@@ -985,6 +998,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
   useEffect(() => setTimerOnState(isTimerOn()), []);
   const [gameKey, setGameKey] = useState(0);
   const turnStartedAt = useRef(Date.now());
+  /** Online: the server's time left when the turn changed hands. */
+  const turnClockMs = useRef<number | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const rngRef = useRef<Rng | null>(null);
   /**
@@ -1047,7 +1062,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     if (el) nodes.current.set(key, el);
     else nodes.current.delete(key);
   };
-  const label = (p: PlayerId) => playerLabel(p, mode, profile.name);
+  const label = (p: PlayerId) =>
+    online && p === '1'
+      ? `${online.opponent.name}${online.opponent.isBot ? ' (bot)' : ''}`
+      : playerLabel(p, mode, profile.name);
 
   const start = useCallback(() => {
     const g = newGame(modeRef.current === 'ai', lab ? LAB_SEED : undefined);
@@ -1115,7 +1133,10 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
 
   // Start on the client only: the deck shuffle uses the clock, which would not
   // match server rendering.
-  useEffect(start, [start]);
+  useEffect(() => {
+    if (!online) start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [start]);
 
   // `body.dragging` hides the hover popups during a drag. A dropped card that
   // gets played unmounts its own button, so its
@@ -1143,20 +1164,14 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     setHoverHand(null);
   }, [state]);
 
-  const dispatch = useCallback(
-    (action: Action) => {
-      if (!state || !rngRef.current) return;
-      const result = applyAction(state, action, {
-        rng: rngRef.current,
-        catalog: byId,
-      });
-      if ('error' in result) {
-        // An action that arrives after the game ended (the AI's queued move
-        // when you concede on its turn) is dropped without a message.
-        if (result.error !== 'GAME_OVER')
-          setMessage(`Not allowed: ${result.error}`);
-        return;
-      }
+  /**
+   * Plays out one action that has happened (`result` is the new state and
+   * what happened): the pictures, sounds, effects and log line. Locally it
+   * follows `applyAction`; online it follows a move from the server.
+   */
+  const commit = useCallback(
+    (action: Action, result: ActionResult) => {
+      if (!state) return;
       setMessage('');
       setSelection(null);
       (document.activeElement as HTMLElement | null)?.blur?.(); // keep no button "focused" after an action
@@ -1526,7 +1541,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             byId,
             state,
             result.state,
-            modeRef.current === 'ai' ? '0' : null,
+            modeRef.current !== 'hotseat' ? '0' : null,
           ),
         ].slice(-100),
       );
@@ -1534,15 +1549,71 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     [state],
   );
 
+  const dispatch = useCallback(
+    (action: Action) => {
+      if (!state) return;
+      if (online) {
+        online.send(action);
+        return;
+      }
+      if (!rngRef.current) return;
+      const result = applyAction(state, action, {
+        rng: rngRef.current,
+        catalog: byId,
+      });
+      if ('error' in result) {
+        // An action that arrives after the game ended (the AI's queued move
+        // when you concede on its turn) is dropped without a message.
+        if (result.error !== 'GAME_OVER')
+          setMessage(`Not allowed: ${result.error}`);
+        return;
+      }
+      commit(action, result);
+    },
+    [state, commit, online],
+  );
+
+  /**
+   * Online: the first state arrives with the game, then each move from the
+   * server is played out in order. One per render, because `commit` reads the
+   * state before the move.
+   */
+  const playedUpdates = useRef(0);
+  useEffect(() => {
+    if (!online) return;
+    if (!state) {
+      rngRef.current = createSeededRng(1);
+      turnClockMs.current = online.initial.msLeft;
+      setState(online.initial.state);
+      setStartDecks({ '0': online.myDeck, '1': [] });
+      setDeckNames({ '0': '', '1': '' });
+      setGameKey((k) => k + 1);
+      return;
+    }
+    const next = online.updates[playedUpdates.current];
+    if (!next) return;
+    playedUpdates.current += 1;
+    const { state: after, msLeft } = next.view;
+    const isNewTurn =
+      after.turn !== state.turn || after.activePlayer !== state.activePlayer;
+    // The server's clock is the one that counts.
+    if (isNewTurn) turnClockMs.current = msLeft;
+    commit(next.action, { state: after, events: next.events });
+  }, [online, online?.updates, state, commit]);
+  const onlineError = online?.error;
+  useEffect(() => {
+    if (onlineError) setMessage(`Not allowed: ${onlineError}`);
+  }, [onlineError]);
+
   /**
    * The viewer is who sits at the bottom: always Player 1 against the AI, the
    * active player in hot-seat.
    */
   const viewer: PlayerId = !state
     ? '0'
-    : mode === 'ai'
-      ? '0'
-      : state.activePlayer;
+    : mode === 'hotseat'
+      ? state.activePlayer
+      : '0';
   viewerRef.current = viewer;
 
   /**
@@ -1566,7 +1637,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     void fireEndConfetti(
       lab?.endPreview
         ? lab.endPreview === 'win'
-        : mode !== 'ai' || winner === viewerRef.current,
+        : mode === 'hotseat' || winner === viewerRef.current,
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameEnded]);
@@ -1616,10 +1687,19 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
    * on a human's turn.
    */
   const timerApplies =
-    !lab && timerOn && !!state && state.status === 'playing' && !aiToMove;
+    !lab &&
+    (!!online || timerOn) &&
+    !!state &&
+    state.status === 'playing' &&
+    !aiToMove;
   useEffect(() => {
-    turnStartedAt.current = Date.now();
+    const msLeft = turnClockMs.current;
+    turnClockMs.current = null;
+    const limitMs = (state ? turnSeconds(state, byId) : 0) * 1000;
+    turnStartedAt.current =
+      msLeft === null ? Date.now() : Date.now() - (limitMs - msLeft);
     setNow(Date.now());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state?.turn, state?.activePlayer, gameKey]);
   useEffect(() => {
     if (!timerApplies) return;
@@ -1650,7 +1730,8 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
     return () => cancelAnimationFrame(frame);
   }, [timerApplies, turnLimit, gameKey, state?.turn, state?.activePlayer]);
   useEffect(() => {
-    if (timedOut) dispatch({ type: 'EndTurn' });
+    // Online, the server ends the turn when time is up.
+    if (timedOut && !online) dispatch({ type: 'EndTurn' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timedOut]);
 
@@ -2222,7 +2303,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         byId,
         s.before,
         cur,
-        modeRef.current === 'ai' ? '0' : null,
+        modeRef.current !== 'hotseat' ? '0' : null,
       ),
     );
     const heard = result.steps.flatMap((s) => s.events);
@@ -2239,7 +2320,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             byId,
             cur,
             r.state,
-            modeRef.current === 'ai' ? '0' : null,
+            modeRef.current !== 'hotseat' ? '0' : null,
           ),
         );
         heard.push(...r.events);
@@ -3240,7 +3321,7 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
             styles.gameOver,
             endWinner !== 'draw' &&
               endWinner !== me &&
-              mode === 'ai' &&
+              mode !== 'hotseat' &&
               styles.gameOverLoss,
           )}
         >
@@ -3252,9 +3333,9 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
           <button
             type="button"
             className={styles.endGameButton}
-            onClick={start}
+            onClick={online ? online.leave : start}
           >
-            New game
+            {online ? 'Back to lobby' : 'New game'}
           </button>
         </div>
       )}
@@ -3300,16 +3381,25 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               Resume
             </Button>
             <div className={styles.menuPair}>
-              <Button
-                onClick={() => {
-                  setMenuOpen(false);
-                  setPicker(loadChoices());
-                  setHeroPicker(loadHeroChoices());
-                }}
-              >
-                New game
-                <small>choose decks</small>
-              </Button>
+              {online ? (
+                <Button onClick={online.leave}>
+                  Lobby
+                  <small>
+                    {over ? 'find another game' : 'leaves the game'}
+                  </small>
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setPicker(loadChoices());
+                    setHeroPicker(loadHeroChoices());
+                  }}
+                >
+                  New game
+                  <small>choose decks</small>
+                </Button>
+              )}
               <Button
                 variant="danger"
                 disabled={over}
@@ -3383,47 +3473,51 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
                   },
                 ]}
               />
-              <SegmentedControl
-                label="Opponent"
-                value={smartAi}
-                onChange={setSmartAi}
-                options={[
-                  {
-                    label: 'Greedy',
-                    title: 'looks one move ahead',
-                    value: true,
-                    disabled: mode !== 'ai',
-                  },
-                  {
-                    label: 'Random',
-                    title: 'plays any legal move',
-                    value: false,
-                    disabled: mode !== 'ai',
-                  },
-                ]}
-              />
-              <SegmentedControl
-                label="Mode"
-                value={mode}
-                onChange={(m) => {
-                  if (mode === m) return;
-                  setMode(m);
-                  setMenuOpen(false);
-                  setTimeout(start, 0);
-                }}
-                options={[
-                  {
-                    label: 'vs AI',
-                    value: 'ai' as const,
-                    title: 'Switching starts a new game',
-                  },
-                  {
-                    label: 'Hot-seat',
-                    value: 'hotseat' as const,
-                    title: 'Switching starts a new game',
-                  },
-                ]}
-              />
+              {!online && (
+                <>
+                  <SegmentedControl
+                    label="Opponent"
+                    value={smartAi}
+                    onChange={setSmartAi}
+                    options={[
+                      {
+                        label: 'Greedy',
+                        title: 'looks one move ahead',
+                        value: true,
+                        disabled: mode !== 'ai',
+                      },
+                      {
+                        label: 'Random',
+                        title: 'plays any legal move',
+                        value: false,
+                        disabled: mode !== 'ai',
+                      },
+                    ]}
+                  />
+                  <SegmentedControl
+                    label="Mode"
+                    value={mode}
+                    onChange={(m) => {
+                      if (mode === m) return;
+                      setMode(m);
+                      setMenuOpen(false);
+                      setTimeout(start, 0);
+                    }}
+                    options={[
+                      {
+                        label: 'vs AI',
+                        value: 'ai' as const,
+                        title: 'Switching starts a new game',
+                      },
+                      {
+                        label: 'Hot-seat',
+                        value: 'hotseat' as const,
+                        title: 'Switching starts a new game',
+                      },
+                    ]}
+                  />
+                </>
+              )}
               <UiThemePicker blurb={false} />
             </Group>
 
@@ -3431,6 +3525,12 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
               <a href="/" onClick={leaveGame}>
                 Home
               </a>
+              {!online && (
+                <a href="/play/online" onClick={leaveGame}>
+                  Play online
+                </a>
+              )}
+              <SupportLink />
               <a href="/deckbuilder" onClick={leaveGame}>
                 Deck builder
               </a>

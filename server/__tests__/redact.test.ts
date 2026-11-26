@@ -1,4 +1,4 @@
-import { HIDDEN_CARD, redactFor } from '../redact';
+import { HIDDEN_CARD, redactEvents, redactFor } from '../redact';
 import { makeMatch } from '../test-helpers';
 
 describe('redactFor', () => {
@@ -34,5 +34,23 @@ describe('redactFor', () => {
     redactFor(state, '1');
 
     expect(JSON.stringify(state)).toBe(before);
+  });
+});
+
+describe('redactEvents', () => {
+  const played = (player: '0' | '1') =>
+    ({
+      type: 'CardPlayed',
+      player,
+      instanceId: 1,
+      cardId: 'CORE_001',
+      mystery: true,
+    }) as const;
+
+  it('hides a Mystery the opponent played face down, not your own', () => {
+    expect(redactEvents([played('1')], '0')).toEqual([
+      { ...played('1'), cardId: HIDDEN_CARD },
+    ]);
+    expect(redactEvents([played('0')], '0')).toEqual([played('0')]);
   });
 });

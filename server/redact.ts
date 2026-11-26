@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import type { CardCatalog, GameState, PlayerId } from '../engine';
+import type { CardCatalog, GameEvent, GameState, PlayerId } from '../engine';
 import { getCardDef } from '../engine';
 
 /** The card id every card the viewer may not see is given. */
@@ -44,3 +44,18 @@ export const foeMysteryCategory = (
 
   return (card && getCardDef(card)?.mystery?.category) || undefined;
 };
+
+/**
+ * The events as `seat` may see them. A Mystery played face down names its card
+ * in the event; only its owner may know it until it fires.
+ */
+export const redactEvents = (
+  events: GameEvent[],
+  seat: PlayerId,
+): GameEvent[] =>
+  events.map((event) => {
+    const isFoeMystery =
+      event.type === 'CardPlayed' && event.mystery && event.player !== seat;
+
+    return isFoeMystery ? { ...event, cardId: HIDDEN_CARD } : event;
+  });

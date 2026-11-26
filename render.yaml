@@ -25,3 +25,7 @@ services:
         value: '30'
       - key: RECONNECT_GRACE_SECONDS
         value: '60'
+      # The donation page address (Ko-fi etc.). Set it in the dashboard, then
+      # redeploy: it is read when the site is built.
+      - key: NEXT_PUBLIC_SUPPORT_URL
+        sync: false

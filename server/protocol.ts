@@ -16,8 +16,11 @@ export interface GameView {
   state: GameState;
   seat: PlayerId;
   foeMysteryCategory?: string;
-  /** Epoch ms at which the active player's turn ends on its own. */
-  deadline: number;
+  /**
+   * Milliseconds left in the active player's turn when this was sent (not a
+   * clock time, so a wrong clock on the player's computer does not matter).
+   */
+  msLeft: number;
 }
 
 export type ClientMessage =
@@ -34,5 +37,5 @@ export type ClientMessage =
 export type ServerMessage =
   | { t: 'queued'; since: number }
   | { t: 'matched'; opponent: OpponentInfo; view: GameView }
-  | { t: 'update'; events: GameEvent[]; view: GameView }
+  | { t: 'update'; action: Action; events: GameEvent[]; view: GameView }
   | { t: 'error'; code: string };
