@@ -251,8 +251,17 @@ export const OnlinePlay = () => {
             ? '✅ Connected to the game server.'
             : status === 'connecting'
               ? '⏳ Connecting to the game server...'
-              : '❌ Connection lost. Trying again...'}
+              : status === 'replaced'
+                ? '⚠️ Another window is using your game session.'
+                : '❌ Connection lost. Trying again...'}
         </p>
+        {status === 'replaced' && (
+          <div className={styles.homeButton}>
+            <Button onClick={() => client.current?.takeOver()}>
+              Use this window
+            </Button>
+          </div>
+        )}
         <div className={styles.choices}>
           <div className={styles.heroSelect}>
             <label className={styles.row}>

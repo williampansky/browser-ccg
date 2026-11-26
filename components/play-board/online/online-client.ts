@@ -68,7 +68,14 @@ export const rehydrate = (view: GameView, catalog: CardCatalog): GameState => {
   };
 };
 
-export type ClientStatus = 'connecting' | 'open' | 'closed';
+/**
+ * `replaced`: the server gave this browser's session to another window, so
+ * this one stays closed until asked to take it back (`takeOver`).
+ */
+export type ClientStatus = 'connecting' | 'open' | 'closed' | 'replaced';
+
+/** What the server says when another window took the session. */
+export const REPLACED_REASON = 'replaced';
 
 export interface ClientHandlers {
   onMessage: (message: ServerMessage) => void;
@@ -89,6 +96,13 @@ export class OnlineClient {
 
   start(): void {
     this.isStopped = false;
+    this.open();
+  }
+
+  /** Take the session back from the other window. */
+  takeOver(): void {
+    if (this.timer) clearTimeout(this.timer);
+    this.retry = 0;
     this.open();
   }
 
@@ -123,8 +137,16 @@ export class OnlineClient {
         /* a message that is not ours is ignored */
       }
     };
-    socket.onclose = () => {
+    socket.onclose = (event) => {
       if (this.socket !== socket || this.isStopped) return;
+      // Reconnecting would take the session straight back and push the other
+      // window off, so two windows would trade it forever (a flicker).
+      if (event.reason === REPLACED_REASON) {
+        this.handlers.onStatus('replaced');
+
+        return;
+      }
+
       this.handlers.onStatus('closed');
       const wait = Math.min(
         RECONNECT_MAX_MS,
