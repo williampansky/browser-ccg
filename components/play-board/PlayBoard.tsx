@@ -2376,6 +2376,19 @@ export const PlayBoard = ({
     if (!canNukeHero || !rngRef.current) return;
     const result = nukeHero(state, me, rngRef.current, byId);
     if (result.steps.length === 0) return;
+    /**
+     * Online, the server owns the game: work out the swings here, but send
+     * them (and the end of the turn) as real actions and let its answers play
+     * out. Applying them to this window's state alone left the server waiting
+     * for a turn this window believed was over.
+     */
+    if (online) {
+      setSelection(null);
+      (document.activeElement as HTMLElement | null)?.blur?.();
+      result.steps.forEach((step) => online.send(step.action));
+      if (result.state.status === 'playing') online.send({ type: 'EndTurn' });
+      return;
+    }
     let cur = result.state;
     const lines = result.steps.map((s) =>
       describeEvents(
