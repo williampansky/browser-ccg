@@ -1175,11 +1175,19 @@ export const PlayBoard = ({
       setMessage('');
       setSelection(null);
       (document.activeElement as HTMLElement | null)?.blur?.(); // keep no button "focused" after an action
+      /**
+       * The card a PlayCard action played. Online, the opponent's hand is
+       * hidden from us, so the server's CardPlayed event names it instead (it
+       * is blank for a face-down Mystery, which stays unseen).
+       */
+      const playedEvent = result.events.find((e) => e.type === 'CardPlayed');
+      const playedCardId =
+        action.type === 'PlayCard'
+          ? (playedEvent?.type === 'CardPlayed' && playedEvent.cardId) ||
+            state.players[state.activePlayer].hand[action.handIndex]?.cardId
+          : undefined;
       if (action.type === 'PlayCard') {
-        const played = byId.get(
-          state.players[state.activePlayer].hand[action.handIndex]?.cardId ??
-            '',
-        );
+        const played = byId.get(playedCardId ?? '');
         // Every card played gets the cast popup (minions and weapons too); a
         // Mystery goes face down, so it never does (that would show the card).
         if (played && !getCardDef(played)?.mystery) {
@@ -1209,19 +1217,11 @@ export const PlayBoard = ({
       }
       /** Which show a spell or skill puts on (the default is the orb). */
       const castingPlayer = state.players[state.activePlayer];
-      const fxKind = spellFxFor(
-        action,
-        castingPlayer.hero?.id,
-        action.type === 'PlayCard'
-          ? castingPlayer.hand[action.handIndex]?.cardId
-          : undefined,
-      );
+      const fxKind = spellFxFor(action, castingPlayer.hero?.id, playedCardId);
       const spellKey = spellKeyFor(
         action,
         castingPlayer.hero?.id,
-        action.type === 'PlayCard'
-          ? castingPlayer.hand[action.handIndex]?.cardId
-          : undefined,
+        playedCardId,
       );
       const fxTune = tuneForSpell(spellKey);
       /**
