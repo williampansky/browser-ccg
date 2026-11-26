@@ -1,5 +1,6 @@
 import React from 'react';
 import { FloatDelta } from './FloatDelta';
+import { useImpactDelayed } from './use-impact-delayed';
 import { heroArtFallback, heroArtRef } from './hero-images';
 import { energyPips, healthFraction, healthTone } from './hero-bar-model';
 import styles from './hero-bar.module.scss';
@@ -100,7 +101,10 @@ export const HeroBar = ({
   canAct,
   ...rest
 }: HeroBarProps) => {
-  const fraction = healthFraction(health);
+  // Drawn numbers go down when the hit lands (the real value is `health`).
+  const shownHealth = useImpactDelayed(health);
+  const shownArmor = useImpactDelayed(armor);
+  const fraction = healthFraction(shownHealth);
   const tone = healthTone(fraction);
   const tt = (text: string) => (showTitles ? text : undefined);
   const weaponText = weapon
@@ -146,15 +150,15 @@ export const HeroBar = ({
           )}
         </span>
         <FloatDelta value={health} />
-        <span className={styles.hp} title={tt(`${health} health`)}>
-          {health}
+        <span className={styles.hp} title={tt(`${shownHealth} health`)}>
+          {shownHealth}
         </span>
-        {armor > 0 && (
+        {shownArmor > 0 && (
           <span
             className={styles.armor}
-            title={tt(`${armor} armor (absorbs attack damage)`)}
+            title={tt(`${shownArmor} armor (absorbs attack damage)`)}
           >
-            {armor}
+            {shownArmor}
           </span>
         )}
       </span>

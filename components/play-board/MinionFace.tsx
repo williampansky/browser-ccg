@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { Card, MinionInstance } from '../../engine';
 import { minionArtBackground } from './card-face-model';
 import { getImpactMs } from './motion';
+import { useImpactDelayed } from './use-impact-delayed';
 import { isDamaged, statTone, statusBadges, StatusBadge } from './minion-model';
 import { FloatDelta } from './FloatDelta';
 import styles from './board-minion.module.scss';
@@ -94,6 +95,8 @@ interface Props {
 
 export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
   const hurt = useHurtFlash(m.health);
+  // The badge goes down with the shake, when the hit lands.
+  const shownHealth = useImpactDelayed(m.health);
   // Stampede only matters the turn the minion came in: after that its icon
   // fades out, then stays gone.
   const [rushGone, setRushGone] = useState(false);
@@ -101,7 +104,8 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
     (b) => !(b.kind === 'rush' && b.fades && rushGone),
   );
   const attackTone = statTone(m.attack, card?.attack);
-  const healthTone = isDamaged(m) ? 'down' : statTone(m.health, card?.health);
+  const healthTone =
+    shownHealth < m.maxHealth ? 'down' : statTone(shownHealth, card?.health);
   return (
     <>
       <span className={styles.dust} aria-hidden="true" />
@@ -181,10 +185,10 @@ export const MinionFace = ({ card, m, turn, sick, doomed }: Props) => {
             styles.health,
             styles[`tone_${healthTone}`],
           )}
-          aria-label={`Health ${m.health}`}
+          aria-label={`Health ${shownHealth}`}
         >
           <img src="/images/ui/stat-health.png" alt="" draggable={false} />
-          <b>{m.health}</b>
+          <b>{shownHealth}</b>
         </span>
         <span className={styles.caption}>{card?.name ?? m.cardId}</span>
       </span>

@@ -86,7 +86,14 @@ import {
 import { MinionFace } from './MinionFace';
 import { buffedMinionIds, minionOvalHeight } from './minion-model';
 import type { FlashTone } from './motion';
-import { EVENT_FX, spellFxFor, spellFxForKey, spellKeyFor } from './spell-fx';
+import {
+  EVENT_FX,
+  spellFxFor,
+  spellFxForKey,
+  spellFxTotalMs,
+  spellKeyFor,
+} from './spell-fx';
+import { loadDelayDamage, saveDelayDamage } from './damage-delay';
 import { fxChain, tuneForSpell } from './spell-fx-tune';
 import type { PixiFx } from './pixi-fx';
 import minionStyles from './board-minion.module.scss';
@@ -132,6 +139,7 @@ import {
   IMPACT_MS,
   lunge,
   lungeBy,
+  BIG_HIT_DAMAGE,
   FLIGHT_MS,
   fxMs,
   nudge,
@@ -191,8 +199,6 @@ const AI_PLAYER: PlayerId = '1';
 const AI_DELAY_MS = 800;
 /** The gap between one attacker and the next when "Attack hero" swings all */
 const NUKE_STAGGER_MS = 320;
-/** Damage dealt by one action from which the whole table jolts */
-const BIG_HIT_DAMAGE = 4;
 /** How long the AI's aiming arrow shows before a targeted action happens. */
 const AI_AIM_MS = 1100;
 /** 'curve' or 'straight'; both are supported by `targetLinePath`. */
@@ -955,6 +961,9 @@ export const PlayBoard = ({
   } | null>(null);
   const [soundOn, setSoundOn] = useState(true);
   useEffect(() => setSoundOn(!isMuted()), []);
+  /** Damage waits for a spell's whole effect (on by default; saved). */
+  const [delayDamage, setDelayDamage] = useState(true);
+  useEffect(() => setDelayDamage(loadDelayDamage()), []);
   /**
    * Loads the Pixi effects layer (its own chunk, so the page does not wait
    * for it); until it is ready, or if it cannot start (no WebGL), the DOM
@@ -1338,7 +1347,25 @@ export const PlayBoard = ({
       } else {
         // Anything else that hurts (a spell) uses the default timing, not the
         // hero swing's from the last attack.
-        setImpactMs(spellFxOn() ? fxMs(fxKind, fxTune) : IMPACT_MS);
+        /**
+         * Damage lands at the first impact, or with the setting on (the
+         * default) when the whole effect has played out, volley included: the
+         * numbers, the hurt shake, the table jolt and the health shown all
+         * follow this one time.
+         */
+        const volleyPlays = Math.max(1, Math.round(fxTune.volleyCount));
+        const hits = result.events.filter(
+          (e) => e.type === 'MinionDamaged' || e.type === 'HeroDamaged',
+        ).length;
+        const isAimedKind = fxKind === 'travel' || fxKind === 'strike';
+        const shots = (isAimedKind ? Math.max(1, hits) : 1) * volleyPlays;
+        setImpactMs(
+          !spellFxOn()
+            ? IMPACT_MS
+            : loadDelayDamage()
+              ? spellFxTotalMs(fxKind, fxTune, shots)
+              : fxMs(fxKind, fxTune),
+        );
       }
       // A big hit from anything (an attack or a spell) jolts the table when
       // it lands.
@@ -3531,6 +3558,14 @@ export const PlayBoard = ({
                 onChange={(on) => {
                   setMuted(!on);
                   setSoundOn(on);
+                }}
+              />
+              <Toggle
+                label="Damage waits for effects"
+                checked={delayDamage}
+                onChange={(on) => {
+                  saveDelayDamage(on);
+                  setDelayDamage(on);
                 }}
               />
               <Toggle

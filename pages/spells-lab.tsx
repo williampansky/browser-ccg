@@ -6,11 +6,17 @@ import { loadHsCards } from '../engine';
 import { createMinion } from '../engine/rules/minion';
 import { MinionFace } from '../components/play-board/MinionFace';
 import { copyLookParams } from '../components/spells-lab/copy-look';
+import {
+  BIG_HIT_DAMAGE,
+  nudge,
+  setImpactMs,
+} from '../components/play-board/motion';
 import { spellEntries } from '../components/spells-lab/spell-list';
 import {
   SPELL_FX_KINDS,
   spellFxForKey,
   spellFxMs,
+  spellFxTotalMs,
 } from '../components/play-board/spell-fx';
 import {
   parseSpellTune,
@@ -48,6 +54,12 @@ const STAGE_LEFT = 388;
 const SAMPLE_MINION = 'CORE_027';
 const SAMPLE_TURN = 3;
 const SAMPLE_ID = 900;
+/** How much the preview hit takes off the sample minion, by default. */
+const DEFAULT_SAMPLE_DAMAGE = 8;
+const MAX_SAMPLE_DAMAGE = 30;
+/** How long the hit stays shown before the sample minion is made whole. */
+const SAMPLE_RESET_MS = 2500;
+const SAMPLE_HURT_DELAY_MS = 30;
 const MIN_SPEED = 0.05;
 const MAX_SPEED = 2;
 const MARKER_SIZE = 56;
@@ -152,6 +164,15 @@ const SpellsLab = () => {
   );
 
   const isMinionShown = q1('minion') === '1';
+  /** Damage and shake wait for the whole effect (on unless `delay=0`). */
+  const isDelay = q1('delay') !== '0';
+  const sampleDamage = Math.min(
+    MAX_SAMPLE_DAMAGE,
+    Math.max(0, Math.round(Number(q1('dmg'))) || DEFAULT_SAMPLE_DAMAGE),
+  );
+  /** The sample minion is hit on each play; a new key restarts its flash. */
+  const [hitCount, setHitCount] = useState(0);
+  const [isSampleHurt, setSampleHurt] = useState(false);
   const isBoardShown = q1('board') === '1';
   const isMulti = q1('multi') === '1';
   const targetCount = Math.min(
@@ -165,6 +186,15 @@ const SpellsLab = () => {
       ? { card, m: createMinion(card, SAMPLE_ID, SAMPLE_TURN, SAMPLE_ID) }
       : null;
   }, []);
+
+  /** The sample minion as it is now: whole, or after the preview hit. */
+  const sampleMinion = useMemo(() => {
+    if (!sample) return null;
+    if (!isSampleHurt) return sample.m;
+    const lost = Math.min(sampleDamage, sample.m.health - 1);
+
+    return { ...sample.m, health: sample.m.health - lost };
+  }, [isSampleHurt, sample, sampleDamage]);
 
   const kind: SpellFxKind =
     SPELL_FX_KINDS.find((effect) => {
@@ -282,6 +312,28 @@ const SpellsLab = () => {
       return Array.from({ length: plays }, () => target);
     });
 
+    // The preview hit on the sample minion: the real board code watches its
+    // health, so the badge, the damage number and the shake follow the impact
+    // time set here (the end of the whole effect, or its first impact), and a
+    // big enough hit jolts the screen as it does in a game.
+    if (isMinionShown && sample) {
+      const impact = isDelay ? spellFxTotalMs(kind, tune, shots.length) : ms;
+      setImpactMs(impact / speed);
+      setHitCount((count) => count + 1);
+      setSampleHurt(false);
+      setTimeout(() => setSampleHurt(true), SAMPLE_HURT_DELAY_MS);
+      if (sampleDamage >= BIG_HIT_DAMAGE) {
+        nudge(document.documentElement, sampleDamage);
+      }
+      setTimeout(
+        () => {
+          setHitCount((count) => count + 1);
+          setSampleHurt(false);
+        },
+        (impact + SAMPLE_RESET_MS) / speed,
+      );
+    }
+
     shots.forEach((target, index) => {
       const wait = (index * tune.volleyDelay) / speed;
       const fire = (): void => {
@@ -294,7 +346,18 @@ const SpellsLab = () => {
       if (wait > 0) setTimeout(fire, wait);
       else fire();
     });
-  }, [areaRect, kind, points, speed, targets, tune]);
+  }, [
+    areaRect,
+    isDelay,
+    isMinionShown,
+    kind,
+    points,
+    sample,
+    sampleDamage,
+    speed,
+    targets,
+    tune,
+  ]);
 
   // Space plays; a loop replays after each one has finished.
   useEffect(() => {
@@ -327,7 +390,7 @@ const SpellsLab = () => {
 
   // A change replays the effect, so a slider can be tuned by eye.
   const firstTune = useRef(true);
-  
+
   useEffect(() => {
     if (firstTune.current) {
       firstTune.current = false;
@@ -565,6 +628,36 @@ const SpellsLab = () => {
             }
           />{' '}
           Show a sample minion as the target
+        </label>
+
+        <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
+          <input
+            type="checkbox"
+            checked={isDelay}
+            onChange={(event) =>
+              setParams({ delay: event.target.checked ? null : '0' })
+            }
+          />{' '}
+          Delay damage and shake until the animation has finished
+        </label>
+
+        <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
+          Preview hit damage (shakes the screen from {BIG_HIT_DAMAGE}){' '}
+          <input
+            type="number"
+            min={0}
+            max={MAX_SAMPLE_DAMAGE}
+            value={sampleDamage}
+            style={{ width: 56 }}
+            onChange={(event) =>
+              setParams({
+                dmg:
+                  Number(event.target.value) === DEFAULT_SAMPLE_DAMAGE
+                    ? null
+                    : event.target.value,
+              })
+            }
+          />
         </label>
 
         <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
@@ -883,8 +976,9 @@ const SpellsLab = () => {
               >
                 <div className={minionStyles.slot}>
                   <MinionFace
+                    key={hitCount}
                     card={sample.card}
-                    m={sample.m}
+                    m={sampleMinion ?? sample.m}
                     sick={false}
                     turn={SAMPLE_TURN}
                   />
@@ -913,8 +1007,9 @@ const SpellsLab = () => {
                 >
                   <div className={minionStyles.slot}>
                     <MinionFace
+                      key={hitCount}
                       card={sample.card}
-                      m={sample.m}
+                      m={sampleMinion ?? sample.m}
                       sick={false}
                       turn={SAMPLE_TURN}
                     />

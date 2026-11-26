@@ -4,6 +4,7 @@ import {
   spellFxFor,
   spellFxForKey,
   spellFxMs,
+  spellFxTotalMs,
   spellKeyFor,
 } from '../spell-fx';
 import { SPELL_FX_DEFAULTS } from '../spell-fx-tune';
@@ -89,5 +90,29 @@ describe('event effects', () => {
       expect(event in EVENT_FX).toBe(false);
       expect(spellFxForKey(event)).toBe('spot');
     }
+  });
+});
+
+describe('spellFxTotalMs', () => {
+  const tune = { ...SPELL_FX_DEFAULTS, volleyDelay: 100 };
+
+  it('is never shorter than the first impact', () => {
+    (['travel', 'strike', 'spot', 'area'] as const).forEach((kind) => {
+      expect(spellFxTotalMs(kind, tune)).toBeGreaterThanOrEqual(
+        spellFxMs(kind, tune),
+      );
+    });
+  });
+
+  it('adds the volley: each later animation starts volleyDelay after the last', () => {
+    expect(spellFxTotalMs('travel', tune, 4)).toBe(
+      spellFxTotalMs('travel', tune, 1) + 300,
+    );
+  });
+
+  it('runs a spot effect for its whole life, rings included', () => {
+    const rings = { ...tune, spotRings: 2, spotRingGap: 250, spotLife: 1000 };
+
+    expect(spellFxTotalMs('spot', rings)).toBe(1250);
   });
 });

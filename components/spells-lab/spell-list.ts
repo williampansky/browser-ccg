@@ -1,4 +1,5 @@
-import { heroes, loadHsCards } from '../../engine';
+import { getCardDef, heroes, loadHsCards } from '../../engine';
+import type { Card } from '../../engine';
 import { CLASS_KEYS } from '../../engine/heroes/classes';
 
 /** One spell the lab can pick: a spell card or a hero skill. */
@@ -7,7 +8,7 @@ export interface SpellEntry {
   key: string;
   /** What the picker shows and matches typing against */
   label: string;
-  /** `Events`, `Hero skills`, `Neutral cards` or `<Class> cards` */
+  /** `Events`, `Hero skills`, `Minions`, `Neutral cards` or `<Class> cards` */
   group: string;
   name: string;
   cost: number;
@@ -50,6 +51,23 @@ const classOrder = (heroClass: string | undefined): number =>
   heroClass ? CLASS_KEYS.indexOf(heroClass as (typeof CLASS_KEYS)[number]) : -1;
 
 /**
+ * Minions that can make an effect of their own: an On Play effect, or a
+ * trigger (PRIME_245 fires at the end of its owner's turn). They are tuned
+ * under the minion's card id, which is what the board looks up when the
+ * effect comes from the minion rather than from a spell.
+ */
+const minionsWithEffects = (): Card[] =>
+  Array.from(loadHsCards().byId.values())
+    .filter((card) => {
+      if (card.type !== 'minion' || !card.active || !card.name) return false;
+      if (card.isToken) return false;
+      const def = getCardDef(card);
+
+      return !!def && (!!def.triggers?.length || !!def.onPlay?.length);
+    })
+    .sort((a, b) => a.id.localeCompare(b.id));
+
+/**
  * Every spell the lab can tune: each hero skill, then every spell card
  * (neutral ones first, then each class's), whatever the set. Cards the game
  * leaves out (inactive, unnamed) are not listed.
@@ -86,6 +104,15 @@ export const spellEntries = (): SpellEntry[] => {
       text: card.text,
       isSkill: false,
     }));
+  const minions: SpellEntry[] = minionsWithEffects().map((card) => ({
+    key: card.id,
+    label: `${card.name} (${card.id}, minion, cost ${card.cost})`,
+    group: 'Minions',
+    name: card.name ?? card.id,
+    cost: card.cost,
+    text: card.text,
+    isSkill: false,
+  }));
   const events: SpellEntry[] = EVENT_ENTRIES.map((event) => ({
     key: event.key,
     label: event.label,
@@ -95,5 +122,5 @@ export const spellEntries = (): SpellEntry[] => {
     text: event.text,
     isSkill: false,
   }));
-  return [...events, ...skills, ...cards];
+  return [...events, ...skills, ...minions, ...cards];
 };
