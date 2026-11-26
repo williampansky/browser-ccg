@@ -153,7 +153,7 @@
     "symbol": "%RUSH%",
     "description": "Enables the minion to attack on the same turn that it is summoned.",
     "shortDescription": "Can attack immediately.",
-    "name": "Stampede"
+    "name": "Blitz"
   },
   {
     "symbol": "%HERO%",

@@ -24,6 +24,7 @@ const KEYWORD_ONLY = [
 const KEYWORD_WORDS = [
   'guard',
   'stampede',
+  'blitz',
   'charge',
   'bubble',
   'concealed',

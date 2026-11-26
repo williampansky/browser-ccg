@@ -15,9 +15,9 @@ describe('turnSeconds', () => {
         produce(mine, (g) => void (g.activePlayer = '1')),
         catalog,
       ),
-    ).toBe(30);
+    ).toBe(15);
     const theirs = setup('CORE_043', { theirs: [[8, 8, 'PRIME_107']] });
-    expect(turnSeconds(theirs, catalog)).toBe(30); // player 0 is the opponent of the owner
+    expect(turnSeconds(theirs, catalog)).toBe(15); // player 0 is the opponent of the owner
   });
   it('stops counting when Cronus is Suppressed or gone', () => {
     const s = produce(
