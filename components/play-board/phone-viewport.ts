@@ -24,12 +24,13 @@ export const isPhone = (screen: PhoneScreen): boolean =>
 
 /**
  * The viewport tag content for a board screen. In landscape on a phone the
- * page is laid out as a desktop-sized window of the visible window's shape and the
- * browser scales it down to fit, so the board's pixel layout, drag maths and
- * effects layer all work unchanged. There is no initial-scale on purpose: it
- * would pin the page at 1:1 and crop it. `viewport-fit=cover` lets an installed
- * app draw under the status bar and cutout instead of leaving blank strips. In portrait (where a rotate prompt
- * shows) and on anything bigger it is the normal tag.
+ * page is laid out as a desktop-sized window of the visible window's shape and
+ * the browser scales it down to fit, so the board's pixel layout, drag maths
+ * and effects layer all work unchanged. There is no initial-scale on purpose:
+ * it would pin the page at 1:1 and crop it. `viewport-fit=cover` lets an
+ * installed app draw under the status bar and cutout instead of leaving blank
+ * strips. In portrait (where a rotate prompt shows) and on anything bigger it
+ * is the normal tag.
  */
 export const boardViewportContent = (screen: PhoneScreen): string => {
   if (!isPhone(screen) || screen.isPortrait) return NORMAL_VIEWPORT;
