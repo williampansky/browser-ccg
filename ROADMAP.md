@@ -129,10 +129,16 @@ card pool needs.
 
 ## Milestone 6: Multiplayer
 
-- [ ] Real server (boardgame.io `Server`) with lobby and matchmaking
-- [ ] Gate who may call which move; hide the opponent's hand and deck (`playerView`)
-- [ ] Reconnects, auth, hosting (Heroku or similar)
-- [ ] Use `ctx.random` for all randomness so games are reproducible
+Built as a custom Node + `ws` server (`server/`), not boardgame.io: the engine is plain TypeScript, so the
+server runs it directly (see CHANGELOG 2026-11-26).
+
+- [x] Real server with a matchmaking queue (30 s wait, then a bot: 90% greedy, 10% random) and "skip the queue"
+- [x] Gate who may act (server checks the seat); hide the opponent's hand, deck and face-down Mystery
+- [x] Reconnects (a session id in localStorage, 60 s grace, then concede); a server-side turn clock
+- [x] Hosting: `render.yaml` (Render, one paid instance, bccg.io)
+- [ ] Live check with two real players in two browsers (only unit-tested so far)
+- [ ] Accounts, rankings, saved match history, and games that survive a server restart
+- [ ] Randomness is the engine's own seeded `Rng`, not `ctx.random`; log the seed per game if replays are wanted
 
 Reference: `hsclone` and `react-card-game` had a two-client SocketIO setup hard-coded to
 localhost; `react-ccg-deprecated` had a single-process Heroku-style server and a lobby wired to a
