@@ -1,2 +1,7 @@
 .faq__page {
+  // The site root never scrolls (base.scss), so a page scrolls itself.
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 7rem;
 }

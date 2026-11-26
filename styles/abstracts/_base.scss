@@ -20,6 +20,14 @@ body,
   max-height: 100vh;
   overflow: hidden;
   overscroll-behavior: none;
+
+  // Phone browsers' 100vh includes the hidden address bar, which pushes the
+  // bottom nav off screen; dvh is the visible height.
+  @supports (height: 100dvh) {
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+  }
 }
 
 body {

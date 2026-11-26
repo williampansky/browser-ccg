@@ -1,5 +1,9 @@
 // The heroes page: a grid of portraits and a detail overlay in the style of the collection's card overlay.
 .page {
+  // The site root never scrolls (base.scss), so a page scrolls itself.
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 1.5rem 1.5rem 7rem;
 }
 

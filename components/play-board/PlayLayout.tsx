@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import type { ReactNode } from 'react';
 import { PLAY_LAYOUT, buildLayoutCss } from './layout-css';
+import { PhoneFit } from './RotatePrompt';
 import { lpanFor, useSidebarMode } from './sidebar-mode';
 
 /**
@@ -27,6 +28,7 @@ export const PlayLayout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <style>{buildLayoutCss(params)}</style>
+      <PhoneFit />
       {children}
     </>
   );

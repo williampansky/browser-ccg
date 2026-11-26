@@ -48,6 +48,7 @@ import {
 import { gapIndex } from './board-position';
 import type { OnlineGame } from './online/types';
 import { SupportLink } from '../site-components/SupportLink';
+import { VersionLabel } from '../site-components/VersionLabel';
 import { getSwing } from './hero-swing-tune';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
 import {
@@ -3676,6 +3677,7 @@ export const PlayBoard = ({
                 </a>
               )}
               <SupportLink />
+              <VersionLabel />
               <a href="/deckbuilder" onClick={leaveGame}>
                 Deck builder
               </a>

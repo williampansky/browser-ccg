@@ -14,6 +14,7 @@ import type { ServerMessage } from '../../../server/protocol';
 import { loadDecks } from '../../deck-builder/deck-storage';
 import { loadProfile } from '../../player-profile/profile';
 import { SupportLink } from '../../site-components/SupportLink';
+import { VersionLabel } from '../../site-components/VersionLabel';
 import { AnimatedIcon, Button, Checkbox, Panel, Select } from '../../ui';
 import {
   deckIsLegal,
@@ -349,6 +350,8 @@ export const OnlinePlay = () => {
           <a href="/play/local">Offline: vs AI or hot-seat</a>
           {' · '}
           <SupportLink />
+          {' · '}
+          <VersionLabel />
         </p>
       </Panel>
     </main>
