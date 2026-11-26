@@ -6,6 +6,8 @@ export interface OnlineUpdate {
   action: Action;
   events: GameEvent[];
   view: GameView;
+  /** Set when the opponent left and the server conceded for them. */
+  note?: 'opponent-left';
 }
 
 /**

@@ -883,6 +883,13 @@ export const PlayBoard = ({
   modeRef.current = mode;
   const [menuOpen, setMenuOpen] = useState(false);
   /**
+   * On a narrow window the log and the deck list are hidden and open as
+   * popups from buttons beside Menu (see `.panelButtons` in the stylesheet).
+   */
+  const [sidePanel, setSidePanel] = useState<'log' | 'deck' | null>(null);
+  /** Online: why the game ended, when it was not by play (a dropped opponent). */
+  const [endNote, setEndNote] = useState('');
+  /**
    * The player's name and colour theme, edited on the /profile page (this
    * browser only for now; see player-profile/profile.ts).
    */
@@ -1594,11 +1601,22 @@ export const PlayBoard = ({
     if (!next) return;
     playedUpdates.current += 1;
     const { state: after, msLeft } = next.view;
+    if (next.note === 'opponent-left')
+      setEndNote(
+        'Your opponent disconnected, so the game was conceded for them.',
+      );
     const isNewTurn =
       after.turn !== state.turn || after.activePlayer !== state.activePlayer;
     // The server's clock is the one that counts.
     if (isNewTurn) turnClockMs.current = msLeft;
-    commit(next.action, { state: after, events: next.events });
+    try {
+      commit(next.action, { state: after, events: next.events });
+    } catch (error) {
+      // A picture or sound that fails must never leave this window on an old
+      // state: the server's state is the truth, so take it as it is.
+      console.error('Could not play out a move; resyncing', error);
+      setState(after);
+    }
   }, [online, online?.updates, state, commit]);
   const onlineError = online?.error;
   useEffect(() => {
@@ -3330,6 +3348,7 @@ export const PlayBoard = ({
               ? 'Draw!'
               : `${label(endWinner as PlayerId)} wins!`}
           </strong>
+          {endNote && <small>{endNote}</small>}
           <button
             type="button"
             className={styles.endGameButton}
@@ -3339,6 +3358,20 @@ export const PlayBoard = ({
           </button>
         </div>
       )}
+      <div className={styles.panelButtons}>
+        <Button
+          aria-pressed={sidePanel === 'log'}
+          onClick={() => setSidePanel(sidePanel === 'log' ? null : 'log')}
+        >
+          Log
+        </Button>
+        <Button
+          aria-pressed={sidePanel === 'deck'}
+          onClick={() => setSidePanel(sidePanel === 'deck' ? null : 'deck')}
+        >
+          Deck
+        </Button>
+      </div>
       <Button className={styles.menuButton} onClick={() => setMenuOpen(true)}>
         Menu
       </Button>
@@ -3728,11 +3761,14 @@ export const PlayBoard = ({
               End turn
             </button>
             {over ? (
-              <strong className={styles.banner}>
-                {state.winner === 'draw'
-                  ? 'Draw!'
-                  : `${label(state.winner as PlayerId)} wins!`}
-              </strong>
+              <>
+                <strong className={styles.banner}>
+                  {state.winner === 'draw'
+                    ? 'Draw!'
+                    : `${label(state.winner as PlayerId)} wins!`}
+                </strong>
+                {endNote && <small>{endNote}</small>}
+              </>
             ) : (
               <small className={styles.text}>
                 Turn {state.turn}: {label(state.activePlayer)}
@@ -3877,7 +3913,13 @@ export const PlayBoard = ({
         </section>
       </div>
 
-      <aside className={styles.deckView} ref={deckPanel}>
+      <aside
+        className={cx(
+          styles.deckView,
+          sidePanel === 'deck' && styles.popupOpen,
+        )}
+        ref={deckPanel}
+      >
         <h2>
           {namedDeck(deckNames[me]) ?? 'Deck'}{' '}
           <small>{state.players[me].deck.length} left</small>
@@ -3912,7 +3954,10 @@ export const PlayBoard = ({
         <i />
       </div>
 
-      <aside className={styles.log} ref={logPanel}>
+      <aside
+        className={cx(styles.log, sidePanel === 'log' && styles.popupOpen)}
+        ref={logPanel}
+      >
         <h2>Log</h2>
         <div
           className={styles.logLines}

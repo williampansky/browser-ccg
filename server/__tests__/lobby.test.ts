@@ -121,6 +121,7 @@ describe('Lobby', () => {
 
     const last = b.got[b.got.length - 1];
     expect(last).toMatchObject({
+      note: 'opponent-left',
       t: 'update',
       view: { state: { status: 'over' } },
     });

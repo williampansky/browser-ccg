@@ -265,6 +265,7 @@ export class Lobby {
     game: Game,
     { action, events }: { action: Action; events: GameEvent[] },
     now: number,
+    note?: 'opponent-left',
   ): void {
     (['0', '1'] as PlayerId[]).forEach((seat) => {
       const id = game.sessions[seat];
@@ -275,6 +276,7 @@ export class Lobby {
         action,
         events: redactEvents(events, seat),
         view: game.match.viewFor(seat, now),
+        ...(note ? { note } : {}),
       });
     });
     if (game.match.isOver && game.overAt === undefined) game.overAt = now;
@@ -302,7 +304,7 @@ export class Lobby {
       if (droppedAt === undefined || game.match.isOver) return;
       if (now - droppedAt < this.deps.config.graceMs) return;
       const step = game.match.submit(seat, { type: 'Concede' }, now);
-      if ('events' in step) this.broadcast(game, step, now);
+      if ('events' in step) this.broadcast(game, step, now, 'opponent-left');
     });
   }
 

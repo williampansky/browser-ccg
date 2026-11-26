@@ -39,5 +39,12 @@ export type ClientMessage =
 export type ServerMessage =
   | { t: 'queued'; since: number; botAfterMs: number }
   | { t: 'matched'; opponent: OpponentInfo; view: GameView }
-  | { t: 'update'; action: Action; events: GameEvent[]; view: GameView }
+  | {
+      t: 'update';
+      action: Action;
+      events: GameEvent[];
+      view: GameView;
+      /** Why the move happened, when it was not the player's own choice. */
+      note?: 'opponent-left';
+    }
   | { t: 'error'; code: string };

@@ -135,13 +135,14 @@ export const OnlinePlay = () => {
         },
       });
     } else if (message.t === 'update') {
-      const { action, events, view } = message;
+      const { action, events, view, note } = message;
       setUpdates((old) => [
         ...old,
         {
           action: forSeat(action, seat.current),
           events: forSeat(events, seat.current),
           view: boardView(view),
+          note,
         },
       ]);
     }
@@ -312,9 +313,16 @@ export const OnlinePlay = () => {
             <Button onClick={cancel}>Cancel</Button>
           </div>
         ) : (
-          <Button variant="primary" disabled={status !== 'open'} onClick={find}>
-            {vsBot ? 'Play a bot' : 'Find match'}
-          </Button>
+          <div>
+            <div>
+              <Button variant="primary" disabled={status !== 'open'} onClick={find}>
+                {vsBot ? 'Play a bot' : 'Find match'}
+              </Button>
+            </div>
+            <div>
+              <Button onClick={cancel}>Cancel</Button>
+            </div>
+          </div>
         )}
         <p className={styles.note}>
           <a href="/play/local">Offline: vs AI or hot-seat</a>
