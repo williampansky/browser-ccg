@@ -19,6 +19,7 @@ const PORT = Number(process.env.PORT ?? 3001);
 const IS_DEV = process.env.NODE_ENV !== 'production';
 const SERVE_NEXT = process.env.SERVE_NEXT !== 'false';
 const TICK_MS = 250;
+const STATS_MS = 5 * 60 * 1000;
 const MAX_MESSAGE_BYTES = 16 * 1024;
 /** More than this many messages inside one window drops the connection. */
 const RATE_LIMIT = 40;
@@ -47,7 +48,15 @@ const isOriginAllowed = (origin: string | undefined): boolean => {
 
 const { cards, byId } = loadHsCards();
 const rng: Rng = createSeededRng(randomInt(SEED_RANGE));
+/** One JSON line per event, for Render's log viewer. Never names or ids. */
+const log = (event: string, data: Record<string, unknown>): void => {
+  console.log(
+    JSON.stringify({ time: new Date().toISOString(), event, ...data }),
+  );
+};
+
 const lobby = new Lobby({
+  log,
   rng,
   catalog: withHeroTokens(byId),
   ordinaryPool: [...playablePool(cards), ...primePool(cards)],
@@ -142,6 +151,10 @@ const start = async (): Promise<void> => {
   });
   server.on('upgrade', onUpgrade);
   setInterval(() => lobby.tick(Date.now()), TICK_MS);
+  setInterval(() => {
+    const { queueSize, gameCount } = lobby;
+    log('stats', { connections: sockets.size, queueSize, games: gameCount });
+  }, STATS_MS);
   server.listen(PORT, () => {
     console.log(`game server on :${PORT} (next: ${SERVE_NEXT})`);
   });

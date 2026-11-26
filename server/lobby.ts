@@ -34,6 +34,9 @@ export interface LobbyConfig {
   keepOverMs: number;
 }
 
+/** Where the lobby reports what happens (one call per event, no names). */
+export type LogFn = (event: string, data: Record<string, unknown>) => void;
+
 export interface LobbyDeps {
   rng: Rng;
   catalog: ReadonlyMap<string, Card>;
@@ -42,6 +45,8 @@ export interface LobbyDeps {
   /** Every card the engine can play, to build bot decks and check decks. */
   allCards: Card[];
   config: LobbyConfig;
+  /** Optional: a line for each match start and end, drop and rejection. */
+  log?: LogFn;
 }
 
 interface Entry {
@@ -60,12 +65,19 @@ interface Session {
 }
 
 interface Game {
+  /** A number to tell games apart in the logs. */
+  id: number;
+  startedAt: number;
+  /** People in it (2, or 1 against a bot). */
+  humans: number;
+  bot?: BotKind;
   match: Match;
   sessions: Partial<Record<PlayerId, string>>;
   nextBotAt: number;
   overAt?: number;
 }
 
+const SECOND_MS = 1000;
 const BOT_NAMES: Record<BotKind, string> = {
   greedy: 'Training Bot',
   random: 'Wandering Bot',
@@ -77,6 +89,7 @@ const BOT_NAMES: Record<BotKind, string> = {
  * own; the server calls `tick(now)` about once a second or faster.
  */
 export class Lobby {
+  private lastGameId = 0;
   private readonly sessions = new Map<string, Session>();
   private readonly games = new Set<Game>();
   private readonly matchmaker: Matchmaker;
@@ -111,8 +124,10 @@ export class Lobby {
     delete session.connection;
     this.matchmaker.remove(id);
     const game = session.game;
-    if (game && !game.match.isOver) session.droppedAt = now;
-    else if (!game) this.sessions.delete(id);
+    if (game && !game.match.isOver) {
+      session.droppedAt = now;
+      this.deps.log?.('player_dropped', { game: game.id });
+    } else if (!game) this.sessions.delete(id);
   }
 
   message(id: string, message: ClientMessage, now: number): void {
@@ -147,7 +162,7 @@ export class Lobby {
     delete session.game;
     delete session.seat;
     if (message.vsBot) {
-      this.start(id, undefined, this.matchmaker.pickBot(), now);
+      this.start(id, undefined, this.matchmaker.pickBot(), now, true);
       return;
     }
     this.matchmaker.add(id, now);
@@ -198,6 +213,7 @@ export class Lobby {
     secondId: string | undefined,
     bot: BotKind | undefined,
     now: number,
+    vsBot = false,
   ): void {
     const first = this.sessions.get(firstId);
     const second = secondId ? this.sessions.get(secondId) : undefined;
@@ -218,8 +234,26 @@ export class Lobby {
       },
       now,
     );
-    const game: Game = { match, sessions: {}, nextBotAt: now };
+    this.lastGameId += 1;
+    const humans = secondId ? 2 : 1;
+    const game: Game = {
+      id: this.lastGameId,
+      startedAt: now,
+      humans,
+      bot: secondId ? undefined : bot,
+      match,
+      sessions: {},
+      nextBotAt: now,
+    };
     this.games.add(game);
+    this.deps.log?.('match_start', {
+      game: game.id,
+      humans,
+      bot: game.bot ?? null,
+      heroes: [a.hero, b.hero],
+      /** True when the player asked for a bot rather than waiting in the queue. */
+      skippedQueue: !secondId && vsBot,
+    });
     const people: [Session | undefined, string | undefined, Entry][] = [
       [first, firstId, entries[0]],
       [second, secondId, entries[1]],
@@ -279,7 +313,33 @@ export class Lobby {
         ...(note ? { note } : {}),
       });
     });
-    if (game.match.isOver && game.overAt === undefined) game.overAt = now;
+    if (game.match.isOver && game.overAt === undefined) {
+      game.overAt = now;
+      this.logEnd(game, now, action, note);
+    }
+  }
+
+  private logEnd(
+    game: Game,
+    now: number,
+    action: Action,
+    note?: 'opponent-left',
+  ): void {
+    const { state } = game.match;
+    const reason = note
+      ? 'disconnect'
+      : action.type === 'Concede'
+        ? 'concede'
+        : 'play';
+    this.deps.log?.('match_end', {
+      game: game.id,
+      winner: state.winner,
+      turns: state.turn,
+      seconds: Math.round((now - game.startedAt) / SECOND_MS),
+      humans: game.humans,
+      bot: game.bot ?? null,
+      reason,
+    });
   }
 
   private tickGame(game: Game, now: number): void {
@@ -324,6 +384,7 @@ export class Lobby {
   }
 
   private fail(session: Session, code: string): void {
+    this.deps.log?.('rejected', { code });
     session.connection?.send({ t: 'error', code });
   }
 }

@@ -1,6 +1,6 @@
 import { buildDeck, createSeededRng, primePool } from '../../engine';
 import { Lobby } from '../lobby';
-import type { Connection } from '../lobby';
+import type { Connection, LogFn } from '../lobby';
 import type { ServerMessage } from '../protocol';
 import { catalog, pool } from '../test-helpers';
 import { loadHsCards } from '../../engine';
@@ -14,8 +14,9 @@ const config = {
   keepOverMs: 5000,
 };
 
-const makeLobby = (seed = 1): Lobby =>
+const makeLobby = (seed = 1, log?: LogFn): Lobby =>
   new Lobby({
+    log,
     rng: createSeededRng(seed),
     catalog,
     ordinaryPool: [...pool, ...primePool(cards)],
@@ -144,5 +145,28 @@ describe('Lobby', () => {
 
     expect(again.got[0]).toMatchObject({ t: 'matched' });
     expect(b.got.some(isOver)).toBe(false);
+  });
+
+  it('logs a match start and end without names or ids', () => {
+    const lines: [string, Record<string, unknown>][] = [];
+    const lobby = makeLobby(1, (event, data) => lines.push([event, data]));
+    const [a, b] = [fakeConnection(), fakeConnection()];
+    lobby.connect('a', a);
+    lobby.connect('b', b);
+    lobby.message('a', queueMessage(1), 0);
+    lobby.message('b', queueMessage(2), 0);
+    lobby.tick(1);
+    lobby.disconnect('a', 1000);
+    lobby.tick(61000);
+    lobby.tick(61250);
+
+    expect(lines.map(([event]) => event)).toEqual([
+      'match_start',
+      'player_dropped',
+      'match_end',
+    ]);
+    expect(lines[0][1]).toMatchObject({ humans: 2, bot: null });
+    expect(lines[2][1]).toMatchObject({ reason: 'disconnect', humans: 2 });
+    expect(JSON.stringify(lines)).not.toContain('Tester');
   });
 });
