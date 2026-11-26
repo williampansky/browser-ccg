@@ -74,6 +74,9 @@ const lobby = new Lobby({
       greedyShare: 0.9,
     },
     botDelayMs: 900,
+    // The board shows a preview of a played card or an attack for about a
+    // second before it happens (700 to 1100 ms), then plays it out.
+    botShownMoveDelayMs: 1800,
     graceMs: envNumber('RECONNECT_GRACE_SECONDS', 60) * 1000,
     keepOverMs: 10 * 60 * 1000,
   },

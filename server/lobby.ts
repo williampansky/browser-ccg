@@ -28,6 +28,11 @@ export interface LobbyConfig {
   matchmaker: MatchmakerConfig;
   /** Pause before each bot move, so a person can follow. */
   botDelayMs: number;
+  /**
+   * Pause after a bot move the board previews (a card, an attack, a skill),
+   * long enough for the player to see the preview before the next move.
+   */
+  botShownMoveDelayMs: number;
   /** How long a person who dropped has to come back before they concede. */
   graceMs: number;
   /** How long a finished game is kept so both can read the result. */
@@ -78,6 +83,13 @@ interface Game {
 }
 
 const SECOND_MS = 1000;
+/** The moves the board previews before they play (see PlayBoard). */
+const SHOWN_MOVES: Action['type'][] = [
+  'PlayCard',
+  'Attack',
+  'WeaponAttack',
+  'HeroSkill',
+];
 const BOT_NAMES: Record<BotKind, string> = {
   greedy: 'Training Bot',
   random: 'Wandering Bot',
@@ -358,7 +370,9 @@ export class Lobby {
     if (match.isOver || now < game.nextBotAt) return;
     const step = match.botStep(now);
     if (step && 'events' in step) {
-      game.nextBotAt = now + this.deps.config.botDelayMs;
+      const { botDelayMs, botShownMoveDelayMs } = this.deps.config;
+      const isShown = SHOWN_MOVES.includes(step.action.type);
+      game.nextBotAt = now + (isShown ? botShownMoveDelayMs : botDelayMs);
       this.broadcast(game, step, now);
     }
   }

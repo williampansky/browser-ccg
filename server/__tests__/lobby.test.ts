@@ -10,6 +10,7 @@ const { cards } = loadHsCards();
 const config = {
   matchmaker: { waitMs: 30000, greedyShare: 0.9 },
   botDelayMs: 0,
+  botShownMoveDelayMs: 0,
   graceMs: 60000,
   keepOverMs: 5000,
 };
