@@ -54,6 +54,7 @@ export const SKILL_FX: Record<string, SpellFxKind> = {
  * card falls back to the travel base.
  */
 export const CARD_FX: Record<string, SpellFxKind> = {
+  CORE_068: 'area',
   CORE_098: 'area',
   CORE_115: 'spot',
   PRIME_172: 'spot',
