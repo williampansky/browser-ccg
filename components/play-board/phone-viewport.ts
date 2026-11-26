@@ -27,7 +27,8 @@ export const isPhone = (screen: PhoneScreen): boolean =>
  * page is laid out as a desktop-sized window of the visible window's shape and the
  * browser scales it down to fit, so the board's pixel layout, drag maths and
  * effects layer all work unchanged. There is no initial-scale on purpose: it
- * would pin the page at 1:1 and crop it. In portrait (where a rotate prompt
+ * would pin the page at 1:1 and crop it. `viewport-fit=cover` lets an installed
+ * app draw under the status bar and cutout instead of leaving blank strips. In portrait (where a rotate prompt
  * shows) and on anything bigger it is the normal tag.
  */
 export const boardViewportContent = (screen: PhoneScreen): string => {
@@ -35,5 +36,5 @@ export const boardViewportContent = (screen: PhoneScreen): string => {
   const wanted = Math.round(BOARD_DESIGN_HEIGHT * screen.aspect);
   const width = Math.min(BOARD_MAX_WIDTH, Math.max(BOARD_MIN_WIDTH, wanted));
 
-  return `width=${width}, user-scalable=no`;
+  return `width=${width}, user-scalable=no, viewport-fit=cover`;
 };

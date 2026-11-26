@@ -8,6 +8,7 @@ export default function Document() {
         {/* Lets a phone install the game as an app with no browser bar. */}
         <link rel="manifest" href="/manifest.webmanifest" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <meta name="theme-color" content="#14161f" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         {/* Sets the saved interface theme before the first paint (no flash of the default). */}
