@@ -1,10 +1,7 @@
-import { e } from 'mathjs';
-import Link from 'next/link';
-import { Fragment, useState } from 'react';
-import { siteConfig } from '../../../app.config';
 import { Nav } from '../Nav';
+import { siteConfig } from '../../../app.config';
+import { useState } from 'react';
 import cx from '../../../utils/cx';
-const { pages } = siteConfig;
 
 export const Header = () => {
   const [active, setActive] = useState<boolean>(false);
@@ -19,7 +16,13 @@ export const Header = () => {
 
   return (
     <header className={cx('site__header', active ? 'active' : '')}>
-      <div className="text__value">{siteConfig.longName}</div>
+      <div className="text__value">
+        <span>{siteConfig.longName}</span>
+        <div className="semver">
+          <code>{`v${siteConfig.version}`}</code>
+        </div>
+      </div>
+
       <button onClick={onClick}>
         <img
           src={active ? closeIcon : menuIcon}
@@ -28,11 +31,8 @@ export const Header = () => {
           }}
         />
       </button>
-      <Nav />
 
-      <div className="semver">
-        <code>{`v${siteConfig.version}`}</code>
-      </div>
+      <Nav />
     </header>
   );
 };

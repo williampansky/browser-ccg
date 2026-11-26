@@ -5,6 +5,7 @@
   overflow: hidden;
   background: rgba(0, 0, 0, 0.95);
   display: none;
+  overflow: auto;
 
   .active & {
     display: block;
@@ -14,22 +15,24 @@
 .site__nav ul {
   @include display-flex(column nowrap, center, center);
   list-style-type: none;
-  // width: fit-content;
-  // padding: 0 1em;
   margin: 0 0 auto;
   padding: 0;
+  height: 100%;
   width: 100%;
-  height: 85%;
+  gap: 0;
+
+  @include breakpoint('small') {
+    @include display-flex(column wrap, center, center);
+    height: 100%;
+  }
 
   a {
-    @include display-flex(row nowrap, center, center);
+    @include display-flex(column nowrap, flex-start, flex-start);
     color: white;
-    height: 65px;
-    min-height: 65px;
-    max-height: 65px;
     white-space: nowrap;
     line-height: 1;
     font-family: var(--font-family-card);
     text-decoration: none;
+    padding: 2rem 3rem;
   }
 }
