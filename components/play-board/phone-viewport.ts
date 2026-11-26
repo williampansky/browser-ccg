@@ -17,7 +17,8 @@ export const BOARD_DESIGN_HEIGHT = 760;
 /** Narrower than this and the log and deck list would be hidden. */
 export const BOARD_MIN_WIDTH = 1200;
 export const BOARD_MAX_WIDTH = 2400;
-export const NORMAL_VIEWPORT = 'initial-scale=1.0, width=device-width';
+export const NORMAL_VIEWPORT =
+  'initial-scale=1.0, width=device-width, viewport-fit=cover';
 
 export const isPhone = (screen: PhoneScreen): boolean =>
   screen.shortSide < PHONE_MAX_SHORT_SIDE;

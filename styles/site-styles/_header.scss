@@ -1,6 +1,7 @@
 .site__header {
   @include display-flex(row nowrap, center, space-between);
-  padding: 0 1rem;
+  padding: 0 max(1rem, env(safe-area-inset-right)) 0
+    max(1rem, env(safe-area-inset-left));
   margin: 0 auto;
   position: relative;
   z-index: 1;

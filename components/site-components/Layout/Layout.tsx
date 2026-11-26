@@ -20,7 +20,10 @@ export const Layout = ({ children, title, description }: Props) => {
       <Head>
         <title>{`BCG | ${title}`}</title>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta
+          name="viewport"
+          content="initial-scale=1.0, width=device-width, viewport-fit=cover"
+        />
         <meta
           name="description"
           property="og:description"

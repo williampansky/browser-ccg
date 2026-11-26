@@ -94,6 +94,9 @@ export const PhoneFit = (): ReactElement | null => {
       window.removeEventListener('orientationchange', applyWhenSettled);
       window.removeEventListener('resize', applyWhenSettled);
       setViewport(NORMAL_VIEWPORT);
+      // An installed app can keep the board's layout height after leaving it,
+      // so ask for a fresh layout once the tag has settled.
+      setTimeout(() => window.dispatchEvent(new Event('resize')), SETTLE_MS);
     };
   }, []);
 
