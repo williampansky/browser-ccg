@@ -23,7 +23,6 @@
   },
   {
     "id": "PRIME_250",
-    "name": "Cyanea; Lady of the Water",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -36,14 +35,12 @@
       "%MYSTERY%",
       "%EVENT%",
       "%SET_VALUE%",
-      "%ON_END%"
+      "%ON_END%",
+      "%BUFF%"
     ],
     "numberPrimary": 2,
     "collectible": true,
-    "active": true,
-    "artistName": "Boyko Julia",
-    "artistUrl": "https://jubo.artstation.com/",
-    "artStatus": "FPO"
+    "active": true
   },
   {
     "id": "PRIME_168",
@@ -69,7 +66,6 @@
   },
   {
     "id": "PRIME_101",
-    "name": "Knight of the Twin Suns",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -85,10 +81,7 @@
     "playContext": "%DESTROY%",
     "collectible": true,
     "active": true,
-    "elite": true,
-    "artistName": "https://www.artstation.com/dianafranco",
-    "artistUrl": "https://www.artstation.com/dianafranco",
-    "artStatus": "FPO"
+    "elite": true
   },
   {
     "id": "PRIME_110",
@@ -102,8 +95,7 @@
     "text": "<strong>%ON_PLAY%:</strong> Destroy all other minions and discard your hand.",
     "collectible": true,
     "active": true,
-    "elite": true,
-    "artStatus": "FPO"
+    "elite": true
   },
   {
     "id": "PRIME_223",
@@ -128,7 +120,6 @@
   },
   {
     "id": "PRIME_074",
-    "name": "Orc Hunters",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -141,10 +132,7 @@
       "%BULWARK%"
     ],
     "collectible": true,
-    "active": true,
-    "artistName": "https://www.artstation.com/einarmartinsen",
-    "artistUrl": "https://www.artstation.com/einarmartinsen",
-    "artStatus": "FPO"
+    "active": true
   },
   {
     "id": "PRIME_165",
@@ -245,8 +233,7 @@
     "text": "<strong>%ON_PLAY%:</strong> Summon all friendly minions that died this turn",
     "collectible": true,
     "active": true,
-    "elite": true,
-    "artStatus": "FPO"
+    "elite": true
   },
   {
     "id": "PRIME_047",
@@ -383,7 +370,6 @@
   },
   {
     "id": "PRIME_100",
-    "name": "Sellarus",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -400,14 +386,10 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_100a",
-    "artistName": "https://www.artstation.com/domenicosellaro",
-    "artistUrl": "https://www.artstation.com/domenicosellaro",
-    "artStatus": "FPO"
+    "entourage": "PRIME_100a"
   },
   {
     "id": "PRIME_072",
-    "name": "Chrome Raider",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -421,10 +403,7 @@
       "%BUBBLE%"
     ],
     "collectible": true,
-    "active": true,
-    "artistName": "https://www.artstation.com/xistenceimaginations",
-    "artistUrl": "https://www.artstation.com/xistenceimaginations",
-    "artStatus": "FPO"
+    "active": true
   },
   {
     "id": "PRIME_002",
@@ -673,7 +652,6 @@
   },
   {
     "id": "PRIME_102",
-    "name": "Jötunn",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -681,19 +659,16 @@
     "cost": 7,
     "attack": 7,
     "health": 5,
-    "text": "At the end of your turn,<br>\ndeal 2 damage to ALL<br>\nother characters",
+    "text": "At the end of your turn, deal 2 damage to everyone else",
     "mechanics": [
       "%ON_END%",
-      "%AOE%"
+      "%AOE%",
+      "%DAMAGE%"
     ],
     "numberPrimary": 2,
     "collectible": true,
     "active": true,
-    "elite": true,
-    "flavor": "\"Once they carved his face onto the rocks of the highest mountain.\"",
-    "artistName": "https://www.artstation.com/diogoyoshikawa",
-    "artistUrl": "https://www.artstation.com/diogoyoshikawa",
-    "artStatus": "FPO"
+    "elite": true
   },
   {
     "id": "PRIME_266",
@@ -899,31 +874,6 @@
     "artStatus": "FINAL"
   },
   {
-    "id": "PRIME_248",
-    "name": "Ah-Xoc-Xin; God of Poetry",
-    "set": "%SET_003%",
-    "type": "%TYPE_MINION%",
-    "rarity": "%RARITY_MYTHIC%",
-    "race": "%RACE_NONE%",
-    "cost": 7,
-    "attack": 5,
-    "health": 5,
-    "text": "<strong>%DISCOVER%</strong> a<br>\nROCKING power",
-    "mechanics": [
-      "%ON_PLAY%",
-      "%DISCOVER%"
-    ],
-    "numberPrimary": 1,
-    "playContext": "%DISCOVER%",
-    "collectible": true,
-    "active": true,
-    "elite": true,
-    "flavor": "\"Ah-zoc-zin\"",
-    "artistName": "https://www.artstation.com/fler",
-    "artistUrl": "https://www.artstation.com/fler",
-    "artStatus": "FPO"
-  },
-  {
     "id": "PRIME_209",
     "name": "Blaze Storm",
     "set": "%SET_003%",
@@ -996,7 +946,7 @@
     "cost": 10,
     "attack": 10,
     "health": 10,
-    "text": "%STEAL% 2 %RANDOM% minions<br>\n<strong>%ON_DEATH%:</strong> %SUMMON% Glory",
+    "text": "%STEAL% 2 %RANDOM% minions; <strong>%ON_DEATH%:</strong> %SUMMON% Glory",
     "mechanics": [
       "%ON_PLAY%",
       "%STEAL%",
@@ -1009,10 +959,7 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_251a",
-    "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin",
-    "artStatus": "FPO"
+    "entourage": "PRIME_251a"
   },
   {
     "id": "PRIME_016",
@@ -1637,7 +1584,6 @@
   },
   {
     "id": "PRIME_086",
-    "name": "Spider Mech",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -1645,13 +1591,12 @@
     "cost": 12,
     "attack": 8,
     "health": 8,
-    "text": "Costs 1 less for each card you<br>\nplayed this turn and last (max 6)",
+    "text": "Costs 1 less for each card you played this turn and last (max 6)",
     "mechanics": [
       "%EVENT%"
     ],
     "collectible": true,
-    "active": true,
-    "artStatus": "FPO"
+    "active": true
   },
   {
     "id": "PRIME_262",
@@ -2072,7 +2017,6 @@
   },
   {
     "id": "PRIME_249",
-    "name": "Hell Executioner",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -2091,10 +2035,7 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "flavor": "Hope you like it... he like you, too.",
-    "artistName": "Maxence Burgel",
-    "artistUrl": "https://inexam.artstation.com/",
-    "artStatus": "FPO"
+    "flavor": "Hope you like it... he like you, too."
   },
   {
     "id": "PRIME_022",
@@ -2239,9 +2180,6 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "artistName": "David Astruga",
-    "artistUrl": "https://www.artstation.com/davidastruga",
-    "artStatus": "FPO",
     "description": "Players affected by this card may still regain Health greater than the initial 15 value that is set."
   },
   {
@@ -2596,12 +2534,15 @@
     "cost": 9,
     "attack": 4,
     "health": 12,
-    "text": "At the end of your turn, add a Dream Card to your hand.",
+    "text": "At the end of your turn, add a random PRIME_109 Card to your hand",
+    "mechanics": [
+      "%ADD_CARD%",
+      "%RANDOM%"
+    ],
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_109a, PRIME_109b, PRIME_109c, PRIME_109d",
-    "artStatus": "FPO"
+    "entourage": "PRIME_109a, PRIME_109b, PRIME_109c, PRIME_109d"
   },
   {
     "id": "PRIME_148",
@@ -2979,7 +2920,6 @@
   },
   {
     "id": "PRIME_085",
-    "name": "Ancient Timber-Hulk",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -2987,15 +2927,12 @@
     "cost": 10,
     "attack": 8,
     "health": 8,
-    "text": "Costs 1 less for each minion<br>\nthat has died this game (max 6)",
+    "text": "Costs 1 less for each minion that has died this game (max 6)",
     "mechanics": [
       "%EVENT%"
     ],
     "collectible": true,
-    "active": true,
-    "artistName": "https://www.artstation.com/ludongjun",
-    "artistUrl": "https://www.artstation.com/ludongjun",
-    "artStatus": "FPO"
+    "active": true
   },
   {
     "id": "PRIME_046",
@@ -3024,7 +2961,6 @@
   },
   {
     "id": "PRIME_245",
-    "name": "Nuclear Submarine",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -3042,10 +2978,7 @@
     "playContext": "%RANDOM%",
     "collectible": true,
     "active": true,
-    "elite": true,
-    "artistName": "https://www.artstation.com/riyuart",
-    "artistUrl": "https://www.artstation.com/riyuart",
-    "artStatus": "FPO"
+    "elite": true
   },
   {
     "id": "PRIME_216",
@@ -3131,8 +3064,7 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_099a",
-    "artStatus": "FPO"
+    "entourage": "PRIME_099a"
   },
   {
     "id": "PRIME_261",
@@ -3294,7 +3226,6 @@
   },
   {
     "id": "PRIME_247",
-    "name": "Volcanic Giant",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_REMARKABLE%",
@@ -3302,15 +3233,12 @@
     "cost": 12,
     "attack": 8,
     "health": 8,
-    "text": "Costs 1 less for each point<br>\nof %ARMOR% you have lost",
+    "text": "Costs 1 less for each point of %ARMOR% lost",
     "mechanics": [
       "%COST%"
     ],
     "collectible": true,
-    "active": true,
-    "artistName": "George Vostrikov",
-    "artistUrl": "https://georgevostrikov.artstation.com/",
-    "artStatus": "FPO"
+    "active": true
   },
   {
     "id": "PRIME_068",
@@ -3408,7 +3336,6 @@
   },
   {
     "id": "PRIME_039",
-    "name": "Starborne Healer",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_COMMON%",
@@ -3423,10 +3350,7 @@
     ],
     "numberPrimary": 5,
     "collectible": true,
-    "active": true,
-    "artistName": "https://www.artstation.com/maxduran",
-    "artistUrl": "https://www.artstation.com/maxduran",
-    "artStatus": "FPO"
+    "active": true
   },
   {
     "id": "PRIME_003",
@@ -3559,8 +3483,7 @@
     "health": 2,
     "text": "<strong>%ON_PLAY%:</strong> Remove 1 Durability from your opponent's weapon.",
     "collectible": true,
-    "active": false,
-    "artStatus": "FPO"
+    "active": false
   },
   {
     "id": "PRIME_120",
@@ -3734,12 +3657,11 @@
     "cost": 9,
     "attack": 8,
     "health": 8,
-    "text": "<strong>%ON_PLAY%:</strong> Summon 1/1 Whelps until your side of the battlefield is full.",
+    "text": "<strong>%ON_PLAY%:</strong> Summon 1/1s until your side of the battlefield is full",
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_108a",
-    "artStatus": "FPO"
+    "entourage": "PRIME_108a"
   },
   {
     "id": "PRIME_178",
@@ -3862,7 +3784,7 @@
     "cost": 10,
     "attack": 10,
     "health": 10,
-    "text": "<small>Force ALL minions to attack %RANDOM% characters</small><br>\n<strong>%ON_DEATH%:</strong> %SUMMON% Ruin",
+    "text": "Force ALL minions to attack %RANDOM% characters; <strong>%ON_DEATH%:</strong> %SUMMON% Ruin",
     "mechanics": [
       "%EVENT%",
       "%RANDOM%",
@@ -3875,10 +3797,7 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_252a",
-    "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin",
-    "artStatus": "FPO"
+    "entourage": "PRIME_252a"
   },
   {
     "id": "PRIME_017",
@@ -4022,10 +3941,7 @@
     "numberPrimary": 15,
     "collectible": true,
     "active": true,
-    "elite": true,
-    "artistName": "https://www.artstation.com/dianafranco",
-    "artistUrl": "https://www.artstation.com/dianafranco",
-    "artStatus": "FPO"
+    "elite": true
   },
   {
     "id": "PRIME_066",
@@ -4074,7 +3990,6 @@
   },
   {
     "id": "PRIME_098",
-    "name": "Spirit of the Forest",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -4092,10 +4007,7 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_098a",
-    "artistName": "https://www.artstation.com/martanael",
-    "artistUrl": "https://www.artstation.com/martanael",
-    "artStatus": "FPO"
+    "entourage": "PRIME_098a"
   },
   {
     "id": "PRIME_021",
@@ -4129,8 +4041,7 @@
     "text": "+5 %SPELL_DAMAGE%",
     "collectible": true,
     "active": true,
-    "elite": true,
-    "artStatus": "FPO"
+    "elite": true
   },
   {
     "id": "PRIME_067",
@@ -4330,8 +4241,7 @@
     "health": 3,
     "text": "Your other %RACE_PIRATE%s have +1/+1.",
     "collectible": true,
-    "active": false,
-    "artStatus": "FPO"
+    "active": false
   },
   {
     "id": "PRIME_035",
@@ -4389,22 +4299,20 @@
     "cost": 10,
     "attack": 10,
     "health": 10,
-    "text": "Set ALL minion's HP to 1<br>\n<strong>%ON_DEATH%:</strong> %SUMMON% Fear",
+    "text": "Set ALL minion's HP to 1; <strong>%ON_DEATH%:</strong> %SUMMON% Fear",
     "mechanics": [
       "%DEBUFF%",
       "%AOE%",
       "%ON_DEATH%",
-      "%SUMMON%"
+      "%SUMMON%",
+      "%SET_VALUE%"
     ],
     "numberPrimary": 1,
     "playContext": "%SUMMON%",
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_253a",
-    "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin",
-    "artStatus": "FPO"
+    "entourage": "PRIME_253a"
   },
   {
     "id": "PRIME_006",
@@ -4481,8 +4389,7 @@
     "health": 2,
     "text": "The first minion you play each turn costs (1) less.",
     "collectible": true,
-    "active": false,
-    "artStatus": "FPO"
+    "active": false
   },
   {
     "id": "PRIME_064",
@@ -4680,8 +4587,7 @@
     "playContext": "%DESTROY%",
     "collectible": true,
     "active": true,
-    "elite": true,
-    "artStatus": "FPO"
+    "elite": true
   },
   {
     "id": "PRIME_048",
@@ -5069,7 +4975,6 @@
   },
   {
     "id": "PRIME_097",
-    "name": "Aharon, Medjai of the Desert",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -5077,7 +4982,7 @@
     "cost": 6,
     "attack": 4,
     "health": 5,
-    "text": "<strong>%ON_DEATH%</strong><br>\n%SUMMON% Ata",
+    "text": "<strong>%ON_DEATH%:</strong> %SUMMON% a 4/5",
     "mechanics": [
       "%ON_DEATH%",
       "%SUMMON%"
@@ -5086,8 +4991,7 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_097a",
-    "artStatus": "FPO"
+    "entourage": "PRIME_097a"
   },
   {
     "id": "PRIME_075",
@@ -5182,8 +5086,7 @@
     "numberSecondary": 1,
     "collectible": true,
     "active": false,
-    "elite": true,
-    "artStatus": "FPO"
+    "elite": true
   },
   {
     "id": "PRIME_241",
@@ -5242,7 +5145,7 @@
     "cost": 10,
     "attack": 10,
     "health": 10,
-    "text": "%DESTROY% ALL minions<br>\n<strong>%ON_DEATH%:</strong> %SUMMON% Despair",
+    "text": "%DESTROY% ALL minions; <strong>%ON_DEATH%:</strong> %SUMMON% Despair",
     "mechanics": [
       "%DESTROY%",
       "%AOE%",
@@ -5253,10 +5156,7 @@
     "collectible": true,
     "active": true,
     "elite": true,
-    "entourage": "PRIME_254a",
-    "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin",
-    "artStatus": "FPO"
+    "entourage": "PRIME_254a"
   },
   {
     "id": "PRIME_069",
@@ -5712,7 +5612,6 @@
   },
   {
     "id": "PRIME_073",
-    "name": "Wandering Mystic",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_SUPERIOR%",
@@ -5727,10 +5626,7 @@
     ],
     "numberPrimary": 1,
     "collectible": true,
-    "active": true,
-    "artistName": "Francis Brunet",
-    "artistUrl": "https://www.artstation.com/francisbrunet",
-    "artStatus": "FPO"
+    "active": true
   },
   {
     "id": "PRIME_260",
@@ -5803,7 +5699,6 @@
   },
   {
     "id": "PRIME_246",
-    "name": "The Chaos Knight",
     "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_MYTHIC%",
@@ -5811,7 +5706,7 @@
     "cost": 7,
     "attack": 4,
     "health": 5,
-    "text": "<strong>%ON_DEATH%:</strong> Swap your<br>\nweakest minion for the<br>\nenemy's strongest",
+    "text": "<strong>%ON_DEATH%:</strong> Swap your weakest minion for the enemy's strongest",
     "mechanics": [
       "%ON_DEATH%",
       "%STEAL%"
@@ -5820,11 +5715,7 @@
     "playContext": "%STEAL%",
     "collectible": true,
     "active": true,
-    "elite": true,
-    "flavor": "Attempting the Warhammer aesthetic.",
-    "artistName": "Daniel Kamarudin",
-    "artistUrl": "https://www.artstation.com/danielkamarudin",
-    "artStatus": "FPO"
+    "elite": true
   },
   {
     "id": "PRIME_057",
