@@ -7,7 +7,10 @@ const nextConfig = {
   distDir: process.env.NEXT_DIST_DIR || '.next',
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
-  swcMinify: true,
+  // Next's SWC minifier (12.3) broke the Pixi spell effects in the production
+  // build: the spot effect's fills came out solid instead of faint (dev and a
+  // Terser build were right). Terser is the safe choice until Next is upgraded.
+  swcMinify: false,
 };
 
 module.exports = withSvgr(nextConfig);
