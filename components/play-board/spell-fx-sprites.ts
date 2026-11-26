@@ -24,6 +24,20 @@ export const SPELL_FX_SPRITES: SpellFxSprite[] = [
   { id: 'dagger-pale', label: 'Pale curved dagger', tip: UP_RIGHT },
   { id: 'dagger-orange', label: 'Orange dagger', tip: UP_RIGHT },
   { id: 'dagger-bone', label: 'Bone dagger', tip: DOWN_LEFT },
+  { id: 'axe-skull', label: 'Skull battle axe', tip: -100 },
+  { id: 'axe-double', label: 'Double axe', tip: -90 },
+  { id: 'spear-purple', label: 'Purple spear', tip: -45 },
+  { id: 'dagger-curved', label: 'Curved brown dagger', tip: -45 },
+  { id: 'hammer-war', label: 'Blue war hammer', tip: -45 },
+  { id: 'mace-star', label: 'Morning star', tip: -45 },
+  { id: 'shard-blue', label: 'Blue crystal shard', tip: -45 },
+  { id: 'shard-ice', label: 'Ice shard', tip: -45 },
+  { id: 'potion-red', label: 'Red potion', tip: -90 },
+  { id: 'potion-green', label: 'Green potion', tip: -90 },
+  { id: 'potion-purple', label: 'Purple potion', tip: -90 },
+  { id: 'skull-beast', label: 'Beast skull', tip: 180 },
+  { id: 'shield-kite', label: 'Blue kite shield', tip: 90 },
+  { id: 'shield-round', label: 'Round wooden shield', tip: -90 },
 ];
 
 /** The picture with this id (the first one if it is not known). */

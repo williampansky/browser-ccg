@@ -77,6 +77,12 @@ const BURST_SPEED_RANGE = 0.18;
 const SPRITE_REACH = 0.7;
 /** The least a picture must move in a frame before it turns to face it. */
 const SPRITE_TURN_MIN = 0.5;
+const AREA_MIN_DROP_SPEED = 0.05;
+const AREA_RAIN_SWAY = 0.04;
+const AREA_MIN_RING_MS = 200;
+const AREA_SHOCK_REACH = 1.15;
+const AREA_SHOCK_THIN = 0.6;
+const AREA_SHOCK_FILL = 0.14;
 const AREA_SEGMENTS = 44;
 const AREA_FADE_IN = 0.2;
 const AREA_FADE_OUT = 0.3;
@@ -93,6 +99,11 @@ const AREA_WAVE_EDGE = 14;
 const AREA_WAVE_RIPPLE = 0.045;
 const AREA_WAVE_SPEED = 0.012;
 const AREA_MIN_SIDE = 220;
+/** A spot picture: its first size (fraction), and how long it pops and fades. */
+const SPOT_PICTURE_FROM = 0.6;
+const SPOT_PICTURE_POP = 0.25;
+const SPOT_PICTURE_FADE_IN = 0.2;
+const SPOT_PICTURE_FADE_OUT = 0.35;
 const SPOT_START_RADIUS = 16;
 const SPOT_RING_FADE = 0.7;
 const SPOT_GLOW_ALPHA = 0.8;
@@ -114,6 +125,8 @@ const softTexture = (app: Application): Texture => {
 };
 
 const STRIKE_CORE = 0xffffff;
+/** How hard a falling picture speeds up (1 = steady). */
+const STRIKE_FALL_POWER = 2.2;
 const STRIKE_OVERSHOOT = 30;
 const BRANCH_SEGMENTS = 5;
 const BRANCH_WIDTH = 0.45;
@@ -426,6 +439,70 @@ const drawSweep = (
   }
 };
 
+/** How far a spinning picture has turned after `elapsedMs`, in radians. */
+const spinRadians = (degreesPerSecond: number, elapsedMs: number): number =>
+  (degreesPerSecond * (elapsedMs / 1000) * Math.PI) / 180;
+
+/** Draws one frame of the shockwave: rings spreading from the region's middle. */
+const drawShockwave = (
+  graphics: Graphics,
+  rect: FxRect,
+  elapsedMs: number,
+  tune: SpellFxTune,
+): void => {
+  const body = colourNumber(tune.areaColour);
+  const edge = colourNumber(tune.areaAccentColour);
+  const rings = Math.max(1, Math.round(tune.areaRings));
+  const ringLife = Math.max(
+    AREA_MIN_RING_MS,
+    tune.areaMs - (rings - 1) * tune.areaRingGap,
+  );
+  graphics.clear();
+  for (let ring = 0; ring < rings; ring++) {
+    const age = (elapsedMs - ring * tune.areaRingGap) / ringLife;
+    if (age <= 0 || age >= 1) continue;
+    const open = 1 - Math.pow(1 - age, 3);
+    const reach = open * AREA_SHOCK_REACH;
+    const alpha = Math.pow(1 - age, 1.2);
+    const colour = mixColour(edge, body, age);
+    graphics.lineStyle({
+      alpha,
+      color: colour,
+      width: Math.max(1, tune.areaWidth * (1 - age * AREA_SHOCK_THIN)),
+    });
+    graphics.beginFill(colour, AREA_SHOCK_FILL * alpha);
+    graphics.drawEllipse(
+      rect.x + rect.width / 2,
+      rect.y + rect.height / 2,
+      (rect.width / 2) * reach,
+      (rect.height / 2) * reach,
+    );
+    graphics.endFill();
+  }
+};
+
+/** The steepest lean a strike may have from vertical (degrees). */
+const STRIKE_MAX_ANGLE = 75;
+
+/**
+ * Where a strike starts: above the top of the screen, leaned off vertical by
+ * the tune's angle so that it still ends on `to` (plus the random sway).
+ */
+const strikeOrigin = (to: FxPoint, tune: SpellFxTune): FxPoint => {
+  const lean = Math.max(
+    -STRIKE_MAX_ANGLE,
+    Math.min(STRIKE_MAX_ANGLE, tune.strikeAngle),
+  );
+  const run = to.y + STRIKE_OVERSHOOT;
+  return {
+    x:
+      to.x -
+      Math.tan((lean * Math.PI) / 180) * run +
+      (Math.random() - 0.5) * tune.strikeSway,
+    y: -STRIKE_OVERSHOOT,
+  };
+};
+
 interface StreamerLane {
   phase: number;
   reach: number;
@@ -604,13 +681,13 @@ export const createPixiFx = (): PixiFx => {
     tune: SpellFxTune,
   ): void => {
     const isSprite = tune.travelHasSprite;
-    const art = spriteById(tune.travelSprite);
-    const size = tune.travelSpriteSize;
-    const tipRadians = ((art.tip + tune.travelSpriteTurn) * Math.PI) / 180;
+    const art = spriteById(tune.sprite);
+    const size = tune.spriteSize;
+    const tipRadians = ((art.tip + tune.spriteTurn) * Math.PI) / 180;
     // A picture lands a little off the target's centre, point first: the path
     // ends where its centre will be, a blade's length back from the spot.
     const scatterAngle = Math.random() * Math.PI * 2;
-    const scatterRadius = tune.travelSpriteScatter * Math.sqrt(Math.random());
+    const scatterRadius = tune.spriteScatter * Math.sqrt(Math.random());
     const hit = isSprite
       ? {
           x: to.x + Math.cos(scatterAngle) * scatterRadius,
@@ -620,7 +697,7 @@ export const createPixiFx = (): PixiFx => {
     const aimX = hit.x - from.x;
     const aimY = hit.y - from.y;
     const aimLength = Math.hypot(aimX, aimY) || 1;
-    const back = isSprite ? tune.travelSpriteDepth - size * SPRITE_REACH : 0;
+    const back = isSprite ? tune.spriteDepth - size * SPRITE_REACH : 0;
     const end = {
       x: hit.x + (aimX / aimLength) * back,
       y: hit.y + (aimY / aimLength) * back,
@@ -680,7 +757,8 @@ export const createPixiFx = (): PixiFx => {
       if (arrivedAt === null) {
         if (isSprite) {
           picture.position.set(at.x, at.y);
-          picture.rotation = heading - tipRadians;
+          picture.rotation =
+            heading - tipRadians + spinRadians(tune.spriteSpin, elapsed);
           picture.width = size;
           picture.height = size;
         } else {
@@ -733,14 +811,14 @@ export const createPixiFx = (): PixiFx => {
       const held = arrivedAt === null ? 0 : elapsed - arrivedAt;
       // A picture sticks in the target, stays a moment, then fades away.
       const pictureLeft = isSprite
-        ? tune.travelSpriteStick + tune.travelSpriteFade - held
+        ? tune.spriteStick + tune.spriteFade - held
         : 0;
       if (isSprite && arrivedAt !== null) {
-        const fade = Math.max(1, tune.travelSpriteFade);
+        const fade = Math.max(1, tune.spriteFade);
         picture.alpha =
-          held <= tune.travelSpriteStick
+          held <= tune.spriteStick
             ? 1
-            : Math.max(0, 1 - (held - tune.travelSpriteStick) / fade);
+            : Math.max(0, 1 - (held - tune.spriteStick) / fade);
       }
       // The streamers keep flailing a moment after the hit, fading out.
       const streamersLeft = streamers ? tune.travelStreamerLinger - held : 0;
@@ -763,15 +841,88 @@ export const createPixiFx = (): PixiFx => {
     wake();
   };
 
+  /**
+   * A picture falls from above point-first onto `to`, sticks in, then fades:
+   * the strike with an axe, a spear or a shard in place of the bolt.
+   */
+  const strikePicture = (to: FxPoint, ms: number, tune: SpellFxTune): void => {
+    const art = spriteById(tune.sprite);
+    const size = tune.spriteSize;
+    const tipRadians = ((art.tip + tune.spriteTurn) * Math.PI) / 180;
+    const picture = new Sprite(Texture.from(spriteUrl(art.id)));
+    picture.anchor.set(0.5);
+    addToStage(picture);
+    const scatterAngle = Math.random() * Math.PI * 2;
+    const scatterRadius = tune.spriteScatter * Math.sqrt(Math.random());
+    const hit = {
+      x: to.x + Math.cos(scatterAngle) * scatterRadius,
+      y: to.y + Math.sin(scatterAngle) * scatterRadius,
+    };
+    // The point leads along the way it falls (leaned by the angle); the centre
+    // ends a blade's length back from the spot.
+    const origin = strikeOrigin(hit, tune);
+    const fallX = hit.x - origin.x;
+    const fallY = hit.y - origin.y;
+    const fallLength = Math.hypot(fallX, fallY) || 1;
+    const heading = Math.atan2(fallY, fallX);
+    const back = size * SPRITE_REACH - tune.spriteDepth;
+    const endX = hit.x - (fallX / fallLength) * back;
+    const endY = hit.y - (fallY / fallLength) * back;
+    const startX = origin.x - (fallX / fallLength) * size;
+    const startY = origin.y - (fallY / fallLength) * size;
+    const duration = Math.max(1, ms);
+    let elapsed = 0;
+    let arrivedAt: number | null = null;
+    jobs.add((deltaMs) => {
+      elapsed += deltaMs;
+      const linear = Math.min(1, elapsed / duration);
+      const fall = Math.pow(linear, STRIKE_FALL_POWER);
+      if (arrivedAt === null) {
+        picture.position.set(
+          startX + (endX - startX) * fall,
+          startY + (endY - startY) * fall,
+        );
+        picture.rotation =
+          heading - tipRadians + spinRadians(tune.spriteSpin, elapsed);
+        picture.width = size;
+        picture.height = size;
+      }
+      if (linear >= 1 && arrivedAt === null) {
+        arrivedAt = elapsed;
+        burstWith(hit, 'hit', tune, colourNumber(tune.strikeColour));
+        if (tune.strikeHasFlash) flashScreen(tune.strikeScreenFlash);
+      }
+      if (arrivedAt === null) return true;
+      const held = elapsed - arrivedAt;
+      const fade = Math.max(1, tune.spriteFade);
+      picture.alpha =
+        held <= tune.spriteStick
+          ? 1
+          : Math.max(0, 1 - (held - tune.spriteStick) / fade);
+      if (held < tune.spriteStick + tune.spriteFade) return true;
+      picture.destroy();
+      return false;
+    });
+    wake();
+  };
+
   const strike = (to: FxPoint, ms: number, tune: SpellFxTune): void => {
+    if (tune.strikeHasSprite) {
+      strikePicture(to, ms, tune);
+      return;
+    }
     const colour = colourNumber(tune.strikeColour);
-    const newPath = (startX: number): FxPoint[] =>
-      jaggedPath(
-        { x: startX, y: -STRIKE_OVERSHOOT },
-        to,
-        Math.round(tune.strikeSegments),
-        tune.strikeJitter,
-      );
+    const isBeam = tune.strikeStyle === 'beam';
+    // A jagged bolt, or (for a beam) a straight line that grows to the target.
+    const newPath = (origin: FxPoint): FxPoint[] =>
+      isBeam
+        ? [origin, to]
+        : jaggedPath(
+            origin,
+            to,
+            Math.round(tune.strikeSegments),
+            tune.strikeJitter,
+          );
     const bolt = new Graphics();
     bolt.blendMode = BLEND_MODES.ADD;
     app.stage.addChild(bolt as never);
@@ -781,40 +932,54 @@ export const createPixiFx = (): PixiFx => {
     glow.blendMode = BLEND_MODES.ADD;
     glow.position.set(to.x, to.y);
     addToStage(glow);
-    const startX = to.x + (Math.random() - 0.5) * tune.strikeSway;
-    let path = newPath(startX);
-    let branches = makeBranches(path, tune);
+    const origin = strikeOrigin(to, tune);
+    let path = newPath(origin);
+    let branches = isBeam ? [] : makeBranches(path, tune);
     let elapsed = 0;
     let isStruck = false;
     let reroll = 0;
     jobs.add((deltaMs) => {
       elapsed += deltaMs;
-      // Before the strike a blue glow gathers where it will land.
+      // Before the strike a glow gathers where it will land.
       if (elapsed < ms) {
         glow.scale.set(tune.strikeGlowScale * (elapsed / ms));
         glow.alpha = elapsed / ms;
         return true;
       }
-      if (!isStruck) {
+      const since = elapsed - ms;
+      // A beam takes a moment to reach the target; its hit lands then.
+      const reach =
+        isBeam && tune.strikeBeamGrow > 0
+          ? Math.min(1, since / tune.strikeBeamGrow)
+          : 1;
+      if (!isStruck && reach >= 1) {
         isStruck = true;
         burstWith(to, 'hit', tune, colour);
         if (tune.strikeHasFlash) flashScreen(tune.strikeScreenFlash);
       }
-      const since = elapsed - ms;
-      const life = 1 - since / tune.strikeLife;
+      const life =
+        1 - since / (tune.strikeLife + (isBeam ? tune.strikeBeamGrow : 0));
       if (life <= 0) {
         bolt.destroy();
         glow.destroy();
         return false;
       }
-      // The bolt re-forms a few times, like a real flicker.
-      if (since > reroll) {
+      if (isBeam) {
+        path = [
+          origin,
+          {
+            x: origin.x + (to.x - origin.x) * reach,
+            y: origin.y + (to.y - origin.y) * reach,
+          },
+        ];
+      } else if (since > reroll) {
+        // The bolt re-forms a few times, like a real flicker.
         reroll += tune.strikeReroll;
-        path = newPath(startX);
+        path = newPath(origin);
         branches = makeBranches(path, tune);
       }
-      const flicker = Math.random() < tune.strikeDropout ? 0.35 : 1;
-      const alpha = life * flicker;
+      const flicker = !isBeam && Math.random() < tune.strikeDropout ? 0.35 : 1;
+      const alpha = Math.min(1, life * 1.5) * flicker;
       glow.scale.set(tune.strikeGlowScale * (1 + (1 - life)));
       glow.alpha = alpha;
       bolt.clear();
@@ -837,6 +1002,16 @@ export const createPixiFx = (): PixiFx => {
     glow.blendMode = BLEND_MODES.ADD;
     glow.position.set(at.x, at.y);
     addToStage(glow);
+    // A picture pops up at the spot (a shield, a skull, a potion) and rises.
+    const art = spriteById(tune.sprite);
+    const picture = tune.spotHasSprite
+      ? new Sprite(Texture.from(spriteUrl(art.id)))
+      : null;
+    if (picture) {
+      picture.anchor.set(0.5);
+      picture.alpha = 0;
+      addToStage(picture);
+    }
     // One layer per ring, so each can have its own blur (the first ring's plus
     // a step per later ring). No blur skips the filter's cost.
     const layers = Array.from({ length: rings }, (_, ring) => {
@@ -878,6 +1053,7 @@ export const createPixiFx = (): PixiFx => {
       }
       if (elapsed >= total && sparkIndex >= sparks.length) {
         glow.destroy();
+        picture?.destroy();
         for (const { layer, softener } of layers) {
           layer.destroy();
           softener?.destroy();
@@ -888,6 +1064,20 @@ export const createPixiFx = (): PixiFx => {
       const opening = 1 - Math.pow(1 - first, 3);
       glow.scale.set(tune.spotGlowScale * (0.4 + 0.6 * opening));
       glow.alpha = tune.spotHasGlow ? SPOT_GLOW_ALPHA * (1 - first) : 0;
+      if (picture) {
+        const life = Math.min(1, elapsed / tune.spotLife);
+        const pop = 1 - Math.pow(1 - Math.min(1, life / SPOT_PICTURE_POP), 3);
+        const fadeIn = Math.min(1, life / SPOT_PICTURE_FADE_IN);
+        const fadeOut = Math.min(1, (1 - life) / SPOT_PICTURE_FADE_OUT);
+        picture.alpha = Math.max(0, Math.min(fadeIn, fadeOut));
+        const scale = SPOT_PICTURE_FROM + (1 - SPOT_PICTURE_FROM) * pop;
+        picture.width = tune.spriteSize * scale;
+        picture.height = tune.spriteSize * scale;
+        picture.position.set(at.x, at.y - tune.spotSpriteRise * opening);
+        picture.rotation =
+          (tune.spriteTurn * Math.PI) / 180 +
+          spinRadians(tune.spriteSpin, elapsed);
+      }
       for (let ring = 0; ring < rings; ring++) {
         const drawing = layers[ring].layer;
         drawing.clear();
@@ -947,6 +1137,7 @@ export const createPixiFx = (): PixiFx => {
     app.stage.addChild(graphics as never);
     const softener = tune.areaBlur > 0 ? new BlurFilter(tune.areaBlur) : null;
     if (softener) graphics.filters = [softener];
+    const body = colourNumber(tune.areaColour);
     const edge = colourNumber(tune.areaAccentColour);
     if (tune.areaHasFlash) flashScreen(tune.areaFlash, edge);
     let elapsed = 0;
@@ -956,20 +1147,36 @@ export const createPixiFx = (): PixiFx => {
       const age = Math.min(1, elapsed / tune.areaMs);
       if (tune.areaStyle === 'sweep')
         drawSweep(graphics, rect, age, elapsed, tune);
+      else if (tune.areaStyle === 'shockwave')
+        drawShockwave(graphics, rect, elapsed, tune);
+      else if (tune.areaStyle === 'rain') graphics.clear();
       else drawSwirl(graphics, rect, age, elapsed, tune);
       // Embers ride the effect: a few new ones each frame, on the arms or in
-      // the band.
-      owed += (tune.areaEmbers * deltaMs) / 1000;
+      // the band. Rain is made of falling (or rising) drops instead.
+      const isRain = tune.areaStyle === 'rain';
+      owed += ((isRain ? tune.areaDrops : tune.areaEmbers) * deltaMs) / 1000;
       const envelope = areaEnvelope(age);
       while (owed >= 1 && envelope > 0) {
         owed -= 1;
+        if (isRain) {
+          const speed = Math.max(AREA_MIN_DROP_SPEED, tune.areaDropSpeed);
+          const isUp = tune.areaFall === 'up';
+          spawn(
+            {
+              x: rect.x + Math.random() * rect.width,
+              y: isUp ? rect.y + rect.height : rect.y,
+            },
+            Math.random() < 0.5 ? body : edge,
+            tune.areaDropScale,
+            rect.height / speed,
+            (Math.random() - 0.5) * AREA_RAIN_SWAY,
+            isUp ? -speed : speed,
+          );
+          continue;
+        }
         const origin =
-          tune.areaStyle === 'sweep'
-            ? {
-                x: rect.x + Math.random() * rect.width,
-                y: rect.y + Math.random() * rect.height,
-              }
-            : swirlPoint(
+          tune.areaStyle === 'swirl'
+            ? swirlPoint(
                 rect,
                 Math.floor(
                   Math.random() * Math.max(1, Math.round(tune.areaArms)),
@@ -978,7 +1185,11 @@ export const createPixiFx = (): PixiFx => {
                 1,
                 (elapsed / 1000) * tune.areaSpin * Math.PI * 2,
                 tune,
-              );
+              )
+            : {
+                x: rect.x + Math.random() * rect.width,
+                y: rect.y + Math.random() * rect.height,
+              };
         spawn(
           origin,
           edge,

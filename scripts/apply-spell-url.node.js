@@ -122,6 +122,19 @@ const parseChoices = (src) => {
   return choices;
 };
 
+/** The picture ids in `SPELL_FX_SPRITES`, for the `sprite` choice. */
+const parseSpriteIds = () => {
+  const file = path.join(PLAY, 'spell-fx-sprites.ts');
+  const src = fs.readFileSync(file, 'utf8');
+  return [...src.matchAll(/\bid: '([a-z0-9-]+)'/g)].map((m) => m[1]);
+};
+
+/** The events that can have an effect, from `EVENT_KEYS` in spell-fx.ts. */
+const parseEventKeys = (src) => {
+  const line = src.match(/export const EVENT_KEYS = \[([^\]]*)\]/);
+  return line ? [...line[1].matchAll(/'(\w+)'/g)].map((m) => m[1]) : [];
+};
+
 const hasCard = (id) =>
   fs
     .readdirSync(DATA_DIR)
@@ -137,8 +150,10 @@ const hasCard = (id) =>
  */
 const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
   const choices = parseChoices(tuneSrc);
+  // The picture list is built from SPELL_FX_SPRITES, not written out.
+  choices.set('sprite', parseSpriteIds());
   const parents = parseFlat(findBlock(tuneSrc, 'SPELL_FX_PARENTS').body);
-  const eventKeys = [...parseFlat(findBlock(fxSrc, 'EVENT_FX').body).keys()];
+  const eventKeys = parseEventKeys(fxSrc);
   const errors = [];
   const changes = [];
   const params = new URL(
@@ -279,8 +294,9 @@ const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
     formatVariants(variants, order),
   );
 
-  // The base effect assignment.
-  if (base !== null) {
+  // The base effect assignment (an event with no `e=` still gets `spot`).
+  const wantsBase = base !== null || eventKeys.includes(key);
+  if (wantsBase) {
     const name = eventKeys.includes(key)
       ? 'EVENT_FX'
       : SKILL_KEY.test(key)
@@ -299,7 +315,15 @@ const plan = ({ url, isDefaults, tuneSrc, fxSrc, classKeys, cardExists }) => {
         break;
       }
     }
-    const next = base === inheritedBase ? undefined : base;
+    // An event plays only while it has an entry, so baking one always writes
+    // its base (`spot` unless told otherwise); anything else drops an entry
+    // that equals what it would inherit.
+    const next =
+      name === 'EVENT_FX'
+        ? (base ?? old ?? 'spot')
+        : base === inheritedBase
+          ? undefined
+          : base;
     if (old !== next) {
       changes.push(`${name} ${key}: ${old || 'none'} -> ${next || 'none'}`);
       if (next) assigned.set(key, next);

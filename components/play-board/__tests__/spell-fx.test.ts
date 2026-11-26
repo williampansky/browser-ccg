@@ -1,4 +1,11 @@
-import { spellFxFor, spellFxForKey, spellFxMs, spellKeyFor } from '../spell-fx';
+import {
+  EVENT_FX,
+  EVENT_KEYS,
+  spellFxFor,
+  spellFxForKey,
+  spellFxMs,
+  spellKeyFor,
+} from '../spell-fx';
 import { SPELL_FX_DEFAULTS } from '../spell-fx-tune';
 
 describe('spellFxFor', () => {
@@ -71,5 +78,16 @@ describe('the area base', () => {
     expect(spellFxMs('area', SPELL_FX_DEFAULTS)).toBe(
       SPELL_FX_DEFAULTS.areaImpactMs,
     );
+  });
+});
+
+describe('event effects', () => {
+  it('lists heal, buff and death as events that start off', () => {
+    expect(EVENT_KEYS).toEqual(['summon', 'heal', 'buff', 'death']);
+    expect('summon' in EVENT_FX).toBe(true);
+    for (const event of ['heal', 'buff', 'death']) {
+      expect(event in EVENT_FX).toBe(false);
+      expect(spellFxForKey(event)).toBe('spot');
+    }
   });
 });

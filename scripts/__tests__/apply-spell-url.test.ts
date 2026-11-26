@@ -105,6 +105,25 @@ describe('apply-spell-url plan', () => {
     expect(entry).not.toContain('spotSides');
   });
 
+  it('enables a heal, buff or death event by baking it', () => {
+    const result = run('sp=heal&s_spotRadius=70');
+    expect(result.errors).toEqual([]);
+    expect(result.fx).toMatch(/'?heal'?: 'spot'/);
+    expect(result.tune).toContain("'heal': {");
+    // Baking again keeps the base it already has.
+    const again = run('sp=heal&s_spotRadius=80', false, {
+      tuneSrc: result.tune,
+      fxSrc: result.fx,
+    });
+    expect(again.fx.match(/'?heal'?: 'spot'/g)).toHaveLength(1);
+    expect(run('sp=death&e=area').fx).toMatch(/'?death'?: 'area'/);
+  });
+
+  it('takes a picture id for the sprite choice', () => {
+    expect(run('sp=CORE_069&s_sprite=axe-skull').errors).toEqual([]);
+    expect(run('sp=CORE_069&s_sprite=nope').errors.length).toBe(1);
+  });
+
   it('writes nothing for a bad spell, field or value', () => {
     expect(run('sp=NOPE_1&s_travelMs=1').errors.length).toBeGreaterThan(0);
     expect(run('sp=CORE_069&s_travelNope=1').errors.length).toBeGreaterThan(0);

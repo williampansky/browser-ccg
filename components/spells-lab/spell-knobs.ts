@@ -1,4 +1,5 @@
 import type { SpellFxKind } from '../play-board/spell-fx';
+import { SPELL_FX_SPRITES } from '../play-board/spell-fx-sprites';
 import type { SpellFxTune } from '../play-board/spell-fx-tune';
 
 type KeyOf<T> = {
@@ -7,11 +8,13 @@ type KeyOf<T> = {
 type NumKey = KeyOf<number>;
 type ChoiceKey =
   | 'areaDirection'
+  | 'areaFall'
   | 'areaRegion'
   | 'areaStyle'
+  | 'strikeStyle'
   | 'spotRingsMotion'
   | 'spotSparkMotion'
-  | 'travelSprite';
+  | 'sprite';
 type ColourKey = Exclude<KeyOf<string>, ChoiceKey>;
 type FlagKey = KeyOf<boolean>;
 
@@ -47,6 +50,60 @@ export interface SpellGroup {
   /** Pick-one options (a word, not a number); shown above the sliders */
   choices?: SpellChoice[];
 }
+
+const PICTURE_CHOICE: SpellChoice = {
+  field: 'sprite',
+  label: 'Picture',
+  options: SPELL_FX_SPRITES.map((art) => ({ value: art.id, label: art.label })),
+};
+
+/** The picture's size, turn and spin: every base that shows one has these. */
+const PICTURE_SHAPE: SpellKnob[] = [
+  { field: 'spriteSize', label: 'Size (px)', min: 16, max: 192 },
+  {
+    field: 'spriteTurn',
+    label: 'Turn (degrees, if it points off)',
+    min: -180,
+    max: 180,
+  },
+  {
+    field: 'spriteSpin',
+    label: 'Spin (degrees per second, 0 = point first)',
+    min: -1440,
+    max: 1440,
+    step: 10,
+  },
+];
+
+/** How a thrown or dropped picture lands, sticks and fades. */
+const PICTURE_LANDING: SpellKnob[] = [
+  {
+    field: 'spriteDepth',
+    label: 'How far the point sinks in (px)',
+    min: -20,
+    max: 40,
+  },
+  {
+    field: 'spriteScatter',
+    label: 'Lands off-centre by up to (px)',
+    min: 0,
+    max: 60,
+  },
+  {
+    field: 'spriteStick',
+    label: 'Stays stuck for (ms)',
+    min: 0,
+    max: 2000,
+    step: 10,
+  },
+  {
+    field: 'spriteFade',
+    label: 'Then fades over (ms)',
+    min: 0,
+    max: 2000,
+    step: 10,
+  },
+];
 
 /**
  * The spells lab's sections. Each value lives in the URL as `s_<field>`. A
@@ -183,53 +240,31 @@ export const SPELL_GROUPS: SpellGroup[] = [
       field: 'travelHasSprite',
       label: 'Fly a picture instead of the orb',
     },
-    choices: [
-      {
-        field: 'travelSprite',
-        label: 'Picture',
-        options: [
-          { value: 'dagger-green', label: 'Green dagger' },
-          { value: 'dagger-purple', label: 'Purple dagger' },
-          { value: 'dagger-cyan', label: 'Cyan curved dagger' },
-          { value: 'dagger-pale', label: 'Pale curved dagger' },
-          { value: 'dagger-orange', label: 'Orange dagger' },
-          { value: 'dagger-bone', label: 'Bone dagger' },
-        ],
-      },
-    ],
+    choices: [PICTURE_CHOICE],
+    knobs: [...PICTURE_SHAPE, ...PICTURE_LANDING],
+  },
+  {
+    title: 'Picture',
+    kinds: ['strike'],
+    flag: {
+      field: 'strikeHasSprite',
+      label: 'Drop a picture instead of the bolt',
+    },
+    choices: [PICTURE_CHOICE],
+    knobs: [...PICTURE_SHAPE, ...PICTURE_LANDING],
+  },
+  {
+    title: 'Picture',
+    kinds: ['spot'],
+    flag: { field: 'spotHasSprite', label: 'Show a picture at the spot' },
+    choices: [PICTURE_CHOICE],
     knobs: [
-      { field: 'travelSpriteSize', label: 'Size (px)', min: 16, max: 192 },
+      ...PICTURE_SHAPE,
       {
-        field: 'travelSpriteTurn',
-        label: 'Turn (degrees, if it points off)',
-        min: -180,
-        max: 180,
-      },
-      {
-        field: 'travelSpriteDepth',
-        label: 'How far the point sinks in (px)',
-        min: -20,
-        max: 40,
-      },
-      {
-        field: 'travelSpriteScatter',
-        label: 'Lands off-centre by up to (px)',
-        min: 0,
-        max: 60,
-      },
-      {
-        field: 'travelSpriteStick',
-        label: 'Stays stuck for (ms)',
-        min: 0,
-        max: 2000,
-        step: 10,
-      },
-      {
-        field: 'travelSpriteFade',
-        label: 'Then fades over (ms)',
-        min: 0,
-        max: 2000,
-        step: 10,
+        field: 'spotSpriteRise',
+        label: 'Rises by (px)',
+        min: -80,
+        max: 160,
       },
     ],
   },
@@ -270,6 +305,36 @@ export const SPELL_GROUPS: SpellGroup[] = [
     ],
   },
   {
+    title: 'Style and angle',
+    kinds: ['strike'],
+    choices: [
+      {
+        field: 'strikeStyle',
+        label: 'Style',
+        options: [
+          { value: 'lightning', label: 'Lightning (a jagged bolt)' },
+          { value: 'beam', label: 'Beam (a straight shaft of light)' },
+        ],
+      },
+    ],
+    knobs: [
+      {
+        field: 'strikeAngle',
+        label: 'Lean from straight down (degrees; + from upper left)',
+        min: -75,
+        max: 75,
+      },
+      {
+        field: 'strikeBeamGrow',
+        label: 'Beam reaches the target in (ms, 0 = at once)',
+        min: 0,
+        max: 800,
+        step: 10,
+        when: (tune) => tune.strikeStyle === 'beam',
+      },
+    ],
+  },
+  {
     title: 'Timing',
     kinds: ['strike'],
     knobs: [
@@ -293,6 +358,7 @@ export const SPELL_GROUPS: SpellGroup[] = [
         min: 30,
         max: 400,
         step: 5,
+        when: (tune) => tune.strikeStyle === 'lightning',
       },
       {
         field: 'strikeDropout',
@@ -300,6 +366,7 @@ export const SPELL_GROUPS: SpellGroup[] = [
         min: 0,
         max: 1,
         step: 0.05,
+        when: (tune) => tune.strikeStyle === 'lightning',
       },
     ],
   },
@@ -312,15 +379,22 @@ export const SPELL_GROUPS: SpellGroup[] = [
         field: 'strikeWidth',
         label: 'Thickness',
         min: 0.3,
-        max: 3,
+        max: 8,
         step: 0.05,
       },
-      { field: 'strikeSegments', label: 'Bends', min: 3, max: 30 },
+      {
+        field: 'strikeSegments',
+        label: 'Bends',
+        min: 3,
+        max: 30,
+        when: (tune) => tune.strikeStyle === 'lightning',
+      },
       {
         field: 'strikeJitter',
         label: 'Kick of each bend (px)',
         min: 0,
         max: 100,
+        when: (tune) => tune.strikeStyle === 'lightning',
       },
       {
         field: 'strikeSway',
@@ -340,6 +414,7 @@ export const SPELL_GROUPS: SpellGroup[] = [
   {
     title: 'Forks',
     kinds: ['strike'],
+    when: (tune) => !tune.strikeHasSprite,
     flag: { field: 'strikeHasForks', label: 'Side forks' },
     knobs: [
       { field: 'strikeBranches', label: 'Forks', min: 1, max: 8 },
@@ -544,6 +619,8 @@ export const SPELL_GROUPS: SpellGroup[] = [
         options: [
           { value: 'swirl', label: 'Swirl (a cyclone)' },
           { value: 'sweep', label: 'Sweep (a wave front)' },
+          { value: 'shockwave', label: 'Shockwave (rings from the middle)' },
+          { value: 'rain', label: 'Rain (drops falling or rising)' },
         ],
       },
     ],
@@ -602,6 +679,54 @@ export const SPELL_GROUPS: SpellGroup[] = [
     ],
     knobs: [
       { field: 'areaWaveWidth', label: 'Wave width (px)', min: 20, max: 400 },
+    ],
+  },
+  {
+    title: 'Shockwave',
+    kinds: ['area'],
+    when: (tune) => tune.areaStyle === 'shockwave',
+    knobs: [
+      { field: 'areaRings', label: 'Rings', min: 1, max: 6 },
+      {
+        field: 'areaRingGap',
+        label: 'Gap between rings (ms)',
+        min: 0,
+        max: 600,
+        step: 10,
+      },
+      { field: 'areaWidth', label: 'Ring thickness (px)', min: 2, max: 120 },
+    ],
+  },
+  {
+    title: 'Rain',
+    kinds: ['area'],
+    when: (tune) => tune.areaStyle === 'rain',
+    choices: [
+      {
+        field: 'areaFall',
+        label: 'Moves',
+        options: [
+          { value: 'down', label: 'Falling' },
+          { value: 'up', label: 'Rising (a surge)' },
+        ],
+      },
+    ],
+    knobs: [
+      { field: 'areaDrops', label: 'Drops per second', min: 10, max: 1200 },
+      {
+        field: 'areaDropSpeed',
+        label: 'Speed (px per ms)',
+        min: 0.1,
+        max: 2,
+        step: 0.05,
+      },
+      {
+        field: 'areaDropScale',
+        label: 'Drop size',
+        min: 0.1,
+        max: 1.5,
+        step: 0.05,
+      },
     ],
   },
   {

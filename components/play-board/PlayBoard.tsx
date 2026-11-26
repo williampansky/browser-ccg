@@ -83,7 +83,7 @@ import {
 import { MinionFace } from './MinionFace';
 import { buffedMinionIds, minionOvalHeight } from './minion-model';
 import type { FlashTone } from './motion';
-import { spellFxFor, spellFxForKey, spellKeyFor } from './spell-fx';
+import { EVENT_FX, spellFxFor, spellFxForKey, spellKeyFor } from './spell-fx';
 import { fxChain, tuneForSpell } from './spell-fx-tune';
 import type { PixiFx } from './pixi-fx';
 import minionStyles from './board-minion.module.scss';
@@ -1442,6 +1442,16 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
       }
       // Heals flash green and buffs gold (also off with ?fx=off).
       if (isSpellHit && spellFxOn()) {
+        /**
+         * A heal, buff or death can have an effect of its own (a spot on what
+         * it happened to), once its look is baked (it has an entry in
+         * `EVENT_FX`); it lands with the hit.
+         */
+        const eventSpot = (key: string, event: string) => {
+          if (!(event in EVENT_FX)) return;
+          const node = nodes.current.get(key);
+          if (node) spot(node, tuneForSpell(event), false, getImpactMs());
+        };
         const flashKey = (key: string, tone: FlashTone) => {
           const node = nodes.current.get(key);
           if (node) flashHit(node, tone, fxTune);
@@ -1449,19 +1459,31 @@ export const PlayBoard = ({ lab }: { lab?: LabProps }) => {
         for (const e of result.events) {
           if (e.type !== 'Healed' || e.amount <= 0) continue;
           flashKey(targetKey(e.target), 'heal');
+          eventSpot(targetKey(e.target), 'heal');
         }
         for (const player of ['0', '1'] as const) {
           const buffed = buffedMinionIds(
             state.players[player].board,
             result.state.players[player].board,
           );
-          for (const id of buffed) flashKey(`m${id}`, 'buff');
+          for (const id of buffed) {
+            flashKey(`m${id}`, 'buff');
+            eventSpot(`m${id}`, 'buff');
+          }
         }
       }
       const died = result.events.filter(
         (e): e is Extract<GameEvent, { type: 'MinionDied' }> =>
           e.type === 'MinionDied',
       );
+      // A death can have an effect of its own where the minion stood (once its
+      // look is baked into `EVENT_FX`), landing with the killing blow.
+      if (spellFxOn() && 'death' in EVENT_FX) {
+        died.forEach((e) => {
+          const node = nodes.current.get(`m${e.instanceId}`);
+          if (node) spot(node, tuneForSpell('death'), false, getImpactMs());
+        });
+      }
       if (died.length > 0 && !reducedMotion()) {
         const fresh: Ghost[] = [];
         for (const e of died) {

@@ -1,3 +1,5 @@
+import { SPELL_FX_SPRITES } from './spell-fx-sprites';
+
 /**
  * The numbers and options behind the spell effects in `pixi-fx.ts`, grouped by
  * the base they belong to (`travel`, `strike`, `spot`; `burst` is shared).
@@ -24,18 +26,20 @@ export interface SpellFxTune {
   travelStretch: number;
   /** Travel option: fly a picture (a dagger) instead of the orb */
   travelHasSprite: boolean;
-  /** Sprite: which picture (see `SPELL_FX_SPRITES`) */
-  travelSprite: string;
-  /** Sprite: width of the picture (px), and an extra turn (degrees) */
-  travelSpriteSize: number;
-  travelSpriteTurn: number;
-  /** Sprite: how far the point sinks into the target past its centre (px) */
-  travelSpriteDepth: number;
-  /** Sprite: how far from the centre each lands, at random (px) */
-  travelSpriteScatter: number;
-  /** Sprite: ms it stays stuck in the target, then ms it takes to fade */
-  travelSpriteStick: number;
-  travelSpriteFade: number;
+  /** Picture (every base): which one (see `SPELL_FX_SPRITES`) */
+  sprite: string;
+  /** Picture: width (px), an extra turn (degrees), and spin (degrees per
+   * second; 0 = point first, anything else tumbles it like a thrown axe) */
+  spriteSize: number;
+  spriteTurn: number;
+  spriteSpin: number;
+  /** Picture: how far the point sinks into the target past its centre (px) */
+  spriteDepth: number;
+  /** Picture: how far from the centre each lands, at random (px) */
+  spriteScatter: number;
+  /** Picture: ms it stays stuck in the target, then ms it takes to fade */
+  spriteStick: number;
+  spriteFade: number;
   /** Travel option: wispy streamers that flail off behind the head */
   travelHasStreamers: boolean;
   /** Streamers: how many, how long (px), how far they wave sideways (px) */
@@ -62,6 +66,13 @@ export interface SpellFxTune {
   travelTrailSpread: number;
   travelTrailDrift: number;
   travelTrailColour: string;
+  /** Strike: the look (a jagged bolt or a straight beam) */
+  strikeStyle: 'lightning' | 'beam';
+  /** Strike: lean from straight down, in degrees (0 = vertical; + comes from
+   * the upper left, - from the upper right) */
+  strikeAngle: number;
+  /** Strike beam: ms it takes to reach the target (0 = at once) */
+  strikeBeamGrow: number;
   /** Strike: milliseconds of charge-up before the hit */
   strikeMs: number;
   /** Strike: bends in the main bolt, and how far each kicks sideways (px) */
@@ -79,6 +90,8 @@ export interface SpellFxTune {
   /** Strike: line thickness, 1 = as drawn */
   strikeWidth: number;
   strikeColour: string;
+  /** Strike option: a picture falls onto the target instead of a bolt */
+  strikeHasSprite: boolean;
   /** Strike option: side forks off the bolt, and how far they reach (px) */
   strikeHasForks: boolean;
   strikeBranches: number;
@@ -106,6 +119,9 @@ export interface SpellFxTune {
   /** Spot: the first ring, and the later rings */
   spotColour: string;
   spotAccentColour: string;
+  /** Spot option: a picture pops up at the spot (and rises) over the rings */
+  spotHasSprite: boolean;
+  spotSpriteRise: number;
   /** Spot option: a soft glow behind the rings, and its size */
   spotHasGlow: boolean;
   spotGlowScale: number;
@@ -120,7 +136,7 @@ export interface SpellFxTune {
   spotSparkScale: number;
   spotSparkSpread: number;
   /** Area: the look (swirl or sweep), and which side of the board it covers */
-  areaStyle: 'swirl' | 'sweep';
+  areaStyle: 'swirl' | 'sweep' | 'shockwave' | 'rain';
   areaRegion: 'enemy' | 'mine' | 'both';
   /** Area: how long it plays (ms), and when its damage lands (ms in) */
   areaMs: number;
@@ -143,6 +159,15 @@ export interface SpellFxTune {
   areaTurns: number;
   areaSpin: number;
   areaWidth: number;
+  /** Shockwave: rings, ms between them */
+  areaRings: number;
+  areaRingGap: number;
+  /** Rain: which way it moves, how many drops per second, their speed (px
+   * per ms) and size */
+  areaFall: 'down' | 'up';
+  areaDrops: number;
+  areaDropSpeed: number;
+  areaDropScale: number;
   /** Sweep: which way the wave runs, and how wide it is (px) */
   areaDirection: 'right' | 'left' | 'out';
   areaWaveWidth: number;
@@ -163,15 +188,10 @@ export interface SpellFxTune {
 export const SPELL_FX_CHOICES: Partial<
   Record<keyof SpellFxTune, readonly string[]>
 > = {
-  travelSprite: [
-    'dagger-green',
-    'dagger-purple',
-    'dagger-cyan',
-    'dagger-pale',
-    'dagger-orange',
-    'dagger-bone',
-  ],
-  areaStyle: ['swirl', 'sweep'],
+  sprite: SPELL_FX_SPRITES.map((art) => art.id),
+  strikeStyle: ['lightning', 'beam'],
+  areaStyle: ['swirl', 'sweep', 'shockwave', 'rain'],
+  areaFall: ['down', 'up'],
   areaRegion: ['enemy', 'mine', 'both'],
   areaDirection: ['right', 'left', 'out'],
   spotRingsMotion: ['out', 'in', 'pulse'],
@@ -188,13 +208,14 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   travelColour: 'ffb347',
   travelStretch: 1,
   travelHasSprite: false,
-  travelSprite: 'dagger-green',
-  travelSpriteSize: 64,
-  travelSpriteTurn: 0,
-  travelSpriteDepth: 8,
-  travelSpriteScatter: 12,
-  travelSpriteStick: 500,
-  travelSpriteFade: 400,
+  sprite: 'dagger-green',
+  spriteSize: 64,
+  spriteTurn: 0,
+  spriteSpin: 0,
+  spriteDepth: 8,
+  spriteScatter: 12,
+  spriteStick: 500,
+  spriteFade: 400,
   travelHasStreamers: false,
   travelStreamerCount: 6,
   travelStreamerLength: 160,
@@ -213,6 +234,9 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   travelTrailSpread: 3,
   travelTrailDrift: 0.03,
   travelTrailColour: 'ff8a2a',
+  strikeStyle: 'lightning',
+  strikeAngle: 0,
+  strikeBeamGrow: 120,
   strikeMs: 160,
   strikeSegments: 14,
   strikeJitter: 34,
@@ -223,6 +247,7 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   strikeGlowScale: 3,
   strikeWidth: 1,
   strikeColour: '8fb8ff',
+  strikeHasSprite: false,
   strikeHasForks: true,
   strikeBranches: 3,
   strikeBranchReach: 150,
@@ -240,6 +265,8 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   spotRingBlurStep: 0,
   spotColour: 'cfe3ff',
   spotAccentColour: 'ffd23f',
+  spotHasSprite: false,
+  spotSpriteRise: 24,
   spotHasGlow: true,
   spotGlowScale: 3,
   spotHasSparks: true,
@@ -265,6 +292,12 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   areaTurns: 1.5,
   areaSpin: 0.9,
   areaWidth: 34,
+  areaRings: 2,
+  areaRingGap: 160,
+  areaFall: 'down',
+  areaDrops: 240,
+  areaDropSpeed: 0.6,
+  areaDropScale: 0.35,
   areaDirection: 'right',
   areaWaveWidth: 110,
   volleyCount: 1,
@@ -416,10 +449,10 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     travelMs: 170,
     travelArc: 0.06,
     travelHasSprite: true,
-    travelSprite: 'dagger-bone',
-    travelSpriteSize: 45,
-    travelSpriteTurn: -15,
-    travelSpriteDepth: 4,
+    sprite: 'dagger-bone',
+    spriteSize: 45,
+    spriteTurn: -15,
+    spriteDepth: 4,
     travelTrailPerFrame: 1,
     travelTrailLife: 490,
     travelTrailScale: 0.15,
@@ -483,12 +516,12 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     travelMs: 170,
     travelArc: 0.21,
     travelHasSprite: true,
-    travelSprite: 'dagger-bone',
-    travelSpriteSize: 80,
-    travelSpriteTurn: -1,
-    travelSpriteDepth: 18,
-    travelSpriteStick: 770,
-    travelSpriteFade: 630,
+    sprite: 'dagger-bone',
+    spriteSize: 80,
+    spriteTurn: -1,
+    spriteDepth: 18,
+    spriteStick: 770,
+    spriteFade: 630,
     travelTrailPerFrame: 1,
     travelTrailLife: 490,
     travelTrailScale: 0.15,
@@ -517,14 +550,75 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     burstLife: 590,
     burstScale: 0.15,
   },
+  PRIME_202: {
+    strikeStyle: 'beam',
+    strikeAngle: 30,
+    strikeBeamGrow: 100,
+    strikeMs: 800,
+    strikeLife: 170,
+    strikeWidth: 3,
+    strikeColour: 'ffe9a0',
+    strikeHasForks: false,
+    strikeScreenFlash: 0.04,
+    volleyCount: 3,
+    volleyDelay: 5,
+  },
+  PRIME_230: {
+    travelMs: 170,
+    travelArc: 0.06,
+    sprite: 'dagger-purple',
+    spriteSize: 45,
+    spriteTurn: -15,
+    spriteDepth: 4,
+    travelHasStreamers: true,
+    travelTrailPerFrame: 1,
+    travelTrailLife: 490,
+    travelTrailScale: 0.15,
+    travelTrailSpread: 8,
+    travelTrailDrift: 0.12,
+    travelTrailColour: 'bfbfbf',
+    volleyDelay: 100,
+    burstCount: 6,
+    burstScale: 0.4,
+  },
+  PRIME_234: {
+    travelMs: 240,
+    travelHaloScale: 3,
+    travelCoreScale: 0.95,
+    travelPulse: 0.11,
+    travelArc: 0.12,
+    travelEase: 2.7,
+    travelColour: 'ed5135',
+    travelStretch: 1.4,
+    travelHasStreamers: true,
+    travelStreamerCount: 16,
+    travelStreamerLength: 500,
+    travelStreamerWave: 45,
+    travelStreamerFlail: 0.8,
+    travelStreamerSpread: 81,
+    travelStreamerWidth: 20,
+    travelStreamerAlpha: 0.5,
+    travelStreamerGrow: 1000,
+    travelStreamerLinger: 980,
+    travelStreamerColour: 'ff7300',
+    travelTrailPerFrame: 8,
+    travelTrailLife: 900,
+    travelTrailScale: 1.5,
+    travelTrailSpread: 24,
+    travelTrailDrift: 0.2,
+    travelTrailColour: 'b5552c',
+    burstCount: 40,
+    burstLife: 680,
+    burstScale: 0.5,
+  },
   PRIME_265: {
     travelMs: 170,
     travelArc: 0.06,
     travelHasSprite: true,
-    travelSprite: 'dagger-pale',
-    travelSpriteSize: 60,
-    travelSpriteTurn: -15,
-    travelSpriteDepth: 4,
+    sprite: 'dagger-pale',
+    spriteSize: 60,
+    spriteTurn: -15,
+    spriteDepth: 4,
     travelTrailPerFrame: 1,
     travelTrailLife: 490,
     travelTrailScale: 0.15,

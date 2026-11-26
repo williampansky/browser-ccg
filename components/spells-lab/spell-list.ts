@@ -15,6 +15,34 @@ export interface SpellEntry {
   isSkill: boolean;
 }
 
+/** The events that can have an effect (`EVENT_KEYS`), as the lab lists them. */
+const EVENT_ENTRIES = [
+  {
+    key: 'summon',
+    label: 'Minion summoned (every summon, event)',
+    name: 'Minion summoned',
+    text: 'Plays on every minion that is summoned or played, centred on it.',
+  },
+  {
+    key: 'heal',
+    label: 'Something healed (every heal, event)',
+    name: 'Something healed',
+    text: 'Plays on every heal, centred on what was healed. Off until you bake a look for it.',
+  },
+  {
+    key: 'buff',
+    label: 'Minion buffed (every buff, event)',
+    name: 'Minion buffed',
+    text: 'Plays on every minion that gains Attack or Health. Off until you bake a look for it.',
+  },
+  {
+    key: 'death',
+    label: 'Minion died (every death, event)',
+    name: 'Minion died',
+    text: 'Plays where every minion dies. Off until you bake a look for it.',
+  },
+];
+
 const titleCase = (key: string): string =>
   key.charAt(0) + key.slice(1).toLowerCase();
 
@@ -58,16 +86,14 @@ export const spellEntries = (): SpellEntry[] => {
       text: card.text,
       isSkill: false,
     }));
-  const events: SpellEntry[] = [
-    {
-      key: 'summon',
-      label: 'Minion summoned (every summon, event)',
-      group: 'Events',
-      name: 'Minion summoned',
-      cost: 0,
-      text: 'Plays on every minion that is summoned or played, centred on it.',
-      isSkill: false,
-    },
-  ];
+  const events: SpellEntry[] = EVENT_ENTRIES.map((event) => ({
+    key: event.key,
+    label: event.label,
+    group: 'Events',
+    name: event.name,
+    cost: 0,
+    text: event.text,
+    isSkill: false,
+  }));
   return [...events, ...skills, ...cards];
 };

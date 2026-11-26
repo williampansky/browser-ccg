@@ -57,12 +57,19 @@ export const CARD_FX: Record<string, SpellFxKind> = {
   CORE_098: 'area',
   CORE_115: 'spot',
   PRIME_201: 'strike',
+  PRIME_202: 'strike',
 };
 
 /**
- * Effects for things that happen, not for one spell, keyed by event: `summon`
- * plays on every minion that is summoned or played (a skill's recruit, a
- * token, a minion from hand).
+ * The things that happen which can have an effect of their own, not tied to
+ * one spell: a minion `summon`ed or played, a `heal`, a `buff` and a `death`.
+ */
+export const EVENT_KEYS = ['summon', 'heal', 'buff', 'death'];
+
+/**
+ * Which events play an effect, and its base. `summon` always plays; a heal,
+ * buff or death plays only once it has an entry here (baking its look in the
+ * spells lab adds one), so a new event stays off until you choose its look.
  */
 export const EVENT_FX: Record<string, SpellFxKind> = {
   summon: 'spot',
@@ -72,6 +79,8 @@ export const EVENT_FX: Record<string, SpellFxKind> = {
 export const spellFxForKey = (key: string): SpellFxKind => {
   const own = SKILL_FX[key] ?? CARD_FX[key] ?? EVENT_FX[key];
   if (own) return own;
+  // An event with no entry yet shows as a spot effect in the lab.
+  if (EVENT_KEYS.includes(key)) return 'spot';
   const parent = SPELL_FX_PARENTS[key];
   return parent ? spellFxForKey(parent) : 'travel';
 };
