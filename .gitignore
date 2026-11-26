@@ -48,3 +48,4 @@ backups/
 
 # loose art to browse in the art lab "Assets" tab (not committed)
 /art-assets/
+dist-server

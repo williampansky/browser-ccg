@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "noEmit": false,
+    "incremental": false,
+    "isolatedModules": false,
+    "jsx": "react",
+    "outDir": "dist-server",
+    "rootDir": "."
+  },
+  "include": ["server/**/*.ts", "engine/**/*.ts"],
+  "exclude": ["node_modules", "**/__tests__/**", "**/*.test.ts", "server/test-helpers.ts", "engine/sim/**", "engine/testing/**"]
+}

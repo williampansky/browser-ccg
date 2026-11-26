@@ -292,7 +292,9 @@ export type ActionErrorCode =
   | 'MYSTERY_ACTIVE'
   | 'NO_WEAPON'
   | 'HERO_CANT_ATTACK'
-  | 'TRIGGER_LOOP';
+  | 'TRIGGER_LOOP'
+  /** Server only: an action from the player whose turn it is not */
+  | 'NOT_YOUR_TURN';
 export interface ActionError {
   error: ActionErrorCode;
 }

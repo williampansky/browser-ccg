@@ -1,0 +1,27 @@
+# Render Blueprint: one web service runs Next and the game server together
+# (the WebSocket needs a long-lived process, so it cannot be a static site).
+# A paid instance is needed: the free tier sleeps after 15 idle minutes, which
+# would drop the matchmaking queue and every game in progress.
+services:
+  - type: web
+    name: bccg
+    runtime: node
+    plan: starter
+    branch: main
+    autoDeploy: true
+    buildCommand: yarn install --frozen-lockfile --production=false && yarn build && yarn server:build
+    startCommand: yarn start:prod
+    healthCheckPath: /healthz
+    domains:
+      - bccg.io
+      - www.bccg.io
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      # Sockets from any other site are refused.
+      - key: ALLOWED_ORIGINS
+        value: https://bccg.io,https://www.bccg.io
+      - key: QUEUE_WAIT_SECONDS
+        value: '30'
+      - key: RECONNECT_GRACE_SECONDS
+        value: '60'
