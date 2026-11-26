@@ -1,22 +1,17 @@
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
-
 import { PLAY_LAYOUT } from '../components/play-board/layout-css';
 import { SPELL_GROUPS } from '../components/spells-lab/spell-knobs';
 import { loadHsCards } from '../engine';
 import { createMinion } from '../engine/rules/minion';
-import minionStyles from '../components/play-board/board-minion.module.scss';
 import { MinionFace } from '../components/play-board/MinionFace';
 import { copyLookParams } from '../components/spells-lab/copy-look';
 import { spellEntries } from '../components/spells-lab/spell-list';
-import type { PixiFx } from '../components/play-board/pixi-fx';
 import {
   SPELL_FX_KINDS,
   spellFxForKey,
   spellFxMs,
 } from '../components/play-board/spell-fx';
-import type { SpellFxKind } from '../components/play-board/spell-fx';
 import {
   parseSpellTune,
   SPELL_FX_PARENTS,
@@ -24,15 +19,14 @@ import {
   tuneForSpell,
 } from '../components/play-board/spell-fx-tune';
 
-/**
- * Spells lab (dev only): plays a spell effect between two draggable points on
- * a blank stage, with every number of it as a slider. Each value is an
- * `s_<field>` URL param (`SpellFxTune` in
- * components/play-board/spell-fx-tune.ts), so a setup is a URL. Add an effect
- * to the picker by adding its kind to `EFFECTS` here and its drawing in
- * `pixi-fx.ts`.
- */
+import minionStyles from '../components/play-board/board-minion.module.scss';
+import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
+import type { PixiFx } from '../components/play-board/pixi-fx';
+import type { SpellFxKind } from '../components/play-board/spell-fx';
+
+/** Default spell ID on load */
 const DEFAULT_SPELL = 'WIZARD:1';
+
 /** Where the other targets sit, relative to the first (px). */
 const EXTRA_TARGETS = [
   { x: -150, y: 60 },
@@ -43,6 +37,7 @@ const EXTRA_TARGETS = [
   { x: 0, y: 250 },
   { x: 200, y: -50 },
 ];
+
 const MIN_REGION_SIDE = 220;
 const MIN_TARGETS = 2;
 const MAX_TARGETS = EXTRA_TARGETS.length + 1;
@@ -60,6 +55,9 @@ const REPLAY_DEBOUNCE_MS = 180;
 const LOOP_GAP_MS = 700;
 const LOOP_TAIL_MS = 600;
 
+/**
+ * The buttons and checkboxes in the left panel, for a consistent look.
+ */
 const panelBtn: CSSProperties = {
   padding: '4px 12px',
   borderRadius: 6,
@@ -69,6 +67,11 @@ const panelBtn: CSSProperties = {
   cursor: 'pointer',
 };
 
+/**
+ * The circle that marks a point on the stage, either the caster or the target.
+ * @param point
+ * @param colour
+ */
 const markerStyle = (
   point: { x: number; y: number },
   colour: string,
@@ -90,6 +93,11 @@ const markerStyle = (
   background: 'rgba(255,255,255,0.04)',
 });
 
+/**
+ * The two points on the stage: where the effect starts and where it lands. The
+ * lab's draggable circles are centered on these points, so the effect is
+ * drawn from/to the center of the circle.
+ */
 type Point = { x: number; y: number };
 
 /**
@@ -105,6 +113,14 @@ const boardBackground = (): string => {
     : '#14161c';
 };
 
+/**
+ * Spells lab (dev only): plays a spell effect between two draggable points on
+ * a blank stage, with every number of it as a slider. Each value is an
+ * `s_<field>` URL param (`SpellFxTune` in
+ * components/play-board/spell-fx-tune.ts), so a setup is a URL. Add an effect
+ * to the picker by adding its kind to `EFFECTS` here and its drawing in
+ * `pixi-fx.ts`.
+ */
 const SpellsLab = () => {
   const router = useRouter();
   const search = router.isReady ? (router.asPath.split('?')[1] ?? '') : '';
@@ -113,21 +129,28 @@ const SpellsLab = () => {
   const [points, setPoints] = useState<{ from: Point; to: Point } | null>(null);
   const [isLoop, setLoop] = useState(false);
   const [isReplayOnChange, setReplayOnChange] = useState(true);
-  const q1 = (key: string) =>
-    (Array.isArray(router.query[key])
-      ? router.query[key]?.[0]
-      : (router.query[key] as string | undefined)) ?? '';
+
+  const q1 = (key: string) => {
+    return (
+      (Array.isArray(router.query[key])
+        ? router.query[key]?.[0]
+        : (router.query[key] as string | undefined)) ?? ''
+    );
+  };
+
   const spellKey = q1('sp') || DEFAULT_SPELL;
   const entry = entries.find((candidate) => candidate.key === spellKey);
-  const entryIndex = entries.findIndex(
-    (candidate) => candidate.key === spellKey,
-  );
+  const entryIndex = entries.findIndex((candidate) => {
+    return candidate.key === spellKey;
+  });
+
   const assigned = spellFxForKey(spellKey);
   const override = q1('e');
   const speed = Math.min(
     MAX_SPEED,
     Math.max(MIN_SPEED, Number(q1('speed')) || 1),
   );
+
   const isMinionShown = q1('minion') === '1';
   const isBoardShown = q1('board') === '1';
   const isMulti = q1('multi') === '1';
@@ -135,14 +158,19 @@ const SpellsLab = () => {
     MAX_TARGETS,
     Math.max(MIN_TARGETS, Math.round(Number(q1('tc'))) || DEFAULT_TARGETS),
   );
+
   const sample = useMemo(() => {
     const card = loadHsCards().byId.get(SAMPLE_MINION);
     return card
       ? { card, m: createMinion(card, SAMPLE_ID, SAMPLE_TURN, SAMPLE_ID) }
       : null;
   }, []);
+
   const kind: SpellFxKind =
-    SPELL_FX_KINDS.find((effect) => effect.kind === override)?.kind ?? assigned;
+    SPELL_FX_KINDS.find((effect) => {
+      return effect.kind === override;
+    })?.kind ?? assigned;
+
   const base = useMemo(() => tuneForSpell(spellKey), [spellKey]);
   const tune = useMemo(() => parseSpellTune(search, base), [search, base]);
   const changed = (field: string) => q1(`s_${field}`) !== '';
@@ -156,27 +184,32 @@ const SpellsLab = () => {
       shallow: true,
     });
   };
-  const resetAll = () =>
-    setParams(
+
+  const resetAll = () => {
+    return setParams(
       Object.fromEntries(
         Object.keys(router.query)
           .filter((key) => key.startsWith('s_'))
           .map((key) => [key, null]),
       ),
     );
+  };
 
   useEffect(() => {
     setPoints({
       from: { x: window.innerWidth * 0.5, y: window.innerHeight * 0.72 },
       to: { x: window.innerWidth * 0.68, y: window.innerHeight * 0.3 },
     });
+
     let isCurrent = true;
     let created: PixiFx | null = null;
+
     import('../components/play-board/pixi-fx').then(({ createPixiFx }) => {
       if (!isCurrent) return;
       created = createPixiFx();
       fxRef.current = created;
     });
+
     return () => {
       isCurrent = false;
       fxRef.current = null;
@@ -192,30 +225,32 @@ const SpellsLab = () => {
   /** The first target, then the others when several targets are shown. */
   const targets = useMemo(() => {
     if (!points) return [];
+
     const extras = isMulti
       ? EXTRA_TARGETS.slice(0, targetCount - 1).map((offset) => ({
           x: points.to.x + offset.x,
           y: points.to.y + offset.y,
         }))
       : [];
+
     return [points.to, ...extras];
   }, [isMulti, points, targetCount]);
+
   /**
    * The region an area effect covers in the lab: the box around the targets
    * (as the game uses the minions it covers), grown by the padding.
    */
   const areaRect = useMemo(() => {
+    const t = targets;
+    const ms = MARKER_SIZE;
     const pad = tune.areaPad;
-    const left =
-      Math.min(...targets.map((target) => target.x)) - MARKER_SIZE / 2 - pad;
-    const right =
-      Math.max(...targets.map((target) => target.x)) + MARKER_SIZE / 2 + pad;
-    const top =
-      Math.min(...targets.map((target) => target.y)) - MARKER_SIZE / 2 - pad;
-    const bottom =
-      Math.max(...targets.map((target) => target.y)) + MARKER_SIZE / 2 + pad;
+    const left = Math.min(...t.map((target) => target.x)) - ms / 2 - pad;
+    const right = Math.max(...t.map((target) => target.x)) + ms / 2 + pad;
+    const top = Math.min(...t.map((target) => target.y)) - ms / 2 - pad;
+    const bottom = Math.max(...t.map((target) => target.y)) + ms / 2 + pad;
     const width = Math.max(MIN_REGION_SIDE, right - left);
     const height = Math.max(MIN_REGION_SIDE, bottom - top);
+
     return {
       x: (left + right) / 2 - width / 2,
       y: (top + bottom) / 2 - height / 2,
@@ -223,6 +258,7 @@ const SpellsLab = () => {
       height,
     };
   }, [targets, tune.areaPad]);
+
   /** Animations in one run: a spot or area effect plays once, not per target. */
   const shotCount =
     Math.max(1, Math.round(tune.volleyCount)) *
@@ -231,17 +267,21 @@ const SpellsLab = () => {
   const play = useCallback((): void => {
     const fx = fxRef.current;
     if (!fx || !points) return;
+
     fx.setSpeed(speed);
     const ms = spellFxMs(kind, tune);
     const plays = Math.max(1, Math.round(tune.volleyCount));
+
     // The game's volley: each target plays `plays` times, and every animation
     // starts `volleyDelay` after the one before (slow motion stretches it too).
     const sequence = kind === 'spot' || kind === 'area' ? [points.to] : targets;
+
     // One entry per animation. Each runs in its own callback, so a delayed
     // shot keeps its own target (a closure over a loop variable would not).
-    const shots = sequence.flatMap((target) =>
-      Array.from({ length: plays }, () => target),
-    );
+    const shots = sequence.flatMap((target) => {
+      return Array.from({ length: plays }, () => target);
+    });
+
     shots.forEach((target, index) => {
       const wait = (index * tune.volleyDelay) / speed;
       const fire = (): void => {
@@ -250,6 +290,7 @@ const SpellsLab = () => {
         else if (kind === 'area') fx.area(areaRect, tune);
         else fx.travel(points.from, target, ms, tune);
       };
+
       if (wait > 0) setTimeout(fire, wait);
       else fire();
     });
@@ -263,12 +304,15 @@ const SpellsLab = () => {
         play();
       }
     };
+
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [play]);
 
+  // A loop replays the effect after it has finished, with a gap.
   useEffect(() => {
     if (!isLoop) return;
+
     const gap =
       spellFxMs(kind, tune) +
       LOOP_GAP_MS +
@@ -276,17 +320,20 @@ const SpellsLab = () => {
       (kind === 'strike' ? tune.strikeLife : LOOP_TAIL_MS) +
       (kind === 'spot' ? tune.spotLife : 0) +
       (kind === 'area' ? tune.areaMs : 0);
+
     const timer = setInterval(play, gap / speed);
     return () => clearInterval(timer);
   }, [isLoop, kind, play, shotCount, speed, tune]);
 
   // A change replays the effect, so a slider can be tuned by eye.
   const firstTune = useRef(true);
+  
   useEffect(() => {
     if (firstTune.current) {
       firstTune.current = false;
       return;
     }
+
     if (!isReplayOnChange || isLoop) return;
     const timer = setTimeout(play, REPLAY_DEBOUNCE_MS);
     return () => clearTimeout(timer);
@@ -294,6 +341,7 @@ const SpellsLab = () => {
 
   const [isCarry, setCarry] = useState(false);
   const [typed, setTyped] = useState<string | null>(null);
+
   /** Moves to another spell; its own saved look starts unless numbers carry. */
   const pickSpell = (key: string): void => {
     const cleared: Record<string, string | null> = { sp: key };
@@ -305,10 +353,17 @@ const SpellsLab = () => {
     setTyped(null);
     setParams(cleared);
   };
+
+  /**
+   * Steps to the next or previous spell in the list, wrapping around. The
+   * next spell's saved look starts unless numbers carry.
+   * @param by +1 for next, -1 for previous
+   */
   const step = (by: number): void => {
     const next = entries[(entryIndex + by + entries.length) % entries.length];
     if (next) pickSpell(next.key);
   };
+
   /**
    * Copies another spell's saved look (and its base effect) onto this spell as
    * unsaved changes, to tweak and bake: an independent copy, not a link.
@@ -318,14 +373,17 @@ const SpellsLab = () => {
     Object.keys(router.query)
       .filter((param) => param.startsWith('s_') || param === 'e')
       .forEach((param) => (changes[param] = null));
+
     Object.assign(
       changes,
       copyLookParams(tuneForSpell(sourceKey), tuneForSpell(spellKey)),
     );
+
     const sourceFx = spellFxForKey(sourceKey);
     if (sourceFx !== assigned) changes.e = sourceFx;
     setParams(changes);
   };
+
   const onType = (value: string): void => {
     setTyped(value);
     const match = entries.find((candidate) => candidate.label === value);
@@ -336,19 +394,23 @@ const SpellsLab = () => {
     (which: 'from' | 'to') => (event: ReactPointerEvent<HTMLDivElement>) => {
       const target = event.currentTarget;
       target.setPointerCapture(event.pointerId);
-      const move = (moveEvent: PointerEvent): void =>
-        setPoints((old) =>
-          old
+
+      const move = (moveEvent: PointerEvent): void => {
+        return setPoints((old) => {
+          return old
             ? {
                 ...old,
                 [which]: { x: moveEvent.clientX, y: moveEvent.clientY },
               }
-            : old,
-        );
+            : old;
+        });
+      };
+
       const stop = (): void => {
         target.removeEventListener('pointermove', move);
         target.removeEventListener('pointerup', stop);
       };
+
       target.addEventListener('pointermove', move);
       target.addEventListener('pointerup', stop);
     };
@@ -395,6 +457,7 @@ const SpellsLab = () => {
             ))}
           </datalist>
         </label>
+
         <div style={{ display: 'flex', gap: 6, margin: '6px 0' }}>
           <button onClick={() => step(-1)} style={panelBtn}>
             ◀ Prev
@@ -411,6 +474,7 @@ const SpellsLab = () => {
             Carry my numbers
           </label>
         </div>
+
         <label style={{ display: 'block', fontSize: 12, margin: '6px 0' }}>
           Copy a look from another spell{' '}
           <select
@@ -430,6 +494,7 @@ const SpellsLab = () => {
               ))}
           </select>
         </label>
+
         {entry && (
           <div style={{ fontSize: 12, color: '#9aa3b8', margin: '6px 0' }}>
             <b style={{ color: '#e8eaf2' }}>{entry.name}</b> · {entry.group} ·
@@ -448,6 +513,7 @@ const SpellsLab = () => {
             {kind !== assigned && ` (trying ${kind})`}
           </div>
         )}
+
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {SPELL_FX_KINDS.map((effect) => (
             <button
@@ -462,6 +528,7 @@ const SpellsLab = () => {
             </button>
           ))}
         </div>
+
         <div style={{ display: 'flex', gap: 6, margin: '8px 0' }}>
           <button onClick={play} style={panelBtn}>
             Play (Space)
@@ -470,6 +537,7 @@ const SpellsLab = () => {
             Reset numbers
           </button>
         </div>
+
         <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
           <input
             type="checkbox"
@@ -478,6 +546,7 @@ const SpellsLab = () => {
           />{' '}
           Loop
         </label>
+
         <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
           <input
             type="checkbox"
@@ -486,6 +555,7 @@ const SpellsLab = () => {
           />{' '}
           Replay when a number changes
         </label>
+
         <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
           <input
             type="checkbox"
@@ -496,6 +566,7 @@ const SpellsLab = () => {
           />{' '}
           Show a sample minion as the target
         </label>
+
         <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
           <input
             type="checkbox"
@@ -506,6 +577,7 @@ const SpellsLab = () => {
           />{' '}
           Show the default board background
         </label>
+
         <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
           <input
             type="checkbox"
@@ -516,6 +588,7 @@ const SpellsLab = () => {
           />{' '}
           Several targets (for a volley or an area spell)
         </label>
+
         {isMulti && (
           <label style={{ display: 'block', fontSize: 12, margin: '4px 0' }}>
             <span style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -533,6 +606,7 @@ const SpellsLab = () => {
             />
           </label>
         )}
+
         <label style={{ display: 'block', fontSize: 12, margin: '6px 0' }}>
           <span style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>Preview speed (slow motion; the effect&apos;s ms stay)</span>
@@ -553,14 +627,17 @@ const SpellsLab = () => {
             }
           />
         </label>
+
         <small style={{ color: '#9aa3b8', display: 'block', margin: '6px 0' }}>
           Drag the two circles. The setup is in the page URL (<code>s_...</code>
           ); it is not baked into the game&apos;s defaults yet.
         </small>
-        {SPELL_GROUPS.filter(
-          (group) =>
-            group.kinds.includes(kind) && (!group.when || group.when(tune)),
-        ).map((group) => {
+
+        {SPELL_GROUPS.filter((group) => {
+          return (
+            group.kinds.includes(kind) && (!group.when || group.when(tune))
+          );
+        }).map((group) => {
           const isOn = !group.flag || tune[group.flag.field];
           return (
             <details
@@ -577,6 +654,7 @@ const SpellsLab = () => {
               >
                 {group.title}
               </summary>
+
               {group.flag && (
                 <label
                   style={{ display: 'block', margin: '6px 0', fontSize: 12 }}
@@ -584,17 +662,18 @@ const SpellsLab = () => {
                   <input
                     type="checkbox"
                     checked={tune[group.flag.field]}
-                    onChange={(event) =>
-                      setParams({
+                    onChange={(event) => {
+                      return setParams({
                         [`s_${group.flag?.field}`]: event.target.checked
                           ? '1'
                           : '0',
-                      })
-                    }
+                      });
+                    }}
                   />{' '}
                   {group.flag.label}
                 </label>
               )}
+
               {isOn &&
                 group.choices?.map((choice) => (
                   <label
@@ -636,6 +715,7 @@ const SpellsLab = () => {
                     )}
                   </label>
                 ))}
+
               {isOn &&
                 group.knobs
                   .filter((knob) => !knob.when || knob.when(tune))
@@ -695,6 +775,7 @@ const SpellsLab = () => {
                       />
                     </label>
                   ))}
+
               {isOn &&
                 group.colours?.map((colour) => (
                   <label
@@ -734,12 +815,14 @@ const SpellsLab = () => {
             </details>
           );
         })}
+
         {JSON.stringify(tune) === JSON.stringify(base) ? null : (
           <p style={{ color: '#9aa3b8', fontSize: 12 }}>
             Differs from this spell's saved look.
           </p>
         )}
       </aside>
+
       <section style={{ flex: 1, minWidth: 0 }}>
         {isBoardShown && (
           <div
@@ -752,12 +835,14 @@ const SpellsLab = () => {
             }}
           />
         )}
+
         <p style={{ color: '#9aa3b8', maxWidth: 560, marginTop: 0 }}>
           A blank stage. The caster circle is where the effect starts (a strike
           ignores it and comes from the top, and a spot effect opens on the
           target circle); the target circle is where it lands. Press Space or
           Play, or change a number.
         </p>
+
         {points && (
           <>
             {kind === 'area' && (
@@ -775,12 +860,14 @@ const SpellsLab = () => {
                 }}
               />
             )}
+
             <div
               onPointerDown={drag('from')}
               style={markerStyle(points.from, '#7ad9a2')}
             >
               caster
             </div>
+
             {isMinionShown && sample ? (
               <div
                 onPointerDown={drag('to')}
@@ -811,6 +898,7 @@ const SpellsLab = () => {
                 target
               </div>
             )}
+
             {targets.slice(1).map((point, index) =>
               isMinionShown && sample ? (
                 <div
