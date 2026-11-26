@@ -40,6 +40,8 @@ const EXTRA_TARGETS = [
   { x: -80, y: -110 },
   { x: 80, y: -110 },
   { x: 0, y: 150 },
+  { x: 0, y: 250 },
+  { x: 200, y: -50 },
 ];
 const MIN_REGION_SIDE = 220;
 const MIN_TARGETS = 2;
