@@ -637,6 +637,30 @@ const targetOf = (a: Action): TargetRef | undefined =>
     ? a.target
     : undefined;
 
+/** The element key an action starts from (a minion, a skill socket, a hero). */
+const aimSource = (action: Action, owner: PlayerId): string => {
+  if (action.type === 'Attack') return `m${action.attackerId}`;
+  if (action.type === 'HeroSkill') return `s${owner}-${action.skill}`;
+
+  return `h${owner}`;
+};
+
+/** How long an untargeted card the opponent plays is shown picked first. */
+const FOE_PICK_MS = 700;
+
+/**
+ * The preview of a move the online opponent is about to make: an arrow to its
+ * target, or just the picked card in its hand for a card with no target.
+ */
+const previewFor = (action: Action) => {
+  const to = targetOf(action);
+  if (to) return { action, from: aimSource(action, '1'), to };
+  if (action.type === 'PlayCard')
+    return { action, from: aimSource(action, '1'), holdMs: FOE_PICK_MS };
+
+  return null;
+};
+
 /** A `?h0=` value in its current form (an old hero key is its class key). */
 const heroParam = (value: string | null): string | null =>
   value ? currentHeroKey(value) : value;
@@ -1061,7 +1085,10 @@ export const PlayBoard = ({
   const [foeAim, setFoeAim] = useState<{
     action: Action;
     from: string;
-    to: TargetRef;
+    /** Absent for a card with no target: it is only shown picked in the hand */
+    to?: TargetRef;
+    /** How long it is shown before the action happens (default AI_AIM_MS) */
+    holdMs?: number;
   } | null>(null);
   const [hover, setHover] = useState<TargetRef | null>(null);
   const nodes = useRef(new Map<string, HTMLElement>());
@@ -1586,6 +1613,8 @@ export const PlayBoard = ({
    * state before the move.
    */
   const playedUpdates = useRef(0);
+  /** The update whose "opponent is about to" preview has already been shown. */
+  const announcedUpdate = useRef(-1);
   useEffect(() => {
     if (!online) return;
     if (!state) {
@@ -1597,8 +1626,33 @@ export const PlayBoard = ({
       setGameKey((k) => k + 1);
       return;
     }
+    // While the opponent's move is being previewed, it waits.
+    if (foeAim) return;
     const next = online.updates[playedUpdates.current];
     if (!next) return;
+    /**
+     * The opponent's move arrives already done, so show it first the way the
+     * AI's is: its picked card in the hand, and an aiming arrow when it has a
+     * target. Your own moves, and a turn ending, are not previewed.
+     */
+    const isFoeMove =
+      state.activePlayer !== '0' && next.action.type !== 'EndTurn';
+    const isPreviewable =
+      next.action.type === 'PlayCard' ||
+      next.action.type === 'Attack' ||
+      next.action.type === 'WeaponAttack' ||
+      next.action.type === 'HeroSkill';
+    if (
+      isFoeMove &&
+      isPreviewable &&
+      announcedUpdate.current !== playedUpdates.current
+    ) {
+      const preview = previewFor(next.action);
+      if (preview) {
+        setFoeAim(preview);
+        return;
+      }
+    }
     playedUpdates.current += 1;
     const { state: after, msLeft } = next.view;
     if (next.note === 'opponent-left')
@@ -1617,7 +1671,7 @@ export const PlayBoard = ({
       console.error('Could not play out a move; resyncing', error);
       setState(after);
     }
-  }, [online, online?.updates, state, commit]);
+  }, [online, online?.updates, state, commit, foeAim]);
   const onlineError = online?.error;
   useEffect(() => {
     if (onlineError) setMessage(`Not allowed: ${onlineError}`);
@@ -1766,24 +1820,20 @@ export const PlayBoard = ({
       );
       const to = targetOf(action);
       if (!to) return dispatch(action);
-      const from =
-        action.type === 'Attack'
-          ? `m${action.attackerId}`
-          : action.type === 'HeroSkill'
-            ? `s${AI_PLAYER}-${action.skill}`
-            : `h${AI_PLAYER}`;
-      setFoeAim({ action, from, to });
+      setFoeAim({ action, from: aimSource(action, AI_PLAYER), to });
     }, AI_DELAY_MS);
     return () => clearTimeout(timer);
   }, [aiToMove, state, dispatch, foeAim, smartAi]);
   useEffect(() => {
     if (!foeAim) return;
     const timer = setTimeout(() => {
-      dispatch(foeAim.action);
+      // Online, the move is already decided: showing it is all there is to do.
+      if (online) announcedUpdate.current = playedUpdates.current;
+      else dispatch(foeAim.action);
       setFoeAim(null);
-    }, AI_AIM_MS);
+    }, foeAim.holdMs ?? AI_AIM_MS);
     return () => clearTimeout(timer);
-  }, [foeAim, dispatch]);
+  }, [foeAim, dispatch, online]);
 
   /**
    * With nothing selected, Escape opens the menu (with a selection it cancels
@@ -3279,7 +3329,9 @@ export const PlayBoard = ({
   const lineFrom = sourceEl && aimable.length > 0 ? centerOf(sourceEl) : null;
 
   const foeFromEl = foeAim ? nodes.current.get(foeAim.from) : undefined;
-  const foeToEl = foeAim ? nodes.current.get(targetKey(foeAim.to)) : undefined;
+  const foeToEl = foeAim?.to
+    ? nodes.current.get(targetKey(foeAim.to))
+    : undefined;
   const foeFrom = foeFromEl ? centerOf(foeFromEl) : null;
   const foeTo = foeToEl ? centerOf(foeToEl) : null;
 

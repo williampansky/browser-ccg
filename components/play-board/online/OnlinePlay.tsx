@@ -332,7 +332,11 @@ export const OnlinePlay = () => {
         ) : (
           <div className={styles.buttons}>
             <div className={styles.playButton}>
-              <Button variant="primary" disabled={status !== 'open'} onClick={find}>
+              <Button
+                variant="primary"
+                disabled={status !== 'open'}
+                onClick={find}
+              >
                 {vsBot ? 'Play a bot' : 'Find match'}
               </Button>
             </div>
