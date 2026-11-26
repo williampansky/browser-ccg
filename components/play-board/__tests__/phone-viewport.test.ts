@@ -7,7 +7,7 @@ describe('boardViewportContent', () => {
       aspect: 2.5,
       isPortrait: false,
     });
-    expect(content).toBe('width=1900, user-scalable=no');
+    expect(content).toBe('width=1900, user-scalable=no, viewport-fit=cover');
   });
 
   it('keeps the board wide enough for the log and deck list', () => {
