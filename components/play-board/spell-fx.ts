@@ -37,6 +37,29 @@ export const spellFxMs = (kind: SpellFxKind, tune: SpellFxTune): number => {
 };
 
 /**
+ * Milliseconds until the whole effect has played out: the hit landing for
+ * `spellFxMs`, then the rest of its life, and the volley (`shots` animations
+ * in all, each `volleyDelay` after the one before). Used to hold damage back
+ * until an effect is over.
+ */
+export const spellFxTotalMs = (
+  kind: SpellFxKind,
+  tune: SpellFxTune,
+  shots = 1,
+): number => {
+  const stagger = Math.max(0, shots - 1) * tune.volleyDelay;
+  if (kind === 'spot') {
+    const rings = Math.max(1, Math.round(tune.spotRings));
+    return tune.spotLife + (rings - 1) * tune.spotRingGap + stagger;
+  }
+  if (kind === 'area') return tune.areaMs + stagger;
+  if (kind === 'strike')
+    return Math.max(tune.strikeMs, tune.strikeLife) + stagger;
+
+  return tune.travelMs + stagger;
+};
+
+/**
  * Hero skills with their own effect, keyed `<CLASS>:<skill number>` (the first
  * skill is 1). A skill never borrows a card's look.
  */

@@ -4,6 +4,7 @@ import styles from './hero-variants.module.scss';
 import cx from '../../utils/cx';
 import { artBackground, PLACEHOLDER_ART } from './card-face-model';
 import { getImpactMs, IMPACT_MS, reducedMotion } from './motion';
+import { useImpactDelayed } from './use-impact-delayed';
 
 /**
  * PROTOTYPE hero displays 2 to 4 (option 1 is HeroBust): the standing figure,
@@ -118,8 +119,10 @@ export const HeroFigure = (
   p: HeroVariantProps & { skills?: FigureSkill[] } & FigureLive,
 ) => {
   const max = p.maxHealth ?? 30;
+  const health = useImpactDelayed(p.health);
+  const armor = useImpactDelayed(p.armor ?? 0);
   const state =
-    p.health <= max / 3 ? styles.low : p.health < max ? styles.hurt : styles.ok;
+    health <= max / 3 ? styles.low : health < max ? styles.hurt : styles.ok;
   return (
     <div
       {...p.dom}
@@ -223,19 +226,19 @@ export const HeroFigure = (
           );
         })}
       </div>
-      {!!p.armor && (
+      {!!armor && (
         <span
           className={cx(styles.figGem, styles.figArmor)}
-          aria-label={`${p.armor} armor`}
+          aria-label={`${armor} armor`}
         >
-          <b>{p.armor}</b>
+          <b>{armor}</b>
         </span>
       )}
       <span
         className={cx(styles.figGem, styles.figHp, state)}
-        aria-label={`${p.health} health`}
+        aria-label={`${health} health`}
       >
-        <b>{p.health}</b>
+        <b>{health}</b>
       </span>
     </div>
   );
@@ -663,17 +666,20 @@ export const HeroRing = (
 ) => {
   const r: RingTune = { ...RING_DEFAULTS, ...p.tune };
   const hit = useRingHit(p.health, p.armor ?? 0, r);
+  // The drawn health and armor go down when the hit lands, with the shake.
+  const health = useImpactDelayed(p.health);
+  const armor = useImpactDelayed(p.armor ?? 0);
   const max = p.maxHealth ?? 30;
   /**
    * The ring has four health states (the other variants keep three): full,
    * graze, hurt, low.
    */
   const t =
-    p.health <= max / 3
+    health <= max / 3
       ? styles.low
-      : p.health <= (max * 2) / 3
+      : health <= (max * 2) / 3
         ? styles.hurt
-        : p.health < max
+        : health < max
           ? styles.graze
           : '';
   const vars = {
@@ -744,10 +750,10 @@ export const HeroRing = (
       )}
       {r.bezel > 0 && <span className={styles.ringBezel} />}
       <div className={styles.ringDisc}>
-        {r.hpLiquid && p.health > 0 && (
+        {r.hpLiquid && health > 0 && (
           <Liquid
-            level={Math.min(1, p.health / max)}
-            health={p.health}
+            level={Math.min(1, health / max)}
+            health={health}
             max={max}
             tone={t}
             alpha={r.liquidAlpha}
@@ -884,13 +890,13 @@ export const HeroRing = (
           </span>
         </div>
       )}
-      {!!p.armor && (
+      {!!armor && (
         <span
           className={cx(styles.ringPill, styles.ringArmor, styles.num)}
           style={{ ['--a' as string]: `${r.armorAngle}deg` }}
-          aria-label={`${p.armor} armor`}
+          aria-label={`${armor} armor`}
         >
-          {p.armor}
+          {armor}
         </span>
       )}
       {r.hpArc && (
@@ -900,13 +906,13 @@ export const HeroRing = (
             className={styles.ringArcTrack}
             strokeWidth={r.hpArcWidth}
           />
-          {p.health > 0 && (
+          {health > 0 && (
             <path
               d={arcPath(
                 r.d / 2 + r.hpArcOffset,
                 r.hpArcStart,
                 r.hpArcStart +
-                  (r.hpArcEnd - r.hpArcStart) * Math.min(1, p.health / max),
+                  (r.hpArcEnd - r.hpArcStart) * Math.min(1, health / max),
               )}
               className={styles.ringArcFill}
               strokeWidth={r.hpArcWidth}
@@ -918,9 +924,9 @@ export const HeroRing = (
       <span
         className={cx(styles.ringPill, styles.ringHp, styles.num, t)}
         style={{ ['--a' as string]: `${r.hpAngle}deg` }}
-        aria-label={`${p.health} health`}
+        aria-label={`${health} health`}
       >
-        {p.health}
+        {health}
       </span>
     </div>
   );

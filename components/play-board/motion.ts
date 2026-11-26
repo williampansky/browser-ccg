@@ -509,6 +509,9 @@ export const flashHit = (
   );
 };
 
+/** Damage dealt by one action from which the whole table jolts. */
+export const BIG_HIT_DAMAGE = 4;
+
 /** A short jolt of the whole table, for a big hit. */
 export const nudge = (el: HTMLElement, strength: number): void => {
   if (reducedMotion() || !el.animate) return;
