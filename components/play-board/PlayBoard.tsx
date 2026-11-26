@@ -1637,6 +1637,8 @@ export const PlayBoard = ({
      */
     const isFoeMove =
       state.activePlayer !== '0' && next.action.type !== 'EndTurn';
+    // Behind the server (more moves waiting), skip the preview to catch up.
+    const isBehind = online.updates.length - playedUpdates.current > 1;
     const isPreviewable =
       next.action.type === 'PlayCard' ||
       next.action.type === 'Attack' ||
@@ -1645,6 +1647,7 @@ export const PlayBoard = ({
     if (
       isFoeMove &&
       isPreviewable &&
+      !isBehind &&
       announcedUpdate.current !== playedUpdates.current
     ) {
       const preview = previewFor(next.action);
@@ -1824,16 +1827,25 @@ export const PlayBoard = ({
     }, AI_DELAY_MS);
     return () => clearTimeout(timer);
   }, [aiToMove, state, dispatch, foeAim, smartAi]);
+  /**
+   * The release timer below must not restart when `dispatch` or `online`
+   * change identity (`online` is a new object on every update from the
+   * server), or a stream of moves keeps pushing the release back and the board
+   * freezes until the stream stops. So it reads them through refs.
+   */
+  const dispatchRef = useRef(dispatch);
+  dispatchRef.current = dispatch;
+  const isOnline = !!online;
   useEffect(() => {
     if (!foeAim) return;
     const timer = setTimeout(() => {
       // Online, the move is already decided: showing it is all there is to do.
-      if (online) announcedUpdate.current = playedUpdates.current;
-      else dispatch(foeAim.action);
+      if (isOnline) announcedUpdate.current = playedUpdates.current;
+      else dispatchRef.current(foeAim.action);
       setFoeAim(null);
     }, foeAim.holdMs ?? AI_AIM_MS);
     return () => clearTimeout(timer);
-  }, [foeAim, dispatch, online]);
+  }, [foeAim, isOnline]);
 
   /**
    * With nothing selected, Escape opens the menu (with a selection it cancels
