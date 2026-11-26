@@ -33,6 +33,13 @@ const envNumber = (name: string, fallback: number): number => {
   return Number.isFinite(value) && value > 0 ? value : fallback;
 };
 
+/**
+ * A browser that vanishes (a closed laptop, a lost network) never says goodbye,
+ * so every socket is pinged and one that stays silent is cut: that starts the
+ * reconnect countdown instead of leaving the game waiting forever.
+ */
+const HEARTBEAT_MS = envNumber('HEARTBEAT_SECONDS', 20) * 1000;
+
 const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? '')
   .split(',')
   .map((origin) => origin.trim())
@@ -73,6 +80,8 @@ const lobby = new Lobby({
 });
 
 const sockets = new Map<string, WebSocket>();
+/** False once a ping has gone out and no pong has come back. */
+const alive = new WeakMap<WebSocket, boolean>();
 
 const wss = new WebSocketServer({
   noServer: true,
@@ -97,6 +106,8 @@ wss.on('connection', (socket: WebSocket, request: IncomingMessage) => {
   // A second tab or a reconnect takes over the session.
   sockets.get(id)?.close(1000, 'replaced');
   sockets.set(id, socket);
+  alive.set(socket, true);
+  socket.on('pong', () => alive.set(socket, true));
   lobby.connect(id, { send: (m) => socket.send(JSON.stringify(m)) });
   let windowStart = Date.now();
   let count = 0;
@@ -143,17 +154,30 @@ const start = async (): Promise<void> => {
   const server = createServer((req, res) => {
     if (req.url === '/healthz') {
       res.writeHead(200, { 'content-type': 'application/json' });
-      const { queueSize, gameCount } = lobby;
+      const { queueSize, gameCount, finishedCount } = lobby;
+      const body = { ok: true, queueSize, gameCount, finishedCount };
 
-      return void res.end(JSON.stringify({ ok: true, queueSize, gameCount }));
+      return void res.end(JSON.stringify(body));
     }
     handler?.(req, res);
   });
   server.on('upgrade', onUpgrade);
   setInterval(() => lobby.tick(Date.now()), TICK_MS);
   setInterval(() => {
-    const { queueSize, gameCount } = lobby;
-    log('stats', { connections: sockets.size, queueSize, games: gameCount });
+    wss.clients.forEach((socket) => {
+      if (alive.get(socket) === false) return socket.terminate();
+      alive.set(socket, false);
+      socket.ping();
+    });
+  }, HEARTBEAT_MS);
+  setInterval(() => {
+    const { queueSize, gameCount, finishedCount } = lobby;
+    log('stats', {
+      connections: sockets.size,
+      queueSize,
+      games: gameCount,
+      finished: finishedCount,
+    });
   }, STATS_MS);
   server.listen(PORT, () => {
     console.log(`game server on :${PORT} (next: ${SERVE_NEXT})`);

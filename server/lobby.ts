@@ -102,8 +102,14 @@ export class Lobby {
     return this.matchmaker.size;
   }
 
+  /** Games still being played. */
   get gameCount(): number {
-    return this.games.size;
+    return Array.from(this.games).filter((game) => !game.match.isOver).length;
+  }
+
+  /** Finished games kept for a while so both players can read the result. */
+  get finishedCount(): number {
+    return this.games.size - this.gameCount;
   }
 
   /** A socket arrived for this session id; a game in progress is resumed. */

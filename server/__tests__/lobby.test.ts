@@ -169,4 +169,21 @@ describe('Lobby', () => {
     expect(lines[2][1]).toMatchObject({ reason: 'disconnect', humans: 2 });
     expect(JSON.stringify(lines)).not.toContain('Tester');
   });
+
+  it('counts live games apart from finished ones kept for the result', () => {
+    const lobby = makeLobby();
+    const a = fakeConnection();
+    lobby.connect('a', a);
+    lobby.message('a', { ...queueMessage(1), vsBot: true }, 0);
+
+    expect(lobby.gameCount).toBe(1);
+    expect(lobby.finishedCount).toBe(0);
+    lobby.message('a', { t: 'action', action: { type: 'Concede' } }, 1000);
+
+    expect(lobby.gameCount).toBe(0);
+    expect(lobby.finishedCount).toBe(1);
+    lobby.tick(1000 + 600000);
+
+    expect(lobby.finishedCount).toBe(0);
+  });
 });
