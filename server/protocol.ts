@@ -30,12 +30,14 @@ export type ClientMessage =
       hero: string;
       name: string;
       color: string;
+      /** Skip the queue and play a bot at once. */
+      vsBot?: boolean;
     }
   | { t: 'leave' }
   | { t: 'action'; action: Action };
 
 export type ServerMessage =
-  | { t: 'queued'; since: number }
+  | { t: 'queued'; since: number; botAfterMs: number }
   | { t: 'matched'; opponent: OpponentInfo; view: GameView }
   | { t: 'update'; action: Action; events: GameEvent[]; view: GameView }
   | { t: 'error'; code: string };

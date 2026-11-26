@@ -19,15 +19,48 @@
 
 .note {
   margin: 0;
-  color: var(--ui-text-dim, inherit);
+  color: var(--ui-text-dim);
   font-size: 0.85rem;
 }
 
 .error {
   margin: 0;
-  color: var(--ui-danger, #ff7b7b);
+  color: var(--ui-danger-text);
 }
 
 .searching {
   margin: 0;
+}
+
+.queue {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  padding: 0.75rem;
+  text-align: center;
+  border: 1px solid var(--ui-group-border);
+  border-radius: var(--ui-field-radius);
+  background: var(--ui-group-bg);
+}
+
+.timer {
+  font-size: 1.6rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.bar {
+  width: 100%;
+  height: 0.4rem;
+  overflow: hidden;
+  background: var(--ui-field-bg);
+  border-radius: 999px;
+
+  &::after {
+    display: block;
+    width: var(--progress);
+    height: 100%;
+    background: var(--ui-primary-bg);
+    transition: width 1s linear;
+    content: '';
+  }
 }

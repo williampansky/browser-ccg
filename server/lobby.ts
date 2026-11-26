@@ -101,7 +101,7 @@ export class Lobby {
     delete session.droppedAt;
     if (session.game && session.seat) this.sendMatched(session, Date.now());
     else if (this.matchmaker.has(id)) {
-      connection.send({ t: 'queued', since: Date.now() });
+      connection.send(this.queuedMessage(Date.now()));
     }
   }
 
@@ -146,8 +146,16 @@ export class Lobby {
     session.entry = entry;
     delete session.game;
     delete session.seat;
+    if (message.vsBot) {
+      this.start(id, undefined, this.matchmaker.pickBot(), now);
+      return;
+    }
     this.matchmaker.add(id, now);
-    session.connection?.send({ t: 'queued', since: now });
+    session.connection?.send(this.queuedMessage(now));
+  }
+
+  private queuedMessage(since: number): ServerMessage {
+    return { t: 'queued', since, botAfterMs: this.matchmaker.waitMs };
   }
 
   /** The deck and hero a player may queue with, or why not. */

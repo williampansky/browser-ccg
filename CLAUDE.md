@@ -20,7 +20,8 @@ earlier `hsclone` repo as the rules reference. Read these first:
 
 ## Current state
 
-- **There is a playable hot-seat board at `/play`** (`components/play-board/`): one browser tab, both
+- **Online play (alpha):** `/play` is the lobby (`components/play-board/online/`: hero + deck pick, queue, "skip the queue: play a bot"), backed by the game server in `server/` (custom Node + `ws`, the engine's only copy of each game, redacted views, queue with a 30 s bot fallback of 90% greedy / 10% random, 60 s reconnect grace; `yarn server:dev` with `NEXT_PUBLIC_WS_URL=ws://localhost:3101/ws` for development, `render.yaml` for Render; see CHANGELOG 2026-11-26). The offline board below is at `/play/local`; the online board is `PlayBoard` with the `online` prop (seats flipped so you are always Player 1, `seat-flip.ts`).
+- **There is a playable hot-seat board at `/play/local`** (`components/play-board/`): one browser tab, both
   players, the active player at the bottom. It runs on the new engine with the real CORE cards the
   engine fully supports (`playablePool` in `engine/decks.ts`: every CORE card). It defaults to playing against a greedy AI (`engine/bots/greedy-bot.ts`: tries each legal move, scores the result, one move ahead; Player 2); the menu switches it to the random bot (`random-bot.ts`) or to hot-seat. There is no art yet and no multiplayer. "Choose one" cards show option buttons before aiming (not yet
   clicked through in a browser, only covered by engine tests). there is no boardgame.io adapter yet (the
@@ -117,7 +118,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - **Debug URL params** (read on every "New game" while they are in the URL): `?first=0|1` picks who goes first
   (0 = Player 1); `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand, in order.
   `?b0=CORE_027,CORE_061` and `?b1=...` put ready-to-attack minions on that player's board (no On Play effect or aura runs),
-  `?w0=CORE_076` and `?w1=...` equip a weapon, `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10). Handy for testing a specific card, e.g. `/play?first=0&p0=CORE_045`.
+  `?w0=CORE_076` and `?w1=...` equip a weapon, `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10). Handy for testing a specific card, e.g. `/play/local?first=0&p0=CORE_045`.
 
 ## Working style: browser checks
 

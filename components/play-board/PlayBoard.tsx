@@ -3526,7 +3526,7 @@ export const PlayBoard = ({
                 Home
               </a>
               {!online && (
-                <a href="/play/online" onClick={leaveGame}>
+                <a href="/play" onClick={leaveGame}>
                   Play online
                 </a>
               )}

@@ -45,7 +45,7 @@ Please don't copy, redistribute or reuse the images.
 - `npm test`, `npx tsc --noEmit -p .`, `npm run build`
 - `npm run sim -- [gamesPerPair] [greedy|random]` - bot-vs-bot win-rate report for the starter decks
 - `npm run airtable` - re-pull the card data into `data/` (needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID`)
-- `/play` also takes debug URL params, e.g. `/play?first=0&p0=CORE_045` (see `CLAUDE.md`)
+- `/play/local` also takes debug URL params, e.g. `/play/local?first=0&p0=CORE_045` (see `CLAUDE.md`)
 
 ## Known issues
 

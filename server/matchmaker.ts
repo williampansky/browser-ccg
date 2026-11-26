@@ -39,6 +39,10 @@ export class Matchmaker {
     private readonly config: MatchmakerConfig = DEFAULT_MATCHMAKER,
   ) {}
 
+  get waitMs(): number {
+    return this.config.waitMs;
+  }
+
   get size(): number {
     return this.queue.length;
   }
@@ -72,7 +76,8 @@ export class Matchmaker {
     return out;
   }
 
-  private pickBot(): BotKind {
+  /** The bot a game against a bot gets: greedy about `greedyShare` of the time. */
+  pickBot(): BotKind {
     const greedyPercent = this.config.greedyShare * PERCENT;
 
     return this.rng.int(PERCENT) < greedyPercent ? 'greedy' : 'random';

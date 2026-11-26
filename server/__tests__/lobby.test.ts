@@ -70,6 +70,28 @@ describe('Lobby', () => {
     expect(matched).toMatchObject({ opponent: { isBot: true } });
   });
 
+  it('starts a bot game at once when asked to skip the queue', () => {
+    const lobby = makeLobby();
+    const a = fakeConnection();
+    lobby.connect('a', a);
+    lobby.message('a', { ...queueMessage(1), vsBot: true }, 0);
+
+    expect(lobby.queueSize).toBe(0);
+    expect(a.got.map((m) => m.t)).toContain('matched');
+    expect(a.got.find((m) => m.t === 'matched')).toMatchObject({
+      opponent: { isBot: true },
+    });
+  });
+
+  it('tells a queued player when a bot will take over', () => {
+    const lobby = makeLobby();
+    const a = fakeConnection();
+    lobby.connect('a', a);
+    lobby.message('a', queueMessage(1), 0);
+
+    expect(a.got[0]).toMatchObject({ t: 'queued', botAfterMs: 30000 });
+  });
+
   it('refuses a deck with a card outside the allowed pool', () => {
     const lobby = makeLobby();
     const a = fakeConnection();
