@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   createSeededRng,
   loadHsCards,
@@ -79,6 +80,7 @@ const ERROR_TEXT: Record<string, string> = {
  * its online mode.
  */
 export const OnlinePlay = () => {
+  const router = useRouter();
   const [phase, setPhase] = useState<Phase>({ kind: 'menu' });
   const [status, setStatus] = useState<ClientStatus>('connecting');
   const [error, setError] = useState('');
@@ -208,6 +210,12 @@ export const OnlinePlay = () => {
     setPhase({ kind: 'menu' });
     setUpdates([]);
   }, []);
+  const home = useCallback(() => {
+    client.current?.send({ t: 'leave' });
+    setPhase({ kind: 'menu' });
+    setUpdates([]);
+    router.push({ pathname: '/' });
+  }, []);
 
   if (phase.kind === 'playing') {
     const game: OnlineGame = {
@@ -239,45 +247,53 @@ export const OnlinePlay = () => {
         <h1>Play</h1>
         <p className={styles.note}>
           {status === 'open'
-            ? 'Connected to the game server.'
+            ? '✅ Connected to the game server.'
             : status === 'connecting'
-              ? 'Connecting to the game server...'
-              : 'Connection lost. Trying again...'}
+              ? '⏳ Connecting to the game server...'
+              : '❌ Connection lost. Trying again...'}
         </p>
-        <label className={styles.row}>
-          <span>Hero</span>
-          <Select
-            aria-label="Hero"
-            disabled={isQueued}
-            value={heroChoice}
-            onChange={(e) => setHeroChoice(e.target.value)}
-          >
-            {heroes.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-        </label>
-        <label className={styles.row}>
-          <span>Deck</span>
-          <Select
-            aria-label="Deck"
-            disabled={isQueued}
-            value={
-              options.some((o) => o.value === deckChoice)
-                ? deckChoice
-                : options[0].value
-            }
-            onChange={(e) => setDeckChoice(e.target.value)}
-          >
-            {options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-        </label>
+        <div className={styles.choices}>
+          <div className={styles.heroSelect}>
+            <label className={styles.row}>
+              <span>Hero</span>
+              <Select
+                aria-label="Hero"
+                disabled={isQueued}
+                name="hero"
+                onChange={(e) => setHeroChoice(e.target.value)}
+                value={heroChoice}
+              >
+                {heroes.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </label>
+          </div>
+          <div className={styles.deckSelect}>
+            <label className={styles.row}>
+              <span>Deck</span>
+              <Select
+                aria-label="Deck"
+                disabled={isQueued}
+                name="deck"
+                onChange={(e) => setDeckChoice(e.target.value)}
+                value={
+                  options.some((o) => o.value === deckChoice)
+                    ? deckChoice
+                    : options[0].value
+                }
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </label>
+          </div>
+        </div>
         {saved.length > usable.length && (
           <p className={styles.note}>
             Saved decks need exactly 30 legal cards to play online.{' '}
@@ -286,6 +302,7 @@ export const OnlinePlay = () => {
         )}
         <Checkbox
           checked={vsBot}
+          className={styles.skipCheckbox}
           disabled={isQueued}
           title="Start a game against a bot right away instead of waiting for another player"
           onChange={setVsBot}
@@ -313,14 +330,14 @@ export const OnlinePlay = () => {
             <Button onClick={cancel}>Cancel</Button>
           </div>
         ) : (
-          <div>
-            <div>
+          <div className={styles.buttons}>
+            <div className={styles.playButton}>
               <Button variant="primary" disabled={status !== 'open'} onClick={find}>
                 {vsBot ? 'Play a bot' : 'Find match'}
               </Button>
             </div>
-            <div>
-              <Button onClick={cancel}>Cancel</Button>
+            <div className={styles.homeButton}>
+              <Button onClick={home}>Home</Button>
             </div>
           </div>
         )}
