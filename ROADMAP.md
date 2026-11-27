@@ -13,7 +13,7 @@ Order matters: each milestone makes the next one cheaper or safer.
 - [x] Run `hsclone` and confirm it plays (two tabs; summoning, attacking and Guard verified)
 - [x] Remove the zone engine, board UI, zone pages and engine-only helpers (303 files, ~14.5k lines)
 - [x] Slim `app.config.ts`; rewrite `CLAUDE.md`, `README.md`, `VISION.md`
-- [ ] Merge `hs-rebuild` into `main` once Milestone 2 plays (decide when)
+- [x] Merge `hs-rebuild` into `main` once Milestone 2 plays (merged 2026-11-15)
 
 ## Milestone 1a: Rules spec (deep-dive, read-only)
 
@@ -135,7 +135,8 @@ server runs it directly (see CHANGELOG 2026-11-26).
 - [x] Real server with a matchmaking queue (30 s wait, then a bot: 90% greedy, 10% random) and "skip the queue"
 - [x] Gate who may act (server checks the seat); hide the opponent's hand, deck and face-down Mystery
 - [x] Reconnects (a session id in localStorage, 60 s grace, then concede); a server-side turn clock
-- [x] Hosting: `render.yaml` (Render, one paid instance, bccg.io)
+- [x] Hosting: `render.yaml` (Render, one paid instance, bccg.io), auto-deployed from `main`; live as an alpha since 2026-11-26
+- [ ] A deploy restarts the server and ends every live game and the queue: warn players or drain games before a restart
 - [ ] Live check with two real players in two browsers (only unit-tested so far)
 - [ ] Accounts, rankings, saved match history, and games that survive a server restart
 - [ ] Randomness is the engine's own seeded `Rng`, not `ctx.random`; log the seed per game if replays are wanted

@@ -25,7 +25,8 @@ with some form of monetization. There is no committed timeline or definition of 
 Most important:
 
 1. **Card design and balance.** The cards and their mechanics are the game.
-2. **Multiplayer.** Moving from a local/bot game to player-vs-player and multi-user.
+2. **Multiplayer.** Moving from a local/bot game to player-vs-player and multi-user. An online alpha (queue, bot
+   fallback, no accounts) has been live at bccg.io since 2026-11-26.
 3. **An enjoyable experience.** It should feel like Hearthstone did: readable boards, satisfying
    trades, clear feedback.
 

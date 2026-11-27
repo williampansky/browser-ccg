@@ -2,6 +2,14 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-27
+
+- **Docs: production environment:** `README.md` (Production section: bccg.io on Render, auto-deploy from `main`, a deploy ends live games, version bump, `swcMinify` off), `CLAUDE.md` (a Production section and the rule that `main` is production; lines that said there was no multiplayer or art), `VISION.md` and `ROADMAP.md` (online alpha is live; the `hs-rebuild` merge ticked; a roadmap item for deploys that end live games) updated.
+- **Removed the stale `get-card-power` test:** it tested a zone-game helper with `as Card` casts, and was the source of the 8 `tsc` errors. `tsc` is now clean. The helper `utils/get-card-power.ts` has no other caller and is left in place.
+- **Collection: filters in a modal below the large breakpoint:** on a large screen the filter rows show as before; below it a header (Open filters, card size, card count) opens them in a dialog (backdrop click or Escape closes it). The filter bar is now `CollectionFilterControls` (one `handleOnSelectChange` for every drop-down) with its own stylesheet, and the card size chips are `CollectionCardSizeControl`. The row styles are shared with the deck builder through `styles/mixins/_filter-row.scss`. `Button` takes a `size` (`sm`) and themes have `--ui-btn-sm-pad`.
+- **Board lab: tier preview runs cooler:** the preview iframe no longer creates a second Pixi canvas (`?fx=off`), and has Auto-refresh and Freeze animations checkboxes (a refresh link when auto-refresh is off). An open preview with auto-reload was keeping the GPU and a renderer busy (7 GB in one Chrome renderer seen in Activity Monitor); not yet confirmed fixed.
+- **Code-style rule:** a function that returns a function (a curried handler) uses a block body and an explicit `return`, not a chain of arrows (`CLAUDE.md`, rule 3).
+
 ## 2026-11-26
 
 - **Board lab: layouts for three screen sizes, a size preview and a hero scale knob:** the board's saved layout now has a base (large) plus override maps for medium (a window up to 1100 px wide) and small (a phone). `PLAY_LAYOUT_TIERS` in `layout-css.ts` holds only the knobs that differ; small inherits medium's. The lab has a Large / Medium / Small switch (`dev=`), sliders say "(from large)" for a value they inherit, and `npm run board -- --tier=medium|small "<url>"` bakes into a tier (a `dev=` URL without `--tier` is refused). A **Preview** button shows `/play/local` in an iframe at that tier's real size. A phone is detected from its screen (`use-is-phone.ts`, `?device=phone` forces it) because `PhoneFit` lays its page out about 1650 px wide and scales it, so no width query matches; the log and deck popup rules now apply on a phone too (`data-phone` on `<html>`). New knobs `lfz0` / `lfz1` scale each hero (figure or ring) as a percentage. The `/play` menu is its own component (`play-menu/`). Not tried on a real phone yet.

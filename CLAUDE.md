@@ -1,7 +1,8 @@
 # Browser CCG
 
-Browser-based collectible card game: Next.js 12 + React 17 front end, with game logic in
-[boardgame.io](https://boardgame.io) 0.49.
+Browser-based collectible card game: Next.js 12 + React 17 front end, a plain-TypeScript rules engine
+(`engine/`) and a small custom Node + `ws` game server (`server/`). Live as an alpha at **bccg.io**
+(see "Production" below).
 
 **Direction:** a Hearthstone-style game (minions that attack, hero health, alternating
 turns, Guard/taunt, spells, weapons, class skills). The earlier zone/SNAP-style game was
@@ -23,9 +24,9 @@ earlier `hsclone` repo as the rules reference. Read these first:
 - **Online play (alpha):** `/play` is the lobby (`components/play-board/online/`: hero + deck pick, queue, "skip the queue: play a bot"), backed by the game server in `server/` (custom Node + `ws`, the engine's only copy of each game, redacted views, queue with a 30 s bot fallback of 90% greedy / 10% random, 60 s reconnect grace; `yarn server:dev` with `NEXT_PUBLIC_WS_URL=ws://localhost:3101/ws` for development, `render.yaml` for Render; see CHANGELOG 2026-11-26). The offline board below is at `/play/local`; the online board is `PlayBoard` with the `online` prop (seats flipped so you are always Player 1, `seat-flip.ts`).
 - **There is a playable hot-seat board at `/play/local`** (`components/play-board/`): one browser tab, both
   players, the active player at the bottom. It runs on the new engine with the real CORE cards the
-  engine fully supports (`playablePool` in `engine/decks.ts`: every CORE card). It defaults to playing against a greedy AI (`engine/bots/greedy-bot.ts`: tries each legal move, scores the result, one move ahead; Player 2); the menu switches it to the random bot (`random-bot.ts`) or to hot-seat. There is no art yet and no multiplayer. "Choose one" cards show option buttons before aiming (not yet
-  clicked through in a browser, only covered by engine tests). there is no boardgame.io adapter yet (the
-  old `game/` stub was removed; it comes later). The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-6 of
+  engine fully supports (`playablePool` in `engine/decks.ts`: every CORE card). It defaults to playing against a greedy AI (`engine/bots/greedy-bot.ts`: tries each legal move, scores the result, one move ahead; Player 2); the menu switches it to the random bot (`random-bot.ts`) or to hot-seat. The art is placeholder (see the README notice); online play is `/play`. "Choose one" cards show option buttons before aiming (not yet
+  clicked through in a browser, only covered by engine tests). there is no boardgame.io adapter (the
+  old `game/` stub was removed; online play uses the custom server instead). The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-6 of
   its build order are done and tested: card model and loader (`engine/cards/`), state and turn flow,
   minions and combat, spells and `legalTargets`, keywords, triggers/On Play effects/`legalActions`, and
   weapons/armor/items. After the slices, every CORE card got a definition (Batches A-C: simple effects,
@@ -42,6 +43,24 @@ earlier `hsclone` repo as the rules reference. Read these first:
 
 - **Classes and hero skills** (`engine/heroes/`): nine classes (`CLASS_FIGHTER`, `CLASS_WIZARD`, `CLASS_RANGER`, `CLASS_CLERIC`, `CLASS_CRUSADER`, `CLASS_ASSASSIN`, `CLASS_MYSTIC`, `CLASS_NECROMANCER`, `CLASS_WARDEN`; keys and the old-key map in `engine/heroes/classes.ts`). A **class** owns the skills and the class cards; a **hero** (the `HEROES` table) is a cosmetic skin on a class, and the engine's hero id is the class key (one default hero per class so far, no skin picker). Skills come from the `SKILLS` table (`data/skills.json`, each linked to a class): only **active** skills are offered, and for now only each class's skill 1 is active (skills 2 and 3, and their code in `SKILL_CODE`, are shelved: untick `active` in Airtable to shelve one, tick it to bring it back). Skill `text` may use `%NUM1%`/`%NUM2%`, filled from `numberPrimary`/`numberSecondary`; behaviour is in `skill-effects.ts`, keyed by class key (entry `n` is skill id `n + 1`; `effects` may be a function of the skill's `entourage` ids).
   A skill's tokens are entourage cards in Airtable (`GAME_002` to `GAME_007`, listed in the skill's `entourage` column); the older Ranger and Warden tokens are still in `tokens.ts` (use `withHeroTokens(catalog)` for a game with heroes). Old hero keys (`ZEUS`, `WARRIOR`, ...) map to class keys through `RENAMED_HERO`, so saved decks, saved choices and `?h0=` keep working. `PlayerState.hero`, action `HeroSkill`, `/play` skill bar (`HeroSkills.tsx`), hero picker in New game (`hero-choice.ts`, `ccg.heroes.v1`; no "no hero" option any more, a saved `none` becomes Random), debug `?h0=WIZARD&h1=none` (still works, for tests and labs). Hero art is `public/images/heroes/<CLASS>/avatar` and `skill-N` (`.jpg` or `.png`); a missing file shows the placeholder. Readings: `RULES.md` Appendix D.
+
+## Production (bccg.io)
+
+- **`main` is production.** `render.yaml` has `autoDeploy: true` on branch `main` (Render, one paid web service running
+  Next and the game server together, `yarn start:prod`, health check `/healthz`). A push to `main` is a release, so do work
+  on a feature branch and merge only when `npm test` and `npm run build` pass. Never push to `main` without being asked.
+- The build is `yarn install --frozen-lockfile --production=false && yarn build && yarn server:build`: keep `yarn.lock` in
+  step with `package.json` (never `package-lock.json`), and keep `server/` compiling under `tsconfig.server.json`.
+- A deploy restarts the process, so every live game and the matchmaking queue are lost (state is in memory). Do not
+  deploy casually while people may be playing.
+- Bump the version for a deploy with `npm run semver:patch` (`:minor`, `:major`); `next.config.js` passes it to the build
+  and `VersionLabel` shows it.
+- `swcMinify: false` in `next.config.js` is deliberate (the SWC minifier broke spell effects in production; CHANGELOG
+  2026-11-26). Look at a production build, not just dev, when you change effects code.
+- `ALLOWED_ORIGINS` on the live server lists only the bccg.io hosts, so `localhost` pages cannot reach it; test online play
+  against `yarn server:dev`.
+- The site serves the placeholder art publicly (README notice). **CI is still the last roadmap item**; the checks above
+  are run by hand before merging.
 
 ## Next up (as of the last session)
 
@@ -281,6 +300,6 @@ Not done yet: existing code does not follow rules 6 and 7 (a prop sort and an im
 - Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
 - Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.
-- Current checks: `npm test` passes (when a card-count test fails after you add or pull cards, update `gameConfig.cardCounts` in `app.config.ts`, the one place those numbers live), `npm run build` passes, and `tsc` has 8 errors
-  (`as Card` casts in `utils/__tests__/get-card-power.test.ts`). Don't "fix"
+- Current checks: `npm test` passes (when a card-count test fails after you add or pull cards, update `gameConfig.cardCounts` in `app.config.ts`, the one place those numbers live), `npm run build` passes, and `tsc` is clean (the 8 old
+  `as Card` errors in `utils/__tests__/get-card-power.test.ts` went when that stale test was removed). Don't "fix"
   unrelated failures as a drive-by.
