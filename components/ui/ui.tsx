@@ -15,15 +15,21 @@ import { AnimatedIcon } from './AnimatedIcon';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
 };
 
 /** A button. `type` defaults to "button" (never submits a form by accident). */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant, className, type = 'button', ...rest }, ref) => (
+  ({ variant, className, size = 'md', type = 'button', ...rest }, ref) => (
     <button
       ref={ref}
       type={type}
-      className={cx('ui-btn', variant && `ui-btn--${variant}`, className)}
+      className={cx(
+        'ui-btn',
+        variant && `ui-btn--${variant}`,
+        size && `ui-btn--${size}`,
+        className,
+      )}
       {...rest}
     />
   ),
