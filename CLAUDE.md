@@ -1,7 +1,8 @@
 # Browser CCG
 
-Browser-based collectible card game: Next.js 12 + React 17 front end, with game logic in
-[boardgame.io](https://boardgame.io) 0.49.
+Browser-based collectible card game: Next.js 12 + React 17 front end, a plain-TypeScript rules engine
+(`engine/`) and a small custom Node + `ws` game server (`server/`). Live as an alpha at **bccg.io**
+(see "Production" below).
 
 **Direction:** a Hearthstone-style game (minions that attack, hero health, alternating
 turns, Guard/taunt, spells, weapons, class skills). The earlier zone/SNAP-style game was
@@ -18,14 +19,30 @@ earlier `hsclone` repo as the rules reference. Read these first:
 - `PREVIOUS-VERSIONS.md` - the four earlier repos, how `hsclone` plays, and what to reuse
 - `CARD-AUDIT.md` - card/art/balance review (written against the old zone rules; see its note)
 
+## Topic docs: read the one for the area you are about to change
+
+Detail that only matters in one area lives in a `CLAUDE.md` next to that code. Claude Code loads a folder's file when
+you read or edit something in it; if you start from somewhere else (a page, a script), read the file listed here first.
+
+| Working on | Read |
+|---|---|
+| The `/play` board, spell effects (Pixi, `/spells-lab`), drag and drop, debug URL params, framed cards, the hand | `components/play-board/CLAUDE.md` |
+| Any lab (`/board-lab`, hero, deck, minion, spells): adding controls, the scripts that bake a lab's URL | `components/board-lab/CLAUDE.md` |
+| UI kit, themes, animated icons, `components/ui/` | `components/ui/CLAUDE.md` |
+| Player name and colour theme | `components/player-profile/CLAUDE.md` |
+| Decks, deck rules, PRIME opt-in, class-restricted cards, the deck builder and picker | `engine/CLAUDE.md` |
+| Classes, hero skills, skill effects | `engine/heroes/CLAUDE.md` |
+| Card art, art lab, `npm run art` / `asset`, where art files live | `scripts/art/CLAUDE.md` |
+| Card data, `npm run airtable`, tokens, the Airtable base | `data/CLAUDE.md` |
+
 ## Current state
 
 - **Online play (alpha):** `/play` is the lobby (`components/play-board/online/`: hero + deck pick, queue, "skip the queue: play a bot"), backed by the game server in `server/` (custom Node + `ws`, the engine's only copy of each game, redacted views, queue with a 30 s bot fallback of 90% greedy / 10% random, 60 s reconnect grace; `yarn server:dev` with `NEXT_PUBLIC_WS_URL=ws://localhost:3101/ws` for development, `render.yaml` for Render; see CHANGELOG 2026-11-26). The offline board below is at `/play/local`; the online board is `PlayBoard` with the `online` prop (seats flipped so you are always Player 1, `seat-flip.ts`).
 - **There is a playable hot-seat board at `/play/local`** (`components/play-board/`): one browser tab, both
   players, the active player at the bottom. It runs on the new engine with the real CORE cards the
-  engine fully supports (`playablePool` in `engine/decks.ts`: every CORE card). It defaults to playing against a greedy AI (`engine/bots/greedy-bot.ts`: tries each legal move, scores the result, one move ahead; Player 2); the menu switches it to the random bot (`random-bot.ts`) or to hot-seat. There is no art yet and no multiplayer. "Choose one" cards show option buttons before aiming (not yet
-  clicked through in a browser, only covered by engine tests). there is no boardgame.io adapter yet (the
-  old `game/` stub was removed; it comes later). The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-6 of
+  engine fully supports (`playablePool` in `engine/decks.ts`: every CORE card). It defaults to playing against a greedy AI (`engine/bots/greedy-bot.ts`: tries each legal move, scores the result, one move ahead; Player 2); the menu switches it to the random bot (`random-bot.ts`) or to hot-seat. Online play is `/play`. "Choose one" cards show option buttons before aiming (not yet
+  clicked through in a browser, only covered by engine tests). there is no boardgame.io adapter (the
+  old `game/` stub was removed; online play uses the custom server instead). The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-6 of
   its build order are done and tested: card model and loader (`engine/cards/`), state and turn flow,
   minions and combat, spells and `legalTargets`, keywords, triggers/On Play effects/`legalActions`, and
   weapons/armor/items. After the slices, every CORE card got a definition (Batches A-C: simple effects,
@@ -40,8 +57,22 @@ earlier `hsclone` repo as the rules reference. Read these first:
   still expect the zone-game shape, and `utils/` reads
   `constants.json`/`mechanics.json` in the old shape, so they are stale until ROADMAP Milestone 4 switches them over.
 
-- **Classes and hero skills** (`engine/heroes/`): nine classes (`CLASS_FIGHTER`, `CLASS_WIZARD`, `CLASS_RANGER`, `CLASS_CLERIC`, `CLASS_CRUSADER`, `CLASS_ASSASSIN`, `CLASS_MYSTIC`, `CLASS_NECROMANCER`, `CLASS_WARDEN`; keys and the old-key map in `engine/heroes/classes.ts`). A **class** owns the skills and the class cards; a **hero** (the `HEROES` table) is a cosmetic skin on a class, and the engine's hero id is the class key (one default hero per class so far, no skin picker). Skills come from the `SKILLS` table (`data/skills.json`, each linked to a class): only **active** skills are offered, and for now only each class's skill 1 is active (skills 2 and 3, and their code in `SKILL_CODE`, are shelved: untick `active` in Airtable to shelve one, tick it to bring it back). Skill `text` may use `%NUM1%`/`%NUM2%`, filled from `numberPrimary`/`numberSecondary`; behaviour is in `skill-effects.ts`, keyed by class key (entry `n` is skill id `n + 1`; `effects` may be a function of the skill's `entourage` ids).
-  A skill's tokens are entourage cards in Airtable (`GAME_002` to `GAME_007`, listed in the skill's `entourage` column); the older Ranger and Warden tokens are still in `tokens.ts` (use `withHeroTokens(catalog)` for a game with heroes). Old hero keys (`ZEUS`, `WARRIOR`, ...) map to class keys through `RENAMED_HERO`, so saved decks, saved choices and `?h0=` keep working. `PlayerState.hero`, action `HeroSkill`, `/play` skill bar (`HeroSkills.tsx`), hero picker in New game (`hero-choice.ts`, `ccg.heroes.v1`; no "no hero" option any more, a saved `none` becomes Random), debug `?h0=WIZARD&h1=none` (still works, for tests and labs). Hero art is `public/images/heroes/<CLASS>/avatar` and `skill-N` (`.jpg` or `.png`); a missing file shows the placeholder. Readings: `RULES.md` Appendix D.
+## Production (bccg.io)
+
+- **`main` is production.** `render.yaml` has `autoDeploy: true` on branch `main` (Render, one paid web service running
+  Next and the game server together, `yarn start:prod`, health check `/healthz`). A push to `main` is a release, so do work
+  on a feature branch and merge only when `npm test` and `npm run build` pass. Never push to `main` without being asked.
+- The build is `yarn install --frozen-lockfile --production=false && yarn build && yarn server:build`: keep `yarn.lock` in
+  step with `package.json` (never `package-lock.json`), and keep `server/` compiling under `tsconfig.server.json`.
+- A deploy restarts the process, so every live game and the matchmaking queue are lost (state is in memory). Do not
+  deploy casually while people may be playing.
+- Bump the version for a deploy with `npm run semver:patch` (`:minor`, `:major`); `next.config.js` passes it to the build
+  and `VersionLabel` shows it.
+- `swcMinify: false` in `next.config.js` is deliberate (the SWC minifier broke spell effects in production; CHANGELOG
+  2026-11-26). Look at a production build, not just dev, when you change effects code.
+- `ALLOWED_ORIGINS` on the live server lists only the bccg.io hosts, so `localhost` pages cannot reach it; test online play
+  against `yarn server:dev`.
+- **CI is still the last roadmap item**; the checks above are run by hand before merging.
 
 ## Next up (as of the last session)
 
@@ -50,76 +81,13 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 1. **Playtest the full pool** and confirm or change the readings in `RULES.md` Appendix B. Decided: `CORE_007` only destroys the
    weapon (follow the text), and `CORE_057b` (a summoned token whose On Play effect could never fire, formerly TacMedic) is now a plain
    2/4 Guard called Frontline Guardsman; the same change is in Airtable and pulled (2026-11-11).
-2. **Card art provenance/licences** (the art itself is ported and on the board; the README carries a "not licensed
-   for reuse" notice). Still to do: a card-by-card provenance table and replacing placeholder art (Milestone 4).
+2. **Card art provenance/licences** (the author removed all FPO art on 2026-11-27: the art that remains is purchased or
+   free-to-use, as are the sounds). Still to do: a card-by-card provenance table (Milestone 4).
 3. **Bot-vs-bot win-rate tables** (Milestone 3; the greedy bot is done). Tune `evaluate` in `greedy-bot.ts` against them.
 4. Slice 7 of the engine plan (a dedicated random-bot invariant suite) is mostly covered already by
    `engine/__tests__/real-pool.test.ts` and `engine/bots/__tests__/`.
 
 **CI is deliberately the very last roadmap item** ("Way later: CI"). Do not suggest or build it early.
-
-## Deck rules and the deck builder
-
-- **Deck rules** (`engine/deck-rules.ts`): at most `MAX_DECK_SIZE` = 30 cards, for every deck (hand-built or random).
-  `createGame` throws on a bigger deck and `buildDeck` clamps. Fewer than 30 is allowed (fatigue covers it). Copy limit
-  (`maxCopies`): 2 of any card, 1 if its rarity is `MYTHIC`; the deck builder enforces it, `createGame` does not.
-- **`/deckbuilder`** (`components/deck-builder/`) is the new builder on the engine's card model (the old page read the zone-game shape).
-  Saved decks live in localStorage (`deck-storage.ts`).
-- **PRIME is opt-in** (`primePool` in `engine/decks.ts`: active, named, non-token PRIME cards the engine can already play; not every PRIME card yet, definitions in `engine/definitions/prime/`, readings in `RULES.md` Appendix C,
-  the rest need definitions). The deck builder has a Core / Prime / Both filter; the picker has "Random deck (Core + Prime)"; every other
-  random deck choice ("Random deck (Core only)") stays CORE-only, so CORE's balance numbers are unchanged. **Unnamed active cards:** Airtable still has no `name` for some *active* PRIME cards (and `data/prime.json`, which mirrors it, leaves them blank). The loader (`engine/cards/load-cards.ts`) names an active, non-token card with no name by its own id (`PRIME_168`), so it is playable and shows in the deck builder and collection, while still reporting a `missing-name` warning. This is a deliberate discrepancy between Airtable and what the game shows: renaming a card in Airtable replaces the id automatically on the next pull. Some of them are playable now (`primePool`); `art-files.test.ts` expects `-CARD` art for them (PRIME_212 is the one exception, listed in the test; it shows the placeholder). Inactive unnamed cards and unnamed tokens stay unnamed and are left out of the pools. **Do not write placeholder names into Airtable** (it was done once by mistake on 2026-11-21 and reverted by hand).
-  PRIME art was copied from `react-ccg-deprecated` (`SET_003`, renamed `PRIME_061-CARD.jpg` -> `SET_PRIME/061-CARD.jpg`, checked card by card against the old data) on 2026-11-12: all but `PRIME_212` have a `-CARD` image, but its provenance is unchecked, like the rest. **A card with no art file shows `public/images/sets/PLACEHOLDER.jpg`**: `artBackground` (`card-face-model.ts`)
-  stacks the card's art over it as CSS background layers, so a missing file (a 404 in the console is expected) falls through; framed cards and board minions both use it.
-- **Class-restricted cards** (PRIME's ids are laid out by class: `PRIME_001`-`110` and `245`-`254` are neutral; `111`-`125` Warden, `126`-`139` Ranger, `140`-`154` Wizard, `155`-`169` Crusader, `170`-`184` Cleric, `185`-`199` Assassin, `200`-`214` Mystic (plus `257`-`260`), `215`-`229` Necromancer, `230`-`244` Fighter, and `255` Smash! (Fighter) carry a class; every CORE card is neutral): the card's `cardClass` is a link to the `CLASSES` table; the pull looks up its symbol and writes `0 %CLASS_FIGHTER%` (the `0 ` is a constant prefix, the loader strips it), which becomes `Card.heroClass` (the class key, e.g. `FIGHTER`; absent for a card with no class). The loader still reads the older `%CLASS_HERO_WARRIOR%` as Fighter. Entourage tokens may carry a class too, but no pool offers tokens. `checkDeck(ids, byId, copyLimit, hero)` refuses a class card for any other class (its `hero` argument is the class key); `createGame` does not check (it has no catalog). Every ordinary pool (`playablePool`, `primePool`) skips class cards; `classPool` returns them (`classCardsFor` one class's), a random deck takes only its own hero's, and otherwise only the deck builder (shown and addable only when the deck's hero matches; changing the hero drops cards that no longer fit) and `/collection` (a Class filter, URL `?class=`) offer them.
-- **Choosing decks for a game** (`components/play-board/deck-choice.ts`): there are no premade decks (the 30 starter decks were deleted). Menu > "New game (choose decks)" opens a picker for each
-  player: "Random deck (Core + Prime)" (the default for both seats), "Random deck (Core only)", or a saved deck. The last picks are remembered (`ccg.newGame.v1`; an old removed choice resets to Core + Prime).
-  **A random deck is built for the hero** (`buildClassDeck` in `engine/decks.ts`, `classCardsFor`): the hero is chosen first, then up to a third of the deck (`CLASS_CARD_SLOTS`, 10) is that class's
-  class-locked cards (a class with fewer gets all of them) and the rest comes from the ordinary pool. The Core-only deck takes only CORE class cards. **The AI seat never plays a saved deck**: any saved pick becomes Core + Prime.
-
-## Spell effects (Pixi layer, `/spells-lab`)
-
-- **Files:** `components/play-board/pixi-fx.ts` (the drawing, one transparent canvas over the page; `?fx=off` turns it all off), `spell-fx.ts` (which spell gets which base), `spell-fx-tune.ts` (every number: `SpellFxTune`, `SPELL_FX_DEFAULTS`, per-spell `SPELL_FX_VARIANTS`, `SPELL_FX_PARENTS`, `SPELL_FX_CHOICES`), `spell-fx-sprites.ts` (the pictures), `motion.ts` (`shoot`, `spot`, `area`, `flashHit`: element-based calls that read positions now and draw later), `components/spells-lab/` + `pages/spells-lab.tsx` (the lab). Tests: `components/play-board/__tests__/spell-fx*.test.ts`.
-- **Bases (`SpellFxKind`)** are named by where the effect is anchored: `travel` (caster to each target hit; an orb, or a picture that sticks in; streamers, stretch), `strike` (falls from above onto each target; a jagged bolt or a straight beam, leaned by `strikeAngle`; or a picture), `spot` (once, on the spell's target or the caster's hero, no damage needed; rings, glow, sparks, a picture), `area` (once over a side of the board for a global spell; swirl, sweep, shockwave, rain). Options are `has...` flags, pick-one fields are listed in `SPELL_FX_CHOICES`, and the lab shows only the knobs the chosen base/option can use.
-- **Keys:** a spell is a card id (`CORE_098`), a hero skill (`WIZARD:1`; the first skill is 1) or an event (`EVENT_KEYS`: `summon` always plays; `heal`, `buff`, `death` play once baked). `SKILL_FX` / `CARD_FX` / `EVENT_FX` assign a base; a spell with no entry plays `travel`. `SPELL_FX_PARENTS` makes a spell start from another's look (Crusader 1 and Mystic 1 from `summon`).
-- **Damage timing:** the impact time (`setImpactMs`) decides when the floating number, hurt shake, table jolt (`BIG_HIT_DAMAGE`) and the health shown (`use-impact-delayed.ts`) land. With the "Damage waits for effects" setting (`damage-delay.ts`, default on; lab checkbox / `delay=0`) it is the end of the whole effect (`spellFxTotalMs`), else the first impact (`spellFxMs`). The lab lists minions with triggers or On Play effects (`minionsWithEffects`) and previews a hit on the sample minion (`dmg`).
-- **Workflow:** tune in `/spells-lab?sp=<key>` (the URL is the setup; Space plays; "Copy a look from another spell"; sample minion, board and several-targets checkboxes), then `npm run spell -- "<lab url>"` writes the entry (`--dry` previews, `--defaults` bakes into the defaults).
-- **A new number:** a field in `SpellFxTune`, its default, a knob in `components/spells-lab/spell-knobs.ts` (with `when` so it only shows when usable), and its use in `pixi-fx.ts`.
-- **A new picture** (a throwable or an icon): `npm run fxsprite -- <png | pack:icon> <id> "<label>" [--tip=-45]` (`npm run asset -- axe` finds icons; packs `weapon-armor-01`, `weapon-armor-04`, `gems`, `potion`, `loot` are read from the `transparent` folders under `~/Downloads/ICONS_BADGES`). It trims and scales the picture to `public/images/fx/sprites/<id>.png` and adds it to `SPELL_FX_SPRITES`, which feeds the lab drop-down and the choices. `tip` is where the point faces on screen in degrees (0 = right, -90 = up, 90 = down); round things take any tip and a spin.
-- **A new style or base:** add the value to the tune type and `SPELL_FX_CHOICES`, draw it in `pixi-fx.ts`, add its knobs (with `when`), and a test. Keep delayed callbacks out of loops that close over the loop variable (see Things worth knowing).
-
-## Interface themes (UI skins, not the card look)
-
-- `components/ui-theme/` + `styles/themes/_themes.scss` + `styles/site-styles/_ui-kit.scss`: `data-ui-theme` on `<html>` (set before paint by `NO_FLASH_SCRIPT` in `_document`; `?ui=<id>` forces and saves one) selects a block of `--ui-*` variables; the shared classes (`ui-panel`, `ui-btn`, `ui-group`, `ui-toggle`, `ui-seg`, `ui-field`, `ui-check`) read only those. **Build controls from the React components in `components/ui/` (`Button`, `LinkButton`, `Select`, `TextInput`, `Checkbox`, `Toggle`, `SegmentedControl`, `Panel`, `Group`), never a raw `<select>`/`<input>`/styled `<button>`, and use `var(--ui-*)` instead of literal colours in page SCSS; a new kind of control goes in `components/ui/` + `_ui-kit.scss` + `ThemeSample.tsx` and `pages/ui-lab.tsx` (so the lab shows it in every state).** A test fails on a raw `<select>`/`<input>` in the themed screens. **Animated icons** (`components/ui/AnimatedIcon.tsx`, registry `animated-icons.ts`, frames in `public/images/ui/animated/<id>/NNN.png`, 96 px, ~1.4 MB for all 22; the Basic Shapes packs, tinted by `currentColor`): `<AnimatedIcon name on />` plays forward when `on` turns true and back when false (`hideWhenOff`: drawn in on, faded out off, for things that come and go), `loop` spins; frames are decoded once and painted on a canvas (a per-frame CSS `mask-image` swap flashed; keep it off React state); reduced-motion shows the last frame. Off draws nothing (the first frames of most icons are stray marks); each icon is sized by its resting last frame (the `spinner` ones by all frames) and fitted without stretching, because the sequences differ in canvas size and padding (Parallel Dots is 177 x 49). The `Checkbox` tick is the cross-into-checkmark one. `/ui-lab` has a gallery. The kit themes' toggle is split into track and knob images (`toggle_track_on/off`, `toggle_knob_on/off` in each theme's art folder, cut from the kit's `toggle_on/off` so the knob can slide); a new kit theme needs those four too. A row of form controls (filters, toolbars) gets `ui-controls`: every control in it is `--ui-control-h` tall and the row keeps that height, so a button that appears (Clear filters) never shifts the layout. Screens keep layout in their own SCSS. Themed: site base, bottom nav, markdown pages, profile, collection, deck builder, heroes viewer, the `/play` menu/pickers/dialogs. Not themed (on purpose, for now): cards, minions, heroes, the board itself (End turn, log, deck list), the dev labs' sliders, and the old Sidebar/Header/store/cards pages.
-- Themes now: `classic` (the old look, default), `emberhold`, `frostforged` (art in `public/images/ui/<id>/`, sounds in `public/sounds/emberhold/`). A theme is an entry in `UI_THEMES` + a block in `_themes.scss` (written as classic + overrides); a test checks they match. `/ui-lab` shows all side by side. Menu sounds (`ui-sfx.ts`) play for clicks inside any `[data-ui-sfx]` area and share the Sound switch. The profile's "colour theme" (`THEMES` in `profile.ts`) is a different thing: the player's side colour.
-
-## Player profile (name + colour theme)
-
-- `components/player-profile/` (`profile.ts`, `ProfileEditor.tsx`): a display name (up to 20 characters, cleaned by `cleanName`) and a colour theme
-  (`THEMES`), edited on the `/profile` page (`ProfilePage.tsx`; the `/play` menu only shows it and links there) and saved in this browser's localStorage (`ccg.profile.v1`). Everything reads it through
-  `normalizeProfile`; `loadProfile` / `saveProfile` are the only storage calls, so accounts later replace those two and nothing else.
-- Player 1 shows the profile name on the hero bar, the turn banner and the log (the stored log keeps `**Player 1**` and the name is applied when it is drawn,
-  so a rename also changes old lines). The theme colours your side (hero bar, log name); the other seat is red, or blue if you chose red.
-  In hot-seat the second player is still "Player 2". The theme is a side colour, not a site-wide skin.
-
-## Playing `/play`: drag and drop, debug params
-
-- **Drag and drop is the main way to act; click is the fallback.** Drag a hand card onto your board (it lands in the
-  gap nearest the pointer), onto a legal target, or onto the play area (untargeted spells). Drag a ready minion or your
-  hero onto an enemy to attack. Untargeted spells and items cast from anywhere on the board above the player bar (the dashed
-  `castArea` overlay; drop or click there). A double-click on such a card in the hand casts it at once (a minion: plays at the far right). **Space** ends the turn; **Shift+Space** is "Attack hero" (only when that button is
-  available). The weapon glows green when it can attack.
-  **Accessibility mode** (one menu option, saved in localStorage; `accessibility.ts`) turns on the hover `title` tooltips (off by
-  default, use `titleIf`), a keyboard focus outline and the explicit "Play" buttons; it is a start, not a full WCAG pass. Dragging just selects, so the highlights and arrow match click-to-select, and a drop
-  runs the same code as a click. "Choose one" cards (including Surveying Drone) are not selected while dragged (that
-  would open their dialog mid-drag): the drop remembers where you dropped, opens the dialog, and picking an option
-  plays it there. Hover popups are hidden during a drag (`body.dragging`), and drags that aim at a target (attackers, and
-  cards with a target) use an invisible drag image (the arrow shows the aim; a ghost would cover the target). Cards
-  dropped on the board or play area keep their ghost. It uses native browser drag, so it does not work on touch screens.
-- **Spell effects** (Pixi layer, `components/play-board/pixi-fx.ts`; bases, per-spell looks and the lab are in `spell-fx.ts`, `spell-fx-tune.ts` and `/spells-lab`) are on by default; `?fx=off` switches them all off.
-- **Debug URL params** (read on every "New game" while they are in the URL): `?first=0|1` picks who goes first
-  (0 = Player 1); `?p0=CORE_045,CORE_051` and `?p1=...` put those cards in that player's opening hand, in order.
-  `?b0=CORE_027,CORE_061` and `?b1=...` put ready-to-attack minions on that player's board (no On Play effect or aura runs),
-  `?w0=CORE_076` and `?w1=...` equip a weapon, `?e0=10` and `?e1=...` set that player's energy (current and total, 0-10). Handy for testing a specific card, e.g. `/play/local?first=0&p0=CORE_045`.
 
 ## Working style: browser checks
 
@@ -133,16 +101,16 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   server on another port (`npm run dev -- -p 3100`), point Playwright at that, and **when you are done close the
   browser and stop that dev server** (kill the process on the port), so nothing is left running.
 
-## Working style: adding controls to a lab
+## Working style: labs
 
-- **Whenever asked to add controls to a lab or tool (board-lab, hero-lab, minion-lab, art-lab, ...), first check whether a script bakes that lab's URL into the saved defaults, and keep the new controls working with it, without being reminded.** Look in `package.json` scripts and `scripts/`: `npm run board` (`scripts/apply-board-url.node.js`) writes the board-lab's `l...` params into `PLAY_LAYOUT` in `components/play-board/layout-css.ts` (a key must match `^l[a-z0-9]+$` and not end in `pv`; setup keys like `p0`, `hn0` and preview switches are skipped on purpose), `npm run ring` (`scripts/apply-ring-url.node.js`) bakes the hero-lab ring's `r_<field>` params into `RING_DEFAULTS` in `components/play-board/HeroVariants.tsx` (a new ring field needs a default there and an `RingTune` entry), and `npm run deck` (`scripts/apply-deck-url.node.js`) bakes the deck lab's `d_<field>` params into `DECK_DEFAULTS` in `components/play-board/deck-row-tune.ts` (a new deck-row field needs a default there, a `DeckTune` entry, a `--dk-*` variable in `deckRowVars` and a knob in `components/deck-lab/deck-knobs.ts`). `/spells-lab` (`components/spells-lab/spell-knobs.ts`, `s_<field>` params, defaults `SPELL_FX_DEFAULTS` in `components/play-board/spell-fx-tune.ts`) is baked by `npm run spell` (`scripts/apply-spell-url.node.js`: `sp=<spell>`'s `s_<field>` params go into that spell's entry in `SPELL_FX_VARIANTS`, `e=<base>` into `SKILL_FX` / `CARD_FX` in `spell-fx.ts`, `--defaults` into `SPELL_FX_DEFAULTS`, `--dry` previews; a new effect number needs a default, a `SpellFxTune` field and a knob in `spell-knobs.ts`). Check the script's header comment for the rules, run it with `--dry` on a URL using the new keys, and say in the reply how the new knobs are baked. If a lab has no such script yet, say so.
+- **Whenever asked to add controls to a lab or tool, read `components/board-lab/CLAUDE.md` first** and keep the new
+  controls working with the lab's bake script (`npm run board`, `ring`, `deck`, `spell`), without being reminded.
 
 ## Working style: keep token costs down
 
 - **Visual work (board art, textures, backgrounds, themes): ask for a reference or a clear description first**, then build ONE opt-in option (a URL param such as the board lab's `l...` knobs) for the author to look at in their own browser. Do not build several variants and screenshot each (three board-art prototypes were tried and thrown away on 2026-11-14).
 - **Check with the cheapest tool that answers the question:** a unit test, a DOM query through `browser_run_code_unsafe` (read one element's text or rect), or a screenshot of one element. A full-page accessibility snapshot (`browser_snapshot`) dumps the whole board, log and deck list; avoid it, or pass `depth` / a `target`. Take a full screenshot only when the look itself is the question.
 - **Read only the part of a big file you need** (`pages/board-lab.tsx` is 600 lines; `PlayBoard.tsx` is far larger): `git grep -n` first, then read a range.
-- **Board lab edits:** the lab is split into `components/board-lab/` (a new knob = one entry in `lab-model.ts` `NUMS` + its CSS in `play-board/layout-css.ts` `CSS_FNS`; a new section = a component in `lab-panels.tsx` or its own file + one `sec(...)` line in `pages/board-lab.tsx`). Edit the one small file; do not read the whole lab.
 - Balance sims (`npm run sim:heroes`, `npm run tune`) cost wall-clock time, not tokens: run them in the background and read only the summary.
 
 ## Commands
@@ -156,22 +124,21 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   prompts interactively. Don't run it.)
 - `npm run tune -- [gamesPerDeck]` - plays tweaked greedy-bot weights against the defaults (same deck both sides; `engine/sim/sim-decks.ts` makes twelve seeded random decks for the sims, and `classDeck` swaps a hero's class cards into one). A first run
   (60 games per deck) found no variant clearly better than the defaults (all within noise, 44-51%), so the weights are not the bottleneck.
-- `npm run art` - turns the master pictures in `art-inbox/` (git-ignored, Drive can sync it; named by card id, `CORE_117.png`) into `NNN-CARD.jpg` (1000 x 1000), `NNN-DECK.jpg` (600 x 75 strip) and, if the card already has one or with `--minion`, `NNN-MINION.jpg` (640 x 800) in `public/images/sets/SET_<SET>/` (`scripts/art/`; `sharp`). Where the strip and portrait are cut from is `art-focus.json` (`{ "CORE_117": { "x": 0.5, "y": 0.3, "zoom": 1.4 } }`, default centred a little high). Flags: a card id, `--dry`, `--keep`, `--minion`. Done masters move to `art-inbox/done/`.
-- `npm run asset -- skull poison` - searches `art-assets-catalog.json`, a description of every one of the 1,091 purchased icons in `art-assets/` (git-ignored; the catalog is tracked, written by looking at each pack), and lists the files whose description has every word. Use it to match a card to art by meaning. Packs and file-name patterns are in the catalog (`prefix` + key + `suffix`); `scripts/art/asset-catalog.ts` is the search.
-- `/art-lab` (dev only, localhost; `components/art-lab/`, `pages/api/art-lab/`, `scripts/art/`): look a card up by id or name from `data/`, then `/art-lab?id=CORE_122` shows the files on disk, a per-kind (card/deck/minion) crop adjuster over the master in `art-inbox/` ("Write images" cuts with `sharp`, then moves the master to `art-inbox/done/`), and every editable CARDS field (dropdown options come from the base's schema; `id`/`set`/`isEntourage` locked). "Save" PATCHes only the changed fields to Airtable and can then run `npm run airtable`. `sharp` is loaded with `eval('require')` in `scripts/art/render.ts` because Next's server bundle broke a normal import; keep `sharp` out of any module the card routes import.
-- `npm run airtable` - pulls the card database from Airtable into `data/*.json` (`airtable.node.js`): the CORE, PRIME, ENTOURAGE and GAME cards,
-  the heroes, classes, skills, mechanics and constants (the card counts the tests expect are in `gameConfig.cardCounts` in `app.config.ts`). Link columns (`SKILLS.class`, `CARDS.cardClass`) come back from Airtable as record ids, so the pull resolves them to class symbols through `CLASSES`. This is the data the engine and `/play` use. It
-  fetches every table first and writes nothing if any fails or comes back empty.
-- The Airtable base was rebuilt on 2026-11-12: tables `CARDS` (all sets in one table; `set` column, `isEntourage` checkbox),
-  `HEROES`, `CLASSES`, `SKILLS` (renamed from `ABILITIES` on 2026-11-23), `MECHANICS`, `CONSTANTS`; symbols are stored bare (`BULWARK`, `MINION`) and the pull puts the
-  `%...%` back. `balance/airtable/` has the scripts that built and loaded it (`build.js`, `rebuild.js`; the Airtable API
-  cannot delete tables or columns, so removals are done by hand in the UI). Balance proposals and the bot-evaluation patch
-  are in `balance/` (see `balance/README.md`); `data/` already includes proposals 1-3 plus the trims in 4-5.
-- **Tokens are entourage cards, named by who makes them.** Every token is an Airtable `CARDS` record with `isEntourage` ticked, rarity NONE, the class link of whatever makes it, cost 0, and a name (tokens are named, unlike cards). Two kinds:
-  - **A class or skill token** (a hero skill's recruit, dagger, idol, claws: not tied to one card) is `GAME_XXX` (next free number), `set` GAME. Put the id in the skill's `entourage` column.
-  - **A card's token** (made by one specific card) is that card's id plus a letter, `<SET>_<NUM>a`, then `b`, `c`, ... for more (`PRIME_131a`, `CORE_057b`), in the parent's set (`set` PRIME for a PRIME card). Put the id in the parent card's `entourage` column, or have its definition name it (`summonEntourage('PRIME_131a')`). Do not make a card's token `GAME_XXX`.
-  Do not add tokens as local code tokens in `engine/heroes/tokens.ts`; the older ones there stay until they are moved. Like any Airtable write, adding or renaming one needs the author's explicit approval for that exact record.
-- It needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID` in `./.env.local` (git-ignored, none checked in; read access is enough for the pull). The art lab prefers `AIRTABLE_API_KEY_CLAUDE_CODE` / `AIRTABLE_BASE_ID_CLAUDE_CODE` (a token with `data.records:write`; it falls back to the plain pair, which cannot save). **NEVER edit Airtable (create, update or delete records, fields or tables) unless the author has said, in that conversation, to make that exact edit.** "Fill in", "fix" or "rename" a card means change the local code or `data/` unless the author says "in Airtable"; when it could mean either, ask first. A pull (`npm run airtable`) is read-only but spends the author's limited API quota, so run one only when it is needed, never as a routine check. Every call counts, so batch reads and do not re-run scripts to double-check. If a write is approved, check the current value first, write only what was asked, keep one-off scripts outside the repo, and say exactly which records changed. (On 2026-11-21 29 card names were written to Airtable without being asked and had to be reverted by hand.) The `_CLAUDE_CODE` token pair is write-capable only for the art lab's "Save" button and for edits the author has just approved; the plain `AIRTABLE_API_KEY` / `AIRTABLE_BASE_ID` pair is read-only. You don't need either to run the site; the JSON is committed.
+
+## Airtable: never edit it unasked
+
+- **NEVER edit Airtable (create, update or delete records, fields or tables) unless the author has said, in that
+  conversation, to make that exact edit.** "Fill in", "fix" or "rename" a card means change the local code or `data/`
+  unless the author says "in Airtable"; when it could mean either, ask first. Adding or renaming a token is an Airtable
+  write too.
+- A pull (`npm run airtable`) is read-only but spends the author's limited API quota: run one only when it is needed,
+  never as a routine check, and batch reads. If a write is approved, check the current value first, write only what was
+  asked, keep one-off scripts outside the repo, and say exactly which records changed.
+- The `_CLAUDE_CODE` token pair is write-capable only for the art lab's Save button and for edits the author has just
+  approved; the plain `AIRTABLE_API_KEY` / `AIRTABLE_BASE_ID` pair is read-only. You do not need either to run the site:
+  the JSON in `data/` is committed. (On 2026-11-21 29 card names were written to Airtable unasked and had to be reverted
+  by hand.) Details and the token naming rules are in `data/CLAUDE.md`.
+- This repo is public: never add an `inspiration` column back, and never name the game a card or mechanic idea came from.
 
 ## Layout
 
@@ -183,34 +150,11 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 - `features/` - Redux Toolkit slices (store in `store.ts`). `hooks/`, `utils/`, `enums/`, `types/`.
 - `app.config.ts` - site pages/nav config plus `gameConfig.numerics` (deck/hand sizes, energy).
 
-## Airtable and the `inspiration` column
-
-- The current base has no `inspiration` column. The old `react-ccg` base (the hsclone-era data) has one naming the Hearthstone
-  card(s) that inspired each entry; it is deliberately not carried over because this repo is public. Don't add it back, and don't
-  copy it in from the old repos' JSON (see `PREVIOUS-VERSIONS.md`). Find base ids in Airtable (they are not recorded here).
-
 ## Things worth knowing
 
 - **A closure inside a loop shares the loop's variable in this build** (Next 12's SWC, ES5 target): a `setTimeout(() => use(target))` in a `for (const target of ...)` sees the last `target` (seen in the spells lab, 2026-11-25). Run delayed work in a `forEach` / `map` callback (or a small function) so each call has its own variables.
 - **Card ids** look like `SET_CORE_010`. Card ids were reassigned between the old repos and
   this one, so match cards across repos by name, not id.
-- **Card art lives in `public/images/sets/SET_<SET>/<num>-CARD.jpg`** and `/play` reads it by card id (`CORE_011` ->
-  `SET_CORE/011-CARD.jpg`). For the Hearthstone-style cards it must match `hsclone`'s
-  `public/assets/images/sets/CORE/CORE_011-CARD.jpg`. The files here that pre-dated the rebuild came from the old zone
-  game, whose ids pointed at different art (Hypnotoad showed a cat in a boat); 63 `-CARD` files were replaced with
-  `hsclone`'s on 2026-11-11, so now every CORE/GAME card with art is byte-identical to `hsclone`'s. **`-DECK` strips (600 x 75, for the deck builder and the `/play` sidebar, not used by the UI yet)**: every CORE card has `hsclone`'s strip (copied 2026-11-12; CORE_019 and CORE_092 had none there, so theirs are cropped from the `-CARD` art). SET_CORE no longer has any `-MINION` images (the board draws minions from `-CARD`), nor old zone-game token art; `engine/cards/__tests__/art-files.test.ts` guards it. SET_PRIME's `-DECK` / `-MINION` images match its `-CARD` art. Only the old site pages (`Sidebar`, `Card`) still use the old zone-game ids. `CORE_088` is
-  "FPO" placeholder art. PRIME has `-CARD` art for every card but `PRIME_212`, copied from `react-ccg-deprecated`.
-- **Framed cards (`components/play-board/CardFace.tsx`)** port `hsclone`'s `CardV3`: the art sits behind a rarity frame PNG
-  (`public/images/frames/<COLOR>.png`; **which rarity gets which colour is the `RARITY_STYLE` table in `card-face-model.ts`**: Free steel with no gem, Common green, Superior blue, Remarkable purple, Mythic red; the files are named by colour, and the frame and gem for a colour were measured to match) and the cost gem, name ribbon, text, type, rarity gem and sword/shield badges are laid
-  over it in the frame's 178 x 250 design units, scaled by the `--u` CSS variable (so use `u(n)` in its SCSS, never `em`:
-  an element's own font-size would change its offsets). **Card text wraps itself** (`softenBreaks`, `textLines` in `card-face-model.ts`; `text-wrap: balance` per line): write Airtable descriptions without `<br>` except for real structure (after a keyword, around a `<small>` line, after a finished sentence or clause, before a keyword line); a break in the middle of a sentence is turned into a space. Hand cards and the cast popup use it; board
-  minions and the choose-one dialogs do not yet. **The hand's feel is ported from `hsclone`** (`components/play-board/hand-fan.ts`
-  plus the `.handSlot` rules in `play-board.module.scss`): hsclone does it with plain CSS transitions, not react-spring (which
-  it never used; `react-spring` in this repo's `package.json` is unused). Cards fan by index (`--fan-rot`, `--fan-drop`), overlap
-  by `HAND_OVERLAP`, sink below the window edge (`--hand-sink`, set inline from the window height) and lift to 1.5x on hover
-  (an in-place lift replaced the old hover popup). The `.hand` row has `pointer-events: none` so the lifted cards never block
-  the hero bar. Dragging hides the source card and uses a centred clone as the drag image (the browser's own snapshot is of
-  the hover-lifted card and lands far from the cursor).
 - **`utils/` is a one-function-per-file folder with a barrel** (`utils/index.ts`). Many helpers
   there still assume the old zone-style card shape.
 - **`hsclone` is the reference, not a dependency.** It is a two-tab game (page with `3002` in
@@ -281,6 +225,6 @@ Not done yet: existing code does not follow rules 6 and 7 (a prop sort and an im
 - Tests sit in `__tests__/` folders next to the code.
 - Utilities in `utils/` are one function per file, kebab-case file names.
 - Write tests for new engine rules first, ported from `hsclone`'s unit tests where possible.
-- Current checks: `npm test` passes (when a card-count test fails after you add or pull cards, update `gameConfig.cardCounts` in `app.config.ts`, the one place those numbers live), `npm run build` passes, and `tsc` has 8 errors
-  (`as Card` casts in `utils/__tests__/get-card-power.test.ts`). Don't "fix"
+- Current checks: `npm test` passes (when a card-count test fails after you add or pull cards, update `gameConfig.cardCounts` in `app.config.ts`, the one place those numbers live), `npm run build` passes, and `tsc` is clean (the 8 old
+  `as Card` errors in `utils/__tests__/get-card-power.test.ts` went when that stale test was removed). Don't "fix"
   unrelated failures as a drive-by.

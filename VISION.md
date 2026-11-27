@@ -16,8 +16,8 @@ the Hearthstone-style game. The zone/SNAP version is archived (tag `snap-style-v
 ## Background
 
 Passion project, started by hand in 2020 and set aside in 2023. All code up to 2023 was written by
-hand, before AI coding tools. Much of the card art was **purchased from asset sites**, and some is
-temporary placeholder. The intent is to eventually grow it into a real multi-user game, possibly
+hand, before AI coding tools. Much of the card art was **purchased from asset sites** and the rest is
+free-to-use. The intent is to eventually grow it into a real multi-user game, possibly
 with some form of monetization. There is no committed timeline or definition of "done" yet.
 
 ## Priorities
@@ -25,7 +25,8 @@ with some form of monetization. There is no committed timeline or definition of 
 Most important:
 
 1. **Card design and balance.** The cards and their mechanics are the game.
-2. **Multiplayer.** Moving from a local/bot game to player-vs-player and multi-user.
+2. **Multiplayer.** Moving from a local/bot game to player-vs-player and multi-user. An online alpha (queue, bot
+   fallback, no accounts) has been live at bccg.io since 2026-11-26.
 3. **An enjoyable experience.** It should feel like Hearthstone did: readable boards, satisfying
    trades, clear feedback.
 
@@ -43,12 +44,28 @@ Secondary:
 - **Mechanics are fine to reuse, names and art need care.** Before any commercial launch, the
   card names, flavor text and art need a provenance/licence review (see `CARD-AUDIT.md` section 6).
 
+## What "done" means: v1.0.0
+
+The author's definition (2026-11-27). The game itself is already in a good place for its original pre-expansion
+release; v1.0.0 is the game around it:
+
+- **User accounts**, replacing the per-browser localStorage profile and decks.
+- **Card collecting, per account:** CORE starts unlocked, PRIME is collectable (the acquisition column in Airtable is
+  not finished yet).
+- **A cosmetics shop, for real money:** hero skins (for example Zeus as a Wizard skin that changes the avatar), skill
+  cosmetics, sounds and similar.
+- **A card pack shop, for real money:** PRIME packs that give random PRIME cards.
+- **A collection-only currency:** duplicate PRIME cards beyond the copy limit (2, or 1 for a Mythic) can be destroyed
+  for it, and it buys unowned cards.
+- **A free path:** playing live games earns that currency, more for a win and less for a loss. A live game is a queue
+  match against a player, or against the bot the queue gives you after its timeout; the "Skip the queue" checkbox and
+  local play earn nothing.
+- **Rank and level tracking** per class and per account, and a **global leaderboard**.
+- **Class skills 2 and 3** (the third is an ultimate) for every class, added slowly and balance-tested; today only
+  skill 1 is active.
+- **Further polish** on the UI, sounds, interactions and spells.
+
 ## Open questions
 
-- What "done" or success looks like (a playable beta, public launch, revenue?).
-- Monetization model, if any.
-- How literal to be with Hearthstone (classes, hero powers, exact keyword set) vs. the author's own
-  twists from `hsclone` (energy shield, Disable, Expiration, class skills).
-- Which cards from the current set (69), the old CORE set (132) and the old PRIME set (254) make the
-  cut for a first release.
-- What is out of scope.
+- How the shop, packs and currencies are set up (the model is cosmetics and PRIME packs; the details are not designed).
+- What is out of scope for v1.0.0 (not decided yet).

@@ -13,7 +13,7 @@ Order matters: each milestone makes the next one cheaper or safer.
 - [x] Run `hsclone` and confirm it plays (two tabs; summoning, attacking and Guard verified)
 - [x] Remove the zone engine, board UI, zone pages and engine-only helpers (303 files, ~14.5k lines)
 - [x] Slim `app.config.ts`; rewrite `CLAUDE.md`, `README.md`, `VISION.md`
-- [ ] Merge `hs-rebuild` into `main` once Milestone 2 plays (decide when)
+- [x] Merge `hs-rebuild` into `main` once Milestone 2 plays (merged 2026-11-15)
 
 ## Milestone 1a: Rules spec (deep-dive, read-only)
 
@@ -60,12 +60,12 @@ Done when: a scripted two-player game plays from start to a winner inside a test
 - [x] Interaction as in `hsclone`: click a card to select, click a slot or target to play it; valid
       targets highlighted; attackers glow. Drag and drop is now the main way (hand to board/target/play area,
       minion or hero onto an enemy), with click kept as the fallback; arrows for both players
-- [x] Hot-seat/two-tab play via boardgame.io `Local`, with no hard-coded hosts or ports
+- [x] Hot-seat play in one tab (`/play/local`), with no hard-coded hosts or ports
 - [x] Card art on the board (hand, board, previews, overlays) via CSS backgrounds; the old `Card`/`Minion`
       renderers are not used by `/play`
 - [x] Port the card art from `hsclone`'s `public/` dir: all 132 CORE cards and the entourage cards that have
       art are ported, plus the GAME cards. PRIME has art for only 2 of 254 cards anywhere. Still open: the
-      provenance and licence check (Milestone 4), and `CORE_088` is "FPO" placeholder art
+      provenance table (Milestone 4)
 
 - [~] Card visuals from `hsclone`: the framed card (rarity frame PNG over the art, cost gem, name ribbon, stat badges)
       is done for cards in hand, the hover preview and the cast popup (`CardFace`). Still to do: the oval minions with
@@ -99,12 +99,8 @@ simulator first.
 - [x] Switch the site pages from the deleted zone-game JSON to the new pool (`data/`)
 - [ ] Naming and text pass (duplicate names, typos, "Attack" vs "Deal" wording; see `CARD-AUDIT.md`)
 - [ ] Art match pass (mismatched art listed in `CARD-AUDIT.md` section 5)
-- [ ] Art provenance table: card, artist, source, licence, status; replace temporary art
-  - **Replacing the FPO art, class by class (started 2026-11-24).** The FPO art is the older
-    art ported from `react-ccg-deprecated`, provenance unchecked. Done and FINAL (a-ravlik, art
-    from the purchased packs): **Mystic, Warden, Necromancer, Ranger, Wizard, Cleric** (and Fighter bar `PRIME_242` Snap, which needs a snap-style image), plus ten PRIME spells, five
-    minions, the Idol tokens and Hellspawn. Left (active cards): **85 cards and 14 tokens**
-    with `artStatus` FPO: neutral 56, Crusader 14, Assassin 14, Fighter 1. Check the live count with the Art filter in `/collection`, or from `data/`.
+- [ ] Art provenance table: card, artist, source, licence, status
+  - **FPO art: done.** The author removed all of it on 2026-11-27; the art that remains is purchased or free-to-use.
   - **The loop that works:** `npm run asset -- <words>` finds an icon by meaning (spells, items,
     weapons); creatures are cutouts from `CARD CHARACTERS` in Downloads composited onto
     `CARD BACKGROUNDS` (Characters Pack 07 and the 10-creature packs; about 150 cutouts are
@@ -135,7 +131,8 @@ server runs it directly (see CHANGELOG 2026-11-26).
 - [x] Real server with a matchmaking queue (30 s wait, then a bot: 90% greedy, 10% random) and "skip the queue"
 - [x] Gate who may act (server checks the seat); hide the opponent's hand, deck and face-down Mystery
 - [x] Reconnects (a session id in localStorage, 60 s grace, then concede); a server-side turn clock
-- [x] Hosting: `render.yaml` (Render, one paid instance, bccg.io)
+- [x] Hosting: `render.yaml` (Render, one paid instance, bccg.io), auto-deployed from `main`; live as an alpha since 2026-11-26
+- [ ] A deploy restarts the server and ends every live game and the queue: warn players or drain games before a restart
 - [ ] Live check with two real players in two browsers (only unit-tested so far)
 - [ ] Accounts, rankings, saved match history, and games that survive a server restart
 - [ ] Randomness is the engine's own seeded `Rng`, not `ctx.random`; log the seed per game if replays are wanted
@@ -146,9 +143,113 @@ sample game. See `PREVIOUS-VERSIONS.md`.
 
 ## Milestone 7: Stack upgrade
 
-Next 12 / React 17 / boardgame.io 0.49 are from late 2022. Upgrade as its own milestone, after the
+Next 12 / React 17 are from late 2022. Upgrade as its own milestone, after the
 new engine plays, so it doesn't block the game. The engine is plain TypeScript and should move
 across with little change; the UI is where the upgrade work will be.
+
+## The road to v1.0.0
+
+What v1.0.0 means is in [VISION.md](VISION.md). These milestones are in dependency order: accounts and a database
+come first because collections, currency, rank and the shop all need to be stored per player. None is started. Sizes
+are guesses; each should be split into slices (one per commit, tests first) when it begins. The game's rules and card
+pool are already in a good place, so this is the game around it.
+
+### Milestone 8: Accounts and a database
+
+- [ ] Pick the storage (a hosted Postgres is the likely fit for Render) and a migration tool; backups from day one
+- [ ] Accounts: sign-in (email or a social login), sessions, password reset if email is used, account deletion
+- [ ] Move the profile (name, colour theme) and saved decks from localStorage to the account; keep guest play, and let a
+      guest's local decks be claimed by the account they sign into
+- [ ] The game server identifies a player by account instead of a localStorage session id (reconnects still work)
+- [ ] Name rules for display names (length, a filter, a way to report one)
+- [ ] A deploy still ends live games (Milestone 6): decide whether to drain before restarts now that results matter
+
+Done when: you can sign in on two browsers and see the same profile and decks, and the database survives a deploy.
+
+### Milestone 9: Collection ownership
+
+- [ ] Finish the Airtable column that says how a card is obtained (CORE: unlocked for everyone; PRIME: collectable),
+      pull it into `data/`, and teach the loader and tests about it (card counts stay in `gameConfig.cardCounts`)
+- [ ] Store what each account owns: copies per card. New accounts own all of CORE and no PRIME
+- [ ] The deck builder and the lobby deck picker offer only owned cards (copy limit 2, or 1 for a Mythic, unchanged)
+- [ ] The server checks a deck against the account's collection, as it checks the copy limits today
+- [ ] `/collection` shows owned and unowned cards (unowned greyed out, with how to get them) and the count owned
+- [ ] Random decks ("Random deck (Core + Prime)") draw from what the account owns
+- [ ] Bots keep using the full pool, so a bot match never depends on what you own
+
+Done when: a fresh account can build and play a CORE deck, and a card it does not own cannot be put in a deck, in the
+browser or by a hand-made socket message.
+
+### Milestone 10: Progression and the free path
+
+Free players must be able to grow their collection, so this comes before the shop.
+
+- [ ] A **collection currency** (name to be chosen; a working name is fine in code). Stored per account
+- [ ] **Earned by playing live games, more for a win and less for a loss.** A live game is a queue match against a
+      player, or against the bot the queue gives you after its timeout. It is **not** the "Skip the queue" checkbox and not
+      `/play/local`. The server is the only place that can decide this: it sees how the match started
+      (`kind: 'humans'` or `kind: 'bot'` in `server/matchmaker.ts`; a skipped queue is a separate request in
+      `protocol.ts`), but a finished match does not record that yet, so the first slice is to record how it started
+- [ ] The server awards the currency when the match ends, once per match, and never on a concede that the game did not
+      earn (decide: does conceding or timing out count as a loss, and does leaving a bot match count at all)
+- [ ] Amounts are data (Airtable `CONSTANTS`), not code, so they can be tuned without a deploy
+- [ ] **Destroy duplicates:** a copy beyond the limit (2, or 1 for a Mythic) can be destroyed for currency, by rarity
+- [ ] **Get a card with currency:** pick an unowned PRIME card and pay a price set by rarity
+- [ ] A results screen after a game: what you earned, and a running total on the profile
+- [ ] Open design questions: a daily cap or a diminishing reward on bot matches so a player cannot farm the timeout
+      bot, how much a loss earns, and what a card costs against what a game pays (the pace of a free player)
+
+Done when: a free account can play queue games, earn currency, and buy a card it did not own, with the server doing all
+the counting.
+
+### Milestone 11: Rank, level and leaderboard
+
+- [ ] Record every finished live game (players, heroes, winner, how it ended). This is also the match history the roadmap
+      lists as an idea
+- [ ] A rank per account and per class, and an account level; decide the rank system (ladder, rating, or stars) first
+- [ ] Matchmaking uses rank: pair close ranks first and widen the search while the queue waits (the 30 s bot fallback stays)
+- [ ] A global leaderboard page
+- [ ] Seasons: whether and when rank resets, and what a season gives
+- [ ] Decide whether bot matches count for rank (probably not, or very little)
+
+Done when: your rank moves after games, the leaderboard shows it, and two close ranks are paired ahead of far ones.
+
+### Milestone 12: Shop and payments
+
+- [ ] The shop's shape is not designed yet: decide currencies, prices, and what real money buys
+- [ ] Payment processor, receipts, refunds and the tax setup; terms of service and a privacy policy; check whether a
+      legal entity is needed before taking money
+- [ ] **Cosmetics:** hero skins (a skin changes a class hero's avatar; the engine's hero id is the class key, so a skin
+      stays cosmetic as it is now), skill cosmetics, sounds; owned per account and chosen in the lobby
+- [ ] **PRIME packs:** a pack gives random PRIME cards from the pool the engine can play (`primePool`). Decide the odds, a
+      guaranteed rarity or pity timer, and show the odds in the shop (some countries require it)
+- [ ] Pack opening screen and sound; a duplicate over the limit is offered for the collection currency
+- [ ] Whether packs can also be bought with the collection currency or an earned one (ties to Milestone 10)
+- [ ] Card names, flavour text and art get their provenance review for a paid product (`VISION.md`, `CARD-AUDIT.md`)
+
+Done when: a real purchase (test mode first) puts a cosmetic or a pack into an account, and a failed or refunded payment
+leaves nothing behind.
+
+### Milestone 13: Class skills 2 and 3 (can run alongside the others)
+
+- [ ] For each class, flesh out skill 2 and the ultimate (skill 3) slowly: design, then code in `skill-effects.ts`, then
+      balance-test with the bot sims (`npm run sim:heroes`) before turning it on
+- [ ] Skills are switched on per skill in Airtable (`active`), so a skill can ship one class at a time
+- [ ] How a player gets skills 2 and 3 (all at once, unlocked by level, or by rank) is a design question for Milestones 10 and 11
+
+Done when: every class has three skills that the sims and playtests find acceptably balanced.
+
+### Milestone 14: Launch readiness
+
+- [ ] A tutorial game for a new player
+- [ ] Error tracking and logs, and an alert when the service is down
+- [ ] Graceful deploys (drain live games before a restart), if not done in Milestone 8
+- [ ] Polish: UI, sounds, interactions, spells (the list never ends; pick a stopping point)
+- [ ] Accessibility pass (the WCAG item in Milestone 2)
+- [ ] Load check: how many sockets one Render instance holds, and what to do beyond it
+- [ ] CI, last, as before (see "Way later: CI")
+
+Done when: it is v1.0.0.
 
 ## Ongoing
 
@@ -158,8 +259,8 @@ across with little change; the UI is where the upgrade work will be.
 
 ## Later
 
-- Store, collection and visuals polish (secondary per `VISION.md`)
-- Monetization (needs a decision first; see open questions in `VISION.md`)
+- Store, collection and visuals polish (now part of v1.0.0: see "The road to v1.0.0")
+- Monetization: cosmetics and PRIME packs for real money (the shape of the shop is not designed yet; the v1.0.0 definition is in `VISION.md`)
 
 ## Way later: CI
 
@@ -263,7 +364,7 @@ engine or loader change.
 
 **Phase 2: new-card and other tables (about 1 session).**
 A "new card" form that picks the next free id for a set and the
-`PRIME_NNNa` token naming (see "Tokens" in `CLAUDE.md`), and editing for
+`PRIME_NNNa` token naming (see "Tokens" in `data/CLAUDE.md`), and editing for
 skills, heroes, classes, mechanics and constants (the same field editor with a
 different schema each). Integrity tests: every `entourage` id exists, every
 class is one of `CLASS_KEYS`, ids are unique across files, art files exist (some
@@ -303,7 +404,7 @@ last and only if the `%SYMBOL%` shape bothers us. Phases 1 to 3 do not need it.
 
 **Retire Airtable (under 1 hour).**
 Remove `airtable.node.js`, the `airtable` script and `balance/airtable/`, the
-`AIRTABLE_*` env notes, and rewrite the Airtable sections of `CLAUDE.md`
+`AIRTABLE_*` env notes, and rewrite the Airtable sections of `CLAUDE.md` and `data/CLAUDE.md`
 (including the "never edit Airtable unasked" rule: git becomes the undo). Take
 one last pull first and keep the base as a read-only archive.
 

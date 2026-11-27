@@ -3,7 +3,9 @@
 A browser-only, turn-based collectible card game in the style of the original Hearthstone.
 See [VISION.md](VISION.md) for goals and priorities and [ROADMAP.md](ROADMAP.md) for what's next.
 
-## Status (2026-11-26)
+## Status (2026-11-27)
+
+**Live (alpha) at [bccg.io](https://bccg.io)**, deployed from `main` (see "Production" below).
 
 A Hearthstone-style game is playable at **`/play`**: minions that attack, hero health, alternating turns, Guard,
 spells, weapons and armor, class heroes with skills, on a rules engine written from scratch in `engine/` (plain
@@ -31,17 +33,15 @@ The shimmer that plays while a card is held (`magic-fireflies.m4a`) is "Magic Fi
 
 ## Card art and licensing notice
 
-The card art and the card frames, badges and other UI art in `public/images/` are **placeholders used for prototyping.
-They are not licensed for reuse**, and they are not covered by whatever licence the code in this repository may have.
-Please don't copy, redistribute or reuse the images.
+The card art, the card frames, badges and other UI art in `public/images/`, and the sounds in `public/sounds/` are
+purchased or free-to-use assets; no placeholder (FPO) art remains. They are not covered by whatever licence the code in
+this repository may have. Please don't copy, redistribute or reuse the images.
 
-- Each card record in `data/` credits its artist in `artistName` and `artistUrl`. Much of it is purchased marketplace
-  art (for example [Rexard on GraphicRiver](https://graphicriver.net/user/rexard)); some is borrowed from independent
-  artists on ArtStation and DeviantArt purely as a stand-in, and some cards have no source recorded yet.
-- The frames, stat badges and gems (`public/images/frames/<COLOR>.png`, `public/images/ui/gem-<COLOR>.png`) come from third-party UI packs, also used here as stand-ins.
-- A credit is attribution, not a licence. Marketplace licences typically allow use inside a finished product but not
-  republishing the raw files, so the art here is meant to be **replaced with properly licensed or commissioned art before
-  any public release**. A card-by-card provenance table is on the [roadmap](ROADMAP.md) (Milestone 4).
+- Each card record in `data/` credits its artist in `artistName` and `artistUrl` where one is recorded. Much of it is
+  purchased marketplace art (for example [Rexard on GraphicRiver](https://graphicriver.net/user/rexard)).
+- The frames, stat badges and gems (`public/images/frames/<COLOR>.png`, `public/images/ui/gem-<COLOR>.png`) come from
+  third-party UI packs.
+- A card-by-card provenance table is on the [roadmap](ROADMAP.md) (Milestone 4).
 - If you are an artist or rights holder and want something here credited differently or removed, please open an issue
   on this repository and it will be taken down promptly.
 
@@ -54,17 +54,30 @@ Please don't copy, redistribute or reuse the images.
   is the Render blueprint (a paid instance, because the queue and live games live in memory). Settings:
   `ALLOWED_ORIGINS` (sites allowed to open a socket), `QUEUE_WAIT_SECONDS` (default 30), `RECONNECT_GRACE_SECONDS`
   (default 60), `NEXT_PUBLIC_SUPPORT_URL` (overrides the Ko-fi link at build time).
-- `npm test`, `npx tsc --noEmit -p .`, `npm run build`
+- `npm test`, `npx tsc --noEmit -p .` (clean), `npm run build`
 - `npm run sim:heroes` and `npm run tune` - bot-vs-bot balance sims (see `CLAUDE.md`)
 - `npm run airtable` - re-pull the card data into `data/` (needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID`)
-- `/play/local` also takes debug URL params, e.g. `/play/local?first=0&p0=CORE_045` (see `CLAUDE.md`)
+- `/play/local` also takes debug URL params, e.g. `/play/local?first=0&p0=CORE_045` (see `components/play-board/CLAUDE.md`)
+
+## Production
+
+- **bccg.io** is one Render web service (`render.yaml`, Node 20, `yarn start:prod`, health check `/healthz`). It
+  **deploys automatically from `main`**: every push to `main` is a release, so work on a feature branch and merge only
+  what builds and passes `npm test`. The build runs `yarn install --frozen-lockfile`, so `yarn.lock` must match
+  `package.json`.
+- A deploy restarts the server, which ends every game in progress and empties the matchmaking queue (state is in memory).
+- Bump the version for each deploy with `npm run semver:patch` (or `:minor`, `:major`); it shows as "v0.1.x alpha" in the
+  lobby and the board menu.
+- `swcMinify` is off in `next.config.js` because Next 12's SWC minifier broke the spell effects in production builds
+  (CHANGELOG 2026-11-26). Revisit when Next is upgraded.
+- The Render settings are in `render.yaml` (`ALLOWED_ORIGINS` is the two bccg.io hosts, so a socket from any other site,
+  including `localhost`, is refused by the live server).
 
 ## Known issues
 
 - Online play is an alpha: no accounts, no rankings, and games live in server memory (a server restart ends them). Matches
-  are not saved or replayable. See [ROADMAP.md](ROADMAP.md).
-- `tsc` reports 8 errors: all are `as Card` casts on partial objects in `utils/__tests__/get-card-power.test.ts`. `npm test` and `npm run build` pass.
+  are not saved or replayable, and a deploy ends the games in progress. See [ROADMAP.md](ROADMAP.md).
 - The card site pages and many `utils/` helpers still use the old zone-style card data and shape.
-- Card art is placeholder only (see the notice above); one PRIME card has no art yet.
+- One PRIME card (`PRIME_212`) has no art yet and shows a placeholder image.
 - Stack is Next 12 and React 17 (late 2022); an upgrade is planned as its own milestone. Online play uses a small
   custom WebSocket server (`ws`), not boardgame.io.
