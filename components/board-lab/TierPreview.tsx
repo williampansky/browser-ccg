@@ -27,6 +27,9 @@ const previewUrl = (query: ParsedUrlQuery, tier: LayoutTier): string => {
     if (key !== 'dev' && text !== undefined) params.set(key, text);
   });
   if (tier === 'small') params.set(PHONE_PARAM, 'phone');
+  // The preview only checks layout; a second full-window WebGL canvas for
+  // spell effects would keep the GPU busy for nothing.
+  params.set('fx', 'off');
 
   return `/play/local?${params.toString()}`;
 };
