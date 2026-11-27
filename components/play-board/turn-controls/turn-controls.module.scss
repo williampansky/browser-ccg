@@ -12,6 +12,7 @@
   grid-template-columns: 0fr;
   opacity: 0;
   transform: translateX(100vw);
+  pointer-events: none;
   transition:
     grid-template-columns 150ms ease,
     margin-left 150ms ease,
@@ -21,9 +22,10 @@
 
 .slideWrapper.open {
   grid-template-columns: 1fr;
-  margin-left: 0.5rem; /* Animates the gap smoothly */
+  margin-left: var(--mid-p, 8px) var(--mid-px, 0.75rem); /* Animates the gap smoothly */
   opacity: 1;
   transform: translateX(0);
+  pointer-events: auto;
 }
 
 .slideInner {
