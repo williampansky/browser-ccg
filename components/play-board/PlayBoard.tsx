@@ -86,6 +86,7 @@ import {
 } from './spell-fx';
 import { loadDelayDamage, saveDelayDamage } from './damage-delay';
 import { fxChain, tuneForSpell } from './spell-fx-tune';
+import { spotSides } from './spot-anchor';
 import type { PixiFx } from './pixi-fx';
 import minionStyles from './board-minion.module.scss';
 import {
@@ -1552,17 +1553,31 @@ export const PlayBoard = ({
         fxKind === 'spot' &&
         spellKey
       ) {
-        const spotNode = nodes.current.get(
-          'target' in action && action.target
-            ? targetKey(action.target)
-            : `h${state.activePlayer}`,
-        );
-        if (spotNode) {
-          const plays = Math.max(1, Math.round(fxTune.volleyCount));
+        const spotSideList = spotSides(fxTune.spotAnchor, state.activePlayer);
+        const spotNodes =
+          spotSideList.length > 0
+            ? spotSideList.flatMap((side) => {
+                return state.players[side].board.map((minion) => {
+                  return nodes.current.get(`m${minion.instanceId}`);
+                });
+              })
+            : [
+                nodes.current.get(
+                  'target' in action && action.target
+                    ? targetKey(action.target)
+                    : `h${state.activePlayer}`,
+                ),
+              ];
+        const plays = Math.max(1, Math.round(fxTune.volleyCount));
+
+        spotNodes.forEach((spotNode, index) => {
+          if (!spotNode) return;
           for (let play = 0; play < plays; play++) {
-            spot(spotNode, fxTune, false, play * fxTune.volleyDelay);
+            const delay =
+              index * fxTune.spotStagger + play * fxTune.volleyDelay;
+            spot(spotNode, fxTune, false, delay);
           }
-        }
+        });
       }
 
       /**

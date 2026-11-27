@@ -11,6 +11,7 @@ type ChoiceKey =
   | 'areaFall'
   | 'areaRegion'
   | 'areaStyle'
+  | 'spotAnchor'
   | 'strikeStyle'
   | 'spotRingsMotion'
   | 'spotSparkMotion'
@@ -441,6 +442,32 @@ export const SPELL_GROUPS: SpellGroup[] = [
     ],
   },
   {
+    title: 'Where it plays',
+    kinds: ['spot'],
+    choices: [
+      {
+        field: 'spotAnchor',
+        label: 'Plays on',
+        options: [
+          { value: 'target', label: "The spell's target (or your hero)" },
+          { value: 'enemy-minions', label: 'Every enemy minion' },
+          { value: 'my-minions', label: 'Every minion of yours' },
+          { value: 'all-minions', label: 'Every minion on the board' },
+        ],
+      },
+    ],
+    knobs: [
+      {
+        field: 'spotStagger',
+        label: 'Delay from one minion to the next (ms)',
+        min: 0,
+        max: 400,
+        step: 5,
+        when: (tune) => tune.spotAnchor !== 'target',
+      },
+    ],
+  },
+  {
     title: 'Rings',
     kinds: ['spot'],
     choices: [
@@ -451,6 +478,7 @@ export const SPELL_GROUPS: SpellGroup[] = [
           { value: 'out', label: 'Open outward' },
           { value: 'in', label: 'Close inward' },
           { value: 'pulse', label: 'Pulse in place' },
+          { value: 'descend', label: 'Close while sliding down' },
         ],
       },
     ],
@@ -467,6 +495,27 @@ export const SPELL_GROUPS: SpellGroup[] = [
         step: 10,
       },
       { field: 'spotRadius', label: 'Reach (px)', min: 30, max: 400 },
+      {
+        field: 'spotDescendStart',
+        label: 'Starts above the spot (px)',
+        min: 0,
+        max: 300,
+        when: (tune) => tune.spotRingsMotion === 'descend',
+      },
+      {
+        field: 'spotDescendEnd',
+        label: 'Ends below the spot (px)',
+        min: 0,
+        max: 300,
+        when: (tune) => tune.spotRingsMotion === 'descend',
+      },
+      {
+        field: 'spotRingSquash',
+        label: 'Height (1 = round, lower = flat halo)',
+        min: 0.1,
+        max: 1,
+        step: 0.05,
+      },
       { field: 'spotRings', label: 'Rings', min: 1, max: 5 },
       {
         field: 'spotRingGap',

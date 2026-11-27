@@ -37,14 +37,19 @@ const SPOT_RISE_SWAY = 0.03;
 const SPOT_PULSE_SWELL = 0.4;
 
 /** The corners of a regular polygon, one point up. */
-const polygon = (at: FxPoint, radius: number, sides: number): FxPoint[] => {
+const polygon = (
+  at: FxPoint,
+  radius: number,
+  sides: number,
+  squash = 1,
+): FxPoint[] => {
   const corners = Math.max(3, Math.round(sides));
   const points: FxPoint[] = [];
   for (let corner = 0; corner < corners; corner++) {
     const angle = (corner / corners) * Math.PI * 2 - Math.PI / 2;
     points.push({
       x: at.x + Math.cos(angle) * radius,
-      y: at.y + Math.sin(angle) * radius,
+      y: at.y + Math.sin(angle) * radius * squash,
     });
   }
   return points;
@@ -108,16 +113,28 @@ const makeSparks = (
   return launches.sort((a, b) => a.delay - b.delay);
 };
 
-/** A ring's radius and opacity at `age` (0 to 1) for the tune's motion. */
-const ringState = (
+/**
+ * A ring's radius, opacity and height offset from the spot at `age` (0 to 1)
+ * for the tune's motion. Only a descending ring leaves the spot's height.
+ */
+export const ringState = (
   age: number,
   tune: SpellFxTune,
-): { alpha: number; radius: number } => {
+): { alpha: number; offsetY: number; radius: number } => {
   const open = 1 - Math.pow(1 - age, 3);
   const reach = tune.spotRadius - SPOT_START_RADIUS;
   if (tune.spotRingsMotion === 'in') {
     return {
       alpha: Math.sin(Math.PI * age),
+      offsetY: 0,
+      radius: tune.spotRadius - reach * open,
+    };
+  }
+  if (tune.spotRingsMotion === 'descend') {
+    const travel = tune.spotDescendStart + tune.spotDescendEnd;
+    return {
+      alpha: Math.sin(Math.PI * age),
+      offsetY: -tune.spotDescendStart + travel * age,
       radius: tune.spotRadius - reach * open,
     };
   }
@@ -126,10 +143,15 @@ const ringState = (
       1 - SPOT_PULSE_SWELL + SPOT_PULSE_SWELL * Math.sin(Math.PI * age);
     return {
       alpha: Math.sin(Math.PI * age),
+      offsetY: 0,
       radius: SPOT_START_RADIUS + reach * swell,
     };
   }
-  return { alpha: 1 - age, radius: SPOT_START_RADIUS + reach * open };
+  return {
+    alpha: 1 - age,
+    offsetY: 0,
+    radius: SPOT_START_RADIUS + reach * open,
+  };
 };
 
 /** Builds the `spot` effect on top of the shared overlay. */
@@ -140,6 +162,7 @@ export const createSpot = (context: FxContext): PixiFx['spot'] => {
     const steel = colourNumber(tune.spotColour);
     const gold = colourNumber(tune.spotAccentColour);
     const rings = Math.max(1, Math.round(tune.spotRings));
+    const squash = tune.spotRingSquash;
     const ringsTotal = tune.spotLife + (rings - 1) * tune.spotRingGap;
     const glow = new Sprite(texture);
     glow.anchor.set(0.5);
@@ -228,9 +251,10 @@ export const createSpot = (context: FxContext): PixiFx['spot'] => {
         drawing.clear();
         const age = (elapsed - ring * tune.spotRingGap) / tune.spotLife;
         if (age <= 0 || age >= 1) continue;
-        const { alpha, radius } = ringState(age, tune);
+        const { alpha, offsetY, radius } = ringState(age, tune);
         const colour = ring === 0 ? steel : gold;
-        const corners = polygon(at, radius, tune.spotSides);
+        const centre = { x: at.x, y: at.y + offsetY };
+        const corners = polygon(centre, radius, tune.spotSides, squash);
         drawing.lineStyle({
           alpha,
           cap: LINE_CAP.ROUND,

@@ -289,10 +289,15 @@ const SpellsLab = () => {
     };
   }, [targets, tune.areaPad]);
 
+  /** A spot anchored to minions plays on each target shown, like the game. */
+  const isAnchoredSpot = kind === 'spot' && tune.spotAnchor !== 'target';
+
   /** Animations in one run: a spot or area effect plays once, not per target. */
   const shotCount =
     Math.max(1, Math.round(tune.volleyCount)) *
-    (kind === 'spot' || kind === 'area' ? 1 : targets.length);
+    ((kind === 'spot' && !isAnchoredSpot) || kind === 'area'
+      ? 1
+      : targets.length);
 
   const play = useCallback((): void => {
     const fx = fxRef.current;
@@ -304,12 +309,20 @@ const SpellsLab = () => {
 
     // The game's volley: each target plays `plays` times, and every animation
     // starts `volleyDelay` after the one before (slow motion stretches it too).
-    const sequence = kind === 'spot' || kind === 'area' ? [points.to] : targets;
+    const isOnce = (kind === 'spot' && !isAnchoredSpot) || kind === 'area';
+    const sequence = isOnce ? [points.to] : targets;
 
     // One entry per animation. Each runs in its own callback, so a delayed
     // shot keeps its own target (a closure over a loop variable would not).
-    const shots = sequence.flatMap((target) => {
-      return Array.from({ length: plays }, () => target);
+    const shots = sequence.flatMap((target, targetIndex) => {
+      return Array.from({ length: plays }, (_, playIndex) => {
+        const overall = targetIndex * plays + playIndex;
+        const delay = isAnchoredSpot
+          ? targetIndex * tune.spotStagger + playIndex * tune.volleyDelay
+          : overall * tune.volleyDelay;
+
+        return { delay, target };
+      });
     });
 
     // The preview hit on the sample minion: the real board code watches its
@@ -334,8 +347,8 @@ const SpellsLab = () => {
       );
     }
 
-    shots.forEach((target, index) => {
-      const wait = (index * tune.volleyDelay) / speed;
+    shots.forEach(({ delay, target }) => {
+      const wait = delay / speed;
       const fire = (): void => {
         if (kind === 'strike') fx.strike(target, ms, tune);
         else if (kind === 'spot') fx.spot(target, tune);
@@ -348,6 +361,7 @@ const SpellsLab = () => {
     });
   }, [
     areaRect,
+    isAnchoredSpot,
     isDelay,
     isMinionShown,
     kind,

@@ -108,8 +108,20 @@ export interface SpellFxTune {
   spotWidth: number;
   /** Spot: corners of each ring (6 = a hexagon, 48 or so = a circle) */
   spotSides: number;
-  /** Spot: how the rings move (open outward, close inward, or pulse in place) */
-  spotRingsMotion: 'out' | 'in' | 'pulse';
+  /**
+   * Spot: how the rings move (open outward, close inward, pulse in place, or
+   * close while sliding down)
+   */
+  spotRingsMotion: 'out' | 'in' | 'pulse' | 'descend';
+  /** Spot, descending rings: how far above and below the spot one starts and ends (px) */
+  spotDescendStart: number;
+  spotDescendEnd: number;
+  /** Spot: squashes every ring's height (1 = round, 0.3 = a flat halo) */
+  spotRingSquash: number;
+  /** Spot: where it plays, on the spell's target or on every minion of a side */
+  spotAnchor: 'target' | 'enemy-minions' | 'my-minions' | 'all-minions';
+  /** Spot: the delay from one minion to the next when it plays on several (ms) */
+  spotStagger: number;
   /** Spot: the tint inside each ring (0 = none) */
   spotFillAlpha: number;
   /** Spot: how soft the first ring is (blur in px, 0 = crisp lines) */
@@ -194,7 +206,8 @@ export const SPELL_FX_CHOICES: Partial<
   areaFall: ['down', 'up'],
   areaRegion: ['enemy', 'mine', 'both'],
   areaDirection: ['right', 'left', 'out'],
-  spotRingsMotion: ['out', 'in', 'pulse'],
+  spotRingsMotion: ['out', 'in', 'pulse', 'descend'],
+  spotAnchor: ['target', 'enemy-minions', 'my-minions', 'all-minions'],
   spotSparkMotion: ['outward', 'rising', 'inward'],
 };
 
@@ -260,6 +273,11 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   spotWidth: 6,
   spotSides: 6,
   spotRingsMotion: 'out',
+  spotDescendStart: 80,
+  spotDescendEnd: 80,
+  spotRingSquash: 1,
+  spotAnchor: 'target',
+  spotStagger: 60,
   spotFillAlpha: 0.1,
   spotRingBlur: 0,
   spotRingBlurStep: 0,
@@ -639,6 +657,24 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     areaSpin: 1,
     areaWidth: 22,
     burstCount: 35,
+  },
+  PRIME_162: {
+    spotAnchor: 'all-minions',
+    spotStagger: 50,
+    spotLife: 700,
+    spotRadius: 90,
+    spotRings: 1,
+    spotWidth: 5,
+    spotSides: 36,
+    spotRingsMotion: 'descend',
+    spotDescendStart: 90,
+    spotDescendEnd: 90,
+    spotRingSquash: 0.35,
+    spotFillAlpha: 0.12,
+    spotRingBlur: 3,
+    spotColour: 'ffd76a',
+    spotHasGlow: false,
+    spotHasSparks: false,
   },
   PRIME_167: {
     travelMs: 400,
