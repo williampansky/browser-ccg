@@ -14,15 +14,10 @@ const TONE_COLOUR: Record<FlashTone, number> = {
 };
 
 const SOFT_TEXTURE_SIZE = 32;
-
 const SOFT_RINGS = 8;
-
 const GLOW_ALPHA = 0.12;
-
 const BURST_SPEED_MIN = 0.12;
-
 const BURST_SPEED_RANGE = 0.18;
-
 const Z_INDEX = 8999;
 
 /** A soft white dot, built from stacked translucent circles. */

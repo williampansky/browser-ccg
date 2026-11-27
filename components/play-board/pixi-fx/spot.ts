@@ -17,23 +17,14 @@ import type { FxContext, FxPoint, PixiFx } from './types';
 
 /** A spot picture: its first size (fraction), and how long it pops and fades. */
 const SPOT_PICTURE_FROM = 0.6;
-
 const SPOT_PICTURE_POP = 0.25;
-
 const SPOT_PICTURE_FADE_IN = 0.2;
-
 const SPOT_PICTURE_FADE_OUT = 0.35;
-
 const SPOT_START_RADIUS = 16;
-
 const SPOT_RING_FADE = 0.7;
-
 const SPOT_GLOW_ALPHA = 0.8;
-
 const SPOT_RISE_STAGGER = 0.7;
-
 const SPOT_RISE_SWAY = 0.03;
-
 const SPOT_PULSE_SWELL = 0.4;
 
 /** The corners of a regular polygon, one point up. */

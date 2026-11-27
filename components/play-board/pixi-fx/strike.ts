@@ -18,11 +18,8 @@ const STRIKE_CORE = 0xffffff;
 
 /** How hard a falling picture speeds up (1 = steady). */
 const STRIKE_FALL_POWER = 2.2;
-
 const STRIKE_OVERSHOOT = 30;
-
 const BRANCH_SEGMENTS = 5;
-
 const BRANCH_WIDTH = 0.45;
 
 /** The glow layers of a bolt, widest and faintest first. */

@@ -20,9 +20,7 @@ interface StreamerLane {
 }
 
 const STREAMER_SEGMENTS = 28;
-
 const STREAMER_WAVE_TURNS = 1.1;
-
 const STREAMER_FLAIL_RATE = 0.006;
 
 /**

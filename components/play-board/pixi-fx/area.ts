@@ -6,46 +6,27 @@ import type { SpellFxTune } from '../spell-fx-tune';
 import type { FxContext, FxPoint, FxRect, PixiFx } from './types';
 
 const AREA_MIN_DROP_SPEED = 0.05;
-
 const AREA_RAIN_SWAY = 0.04;
-
 const AREA_MIN_RING_MS = 200;
-
 const AREA_SHOCK_REACH = 1.15;
-
 const AREA_SHOCK_THIN = 0.6;
-
 const AREA_SHOCK_FILL = 0.14;
-
 const AREA_SEGMENTS = 44;
-
 const AREA_FADE_IN = 0.2;
-
 const AREA_FADE_OUT = 0.3;
 
 /** How much of an arm, from its rim end, fades in. */
 const AREA_RIM_FADE = 0.14;
-
 const AREA_GROW_FROM = 0.55;
-
 const AREA_GROW_BY = 0.35;
-
 const AREA_GLOW_WIDTH = 2.4;
-
 const AREA_GLOW_ALPHA = 0.3;
-
 const AREA_EMBER_LIFE_MS = 520;
-
 const AREA_EMBER_SCALE = 0.32;
-
 const AREA_EMBER_DRIFT = 0.05;
-
 const AREA_WAVE_EDGE = 14;
-
 const AREA_WAVE_RIPPLE = 0.045;
-
 const AREA_WAVE_SPEED = 0.012;
-
 const AREA_MIN_SIDE = 220;
 
 /** A colour part way from `a` to `b` (0 = a, 1 = b). */
