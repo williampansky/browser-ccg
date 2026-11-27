@@ -78,6 +78,7 @@ export const SKILL_FX: Record<string, SpellFxKind> = {
  */
 export const CARD_FX: Record<string, SpellFxKind> = {
   CORE_068: 'area',
+  CORE_072: 'area',
   CORE_092: 'spot',
   CORE_098: 'area',
   CORE_111: 'spot',
@@ -91,6 +92,7 @@ export const CARD_FX: Record<string, SpellFxKind> = {
   PRIME_202: 'strike',
   PRIME_240: 'strike',
   PRIME_257: 'strike',
+  PRIME_272: 'spot',
 };
 
 /**
