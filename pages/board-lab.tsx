@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { heroes, loadHsCards } from '../engine';
 import { LabOverlay } from '../components/board-lab/LabOverlay';
 import {
@@ -55,10 +55,10 @@ import {
   SoundSlotPanel,
   useSoundTuning,
 } from '../components/board-lab/SoundPanel';
-import {
-  PLAY_LAYOUT,
-  buildLayoutCss,
-} from '../components/play-board/layout-css';
+import { TierPreview } from '../components/board-lab/TierPreview';
+import { LabTierSwitch } from '../components/board-lab/LabTierSwitch';
+import { labLayout, setLabTier } from '../components/board-lab/lab-tier';
+import { buildLayoutCss } from '../components/play-board/layout-css';
 
 // The real /play board (client only, like /play itself).
 const PlayBoard = dynamic(
@@ -72,7 +72,7 @@ const PlayBoard = dynamic(
  * Everything is in the URL, so a layout can be shared or bookmarked:
  *  - setup (the same debug params as /play): b0 b1 (board minion ids), turn (0 = player, 1 = enemy; applied live), p0 p1 (hand ids), w0 w1, e0 e1, h0 h1, first, herofig
  *  - layout (CSS overrides over the real stylesheet): lm minion height px, lg minion gap px, lml/lms clicked-minion lift px / scale, lmh aimed-at target scale, lmpv=1 previews it on your first minion, ls section gap px, lw table max width px,
- *    lhs hand sink px, lhw0 / lhw1 my hand / enemy hand card width px, lfw0 / lfw1 my / enemy hero figure width px, lfs hero figure side (left|right), lfx0/lfy0/lfx1/lfy1 hero figure X/Y offsets px,
+ *    lhs hand sink px, lhw0 / lhw1 my hand / enemy hand card width px, lfw0 / lfw1 my / enemy hero figure width px, lfz0 / lfz1 my / enemy hero overall scale % (figure or ring), lfs hero figure side (left|right), lfx0/lfy0/lfx1/lfy1 hero figure X/Y offsets px,
  *    lhrt/lhdp fan tilt/drop (x), lhol card overlap px, lhov/lhoy/lhot hover scale/lift px/tilt deg, lhom hover ms, lhpa/lhpb/lhpm parting px (adjacent / further out) and ms, lhha/lhhs/lhfl/lhsm hover halo opacity/swell, flash brightness, sheen ms, lhst settle ms, lhdr draw-in ms, lhpv=N holds card N in its hover look, hn0/hn1 cards dealt to each hand (setup, not baked),
  *    lxgh/lxgb/lxga/lxgo/lxgd/lxgk/lxgg flow glow hue deg, card halo rest/peak (card units) and opacity, pulse ms, keyword glow size % and peak brightness, lxgpv=1 treats Combo as on (ticking it puts PRIME_189 in your hand and sets e0=10),
  *    lsel clicked-card scale, lpv=1 previews it on the first card, lpan log/deck arrangement (swap|stackL|stackR), lsplit stacked log share %,
@@ -87,6 +87,8 @@ const { cards } = loadHsCards();
 const BoardLab = () => {
   const router = useRouter();
   const q = router.query;
+  const tier = setLabTier(q.dev);
+  const [isPreviewOn, setIsPreviewOn] = useState(false);
   const { sections, setAllSections, toggleSection } = useLabSections();
   const { tab, setTab, subtab, setSubtab } = useLabTab();
   const defaults = useMeasuredDefaults(q);
@@ -139,10 +141,10 @@ const BoardLab = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
 
-  // With no layout params the lab shows exactly what /play shows (PLAY_LAYOUT);
+  // With no layout params the lab shows exactly what /play shows (`labLayout`, for the tier in `dev`);
   // a param in the URL overrides one knob.
   const css = buildLayoutCss({
-    ...PLAY_LAYOUT,
+    ...labLayout(),
     ...Object.fromEntries(Object.keys(q).map((k) => [k, one(q[k])])),
   });
 
@@ -182,7 +184,7 @@ const BoardLab = () => {
       return Number.isNaN(n) || n < 1 ? undefined : n;
     })(),
     timerPct: (() => {
-      const v = one(q.lmdtpv) || PLAY_LAYOUT.lmdtpv || '';
+      const v = one(q.lmdtpv) || labLayout().lmdtpv || '';
       return v === '' || Number.isNaN(+v) ? 70 : Math.min(100, Math.max(0, +v));
     })(),
     active: (one(q.turn) === '0' || one(q.turn) === '1'
@@ -358,7 +360,20 @@ const BoardLab = () => {
     <>
       <style>{css}</style>
       <PlayBoard key={boardKey} lab={lab} />
+      {isPreviewOn && (
+        <TierPreview
+          onClose={() => setIsPreviewOn(false)}
+          query={q}
+          tier={tier}
+        />
+      )}
       <LabOverlay onSetAll={setAllSections}>
+        <LabTierSwitch
+          isPreviewOn={isPreviewOn}
+          onPreviewToggle={() => setIsPreviewOn(!isPreviewOn)}
+          setParams={setParams}
+          tier={tier}
+        />
         <LabTabBar tab={tab} onTab={setTab} />
         <LabSubTabBar tab={tab} subtab={subtab} onSubtab={setSubtab} />
         {sectionsFor(tab, subtab).map((id) => panels[id])}

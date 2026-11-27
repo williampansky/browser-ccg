@@ -1,6 +1,7 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
-import { ENERGY_COLOURS, PLAY_LAYOUT } from '../play-board/layout-css';
+import { ENERGY_COLOURS } from '../play-board/layout-css';
+import { labLayout } from './lab-tier';
 import { NUMS, one, row, wide } from './lab-model';
 
 const note = { display: 'block', color: '#9aa3b8', fontSize: 11 } as const;
@@ -16,9 +17,9 @@ export const BackgroundPanel = ({
   q: ParsedUrlQuery;
   setParams: (changes: Record<string, string | null>) => void;
 }) => {
-  // What the board really uses: /play's saved background (PLAY_LAYOUT) under
+  // What the board really uses: /play's saved background (`labLayout`) under
   // whatever the URL sets.
-  const q = { ...PLAY_LAYOUT, ...urlQuery };
+  const q = { ...labLayout(), ...urlQuery };
   const [files, setFiles] = useState<string[]>([]);
   useEffect(() => {
     fetch('/api/backgrounds')

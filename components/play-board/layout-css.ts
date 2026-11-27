@@ -50,6 +50,13 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
     `${CLS('figMe')}{width:${v}px !important;--figW:${v}px !important}`,
   lfw1: (v) =>
     `${CLS('figFoe')}{width:${v}px !important;--figW:${v}px !important}`,
+  // An overall size for the whole hero (figure or ring) as a percentage, via
+  // the individual `scale` property so it composes with the offsets. It
+  // shrinks toward the corner the hero is anchored to (see `lfs`).
+  lfz0: (v) =>
+    `${CLS('figMe')}{scale:${v / 100} !important;transform-origin:0 100% !important}`,
+  lfz1: (v) =>
+    `${CLS('figFoe')}{scale:${v / 100} !important;transform-origin:0 0 !important}`,
   lfx0: (v) => `${CLS('figMe')}{--lab-x:${v}px}`,
   lfy0: (v) => `${CLS('figMe')}{--lab-y:${v}px}`,
   lfx1: (v) => `${CLS('figFoe')}{--lab-x:${v}px}`,
@@ -1042,6 +1049,73 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lswsb: '12',
 };
 
+export type LayoutTier = 'large' | 'medium' | 'small';
+
+export const LAYOUT_TIERS: LayoutTier[] = ['large', 'medium', 'small'];
+
+/**
+ * Medium applies in a window this narrow or narrower (a tablet, a small laptop
+ * window). Small is a phone and has no query: `PhoneFit` lays a phone's page
+ * out at least 1200 px wide and scales it down, so no width query would match
+ * it. `PlayLayout` detects the phone itself (`use-is-phone.ts`).
+ */
+export const MEDIUM_MEDIA = '(max-width: 1100px)';
+
+/**
+ * Knobs that differ on smaller screens, written by `npm run board -- --tier=`.
+ * Only the differences go here; a tier also keeps the ones of the tier above
+ * it (small inherits medium's).
+ */
+export const PLAY_LAYOUT_TIERS: Record<
+  Exclude<LayoutTier, 'large'>,
+  Record<string, string>
+> = {
+  medium: {},
+  small: {
+    lrx1: '-381',
+    lry1: '-25',
+    lfz1: '100',
+    lfz0: '150',
+    lbx: '0',
+    lrx0: '-410',
+    lry0: '199',
+    lhs: '75',
+    lhw0: '160',
+    leo: 'h',
+    ley: '-170',
+    lex: '-1342',
+    les: '1',
+    lg: '20',
+  },
+};
+
+/**
+ * The saved knobs one tier uses: the base, then each tier's overrides down to
+ * and including this one.
+ */
+export const layoutForTier = (tier: LayoutTier): Record<string, string> => {
+  const { medium, small } = PLAY_LAYOUT_TIERS;
+  if (tier === 'large') return { ...PLAY_LAYOUT };
+  if (tier === 'medium') return { ...PLAY_LAYOUT, ...medium };
+  return { ...PLAY_LAYOUT, ...medium, ...small };
+};
+
+/**
+ * What a tier's value for a knob would be without its own override: the
+ * next tier up's, so the lab can say where a value comes from.
+ */
+export const inheritedFrom = (
+  tier: LayoutTier,
+  key: string,
+): LayoutTier | null => {
+  if (tier === 'large') return null;
+  const own = PLAY_LAYOUT_TIERS[tier][key] !== undefined;
+  if (own) return tier;
+  if (tier === 'small' && PLAY_LAYOUT_TIERS.medium[key] !== undefined)
+    return 'medium';
+  return 'large';
+};
+
 /**
  * The board's background image (the lab's Background section): `lbgf` the image
  * URL (none = off), `lbgt` where it goes (`table` = the play
@@ -1146,7 +1220,9 @@ export const buildLayoutCss = (
       .filter((k) => !(join && (k === 'lgw' || k === 'ldw')))
       .map((k) => CSS_FNS[k](+one(k))),
     one('lfs') === 'right'
-      ? `${CLS('figSlot')}{left:auto !important;right:0.5rem !important}`
+      ? `${CLS('figSlot')}{left:auto !important;right:0.5rem !important}` +
+        `${CLS('figMe')}{transform-origin:100% 100% !important}` +
+        `${CLS('figFoe')}{transform-origin:100% 0 !important}`
       : '',
     ['solid', 'dashed', 'dotted', 'double'].includes(one('lgbs'))
       ? `${CLS('page')}{--lg-brs:${one('lgbs')}}`
@@ -1156,4 +1232,20 @@ export const buildLayoutCss = (
       ? `${CLS('table')}::before{display:none !important}`
       : '',
   ].join('\n');
+};
+
+/**
+ * The page's layout CSS: the base, then a `@media` block for medium. On a phone
+ * the small tier's CSS comes last with no query, so it wins. `resolve` gives
+ * the params for a tier (so the caller can lay its own overrides on top).
+ */
+export const buildTieredLayoutCss = (
+  resolve: (tier: LayoutTier) => Record<string, string | undefined>,
+  isPhone: boolean,
+): string => {
+  const base = buildLayoutCss(resolve('large'));
+  const medium = `@media ${MEDIUM_MEDIA}{${buildLayoutCss(resolve('medium'))}}`;
+  const small = isPhone ? buildLayoutCss(resolve('small')) : '';
+
+  return [base, medium, small].join('\n');
 };

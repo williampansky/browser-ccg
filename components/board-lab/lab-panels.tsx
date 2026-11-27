@@ -1,11 +1,8 @@
 import { LOG_SAMPLES } from '../play-board/sample-log';
 import type { ParsedUrlQuery } from 'querystring';
 import type { ReactNode } from 'react';
-import {
-  ENERGY_COLOURS,
-  MID_KNOBS,
-  PLAY_LAYOUT,
-} from '../play-board/layout-css';
+import { ENERGY_COLOURS, MID_KNOBS } from '../play-board/layout-css';
+import { labLayout } from './lab-tier';
 import { HEROES, SLIDER_MAX, one, row, wide } from './lab-model';
 
 export interface PanelProps {
@@ -660,7 +657,7 @@ export const LogDeckPanel = ({
       Arrangement{' '}
       {/* "default" is written into the URL (not removed from it): with no lpan the lab falls back to the saved layout's arrangement. */}
       <select
-        value={one(q.lpan) || PLAY_LAYOUT.lpan || 'default'}
+        value={one(q.lpan) || labLayout().lpan || 'default'}
         onChange={(e) => setParams({ lpan: e.target.value })}
       >
         <option value="default">Log left, deck right</option>
@@ -683,7 +680,7 @@ export const LogDeckPanel = ({
       X / Y offset" sliders).
     </small>
     {/* Connected: one width for the whole column; separate: a width for each panel. */}
-    {['joinL', 'joinR'].includes(one(q.lpan) || PLAY_LAYOUT.lpan || '')
+    {['joinL', 'joinR'].includes(one(q.lpan) || labLayout().lpan || '')
       ? sliders(['lsbw', 'lsbh', 'lsbd', 'lgx', 'lgy'])
       : sliders(['lsplit', 'lgw', 'ldw', 'lgx', 'lgy', 'ldx', 'ldy'])}
   </>
@@ -726,7 +723,7 @@ export const LogBreaksPanel = ({ q, setParams, sliders }: PanelProps) => (
     <label style={row}>
       Break line style{' '}
       <select
-        value={one(q.lgbs) || PLAY_LAYOUT.lgbs || 'solid'}
+        value={one(q.lgbs) || labLayout().lgbs || 'solid'}
         onChange={(e) => setParams({ lgbs: e.target.value })}
       >
         <option value="solid">solid</option>
@@ -796,8 +793,8 @@ export const HeroFiguresPanel = ({
     </label>
     {sliders(
       (one(q.herotype) || 'ring') === 'ring'
-        ? ['lrx0', 'lry0', 'lrx1', 'lry1']
-        : ['lfw0', 'lfw1', 'lfx0', 'lfy0', 'lfx1', 'lfy1'],
+        ? ['lfz0', 'lfz1', 'lrx0', 'lry0', 'lrx1', 'lry1']
+        : ['lfz0', 'lfz1', 'lfw0', 'lfw1', 'lfx0', 'lfy0', 'lfx1', 'lfy1'],
     )}
     <label style={row}>
       Figure side{' '}

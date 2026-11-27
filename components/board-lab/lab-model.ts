@@ -5,8 +5,8 @@ import {
   CSS_FNS,
   MID_KNOBS,
   MID_TIMER_PREVIEW_KEY,
-  PLAY_LAYOUT,
 } from '../play-board/layout-css';
+import { labLayout } from './lab-tier';
 
 export type Num = {
   key: string;
@@ -333,6 +333,24 @@ export const NUMS: Num[] = [
     max: SLIDER_MAX.lfw1,
     css: CSS_FNS.lfw1,
     read: () => px(cs('figFoe')?.width),
+  },
+  // Overall hero size (figure or ring), a percentage; the design itself comes
+  // from the hero lab.
+  {
+    key: 'lfz0',
+    label: 'My hero scale (%)',
+    min: 30,
+    max: 150,
+    css: CSS_FNS.lfz0,
+    read: () => 100,
+  },
+  {
+    key: 'lfz1',
+    label: 'Enemy hero scale (%)',
+    min: 30,
+    max: 150,
+    css: CSS_FNS.lfz1,
+    read: () => 100,
   },
   // Hero figure position: an offset from where /play puts it (via the
   // individual `translate` property, so it composes with the rest).
@@ -1580,7 +1598,7 @@ NUMS.push({
   min: 0,
   max: 100,
   css: () => '',
-  read: () => +(PLAY_LAYOUT[MID_TIMER_PREVIEW_KEY] ?? 70),
+  read: () => +(labLayout()[MID_TIMER_PREVIEW_KEY] ?? 70),
 });
 
 // The end game screen: CSS knobs (overlay, banner) and the confetti numbers

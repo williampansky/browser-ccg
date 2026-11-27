@@ -12,6 +12,12 @@
  *
  *   npm run board -- "http://localhost:3000/board-lab?les=0.8&lex=-1281&lry0=151"
  *   npm run board -- --dry "les=0.8&lex=-1281"      show the changes, write nothing
+ *   npm run board -- --tier=medium "<url>"   bake into a smaller screen size
+ *
+ * `--tier=medium|small` writes into that tier's override map
+ * (`PLAY_LAYOUT_TIERS`) instead: only the knobs that differ from the tier above
+ * (small starts from medium, medium from the base). Use it with a lab URL that
+ * has `dev=<tier>`; `dev` itself is not a layout knob and is skipped.
  */
 const fs = require('fs');
 const path = require('path');
@@ -25,6 +31,12 @@ const FILE = path.join(
 );
 const args = process.argv.slice(2);
 const dry = args.includes('--dry');
+const tierArg = args.find((a) => a.startsWith('--tier='));
+const tier = tierArg ? tierArg.slice('--tier='.length) : 'large';
+if (!['large', 'medium', 'small'].includes(tier)) {
+  console.error('--tier must be large, medium or small');
+  process.exit(1);
+}
 const input = args.find((a) => !a.startsWith('--'));
 if (!input) {
   console.error('Usage: npm run board -- [--dry] "<board-lab url or query>"');
@@ -37,14 +49,35 @@ const params = new URL(
   'http://localhost',
 ).searchParams;
 
-const src = fs.readFileSync(FILE, 'utf8');
-const start = src.indexOf('export const PLAY_LAYOUT');
-const end = start < 0 ? -1 : src.indexOf('\n};', start);
-if (end < 0) {
-  console.error('Could not find PLAY_LAYOUT in ' + FILE);
+const urlTier = params.get('dev');
+if (urlTier && urlTier !== tier) {
+  console.error(
+    `That URL is for dev=${urlTier}; add --tier=${urlTier} (or drop dev=).`,
+  );
+  process.exit(1);
+}
+
+let src = fs.readFileSync(FILE, 'utf8');
+let start;
+let end;
+if (tier === 'large') {
+  start = src.indexOf('export const PLAY_LAYOUT:');
+  end = start < 0 ? -1 : src.indexOf('\n};', start);
+} else {
+  // A tier's map is `  medium: {},` when empty; open it up so keys can be added.
+  const open = `  ${tier}: {},`;
+  const tiers = src.indexOf('export const PLAY_LAYOUT_TIERS');
+  const at = src.indexOf(open, tiers);
+  if (tiers >= 0 && at >= 0) src = src.replace(open, `  ${tier}: {\n  },`);
+  start = src.indexOf(`  ${tier}: {`, tiers);
+  end = start < 0 ? -1 : src.indexOf('\n  },', start);
+}
+if (end < 0 || start < 0) {
+  console.error('Could not find the layout map for ' + tier + ' in ' + FILE);
   process.exit(1);
 }
 let block = src.slice(start, end);
+const pad = tier === 'large' ? '  ' : '    ';
 
 const errors = [];
 const changes = [];
@@ -67,7 +100,7 @@ for (const [key, value] of params) {
     block = block.replace(re, `$1${value}$3`);
   } else {
     changes.push(`${key}: (new) ${value}`);
-    block += `\n  ${key}: '${value}',`;
+    block += `\n${pad}${key}: '${value}',`;
   }
 }
 
@@ -81,7 +114,7 @@ if (!found) {
   process.exit(1);
 }
 if (!changes.length) {
-  console.log('Already matches PLAY_LAYOUT, nothing to change.');
+  console.log(`Already matches the ${tier} layout, nothing to change.`);
   process.exit(0);
 }
 console.log(

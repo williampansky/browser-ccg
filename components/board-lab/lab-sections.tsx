@@ -2,12 +2,9 @@ import type { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
 import { END_KNOBS } from '../play-board/end-celebration';
 import { SWINGS } from '../play-board/hero-swing-tune';
-import {
-  ENERGY_COLOURS,
-  MID_KNOBS,
-  PLAY_LAYOUT,
-} from '../play-board/layout-css';
+import { ENERGY_COLOURS, MID_KNOBS } from '../play-board/layout-css';
 import { one } from './lab-model';
+import { labLayout } from './lab-tier';
 
 /**
  * The URL params each accordion section owns, for its Copy / Paste config
@@ -252,6 +249,8 @@ export const SECTION_KEYS: Record<string, string[]> = {
   logtest: ['llpv'],
   heroes: [
     'herotype',
+    'lfz0',
+    'lfz1',
     'lfw0',
     'lfw1',
     'lfx0',
@@ -363,12 +362,12 @@ export const useLabSections = () => {
 
 /**
  * What a section's controls hold right now: the URL's values, else /play's
- * saved ones (PLAY_LAYOUT), as `key=value&...`.
+ * saved ones (`labLayout`), as `key=value&...`.
  */
 const sectionConfig = (keys: string[], q: ParsedUrlQuery): string => {
   const u = new URLSearchParams();
   keys.forEach((k) => {
-    const v = one(q[k]) || PLAY_LAYOUT[k] || '';
+    const v = one(q[k]) || labLayout()[k] || '';
     if (v !== '') u.set(k, v);
   });
   return u.toString();

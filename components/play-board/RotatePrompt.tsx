@@ -11,7 +11,7 @@ import type { PhoneScreen } from './phone-viewport';
 const SETTLE_MS = 250;
 const DEBUG_TEXT_PX = 14;
 
-const readScreen = (): PhoneScreen => {
+export const readScreen = (): PhoneScreen => {
   const { width, height } = window.screen;
 
   return {

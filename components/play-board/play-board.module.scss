@@ -1450,7 +1450,10 @@ $po-green: var(--po-c, #5fd16a);
   margin-right: 0.5rem;
 }
 
-@media (max-width: 1100px) {
+// The same rules for a narrow window and for a phone. A phone's page is laid
+// out about 1650 px wide and scaled down (`phone-viewport.ts`), so no width
+// query matches it; `PlayLayout` sets `data-phone` on <html> instead.
+@mixin narrow-panels {
   .panelButtons {
     display: flex;
   }
@@ -1477,5 +1480,12 @@ $po-green: var(--po-c, #5fd16a);
     --lab-x: 0px;
     --lab-y: 0px;
     translate: none !important;
-  }
+  }}
+
+@media (max-width: 1100px) {
+  @include narrow-panels;
+}
+
+:global(html[data-phone]) {
+  @include narrow-panels;
 }
