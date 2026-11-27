@@ -184,15 +184,24 @@ import { Button, Group, Panel, SegmentedControl, Select, Toggle } from '../ui';
 import { UiThemePicker } from '../ui-theme/UiThemePicker';
 import { playUiSound } from '../ui-theme/ui-sfx';
 import styles from './play-board.module.scss';
+import { gameConfig } from '../../app.config';
+import { EndTurnButton } from './end-turn-button';
+import { AttackHeroButton } from './attack-hero-button';
+import { TurnControls } from './turn-controls';
 
-let activeGhost: DragGhost | null = null; // the opaque card that follows the pointer during a hand drag
+/**
+ * The opaque card that follows the pointer during a hand drag
+ */
+let activeGhost: DragGhost | null = null;
+
 /**
  * Un-hides the dragged hand card once the ghost has flown back to it (at once
  * when there is no ghost), so the real card and the ghost are never both
  * visible.
  */
-const clearDraggedHandWhenLanded = (set: (v: null) => void) =>
-  activeGhost ? activeGhost.whenDone(() => set(null)) : set(null);
+const clearDraggedHandWhenLanded = (set: (v: null) => void) => {
+  return activeGhost ? activeGhost.whenDone(() => set(null)) : set(null);
+};
 
 type Mode = 'ai' | 'hotseat' | 'online';
 type PlayAction = Extract<Action, { type: 'PlayCard' }>;
@@ -212,35 +221,45 @@ type Selection =
   | { kind: 'skill'; index: number };
 
 const { cards, byId: baseById } = loadHsCards();
+
 /** The cards plus the minions and weapons hero skills create. */
 const byId = withHeroTokens(baseById);
 const pool = playablePool(cards);
 const prime = primePool(cards);
+
 /** " as Zeus" for the start-of-game log line; empty without a hero. */
 const heroText = (s: GameState, p: PlayerId) => {
   const hero = getHero(s.players[p].hero?.id);
   return hero ? ` as ${hero.name}` : '';
 };
+
 /**
  * A deck's own name for the deck panel's heading; undefined for an unnamed deck
  * (the generated "a random deck" names read as sentence text, not a title).
  */
-const namedDeck = (name?: string) =>
-  name && !/^an? random /i.test(name) && name !== 'Unnamed' ? name : undefined;
+const namedDeck = (name?: string) => {
+  return name && !/^an? random /i.test(name) && name !== 'Unnamed'
+    ? name
+    : undefined;
+};
+
 /**
  * A card only if its Airtable row is active; an inactive one is treated as
  * missing (the choose dialog then shows a blank card).
  */
 const activeCard = (c?: Card): Card | undefined => (c?.active ? c : undefined);
 const otherPlayer = (p: PlayerId): PlayerId => (p === '0' ? '1' : '0');
+
 /**
  * What a player is called on the board: your own name for Player 1, "Player 2"
  * (and "(AI)" against the bot) for the other seat.
  */
-const playerLabel = (p: PlayerId, mode: Mode, myName: string) =>
-  p === '0'
+const playerLabel = (p: PlayerId, mode: Mode, myName: string) => {
+  return p === '0'
     ? myName
     : `Player 2${mode === 'ai' && p === AI_PLAYER ? ' (AI)' : ''}`;
+};
+
 /**
  * The art of a card (`artBackground`: art, then `fallbackId`'s art, then
  * PLACEHOLDER.jpg when a file is missing).
@@ -248,6 +267,7 @@ const playerLabel = (p: PlayerId, mode: Mode, myName: string) =>
 const artStyle = (id?: string, fallbackId?: string): React.CSSProperties => ({
   backgroundImage: artBackground(id, fallbackId),
 });
+
 /**
  * An invisible 1px drag image: the aim arrow shows an attack, so no ghost of
  * the attacker needs to cover the targets.
@@ -255,53 +275,74 @@ const artStyle = (id?: string, fallbackId?: string): React.CSSProperties => ({
 const blankDragImage = (() => {
   if (typeof Image === 'undefined') return null;
   const img = new Image();
-  img.src =
-    'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  img.src = `data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7`;
+
   return img;
 })();
+
 /**
  * While a drag is active the body carries this class, which hides the hover
  * popups (see play-board.module.scss).
  */
-const setDragging = (on: boolean) =>
-  document.body.classList.toggle('dragging', on);
+const setDragging = (on: boolean) => {
+  return document.body.classList.toggle('dragging', on);
+};
+
 /**
  * Card type -> accent colour class (minion blue, spell purple, weapon orange,
  * item teal).
  */
-const typeClass = (type?: string) =>
-  type ? (styles[`type_${type}`] ?? '') : '';
+const typeClass = (type?: string) => {
+  return type ? (styles[`type_${type}`] ?? '') : '';
+};
+
 /** Spell effects (Pixi layer, projectiles, flashes) are on; ?fx=off stops them. */
-const spellFxOn = (): boolean =>
-  new URLSearchParams(window.location.search).get('fx') !== 'off';
+const spellFxOn = (): boolean => {
+  return new URLSearchParams(window.location.search).get('fx') !== 'off';
+};
+
 /** The key of the summon effect in `EVENT_FX` / `SPELL_FX_VARIANTS`. */
 const SUMMON_FX_KEY = 'summon';
 /** A summoned minion needs a render before its node exists. */
 const SUMMON_RENDER_MS = 80;
 /** A played minion's card flies in first; the effect starts as it arrives. */
 const SUMMON_LANDED_MS = FLIGHT_MS;
-const isSpellHitAction = (action: Action): boolean =>
-  action.type === 'HeroSkill' || action.type === 'PlayCard';
-const targetKey = (t: TargetRef) =>
-  t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`;
+
+const isSpellHitAction = (action: Action): boolean => {
+  return action.type === 'HeroSkill' || action.type === 'PlayCard';
+};
+
+const targetKey = (t: TargetRef) => {
+  return t.kind === 'hero' ? `h${t.player}` : `m${t.instanceId}`;
+};
+
 const centerOf = (el: HTMLElement) => {
   const r = el.getBoundingClientRect();
   return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
 };
-const sameTarget = (a: TargetRef, b: TargetRef) =>
-  a.kind === 'hero'
+
+const sameTarget = (a: TargetRef, b: TargetRef) => {
+  return a.kind === 'hero'
     ? b.kind === 'hero' && a.player === b.player
     : b.kind === 'minion' && a.instanceId === b.instanceId;
+};
 
 /**
  * Renders log markup: `**Player 1**` (coloured by side) and `__Card__` (bold
  * italic).
  */
-const plain = (text?: string) =>
-  (text ?? '')
+const plain = (text?: string) => {
+  return (text ?? '')
     .replace(/<[^>]*>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+};
+
+/**
+ * Tooltips for cards and hero skills: "Card name (cost) type: text". Hero skills
+ * are treated as cards so the log can show their tooltip and open their big
+ * view like any card's.
+ */
 const tipByName = new Map(
   cards.map((c) => [
     c.name,
@@ -312,6 +353,7 @@ const tipByName = new Map(
     }: ${plain(c.text)}`,
   ]),
 );
+
 /**
  * Hero skills by name, as cards: so the log can show their tooltip and open
  * their big view like any card's.
@@ -321,21 +363,30 @@ const skillCardByName = new Map(
     h.skills.map((s) => [s.name, skillCard(h.id, s)] as const),
   ),
 );
+
+/**
+ * Hero skill tooltips: "Fireball (2) hero skill: Deal 3 damage to a minion or player."
+ */
 skillCardByName.forEach((c, name) =>
   tipByName.set(name, `${name} (${c.cost}) hero skill: ${plain(c.text)}`),
 );
+
 /** A card (or hero skill) by the name the log prints. */
-const logCardByName = (name: string): Card | undefined =>
-  cards.find((c) => c.name === name) ?? skillCardByName.get(name);
+const logCardByName = (name: string): Card | undefined => {
+  return cards.find((c) => c.name === name) ?? skillCardByName.get(name);
+};
+
 /**
  * Instant tooltip (fixed-position, so scrolling panels can't clip it). `side`
  * is which way it opens from the element.
  */
+
 /**
  * How long the pointer must rest on a board minion before its tooltip shows
  * (ms).
  */
 const MINION_TIP_DELAY_MS = 800;
+
 const useTip = (
   tip: string | undefined,
   side: 'left' | 'right' = 'right',
@@ -346,26 +397,33 @@ const useTip = (
   const timer = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => () => clearTimeout(timer.current), []);
   const tipRef = useRef<HTMLSpanElement>(null);
+
   // Once drawn, slide it back inside the window if it opened past an edge.
   useLayoutEffect(() => {
     if (tipRef.current) nudgeIntoViewport(tipRef.current);
   }, [pos, tip]);
+
   const handlers = {
     onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
       const el = e.currentTarget;
       const show = () => {
-        const r = el.getBoundingClientRect(); // measured when it shows, not when the pointer arrived (a minion may have lifted since)
+        // measured when it shows, not when the pointer arrived
+        // (a minion may have lifted since)
+        const r = el.getBoundingClientRect();
         setPos({ x: side === 'right' ? r.right + 8 : r.left - 8, y: r.top });
       };
+
       clearTimeout(timer.current);
       if (delayMs > 0) timer.current = setTimeout(show, delayMs);
       else show();
     },
+
     onMouseLeave: () => {
       clearTimeout(timer.current);
       setPos(null);
     },
   };
+
   /**
    * Rendered into <body>: inside a minion (which is scaled while selected and
    * thrown while attacking) a fixed element
@@ -389,18 +447,22 @@ const useTip = (
           document.body,
         )
       : null;
+
   return { handlers, node };
 };
+
 /**
  * Width of a card in hand at full size (the hand shrinks them together when it
  * gets crowded).
  */
 const HAND_CARD_WIDTH = 144;
+
 /**
  * How many px of the tops of the cards in hand stay visible above the bottom
  * edge of the window.
  */
 const HAND_PEEK = 110;
+
 /**
  * A card name in the log: hover for its text; right-click (or a click, if the
  * player chose that) for the collection's big view.
@@ -424,6 +486,7 @@ const LogCard = ({
     handlers.onMouseLeave();
     onInspect(card);
   };
+
   return (
     <strong
       className={styles.logCard}
@@ -437,6 +500,7 @@ const LogCard = ({
     </strong>
   );
 };
+
 interface Ghost {
   key: number;
   owner: PlayerId;
@@ -445,11 +509,13 @@ interface Ghost {
   /** ms to wait before dying: an attack's killing blow has to land first */
   delay: number;
 }
+
 /**
  * How long a death plays before the slot is gone (see `minionDie` in
  * board-minion.module.scss).
  */
 const DEATH_MS = 750;
+
 /**
  * The row of minions with this owner's ghosts put back at the places their
  * minions died.
@@ -467,8 +533,10 @@ const withGhosts = (
     .forEach((g) =>
       out.splice(Math.min(g.index, out.length), 0, renderGhost(g)),
     );
+
   return out;
 };
+
 /**
  * A board minion: hovering shows its printed card next to its current stats.
  */
@@ -486,12 +554,14 @@ const MinionTip = ({
     ? (tipByName.get(card.name) ??
       [card.name, card.text].filter(Boolean).join('\n'))
     : undefined;
+
   const { handlers, node } = useTip(
     printed && `${printed}\nNow: ${m.attack}/${m.health} (max ${m.maxHealth})`,
     'right',
     quiet,
     MINION_TIP_DELAY_MS,
   );
+
   return (
     <button
       {...rest}
@@ -513,6 +583,7 @@ const MinionTip = ({
     </button>
   );
 };
+
 /**
  * Groups log lines into blocks: a turn header and an info line stand alone,
  * and an action takes the result lines under it (a result with no action
@@ -520,12 +591,14 @@ const MinionTip = ({
  */
 const groupLog = (lines: LogLine[]): LogLine[][] => {
   const blocks: LogLine[][] = [];
+
   for (const line of lines) {
     const last = blocks[blocks.length - 1];
     const isOpen = last && last[0].kind === 'action' && line.kind === 'effect';
     if (isOpen) last.push(line);
     else blocks.push([line]);
   }
+
   return blocks;
 };
 
@@ -553,6 +626,7 @@ const renderLogMarkup = (text: string, props: LogRenderProps) => {
         </strong>
       );
     }
+
     if (part.startsWith('__')) {
       const [first, rest] = part.slice(2, -2).split('|');
       const owner = rest === undefined ? undefined : first;
@@ -567,6 +641,7 @@ const renderLogMarkup = (text: string, props: LogRenderProps) => {
         />
       );
     }
+
     return part;
   });
 };
@@ -585,6 +660,7 @@ const renderLogBlock = (
   const style = {
     '--who': side ? props.colors[side] : undefined,
   } as React.CSSProperties;
+
   if (head.kind === 'turn' && side) {
     return (
       <div
@@ -596,6 +672,7 @@ const renderLogBlock = (
       </div>
     );
   }
+
   if (head.kind === 'info') {
     return (
       <div className={styles.logInfo}>
@@ -604,6 +681,7 @@ const renderLogBlock = (
       </div>
     );
   }
+
   return (
     <div className={styles.logBlock} style={style}>
       {[head, ...results].map((line, i) =>
@@ -628,6 +706,10 @@ const renderLogBlock = (
   );
 };
 
+/**
+ * Store the side split in localStorage, so it persists across page reloads. The
+ * split is a fraction of the board width (0 = all Player 1, 1 = all Player 2).
+ */
 const SIDE_SPLIT_KEY = 'ccg.sideSplit.v1';
 
 /**
@@ -636,6 +718,10 @@ const SIDE_SPLIT_KEY = 'ccg.sideSplit.v1';
  */
 const HOVER_RELEASE_MS = 70;
 
+/**
+ * The target of an action, if it has one.
+ * e.g. PlayCard, Attack, WeaponAttack, HeroSkill
+ */
 const targetOf = (a: Action): TargetRef | undefined =>
   a.type === 'PlayCard' ||
   a.type === 'Attack' ||
@@ -662,15 +748,18 @@ const FOE_PICK_MS = 700;
 const previewFor = (action: Action) => {
   const to = targetOf(action);
   if (to) return { action, from: aimSource(action, '1'), to };
-  if (action.type === 'PlayCard')
+
+  if (action.type === 'PlayCard') {
     return { action, from: aimSource(action, '1'), holdMs: FOE_PICK_MS };
+  }
 
   return null;
 };
 
 /** A `?h0=` value in its current form (an old hero key is its class key). */
-const heroParam = (value: string | null): string | null =>
-  value ? currentHeroKey(value) : value;
+const heroParam = (value: string | null): string | null => {
+  return value ? currentHeroKey(value) : value;
+};
 
 /**
  * Debug URL params for /play (read on every new game): `?first=0|1` picks who
@@ -694,21 +783,26 @@ const debugParams = (): {
   const q = new URLSearchParams(
     typeof window === 'undefined' ? '' : window.location.search,
   );
-  const list = (k: string) =>
-    (q.get(k) ?? '')
+
+  const list = (k: string) => {
+    return (q.get(k) ?? '')
       .split(',')
       .map((x) => x.trim())
       .filter((id) => byId.has(id));
+  };
+
   const f = q.get('first');
   const count = (k: string) => {
     const n = parseInt(q.get(k) ?? '', 10);
     return Number.isNaN(n) ? undefined : Math.min(MAX_HAND, Math.max(0, n));
   };
+
   const weapon = (k: string) => list(k)[0];
   const energy = (k: string) => {
     const n = parseInt(q.get(k) ?? '', 10);
     return Number.isNaN(n) ? undefined : Math.min(10, Math.max(0, n));
   };
+
   return {
     first: f === '0' || f === '1' ? f : undefined,
     hands: { '0': list('p0'), '1': list('p1') },
@@ -735,13 +829,16 @@ const newGame = (
   const rng = createSeededRng(seed ?? Date.now() % 2147483647);
   const choices = loadChoices();
   const saved = loadDecks(byId);
+
   /** The AI never plays a saved deck: it gets a random one. */
   const deckChoices = {
     '0': choices['0'],
     '1': vsAi ? aiDeckChoice(choices['1']) : choices['1'],
   };
+
   const dbg = debugParams();
   const heroChoices = loadHeroChoices();
+
   // The hero comes first, because its class decides which class cards its
   // deck may draw. A saved deck with its own hero brings it along; otherwise
   // the picker's hero is used.
@@ -759,8 +856,11 @@ const newGame = (
       rng,
     ),
   };
-  const classCardsOf = (hero?: string): Card[] =>
-    hero ? classCardsFor(cards, hero) : [];
+
+  const classCardsOf = (hero?: string): Card[] => {
+    return hero ? classCardsFor(cards, hero) : [];
+  };
+
   const p0 = resolveDeck(
     deckChoices['0'],
     pool,
@@ -769,6 +869,7 @@ const newGame = (
     prime,
     classCardsOf(heroKeys['0']),
   );
+
   const p1 = resolveDeck(
     deckChoices['1'],
     pool,
@@ -777,9 +878,11 @@ const newGame = (
     prime,
     classCardsOf(heroKeys['1']),
   );
+
   const decks = { '0': p0.cards, '1': p1.cards };
   const randomFirst: PlayerId = rng.int(2) === 0 ? '0' : '1';
   const first: PlayerId = dbg.first ?? randomFirst;
+
   let state = createGame(
     {
       decks,
@@ -789,6 +892,7 @@ const newGame = (
     },
     rng,
   );
+
   state = produce(state, (g) => {
     (['0', '1'] as PlayerId[]).forEach((p) => {
       const me = g.players[p];
@@ -804,6 +908,7 @@ const newGame = (
       });
     });
   });
+
   // `?hn0=` / `?hn1=`: a hand of exactly that many cards, taken from the top of
   // the deck or put back on it.
   state = produce(state, (g) => {
@@ -816,7 +921,9 @@ const newGame = (
       while (me.hand.length > want) me.deck.unshift(me.hand.pop()!);
     });
   });
+
   state = applyDebugSetup(state, dbg.setup, byId);
+
   return {
     state,
     rng,
@@ -2394,16 +2501,34 @@ export const PlayBoard = ({
       a.target.kind === 'hero' &&
       a.target.player === foe,
   );
+
+  /**
+   * "Attack hero" is only available when it can be done: the foe has no
+   * minions, it is your turn, and at least one of your minions or your hero's
+   * weapon can hit the foe's hero.
+   */
   const canNukeHero =
     !over &&
     myTurn &&
     state.players[foe].board.length === 0 &&
     heroHits.length > 0;
+
+  // Nuke hero is only available when it can be done, so the button can be
+  // disabled when it is not.
   nukeRef.current = canNukeHero ? () => onNukeHero() : null;
+
+  /**
+   * "Attack hero" button: every ready minion and the hero's weapon hit the
+   * foe's hero, then the turn ends. The server owns the game online, so it is
+   * sent the actions and the end-of-turn, and this window's state is updated
+   * only after the server's answers arrive. Offline, the actions are applied
+   * here and the turn ends.
+   */
   const onNukeHero = () => {
     if (!canNukeHero || !rngRef.current) return;
     const result = nukeHero(state, me, rngRef.current, byId);
     if (result.steps.length === 0) return;
+
     /**
      * Online, the server owns the game: work out the swings here, but send
      * them (and the end of the turn) as real actions and let its answers play
@@ -2417,6 +2542,7 @@ export const PlayBoard = ({
       if (result.state.status === 'playing') online.send({ type: 'EndTurn' });
       return;
     }
+
     let cur = result.state;
     const lines = result.steps.map((s) =>
       describeEvents(
@@ -2427,6 +2553,7 @@ export const PlayBoard = ({
         modeRef.current !== 'hotseat' ? '0' : null,
       ),
     );
+
     const heard = result.steps.flatMap((s) => s.events);
     if (cur.status === 'playing') {
       const r = applyAction(
@@ -2434,6 +2561,7 @@ export const PlayBoard = ({
         { type: 'EndTurn' },
         { rng: rngRef.current, catalog: byId },
       );
+
       if (!('error' in r)) {
         lines.push(
           describeEvents(
@@ -2444,22 +2572,29 @@ export const PlayBoard = ({
             modeRef.current !== 'hotseat' ? '0' : null,
           ),
         );
+
         heard.push(...r.events);
         cur = r.state;
       }
     }
+
     setSelection(null);
     (document.activeElement as HTMLElement | null)?.blur?.();
+
     // "Attack hero" swings every attacker in turn: each is thrown at the hero,
     // one after another, then the turn passes.
     if (!reducedMotion()) {
       const swings = heard.filter(
         (e) => e.type === 'MinionAttacked' || e.type === 'WeaponAttacked',
       );
+
       const weaponBefore = state.players[me].weapon;
       const weaponSwing = swings.findIndex((e) => e.type === 'WeaponAttacked');
-      if (weaponBefore && weaponSwing >= 0 && !cur.players[me].weapon)
+
+      if (weaponBefore && weaponSwing >= 0 && !cur.players[me].weapon) {
         holdBrokenWeapon(me, weaponBefore, weaponSwing * NUKE_STAGGER_MS);
+      }
+
       swings.forEach((e, i) => {
         setTimeout(() => {
           const from = nodes.current.get(
@@ -2473,13 +2608,18 @@ export const PlayBoard = ({
         }, i * NUKE_STAGGER_MS);
       });
     }
+
     setState(cur);
     playSounds(soundsFor(heard));
     setLog((old) => [...old, ...lines].slice(-100));
   };
 
-  const canAttack = (m: MinionInstance) =>
-    actions.some((a) => a.type === 'Attack' && a.attackerId === m.instanceId);
+  const canAttack = (m: MinionInstance) => {
+    return actions.some(
+      (a) => a.type === 'Attack' && a.attackerId === m.instanceId,
+    );
+  };
+
   const heroCanSwing = actions.some((a) => a.type === 'WeaponAttack');
 
   const clickMinion = (owner: PlayerId, m: MinionInstance) => {
@@ -2493,6 +2633,7 @@ export const PlayBoard = ({
       );
     }
   };
+
   /**
    * Click a skill button: an untargeted skill is used at once; a targeted one
    * is selected and then aimed.
@@ -3372,7 +3513,9 @@ export const PlayBoard = ({
           : selection
             ? `h${me}`
             : null;
+
   const sourceEl = sourceKey ? nodes.current.get(sourceKey) : undefined;
+
   /**
    * The arrow always follows the pointer; a legal target under it is shown by
    * highlighting that target.
@@ -3865,15 +4008,7 @@ export const PlayBoard = ({
                 />
               </div>
             )}
-            <button
-              type="button"
-              disabled={over || !myTurn}
-              className={styles.endTurn}
-              title={titleIf(a11y, 'Space')}
-              onClick={() => dispatch({ type: 'EndTurn' })}
-            >
-              End turn
-            </button>
+
             {over ? (
               <>
                 <strong className={styles.banner}>
@@ -3909,21 +4044,19 @@ export const PlayBoard = ({
                   : ''}
               </small>
             )}
+
             {message && <span className={styles.error}>{message}</span>}
-            {canNukeHero && (
-              <button
-                type="button"
-                className={styles.attackHero}
-                title={titleIf(
-                  a11y,
-                  'Attack the enemy hero with every ready minion, left to right, then end your turn (Shift+Space)',
-                )}
-                onClick={onNukeHero}
-              >
-                Attack hero
-              </button>
-            )}
+
+            <TurnControls
+              a11y={a11y}
+              canNukeHero={canNukeHero}
+              endTurnDisabled={over || !myTurn}
+              myTurn={myTurn}
+              onAttackHeroClick={onNukeHero}
+              onEndTurnClick={() => dispatch({ type: 'EndTurn' })}
+            />
           </div>
+
           <section className={styles.side}>
             <div
               className={cx(
@@ -4003,6 +4136,7 @@ export const PlayBoard = ({
               );
             })()}
           </div>
+
           {a11y && (
             <div className={styles.controls}>
               {untargetedPlays.map((a, i) => (

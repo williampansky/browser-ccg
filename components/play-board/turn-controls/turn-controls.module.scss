@@ -1,0 +1,32 @@
+/* Buttons.css */
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  justify-content: flex-start;
+  flex-flow: row nowrap;
+}
+
+.slideWrapper {
+  display: grid;
+  grid-template-columns: 0fr;
+  opacity: 0;
+  transform: translateX(100vw);
+  transition:
+    grid-template-columns 150ms ease,
+    margin-left 150ms ease,
+    opacity 300ms ease,
+    transform 200ms ease;
+}
+
+.slideWrapper.open {
+  grid-template-columns: 1fr;
+  margin-left: 0.5rem; /* Animates the gap smoothly */
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slideInner {
+  overflow: hidden;
+  white-space: nowrap;
+}

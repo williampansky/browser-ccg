@@ -17,6 +17,7 @@ export const gameConfig: GameConfig = {
     maxNumberOfDecks: 10,
     numberOfPlayers: 2,
   },
+  showAttackHeroButton: true,
 };
 
 export const sitePages: Pages = {

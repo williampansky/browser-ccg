@@ -5,6 +5,7 @@ export interface GameConfig {
     entourage: number;
     game: number;
   };
+  
   numerics: {
     actionPointsPerTurn: number;
     actionPointsTotal: number;
@@ -15,6 +16,9 @@ export interface GameConfig {
     maxNumberOfDecks: number;
     numberOfPlayers: number;
   };
+
+  /** When enabled, shows a "Attack Hero" button when available */
+  showAttackHeroButton?: boolean;
 }
 
 export interface Page {

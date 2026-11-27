@@ -1024,38 +1024,6 @@ $po-green: var(--po-c, #5fd16a);
   color: #5fd16a;
 }
 
-.endTurn {
-  // Its own place in the strip, apart from the text (lmdba align, lmdbdx / lmdbdy nudge).
-  order: var(--mid-bpo, 0);
-  margin-left: var(--mid-bpl, 0px);
-  position: var(--mid-bpp, static);
-  left: 50%;
-  top: 50%;
-  translate: calc(var(--mid-bpsx, 0px) + var(--mid-bdx, 0px))
-    calc(var(--mid-bpsy, 0px) + var(--mid-bdy, 0px));
-  padding: var(--mid-by, 8px) var(--mid-bx, 19px);
-  border-radius: var(--mid-br, 6px);
-  border: 1px solid var(--mid-bb, #5a8cf0);
-  background: var(--mid-bc, #3b6fd4);
-  color: var(--mid-bt, inherit);
-  font-size: calc(1em * var(--mid-bs, 1));
-  font-weight: var(--mid-bw, 700);
-  cursor: pointer;
-
-  &:not(:disabled) {
-    box-shadow: 0 0 var(--mid-bg, 0px) var(--mid-bc, #3b6fd4);
-  }
-
-  &:not(:disabled):hover {
-    filter: brightness(var(--mid-bh, 1));
-  }
-
-  &:disabled {
-    opacity: var(--mid-bd, 0.4);
-    cursor: not-allowed;
-  }
-}
-
 .endGameButton {
   padding: var(--mid-by, 16px) var(--mid-bx, 39px);
   border-radius: var(--mid-br, 6px);
@@ -1218,23 +1186,6 @@ $po-green: var(--po-c, #5fd16a);
 
 .previewText {
   font-size: 1rem;
-}
-
-// "Attack hero" sits at the right end of the middle strip, opposite End turn.
-.attackHero {
-  margin-left: auto;
-  padding: 0.5rem 1.2rem;
-  border-radius: 6px;
-  border: 1px solid #ff8a8a;
-  background: #b83a3a;
-  color: inherit;
-  font-weight: 700;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
 }
 
 // A cast spell flashes in the middle of the screen, then fades. Red-ringed when the enemy cast it.
@@ -1562,6 +1513,7 @@ $po-green: var(--po-c, #5fd16a);
   z-index: 10;
   display: none;
   gap: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 @media (max-width: 1100px) {
