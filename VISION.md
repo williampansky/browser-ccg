@@ -57,6 +57,9 @@ release; v1.0.0 is the game around it:
 - **A card pack shop, for real money:** PRIME packs that give random PRIME cards.
 - **A collection-only currency:** duplicate PRIME cards beyond the copy limit (2, or 1 for a Mythic) can be destroyed
   for it, and it buys unowned cards.
+- **A free path:** playing live games earns that currency, more for a win and less for a loss. A live game is a queue
+  match against a player, or against the bot the queue gives you after its timeout; the "Skip the queue" checkbox and
+  local play earn nothing.
 - **Rank and level tracking** per class and per account, and a **global leaderboard**.
 - **Class skills 2 and 3** (the third is an ultimate) for every class, added slowly and balance-tested; today only
   skill 1 is active.
