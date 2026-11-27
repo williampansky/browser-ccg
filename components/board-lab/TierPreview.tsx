@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ParsedUrlQuery } from 'querystring';
 import type { LayoutTier } from '../play-board/layout-css';
 import { PHONE_PARAM } from '../play-board/use-is-phone';
@@ -15,9 +15,28 @@ export const TIER_SIZE: Record<LayoutTier, { height: number; width: number }> =
     small: { height: 760, width: 1647 },
   };
 
-const PREVIEW_DELAY_MS = 400;
+const PREVIEW_DELAY_MS = 800;
 const MAX_WIDTH_SHARE = 0.55;
 const MAX_HEIGHT_SHARE = 0.8;
+const FREEZE_STYLE_ID = 'tier-preview-freeze';
+const FREEZE_CSS =
+  '*, *::before, *::after { animation: none !important; ' +
+  'transition: none !important; }';
+
+/** Adds or removes the style that stops every animation in the preview. */
+const setFrozen = (
+  frame: HTMLIFrameElement | null,
+  isFrozen: boolean,
+): void => {
+  const doc = frame?.contentDocument;
+  if (!doc) return;
+  doc.getElementById(FREEZE_STYLE_ID)?.remove();
+  if (!isFrozen) return;
+  const style = doc.createElement('style');
+  style.id = FREEZE_STYLE_ID;
+  style.textContent = FREEZE_CSS;
+  doc.head.appendChild(style);
+};
 
 /** The lab's current setup and knobs as a /play/local URL. */
 const previewUrl = (query: ParsedUrlQuery, tier: LayoutTier): string => {
@@ -27,6 +46,9 @@ const previewUrl = (query: ParsedUrlQuery, tier: LayoutTier): string => {
     if (key !== 'dev' && text !== undefined) params.set(key, text);
   });
   if (tier === 'small') params.set(PHONE_PARAM, 'phone');
+  // The preview only checks layout; a second full-window WebGL canvas for
+  // spell effects would keep the GPU busy for nothing.
+  params.set('fx', 'off');
 
   return `/play/local?${params.toString()}`;
 };
@@ -48,14 +70,20 @@ export const TierPreview = ({
 }) => {
   const url = previewUrl(query, tier);
   const [src, setSrc] = useState(url);
+  const [isAutoRefresh, setIsAutoRefresh] = useState(true);
+  const [isFrozen, setIsFrozen] = useState(true);
+  const frameRef = useRef<HTMLIFrameElement>(null);
   const [viewport, setViewport] = useState({ height: 800, width: 1400 });
   const { height, width } = TIER_SIZE[tier];
 
   useEffect(() => {
+    if (!isAutoRefresh) return;
     const timer = setTimeout(() => setSrc(url), PREVIEW_DELAY_MS);
 
     return () => clearTimeout(timer);
-  }, [url]);
+  }, [isAutoRefresh, url]);
+
+  useEffect(() => setFrozen(frameRef.current, isFrozen), [isFrozen]);
 
   useEffect(() => {
     const measure = () =>
@@ -94,9 +122,37 @@ export const TierPreview = ({
           close
         </a>
       </div>
+      <div style={{ display: 'flex', gap: 12, marginBottom: 4 }}>
+        <label>
+          <input
+            checked={isAutoRefresh}
+            onChange={(event) => setIsAutoRefresh(event.target.checked)}
+            type="checkbox"
+          />{' '}
+          Auto-refresh
+        </label>
+        <label>
+          <input
+            checked={isFrozen}
+            onChange={(event) => setIsFrozen(event.target.checked)}
+            type="checkbox"
+          />{' '}
+          Freeze animations
+        </label>
+        {!isAutoRefresh && (
+          <a
+            style={{ cursor: 'pointer', color: '#7aa2ff' }}
+            onClick={() => setSrc(url)}
+          >
+            refresh
+          </a>
+        )}
+      </div>
       <div style={{ height: height * scale, width: width * scale }}>
         <iframe
           key={tier}
+          onLoad={() => setFrozen(frameRef.current, isFrozen)}
+          ref={frameRef}
           src={src}
           title="Board preview"
           style={{

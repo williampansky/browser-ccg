@@ -99,6 +99,11 @@ a.ui-btn {
   border-color: var(--ui-danger-border);
 }
 
+.ui-btn.ui-btn--sm {
+  padding: var(--ui-btn-sm-pad);
+  font-size: 0.75rem;
+}
+
 // A switch row: a label and the switch. State is `aria-checked`, so it is both the accessible and the visual truth.
 .ui-toggle {
   display: flex;

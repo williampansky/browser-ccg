@@ -1,0 +1,1 @@
+export { CollectionCardSizeControl } from './CollectionCardSizeControl';

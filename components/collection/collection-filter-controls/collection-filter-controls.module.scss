@@ -1,0 +1,42 @@
+@import '../../../styles/abstracts/breakpoints';
+@import '../../../styles/mixins/breakpoint';
+@import '../../../styles/mixins/filter-row';
+
+.filters {
+  @include filter-row;
+}
+
+.count {
+  @include filter-count;
+}
+
+.links {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+
+.links .link {
+  height: var(--ui-control-h);
+  padding: var(--ui-btn-sm-pad);
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.clearButton {
+  margin-left: auto;
+}
+
+// Shown in the filters dialog only on a large screen: below that the header
+// above the grid already has the card count and size.
+.largeOnly {
+  display: none;
+
+  @include breakpoint('large') {
+    display: revert;
+  }
+}

@@ -1,0 +1,12 @@
+// The row of filter controls above a card grid (collection, deck builder). The
+// row itself (flex, gap, control height) is the `ui-controls` class.
+@mixin filter-row {
+  display: flex;
+  padding-bottom: 0.5rem;
+}
+
+// The "N cards" label, pushed to the right end of the row.
+@mixin filter-count {
+  margin-left: auto;
+  opacity: 0.7;
+}
