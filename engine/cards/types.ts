@@ -36,6 +36,13 @@ export interface CardNumbers {
   overcharge?: number;
 }
 
+/**
+ * How a card reaches a player: `STARTER` is unlocked free with its class,
+ * `COLLECTIBLE` is earned from packs or crafting, `REWARD` unlocks by playing
+ * and `NONE` cannot be obtained (tokens, retired cards).
+ */
+export type Availability = 'STARTER' | 'COLLECTIBLE' | 'REWARD' | 'NONE';
+
 export interface Card {
   /** e.g. `CORE_063`, or `CORE_057a` for an entourage token */
   id: string;
@@ -93,7 +100,8 @@ export interface Card {
    * and count as active).
    */
   active: boolean;
-  collectible: boolean;
+  /** How a player gets this card; absent in the data means `NONE` */
+  availability: Availability;
   /**
    * Hero key (`WARRIOR`) that alone may put this card in its deck; absent for a
    * neutral card (`%CLASS_NONE%`).

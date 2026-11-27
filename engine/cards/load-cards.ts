@@ -1,4 +1,5 @@
 import type {
+  Availability,
   Card,
   CardIssue,
   CardIssueCode,
@@ -62,6 +63,18 @@ export function stripSymbol(value: unknown): string | undefined {
  * older `%CLASS_HERO_WARRIOR%` form still maps to its class. `undefined` for
  * `%CLASS_NONE%` or anything that is not a class.
  */
+const AVAILABILITIES: Availability[] = [
+  'STARTER',
+  'COLLECTIBLE',
+  'REWARD',
+  'NONE',
+];
+
+/** The card's `availability`; anything missing or unknown means `NONE`. */
+function readAvailability(value: unknown): Availability {
+  return AVAILABILITIES.find((option) => option === value) ?? 'NONE';
+}
+
 function readHeroClass(value: unknown): string | undefined {
   const symbol = stripSymbol(value);
   if (!symbol) return undefined;
@@ -371,7 +384,7 @@ function normaliseCard(
     isToken,
     elite: raw.elite === true,
     active: raw.active === true,
-    collectible: raw.collectible === true,
+    availability: readAvailability(raw.availability),
   };
 
   const heroClass = readHeroClass(raw.cardClass);

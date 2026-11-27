@@ -18,7 +18,6 @@ export const Minion = ({ isSelected = false, ...card }: ReactMinionProps) => {
     basePower,
     booleans,
     canPlay,
-    collectible,
     currentCost,
     description,
     displayHealth,

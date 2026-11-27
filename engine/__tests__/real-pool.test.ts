@@ -229,7 +229,12 @@ describe('the PRIME pool (opt-in, kept apart from CORE)', () => {
   });
   it('leaves out an unnamed card and an inactive card even if its stats need no code', () => {
     const plain = cards.find(
-      (c) => c.source === 'prime' && !needsBehaviour(c) && c.active && c.name,
+      (c) =>
+        c.source === 'prime' &&
+        !needsBehaviour(c) &&
+        c.active &&
+        c.name &&
+        !c.heroClass,
     )!;
     expect(primePool([plain])).toHaveLength(1);
     expect(primePool([{ ...plain, name: undefined }])).toHaveLength(0);

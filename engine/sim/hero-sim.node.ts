@@ -1,11 +1,14 @@
 /**
- * Hero balance report. Usage: `npm run sim:heroes -- [games]`
+ * Hero balance report. Usage: `npm run sim:heroes -- [games] [core]`
  * Hero against hero (every playable class plus "no hero") on the same base
  * deck, one of twelve seeded random Core + Prime decks (`sim-decks.ts`). Each
  * class's side has up to ten of its class cards swapped in, so both sides share
  * the rest of the deck and differ by class. `games` is per hero pair per deck
  * (alternating seats). Prints the hero grid, each hero's overall rate and each
  * hero's rate by deck. Greedy bot on both sides.
+ *
+ * With `core`, the decks are Core only and no class cards are swapped in (Core
+ * has none), so heroes differ by skill alone: the starter deck situation.
  */
 import { chooseGreedyAction } from '../bots/greedy-bot';
 import { loadHsCards } from '../cards/load-hs-cards';
@@ -16,6 +19,7 @@ import { playMatchup } from './simulate';
 
 const gamesArg = process.argv.slice(2).find((arg) => /^\d+$/.test(arg));
 const games = Number(gamesArg ?? 20);
+const isCoreOnly = process.argv.slice(2).includes('core');
 const DECK_COUNT = 12;
 const NO_HERO = 'NONE';
 const COLUMN_WIDTH = 16;
@@ -30,7 +34,9 @@ if (!Number.isInteger(games) || games < 2)
 const { byId, cards } = loadHsCards();
 const catalog = withHeroTokens(byId);
 const decks = simDecks(
-  [...playablePool(cards), ...primePool(cards)],
+  isCoreOnly
+    ? playablePool(cards)
+    : [...playablePool(cards), ...primePool(cards)],
   DECK_COUNT,
 );
 const names = [...heroes().map((hero) => hero.id), NO_HERO];
@@ -39,7 +45,9 @@ const started = Date.now();
 const rate = (value: number): string => `${(value * 100).toFixed(0)}%`;
 
 const deckFor = (name: string, base: string[], seed: number): string[] =>
-  name === NO_HERO ? base : classDeck(base, classCardsFor(cards, name), seed);
+  name === NO_HERO || isCoreOnly
+    ? base
+    : classDeck(base, classCardsFor(cards, name), seed);
 
 const wins = new Map<string, number>();
 const total = new Map<string, number>();
@@ -91,7 +99,7 @@ decks.forEach((base, deckIndex) => {
 });
 
 console.log(
-  `Hero vs hero on the same base deck, class cards swapped in, ${decks.length} random decks x ${games} games per pair (seats alternating), greedy bot\n`,
+  `Hero vs hero on the same base deck, ${isCoreOnly ? 'Core only, no class cards (skills alone)' : 'class cards swapped in'}, ${decks.length} random decks x ${games} games per pair (seats alternating), greedy bot\n`,
 );
 console.log(
   ''.padEnd(COLUMN_WIDTH) +

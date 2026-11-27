@@ -127,7 +127,7 @@ const toCard = (fields, classSymbolById, isEntourage) => {
     playType: fields.playType,
     playContext: fields.playContext && wrapSymbol(fields.playContext),
     targetingArrowText: fields.targetingText,
-    collectible: fields.collectible ?? false,
+    availability: fields.availability,
     active: fields.active ?? false,
     elite: fields.elite,
     entourage: fields.entourage,

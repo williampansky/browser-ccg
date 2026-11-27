@@ -35,7 +35,7 @@ const token = (
   isToken: true,
   elite: false,
   active: true,
-  collectible: false,
+  availability: 'NONE',
 });
 
 export const HERO_TOKENS: Card[] = [

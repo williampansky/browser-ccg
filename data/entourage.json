@@ -8,7 +8,7 @@
     "cost": 4,
     "attack": 4,
     "health": 5,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "elite": true,
     "isEntourage": true
@@ -29,7 +29,7 @@
     "numberSecondary": 2,
     "playType": "GLOBAL",
     "playContext": "%SUMMON%",
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "entourage": "PRIME_125c",
     "artistName": "a-ravlik",
@@ -48,7 +48,7 @@
     "cost": 2,
     "attack": 2,
     "health": 2,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -70,7 +70,7 @@
     "mechanics": [
       "%BULWARK%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -91,7 +91,7 @@
     ],
     "numberPrimary": 1,
     "numberSecondary": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -114,7 +114,7 @@
       "%SPELL_DAMAGE%"
     ],
     "numberPrimary": 1,
-    "collectible": false,
+    "availability": "STARTER",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -131,7 +131,7 @@
     "cost": 4,
     "attack": 4,
     "health": 5,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "elite": true,
     "isEntourage": true
@@ -146,7 +146,7 @@
     "cost": 1,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "flavor": "One of the Bubbulgosh brothers.",
     "artistName": "Rexard",
@@ -164,7 +164,7 @@
     "cost": 1,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "flavor": "One of the Bubbulgosh brothers.",
     "artistName": "Rexard",
@@ -182,7 +182,7 @@
     "cost": 0,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -198,7 +198,7 @@
     "cost": 1,
     "attack": 2,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "isEntourage": true
   },
@@ -212,7 +212,7 @@
     "cost": 1,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -235,7 +235,7 @@
     "numberSecondary": 2,
     "playType": "GLOBAL",
     "playContext": "%SUMMON%",
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "entourage": "PRIME_111c",
     "artistName": "a-ravlik",
@@ -255,7 +255,7 @@
     ],
     "playType": "GLOBAL",
     "playContext": "%SUMMON%",
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "isEntourage": true
   },
@@ -276,7 +276,7 @@
     "numberSecondary": 2,
     "playType": "GLOBAL",
     "playContext": "%BUFF%",
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -292,7 +292,7 @@
     "cost": 1,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "isEntourage": true
   },
@@ -308,7 +308,7 @@
     ],
     "playType": "TARGETED",
     "playContext": "%SUMMON%",
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "isEntourage": true
   },
@@ -329,7 +329,7 @@
     "playType": "TARGETED",
     "playContext": "%DAMAGE%",
     "targetingArrowText": "Deal %NUM1% damage",
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -351,7 +351,7 @@
     "mechanics": [
       "%BULWARK%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -373,7 +373,7 @@
     "numberPrimary": 1,
     "playType": "TARGETED",
     "playContext": "%DAMAGE%",
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "isEntourage": true
   },
@@ -387,7 +387,7 @@
     "cost": 1,
     "attack": 2,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -407,7 +407,7 @@
     "mechanics": [
       "%BULWARK%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "isEntourage": true
   },
@@ -425,7 +425,7 @@
     "mechanics": [
       "%BULWARK%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -442,7 +442,7 @@
     "cost": 0,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "STARTER",
     "active": true,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -459,7 +459,7 @@
     "attack": 3,
     "health": 2,
     "targetingArrowText": "Attack for 3 damage.",
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -481,7 +481,7 @@
     "mechanics": [
       "%RUSH%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -499,7 +499,7 @@
     "cost": 0,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "STARTER",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -521,7 +521,7 @@
     "mechanics": [
       "%RUSH%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -542,7 +542,7 @@
     ],
     "numberPrimary": 4,
     "playContext": "%BUFF%",
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "isEntourage": true
   },
@@ -556,7 +556,7 @@
     "attack": 3,
     "health": 2,
     "targetingArrowText": "Attack for 3 damage.",
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -576,7 +576,7 @@
     "mechanics": [
       "%RUSH%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -593,7 +593,7 @@
     "attack": 1,
     "health": 4,
     "targetingArrowText": "Attack for 1 damage.",
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -610,7 +610,7 @@
     "cost": 4,
     "attack": 4,
     "health": 5,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "elite": true,
     "isEntourage": true
@@ -627,7 +627,7 @@
       "%DRAW_CARD%"
     ],
     "playType": "GLOBAL",
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "isEntourage": true
   },
@@ -641,7 +641,7 @@
     "attack": 3,
     "health": 4,
     "targetingArrowText": "Attack for 5 damage.",
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "artistName": "pasilan",
     "artistUrl": "https://graphicriver.net/user/pasilan",
@@ -658,7 +658,7 @@
     "cost": 0,
     "attack": 2,
     "health": 2,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -681,7 +681,7 @@
     "playType": "TARGETED",
     "playContext": "%DAMAGE%",
     "targetingArrowText": "Deal %NUM1% damage",
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -703,7 +703,7 @@
     "mechanics": [
       "%RUSH%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -724,7 +724,7 @@
     "mechanics": [
       "%BULWARK%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -746,7 +746,7 @@
     "mechanics": [
       "%BULWARK%"
     ],
-    "collectible": false,
+    "availability": "STARTER",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -762,7 +762,7 @@
     "cost": 4,
     "attack": 7,
     "health": 6,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "isEntourage": true
   },
@@ -776,7 +776,7 @@
     "cost": 2,
     "attack": 3,
     "health": 2,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -797,7 +797,7 @@
     "mechanics": [
       "%BULWARK%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -818,7 +818,7 @@
     "mechanics": [
       "%RUSH%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -838,7 +838,7 @@
     "mechanics": [
       "%CANT_TARGET%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "isEntourage": true
   },
@@ -859,7 +859,7 @@
     "numberSecondary": 1,
     "playType": "GLOBAL",
     "playContext": "%BUFF%",
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -876,7 +876,7 @@
     "cost": 1,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -892,7 +892,7 @@
     "cost": 0,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "isEntourage": true
   },
@@ -908,7 +908,7 @@
     ],
     "playType": "GLOBAL",
     "playContext": "%SUMMON%",
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "isEntourage": true
   },
@@ -926,7 +926,7 @@
     "numberPrimary": 3,
     "playType": "TARGETED",
     "playContext": "%DAMAGE%",
-    "collectible": false,
+    "availability": "NONE",
     "active": false,
     "isEntourage": true
   },
@@ -940,7 +940,7 @@
     "cost": 0,
     "attack": 1,
     "health": 3,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -958,7 +958,7 @@
     "cost": 2,
     "attack": 2,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -975,7 +975,7 @@
     "cost": 0,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -992,7 +992,7 @@
     "cost": 1,
     "attack": 2,
     "health": 2,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -1011,7 +1011,7 @@
       "%RETURN%"
     ],
     "playContext": "%RETURN%",
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "isEntourage": true
   },
@@ -1030,7 +1030,7 @@
     "playType": "TARGETED",
     "playContext": "%BOON%",
     "targetingArrowText": "+1/+1 one turn only",
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -1047,7 +1047,7 @@
     "cost": 4,
     "attack": 4,
     "health": 5,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "elite": true,
     "isEntourage": true
@@ -1062,7 +1062,7 @@
     "cost": 0,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "Rexard",
     "artistUrl": "https://graphicriver.net/user/rexard",
@@ -1080,7 +1080,7 @@
     "cost": 1,
     "attack": 4,
     "health": 2,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -1097,7 +1097,7 @@
     "cost": 0,
     "attack": 1,
     "health": 1,
-    "collectible": false,
+    "availability": "STARTER",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -1121,7 +1121,7 @@
       "%ON_END%"
     ],
     "numberPrimary": 1,
-    "collectible": false,
+    "availability": "STARTER",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -1138,7 +1138,7 @@
     "cost": 4,
     "attack": 4,
     "health": 5,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "elite": true,
     "isEntourage": true
@@ -1154,7 +1154,7 @@
     "cost": 0,
     "attack": 6,
     "health": 6,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -1171,7 +1171,7 @@
     "cost": 0,
     "attack": 1,
     "health": 2,
-    "collectible": false,
+    "availability": "STARTER",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -1192,7 +1192,7 @@
     "mechanics": [
       "%BULWARK%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",
@@ -1208,7 +1208,7 @@
     "cost": 3,
     "attack": 3,
     "health": 3,
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "isEntourage": true
   },
@@ -1226,7 +1226,7 @@
     "mechanics": [
       "%HIDDEN%"
     ],
-    "collectible": false,
+    "availability": "NONE",
     "active": true,
     "artistName": "a-ravlik",
     "artistUrl": "https://graphicriver.net/user/a-ravlik",

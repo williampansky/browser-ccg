@@ -152,7 +152,7 @@ describe('loadCards: normalisation', () => {
             id: 'CORE_901',
             active: true,
             elite: true,
-            collectible: true,
+            availability: 'STARTER',
           }),
         ],
         prime: [spell({ id: 'PRIME_901' })],
@@ -165,13 +165,13 @@ describe('loadCards: normalisation', () => {
     expect(byId.get('CORE_901')).toMatchObject({
       active: true,
       elite: true,
-      collectible: true,
+      availability: 'STARTER',
       isToken: false,
     });
     expect(byId.get('PRIME_901')).toMatchObject({
       active: false,
       elite: false,
-      collectible: false,
+      availability: 'NONE',
     });
     expect(byId.get('CORE_901a')).toMatchObject({
       active: false,

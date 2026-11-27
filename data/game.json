@@ -13,7 +13,7 @@
     "numberPrimary": 1,
     "playType": "GLOBAL",
     "playContext": "%ENERGY%",
-    "collectible": false,
+    "availability": "STARTER",
     "active": true,
     "howToEarn": "Start a match as the second player.",
     "howToEarnGolden": "Start match with a deck filled only with golden cards.",

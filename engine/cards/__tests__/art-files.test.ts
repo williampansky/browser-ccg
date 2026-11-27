@@ -70,6 +70,12 @@ describe('SET_PRIME art', () => {
       'PRIME_253a',
       'PRIME_254',
       'PRIME_254a',
+      'PRIME_273',
+      'PRIME_274',
+      'PRIME_275',
+      'PRIME_276',
+      'PRIME_277',
+      'PRIME_278',
     ];
 
     for (const c of (

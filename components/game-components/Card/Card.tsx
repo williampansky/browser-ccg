@@ -34,7 +34,6 @@ export const Card = ({ isSelected = false, ...card }: ReactCardProps) => {
     basePower,
     booleans,
     canPlay,
-    collectible,
     currentCost,
     description,
     displayHealth,

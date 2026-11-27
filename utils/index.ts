@@ -8,7 +8,6 @@ export { default as cardWasHealed } from './card-was-healed';
 export { default as cx } from './cx';
 export { default as createArtistHtmlLink } from './create-artist-html-link';
 export { default as createCardKey } from './create-card-key';
-export { default as createCardObject } from './create-card-object';
 export { default as createMarkup } from './create-markup';
 export { default as elementIsNotUndefined } from './element-is-not-undefined';
 export { default as filterArray } from './filter-array';

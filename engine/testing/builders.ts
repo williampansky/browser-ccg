@@ -37,7 +37,7 @@ const baseCard = (
   isToken: false,
   elite: false,
   active: true,
-  collectible: true,
+  availability: 'COLLECTIBLE',
 });
 
 export const minionCard = (id: string, o: MinionOpts = {}): Card => ({

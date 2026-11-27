@@ -77,15 +77,12 @@ export interface CardStateBooleans {
 }
 
 /**
- * Base card information from the database/API, which gets
- * converted into a Card interface via the `createCardObject` util.
- * @see createCardObject
+ * Base card information from the database/API.
  */
 export interface CardBase {
   active?: boolean;
   artistName?: string;
   artistUrl?: string;
-  collectible?: boolean;
   cost: number;
   description?: string;
   elite?: boolean;
@@ -201,7 +198,6 @@ export interface Card {
   basePower: number;
   booleans: CardStateBooleans;
   canPlay: boolean;
-  collectible: boolean;
   currentCost: number;
   description?: string;
   destroyedOnTurn?: number;
