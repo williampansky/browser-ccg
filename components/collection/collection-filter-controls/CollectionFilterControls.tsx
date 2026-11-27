@@ -82,6 +82,17 @@ export const CollectionFilterControls = ({
   const hasActiveFilters = isFiltered(filters) || art !== 'all';
   const canClear = hasActiveFilters || isShowingTokens;
 
+  const cardCostSegmentOptions = COSTS.map((cost) => ({
+    label: cost === 'all' ? 'All' : cost,
+    value: cost,
+  }));
+
+  const cardSizeSegmentOptions = SIZES.map((option) => ({
+    label: option.label,
+    title: `${option.label} cards`,
+    value: option.id,
+  }));
+
   const setFilter = <K extends keyof CollectionFilters>(key: K) => {
     return (value: CollectionFilters[K]): void => {
       set(key, value);
@@ -109,13 +120,16 @@ export const CollectionFilterControls = ({
       <div className={`${styles.filters} ui-controls`}>
         <TextInput
           aria-label="Search"
+          id="cardName"
           onChange={(event) => set('search', event.target.value)}
           placeholder="Search name, id or text (comma-separate several)"
           type="search"
           value={filters.search}
         />
+
         <Select
           aria-label="Card set"
+          id="cardSet"
           onChange={handleOnSelectChange(setFilter('set'))}
           value={filters.set}
         >
@@ -125,8 +139,10 @@ export const CollectionFilterControls = ({
             </option>
           ))}
         </Select>
+
         <Select
           aria-label="Card type"
+          id="cardType"
           onChange={handleOnSelectChange(setFilter('type'))}
           value={filters.type}
         >
@@ -136,8 +152,10 @@ export const CollectionFilterControls = ({
             </option>
           ))}
         </Select>
+
         <Select
           aria-label="Rarity"
+          id="CardRarity"
           onChange={handleOnSelectChange(setFilter('rarity'))}
           value={filters.rarity}
         >
@@ -148,8 +166,10 @@ export const CollectionFilterControls = ({
             </option>
           ))}
         </Select>
+
         <Select
           aria-label="Minion race"
+          id="cardRace"
           onChange={handleOnSelectChange(setFilter('race'))}
           value={filters.race}
         >
@@ -160,8 +180,10 @@ export const CollectionFilterControls = ({
             </option>
           ))}
         </Select>
+
         <Select
           aria-label="Class"
+          id="cardClass"
           onChange={handleOnSelectChange(setFilter('hero'))}
           value={filters.hero}
         >
@@ -173,8 +195,10 @@ export const CollectionFilterControls = ({
             </option>
           ))}
         </Select>
+
         <Select
           aria-label="Effect"
+          id="cardEffect"
           onChange={handleOnSelectChange(setFilter('effect'))}
           value={filters.effect}
         >
@@ -189,17 +213,16 @@ export const CollectionFilterControls = ({
 
       <div className={`${styles.filters} ui-controls`}>
         <SegmentedControl
-          ariaLabel="Mana cost"
+          ariaLabel="Card cost"
           chips
           onChange={(cost) => set('cost', cost)}
-          options={COSTS.map((cost) => ({
-            label: cost === 'all' ? 'All' : cost,
-            value: cost,
-          }))}
+          options={cardCostSegmentOptions}
           value={filters.cost}
         />
+
         <Select
           aria-label="Sort by"
+          id="sortBy"
           onChange={handleOnSelectChange(setSort)}
           value={sort}
         >
@@ -209,8 +232,10 @@ export const CollectionFilterControls = ({
             </option>
           ))}
         </Select>
+
         <Checkbox
           checked={isShowingTokens}
+          id="showTokens"
           onChange={onShowTokensChange}
           title="Also show the summoned and offered entourage cards"
         >
@@ -220,6 +245,7 @@ export const CollectionFilterControls = ({
         {isDebug && (
           <Select
             aria-label="Art status (dev only)"
+            id="cardArtStatus"
             onChange={handleOnSelectChange(setArt)}
             title="Dev only"
             value={art}
@@ -244,15 +270,11 @@ export const CollectionFilterControls = ({
           ariaLabel="Card size"
           chips
           onChange={onPickSizeChange}
-          options={SIZES.map((option) => ({
-            label: option.label,
-            title: `${option.label} cards`,
-            value: option.id,
-          }))}
+          options={cardSizeSegmentOptions}
           value={size}
         />
 
-        <div>
+        <div className={styles.links}>
           <Link href="/deckbuilder">
             <a>Deck builder</a>
           </Link>
