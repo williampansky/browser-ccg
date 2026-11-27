@@ -155,7 +155,7 @@ export const siteConfig: SiteConfig = {
   longName: 'Browser-CCG',
   pages: sitePages,
   footerButtons: footerButtons,
-  version: '0.1.4',
+  version: '0.1.5',
   disableRightClick: true,
 };
 

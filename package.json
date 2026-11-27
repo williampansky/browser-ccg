@@ -1,6 +1,6 @@
 {
   "name": "browser-ccg",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -48,6 +48,7 @@
     "mathjs": "^11.2.1",
     "next": "^12.3.2",
     "next-svgr": "^0.0.2",
+    "pixelfx": "https://codeload.github.com/patch-gg/pixelfx/tar.gz/5294518ce7c72e48b6100a744596e0acf57f2826",
     "pixi.js": "^7.4.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

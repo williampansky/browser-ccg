@@ -15,7 +15,7 @@ import type { SpellFxTune } from './spell-fx-tune';
  * - `area`: plays once over a side of the board (or both), for a global spell
  *   such as a damage-all.
  *
- * Add a base here, in `pixi-fx.ts` (its drawing) and in `spellFxMs`.
+ * Add a base here, in `pixi-fx/` (its drawing) and in `spellFxMs`.
  */
 export type SpellFxKind = 'travel' | 'strike' | 'spot' | 'area';
 
@@ -78,13 +78,21 @@ export const SKILL_FX: Record<string, SpellFxKind> = {
  */
 export const CARD_FX: Record<string, SpellFxKind> = {
   CORE_068: 'area',
+  CORE_072: 'area',
   CORE_092: 'spot',
   CORE_098: 'area',
+  CORE_111: 'spot',
   CORE_115: 'spot',
+  CORE_120: 'spot',
   PRIME_116: 'area',
+  PRIME_150: 'area',
+  PRIME_162: 'spot',
   PRIME_172: 'spot',
   PRIME_201: 'strike',
   PRIME_202: 'strike',
+  PRIME_240: 'strike',
+  PRIME_257: 'strike',
+  PRIME_272: 'spot',
 };
 
 /**

@@ -1,7 +1,7 @@
 import { SPELL_FX_SPRITES } from './spell-fx-sprites';
 
 /**
- * The numbers and options behind the spell effects in `pixi-fx.ts`, grouped by
+ * The numbers and options behind the spell effects in `pixi-fx/`, grouped by
  * the base they belong to (`travel`, `strike`, `spot`; `burst` is shared).
  * `SPELL_FX_DEFAULTS` is the saved look; the spells lab (`/spells-lab`) edits it
  * live through `s_<field>` URL params (`parseSpellTune`). Every effect is handed
@@ -108,8 +108,28 @@ export interface SpellFxTune {
   spotWidth: number;
   /** Spot: corners of each ring (6 = a hexagon, 48 or so = a circle) */
   spotSides: number;
-  /** Spot: how the rings move (open outward, close inward, or pulse in place) */
-  spotRingsMotion: 'out' | 'in' | 'pulse';
+  /**
+   * Spot: how the rings move (open outward, close inward, pulse in place, or
+   * close while sliding down)
+   */
+  spotRingsMotion: 'out' | 'in' | 'pulse' | 'descend';
+  /** Spot, descending rings: how far above and below the spot one starts and ends (px) */
+  spotDescendStart: number;
+  spotDescendEnd: number;
+  /** Spot, descending rings: the shift right of the spot at the start and the end (px) */
+  spotDescendStartX: number;
+  spotDescendEndX: number;
+  /** Spot, descending rings: the size they close to (px radius) and how round they end (0 = keep their height, 1 = fully round) */
+  spotDescendEndRadius: number;
+  spotDescendRound: number;
+  /** Spot, descending rings: the share of their life spent travelling (the rest they hold on the end point, fading) */
+  spotDescendArrive: number;
+  /** Spot: squashes every ring's height (1 = round, 0.3 = a flat halo) */
+  spotRingSquash: number;
+  /** Spot: where it plays, on the spell's target or on every minion of a side */
+  spotAnchor: 'target' | 'enemy-minions' | 'my-minions' | 'all-minions';
+  /** Spot: the delay from one minion to the next when it plays on several (ms) */
+  spotStagger: number;
   /** Spot: the tint inside each ring (0 = none) */
   spotFillAlpha: number;
   /** Spot: how soft the first ring is (blur in px, 0 = crisp lines) */
@@ -127,6 +147,9 @@ export interface SpellFxTune {
   spotGlowScale: number;
   /** Spot option: sparks flying out, and how many */
   spotHasSparks: boolean;
+  /** Spot sparks: use their own colour (hex, no #) instead of the later rings' colour */
+  spotHasSparkColour: boolean;
+  spotSparkColour: string;
   spotSparkCount: number;
   /** Spot sparks: where they go (rising ones start staggered) */
   spotSparkMotion: 'outward' | 'rising' | 'inward';
@@ -179,6 +202,24 @@ export interface SpellFxTune {
   burstCount: number;
   burstLife: number;
   burstScale: number;
+  /** Impact sparks: how fast they fly (1 = the default speed) */
+  burstSpeed: number;
+  /** Impact sparks: use their own colour (hex, no #) instead of the default */
+  burstHasColour: boolean;
+  burstColour: string;
+  /** Finisher on a hit (travel and strike): a bloom of light (size, 0 = none) and its life (ms) */
+  finishFlash: number;
+  finishFlashMs: number;
+  /** Finisher: an expanding ring (reach px, 0 = none), its life (ms), line width (px) and height (1 = round) */
+  finishRing: number;
+  finishRingMs: number;
+  finishRingWidth: number;
+  finishRingSquash: number;
+  /** Finisher: sparkles that linger and drift up (how many, 0 = none) and for how long (ms) */
+  finishLinger: number;
+  finishLingerMs: number;
+  /** Finisher: the colour of the bloom, ring and sparkles (hex, no #) */
+  finishColour: string;
 }
 
 /**
@@ -194,7 +235,8 @@ export const SPELL_FX_CHOICES: Partial<
   areaFall: ['down', 'up'],
   areaRegion: ['enemy', 'mine', 'both'],
   areaDirection: ['right', 'left', 'out'],
-  spotRingsMotion: ['out', 'in', 'pulse'],
+  spotRingsMotion: ['out', 'in', 'pulse', 'descend'],
+  spotAnchor: ['target', 'enemy-minions', 'my-minions', 'all-minions'],
   spotSparkMotion: ['outward', 'rising', 'inward'],
 };
 
@@ -260,6 +302,16 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   spotWidth: 6,
   spotSides: 6,
   spotRingsMotion: 'out',
+  spotDescendStart: 80,
+  spotDescendEnd: 80,
+  spotDescendStartX: 0,
+  spotDescendEndX: 0,
+  spotDescendEndRadius: 16,
+  spotDescendRound: 0,
+  spotDescendArrive: 1,
+  spotRingSquash: 1,
+  spotAnchor: 'target',
+  spotStagger: 60,
   spotFillAlpha: 0.1,
   spotRingBlur: 0,
   spotRingBlurStep: 0,
@@ -270,6 +322,8 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   spotHasGlow: true,
   spotGlowScale: 3,
   spotHasSparks: true,
+  spotHasSparkColour: false,
+  spotSparkColour: 'ffd76a',
   spotSparkCount: 14,
   spotSparkMotion: 'outward',
   spotSparkSpeed: 0.22,
@@ -305,6 +359,18 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   burstCount: 18,
   burstLife: 420,
   burstScale: 0.55,
+  burstSpeed: 1,
+  burstHasColour: false,
+  burstColour: 'ffd27a',
+  finishFlash: 0,
+  finishFlashMs: 260,
+  finishRing: 0,
+  finishRingMs: 420,
+  finishRingWidth: 4,
+  finishRingSquash: 0.8,
+  finishLinger: 0,
+  finishLingerMs: 900,
+  finishColour: 'ffd27a',
 };
 
 /**
@@ -348,6 +414,54 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     spotSparkScale: 0.4,
     spotSparkSpread: 60,
   },
+  CORE_001: {
+    travelMs: 300,
+    travelArc: 0.03,
+    travelEase: 3.1,
+    travelColour: '55f21c',
+    travelStretch: 2,
+    travelTrailPerFrame: 8,
+    travelTrailLife: 60,
+    travelTrailScale: 0.25,
+    travelTrailSpread: 0,
+    travelTrailDrift: 0,
+    travelTrailColour: '2c9325',
+  },
+  CORE_006: {
+    travelMs: 1200,
+    travelHaloScale: 0.6,
+    travelArc: 0.4,
+    travelEase: 4,
+    travelColour: '47ffc8',
+    travelTrailColour: '29ff4c',
+  },
+  CORE_053: {
+    travelMs: 150,
+    travelArc: 0.15,
+    travelEase: 1.4,
+    travelHasSprite: true,
+    sprite: 'dagger-purple',
+    spriteSize: 69,
+    spriteTurn: -15,
+    spriteDepth: 4,
+    travelTrailPerFrame: 8,
+    travelTrailLife: 490,
+    travelTrailScale: 0.35,
+    travelTrailSpread: 8,
+    travelTrailDrift: 0.12,
+    travelTrailColour: 'bfbfbf',
+    volleyDelay: 100,
+    burstCount: 6,
+    burstScale: 0.4,
+    finishFlash: 3.4,
+    finishFlashMs: 410,
+    finishRing: 55,
+    finishRingWidth: 1,
+    finishRingSquash: 0.2,
+    finishLinger: 6,
+    finishLingerMs: 560,
+    finishColour: 'e7a3ff',
+  },
   CORE_058: {
     travelMs: 170,
     travelHaloScale: 0.95,
@@ -365,6 +479,26 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     burstCount: 60,
     burstLife: 550,
     burstScale: 0.2,
+  },
+  CORE_060: {
+    travelMs: 250,
+    travelHaloScale: 0.9,
+    travelCoreScale: 0.65,
+    travelPulse: 0.1,
+    travelArc: 0,
+    travelEase: 1.1,
+    travelColour: 'ff6347',
+    travelStretch: 4,
+    travelTrailColour: 'ffdb29',
+    finishFlash: 2.5,
+    finishFlashMs: 400,
+    finishRing: 74,
+    finishRingMs: 100,
+    finishRingWidth: 1,
+    finishRingSquash: 1,
+    finishLinger: 10,
+    finishLingerMs: 380,
+    finishColour: 'ffa97a',
   },
   CORE_063: {
     travelMs: 690,
@@ -417,6 +551,35 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     burstLife: 680,
     burstScale: 0.5,
   },
+  CORE_072: {
+    areaMs: 1010,
+    areaImpactMs: 1080,
+    areaPad: 89,
+    areaColour: '9c1c8b',
+    areaAccentColour: 'e2a2cd',
+    areaBlur: 3,
+    areaEmbers: 175,
+    areaShake: 0,
+    areaHasFlash: false,
+    areaFlash: 0.22,
+    areaArms: 2,
+    areaTurns: 2.2,
+    areaWidth: 18,
+    areaRings: 1,
+    areaRingGap: 600,
+  },
+  CORE_083: {
+    travelMs: 1200,
+    travelHaloScale: 2.2,
+    travelCoreScale: 1.2,
+    travelPulse: 0.09,
+    travelEase: 4,
+    travelColour: 'ffccfd',
+    travelStretch: 1.3,
+    travelTrailPerFrame: 8,
+    travelTrailLife: 900,
+    travelTrailColour: 'f39af9',
+  },
   CORE_092: {
     sprite: 'mind-circle',
     spriteSize: 45,
@@ -458,6 +621,18 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     areaSpin: 0.6,
     burstCount: 35,
   },
+  CORE_111: {
+    sprite: 'skull-beast',
+    spriteSize: 65,
+    spotLife: 770,
+    spotRadius: 73,
+    spotSides: 18,
+    spotRingBlur: 8,
+    spotColour: '43e545',
+    spotAccentColour: '317f15',
+    spotHasSprite: true,
+    spotSpriteRise: 10,
+  },
   CORE_115: {
     spotLife: 550,
     spotRadius: 110,
@@ -473,6 +648,21 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     spotHasSparks: false,
     spotSparkMotion: 'inward',
     spotSparkSpread: 200,
+  },
+  CORE_120: {
+    travelEase: 0.5,
+    spotLife: 400,
+    spotRadius: 80,
+    spotRings: 3,
+    spotRingGap: 205,
+    spotWidth: 20,
+    spotSides: 13,
+    spotRingsMotion: 'pulse',
+    spotFillAlpha: 0.15,
+    spotRingBlur: 10,
+    spotRingBlurStep: -6,
+    spotColour: 'f5d1ff',
+    spotAccentColour: 'cb3dff',
   },
   CORE_125: {
     travelMs: 170,
@@ -554,6 +744,48 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     areaDropSpeed: 0.1,
     volleyCount: 2,
     volleyDelay: 130,
+  },
+  PRIME_150: {
+    areaMs: 1700,
+    areaImpactMs: 1360,
+    areaPad: 115,
+    areaColour: 'ec6922',
+    areaAccentColour: 'ff8d5c',
+    areaBlur: 18,
+    areaEmbers: 229,
+    areaArms: 5,
+    areaTurns: 0.6,
+    areaSpin: 1,
+    areaWidth: 22,
+    burstCount: 35,
+  },
+  PRIME_162: {
+    spotLife: 500,
+    spotRadius: 129,
+    spotRings: 1,
+    spotWidth: 8,
+    spotSides: 5,
+    spotRingsMotion: 'descend',
+    spotDescendStart: 111,
+    spotDescendEnd: 40,
+    spotDescendEndX: 44,
+    spotDescendEndRadius: 20,
+    spotDescendRound: 1,
+    spotDescendArrive: 0.6,
+    spotRingSquash: 0.25,
+    spotAnchor: 'all-minions',
+    spotStagger: 200,
+    spotFillAlpha: 0.6,
+    spotRingBlur: 0.5,
+    spotColour: 'ffb8f2',
+    spotGlowScale: 5,
+    spotHasSparkColour: true,
+    spotSparkColour: 'ff00f7',
+    spotSparkMotion: 'rising',
+    spotSparkSpeed: 0.07,
+    spotSparkLife: 1500,
+    spotSparkScale: 0.15,
+    spotSparkSpread: 200,
   },
   PRIME_167: {
     travelMs: 400,
@@ -710,6 +942,15 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     burstLife: 680,
     burstScale: 0.5,
   },
+  PRIME_240: {
+    sprite: 'axe-double',
+    spriteSize: 78,
+    strikeAngle: 28,
+    strikeMs: 300,
+    strikeColour: 'cf5c2a',
+    strikeHasSprite: true,
+    strikeScreenFlash: 0.02,
+  },
   PRIME_245: {
     travelMs: 1200,
     travelHaloScale: 2.25,
@@ -738,6 +979,22 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     burstLife: 930,
     burstScale: 0.4,
   },
+  PRIME_257: {
+    strikeAngle: 53,
+    strikeJitter: 40,
+    strikeSway: 310,
+    strikeLife: 480,
+    strikeReroll: 40,
+    strikeDropout: 0.4,
+    strikeGlowScale: 3.4,
+    strikeColour: '2a67cf',
+    strikeBranchReach: 74,
+    strikeScreenFlash: 0.15,
+    volleyCount: 2,
+    volleyDelay: 55,
+    burstCount: 31,
+    burstLife: 1200,
+  },
   PRIME_265: {
     travelMs: 170,
     travelArc: 0.06,
@@ -756,6 +1013,22 @@ export const SPELL_FX_VARIANTS: Record<string, Partial<SpellFxTune>> = {
     volleyDelay: 400,
     burstCount: 6,
     burstScale: 0.4,
+  },
+  PRIME_272: {
+    sprite: 'white-skull',
+    spotRadius: 60,
+    spotRings: 1,
+    spotWidth: 10,
+    spotSides: 21,
+    spotRingBlur: 10.5,
+    spotColour: '78ff66',
+    spotHasSprite: true,
+    spotGlowScale: 8,
+    spotHasSparkColour: true,
+    spotSparkColour: '6aea34',
+    spotSparkSpeed: 0.12,
+    spotSparkLife: 1030,
+    spotSparkSpread: 86,
   },
   'RANGER:1': {
     travelMs: 300,

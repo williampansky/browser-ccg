@@ -3,6 +3,7 @@ import type { PixiFx } from './pixi-fx';
 import { spellFxMs } from './spell-fx';
 import { tuneForSpell } from './spell-fx-tune';
 import type { SpellFxTune } from './spell-fx-tune';
+import { scaleSpotTune } from './spot-anchor';
 import type { SpellFxKind } from './spell-fx';
 import type { HeroSwingSettings, SwingKind } from './hero-swing-tune';
 
@@ -415,12 +416,14 @@ export const spot = (
   tune: SpellFxTune,
   isSettled = false,
   delayMs = 0,
+  scale = 1,
 ): void => {
   const fx = pixiFx;
   if (reducedMotion() || !fx) return;
   const at = isSettled ? layoutCenter(target) : centerOf(target);
-  if (delayMs > 0) setTimeout(() => fx.spot(at, tune), delayMs);
-  else fx.spot(at, tune);
+  const scaled = scaleSpotTune(tune, scale);
+  if (delayMs > 0) setTimeout(() => fx.spot(at, scaled), delayMs);
+  else fx.spot(at, scaled);
 };
 
 /**

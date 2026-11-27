@@ -11,6 +11,7 @@ type ChoiceKey =
   | 'areaFall'
   | 'areaRegion'
   | 'areaStyle'
+  | 'spotAnchor'
   | 'strikeStyle'
   | 'spotRingsMotion'
   | 'spotSparkMotion'
@@ -441,6 +442,32 @@ export const SPELL_GROUPS: SpellGroup[] = [
     ],
   },
   {
+    title: 'Where it plays',
+    kinds: ['spot'],
+    choices: [
+      {
+        field: 'spotAnchor',
+        label: 'Plays on',
+        options: [
+          { value: 'target', label: "The spell's target (or your hero)" },
+          { value: 'enemy-minions', label: 'Every enemy minion' },
+          { value: 'my-minions', label: 'Every minion of yours' },
+          { value: 'all-minions', label: 'Every minion on the board' },
+        ],
+      },
+    ],
+    knobs: [
+      {
+        field: 'spotStagger',
+        label: 'Delay from one minion to the next (ms)',
+        min: 0,
+        max: 400,
+        step: 5,
+        when: (tune) => tune.spotAnchor !== 'target',
+      },
+    ],
+  },
+  {
     title: 'Rings',
     kinds: ['spot'],
     choices: [
@@ -451,6 +478,7 @@ export const SPELL_GROUPS: SpellGroup[] = [
           { value: 'out', label: 'Open outward' },
           { value: 'in', label: 'Close inward' },
           { value: 'pulse', label: 'Pulse in place' },
+          { value: 'descend', label: 'Close while sliding down' },
         ],
       },
     ],
@@ -467,6 +495,64 @@ export const SPELL_GROUPS: SpellGroup[] = [
         step: 10,
       },
       { field: 'spotRadius', label: 'Reach (px)', min: 30, max: 400 },
+      {
+        field: 'spotDescendStart',
+        label: 'Starts above the spot (px)',
+        min: 0,
+        max: 300,
+        when: (tune) => tune.spotRingsMotion === 'descend',
+      },
+      {
+        field: 'spotDescendEnd',
+        label: 'Ends below the spot (px)',
+        min: 0,
+        max: 300,
+        when: (tune) => tune.spotRingsMotion === 'descend',
+      },
+      {
+        field: 'spotDescendStartX',
+        label: 'Starts to the right of the spot (px, - = left)',
+        min: -300,
+        max: 300,
+        when: (tune) => tune.spotRingsMotion === 'descend',
+      },
+      {
+        field: 'spotDescendEndX',
+        label: 'Ends to the right of the spot (px, - = left)',
+        min: -300,
+        max: 300,
+        when: (tune) => tune.spotRingsMotion === 'descend',
+      },
+      {
+        field: 'spotDescendEndRadius',
+        label: 'Closes to a radius of (px)',
+        min: 4,
+        max: 200,
+        when: (tune) => tune.spotRingsMotion === 'descend',
+      },
+      {
+        field: 'spotDescendArrive',
+        label: 'Arrives at this share of its life (1 = at the very end)',
+        min: 0.2,
+        max: 1,
+        step: 0.05,
+        when: (tune) => tune.spotRingsMotion === 'descend',
+      },
+      {
+        field: 'spotDescendRound',
+        label: 'Turns round by the end (0 = keeps its height)',
+        min: 0,
+        max: 1,
+        step: 0.05,
+        when: (tune) => tune.spotRingsMotion === 'descend',
+      },
+      {
+        field: 'spotRingSquash',
+        label: 'Height (1 = round, lower = flat halo)',
+        min: 0.1,
+        max: 1,
+        step: 0.05,
+      },
       { field: 'spotRings', label: 'Rings', min: 1, max: 5 },
       {
         field: 'spotRingGap',
@@ -571,6 +657,14 @@ export const SPELL_GROUPS: SpellGroup[] = [
         max: 200,
       },
     ],
+  },
+  {
+    title: 'Spark colour',
+    kinds: ['spot'],
+    when: (tune) => tune.spotHasSparks,
+    flag: { field: 'spotHasSparkColour', label: 'Choose the spark colour' },
+    colours: [{ field: 'spotSparkColour', label: 'Spark colour' }],
+    knobs: [],
   },
   {
     title: 'Region and timing',
@@ -787,6 +881,86 @@ export const SPELL_GROUPS: SpellGroup[] = [
         min: 0.1,
         max: 2,
         step: 0.05,
+      },
+      {
+        field: 'burstSpeed',
+        label: 'Spark speed (1 = default)',
+        min: 0.2,
+        max: 3,
+        step: 0.05,
+      },
+    ],
+  },
+  {
+    title: 'Spark colour',
+    kinds: ['travel', 'strike'],
+    flag: { field: 'burstHasColour', label: 'Choose the spark colour' },
+    colours: [{ field: 'burstColour', label: 'Spark colour' }],
+    knobs: [],
+  },
+  {
+    title: 'Finisher',
+    kinds: ['travel', 'strike'],
+    colours: [{ field: 'finishColour', label: 'Finisher colour' }],
+    knobs: [
+      {
+        field: 'finishFlash',
+        label: 'Bloom of light, size (0 = none)',
+        min: 0,
+        max: 8,
+        step: 0.1,
+      },
+      {
+        field: 'finishFlashMs',
+        label: 'Bloom lasts (ms)',
+        min: 60,
+        max: 1000,
+        step: 10,
+        when: (tune) => tune.finishFlash > 0,
+      },
+      {
+        field: 'finishRing',
+        label: 'Shockwave ring, reach (px, 0 = none)',
+        min: 0,
+        max: 300,
+      },
+      {
+        field: 'finishRingMs',
+        label: 'Ring lasts (ms)',
+        min: 100,
+        max: 1200,
+        step: 10,
+        when: (tune) => tune.finishRing > 0,
+      },
+      {
+        field: 'finishRingWidth',
+        label: 'Ring line thickness (px)',
+        min: 1,
+        max: 20,
+        step: 0.5,
+        when: (tune) => tune.finishRing > 0,
+      },
+      {
+        field: 'finishRingSquash',
+        label: 'Ring height (1 = round)',
+        min: 0.2,
+        max: 1,
+        step: 0.05,
+        when: (tune) => tune.finishRing > 0,
+      },
+      {
+        field: 'finishLinger',
+        label: 'Lingering sparkles (0 = none)',
+        min: 0,
+        max: 80,
+      },
+      {
+        field: 'finishLingerMs',
+        label: 'Sparkles linger (ms)',
+        min: 200,
+        max: 2500,
+        step: 20,
+        when: (tune) => tune.finishLinger > 0,
       },
     ],
   },

@@ -86,6 +86,7 @@ import {
 } from './spell-fx';
 import { loadDelayDamage, saveDelayDamage } from './damage-delay';
 import { fxChain, tuneForSpell } from './spell-fx-tune';
+import { spotScaleFor, spotSides } from './spot-anchor';
 import type { PixiFx } from './pixi-fx';
 import minionStyles from './board-minion.module.scss';
 import {
@@ -1552,17 +1553,36 @@ export const PlayBoard = ({
         fxKind === 'spot' &&
         spellKey
       ) {
-        const spotNode = nodes.current.get(
-          'target' in action && action.target
-            ? targetKey(action.target)
-            : `h${state.activePlayer}`,
-        );
-        if (spotNode) {
-          const plays = Math.max(1, Math.round(fxTune.volleyCount));
+        const spotSideList = spotSides(fxTune.spotAnchor, state.activePlayer);
+        const spotKeys =
+          spotSideList.length > 0
+            ? spotSideList.flatMap((side) => {
+                return state.players[side].board.map((minion) => {
+                  return `m${minion.instanceId}`;
+                });
+              })
+            : [
+                'target' in action && action.target
+                  ? targetKey(action.target)
+                  : `h${state.activePlayer}`,
+              ];
+        const plays = Math.max(1, Math.round(fxTune.volleyCount));
+
+        spotKeys.forEach((spotKey, index) => {
+          const spotNode = nodes.current.get(spotKey);
+          if (!spotNode) return;
+          // The tune's pixel numbers are for the lab's minion; a minion of
+          // another size (a smaller layout) gets them scaled to match.
+          const scale = spotScaleFor(
+            spotKey.startsWith('m'),
+            spotNode.offsetWidth,
+          );
           for (let play = 0; play < plays; play++) {
-            spot(spotNode, fxTune, false, play * fxTune.volleyDelay);
+            const delay =
+              index * fxTune.spotStagger + play * fxTune.volleyDelay;
+            spot(spotNode, fxTune, false, delay, scale);
           }
-        }
+        });
       }
 
       /**

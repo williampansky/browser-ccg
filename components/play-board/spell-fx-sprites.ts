@@ -39,6 +39,7 @@ export const SPELL_FX_SPRITES: SpellFxSprite[] = [
   { id: 'shield-kite', label: 'Blue kite shield', tip: 90 },
   { id: 'shield-round', label: 'Round wooden shield', tip: -90 },
   { id: 'mind-circle', label: 'mind circle icon', tip: -45 },
+  { id: 'white-skull', label: 'white skull', tip: -45 },
 ];
 
 /** The picture with this id (the first one if it is not known). */
