@@ -252,6 +252,9 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
    `return` (callbacks such as `flatMap` included), not a wrapped expression. An arrow whose body fits on one line stays
    braceless (`(m) => m.attack >= 7`). A call whose arguments wrap (`.map(\n  (m) => ...\n)`) does not count as the arrow
    wrapping.
+   **A function that returns a function (curried handlers, `(key) => (value) => ...`) is not an exception:** write the outer
+   function with a block body and an explicit `return` of the inner one, never a chain of arrows. Prettier will happily keep
+   the chain, so this one is easy to miss; check for `=>` followed directly by another `(...) =>` when you finish a file.
 4. **No long inline conditions.** When a condition, filter or map callback spans several lines or chains more than two
    operations or comparisons, name the parts (a variable, or a small helper such as `isHiddenMinion`).
 5. **Blank lines:** a multi-line statement (a function, an `if` or loop block, a wrapped call) has a blank line before and
