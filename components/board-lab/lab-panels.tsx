@@ -572,7 +572,7 @@ export const EnergyPanel = ({
       ).map(([v, name]) => (
         <button
           key={v}
-          onClick={() => setParams({ leo: v === 'v' ? null : v })}
+          onClick={() => setParams({ leo: v })}
           style={{
             marginRight: 4,
             padding: '3px 10px',
