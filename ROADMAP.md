@@ -364,7 +364,7 @@ engine or loader change.
 
 **Phase 2: new-card and other tables (about 1 session).**
 A "new card" form that picks the next free id for a set and the
-`PRIME_NNNa` token naming (see "Tokens" in `CLAUDE.md`), and editing for
+`PRIME_NNNa` token naming (see "Tokens" in `data/CLAUDE.md`), and editing for
 skills, heroes, classes, mechanics and constants (the same field editor with a
 different schema each). Integrity tests: every `entourage` id exists, every
 class is one of `CLASS_KEYS`, ids are unique across files, art files exist (some
@@ -404,7 +404,7 @@ last and only if the `%SYMBOL%` shape bothers us. Phases 1 to 3 do not need it.
 
 **Retire Airtable (under 1 hour).**
 Remove `airtable.node.js`, the `airtable` script and `balance/airtable/`, the
-`AIRTABLE_*` env notes, and rewrite the Airtable sections of `CLAUDE.md`
+`AIRTABLE_*` env notes, and rewrite the Airtable sections of `CLAUDE.md` and `data/CLAUDE.md`
 (including the "never edit Airtable unasked" rule: git becomes the undo). Take
 one last pull first and keep the base as a read-only archive.
 

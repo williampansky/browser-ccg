@@ -57,7 +57,7 @@ this repository may have. Please don't copy, redistribute or reuse the images.
 - `npm test`, `npx tsc --noEmit -p .` (clean), `npm run build`
 - `npm run sim:heroes` and `npm run tune` - bot-vs-bot balance sims (see `CLAUDE.md`)
 - `npm run airtable` - re-pull the card data into `data/` (needs `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID`)
-- `/play/local` also takes debug URL params, e.g. `/play/local?first=0&p0=CORE_045` (see `CLAUDE.md`)
+- `/play/local` also takes debug URL params, e.g. `/play/local?first=0&p0=CORE_045` (see `components/play-board/CLAUDE.md`)
 
 ## Production
 
