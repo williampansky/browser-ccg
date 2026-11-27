@@ -44,12 +44,25 @@ Secondary:
 - **Mechanics are fine to reuse, names and art need care.** Before any commercial launch, the
   card names, flavor text and art need a provenance/licence review (see `CARD-AUDIT.md` section 6).
 
+## What "done" means: v1.0.0
+
+The author's definition (2026-11-27). The game itself is already in a good place for its original pre-expansion
+release; v1.0.0 is the game around it:
+
+- **User accounts**, replacing the per-browser localStorage profile and decks.
+- **Card collecting, per account:** CORE starts unlocked, PRIME is collectable (the acquisition column in Airtable is
+  not finished yet).
+- **A cosmetics shop, for real money:** hero skins (for example Zeus as a Wizard skin that changes the avatar), skill
+  cosmetics, sounds and similar.
+- **A card pack shop, for real money:** PRIME packs that give random PRIME cards.
+- **A collection-only currency:** duplicate PRIME cards beyond the copy limit (2, or 1 for a Mythic) can be destroyed
+  for it, and it buys unowned cards.
+- **Rank and level tracking** per class and per account, and a **global leaderboard**.
+- **Class skills 2 and 3** (the third is an ultimate) for every class, added slowly and balance-tested; today only
+  skill 1 is active.
+- **Further polish** on the UI, sounds, interactions and spells.
+
 ## Open questions
 
-- What "done" or success looks like (a playable beta, public launch, revenue?).
-- Monetization model, if any.
-- How literal to be with Hearthstone (classes, hero powers, exact keyword set) vs. the author's own
-  twists from `hsclone` (energy shield, Disable, Expiration, class skills).
-- Which cards from the current set (69), the old CORE set (132) and the old PRIME set (254) make the
-  cut for a first release.
-- What is out of scope.
+- How the shop, packs and currencies are set up (the model is cosmetics and PRIME packs; the details are not designed).
+- What is out of scope for v1.0.0 (not decided yet).

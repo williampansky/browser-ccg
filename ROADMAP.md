@@ -156,7 +156,7 @@ across with little change; the UI is where the upgrade work will be.
 ## Later
 
 - Store, collection and visuals polish (secondary per `VISION.md`)
-- Monetization (needs a decision first; see open questions in `VISION.md`)
+- Monetization: cosmetics and PRIME packs for real money (the shape of the shop is not designed yet; the v1.0.0 definition is in `VISION.md`)
 
 ## Way later: CI
 
