@@ -1,5 +1,10 @@
 import { ringState } from '../pixi-fx/spot';
-import { spotSides } from '../spot-anchor';
+import {
+  scaleSpotTune,
+  SPOT_REFERENCE_MINION_WIDTH,
+  spotScaleFor,
+  spotSides,
+} from '../spot-anchor';
 import { SPELL_FX_DEFAULTS } from '../spell-fx-tune';
 import type { SpellFxTune } from '../spell-fx-tune';
 
@@ -153,5 +158,49 @@ describe('descending ring hold', () => {
   it('keeps the swell and fade when it arrives at the very end', () => {
     expect(ringState(0.5, descending).alpha).toBeCloseTo(1);
     expect(ringState(0.1, descending).alpha).toBeLessThan(1);
+  });
+});
+
+describe('spot numbers follow the size of the minion', () => {
+  const tuned: SpellFxTune = {
+    ...SPELL_FX_DEFAULTS,
+    spotDescendEnd: 40,
+    spotDescendEndRadius: 26,
+    spotDescendEndX: 44,
+    spotDescendStart: 100,
+    spotLife: 700,
+    spotRadius: 120,
+    spotRingBlur: 3,
+    spotWidth: 8,
+  };
+
+  it('scales by the minion width over the lab minion width', () => {
+    expect(spotScaleFor(true, SPOT_REFERENCE_MINION_WIDTH)).toBe(1);
+    expect(spotScaleFor(true, SPOT_REFERENCE_MINION_WIDTH / 2)).toBe(0.5);
+  });
+
+  it('does not scale heroes or an element with no width', () => {
+    expect(spotScaleFor(false, 300)).toBe(1);
+    expect(spotScaleFor(true, 0)).toBe(1);
+  });
+
+  it('scales the pixel numbers and leaves timings and blur alone', () => {
+    const half = scaleSpotTune(tuned, 0.5);
+
+    expect(half.spotRadius).toBe(60);
+    expect(half.spotDescendEnd).toBe(20);
+    expect(half.spotDescendEndRadius).toBe(13);
+    expect(half.spotDescendEndX).toBe(22);
+    expect(half.spotDescendStart).toBe(50);
+    expect(half.spotWidth).toBe(4);
+    expect(half.spotLife).toBe(700);
+    expect(half.spotRingBlur).toBe(3);
+  });
+
+  it('returns the same tune at scale 1, and never changes the original', () => {
+    expect(scaleSpotTune(tuned, 1)).toBe(tuned);
+    scaleSpotTune(tuned, 2);
+
+    expect(tuned.spotRadius).toBe(120);
   });
 });

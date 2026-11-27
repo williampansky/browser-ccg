@@ -86,7 +86,7 @@ import {
 } from './spell-fx';
 import { loadDelayDamage, saveDelayDamage } from './damage-delay';
 import { fxChain, tuneForSpell } from './spell-fx-tune';
-import { spotSides } from './spot-anchor';
+import { spotScaleFor, spotSides } from './spot-anchor';
 import type { PixiFx } from './pixi-fx';
 import minionStyles from './board-minion.module.scss';
 import {
@@ -1554,28 +1554,33 @@ export const PlayBoard = ({
         spellKey
       ) {
         const spotSideList = spotSides(fxTune.spotAnchor, state.activePlayer);
-        const spotNodes =
+        const spotKeys =
           spotSideList.length > 0
             ? spotSideList.flatMap((side) => {
                 return state.players[side].board.map((minion) => {
-                  return nodes.current.get(`m${minion.instanceId}`);
+                  return `m${minion.instanceId}`;
                 });
               })
             : [
-                nodes.current.get(
-                  'target' in action && action.target
-                    ? targetKey(action.target)
-                    : `h${state.activePlayer}`,
-                ),
+                'target' in action && action.target
+                  ? targetKey(action.target)
+                  : `h${state.activePlayer}`,
               ];
         const plays = Math.max(1, Math.round(fxTune.volleyCount));
 
-        spotNodes.forEach((spotNode, index) => {
+        spotKeys.forEach((spotKey, index) => {
+          const spotNode = nodes.current.get(spotKey);
           if (!spotNode) return;
+          // The tune's pixel numbers are for the lab's minion; a minion of
+          // another size (a smaller layout) gets them scaled to match.
+          const scale = spotScaleFor(
+            spotKey.startsWith('m'),
+            spotNode.offsetWidth,
+          );
           for (let play = 0; play < plays; play++) {
             const delay =
               index * fxTune.spotStagger + play * fxTune.volleyDelay;
-            spot(spotNode, fxTune, false, delay);
+            spot(spotNode, fxTune, false, delay, scale);
           }
         });
       }
