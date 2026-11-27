@@ -82,6 +82,19 @@ export const CollectionFilterControls = ({
   const hasActiveFilters = isFiltered(filters) || art !== 'all';
   const canClear = hasActiveFilters || isShowingTokens;
 
+  const setFilter =
+    <K extends keyof CollectionFilters>(key: K) =>
+    (value: CollectionFilters[K]): void => {
+      set(key, value);
+    };
+
+  /** A Select's onChange: hands the chosen option to `apply` as type `T`. */
+  const handleOnSelectChange =
+    <T extends string>(apply: (value: T) => void) =>
+    (event: ChangeEvent<HTMLSelectElement>): void => {
+      apply(event.target.value as T);
+    };
+
   const setLabel = (option: string): string => {
     if (option === 'both') return 'Core + Prime';
     if (option === 'core') return `Core (${lengthOfCorePool})`;
@@ -101,9 +114,7 @@ export const CollectionFilterControls = ({
         />
         <Select
           aria-label="Card set"
-          onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-            set('set', event.target.value as CollectionFilters['set']);
-          }}
+          onChange={handleOnSelectChange(setFilter('set'))}
           value={filters.set}
         >
           {SETS.map((option) => (
@@ -114,9 +125,7 @@ export const CollectionFilterControls = ({
         </Select>
         <Select
           aria-label="Card type"
-          onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-            set('type', event.target.value as CollectionFilters['type']);
-          }}
+          onChange={handleOnSelectChange(setFilter('type'))}
           value={filters.type}
         >
           {TYPES.map((type) => (
@@ -127,7 +136,7 @@ export const CollectionFilterControls = ({
         </Select>
         <Select
           aria-label="Rarity"
-          onChange={(event) => set('rarity', event.target.value)}
+          onChange={handleOnSelectChange(setFilter('rarity'))}
           value={filters.rarity}
         >
           <option value="all">All rarities</option>
@@ -139,7 +148,7 @@ export const CollectionFilterControls = ({
         </Select>
         <Select
           aria-label="Minion race"
-          onChange={(event) => set('race', event.target.value)}
+          onChange={handleOnSelectChange(setFilter('race'))}
           value={filters.race}
         >
           <option value="all">All races</option>
@@ -151,7 +160,7 @@ export const CollectionFilterControls = ({
         </Select>
         <Select
           aria-label="Class"
-          onChange={(event) => set('hero', event.target.value)}
+          onChange={handleOnSelectChange(setFilter('hero'))}
           value={filters.hero}
         >
           <option value="all">All classes</option>
@@ -164,7 +173,7 @@ export const CollectionFilterControls = ({
         </Select>
         <Select
           aria-label="Effect"
-          onChange={(event) => set('effect', event.target.value)}
+          onChange={handleOnSelectChange(setFilter('effect'))}
           value={filters.effect}
         >
           <option value="all">Any effect</option>
@@ -189,9 +198,7 @@ export const CollectionFilterControls = ({
         />
         <Select
           aria-label="Sort by"
-          onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-            setSort(event.target.value as SortKey);
-          }}
+          onChange={handleOnSelectChange(setSort)}
           value={sort}
         >
           {SORTS.map((option) => (
@@ -211,9 +218,7 @@ export const CollectionFilterControls = ({
         {isDebug && (
           <Select
             aria-label="Art status (dev only)"
-            onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-              setArt(event.target.value as ArtFilter);
-            }}
+            onChange={handleOnSelectChange(setArt)}
             title="Dev only"
             value={art}
           >
