@@ -6,11 +6,6 @@ import type { PlayerProfile } from '../../player-profile/profile';
 import { saveLogCardTrigger, useLogCardTrigger } from '../log-card-trigger';
 import type { OnlineGame } from '../online/types';
 import type { Mode } from '../types';
-import {
-  effectiveSidebarMode,
-  saveSidebarMode,
-  useSidebarMode,
-} from '../sidebar-mode';
 import boardStyles from '../play-board.module.scss';
 import styles from './play-menu.module.scss';
 
@@ -66,7 +61,7 @@ export const PlayMenu = ({
   sideColor,
   turnLimit,
 }: Props) => {
-  const sidebarChoice = useSidebarMode();
+  const isDebug = process.env.NODE_ENV !== 'production';
   const logCardTrigger = useLogCardTrigger();
 
   return (
@@ -126,55 +121,48 @@ export const PlayMenu = ({
         <Group aria-label="Settings" className={styles.menuGroup}>
           <h4>Settings</h4>
           <Toggle checked={isSoundOn} label="Sound" onChange={onSoundChange} />
-          <Toggle
-            checked={isDamageDelayed}
-            label="Damage waits for effects"
-            onChange={onDamageDelayChange}
-          />
-          <Toggle
-            checked={isTimerOn}
-            label={`Turn timer (${turnLimit}s)`}
-            onChange={onTimerChange}
-          />
+
+          {isDebug && (
+            <Toggle
+              checked={isDamageDelayed}
+              label="Damage waits for effects"
+              onChange={onDamageDelayChange}
+            />
+          )}
+
+          {isDebug && (
+            <Toggle
+              checked={isTimerOn}
+              label={`Turn timer (${turnLimit}s)`}
+              onChange={onTimerChange}
+            />
+          )}
+
           <Toggle
             checked={isA11yOn}
             label="Accessibility mode"
             onChange={onA11yChange}
           />
-          <SegmentedControl
-            label="Log and deck"
-            onChange={saveSidebarMode}
-            options={[
-              {
-                label: 'Separate',
-                title: 'two panels',
-                value: 'separate' as const,
-              },
-              {
-                label: 'Connected',
-                title: 'one sidebar with a bar to drag between them',
-                value: 'connected' as const,
-              },
-            ]}
-            value={effectiveSidebarMode(sidebarChoice)}
-          />
-          <SegmentedControl
-            label="Card view from the log"
-            onChange={saveLogCardTrigger}
-            options={[
-              {
-                label: 'Right-click',
-                title: 'right-click a card name in the log',
-                value: 'rightClick' as const,
-              },
-              {
-                label: 'Click',
-                title: 'a single click on a card name in the log',
-                value: 'click' as const,
-              },
-            ]}
-            value={logCardTrigger}
-          />
+
+          {isDebug && (
+            <SegmentedControl
+              label="Card view from the log"
+              onChange={saveLogCardTrigger}
+              options={[
+                {
+                  label: 'Right-click',
+                  title: 'right-click a card name in the log',
+                  value: 'rightClick' as const,
+                },
+                {
+                  label: 'Click',
+                  title: 'a single click on a card name in the log',
+                  value: 'click' as const,
+                },
+              ]}
+              value={logCardTrigger}
+            />
+          )}
 
           {!online && (
             <>
