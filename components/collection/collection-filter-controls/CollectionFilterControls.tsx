@@ -31,6 +31,17 @@ import type {
 
 import styles from './collection-filter-controls.module.scss';
 
+const cardCostSegmentOptions = COSTS.map((cost) => ({
+  label: cost === 'all' ? 'All' : cost,
+  value: cost,
+}));
+
+const cardSizeSegmentOptions = SIZES.map((option) => ({
+  label: option.label,
+  title: `${option.label} cards`,
+  value: option.id,
+}));
+
 type FilterSet = <K extends keyof CollectionFilters>(
   key: K,
   value: CollectionFilters[K],
@@ -81,17 +92,6 @@ export const CollectionFilterControls = ({
   const races = raceOptions(pool);
   const hasActiveFilters = isFiltered(filters) || art !== 'all';
   const canClear = hasActiveFilters || isShowingTokens;
-
-  const cardCostSegmentOptions = COSTS.map((cost) => ({
-    label: cost === 'all' ? 'All' : cost,
-    value: cost,
-  }));
-
-  const cardSizeSegmentOptions = SIZES.map((option) => ({
-    label: option.label,
-    title: `${option.label} cards`,
-    value: option.id,
-  }));
 
   const setFilter = <K extends keyof CollectionFilters>(key: K) => {
     return (value: CollectionFilters[K]): void => {
