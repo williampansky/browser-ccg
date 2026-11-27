@@ -1,3 +1,4 @@
+import { sparkColour } from '../pixi-fx/context';
 import { flashState, hasFinisher, ringState } from '../pixi-fx/finisher';
 import { SPELL_FX_DEFAULTS } from '../spell-fx-tune';
 import type { SpellFxTune } from '../spell-fx-tune';
@@ -42,5 +43,26 @@ describe('finishers', () => {
     expect(end.alpha).toBe(0);
     expect(end.width).toBeLessThan(start.width);
     expect(end.width).toBeGreaterThan(0);
+  });
+});
+
+describe('spark colour', () => {
+  const GOLD = 0xffd27a;
+  const STRIKE = 0x112233;
+
+  it('keeps the old colours unless the tune has its own', () => {
+    expect(sparkColour(SPELL_FX_DEFAULTS, 'hit')).toBe(GOLD);
+    expect(sparkColour(SPELL_FX_DEFAULTS, 'hit', STRIKE)).toBe(STRIKE);
+  });
+
+  it('uses the tune colour over both when it is switched on', () => {
+    const own: SpellFxTune = {
+      ...SPELL_FX_DEFAULTS,
+      burstColour: 'c684ff',
+      burstHasColour: true,
+    };
+
+    expect(sparkColour(own, 'hit')).toBe(0xc684ff);
+    expect(sparkColour(own, 'heal', STRIKE)).toBe(0xc684ff);
   });
 });

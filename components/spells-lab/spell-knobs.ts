@@ -622,6 +622,14 @@ export const SPELL_GROUPS: SpellGroup[] = [
     ],
   },
   {
+    title: 'Spark colour',
+    kinds: ['spot'],
+    when: (tune) => tune.spotHasSparks,
+    flag: { field: 'spotHasSparkColour', label: 'Choose the spark colour' },
+    colours: [{ field: 'spotSparkColour', label: 'Spark colour' }],
+    knobs: [],
+  },
+  {
     title: 'Region and timing',
     kinds: ['area'],
     choices: [
@@ -845,6 +853,13 @@ export const SPELL_GROUPS: SpellGroup[] = [
         step: 0.05,
       },
     ],
+  },
+  {
+    title: 'Spark colour',
+    kinds: ['travel', 'strike'],
+    flag: { field: 'burstHasColour', label: 'Choose the spark colour' },
+    colours: [{ field: 'burstColour', label: 'Spark colour' }],
+    knobs: [],
   },
   {
     title: 'Finisher',

@@ -2,7 +2,7 @@ import { Application, BLEND_MODES, Graphics, Sprite, Texture } from 'pixi.js';
 
 import type { FlashTone } from '../motion';
 import { SPELL_FX_SPRITES, spriteUrl } from '../spell-fx-sprites';
-import { SPELL_FX_DEFAULTS } from '../spell-fx-tune';
+import { colourNumber, SPELL_FX_DEFAULTS } from '../spell-fx-tune';
 import type { SpellFxTune } from '../spell-fx-tune';
 
 import { createFinisher, hasFinisher } from './finisher';
@@ -34,6 +34,21 @@ const softTexture = (app: Application): Texture => {
 };
 
 const SCREEN_FLASH_MS = 140;
+
+/**
+ * The colour of a hit's sparks: the tune's own colour when it has one,
+ * otherwise what the caller asked for (a strike's colour), otherwise the
+ * colour of the hit's tone.
+ */
+export const sparkColour = (
+  tune: SpellFxTune,
+  tone: FlashTone,
+  override?: number,
+): number => {
+  if (tune.burstHasColour) return colourNumber(tune.burstColour);
+
+  return override ?? TONE_COLOUR[tone];
+};
 
 /** Creates the overlay canvas and the helpers every effect base shares. */
 export const createFxContext = (): FxContext => {
@@ -130,7 +145,7 @@ export const createFxContext = (): FxContext => {
     override?: number,
   ): void => {
     const { burstCount, burstLife, burstScale, burstSpeed } = tune;
-    const colour = override ?? TONE_COLOUR[tone];
+    const colour = sparkColour(tune, tone, override);
     const count = Math.round(burstCount);
     for (let spark = 0; spark < count; spark++) {
       const angle = (spark / count) * Math.PI * 2 + Math.random();

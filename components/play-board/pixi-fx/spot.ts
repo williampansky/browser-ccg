@@ -152,6 +152,9 @@ export const createSpot = (context: FxContext): PixiFx['spot'] => {
   const spot = (at: FxPoint, tune: SpellFxTune): void => {
     const steel = colourNumber(tune.spotColour);
     const gold = colourNumber(tune.spotAccentColour);
+    const sparkTint = tune.spotHasSparkColour
+      ? colourNumber(tune.spotSparkColour)
+      : gold;
     const rings = Math.max(1, Math.round(tune.spotRings));
     const squash = tune.spotRingSquash;
     const ringsTotal = tune.spotLife + (rings - 1) * tune.spotRingGap;
@@ -203,7 +206,7 @@ export const createSpot = (context: FxContext): PixiFx['spot'] => {
         const spark = sparks[sparkIndex++];
         spawn(
           spark.from,
-          gold,
+          sparkTint,
           tune.spotSparkScale,
           tune.spotSparkLife,
           spark.vx,

@@ -139,6 +139,9 @@ export interface SpellFxTune {
   spotGlowScale: number;
   /** Spot option: sparks flying out, and how many */
   spotHasSparks: boolean;
+  /** Spot sparks: use their own colour (hex, no #) instead of the later rings' colour */
+  spotHasSparkColour: boolean;
+  spotSparkColour: string;
   spotSparkCount: number;
   /** Spot sparks: where they go (rising ones start staggered) */
   spotSparkMotion: 'outward' | 'rising' | 'inward';
@@ -193,6 +196,9 @@ export interface SpellFxTune {
   burstScale: number;
   /** Impact sparks: how fast they fly (1 = the default speed) */
   burstSpeed: number;
+  /** Impact sparks: use their own colour (hex, no #) instead of the default */
+  burstHasColour: boolean;
+  burstColour: string;
   /** Finisher on a hit (travel and strike): a bloom of light (size, 0 = none) and its life (ms) */
   finishFlash: number;
   finishFlashMs: number;
@@ -303,6 +309,8 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   spotHasGlow: true,
   spotGlowScale: 3,
   spotHasSparks: true,
+  spotHasSparkColour: false,
+  spotSparkColour: 'ffd76a',
   spotSparkCount: 14,
   spotSparkMotion: 'outward',
   spotSparkSpeed: 0.22,
@@ -339,6 +347,8 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   burstLife: 420,
   burstScale: 0.55,
   burstSpeed: 1,
+  burstHasColour: false,
+  burstColour: 'ffd27a',
   finishFlash: 0,
   finishFlashMs: 260,
   finishRing: 0,
