@@ -1,4 +1,8 @@
 import Link from 'next/link';
+import type { ChangeEvent } from 'react';
+
+import { heroes } from '../../../engine';
+import type { Card } from '../../../engine';
 import {
   Button,
   Checkbox,
@@ -6,7 +10,6 @@ import {
   Select,
   TextInput,
 } from '../../ui';
-import styles from './collection-filter-controls.module.scss';
 import {
   ART_FILTERS,
   COSTS,
@@ -25,8 +28,8 @@ import type {
   SizeId,
   SortKey,
 } from '../collection-model';
-import { heroes } from '../../../engine';
-import type { Card } from '../../../engine';
+
+import styles from './collection-filter-controls.module.scss';
 
 type FilterSet = <K extends keyof CollectionFilters>(
   key: K,
@@ -35,27 +38,32 @@ type FilterSet = <K extends keyof CollectionFilters>(
 
 interface Props {
   art: ArtFilter;
-  debug: boolean;
   filters: CollectionFilters;
+  isDebug: boolean;
+  isShowingTokens: boolean;
   lengthOfCorePool: number;
   lengthOfPrimePool: number;
   onClearFiltersClick: () => void;
   onPickSizeChange: (id: SizeId) => void;
-  onShowTokensChange: (isShown: boolean) => void;
+  onShowTokensChange: (isShowing: boolean) => void;
   pool: Card[];
   set: FilterSet;
   setArt: (art: ArtFilter) => void;
   setSort: (sort: SortKey) => void;
   shown: Card[];
-  showTokens: boolean;
   size: SizeId;
   sort: SortKey;
 }
 
+/**
+ * The two rows of controls above the collection grid: search and dropdown
+ * filters, then cost, sort, the entourage switch, card count and card size.
+ */
 export const CollectionFilterControls = ({
   art,
-  debug,
   filters,
+  isDebug,
+  isShowingTokens,
   lengthOfCorePool,
   lengthOfPrimePool,
   onClearFiltersClick,
@@ -66,149 +74,158 @@ export const CollectionFilterControls = ({
   setArt,
   setSort,
   shown,
-  showTokens,
   size,
   sort,
 }: Props): JSX.Element => {
   const effects = effectOptions(pool);
   const races = raceOptions(pool);
+  const hasActiveFilters = isFiltered(filters) || art !== 'all';
+  const canClear = hasActiveFilters || isShowingTokens;
+
+  const setLabel = (option: string): string => {
+    if (option === 'both') return 'Core + Prime';
+    if (option === 'core') return `Core (${lengthOfCorePool})`;
+
+    return `Prime (${lengthOfPrimePool}, more coming)`;
+  };
 
   return (
     <div>
       <div className={`${styles.filters} ui-controls`}>
         <TextInput
-          type="search"
-          placeholder="Search name, id or text (comma-separate several)"
           aria-label="Search"
+          onChange={(event) => set('search', event.target.value)}
+          placeholder="Search name, id or text (comma-separate several)"
+          type="search"
           value={filters.search}
-          onChange={(e) => set('search', e.target.value)}
         />
         <Select
-          value={filters.set}
-          onChange={(e) =>
-            set('set', e.target.value as CollectionFilters['set'])
-          }
           aria-label="Card set"
+          onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+            set('set', event.target.value as CollectionFilters['set']);
+          }}
+          value={filters.set}
         >
-          {SETS.map((s) => (
-            <option key={s} value={s}>
-              {s === 'both'
-                ? 'Core + Prime'
-                : s === 'core'
-                  ? `Core (${lengthOfCorePool})`
-                  : `Prime (${lengthOfPrimePool}, more coming)`}
+          {SETS.map((option) => (
+            <option key={option} value={option}>
+              {setLabel(option)}
             </option>
           ))}
         </Select>
         <Select
-          value={filters.type}
-          onChange={(e) =>
-            set('type', e.target.value as CollectionFilters['type'])
-          }
           aria-label="Card type"
+          onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+            set('type', event.target.value as CollectionFilters['type']);
+          }}
+          value={filters.type}
         >
-          {TYPES.map((t) => (
-            <option key={t} value={t}>
-              {t === 'all' ? 'All types' : t}
+          {TYPES.map((type) => (
+            <option key={type} value={type}>
+              {type === 'all' ? 'All types' : type}
             </option>
           ))}
         </Select>
         <Select
-          value={filters.rarity}
-          onChange={(e) => set('rarity', e.target.value)}
           aria-label="Rarity"
+          onChange={(event) => set('rarity', event.target.value)}
+          value={filters.rarity}
         >
           <option value="all">All rarities</option>
-          {RARITIES.map((r) => (
-            <option key={r.id} value={r.id}>
-              {r.label}
+          {RARITIES.map((rarity) => (
+            <option key={rarity.id} value={rarity.id}>
+              {rarity.label}
             </option>
           ))}
         </Select>
         <Select
-          value={filters.race}
-          onChange={(e) => set('race', e.target.value)}
           aria-label="Minion race"
+          onChange={(event) => set('race', event.target.value)}
+          value={filters.race}
         >
           <option value="all">All races</option>
-          {races.map((r) => (
-            <option key={r.value} value={r.value}>
-              {r.label}
+          {races.map((race) => (
+            <option key={race.value} value={race.value}>
+              {race.label}
             </option>
           ))}
         </Select>
         <Select
-          value={filters.hero}
-          onChange={(e) => set('hero', e.target.value)}
           aria-label="Class"
+          onChange={(event) => set('hero', event.target.value)}
+          value={filters.hero}
         >
           <option value="all">All classes</option>
           <option value="neutral">Neutral</option>
-          {heroes().map((h) => (
-            <option key={h.id} value={h.id}>
-              {h.name} only
+          {heroes().map((hero) => (
+            <option key={hero.id} value={hero.id}>
+              {hero.name} only
             </option>
           ))}
         </Select>
         <Select
-          value={filters.effect}
-          onChange={(e) => set('effect', e.target.value)}
           aria-label="Effect"
+          onChange={(event) => set('effect', event.target.value)}
+          value={filters.effect}
         >
           <option value="all">Any effect</option>
-          {effects.map((x) => (
-            <option key={x.value} value={x.value}>
-              {x.label}
+          {effects.map((effect) => (
+            <option key={effect.value} value={effect.value}>
+              {effect.label}
             </option>
           ))}
         </Select>
       </div>
+
       <div className={`${styles.filters} ui-controls`}>
         <SegmentedControl
-          chips
           ariaLabel="Mana cost"
-          value={filters.cost}
-          onChange={(c) => set('cost', c)}
-          options={COSTS.map((c) => ({
-            label: c === 'all' ? 'All' : c,
-            value: c,
+          chips
+          onChange={(cost) => set('cost', cost)}
+          options={COSTS.map((cost) => ({
+            label: cost === 'all' ? 'All' : cost,
+            value: cost,
           }))}
+          value={filters.cost}
         />
         <Select
-          value={sort}
-          onChange={(e) => setSort(e.target.value as SortKey)}
           aria-label="Sort by"
+          onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+            setSort(event.target.value as SortKey);
+          }}
+          value={sort}
         >
-          {SORTS.map((s) => (
-            <option key={s.id} value={s.id}>
-              Sort: {s.label}
+          {SORTS.map((option) => (
+            <option key={option.id} value={option.id}>
+              Sort: {option.label}
             </option>
           ))}
         </Select>
         <Checkbox
-          checked={showTokens}
+          checked={isShowingTokens}
           onChange={onShowTokensChange}
           title="Also show the summoned and offered entourage cards"
         >
           Entourage
         </Checkbox>
 
-        {debug && (
+        {isDebug && (
           <Select
-            value={art}
-            onChange={(e) => setArt(e.target.value as ArtFilter)}
             aria-label="Art status (dev only)"
+            onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+              setArt(event.target.value as ArtFilter);
+            }}
             title="Dev only"
+            value={art}
           >
-            {ART_FILTERS.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.id === 'all' ? 'Art: any' : a.label}
+            {ART_FILTERS.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.id === 'all' ? 'Art: any' : option.label}
               </option>
             ))}
           </Select>
         )}
 
-        {(isFiltered(filters) || art !== 'all' || showTokens) && (
+        {canClear && (
           <Button onClick={onClearFiltersClick}>Clear filters</Button>
         )}
 
@@ -217,15 +234,15 @@ export const CollectionFilterControls = ({
         </span>
 
         <SegmentedControl
-          chips
           ariaLabel="Card size"
-          value={size}
+          chips
           onChange={onPickSizeChange}
-          options={SIZES.map((s) => ({
-            label: s.label,
-            value: s.id,
-            title: `${s.label} cards`,
+          options={SIZES.map((option) => ({
+            label: option.label,
+            title: `${option.label} cards`,
+            value: option.id,
           }))}
+          value={size}
         />
 
         <div>

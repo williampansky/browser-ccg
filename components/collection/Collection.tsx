@@ -1,26 +1,33 @@
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
+import type { CSSProperties } from 'react';
+
 import { classPool, loadHsCards, playablePool, primePool } from '../../engine';
+import type { Card } from '../../engine';
 import { CardDetailOverlay } from '../card-detail/CardDetailOverlay';
+import styles from '../deck-builder/deck-builder.module.scss';
+
 import { CollectionCard } from './CollectionCard';
+import { CollectionFilterControls } from './collection-filter-controls';
 import {
-  ArtFilter,
   DEFAULT_FILTERS,
   filterCards,
   fromQuery,
-  toQuery,
-  matchesArt,
   loadSize,
+  matchesArt,
   saveSize,
-  SizeId,
   sizeOf,
-  SortKey,
   sortCards,
+  toQuery,
 } from './collection-model';
-import type { CollectionFilters } from './collection-model';
+import type {
+  ArtFilter,
+  CollectionFilters,
+  SizeId,
+  SortKey,
+} from './collection-model';
+
 import gridStyles from './collection.module.scss';
-import styles from '../deck-builder/deck-builder.module.scss';
-import { CollectionFilterControls } from './collection-filter-controls';
 
 const { cards, byId } = loadHsCards();
 const corePool = playablePool(cards);
@@ -32,72 +39,75 @@ const pool = [...corePool, ...prime, ...classPool(cards)];
  * Shown only when the box is ticked; the Core/Prime set filter applies to them
  * too (by the set in their id).
  */
-const tokenPool = Array.from(byId.values()).filter(
-  (c) => c.isToken && c.active && c.name,
-);
+const isOfferedToken = (card: Card): boolean => {
+  return card.isToken && card.active && Boolean(card.name);
+};
+
+const tokenPool = Array.from(byId.values()).filter(isOfferedToken);
 
 /**
  * Every card the engine can play, browsable. There is no ownership yet, so the
  * collection is the whole pool.
  */
-export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
+export const Collection = ({
+  missingArt = [],
+}: {
+  missingArt?: string[];
+}): JSX.Element => {
   /**
    * Dev-only art tools: hidden in a production build. `missingArt` (ids with no
    * art file) comes from getStaticProps.
    */
-  const debug = process.env.NODE_ENV !== 'production';
+  const isDebug = process.env.NODE_ENV !== 'production';
   const missing = useMemo(() => new Set(missingArt), [missingArt]);
   const [art, setArt] = useState<ArtFilter>('all');
-  const [showTokens, setShowTokens] = useState(false);
+  const [isShowingTokens, setIsShowingTokens] = useState(false);
   const [filters, setFilters] = useState<CollectionFilters>(DEFAULT_FILTERS);
   const [sort, setSort] = useState<SortKey>('cost');
   const [size, setSize] = useState<SizeId>('medium');
   const [viewing, setViewing] = useState<string | null>(null);
+
   const set = <K extends keyof CollectionFilters>(
     key: K,
     value: CollectionFilters[K],
-  ) => setFilters((f) => ({ ...f, [key]: value }));
+  ) => setFilters((previous) => ({ ...previous, [key]: value }));
 
   /**
    * The filters live in the URL (?q=...&type=spell) so a refresh or a shared
-   * link keeps them. Read once the router knows
-   * the query (a static page has none on the first render), then written back
-   * on every change.
+   * link keeps them. Read once the router knows the query (a static page has
+   * none on the first render), then written back on every change.
    */
   const router = useRouter();
-  const [urlRead, setUrlRead] = useState(false);
+  const [isUrlRead, setIsUrlRead] = useState(false);
 
   useEffect(() => {
-    if (!router.isReady || urlRead) return;
-    const q = fromQuery(router.query);
-    setFilters(q.filters);
-    setSort(q.sort);
-    setArt(q.art);
-    setShowTokens(q.tokens);
-    setUrlRead(true);
-  }, [router.isReady, router.query, urlRead]);
+    if (!router.isReady || isUrlRead) return;
+    const saved = fromQuery(router.query);
+    setFilters(saved.filters);
+    setSort(saved.sort);
+    setArt(saved.art);
+    setIsShowingTokens(saved.tokens);
+    setIsUrlRead(true);
+  }, [router.isReady, router.query, isUrlRead]);
 
   useEffect(() => {
-    if (!urlRead) return;
-    const next = new URLSearchParams(
-      toQuery(filters, sort, art, showTokens),
-    ).toString();
+    if (!isUrlRead) return;
+    const query = toQuery(filters, sort, art, isShowingTokens);
+    const next = new URLSearchParams(query).toString();
 
     if (next !== window.location.search.replace(/^\?/, '')) {
-      router.replace(
-        {
-          pathname: router.pathname,
-          query: toQuery(filters, sort, art, showTokens),
-        },
-        undefined,
-        { shallow: true, scroll: false },
-      );
+      router.replace({ pathname: router.pathname, query }, undefined, {
+        shallow: true,
+        scroll: false,
+      });
     }
-  }, [filters, sort, art, showTokens, urlRead]); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters, sort, art, isShowingTokens, isUrlRead]);
 
   // The saved size is read after the first render (it lives in localStorage,
   // which the server does not have).
   useEffect(() => setSize(loadSize()), []);
+
   const pickSize = (id: SizeId) => {
     setSize(id);
     saveSize(id);
@@ -106,7 +116,7 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
   const clearFilters = () => {
     setFilters(DEFAULT_FILTERS);
     setArt('all');
-    setShowTokens(false);
+    setIsShowingTokens(false);
   };
 
   /**
@@ -116,11 +126,11 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
     return sortCards(
       [
         ...filterCards(pool, filters),
-        ...(showTokens ? filterCards(tokenPool, filters) : []),
+        ...(isShowingTokens ? filterCards(tokenPool, filters) : []),
       ],
       sort,
-    ).filter((c) => !debug || matchesArt(c, art, missing));
-  }, [filters, sort, art, showTokens, debug, missing]);
+    ).filter((card) => !isDebug || matchesArt(card, art, missing));
+  }, [filters, sort, art, isShowingTokens, isDebug, missing]);
 
   const cardWidth = sizeOf(size).width;
   const open = viewing ? byId.get(viewing) : undefined;
@@ -130,37 +140,38 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
       <section className={styles.pool}>
         <CollectionFilterControls
           art={art}
-          debug={debug}
           filters={filters}
+          isDebug={isDebug}
+          isShowingTokens={isShowingTokens}
           lengthOfCorePool={corePool.length}
           lengthOfPrimePool={prime.length}
           onClearFiltersClick={clearFilters}
           onPickSizeChange={pickSize}
-          onShowTokensChange={setShowTokens}
+          onShowTokensChange={setIsShowingTokens}
           pool={pool}
           set={set}
           setArt={setArt}
           setSort={setSort}
           shown={shown}
-          showTokens={showTokens}
           size={size}
           sort={sort}
         />
+
         <div
           className={gridStyles.grid}
           style={
             {
               gridTemplateColumns: `repeat(auto-fill, ${cardWidth}px)`,
               ['--card-w' as string]: `${cardWidth}px`,
-            } as React.CSSProperties
+            } as CSSProperties
           }
         >
-          {shown.map((c) => (
-            <div key={c.id} className={styles.cardWrap}>
+          {shown.map((card) => (
+            <div key={card.id} className={styles.cardWrap}>
               <CollectionCard
-                card={c}
+                card={card}
+                onOpen={() => setViewing(card.id)}
                 width={cardWidth}
-                onOpen={() => setViewing(c.id)}
               />
             </div>
           ))}
@@ -170,8 +181,8 @@ export const Collection = ({ missingArt = [] }: { missingArt?: string[] }) => {
 
       {open && (
         <CardDetailOverlay
-          card={open}
           byId={byId}
+          card={open}
           onClose={() => setViewing(null)}
         />
       )}
