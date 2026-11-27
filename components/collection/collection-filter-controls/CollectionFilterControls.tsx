@@ -82,18 +82,20 @@ export const CollectionFilterControls = ({
   const hasActiveFilters = isFiltered(filters) || art !== 'all';
   const canClear = hasActiveFilters || isShowingTokens;
 
-  const setFilter =
-    <K extends keyof CollectionFilters>(key: K) =>
-    (value: CollectionFilters[K]): void => {
+  const setFilter = <K extends keyof CollectionFilters>(key: K) => {
+    return (value: CollectionFilters[K]): void => {
       set(key, value);
     };
+  };
 
   /** A Select's onChange: hands the chosen option to `apply` as type `T`. */
-  const handleOnSelectChange =
-    <T extends string>(apply: (value: T) => void) =>
-    (event: ChangeEvent<HTMLSelectElement>): void => {
+  const handleOnSelectChange = <T extends string>(
+    apply: (value: T) => void,
+  ) => {
+    return (event: ChangeEvent<HTMLSelectElement>): void => {
       apply(event.target.value as T);
     };
+  };
 
   const setLabel = (option: string): string => {
     if (option === 'both') return 'Core + Prime';
