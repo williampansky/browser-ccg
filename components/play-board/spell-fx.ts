@@ -80,11 +80,16 @@ export const CARD_FX: Record<string, SpellFxKind> = {
   CORE_068: 'area',
   CORE_092: 'spot',
   CORE_098: 'area',
+  CORE_111: 'spot',
   CORE_115: 'spot',
+  CORE_120: 'spot',
   PRIME_116: 'area',
+  PRIME_150: 'area',
   PRIME_172: 'spot',
   PRIME_201: 'strike',
   PRIME_202: 'strike',
+  PRIME_240: 'strike',
+  PRIME_257: 'strike',
 };
 
 /**
