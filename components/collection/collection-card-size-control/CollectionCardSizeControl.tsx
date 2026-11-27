@@ -1,4 +1,4 @@
-import { SegmentedControl } from '../../ui/ui';
+import { SegmentedControl } from '../../ui';
 import { SizeId, SIZES } from '../collection-model';
 
 const cardSizeSegmentOptions = SIZES.map((option) => ({

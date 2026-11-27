@@ -1,14 +1,12 @@
-export {
-  Button,
-  LinkButton,
-  Select,
-  TextInput,
-  Checkbox,
-  Toggle,
-  SegmentedControl,
-  Panel,
-  Group,
-} from './ui';
-export type { SegmentOption } from './ui';
-export { AnimatedIcon, preloadIcon } from './AnimatedIcon';
 export { ANIMATED_ICONS } from './animated-icons';
+export { AnimatedIcon, preloadIcon } from './AnimatedIcon';
+export { Button } from './button';
+export { Checkbox } from './checkbox';
+export { Group } from './group';
+export { LinkButton } from './link-button';
+export { Panel } from './panel';
+export { SegmentedControl } from './segmented-control';
+export { Select } from './select';
+export { TextInput } from './text-input';
+export { Toggle } from './toggle';
+export type { SegmentOption } from './segmented-control';
