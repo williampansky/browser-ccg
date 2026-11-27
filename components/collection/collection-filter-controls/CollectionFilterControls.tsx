@@ -6,7 +6,7 @@ import {
   Select,
   TextInput,
 } from '../../ui';
-import styles from '../../deck-builder/deck-builder.module.scss';
+import styles from './collection-filter-controls.module.scss';
 import {
   ART_FILTERS,
   COSTS,

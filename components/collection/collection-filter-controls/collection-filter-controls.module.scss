@@ -1,0 +1,9 @@
+.filters {
+  display: flex;
+  padding-bottom: 0.5rem; // the row itself (flex, gap, control height) is `ui-controls`
+}
+
+.count {
+  margin-left: auto;
+  opacity: 0.7;
+}
