@@ -16,8 +16,8 @@ the Hearthstone-style game. The zone/SNAP version is archived (tag `snap-style-v
 ## Background
 
 Passion project, started by hand in 2020 and set aside in 2023. All code up to 2023 was written by
-hand, before AI coding tools. Much of the card art was **purchased from asset sites**, and some is
-temporary placeholder. The intent is to eventually grow it into a real multi-user game, possibly
+hand, before AI coding tools. Much of the card art was **purchased from asset sites** and the rest is
+free-to-use. The intent is to eventually grow it into a real multi-user game, possibly
 with some form of monetization. There is no committed timeline or definition of "done" yet.
 
 ## Priorities

@@ -60,12 +60,12 @@ Done when: a scripted two-player game plays from start to a winner inside a test
 - [x] Interaction as in `hsclone`: click a card to select, click a slot or target to play it; valid
       targets highlighted; attackers glow. Drag and drop is now the main way (hand to board/target/play area,
       minion or hero onto an enemy), with click kept as the fallback; arrows for both players
-- [x] Hot-seat/two-tab play via boardgame.io `Local`, with no hard-coded hosts or ports
+- [x] Hot-seat play in one tab (`/play/local`), with no hard-coded hosts or ports
 - [x] Card art on the board (hand, board, previews, overlays) via CSS backgrounds; the old `Card`/`Minion`
       renderers are not used by `/play`
 - [x] Port the card art from `hsclone`'s `public/` dir: all 132 CORE cards and the entourage cards that have
       art are ported, plus the GAME cards. PRIME has art for only 2 of 254 cards anywhere. Still open: the
-      provenance and licence check (Milestone 4), and `CORE_088` is "FPO" placeholder art
+      provenance table (Milestone 4)
 
 - [~] Card visuals from `hsclone`: the framed card (rarity frame PNG over the art, cost gem, name ribbon, stat badges)
       is done for cards in hand, the hover preview and the cast popup (`CardFace`). Still to do: the oval minions with
@@ -99,12 +99,8 @@ simulator first.
 - [x] Switch the site pages from the deleted zone-game JSON to the new pool (`data/`)
 - [ ] Naming and text pass (duplicate names, typos, "Attack" vs "Deal" wording; see `CARD-AUDIT.md`)
 - [ ] Art match pass (mismatched art listed in `CARD-AUDIT.md` section 5)
-- [ ] Art provenance table: card, artist, source, licence, status; replace temporary art
-  - **Replacing the FPO art, class by class (started 2026-11-24).** The FPO art is the older
-    art ported from `react-ccg-deprecated`, provenance unchecked. Done and FINAL (a-ravlik, art
-    from the purchased packs): **Mystic, Warden, Necromancer, Ranger, Wizard, Cleric** (and Fighter bar `PRIME_242` Snap, which needs a snap-style image), plus ten PRIME spells, five
-    minions, the Idol tokens and Hellspawn. Left (active cards): **85 cards and 14 tokens**
-    with `artStatus` FPO: neutral 56, Crusader 14, Assassin 14, Fighter 1. Check the live count with the Art filter in `/collection`, or from `data/`.
+- [ ] Art provenance table: card, artist, source, licence, status
+  - **FPO art: done.** The author removed all of it on 2026-11-27; the art that remains is purchased or free-to-use.
   - **The loop that works:** `npm run asset -- <words>` finds an icon by meaning (spells, items,
     weapons); creatures are cutouts from `CARD CHARACTERS` in Downloads composited onto
     `CARD BACKGROUNDS` (Characters Pack 07 and the 10-creature packs; about 150 cutouts are
@@ -147,7 +143,7 @@ sample game. See `PREVIOUS-VERSIONS.md`.
 
 ## Milestone 7: Stack upgrade
 
-Next 12 / React 17 / boardgame.io 0.49 are from late 2022. Upgrade as its own milestone, after the
+Next 12 / React 17 are from late 2022. Upgrade as its own milestone, after the
 new engine plays, so it doesn't block the game. The engine is plain TypeScript and should move
 across with little change; the UI is where the upgrade work will be.
 

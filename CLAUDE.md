@@ -24,7 +24,7 @@ earlier `hsclone` repo as the rules reference. Read these first:
 - **Online play (alpha):** `/play` is the lobby (`components/play-board/online/`: hero + deck pick, queue, "skip the queue: play a bot"), backed by the game server in `server/` (custom Node + `ws`, the engine's only copy of each game, redacted views, queue with a 30 s bot fallback of 90% greedy / 10% random, 60 s reconnect grace; `yarn server:dev` with `NEXT_PUBLIC_WS_URL=ws://localhost:3101/ws` for development, `render.yaml` for Render; see CHANGELOG 2026-11-26). The offline board below is at `/play/local`; the online board is `PlayBoard` with the `online` prop (seats flipped so you are always Player 1, `seat-flip.ts`).
 - **There is a playable hot-seat board at `/play/local`** (`components/play-board/`): one browser tab, both
   players, the active player at the bottom. It runs on the new engine with the real CORE cards the
-  engine fully supports (`playablePool` in `engine/decks.ts`: every CORE card). It defaults to playing against a greedy AI (`engine/bots/greedy-bot.ts`: tries each legal move, scores the result, one move ahead; Player 2); the menu switches it to the random bot (`random-bot.ts`) or to hot-seat. The art is placeholder (see the README notice); online play is `/play`. "Choose one" cards show option buttons before aiming (not yet
+  engine fully supports (`playablePool` in `engine/decks.ts`: every CORE card). It defaults to playing against a greedy AI (`engine/bots/greedy-bot.ts`: tries each legal move, scores the result, one move ahead; Player 2); the menu switches it to the random bot (`random-bot.ts`) or to hot-seat. Online play is `/play`. "Choose one" cards show option buttons before aiming (not yet
   clicked through in a browser, only covered by engine tests). there is no boardgame.io adapter (the
   old `game/` stub was removed; online play uses the custom server instead). The new engine is being built in `engine/` (see `ENGINE-DESIGN.md`). Slices 1-6 of
   its build order are done and tested: card model and loader (`engine/cards/`), state and turn flow,
@@ -59,8 +59,7 @@ earlier `hsclone` repo as the rules reference. Read these first:
   2026-11-26). Look at a production build, not just dev, when you change effects code.
 - `ALLOWED_ORIGINS` on the live server lists only the bccg.io hosts, so `localhost` pages cannot reach it; test online play
   against `yarn server:dev`.
-- The site serves the placeholder art publicly (README notice). **CI is still the last roadmap item**; the checks above
-  are run by hand before merging.
+- **CI is still the last roadmap item**; the checks above are run by hand before merging.
 
 ## Next up (as of the last session)
 
@@ -69,8 +68,8 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 1. **Playtest the full pool** and confirm or change the readings in `RULES.md` Appendix B. Decided: `CORE_007` only destroys the
    weapon (follow the text), and `CORE_057b` (a summoned token whose On Play effect could never fire, formerly TacMedic) is now a plain
    2/4 Guard called Frontline Guardsman; the same change is in Airtable and pulled (2026-11-11).
-2. **Card art provenance/licences** (the art itself is ported and on the board; the README carries a "not licensed
-   for reuse" notice). Still to do: a card-by-card provenance table and replacing placeholder art (Milestone 4).
+2. **Card art provenance/licences** (the author removed all FPO art on 2026-11-27: the art that remains is purchased or
+   free-to-use, as are the sounds). Still to do: a card-by-card provenance table (Milestone 4).
 3. **Bot-vs-bot win-rate tables** (Milestone 3; the greedy bot is done). Tune `evaluate` in `greedy-bot.ts` against them.
 4. Slice 7 of the engine plan (a dedicated random-bot invariant suite) is mostly covered already by
    `engine/__tests__/real-pool.test.ts` and `engine/bots/__tests__/`.
@@ -217,8 +216,7 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
   `SET_CORE/011-CARD.jpg`). For the Hearthstone-style cards it must match `hsclone`'s
   `public/assets/images/sets/CORE/CORE_011-CARD.jpg`. The files here that pre-dated the rebuild came from the old zone
   game, whose ids pointed at different art (Hypnotoad showed a cat in a boat); 63 `-CARD` files were replaced with
-  `hsclone`'s on 2026-11-11, so now every CORE/GAME card with art is byte-identical to `hsclone`'s. **`-DECK` strips (600 x 75, for the deck builder and the `/play` sidebar, not used by the UI yet)**: every CORE card has `hsclone`'s strip (copied 2026-11-12; CORE_019 and CORE_092 had none there, so theirs are cropped from the `-CARD` art). SET_CORE no longer has any `-MINION` images (the board draws minions from `-CARD`), nor old zone-game token art; `engine/cards/__tests__/art-files.test.ts` guards it. SET_PRIME's `-DECK` / `-MINION` images match its `-CARD` art. Only the old site pages (`Sidebar`, `Card`) still use the old zone-game ids. `CORE_088` is
-  "FPO" placeholder art. PRIME has `-CARD` art for every card but `PRIME_212`, copied from `react-ccg-deprecated`.
+  `hsclone`'s on 2026-11-11, so now every CORE/GAME card with art is byte-identical to `hsclone`'s. **`-DECK` strips (600 x 75, for the deck builder and the `/play` sidebar, not used by the UI yet)**: every CORE card has `hsclone`'s strip (copied 2026-11-12; CORE_019 and CORE_092 had none there, so theirs are cropped from the `-CARD` art). SET_CORE no longer has any `-MINION` images (the board draws minions from `-CARD`), nor old zone-game token art; `engine/cards/__tests__/art-files.test.ts` guards it. SET_PRIME's `-DECK` / `-MINION` images match its `-CARD` art. Only the old site pages (`Sidebar`, `Card`) still use the old zone-game ids. PRIME has `-CARD` art for every card but `PRIME_212`, copied from `react-ccg-deprecated`.
 - **Framed cards (`components/play-board/CardFace.tsx`)** port `hsclone`'s `CardV3`: the art sits behind a rarity frame PNG
   (`public/images/frames/<COLOR>.png`; **which rarity gets which colour is the `RARITY_STYLE` table in `card-face-model.ts`**: Free steel with no gem, Common green, Superior blue, Remarkable purple, Mythic red; the files are named by colour, and the frame and gem for a colour were measured to match) and the cost gem, name ribbon, text, type, rarity gem and sword/shield badges are laid
   over it in the frame's 178 x 250 design units, scaled by the `--u` CSS variable (so use `u(n)` in its SCSS, never `em`:

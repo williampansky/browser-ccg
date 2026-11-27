@@ -33,17 +33,15 @@ The shimmer that plays while a card is held (`magic-fireflies.m4a`) is "Magic Fi
 
 ## Card art and licensing notice
 
-The card art and the card frames, badges and other UI art in `public/images/` are **placeholders used for prototyping.
-They are not licensed for reuse**, and they are not covered by whatever licence the code in this repository may have.
-Please don't copy, redistribute or reuse the images.
+The card art, the card frames, badges and other UI art in `public/images/`, and the sounds in `public/sounds/` are
+purchased or free-to-use assets; no placeholder (FPO) art remains. They are not covered by whatever licence the code in
+this repository may have. Please don't copy, redistribute or reuse the images.
 
-- Each card record in `data/` credits its artist in `artistName` and `artistUrl`. Much of it is purchased marketplace
-  art (for example [Rexard on GraphicRiver](https://graphicriver.net/user/rexard)); some is borrowed from independent
-  artists on ArtStation and DeviantArt purely as a stand-in, and some cards have no source recorded yet.
-- The frames, stat badges and gems (`public/images/frames/<COLOR>.png`, `public/images/ui/gem-<COLOR>.png`) come from third-party UI packs, also used here as stand-ins.
-- A credit is attribution, not a licence. Marketplace licences typically allow use inside a finished product but not
-  republishing the raw files, so the art here is meant to be **replaced with properly licensed or commissioned art before
-  any launch beyond this alpha** (the alpha at bccg.io already serves these images). A card-by-card provenance table is on the [roadmap](ROADMAP.md) (Milestone 4).
+- Each card record in `data/` credits its artist in `artistName` and `artistUrl` where one is recorded. Much of it is
+  purchased marketplace art (for example [Rexard on GraphicRiver](https://graphicriver.net/user/rexard)).
+- The frames, stat badges and gems (`public/images/frames/<COLOR>.png`, `public/images/ui/gem-<COLOR>.png`) come from
+  third-party UI packs.
+- A card-by-card provenance table is on the [roadmap](ROADMAP.md) (Milestone 4).
 - If you are an artist or rights holder and want something here credited differently or removed, please open an issue
   on this repository and it will be taken down promptly.
 
@@ -80,6 +78,6 @@ Please don't copy, redistribute or reuse the images.
 - Online play is an alpha: no accounts, no rankings, and games live in server memory (a server restart ends them). Matches
   are not saved or replayable, and a deploy ends the games in progress. See [ROADMAP.md](ROADMAP.md).
 - The card site pages and many `utils/` helpers still use the old zone-style card data and shape.
-- Card art is placeholder only (see the notice above); one PRIME card has no art yet.
+- One PRIME card (`PRIME_212`) has no art yet and shows a placeholder image.
 - Stack is Next 12 and React 17 (late 2022); an upgrade is planned as its own milestone. Online play uses a small
   custom WebSocket server (`ws`), not boardgame.io.
