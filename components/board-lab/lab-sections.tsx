@@ -75,6 +75,8 @@ export const SECTION_KEYS: Record<string, string[]> = {
     'lhw1',
     'lhs',
     'lsel',
+    'lselx',
+    'lsely',
     'lpv',
     'lhpv',
     'lhrt',

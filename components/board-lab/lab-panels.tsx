@@ -325,7 +325,7 @@ export const HandsPanel = ({
     <div style={groupStyle}>
       <b>Clicked card, settling and drawing</b>
     </div>
-    {sliders(['lsel', 'lhst', 'lhdr'])}
+    {sliders(['lsel', 'lselx', 'lsely', 'lhst', 'lhdr'])}
     <label style={row}>
       <input
         type="checkbox"

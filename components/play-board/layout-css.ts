@@ -71,6 +71,8 @@ export const CSS_FNS: Record<string, (v: number) => string> = {
   lms: (v) => `${SLOT}{--sel-scale:${v}}`,
   lmh: (v) => `${SLOT}{--aim-scale:${v}}`,
   lsel: () => '',
+  lselx: () => '',
+  lsely: () => '',
   // Hand look and feel: CSS variables on .hand (see the .handSlot block in
   // play-board.module.scss for what each one does).
   // `--h-tilt-base` is the same number kept apart, so the lab can show it as
@@ -1086,6 +1088,10 @@ export const PLAY_LAYOUT_TIERS: Record<
     lex: '-1342',
     les: '1',
     lg: '20',
+    lm: '125',
+    lsel: '1.75',
+    lselx: '450',
+    lsely: '040',
   },
 };
 
@@ -1188,10 +1194,18 @@ export const buildLayoutCss = (
   // The clicked card's size. `lpv` previews it on the first card in hand
   // without clicking.
   const sel = Math.min(3, Math.max(1, +one('lsel') || 2));
-  const selTransform = `transform:translate(var(--x),calc(var(--y-comp) + (${-(110 * sel + 5)}px + var(--hand-sink)) * var(--zoom))) rotate(0deg) scale(calc(${sel} * var(--zoom))) !important`;
-  const slotSel = `${CLS('handSlot')}${CLS('slotSelected')}`;
+  const selX = +one('lselx') || 0;
+  const selY = +one('lsely') || 0;
+  const selMoved = one('lsel') || one('lselx') || one('lsely');
+  const selTransform = `transform:translate(calc(${selX}px * var(--zoom)),calc(var(--y-comp) + ${selY}px + (${-(110 * sel + 5)}px + var(--hand-sink)) * var(--zoom))) rotate(0deg) scale(calc(${sel} * var(--zoom))) !important`;
+  const slotSel = [CLS('slotSelected'), CLS('slotHeld')]
+    .flatMap((cls) => [
+      `${CLS('handSlot')}${cls}`,
+      `${CLS('handSlot')}${cls}:hover`,
+    ])
+    .join(',');
   const selCss =
-    (one('lsel') ? `${slotSel},${slotSel}:hover{${selTransform}}` : '') +
+    (selMoved ? `${slotSel}{${selTransform}}` : '') +
     (one('lpv')
       ? `${CLS('handSlot')}:nth-child(1){${selTransform};z-index:20 !important;filter:drop-shadow(0 0 8px #ffd45e) drop-shadow(0 0 3px #ffd45e) !important}`
       : '');

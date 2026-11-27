@@ -1472,6 +1472,7 @@ $po-green: var(--po-c, #5fd16a);
     z-index: 60 !important;
     display: flex !important;
     width: auto !important;
+    max-width: 20vw !important;
     height: auto !important;
     padding: 0.75rem;
     background: rgb(20 22 32 / 97%);

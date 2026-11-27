@@ -760,6 +760,22 @@ export const NUMS: Num[] = [
     css: CSS_FNS.lsel,
     read: () => 2,
   },
+  {
+    key: 'lselx',
+    label: 'Clicked card: X from hand centre (px)',
+    min: -600,
+    max: 600,
+    css: CSS_FNS.lselx,
+    read: () => 0,
+  },
+  {
+    key: 'lsely',
+    label: 'Clicked card: move down (px)',
+    min: -600,
+    max: 600,
+    css: CSS_FNS.lsely,
+    read: () => 0,
+  },
   // The log and deck panels. Their presets are in `panelCss`; these are size
   // and offset.
   {
