@@ -1,3 +1,4 @@
+import React from 'react';
 import Link from 'next/link';
 import type { ChangeEvent } from 'react';
 
@@ -30,6 +31,7 @@ import type {
 } from '../collection-model';
 
 import styles from './collection-filter-controls.module.scss';
+import { CollectionCardSizeControl } from '../collection-card-size-control';
 
 const cardCostSegmentOptions = COSTS.map((cost) => ({
   label: cost === 'all' ? 'All' : cost,
@@ -116,7 +118,7 @@ export const CollectionFilterControls = ({
   };
 
   return (
-    <div>
+    <React.Fragment>
       <div className={`${styles.filters} ui-controls`}>
         <TextInput
           aria-label="Search"
@@ -258,31 +260,33 @@ export const CollectionFilterControls = ({
           </Select>
         )}
 
-        {canClear && (
-          <Button onClick={onClearFiltersClick}>Clear filters</Button>
-        )}
-
-        <span className={styles.count}>
+        <span className={`${styles.count} ${styles.largeOnly}`}>
           {shown.length === 1 ? '1 card' : `${shown.length} cards`}
         </span>
 
-        <SegmentedControl
-          ariaLabel="Card size"
-          chips
-          onChange={onPickSizeChange}
-          options={cardSizeSegmentOptions}
-          value={size}
-        />
+        <div className={styles.largeOnly}>
+          <CollectionCardSizeControl
+            onPickSizeChange={onPickSizeChange}
+            size={size}
+          />
+        </div>
 
         <div className={styles.links}>
           <Link href="/deckbuilder">
-            <a>Deck builder</a>
+            <a className={styles.link}>Deck builder</a>
           </Link>
           <Link href="/heroes">
-            <a>Heroes</a>
+            <a className={styles.link}>Heroes</a>
           </Link>
+          {canClear && (
+            <div className={styles.clearButton}>
+              <Button onClick={onClearFiltersClick} size="sm">
+                Clear filters
+              </Button>
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 };

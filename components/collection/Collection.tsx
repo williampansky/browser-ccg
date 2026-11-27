@@ -28,6 +28,8 @@ import type {
 } from './collection-model';
 
 import gridStyles from './collection.module.scss';
+import { Button } from '../ui';
+import { CollectionCardSizeControl } from './collection-card-size-control';
 
 const { cards, byId } = loadHsCards();
 const corePool = playablePool(cards);
@@ -63,6 +65,7 @@ export const Collection = ({
   const [art, setArt] = useState<ArtFilter>('all');
   const [isShowingTokens, setIsShowingTokens] = useState(false);
   const [filters, setFilters] = useState<CollectionFilters>(DEFAULT_FILTERS);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [sort, setSort] = useState<SortKey>('cost');
   const [size, setSize] = useState<SizeId>('medium');
   const [viewing, setViewing] = useState<string | null>(null);
@@ -113,6 +116,18 @@ export const Collection = ({
     saveSize(id);
   };
 
+  const closeFilters = () => setIsFiltersOpen(false);
+
+  useEffect(() => {
+    if (!isFiltersOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsFiltersOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [isFiltersOpen]);
+
   const clearFilters = () => {
     setFilters(DEFAULT_FILTERS);
     setArt('all');
@@ -138,24 +153,67 @@ export const Collection = ({
   return (
     <div className={styles.page}>
       <section className={styles.pool}>
-        <CollectionFilterControls
-          art={art}
-          filters={filters}
-          isDebug={isDebug}
-          isShowingTokens={isShowingTokens}
-          lengthOfCorePool={corePool.length}
-          lengthOfPrimePool={prime.length}
-          onClearFiltersClick={clearFilters}
-          onPickSizeChange={pickSize}
-          onShowTokensChange={setIsShowingTokens}
-          pool={pool}
-          set={set}
-          setArt={setArt}
-          setSort={setSort}
-          shown={shown}
-          size={size}
-          sort={sort}
-        />
+        <div className={gridStyles.headerPanel}>
+          <div className={gridStyles.headerPanelGroup}>
+            <div>
+              <Button onClick={() => setIsFiltersOpen(true)} size="sm">
+                Open filters
+              </Button>
+            </div>
+            <div>
+              <CollectionCardSizeControl
+                onPickSizeChange={pickSize}
+                size={size}
+              />
+            </div>
+          </div>
+          <div>
+            <span className={gridStyles.count}>
+              {shown.length === 1 ? '1 card' : `${shown.length} cards`}
+            </span>
+          </div>
+        </div>
+
+        <div
+          className={`${gridStyles.filtersModal} ${isFiltersOpen ? gridStyles.filtersModalOpen : ''}`}
+        >
+          <div
+            className={gridStyles.backdrop}
+            onClick={(event) => {
+              if (event.target === event.currentTarget) closeFilters();
+            }}
+          >
+            <div
+              aria-label="Filters dialog"
+              aria-modal="true"
+              className={`ui-panel ${gridStyles.filtersDialog}`}
+              role="dialog"
+            >
+              <CollectionFilterControls
+                art={art}
+                filters={filters}
+                isDebug={isDebug}
+                isShowingTokens={isShowingTokens}
+                lengthOfCorePool={corePool.length}
+                lengthOfPrimePool={prime.length}
+                onClearFiltersClick={clearFilters}
+                onPickSizeChange={pickSize}
+                onShowTokensChange={setIsShowingTokens}
+                pool={pool}
+                set={set}
+                setArt={setArt}
+                setSort={setSort}
+                shown={shown}
+                size={size}
+                sort={sort}
+              />
+
+              <div className={gridStyles.closeRow}>
+                <Button onClick={closeFilters}>Close filters</Button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div
           className={gridStyles.grid}
