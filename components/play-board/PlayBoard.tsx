@@ -46,21 +46,11 @@ import {
   MAX_HAND,
 } from '../../engine';
 import { gapIndex } from './board-position';
+import { PlayMenu } from './play-menu';
 import type { OnlineGame } from './online/types';
-import { SupportLink } from '../site-components/SupportLink';
-import { VersionLabel } from '../site-components/VersionLabel';
 import { getSwing } from './hero-swing-tune';
 import { isAccessible, setAccessible, titleIf } from './accessibility';
-import {
-  LogCardTrigger,
-  saveLogCardTrigger,
-  useLogCardTrigger,
-} from './log-card-trigger';
-import {
-  effectiveSidebarMode,
-  saveSidebarMode,
-  useSidebarMode,
-} from './sidebar-mode';
+import { LogCardTrigger, useLogCardTrigger } from './log-card-trigger';
 import { ChooseModal, ChooseOption } from './ChooseModal';
 import { CardDetailOverlay } from '../card-detail/CardDetailOverlay';
 import { nudgeIntoViewport, useKeepTipsInViewport } from './viewport-nudge';
@@ -180,8 +170,7 @@ import { targetLinePath, TargetLineStyle } from './target-line';
 import { startDragGhost, DragGhost } from './drag-ghost';
 import { fireEndConfetti } from './end-celebration';
 import cx from '../../utils/cx';
-import { Button, Group, Panel, SegmentedControl, Select, Toggle } from '../ui';
-import { UiThemePicker } from '../ui-theme/UiThemePicker';
+import { Button, Panel, Select } from '../ui';
 import { playUiSound } from '../ui-theme/ui-sfx';
 import styles from './play-board.module.scss';
 import { gameConfig } from '../../app.config';
@@ -203,7 +192,7 @@ const clearDraggedHandWhenLanded = (set: (v: null) => void) => {
   return activeGhost ? activeGhost.whenDone(() => set(null)) : set(null);
 };
 
-type Mode = 'ai' | 'hotseat' | 'online';
+export type Mode = 'ai' | 'hotseat' | 'online';
 type PlayAction = Extract<Action, { type: 'PlayCard' }>;
 const AI_PLAYER: PlayerId = '1';
 const AI_DELAY_MS = 800;
@@ -1121,7 +1110,6 @@ export const PlayBoard = ({
    * default; saved. More settings will be split out of it later.
    */
   const [a11y, setA11y] = useState(false);
-  const sidebarChoice = useSidebarMode();
   const logCardTrigger = useLogCardTrigger();
   useEffect(() => setA11y(isAccessible()), []);
 
@@ -3887,205 +3875,53 @@ export const PlayBoard = ({
       )}
 
       {menuOpen && (
-        <div
-          className={styles.modalBackdrop}
-          data-ui-sfx
-          onClick={() => setMenuOpen(false)}
-        >
-          <Panel
-            className={styles.menu}
-            role="dialog"
-            aria-label="Menu"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <header className={styles.menuHead}>
-              <h3>Menu</h3>
-              <span className={styles.menuWho}>
-                Playing as{' '}
-                <b style={{ color: sideColors['0'] }}>{profile.name}</b> ·{' '}
-                <a href="/profile" onClick={leaveGame}>
-                  Profile
-                </a>
-              </span>
-            </header>
-
-            <Button
-              variant="primary"
-              className={styles.menuPrimary}
-              autoFocus
-              onClick={() => setMenuOpen(false)}
-            >
-              Resume
-            </Button>
-            <div className={styles.menuPair}>
-              {online ? (
-                <Button onClick={online.leave}>
-                  Lobby
-                  <small>
-                    {over ? 'find another game' : 'leaves the game'}
-                  </small>
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    setMenuOpen(false);
-                    setPicker(loadChoices());
-                    setHeroPicker(loadHeroChoices());
-                  }}
-                >
-                  New game
-                  <small>choose decks</small>
-                </Button>
-              )}
-              <Button
-                variant="danger"
-                disabled={over}
-                onClick={() => {
-                  setMenuOpen(false);
-                  dispatch({ type: 'Concede', player: viewer });
-                }}
-              >
-                Concede
-                <small>{over ? 'game is over' : 'give up this game'}</small>
-              </Button>
-            </div>
-
-            <Group className={styles.menuGroup} aria-label="Settings">
-              <h4>Settings</h4>
-              <Toggle
-                label="Sound"
-                checked={soundOn}
-                onChange={(on) => {
-                  setMuted(!on);
-                  setSoundOn(on);
-                }}
-              />
-              <Toggle
-                label="Damage waits for effects"
-                checked={delayDamage}
-                onChange={(on) => {
-                  saveDelayDamage(on);
-                  setDelayDamage(on);
-                }}
-              />
-              <Toggle
-                label={`Turn timer (${turnLimit}s)`}
-                checked={timerOn}
-                onChange={(on) => {
-                  setTimerOn(on);
-                  setTimerOnState(on);
-                }}
-              />
-              <Toggle
-                label="Accessibility mode"
-                checked={a11y}
-                onChange={(on) => {
-                  setAccessible(on);
-                  setA11y(on);
-                }}
-              />
-              <SegmentedControl
-                label="Log and deck"
-                value={effectiveSidebarMode(sidebarChoice)}
-                onChange={saveSidebarMode}
-                options={[
-                  {
-                    label: 'Separate',
-                    title: 'two panels',
-                    value: 'separate' as const,
-                  },
-                  {
-                    label: 'Connected',
-                    title: 'one sidebar with a bar to drag between them',
-                    value: 'connected' as const,
-                  },
-                ]}
-              />
-              <SegmentedControl
-                label="Card view from the log"
-                value={logCardTrigger}
-                onChange={saveLogCardTrigger}
-                options={[
-                  {
-                    label: 'Right-click',
-                    title: 'right-click a card name in the log',
-                    value: 'rightClick' as const,
-                  },
-                  {
-                    label: 'Click',
-                    title: 'a single click on a card name in the log',
-                    value: 'click' as const,
-                  },
-                ]}
-              />
-              {!online && (
-                <>
-                  <SegmentedControl
-                    label="Opponent"
-                    value={smartAi}
-                    onChange={setSmartAi}
-                    options={[
-                      {
-                        label: 'Greedy',
-                        title: 'looks one move ahead',
-                        value: true,
-                        disabled: mode !== 'ai',
-                      },
-                      {
-                        label: 'Random',
-                        title: 'plays any legal move',
-                        value: false,
-                        disabled: mode !== 'ai',
-                      },
-                    ]}
-                  />
-                  <SegmentedControl
-                    label="Mode"
-                    value={mode}
-                    onChange={(m) => {
-                      if (mode === m) return;
-                      setMode(m);
-                      setMenuOpen(false);
-                      setTimeout(start, 0);
-                    }}
-                    options={[
-                      {
-                        label: 'vs AI',
-                        value: 'ai' as const,
-                        title: 'Switching starts a new game',
-                      },
-                      {
-                        label: 'Hot-seat',
-                        value: 'hotseat' as const,
-                        title: 'Switching starts a new game',
-                      },
-                    ]}
-                  />
-                </>
-              )}
-              <UiThemePicker blurb={false} />
-            </Group>
-
-            <footer className={styles.menuLinks}>
-              <a href="/" onClick={leaveGame}>
-                Home
-              </a>
-              {!online && (
-                <a href="/play" onClick={leaveGame}>
-                  Play online
-                </a>
-              )}
-              <SupportLink />
-              <VersionLabel />
-              <a href="/deckbuilder" onClick={leaveGame}>
-                Deck builder
-              </a>
-              <a href="/collection" onClick={leaveGame}>
-                Cards
-              </a>
-            </footer>
-          </Panel>
-        </div>
+        <PlayMenu
+          isA11yOn={a11y}
+          isDamageDelayed={delayDamage}
+          isOver={over}
+          isSmartAi={smartAi}
+          isSoundOn={soundOn}
+          isTimerOn={timerOn}
+          mode={mode}
+          online={online}
+          onA11yChange={(isOn) => {
+            setAccessible(isOn);
+            setA11y(isOn);
+          }}
+          onClose={() => setMenuOpen(false)}
+          onConcede={() => {
+            setMenuOpen(false);
+            dispatch({ type: 'Concede', player: viewer });
+          }}
+          onDamageDelayChange={(isOn) => {
+            saveDelayDamage(isOn);
+            setDelayDamage(isOn);
+          }}
+          onLeaveClick={leaveGame}
+          onModeChange={(nextMode) => {
+            if (mode === nextMode) return;
+            setMode(nextMode);
+            setMenuOpen(false);
+            setTimeout(start, 0);
+          }}
+          onNewGame={() => {
+            setMenuOpen(false);
+            setPicker(loadChoices());
+            setHeroPicker(loadHeroChoices());
+          }}
+          onSmartAiChange={setSmartAi}
+          onSoundChange={(isOn) => {
+            setMuted(!isOn);
+            setSoundOn(isOn);
+          }}
+          onTimerChange={(isOn) => {
+            setTimerOn(isOn);
+            setTimerOnState(isOn);
+          }}
+          profile={profile}
+          sideColor={sideColors['0']}
+          turnLimit={turnLimit}
+        />
       )}
 
       {picker && (
