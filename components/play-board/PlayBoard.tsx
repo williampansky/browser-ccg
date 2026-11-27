@@ -999,6 +999,7 @@ export const PlayBoard = ({
   const [state, setState] = useState<GameState | null>(null);
   /** One entry per action, oldest first. */
   const [log, setLog] = useState<LogLine[][]>([]);
+
   /**
    * Each player's deck list at the start, for the deck tracker on the right.
    */
@@ -1006,11 +1007,14 @@ export const PlayBoard = ({
     '0': [],
     '1': [],
   });
+
   const [deckNames, setDeckNames] = useState<Record<PlayerId, string>>({
     '0': '',
     '1': '',
   });
+
   const [selection, setSelection] = useState<Selection | null>(null);
+
   /** The card whose big view is open (right-click on a minion) */
   const [inspect, setInspect] = useState<Card | null>(null);
   const [message, setMessage] = useState('');
@@ -1020,35 +1024,45 @@ export const PlayBoard = ({
   const viewerRef = useRef<PlayerId>('0');
   modeRef.current = mode;
   const [menuOpen, setMenuOpen] = useState(false);
+
   /**
    * On a narrow window the log and the deck list are hidden and open as
    * popups from buttons beside Menu (see `.panelButtons` in the stylesheet).
    */
   const [sidePanel, setSidePanel] = useState<'log' | 'deck' | null>(null);
+
   /** Online: why the game ended, when it was not by play (a dropped opponent). */
   const [endNote, setEndNote] = useState('');
+
   /**
    * The player's name and colour theme, edited on the /profile page (this
    * browser only for now; see player-profile/profile.ts).
    */
   const [profile, setProfileState] = useState<PlayerProfile>(DEFAULT_PROFILE);
   useEffect(() => setProfileState(loadProfile()), []);
+
   /**
-   * Each side's colour: yours is your theme; the other seat is red (blue if you
-   * chose red).
+   * Each side's foe color
    */
   const foeColor =
     online && themeOf(online.opponent.color).id !== themeOf(profile.theme).id
       ? themeOf(online.opponent.color).color
       : foeTheme(profile.theme).color;
+
+  /**
+   * Each side's colour: yours is your theme; the other seat is red (blue if you
+   * chose red).
+   */
   const sideColors = {
     '0': themeOf(profile.theme).color,
     '1': foeColor,
   } as Record<'0' | '1', string>;
+
   const logBlocks = log.flatMap(groupLog);
-  const firstTurnBlock = logBlocks.findIndex(
-    (block) => block[0].kind === 'turn',
-  );
+  const firstTurnBlock = logBlocks.findIndex((block) => {
+    return block[0].kind === 'turn';
+  });
+
   /**
    * The "New game" deck picker: null when closed, else the choices being
    * edited.
@@ -1060,6 +1074,7 @@ export const PlayBoard = ({
     '0': 'random',
     '1': 'random',
   });
+
   /** The spell just cast, shown briefly in the middle of the board. */
   const [castFx, setCastFx] = useState<{
     card: Card;
@@ -1069,9 +1084,11 @@ export const PlayBoard = ({
   } | null>(null);
   const [soundOn, setSoundOn] = useState(true);
   useEffect(() => setSoundOn(!isMuted()), []);
+
   /** Damage waits for a spell's whole effect (on by default; saved). */
   const [delayDamage, setDelayDamage] = useState(true);
   useEffect(() => setDelayDamage(loadDelayDamage()), []);
+
   /**
    * Loads the Pixi effects layer (its own chunk, so the page does not wait
    * for it); until it is ready, or if it cannot start (no WebGL), the DOM
@@ -1098,18 +1115,23 @@ export const PlayBoard = ({
       fx?.destroy();
     };
   }, []);
-  /** Accessibility mode (one menu option for now): hover titles, a visible focus outline and explicit "Play" buttons after
-   *  selecting a card. Off by default; saved. More settings will be split out of it later. */
+
+  /** Accessibility mode (one menu option for now): hover titles, a visible
+   * focus outline and explicit "Play" buttons after selecting a card. Off by
+   * default; saved. More settings will be split out of it later.
+   */
   const [a11y, setA11y] = useState(false);
   const sidebarChoice = useSidebarMode();
   const logCardTrigger = useLogCardTrigger();
   useEffect(() => setA11y(isAccessible()), []);
+
   /**
    * Each hero is drawn as the Vol 14 figure card
    * (components/play-board/HeroVariants.tsx); ?herofig=0 brings back the old
    * bar.
    */
   const [figUi, setFigUi] = useState(true);
+
   useEffect(
     () =>
       setFigUi(
@@ -1117,6 +1139,7 @@ export const PlayBoard = ({
       ),
     [],
   );
+
   /**
    * The hero is drawn as the thin ring with orbiting sockets (its look:
    * RING_DEFAULTS, over the `r_<field>` params the hero lab writes);
@@ -1124,6 +1147,7 @@ export const PlayBoard = ({
    */
   const [heroType, setHeroType] = useState<'figure' | 'ring'>('ring');
   const [ringTune, setRingTune] = useState(() => parseRingTune(''));
+
   /**
    * The deck panel's rows (the `-DECK` strip behind each name): DECK_DEFAULTS
    * over the `d_<field>` params the deck lab writes.
@@ -1138,6 +1162,7 @@ export const PlayBoard = ({
     setRingTune(parseRingTune(window.location.search));
     setDeckTune(parseDeckTune(window.location.search));
   }, []);
+
   /**
    * Turn timer: 60 s per turn (15 s with Cronus on a board), on by default;
    * running out ends the turn. Local stand-in for a server clock.
@@ -1146,16 +1171,19 @@ export const PlayBoard = ({
   useEffect(() => setTimerOnState(isTimerOn()), []);
   const [gameKey, setGameKey] = useState(0);
   const turnStartedAt = useRef(Date.now());
+
   /** Online: the server's time left when the turn changed hands. */
   const turnClockMs = useRef<number | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const rngRef = useRef<Rng | null>(null);
+
   /**
    * The log shows the newest line at the bottom and stays pinned there unless
    * you scroll up to read older events.
    */
   const logRef = useRef<HTMLDivElement | null>(null);
   const logPinned = useRef(true);
+
   // Targeting line: where the pointer is, which character it is over, and the
   // DOM nodes to draw between.
   /**
@@ -1167,6 +1195,7 @@ export const PlayBoard = ({
    * then the row closes up.
    */
   const [ghosts, setGhosts] = useState<Ghost[]>([]);
+
   /**
    * A weapon that broke on its last use stays on the hero bar until the swing
    * that broke it is over (state drops it at once).
@@ -1174,6 +1203,7 @@ export const PlayBoard = ({
   const [heldWeapons, setHeldWeapons] = useState<
     Partial<Record<PlayerId, WeaponInstance>>
   >({});
+
   const holdBrokenWeapon = (
     owner: PlayerId,
     weapon: WeaponInstance,
@@ -1192,6 +1222,7 @@ export const PlayBoard = ({
       delayMs + getSwing('hero').totalMs,
     );
   };
+
   // A minion played from your hand: its card flies from the hand to the slot,
   // and the minion's landing waits for it.
   /**
@@ -1207,16 +1238,20 @@ export const PlayBoard = ({
     /** How long it is shown before the action happens (default AI_AIM_MS) */
     holdMs?: number;
   } | null>(null);
+
   const [hover, setHover] = useState<TargetRef | null>(null);
   const nodes = useRef(new Map<string, HTMLElement>());
+
   const track = (key: string) => (el: HTMLElement | null) => {
     if (el) nodes.current.set(key, el);
     else nodes.current.delete(key);
   };
-  const label = (p: PlayerId) =>
-    online && p === '1'
+
+  const label = (p: PlayerId) => {
+    return online && p === '1'
       ? `${online.opponent.name}${online.opponent.isBot ? ' (bot)' : ''}`
       : playerLabel(p, mode, profile.name);
+  };
 
   const start = useCallback(() => {
     const g = newGame(modeRef.current === 'ai', lab ? LAB_SEED : undefined);
@@ -1224,8 +1259,10 @@ export const PlayBoard = ({
     setState(g.state);
     setStartDecks(g.decks);
     setDeckNames(g.deckNames);
+
     const [a, b] =
       g.first === '0' ? ['Player 1', 'Player 2'] : ['Player 2', 'Player 1'];
+
     setLog([
       [
         {
@@ -1238,6 +1275,7 @@ export const PlayBoard = ({
         },
       ],
     ]);
+
     setSelection(null);
     setMessage('');
     setFoeAim(null);
@@ -1252,13 +1290,16 @@ export const PlayBoard = ({
   const hasSelection = selection !== null;
   useEffect(() => {
     if (!hasSelection) return;
+
     const key = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setSelection(null);
     };
+
     const rightClick = (e: MouseEvent) => {
       e.preventDefault(); // no browser context menu while cancelling
       setSelection(null);
     };
+
     window.addEventListener('keydown', key);
     window.addEventListener('contextmenu', rightClick);
     return () => {
@@ -1306,6 +1347,7 @@ export const PlayBoard = ({
       window.removeEventListener('dragend', off, true);
     };
   }, []);
+
   useEffect(() => {
     setDragging(false);
     // the card under the pointer may be a different one now
@@ -1325,7 +1367,9 @@ export const PlayBoard = ({
       if (!state) return;
       setMessage('');
       setSelection(null);
-      (document.activeElement as HTMLElement | null)?.blur?.(); // keep no button "focused" after an action
+      // keep no button "focused" after an action
+      (document.activeElement as HTMLElement | null)?.blur?.();
+
       /**
        * The card a PlayCard action played. Online, the opponent's hand is
        * hidden from us, so the server's CardPlayed event names it instead (it
@@ -1337,6 +1381,7 @@ export const PlayBoard = ({
           ? (playedEvent?.type === 'CardPlayed' && playedEvent.cardId) ||
             state.players[state.activePlayer].hand[action.handIndex]?.cardId
           : undefined;
+
       if (action.type === 'PlayCard') {
         const played = byId.get(playedCardId ?? '');
         // Every card played gets the cast popup (minions and weapons too); a
@@ -1345,6 +1390,7 @@ export const PlayBoard = ({
           setCastFx({ card: played, owner: state.activePlayer, n: Date.now() });
         }
       }
+
       if (action.type === 'HeroSkill') {
         /** Every hero skill gets the cast popup, like a spell. */
         const heroId = state.players[state.activePlayer].hero?.id;
@@ -1352,6 +1398,7 @@ export const PlayBoard = ({
           state.players[state.activePlayer].hero,
           action.skill,
         );
+
         if (heroId && skill)
           setCastFx({
             card: skillCard(heroId, skill),
@@ -1362,10 +1409,12 @@ export const PlayBoard = ({
               : skillCardArt(heroId, skill.index),
           });
       }
+
       const summoned = result.events.find((e) => e.type === 'MinionPlayed');
       if (summoned && summoned.type === 'MinionPlayed') {
         landedAt.current.set(summoned.instanceId, Date.now() + 520);
       }
+
       /** Which show a spell or skill puts on (the default is the orb). */
       const castingPlayer = state.players[state.activePlayer];
       const fxKind = spellFxFor(action, castingPlayer.hero?.id, playedCardId);
@@ -1375,6 +1424,7 @@ export const PlayBoard = ({
         playedCardId,
       );
       const fxTune = tuneForSpell(spellKey);
+
       /**
        * Every minion that is summoned or played gets the summon effect, centred
        * on it once it is on the board (its node exists after the next render,
@@ -1386,6 +1436,7 @@ export const PlayBoard = ({
           spellKey && fxChain(spellKey).includes(SUMMON_FX_KEY)
             ? spellKey
             : SUMMON_FX_KEY;
+
         // Each in its own callback: a delayed closure over a loop variable
         // would see the last minion (this build shares those variables).
         result.events.forEach((e) => {
@@ -1399,6 +1450,7 @@ export const PlayBoard = ({
           }, wait);
         });
       }
+
       // Attacks are thrown at the target; a big hit jolts the table when it
       // lands.
       if (action.type === 'Attack' || action.type === 'WeaponAttack') {
@@ -1408,6 +1460,7 @@ export const PlayBoard = ({
             : `h${state.activePlayer}`,
         );
         const to = action.target && nodes.current.get(targetKey(action.target));
+
         // A hero swings heavier than a minion lunges, so its hit lands later.
         const kind = action.type === 'WeaponAttack' ? 'hero' : 'minion';
         setImpactMs(swingImpactMs(kind));
@@ -1417,8 +1470,10 @@ export const PlayBoard = ({
           kind === 'hero' &&
           weaponBefore &&
           !result.state.players[owner].weapon
-        )
+        ) {
           holdBrokenWeapon(owner, weaponBefore);
+        }
+
         /**
          * A minion that attacks (Stampede) before it has landed would lunge
          * unseen: wait for it to land.
@@ -1430,6 +1485,7 @@ export const PlayBoard = ({
                 (landedAt.current.get(action.attackerId) ?? 0) - Date.now(),
               )
             : 0;
+
         /**
          * An attacker that dies in the exchange is replaced by a death ghost on
          * the next render, so the lunge goes to the ghost
@@ -1441,8 +1497,10 @@ export const PlayBoard = ({
             (e) =>
               e.type === 'MinionDied' && e.instanceId === action.attackerId,
           );
+
         if (from && to) {
-          const vec = aimVector(from, to); // read now: the target may be dead and gone when the lunge starts
+          // read now: the target may be dead and gone when the lunge starts
+          const vec = aimVector(from, to);
           if (attackerDies && action.type === 'Attack') {
             const id = action.attackerId;
             setTimeout(() => {
@@ -1462,11 +1520,13 @@ export const PlayBoard = ({
          * follow this one time.
          */
         const volleyPlays = Math.max(1, Math.round(fxTune.volleyCount));
-        const hits = result.events.filter(
-          (e) => e.type === 'MinionDamaged' || e.type === 'HeroDamaged',
-        ).length;
+        const hits = result.events.filter((e) => {
+          return e.type === 'MinionDamaged' || e.type === 'HeroDamaged';
+        }).length;
+
         const isAimedKind = fxKind === 'travel' || fxKind === 'strike';
         const shots = (isAimedKind ? Math.max(1, hits) : 1) * volleyPlays;
+
         setImpactMs(
           !spellFxOn()
             ? IMPACT_MS
@@ -1475,6 +1535,7 @@ export const PlayBoard = ({
               : fxMs(fxKind, fxTune),
         );
       }
+
       // A big hit from anything (an attack or a spell) jolts the table when
       // it lands.
       const dealt = result.events.reduce(
@@ -1485,12 +1546,16 @@ export const PlayBoard = ({
             : 0),
         0,
       );
-      if (dealt >= BIG_HIT_DAMAGE && tableRef.current)
+
+      if (dealt >= BIG_HIT_DAMAGE && tableRef.current) {
         nudge(tableRef.current, dealt);
+      }
+
       // A spell's target flashes where it was hit (on unless ?fx=off). A
       // minion that dies gets its death ghost instead.
       const isSpellHit =
         action.type !== 'Attack' && action.type !== 'WeaponAttack';
+
       /**
        * A spot effect (a nova) plays once, centred on the spell's target or
        * on the caster's hero, whether or not anything was damaged (an armor
@@ -1514,6 +1579,7 @@ export const PlayBoard = ({
           }
         }
       }
+
       /**
        * An area effect (a global spell) plays once over the minions on the side
        * it covers, whether or not anything is damaged.
@@ -1531,11 +1597,13 @@ export const PlayBoard = ({
             : fxTune.areaRegion === 'both'
               ? ['0', '1']
               : [foe];
+
         const covered = sides.flatMap((side) =>
           state.players[side as PlayerId].board.map((minion) =>
             nodes.current.get(`m${minion.instanceId}`),
           ),
         );
+
         const els = covered.filter((el): el is HTMLElement => !!el);
         if (els.length > 0) {
           const plays = Math.max(1, Math.round(fxTune.volleyCount));
@@ -1547,6 +1615,7 @@ export const PlayBoard = ({
           }
         }
       }
+
       /**
        * A spell's orb flies from the caster's hero to each
        * target, and the hit (flash, numbers, jolt, death) waits for it.
@@ -1554,10 +1623,11 @@ export const PlayBoard = ({
       let shot = false;
       if (isSpellHit && spellFxOn()) {
         const deadIds = new Set(
-          result.events.flatMap((e) =>
-            e.type === 'MinionDied' ? [e.instanceId] : [],
-          ),
+          result.events.flatMap((e) => {
+            return e.type === 'MinionDied' ? [e.instanceId] : [];
+          }),
         );
+
         /**
          * A spell flies from its card's slot in the viewer's hand; the other
          * seat's cards, whose hand is face-down backs with no slot, fly from
@@ -1566,18 +1636,22 @@ export const PlayBoard = ({
         const isViewersCard =
           action.type === 'PlayCard' &&
           state.activePlayer === viewerRef.current;
+
         const cardNode =
           action.type === 'PlayCard' && isViewersCard
             ? nodes.current.get(`c${action.handIndex}`)
             : undefined;
+
         // A hero skill starts at its own socket on the hero (any skill number,
         // so skills 2 and the ultimate need nothing more), else at the hero.
         const skillNode =
           action.type === 'HeroSkill'
             ? nodes.current.get(`s${state.activePlayer}-${action.skill}`)
             : undefined;
+
         const caster =
           cardNode ?? skillNode ?? nodes.current.get(`h${state.activePlayer}`);
+
         /**
          * Damage comes from the action's own source (the hand slot, the skill
          * socket or the hero) until a trigger fires; the damage after that
@@ -1599,17 +1673,20 @@ export const PlayBoard = ({
             sourceTune = tuneForSpell(e.cardId);
             continue;
           }
+
           const key =
             e.type === 'MinionDamaged'
               ? `m${e.instanceId}`
               : e.type === 'HeroDamaged'
                 ? `h${e.player}`
                 : null;
+
           const node = key && nodes.current.get(key);
           if (!node) continue;
           const isTravel = sourceKind === 'travel' || sourceKind === 'strike';
           const isDead =
             e.type === 'MinionDamaged' && deadIds.has(e.instanceId);
+
           // The volley: each hit plays `volleyCount` times, and every
           // animation (across targets too) starts `volleyDelay` after the last.
           const plays = Math.max(1, Math.round(sourceTune.volleyCount));
@@ -1624,6 +1701,7 @@ export const PlayBoard = ({
           }
         }
       }
+
       // Heals flash green and buffs gold (also off with ?fx=off).
       if (isSpellHit && spellFxOn()) {
         /**
@@ -1636,15 +1714,18 @@ export const PlayBoard = ({
           const node = nodes.current.get(key);
           if (node) spot(node, tuneForSpell(event), false, getImpactMs());
         };
+
         const flashKey = (key: string, tone: FlashTone) => {
           const node = nodes.current.get(key);
           if (node) flashHit(node, tone, fxTune);
         };
+
         for (const e of result.events) {
           if (e.type !== 'Healed' || e.amount <= 0) continue;
           flashKey(targetKey(e.target), 'heal');
           eventSpot(targetKey(e.target), 'heal');
         }
+
         for (const player of ['0', '1'] as const) {
           const buffed = buffedMinionIds(
             state.players[player].board,
@@ -1656,10 +1737,12 @@ export const PlayBoard = ({
           }
         }
       }
+
       const died = result.events.filter(
         (e): e is Extract<GameEvent, { type: 'MinionDied' }> =>
           e.type === 'MinionDied',
       );
+
       // A death can have an effect of its own where the minion stood (once its
       // look is baked into `EVENT_FX`), landing with the killing blow.
       if (spellFxOn() && 'death' in EVENT_FX) {
@@ -1668,6 +1751,7 @@ export const PlayBoard = ({
           if (node) spot(node, tuneForSpell('death'), false, getImpactMs());
         });
       }
+
       if (died.length > 0 && !reducedMotion()) {
         const fresh: Ghost[] = [];
         for (const e of died) {
@@ -1694,14 +1778,17 @@ export const PlayBoard = ({
           DEATH_MS + getImpactMs() + 50,
         );
       }
+
       setState(result.state);
       /** Sounds wait for the picture's impact: the strike of an attack. */
       const isAttack =
         action.type === 'Attack' || action.type === 'WeaponAttack';
+
       playSounds(
         soundsFor(result.events),
         reducedMotion() ? 0 : isAttack ? getImpactMs() / 1000 : 0,
       );
+
       setLog((old) =>
         [
           ...old,
@@ -1721,15 +1808,18 @@ export const PlayBoard = ({
   const dispatch = useCallback(
     (action: Action) => {
       if (!state) return;
+
       if (online) {
         online.send(action);
         return;
       }
+
       if (!rngRef.current) return;
       const result = applyAction(state, action, {
         rng: rngRef.current,
         catalog: byId,
       });
+
       if ('error' in result) {
         // An action that arrives after the game ended (the AI's queued move
         // when you concede on its turn) is dropped without a message.
@@ -1737,6 +1827,7 @@ export const PlayBoard = ({
           setMessage(`Not allowed: ${result.error}`);
         return;
       }
+
       commit(action, result);
     },
     [state, commit, online],
@@ -1761,10 +1852,12 @@ export const PlayBoard = ({
       setGameKey((k) => k + 1);
       return;
     }
+
     // While the opponent's move is being previewed, it waits.
     if (foeAim) return;
     const next = online.updates[playedUpdates.current];
     if (!next) return;
+
     /**
      * The opponent's move arrives already done, so show it first the way the
      * AI's is: its picked card in the hand, and an aiming arrow when it has a
@@ -1772,6 +1865,7 @@ export const PlayBoard = ({
      */
     const isFoeMove =
       state.activePlayer !== '0' && next.action.type !== 'EndTurn';
+
     // Behind the server (more moves waiting), skip the preview to catch up.
     const isBehind = online.updates.length - playedUpdates.current > 1;
     const isPreviewable =
@@ -1791,14 +1885,18 @@ export const PlayBoard = ({
         return;
       }
     }
+
     playedUpdates.current += 1;
     const { state: after, msLeft } = next.view;
-    if (next.note === 'opponent-left')
+    if (next.note === 'opponent-left') {
       setEndNote(
         'Your opponent disconnected, so the game was conceded for them.',
       );
+    }
+
     const isNewTurn =
       after.turn !== state.turn || after.activePlayer !== state.activePlayer;
+
     // The server's clock is the one that counts.
     if (isNewTurn) turnClockMs.current = msLeft;
     try {
@@ -1810,6 +1908,7 @@ export const PlayBoard = ({
       setState(after);
     }
   }, [online, online?.updates, state, commit, foeAim]);
+
   const onlineError = online?.error;
   useEffect(() => {
     if (onlineError) setMessage(`Not allowed: ${onlineError}`);
@@ -1832,6 +1931,7 @@ export const PlayBoard = ({
    * counts as a win.
    */
   const gameEnded = state?.status === 'over' || !!lab?.endPreview;
+
   /**
    * Who the end screen says won (the lab's preview picks a side: you, or the
    * opponent).
@@ -1841,6 +1941,7 @@ export const PlayBoard = ({
       ? viewer
       : otherPlayer(viewer)
     : state?.winner;
+
   useEffect(() => {
     if (!gameEnded) return;
     const winner = state?.winner;
@@ -1851,6 +1952,7 @@ export const PlayBoard = ({
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameEnded]);
+
   const aiToMove =
     !lab &&
     !!state &&
@@ -1865,10 +1967,12 @@ export const PlayBoard = ({
   const labKey = lab
     ? JSON.stringify([lab.boards, lab.energy, lab.active])
     : '';
+
   const logSample = lab?.logSample;
   useEffect(() => {
     if (logSample) setLog(sampleLog(logSample));
   }, [logSample]);
+
   useEffect(() => {
     if (!lab) return;
     setState((old) => {
@@ -1902,6 +2006,7 @@ export const PlayBoard = ({
     !!state &&
     state.status === 'playing' &&
     !aiToMove;
+
   useEffect(() => {
     const msLeft = turnClockMs.current;
     turnClockMs.current = null;
@@ -1911,14 +2016,17 @@ export const PlayBoard = ({
     setNow(Date.now());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state?.turn, state?.activePlayer, gameKey]);
+
   useEffect(() => {
     if (!timerApplies) return;
     const id = setInterval(() => setNow(Date.now()), 250);
     return () => clearInterval(id);
   }, [timerApplies]);
+
   const turnLimit = state ? turnSeconds(state, byId) : DEFAULT_TURN_SECONDS;
   const clockLeft = secondsLeft(turnStartedAt.current, now, turnLimit);
   const timedOut = timerApplies && clockLeft <= 0;
+
   /**
    * The timer bar drains every frame from the exact time left (the clock text
    * above counts whole seconds, which made the bar step once a second).
@@ -1939,6 +2047,7 @@ export const PlayBoard = ({
     draw();
     return () => cancelAnimationFrame(frame);
   }, [timerApplies, turnLimit, gameKey, state?.turn, state?.activePlayer]);
+
   useEffect(() => {
     // Online, the server ends the turn when time is up.
     if (timedOut && !online) dispatch({ type: 'EndTurn' });
@@ -1962,6 +2071,7 @@ export const PlayBoard = ({
     }, AI_DELAY_MS);
     return () => clearTimeout(timer);
   }, [aiToMove, state, dispatch, foeAim, smartAi]);
+
   /**
    * The release timer below must not restart when `dispatch` or `online`
    * change identity (`online` is a new object on every update from the
@@ -2000,6 +2110,7 @@ export const PlayBoard = ({
   const castRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (!castFx) return;
+
     /**
      * The animation length can be changed in the board lab, so read it from the
      * element (1.6 s by default).
@@ -2033,16 +2144,19 @@ export const PlayBoard = ({
   /** Keep the hand on one row: past what fits, the cards shrink together. */
   const handRef = useRef<HTMLDivElement | null>(null);
   const [handWidth, setHandWidth] = useState(0);
+
   /**
    * How far the cards sink below the row so only their tops show; shrinks on
    * short windows so they never vanish offscreen.
    */
   const [handSink, setHandSink] = useState(100);
+
   /**
    * The cast-a-spell area is the board above the player bar: `bottomRef` is
    * that bar's section, `tableRef` the board.
    */
   const tableRef = useRef<HTMLDivElement | null>(null);
+
   /**
    * The board's width, so a full row of seven minions fits (their size follows
    * it).
@@ -2051,6 +2165,7 @@ export const PlayBoard = ({
   const bottomRef = useRef<HTMLElement | null>(null);
   const [areaHeight, setAreaHeight] = useState(0);
   const [areaHot, setAreaHot] = useState(false);
+
   /**
    * True when a pointer at this height is over the cast area, i.e. on the board
    * and above the player bar.
@@ -2058,6 +2173,7 @@ export const PlayBoard = ({
   const aboveBar = (clientY: number) =>
     !!bottomRef.current &&
     clientY < bottomRef.current.getBoundingClientRect().top;
+
   useEffect(() => {
     const el = handRef.current;
     if (!el) return;
@@ -2099,16 +2215,19 @@ export const PlayBoard = ({
 
   /** Space ends the turn (when you can), unless a choice dialog is open. */
   const [hoverGap, setHoverGap] = useState<number | null>(null);
+
   /**
    * A "choose one" card being dragged (it is not selected until dropped,
    * because selecting opens its dialog).
    */
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+
   /**
    * The hand card being dragged: hidden in the hand so only the drag image
    * shows.
    */
   const [draggedHand, setDraggedHand] = useState<number | null>(null);
+
   /**
    * The connected sidebar's divider (the board lab's "Connected sidebar"
    * arrangement): the log's share of the column's height, 0.12 to 0.88; null =
@@ -2118,15 +2237,18 @@ export const PlayBoard = ({
   const sideDragRef = useRef<number | null>(null);
   const logPanel = useRef<HTMLElement | null>(null);
   const deckPanel = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
     const saved = parseFloat(window.localStorage.getItem(SIDE_SPLIT_KEY) ?? '');
     if (!Number.isNaN(saved))
       setSideDrag(Math.min(0.88, Math.max(0.12, saved)));
   }, []);
+
   const setSide = (f: number | null) => {
     sideDragRef.current = f;
     setSideDrag(f);
   };
+
   const dragDivider = (e: React.PointerEvent<HTMLDivElement>) => {
     e.preventDefault();
     const el = e.currentTarget;
@@ -2160,16 +2282,19 @@ export const PlayBoard = ({
     el.addEventListener('pointerup', up);
     el.addEventListener('pointercancel', up);
   };
+
   const resetDivider = () => {
     setSide(null);
     window.localStorage.removeItem(SIDE_SPLIT_KEY);
   };
+
   /**
    * The card whose hover slot the pointer is on (it lifts); let go a moment
    * after the pointer leaves.
    */
   const [hoverHand, setHoverHand] = useState<number | null>(null);
   const hoverRelease = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   /**
    * Hover pacing: `underHand` is the slot the pointer is on, `hoverRef` mirrors
    * `hoverHand` for the timer, `stepTimer` is the pending next step and
@@ -2179,10 +2304,12 @@ export const PlayBoard = ({
   const hoverRef = useRef<number | null>(null);
   const stepTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastHoverAt = useRef(0);
+
   const stopStepping = () => {
     if (stepTimer.current) clearTimeout(stepTimer.current);
     stepTimer.current = null;
   };
+
   const applyHover = (i: number | null) => {
     if (hoverRef.current === i) return;
     hoverRef.current = i;
@@ -2190,9 +2317,15 @@ export const PlayBoard = ({
     setHoverHand(i);
     if (i !== null && !selectionRef.current) playCardHover();
   };
-  /** The pointer is on the slot of card `target`. With a pace set (the lab's `lhsd`, ms), the hover changes at most once per that long, one card
-   *  at a time, and keeps catching up toward the pointer: a fast sweep or a far jump fans across the cards instead of snapping. A hover that
-   *  has been still for that long moves at once, so a slow sweep is never held back. 0 (the default) follows the pointer straight away. */
+
+  /**
+   * The pointer is on the slot of card `target`. With a pace set
+   * (the lab's `lhsd`, ms), the hover changes at most once per that long,
+   * one card at a time, and keeps catching up toward the pointer: a fast
+   * sweep or a far jump fans across the cards instead of snapping. A hover that
+   * has been still for that long moves at once, so a slow sweep is never held
+   * back. 0 (the default) follows the pointer straight away.
+   */
   const hoverTo = (target: number) => {
     if (hoverRelease.current) clearTimeout(hoverRelease.current);
     if (over || document.body.classList.contains('dragging')) return;
@@ -2202,11 +2335,13 @@ export const PlayBoard = ({
     const ms = el
       ? parseFloat(getComputedStyle(el).getPropertyValue('--h-step-ms'))
       : NaN;
+
     if (from === null || Number.isNaN(ms) || ms <= 0) {
       stopStepping();
       applyHover(target);
       return;
     }
+
     const step = () => {
       stepTimer.current = null;
       const h = hoverRef.current;
@@ -2215,18 +2350,22 @@ export const PlayBoard = ({
       applyHover(h + Math.sign(u - h));
       if (hoverRef.current !== u) stepTimer.current = setTimeout(step, ms);
     };
+
     if (target === from) return stopStepping();
     if (stepTimer.current) return; // a step is already on its way; it will see the new target
     const wait = ms - (Date.now() - lastHoverAt.current);
     if (wait <= 0) step();
     else stepTimer.current = setTimeout(step, wait);
   };
+
   useEffect(() => stopStepping, []);
+
   /**
    * A card dragged to aim at a target stays in the hand (selected, with the
    * arrow); it must not take a click's enlargement.
    */
   const [heldHand, setHeldHand] = useState<number | null>(null);
+
   // A dragged card that gets played unmounts its own button (when it was the
   // last one in the hand), so its dragend never
   // reaches React and `draggedHand` would stay set: the next card drawn into
@@ -2247,11 +2386,13 @@ export const PlayBoard = ({
       window.removeEventListener('dragend', clear, true);
     };
   }, []);
+
   useEffect(() => {
     setDraggedHand(null);
     setHeldHand(null);
     setDragIndex(null);
   }, [state]);
+
   /**
    * Where a choose-one card was dropped; picking its option in the dialog then
    * plays it there.
@@ -2260,12 +2401,14 @@ export const PlayBoard = ({
     boardIndex?: number;
     target?: TargetRef;
   } | null>(null);
+
   useEffect(() => {
     if (!selection) setPendingDrop(null);
   }, [selection]);
   const modalOpenRef = useRef(false);
   const menuOpenRef = useRef(false);
   menuOpenRef.current = menuOpen;
+
   /**
    * The menu's own sounds (they come from the interface theme and are silent in
    * a theme without any).
@@ -2276,6 +2419,7 @@ export const PlayBoard = ({
       playUiSound(menuOpen ? 'open' : 'close');
     menuWasOpen.current = menuOpen;
   }, [menuOpen]);
+
   /**
    * Set each render to `onNukeHero` while "Attack hero" is available (null
    * otherwise): Shift+Space runs it.
@@ -2290,17 +2434,21 @@ export const PlayBoard = ({
         e.repeat ||
         modalOpenRef.current ||
         menuOpenRef.current
-      )
+      ) {
         return;
+      }
+
       e.preventDefault(); // no page scroll, and no click on a focused button
       // Shift+Space is "Attack hero": it does nothing when that is unavailable,
       // so it can never end the turn by accident.
       if (e.shiftKey) nukeRef.current?.();
       else dispatch({ type: 'EndTurn' });
     };
+
     const up = (e: KeyboardEvent) => {
       if (e.key === ' ') e.preventDefault();
     };
+
     window.addEventListener('keydown', down);
     window.addEventListener('keyup', up);
     return () => {
@@ -2347,27 +2495,29 @@ export const PlayBoard = ({
     );
     return () => clearTimeout(t);
   }, [hoverHand]);
+
   /**
    * A clicked (selected) or dragged hand card keeps the preview on, with no
    * delay.
    */
   const previewIndex =
     selection?.kind === 'hand' ? selection.index : (dragIndex ?? previewHand);
-  const boostIds = useMemo(
-    () =>
-      state && previewIndex !== null
-        ? boostedMinions(state, viewer, previewIndex, byId)
-        : [],
-    [state, viewer, previewIndex],
-  );
 
-  if (!state || !rngRef.current)
+  const boostIds = useMemo(() => {
+    return state && previewIndex !== null
+      ? boostedMinions(state, viewer, previewIndex, byId)
+      : [];
+  }, [state, viewer, previewIndex]);
+
+  if (!state || !rngRef.current) {
     return <main className={styles.page}>Loading...</main>;
+  }
 
   const me = viewer;
   const foe = otherPlayer(me);
   const over = state.status === 'over';
   const myTurn = state.activePlayer === me;
+
   /** Links out of the game ask first while a game is still going. */
   const leaveGame = (e: { preventDefault: () => void }) => {
     if (!over && !window.confirm('Leave this game? It is not saved.'))
@@ -2378,27 +2528,36 @@ export const PlayBoard = ({
   const optionsFor = (sel: Selection | null): Action[] => {
     if (!sel) return [];
     if (sel.kind === 'hand') {
-      const plays = actions.filter(
-        (a): a is PlayAction =>
-          a.type === 'PlayCard' && a.handIndex === sel.index,
-      );
+      const plays = actions.filter((a): a is PlayAction => {
+        return a.type === 'PlayCard' && a.handIndex === sel.index;
+      });
+
       // A "choose one" card shows nothing to aim at until an option is picked.
-      if (plays.some((a) => a.choice !== undefined))
+      if (plays.some((a) => a.choice !== undefined)) {
         return plays.filter((a) => a.choice === sel.choice);
+      }
+
       return plays;
     }
-    if (sel.kind === 'minion')
+
+    if (sel.kind === 'minion') {
       return actions.filter(
         (a) => a.type === 'Attack' && a.attackerId === sel.id,
       );
-    if (sel.kind === 'skill')
+    }
+
+    if (sel.kind === 'skill') {
       return actions.filter(
         (a) => a.type === 'HeroSkill' && a.skill === sel.index,
       );
+    }
+
     return actions.filter((a) => a.type === 'WeaponAttack');
   };
+
   const options = optionsFor(selection);
   const aimable = options.map(targetOf).filter((t): t is TargetRef => !!t);
+
   /**
    * A dragged choose-one card has no selection yet, so its legal targets and
    * zones come straight from its plays.
@@ -2410,15 +2569,20 @@ export const PlayBoard = ({
           (a): a is PlayAction =>
             a.type === 'PlayCard' && a.handIndex === dragIndex,
         );
-  const isAimable = (t: TargetRef) =>
-    aimable.some((x) => sameTarget(x, t)) ||
-    dragPlays.some((a) => {
-      const at = targetOf(a);
-      return !!at && sameTarget(at, t);
-    });
+
+  const isAimable = (t: TargetRef) => {
+    return (
+      aimable.some((x) => sameTarget(x, t)) ||
+      dragPlays.some((a) => {
+        const at = targetOf(a);
+        return !!at && sameTarget(at, t);
+      })
+    );
+  };
 
   const clickTarget = (t: TargetRef) => {
     if (!isAimable(t)) return false;
+
     /**
      * For a minion with an On Play effect, prefer the rightmost board position.
      */
@@ -2426,6 +2590,7 @@ export const PlayBoard = ({
       const at = targetOf(a);
       return at && sameTarget(at, t);
     });
+
     const best = matching.reduce((a, b) =>
       a.type === 'PlayCard' &&
       b.type === 'PlayCard' &&
@@ -2433,6 +2598,7 @@ export const PlayBoard = ({
         ? b
         : a,
     );
+
     dispatch(best);
     return true;
   };
@@ -2451,6 +2617,7 @@ export const PlayBoard = ({
       const at = targetOf(a);
       return !!at && sameTarget(at, hover);
     });
+
     if (act) {
       const seen: GameState = state.players[foe].mystery
         ? {
@@ -2461,22 +2628,26 @@ export const PlayBoard = ({
             },
           }
         : state;
+
       const r = applyAction(seen, act, {
         rng: createSeededRng(1),
         catalog: byId,
       });
+
       if (!('error' in r)) {
         const here = new Set(
           [...seen.players['0'].board, ...seen.players['1'].board].map(
             (m) => m.instanceId,
           ),
         );
-        r.events.forEach(
-          (e) =>
+
+        r.events.forEach((e) => {
+          return (
             e.type === 'MinionDied' &&
             here.has(e.instanceId) &&
-            doomed.add(e.instanceId),
-        );
+            doomed.add(e.instanceId)
+          );
+        });
       }
     }
   }
@@ -2484,12 +2655,12 @@ export const PlayBoard = ({
   /**
    * Spell damage from the viewer's board, shown on the spells in their hand.
    */
-  const mySpellDamage = state.players[viewer].board.reduce(
-    (sum, m) =>
+  const mySpellDamage = state.players[viewer].board.reduce((sum, m) => {
+    return (
       sum +
-      (m.silenced ? 0 : (getCardDef(byId.get(m.cardId)!)?.spellDamage ?? 0)),
-    0,
-  );
+      (m.silenced ? 0 : (getCardDef(byId.get(m.cardId)!)?.spellDamage ?? 0))
+    );
+  }, 0);
 
   /**
    * "Attack hero" button: with no enemy minions in the way, every ready minion
@@ -2640,37 +2811,44 @@ export const PlayBoard = ({
    */
   const pickSkill = (index: number) => {
     if (over) return;
+
     const uses = actions.filter(
-      (a): a is Extract<Action, { type: 'HeroSkill' }> =>
-        a.type === 'HeroSkill' && a.skill === index,
+      (a): a is Extract<Action, { type: 'HeroSkill' }> => {
+        return a.type === 'HeroSkill' && a.skill === index;
+      },
     );
+
     if (uses.length === 0) return;
-    if (uses.every((a) => !a.target) && uses[0].choice === undefined)
+    if (uses.every((a) => !a.target) && uses[0].choice === undefined) {
       dispatch(uses[0]);
-    else if (uses[0].choice !== undefined)
+    } else if (uses[0].choice !== undefined) {
       setSelection(
         selection?.kind === 'skill' && selection.index === index
           ? null
           : { kind: 'skill', index },
       ); // opens the options dialog
-    else
+    } else {
       setSelection(
         selection?.kind === 'skill' && selection.index === index
           ? null
           : { kind: 'skill', index },
       );
+    }
   };
+
   const clickHero = (owner: PlayerId) => {
     if (over) return;
     if (clickTarget({ kind: 'hero', player: owner })) return;
-    if (owner === me && heroCanSwing)
+    if (owner === me && heroCanSwing) {
       setSelection(selection?.kind === 'hero' ? null : { kind: 'hero' });
+    }
   };
 
   const selectedCard =
     selection?.kind === 'hand'
       ? byId.get(state.players[me].hand[selection.index]?.cardId ?? '')
       : undefined;
+
   const untargetedPlays =
     selection?.kind === 'hand' ? options.filter((a) => !targetOf(a)) : [];
 
@@ -2682,20 +2860,22 @@ export const PlayBoard = ({
     selection?.kind === 'hand' && selection.choice === undefined
       ? Array.from(
           new Set(
-            actions.flatMap((a) =>
-              a.type === 'PlayCard' &&
-              a.handIndex === selection.index &&
-              a.choice !== undefined
+            actions.flatMap((a) => {
+              return a.type === 'PlayCard' &&
+                a.handIndex === selection.index &&
+                a.choice !== undefined
                 ? [a.choice]
-                : [],
-            ),
+                : [];
+            }),
           ),
         )
       : [];
+
   const choiceLabel = (choice: number): string => {
     const card = selectedCard;
     const def = card && getCardDef(card);
     const raw = def?.choices?.[choice]?.label ?? `Option ${choice + 1}`;
+
     /**
      * A spell's damage option shows what it will really deal with your Spell
      * Damage (the in-hand text already does).
@@ -2704,21 +2884,27 @@ export const PlayBoard = ({
       card?.type === 'spell'
         ? plain(withSpellDamageText(raw, mySpellDamage))
         : raw;
+
     /** Surveying Drone: show which card each option keeps. */
     const top =
       card?.id === 'CORE_055'
         ? byId.get(state.players[me].deck[choice]?.cardId ?? '')
         : undefined;
+
     return top ? `${base}: ${top.name}` : base;
   };
+
   const pickChoice = (choice: number) => {
     if (selection?.kind !== 'hand') return;
-    const plays = actions.filter(
-      (a): a is PlayAction =>
+
+    const plays = actions.filter((a): a is PlayAction => {
+      return (
         a.type === 'PlayCard' &&
         a.handIndex === selection.index &&
-        a.choice === choice,
-    );
+        a.choice === choice
+      );
+    });
+
     if (pendingDrop) {
       const ctx = pendingDrop;
       setPendingDrop(null);
@@ -2732,17 +2918,20 @@ export const PlayBoard = ({
             : a.boardIndex !== undefined)
         );
       });
+
       if (match) {
         dispatch(
           ctx.boardIndex !== undefined
             ? { ...match, boardIndex: ctx.boardIndex }
             : match,
         );
+
         return;
       }
       // The option does not fit where it was dropped: fall through to the click
       // flow.
     }
+
     if (plays.length > 0 && plays.every((a) => !a.target)) dispatch(plays[0]);
     else setSelection({ ...selection, choice });
   };
@@ -2754,18 +2943,24 @@ export const PlayBoard = ({
   const placedPlays = untargetedPlays.filter(
     (a) => a.type === 'PlayCard' && a.boardIndex !== undefined,
   );
+
   const dragPlaced = dragPlays.some(
     (a) => a.boardIndex !== undefined && !a.target,
   );
+
   const dragLoose = dragPlays.some(
     (a) => a.boardIndex === undefined && !a.target,
   );
-  const overlayPreview = lab?.overlayPreview; // lab only: show an overlay without picking a card
+
+  // lab only: show an overlay without picking a card
+  const overlayPreview = lab?.overlayPreview;
+
   const boardZone =
     (placedPlays.length > 0 ||
       dragPlaced ||
       overlayPreview?.startsWith('minion')) &&
     !over;
+
   /**
    * A dragged choose-one card is a global play until it is dropped: anywhere on
    * the board opens its dialog (a targeted option
@@ -2778,6 +2973,7 @@ export const PlayBoard = ({
       ((dragLoose || dragChoice) && !dragPlaced) ||
       overlayPreview?.startsWith('spell')) &&
     !over;
+
   const dropChoiceCard = (ctx: { boardIndex?: number; target?: TargetRef }) => {
     if (dragIndex === null) return;
     setPendingDrop(ctx);
@@ -2789,8 +2985,8 @@ export const PlayBoard = ({
    * The gap under the pointer, ignoring the spacer that marks it (so it does
    * not move its own target).
    */
-  const gapAt = (row: Element, clickX: number) =>
-    gapIndex(
+  const gapAt = (row: Element, clickX: number) => {
+    return gapIndex(
       Array.from(row.children)
         .filter((el) => !el.hasAttribute('data-gap'))
         .map((el) => {
@@ -2799,6 +2995,8 @@ export const PlayBoard = ({
         }),
       clickX,
     );
+  };
+
   const myBoard = state.players[me].board;
   const gapMarker =
     boardZone &&
@@ -2809,9 +3007,8 @@ export const PlayBoard = ({
 
   /**
    * Click-to-play: with a minion selected, click your board where you want it
-   * to land (between two minions, or at either end);
-   * with a spell or other card that needs no aim, click anywhere in the play
-   * area.
+   * to land (between two minions, or at either end); with a spell or other
+   * card that needs no aim, click anywhere in the play area.
    */
   const playFromArea = (
     e: React.MouseEvent,
@@ -2824,16 +3021,22 @@ export const PlayBoard = ({
       over ||
       selection?.kind !== 'hand' ||
       (!dropped && (e.target as HTMLElement).closest('button'))
-    )
+    ) {
       return;
-    if (zone === 'table' && !aboveBar(e.clientY)) return; // the cast area ends at the player bar
+    }
+
+    // the cast area ends at the player bar
+    if (zone === 'table' && !aboveBar(e.clientY)) return;
     if (zone === 'board') e.stopPropagation();
+
     const plain = untargetedPlays.filter(
       (a): a is PlayAction => a.type === 'PlayCard',
     );
+
     const placed = plain.filter((a) => a.boardIndex !== undefined);
     if (placed.length > 0) {
       if (zone !== 'board') return;
+
       /**
        * Land in the gap nearest the click: between two minions, or at either
        * end.
@@ -2855,23 +3058,29 @@ export const PlayBoard = ({
     selection?.kind === 'skill'
       ? skillFor(state.players[me].hero, selection.index)
       : undefined;
+
   const skillOptions =
     skillPick?.options && selection?.kind === 'skill'
       ? skillPick.options(state, me, byId)
       : [];
+
   const skillModal = skillOptions.length > 0 && selection?.kind === 'skill';
   const pickSkillOption = (choice: number) => {
     if (selection?.kind !== 'skill') return;
-    const use = actions.find(
-      (a) =>
+    const use = actions.find((a) => {
+      return (
         a.type === 'HeroSkill' &&
         a.skill === selection.index &&
-        a.choice === choice,
-    );
+        a.choice === choice
+      );
+    });
+
     if (use) dispatch(use);
   };
+
   const droneModal =
     selectedCard?.id === 'CORE_055' && choiceOptions.length > 0;
+
   /**
    * Every "choose one" card asks in a dialog first, however small the options
    * are.
@@ -2885,10 +3094,13 @@ export const PlayBoard = ({
    */
   const topOfDeck = (c: number) =>
     byId.get(state.players[me].deck[c]?.cardId ?? '');
-  const previewCard = byId.get('CORE_051'); // the lab's sample: a "choose one" card
+
+  // the lab's sample: a "choose one" card
+  const previewCard = byId.get('CORE_051');
   let chooseTitle = '';
   let chooseOptions: ChooseOption[] = [];
   let pickChooseOption: (index: number) => void = () => undefined;
+
   if (droneModal) {
     chooseTitle = `${selectedCard?.name}: pick a card to keep on top`;
     chooseOptions = choiceOptions.map((c) => ({
@@ -2926,15 +3138,15 @@ export const PlayBoard = ({
 
   /**
    * Drag and drop (the main way to play a card; clicking still works). Dragging
-   * selects the card, so the same drop zones,
-   * targets and arrow show as for a click; dropping plays it exactly as a click
-   * would.
+   * selects the card, so the same drop zones, targets and arrow show as for a
+   * click; dropping plays it exactly as a click would.
    */
   const dropOnTarget = (t: TargetRef) => ({
     onDragOver: (e: React.DragEvent) => {
       if (!isAimable(t)) return;
       e.preventDefault();
-      setHover((h) => (h && targetKey(h) === targetKey(t) ? h : t)); // same target: no re-render per dragover event
+      // same target: no re-render per dragover event
+      setHover((h) => (h && targetKey(h) === targetKey(t) ? h : t));
     },
     onDragLeave: () => setHover(null),
     onDrop: (e: React.DragEvent) => {
@@ -2957,7 +3169,7 @@ export const PlayBoard = ({
       e.dataTransfer.setData('text/plain', 'attack');
       e.dataTransfer.effectAllowed = 'move';
       setDragging(true);
-      if (blankDragImage) e.dataTransfer.setDragImage(blankDragImage, 0, 0); // no ghost over the target: the arrow shows the attack
+      if (blankDragImage) e.dataTransfer.setDragImage(blankDragImage, 0, 0);
       setTimeout(() => setSelection(sel), 0);
     },
     onDragEnd: () => {
@@ -2974,6 +3186,7 @@ export const PlayBoard = ({
   const minionRowStyle = {
     ['--m-h' as string]: `${minionOvalHeight(boardWidth)}px`,
   } as React.CSSProperties;
+
   const renderMinion = (owner: PlayerId, m: MinionInstance) => {
     const card = byId.get(m.cardId);
     const selected =
@@ -2981,6 +3194,7 @@ export const PlayBoard = ({
     const aim = isAimable({ kind: 'minion', instanceId: m.instanceId });
     const sick =
       m.playedOnTurn === state.turn && !m.keywords.rush && owner === me;
+
     return (
       <MinionTip
         key={m.instanceId}
@@ -3056,6 +3270,7 @@ export const PlayBoard = ({
     const liveSkills = hero
       ? hero.skills.map((s) => skillFor(p.hero, s.index) ?? s)
       : [];
+
     const skillRow = hero && p.hero && (
       <HeroSkills
         heroName={hero.name}
@@ -3078,6 +3293,7 @@ export const PlayBoard = ({
         }))}
       />
     );
+
     if (figUi && hero && p.hero) {
       const HeroView = heroType === 'ring' ? HeroRing : HeroFigure;
       return (
@@ -3172,6 +3388,7 @@ export const PlayBoard = ({
         </div>
       );
     }
+
     const bar = (
       <HeroBar
         name={label(owner)}
@@ -3237,6 +3454,7 @@ export const PlayBoard = ({
         onClick={() => clickHero(owner)}
       />
     );
+
     return (
       <>
         {owner === viewer ? skillRow : null}
@@ -3247,6 +3465,7 @@ export const PlayBoard = ({
   };
 
   const handCount = state.players[me].hand.length;
+
   /**
    * The card being dragged or selected: the energy bar blinks the orbs it would
    * spend.
@@ -3256,6 +3475,7 @@ export const PlayBoard = ({
     pendingIndex === null
       ? undefined
       : byId.get(state.players[me].hand[pendingIndex]?.cardId ?? '');
+
   const pendingCost =
     pendingIndex === null || !pendingCard || over || !myTurn
       ? undefined
@@ -3267,7 +3487,9 @@ export const PlayBoard = ({
           getCardDef,
           state.players[me].hand[pendingIndex]?.costDelta ?? 0,
         );
+
   const zoomNow = handZoom(handWidth, handCount, HAND_CARD_WIDTH);
+
   const renderHandCard = (
     card: Card | undefined,
     index: number,
@@ -3276,17 +3498,19 @@ export const PlayBoard = ({
     const playable = actions.some(
       (a) => a.type === 'PlayCard' && a.handIndex === index,
     );
+
     const selected = selection?.kind === 'hand' && selection.index === index;
+
     /**
      * "Choose one" cards are dragged without selecting (selecting opens the
      * dialog); the drop opens it, then the pick plays it there.
      */
-    const isChoice = actions.some(
-      (a) =>
-        a.type === 'PlayCard' &&
-        a.handIndex === index &&
-        a.choice !== undefined,
-    );
+    const isChoice = actions.some((a) => {
+      return (
+        a.type === 'PlayCard' && a.handIndex === index && a.choice !== undefined
+      );
+    });
+
     const draggable = !over && playable;
     const fanVars = {
       ['--fan-rot' as string]: `${fanRotation(index, handCount)}deg`,
@@ -3297,14 +3521,20 @@ export const PlayBoard = ({
         Math.abs(index - (handCount - 1) / 2) /
         Math.max((handCount - 1) / 2, 0.5),
     };
+
     const title = titleIf(
       a11y,
       playable ? card?.text : `Can't play now. ${card?.text ?? ''}`,
     );
-    const toggleSelect = () =>
-      !over &&
-      playable &&
-      setSelection(selected ? null : { kind: 'hand', index });
+
+    const toggleSelect = () => {
+      return (
+        !over &&
+        playable &&
+        setSelection(selected ? null : { kind: 'hand', index })
+      );
+    };
+
     /**
      * A quick double-click plays a minion at the far right of your board, or
      * casts a spell or item that needs no aim. (The two clicks before it select
@@ -3316,36 +3546,45 @@ export const PlayBoard = ({
       const plays = actions.filter(
         (x): x is PlayAction => x.type === 'PlayCard' && x.handIndex === index,
       );
-      const placed = plays.filter(
-        (x) =>
+
+      const placed = plays.filter((x) => {
+        return (
           card?.type === 'minion' &&
           x.boardIndex !== undefined &&
           !x.target &&
-          x.choice === undefined,
-      );
+          x.choice === undefined
+        );
+      });
+
       if (placed.length > 0) {
         dispatch(
-          placed.reduce((x, y) =>
-            (y.boardIndex ?? 0) > (x.boardIndex ?? 0) ? y : x,
-          ),
+          placed.reduce((x, y) => {
+            return (y.boardIndex ?? 0) > (x.boardIndex ?? 0) ? y : x;
+          }),
         );
+
         return;
       }
+
       // A spell or item that needs no aim (a global one) is cast at once.
       const isCastable = card?.type === 'spell' || card?.type === 'item';
-      const global = plays.filter(
-        (x) =>
+      const global = plays.filter((x) => {
+        return (
           isCastable &&
           x.boardIndex === undefined &&
           !x.target &&
-          x.choice === undefined,
-      );
+          x.choice === undefined
+        );
+      });
+
       if (global.length === 1) {
         dispatch(global[0]);
         return;
       }
+
       setSelection({ kind: 'hand', index });
     };
+
     const dragStart = (e: React.DragEvent) => {
       e.dataTransfer.setData('text/plain', String(index)); // Firefox needs data to start a drag
       e.dataTransfer.effectAllowed = 'move';
@@ -3354,6 +3593,7 @@ export const PlayBoard = ({
       stopStepping();
       hoverRef.current = null;
       setHoverHand(null);
+
       /**
        * A card that aims at a target gets the arrow instead of a ghost (the
        * ghost would cover the target); one that is
@@ -3365,9 +3605,10 @@ export const PlayBoard = ({
       const aimsAtTarget =
         !!blankDragImage &&
         !isChoice &&
-        actions.some(
-          (a) => a.type === 'PlayCard' && a.handIndex === index && a.target,
-        );
+        actions.some((a) => {
+          return a.type === 'PlayCard' && a.handIndex === index && a.target;
+        });
+
       if (aimsAtTarget) {
         e.dataTransfer.setDragImage(blankDragImage!, 0, 0);
       } else {
@@ -3385,6 +3626,7 @@ export const PlayBoard = ({
           e.clientY,
         );
       }
+
       // Select after the drag has begun: re-rendering the dragged card inside
       // dragstart can cancel it.
       // The card is hidden in the hand only when a ghost replaces it; one that
@@ -3397,17 +3639,22 @@ export const PlayBoard = ({
         else setSelection({ kind: 'hand', index });
       }, 0);
     };
+
     const dragEnd = () => {
       setDragging(false);
       activeGhost?.stop();
       clearDraggedHandWhenLanded(setDraggedHand);
       activeGhost = null;
-      if (!isChoice) setSelection(null); // a dropped choose-one card has just opened its dialog: keep that
+
+      // a dropped choose-one card has just opened its dialog: keep that
+      if (!isChoice) setSelection(null);
+
       setDragIndex(null);
       setHeldHand(null);
       setHover(null);
       setHoverGap(null);
     };
+
     /**
      * The hover slot: the pointer is tested against a slot (a column that never
      * moves or grows), not the card, so a lifted, enlarged card
@@ -3425,6 +3672,7 @@ export const PlayBoard = ({
         cancelCardHover();
       }, HOVER_RELEASE_MS);
     };
+
     const cardEl = (
       <button
         key={instanceId}
@@ -3468,6 +3716,7 @@ export const PlayBoard = ({
         )}
       </button>
     );
+
     const hitEl = (
       <div
         key={instanceId}
@@ -3496,6 +3745,7 @@ export const PlayBoard = ({
         onDragEnd={dragEnd}
       />
     );
+
     return { cardEl, hitEl };
   };
 
@@ -3528,6 +3778,7 @@ export const PlayBoard = ({
   const foeToEl = foeAim?.to
     ? nodes.current.get(targetKey(foeAim.to))
     : undefined;
+
   const foeFrom = foeFromEl ? centerOf(foeFromEl) : null;
   const foeTo = foeToEl ? centerOf(foeToEl) : null;
 
@@ -3543,6 +3794,7 @@ export const PlayBoard = ({
       {hasSelection && lineFrom && (
         <AimArrow from={lineFrom} hit={!!overTarget} />
       )}
+
       {foeFrom && foeTo && (
         <svg className={styles.targetLine} aria-hidden="true">
           <defs>
@@ -3567,6 +3819,7 @@ export const PlayBoard = ({
           />
         </svg>
       )}
+
       {castFx && (
         <div
           ref={castRef}
@@ -3581,6 +3834,7 @@ export const PlayBoard = ({
           </div>
         </div>
       )}
+
       {(over || lab?.endPreview) && !menuOpen && (
         <div
           className={cx(
@@ -3606,6 +3860,7 @@ export const PlayBoard = ({
           </button>
         </div>
       )}
+
       <div className={styles.panelButtons}>
         <Button
           aria-pressed={sidePanel === 'log'}
@@ -3630,6 +3885,7 @@ export const PlayBoard = ({
           onClose={() => setInspect(null)}
         />
       )}
+
       {menuOpen && (
         <div
           className={styles.modalBackdrop}
@@ -3831,6 +4087,7 @@ export const PlayBoard = ({
           </Panel>
         </div>
       )}
+
       {picker && (
         <div
           className={styles.modalBackdrop}
@@ -3912,6 +4169,7 @@ export const PlayBoard = ({
           </Panel>
         </div>
       )}
+
       {(droneModal || choiceModal || skillModal || lab?.choosePreview) && (
         <ChooseModal
           title={chooseTitle}
