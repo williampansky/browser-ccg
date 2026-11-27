@@ -116,6 +116,14 @@ export interface SpellFxTune {
   /** Spot, descending rings: how far above and below the spot one starts and ends (px) */
   spotDescendStart: number;
   spotDescendEnd: number;
+  /** Spot, descending rings: the shift right of the spot at the start and the end (px) */
+  spotDescendStartX: number;
+  spotDescendEndX: number;
+  /** Spot, descending rings: the size they close to (px radius) and how round they end (0 = keep their height, 1 = fully round) */
+  spotDescendEndRadius: number;
+  spotDescendRound: number;
+  /** Spot, descending rings: the share of their life spent travelling (the rest they hold on the end point, fading) */
+  spotDescendArrive: number;
   /** Spot: squashes every ring's height (1 = round, 0.3 = a flat halo) */
   spotRingSquash: number;
   /** Spot: where it plays, on the spell's target or on every minion of a side */
@@ -296,6 +304,11 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   spotRingsMotion: 'out',
   spotDescendStart: 80,
   spotDescendEnd: 80,
+  spotDescendStartX: 0,
+  spotDescendEndX: 0,
+  spotDescendEndRadius: 16,
+  spotDescendRound: 0,
+  spotDescendArrive: 1,
   spotRingSquash: 1,
   spotAnchor: 'target',
   spotStagger: 60,
