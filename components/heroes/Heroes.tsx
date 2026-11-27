@@ -5,7 +5,7 @@ import {
   heroArtRef,
   heroImage,
 } from '../play-board/hero-images';
-import { HeroDetail } from './hero-detail/HeroDetail';
+import { HeroDetail } from './hero-detail';
 import styles from './heroes.module.scss';
 
 const ARCHETYPES: Record<string, string> = {
