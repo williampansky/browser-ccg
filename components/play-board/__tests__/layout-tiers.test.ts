@@ -16,17 +16,18 @@ describe('layout tiers', () => {
   it('small keeps the base and medium overrides, then its own', () => {
     const { medium, small } = PLAY_LAYOUT_TIERS;
     const saved = { medium: { ...medium }, small: { ...small } };
-    medium.ldw = '111';
-    medium.lgw = '222';
-    small.lgw = '333';
+    // Made-up keys, so baked tier values in the real maps cannot interfere.
+    medium.ltestA = '111';
+    medium.ltestB = '222';
+    small.ltestB = '333';
 
-    expect(layoutForTier('medium').ldw).toBe('111');
-    expect(layoutForTier('small').ldw).toBe('111');
-    expect(layoutForTier('small').lgw).toBe('333');
-    expect(layoutForTier('large').lgw).toBe(PLAY_LAYOUT.lgw);
-    expect(inheritedFrom('small', 'ldw')).toBe('medium');
-    expect(inheritedFrom('small', 'lgw')).toBe('small');
-    expect(inheritedFrom('small', 'lbx')).toBe('large');
+    expect(layoutForTier('medium').ltestA).toBe('111');
+    expect(layoutForTier('small').ltestA).toBe('111');
+    expect(layoutForTier('small').ltestB).toBe('333');
+    expect(layoutForTier('large').ltestB).toBeUndefined();
+    expect(inheritedFrom('small', 'ltestA')).toBe('medium');
+    expect(inheritedFrom('small', 'ltestB')).toBe('small');
+    expect(inheritedFrom('small', 'ltestC')).toBe('large');
 
     Object.keys(medium).forEach((key) => delete medium[key]);
     Object.keys(small).forEach((key) => delete small[key]);
