@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   cleanName,
   MAX_NAME_LENGTH,
@@ -6,7 +6,7 @@ import {
   PlayerProfile,
   THEMES,
 } from './profile';
-import { TextInput } from '../ui';
+import { Field, TextInput } from '../ui';
 import styles from './profile-editor.module.scss';
 import cx from '../../utils/cx';
 
@@ -22,28 +22,41 @@ interface Props {
  */
 export const ProfileEditor = ({ profile, onChange }: Props) => {
   const [draft, setDraft] = useState(profile.name);
-  // If the saved profile changes underneath (loaded after the first render),
-  // show it.
-  useEffect(() => setDraft(profile.name), [profile.name]);
+  const isEditing = useRef(false);
+
+  // If the saved profile changes underneath
+  // (loaded after the first render), show it.
+  useEffect(() => {
+    if (!isEditing.current) setDraft(profile.name);
+  }, [profile.name]);
+
   return (
-    <section className={styles.editor} aria-label="Your profile">
-      <label className={styles.field}>
-        <span>Your name</span>
+    <div className={styles.profile} aria-label="Your profile">
+      <Field label="Your name">
         <TextInput
-          value={draft}
-          maxLength={MAX_NAME_LENGTH}
-          spellCheck={false}
           autoComplete="off"
+          autoCorrect="off"
+          enterKeyHint="search"
+          id="profileName"
+          maxLength={MAX_NAME_LENGTH}
           onChange={(e) => {
+            isEditing.current = true;
             setDraft(e.target.value);
             onChange(normalizeProfile({ ...profile, name: e.target.value }));
           }}
-          onBlur={() => setDraft(cleanName(draft))}
+          onBlur={() => {
+            isEditing.current = false;
+            setDraft(cleanName(draft));
+          }}
+          onFocus={() => {
+            isEditing.current = true;
+          }}
           onKeyDown={(e) => e.stopPropagation()}
+          spellCheck={false}
+          value={draft}
         />
-      </label>
-      <div className={styles.field}>
-        <span id="profile-theme-label">Your color</span>
+      </Field>
+      <Field as="div" label="Your color" labelId="profile-theme-label">
         <div
           className={styles.swatches}
           role="radiogroup"
@@ -68,7 +81,7 @@ export const ProfileEditor = ({ profile, onChange }: Props) => {
             />
           ))}
         </div>
-      </div>
-    </section>
+      </Field>
+    </div>
   );
 };

@@ -1,19 +1,7 @@
-.editor {
+.profile {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 0.6rem 0.7rem;
-  border: 1px solid var(--ui-line-soft);
-  border-radius: 8px;
-  background: var(--ui-group-bg);
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: 0.8rem;
-  color: var(--ui-text-dim);
+  gap: 1rem;
 }
 
 .swatches {
@@ -33,8 +21,9 @@
 
   &.on {
     border-color: #fff;
-    box-shadow:
-      0 0 0 2px var(--ui-sunken),
-      0 0 0 4px var(--swatch);
+    // An outline with an offset leaves the panel showing through the gap, so
+    // no theme colour is needed to fake it.
+    outline: 2px solid var(--swatch);
+    outline-offset: 2px;
   }
 }

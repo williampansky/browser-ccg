@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ProfileEditor } from './ProfileEditor';
 import {
@@ -12,6 +11,7 @@ import {
 } from './profile';
 import { UiThemePicker } from '../ui-theme/UiThemePicker';
 import styles from './profile-page.module.scss';
+import { LinkButton, Panel } from '../ui';
 
 /**
  * Edits the player profile. Everything is saved as you type, in this browser
@@ -19,6 +19,7 @@ import styles from './profile-page.module.scss';
  */
 export const ProfilePage = () => {
   const [profile, setProfile] = useState<PlayerProfile>(DEFAULT_PROFILE);
+
   // Only save once the stored profile has been read, or the first render would
   // overwrite it with the default.
   const [loaded, setLoaded] = useState(false);
@@ -36,11 +37,11 @@ export const ProfilePage = () => {
   return (
     <div className={styles.page}>
       <h1>Profile</h1>
-      <ProfileEditor profile={profile} onChange={change} />
-      <section className={styles.theme} aria-label="Interface theme">
-        <UiThemePicker />
-      </section>
-      <section className={styles.preview} aria-label="Preview">
+      <Panel as="section" aria-label="Profile" className={styles.panel}>
+        <ProfileEditor profile={profile} onChange={change} />
+        <UiThemePicker blurb={false} />
+      </Panel>
+      <Panel as="section" aria-label="Preview" className={styles.preview}>
         <span
           className={styles.side}
           style={
@@ -62,14 +63,14 @@ export const ProfilePage = () => {
         >
           Opponent
         </span>
-      </section>
+      </Panel>
       <p className={styles.note}>
         Saved in this browser only. The name and color show on the hero bar, the
         turn banner and the log in a game.
       </p>
-      <Link href="/play">
-        <a className={styles.play}>Play</a>
-      </Link>
+      <LinkButton href="/play" variant="primary">
+        Play
+      </LinkButton>
     </div>
   );
 };
