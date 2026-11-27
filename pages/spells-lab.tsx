@@ -131,7 +131,7 @@ const boardBackground = (): string => {
  * `s_<field>` URL param (`SpellFxTune` in
  * components/play-board/spell-fx-tune.ts), so a setup is a URL. Add an effect
  * to the picker by adding its kind to `EFFECTS` here and its drawing in
- * `pixi-fx.ts`.
+ * `pixi-fx/`.
  */
 const SpellsLab = () => {
   const router = useRouter();

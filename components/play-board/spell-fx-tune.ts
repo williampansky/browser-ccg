@@ -1,7 +1,7 @@
 import { SPELL_FX_SPRITES } from './spell-fx-sprites';
 
 /**
- * The numbers and options behind the spell effects in `pixi-fx.ts`, grouped by
+ * The numbers and options behind the spell effects in `pixi-fx/`, grouped by
  * the base they belong to (`travel`, `strike`, `spot`; `burst` is shared).
  * `SPELL_FX_DEFAULTS` is the saved look; the spells lab (`/spells-lab`) edits it
  * live through `s_<field>` URL params (`parseSpellTune`). Every effect is handed

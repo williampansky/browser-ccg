@@ -15,7 +15,7 @@ import type { SpellFxTune } from './spell-fx-tune';
  * - `area`: plays once over a side of the board (or both), for a global spell
  *   such as a damage-all.
  *
- * Add a base here, in `pixi-fx.ts` (its drawing) and in `spellFxMs`.
+ * Add a base here, in `pixi-fx/` (its drawing) and in `spellFxMs`.
  */
 export type SpellFxKind = 'travel' | 'strike' | 'spot' | 'area';
 
