@@ -20,7 +20,7 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 /** A button. `type` defaults to "button" (never submits a form by accident). */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant, className, size = 'md', type = 'button', ...rest }, ref) => (
+  ({ variant, className, size, type = 'button', ...rest }, ref) => (
     <button
       ref={ref}
       type={type}
