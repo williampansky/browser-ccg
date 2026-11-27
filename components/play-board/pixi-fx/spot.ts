@@ -30,6 +30,26 @@ const SPOT_PULSE_SWELL = 0.4;
 /** A descending ring takes at least this share of its life to arrive. */
 const MIN_DESCEND_ARRIVAL = 0.05;
 
+/** A holding ring fades in over this share of its life. */
+const DESCEND_FADE_IN = 0.12;
+
+/** After arriving, a ring stays fully visible for this share of what is left. */
+const DESCEND_HOLD_SHARE = 0.5;
+
+/**
+ * A descending ring's opacity at `age` (0 to 1). One that arrives at the very
+ * end just swells and fades; one that arrives early fades in, stays fully
+ * visible while it travels and holds on its end point, then fades out.
+ */
+const descendAlpha = (age: number, arrival: number): number => {
+  if (arrival >= 1) return Math.sin(Math.PI * age);
+  const holdEnd = arrival + (1 - arrival) * DESCEND_HOLD_SHARE;
+  const fadeIn = Math.min(1, age / DESCEND_FADE_IN);
+  const fadeOut = age < holdEnd ? 1 : 1 - (age - holdEnd) / (1 - holdEnd);
+
+  return Math.max(0, Math.min(fadeIn, fadeOut));
+};
+
 /** The corners of a regular polygon, one point up. */
 const polygon = (
   at: FxPoint,
@@ -143,7 +163,7 @@ export const ringState = (age: number, tune: SpellFxTune): RingState => {
     const settle = 1 - Math.pow(1 - progress, 3);
 
     return {
-      alpha: fade,
+      alpha: descendAlpha(age, arrival),
       offsetX: tune.spotDescendStartX + travelX * progress,
       offsetY: -tune.spotDescendStart + travelY * progress,
       radius: tune.spotRadius - shrink * settle,

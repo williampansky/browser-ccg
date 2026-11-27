@@ -134,3 +134,24 @@ describe('descending ring arrival', () => {
     expect(sameButExplicit).toEqual(slow);
   });
 });
+
+describe('descending ring hold', () => {
+  const holding: SpellFxTune = { ...descending, spotDescendArrive: 0.5 };
+
+  it('is fully visible while it travels and holds', () => {
+    expect(ringState(0.3, holding).alpha).toBe(1);
+    expect(ringState(0.5, holding).alpha).toBe(1);
+    expect(ringState(0.7, holding).alpha).toBe(1);
+  });
+
+  it('fades in at the start and out at the end', () => {
+    expect(ringState(0, holding).alpha).toBe(0);
+    expect(ringState(0.9, holding).alpha).toBeLessThan(1);
+    expect(ringState(1, holding).alpha).toBe(0);
+  });
+
+  it('keeps the swell and fade when it arrives at the very end', () => {
+    expect(ringState(0.5, descending).alpha).toBeCloseTo(1);
+    expect(ringState(0.1, descending).alpha).toBeLessThan(1);
+  });
+});
