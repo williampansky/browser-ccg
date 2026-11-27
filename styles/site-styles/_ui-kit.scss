@@ -341,7 +341,13 @@ select.ui-field {
 .ui-field-row {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.ui-field-label {
+  font-size: 0.8rem;
+  color: var(--ui-text-dim);
 }
 
 .ui-dim {

@@ -2,6 +2,7 @@ export { ANIMATED_ICONS } from './animated-icons';
 export { AnimatedIcon, preloadIcon } from './AnimatedIcon';
 export { Button } from './button';
 export { Checkbox } from './checkbox';
+export { Field } from './field';
 export { Group } from './group';
 export { LinkButton } from './link-button';
 export { Panel } from './panel';
