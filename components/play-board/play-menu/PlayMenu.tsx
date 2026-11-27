@@ -5,7 +5,7 @@ import { VersionLabel } from '../../site-components/VersionLabel';
 import type { PlayerProfile } from '../../player-profile/profile';
 import { saveLogCardTrigger, useLogCardTrigger } from '../log-card-trigger';
 import type { OnlineGame } from '../online/types';
-import type { Mode } from '../PlayBoard';
+import type { Mode } from '../types';
 import {
   effectiveSidebarMode,
   saveSidebarMode,

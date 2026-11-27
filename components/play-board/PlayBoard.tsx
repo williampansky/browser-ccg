@@ -173,10 +173,8 @@ import cx from '../../utils/cx';
 import { Button, Panel, Select } from '../ui';
 import { playUiSound } from '../ui-theme/ui-sfx';
 import styles from './play-board.module.scss';
-import { gameConfig } from '../../app.config';
-import { EndTurnButton } from './end-turn-button';
-import { AttackHeroButton } from './attack-hero-button';
 import { TurnControls } from './turn-controls';
+import type { Mode } from './types';
 
 /**
  * The opaque card that follows the pointer during a hand drag
@@ -192,7 +190,6 @@ const clearDraggedHandWhenLanded = (set: (v: null) => void) => {
   return activeGhost ? activeGhost.whenDone(() => set(null)) : set(null);
 };
 
-export type Mode = 'ai' | 'hotseat' | 'online';
 type PlayAction = Extract<Action, { type: 'PlayCard' }>;
 const AI_PLAYER: PlayerId = '1';
 const AI_DELAY_MS = 800;
