@@ -2,6 +2,12 @@
 
 What changed, newest first. Written from the git history; `git log` has the detail.
 
+## 2026-11-27
+
+- **pixelfx added (not wired into the board yet):** [pixelfx](https://github.com/patch-gg/pixelfx) (MIT, 244 pixel-art effects drawn by code, no dependencies) is a dependency, pinned to a commit through its GitHub tarball URL (`github:` shorthand failed with a 504 from GitHub's API, and the tarball URL also keeps the Render build reproducible). `components/play-board/pixel-fx.ts` has `createPixelPlayer` (advance time, read RGBA pixels; no Pixi in it, so it is tested) and `PIXEL_EFFECTS`, a lazily loaded catalog of three effects to start (`explosions/big-explosion`, `holy/heal`, `ice/frost-nova`); `types/pixelfx.d.ts` types the parts used. Jest now transforms pixelfx and maps its `exports` paths (`jest.config.ts`). Still to do: draw a player's pixels as a Pixi texture (nearest-neighbour) as a new spell-effect base. Not bundled yet because nothing imports the adapter.
+- **custom-pixi-particles not added: it is GPL-2.0.** Its latest versions also need Pixi 8 (a 7.x line needs `pixi.js ^7.3.2`). GPL-2.0 would put obligations on a game that may be sold. `@pixi/particle-emitter` (MIT, Pixi 6 to 7) is the drop-in alternative if a particle library is wanted.
+- **Baked spell looks:** tuned looks for CORE_001, 006, 060, 083, 111, 120 and PRIME_150, 240, 257 (CORE_111 and 120 are spots, PRIME_150 an area, PRIME_240 and 257 strikes).
+
 ## 2026-11-26
 
 - **Board lab: layouts for three screen sizes, a size preview and a hero scale knob:** the board's saved layout now has a base (large) plus override maps for medium (a window up to 1100 px wide) and small (a phone). `PLAY_LAYOUT_TIERS` in `layout-css.ts` holds only the knobs that differ; small inherits medium's. The lab has a Large / Medium / Small switch (`dev=`), sliders say "(from large)" for a value they inherit, and `npm run board -- --tier=medium|small "<url>"` bakes into a tier (a `dev=` URL without `--tier` is refused). A **Preview** button shows `/play/local` in an iframe at that tier's real size. A phone is detected from its screen (`use-is-phone.ts`, `?device=phone` forces it) because `PhoneFit` lays its page out about 1650 px wide and scales it, so no width query matches; the log and deck popup rules now apply on a phone too (`data-phone` on `<html>`). New knobs `lfz0` / `lfz1` scale each hero (figure or ring) as a percentage. The `/play` menu is its own component (`play-menu/`). Not tried on a real phone yet.

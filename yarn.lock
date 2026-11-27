@@ -9865,6 +9865,10 @@ pirates@^4.0.4:
   resolved "https://registry.yarnpkg.com/pirates/-/pirates-4.0.5.tgz#feec352ea5c3268fb23a37c702ab1699f35a5f3b"
   integrity sha512-8V9+HQPupnaXMA23c5hvl69zXvTwTzyAYasnkb0Tts4XvO4CliqONMOnvlq26rkhLC3nWDFBJf73LU1e1VZLaQ==
 
+"pixelfx@https://codeload.github.com/patch-gg/pixelfx/tar.gz/5294518ce7c72e48b6100a744596e0acf57f2826":
+  version "0.3.1"
+  resolved "https://codeload.github.com/patch-gg/pixelfx/tar.gz/5294518ce7c72e48b6100a744596e0acf57f2826#59b20ee7d9df5336d53d8cdcfa1bcd8a4397ffb3"
+
 pixi.js@^7.4.3:
   version "7.4.3"
   resolved "https://registry.yarnpkg.com/pixi.js/-/pixi.js-7.4.3.tgz#096424e254debcb4fe106c162d56a05cea77d4b6"
