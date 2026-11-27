@@ -5,6 +5,7 @@ import { SPELL_FX_SPRITES, spriteUrl } from '../spell-fx-sprites';
 import { SPELL_FX_DEFAULTS } from '../spell-fx-tune';
 import type { SpellFxTune } from '../spell-fx-tune';
 
+import { createFinisher, hasFinisher } from './finisher';
 import type { FxContext, FxPoint, Particle } from './types';
 
 const TONE_COLOUR: Record<FlashTone, number> = {
@@ -113,22 +114,33 @@ export const createFxContext = (): FxContext => {
   app.ticker.add(step);
   app.ticker.stop();
 
+  const finish = createFinisher({
+    addToStage,
+    app,
+    jobs,
+    spawn,
+    texture,
+    wake,
+  });
+
   const burstWith = (
     at: FxPoint,
     tone: FlashTone,
     tune: SpellFxTune,
     override?: number,
   ): void => {
-    const { burstCount, burstLife, burstScale } = tune;
+    const { burstCount, burstLife, burstScale, burstSpeed } = tune;
     const colour = override ?? TONE_COLOUR[tone];
     const count = Math.round(burstCount);
     for (let spark = 0; spark < count; spark++) {
       const angle = (spark / count) * Math.PI * 2 + Math.random();
-      const speed = BURST_SPEED_MIN + Math.random() * BURST_SPEED_RANGE;
+      const speed =
+        (BURST_SPEED_MIN + Math.random() * BURST_SPEED_RANGE) * burstSpeed;
       const vx = Math.cos(angle) * speed;
       const vy = Math.sin(angle) * speed;
       spawn(at, colour, burstScale, burstLife, vx, vy);
     }
+    if (hasFinisher(tune)) finish(at, tune);
     wake();
   };
 

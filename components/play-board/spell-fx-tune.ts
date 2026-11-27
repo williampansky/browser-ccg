@@ -191,6 +191,21 @@ export interface SpellFxTune {
   burstCount: number;
   burstLife: number;
   burstScale: number;
+  /** Impact sparks: how fast they fly (1 = the default speed) */
+  burstSpeed: number;
+  /** Finisher on a hit (travel and strike): a bloom of light (size, 0 = none) and its life (ms) */
+  finishFlash: number;
+  finishFlashMs: number;
+  /** Finisher: an expanding ring (reach px, 0 = none), its life (ms), line width (px) and height (1 = round) */
+  finishRing: number;
+  finishRingMs: number;
+  finishRingWidth: number;
+  finishRingSquash: number;
+  /** Finisher: sparkles that linger and drift up (how many, 0 = none) and for how long (ms) */
+  finishLinger: number;
+  finishLingerMs: number;
+  /** Finisher: the colour of the bloom, ring and sparkles (hex, no #) */
+  finishColour: string;
 }
 
 /**
@@ -323,6 +338,16 @@ export const SPELL_FX_DEFAULTS: SpellFxTune = {
   burstCount: 18,
   burstLife: 420,
   burstScale: 0.55,
+  burstSpeed: 1,
+  finishFlash: 0,
+  finishFlashMs: 260,
+  finishRing: 0,
+  finishRingMs: 420,
+  finishRingWidth: 4,
+  finishRingSquash: 0.8,
+  finishLinger: 0,
+  finishLingerMs: 900,
+  finishColour: 'ffd27a',
 };
 
 /**
