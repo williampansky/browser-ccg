@@ -7,6 +7,7 @@ import {
   heroes,
   MAX_DECK_SIZE,
 } from '../engine';
+import { starterDeck } from '../engine/starter-decks';
 import {
   cleanName,
   THEMES,
@@ -290,11 +291,11 @@ export class Lobby {
   private botEntry(bot: BotKind): Entry {
     const { rng, allCards, ordinaryPool } = this.deps;
     const hero = rng.pick(heroes()).id;
-    const deck = buildClassDeck(
-      ordinaryPool,
-      classCardsFor(allCards, hero),
-      rng,
-    );
+    const starter = starterDeck(hero);
+    const deck =
+      starter.length > 0
+        ? starter
+        : buildClassDeck(ordinaryPool, classCardsFor(allCards, hero), rng);
 
     return {
       deck,

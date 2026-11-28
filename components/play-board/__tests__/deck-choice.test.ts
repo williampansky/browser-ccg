@@ -140,11 +140,8 @@ describe('class cards in a random deck', () => {
 });
 
 describe('the AI seat', () => {
-  it('keeps a random or starter choice, and a saved deck becomes the starter deck', () => {
-    expect(aiDeckChoice(RANDOM_DECK)).toBe(RANDOM_DECK);
-    expect(aiDeckChoice(RANDOM_ALL)).toBe(RANDOM_ALL);
-    expect(aiDeckChoice('saved:a')).toBe(STARTER_DECK);
-    expect(aiDeckChoice('starter:Aggro')).toBe(STARTER_DECK);
+  it('the AI seat always plays the starter deck', () => {
+    expect(aiDeckChoice()).toBe(STARTER_DECK);
   });
 });
 

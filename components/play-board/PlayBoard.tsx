@@ -820,7 +820,7 @@ const newGame = (
   /** The AI never plays a saved deck: it gets a random one. */
   const deckChoices = {
     '0': choices['0'],
-    '1': vsAi ? aiDeckChoice(choices['1']) : choices['1'],
+    '1': vsAi ? aiDeckChoice() : choices['1'],
   };
 
   const dbg = debugParams();

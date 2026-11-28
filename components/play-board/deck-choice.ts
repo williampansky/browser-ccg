@@ -27,14 +27,8 @@ export const STARTER_DECK: DeckChoice = 'starter';
 
 const SAVED_PREFIX = 'saved:';
 
-/**
- * The choice the AI seat actually uses: a random deck as picked, anything else
- * (a saved deck) becomes the starter deck.
- */
-export const aiDeckChoice = (choice: DeckChoice): DeckChoice =>
-  choice === RANDOM_DECK || choice === RANDOM_ALL || choice === STARTER_DECK
-    ? choice
-    : STARTER_DECK;
+/** The AI seat always plays its hero's starter deck, whatever was picked. */
+export const aiDeckChoice = (): DeckChoice => STARTER_DECK;
 
 export interface DeckOption {
   value: DeckChoice;
