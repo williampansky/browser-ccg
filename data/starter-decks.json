@@ -1,0 +1,677 @@
+[
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "PRIME_204",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "CORE_086",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "CORE_090",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "CORE_082",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "CORE_093",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "CORE_029",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "CORE_032",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "CORE_008",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "PRIME_151",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "PRIME_128",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "CORE_001",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "CORE_126",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "CORE_078",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "PRIME_239",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "PRIME_273",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "CORE_015",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "CORE_024",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "CORE_029",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "CORE_014",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "CORE_042",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "PRIME_176",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "CORE_008",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "CORE_125",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "CORE_001",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "PRIME_166",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "CORE_004",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "PRIME_261",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "PRIME_200",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "CORE_008",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "CORE_038",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "CORE_002",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "PRIME_174",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "PRIME_142",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "CORE_024",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "CORE_029",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "CORE_040",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "CORE_008",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "PRIME_121",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "PRIME_137",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "PRIME_160",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "CORE_008",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "CORE_030",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "PRIME_275",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "CORE_089",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "CORE_032",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "PRIME_224",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "CORE_002",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "CORE_029",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "PRIME_276",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "PRIME_222",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "CORE_022",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "CORE_042",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "PRIME_170",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "PRIME_138",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "PRIME_258",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "PRIME_130",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "PRIME_203",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "CORE_038",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "CORE_017",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "PRIME_235",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "PRIME_164",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "PRIME_260",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "PRIME_113",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "CORE_029",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "CORE_042",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "PRIME_259",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "CORE_029",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "PRIME_135",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "CORE_004",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "CORE_024",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "CORE_022",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "PRIME_173",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "PRIME_131",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "PRIME_265",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "PRIME_277",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "CORE_024",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "PRIME_119",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "PRIME_172",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "PRIME_155",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "PRIME_266",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "PRIME_217",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "CORE_128",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "CORE_038",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "PRIME_274",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "PRIME_216",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "PRIME_219",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "PRIME_136",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "PRIME_223",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "PRIME_162",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "PRIME_115",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "PRIME_193",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "PRIME_278",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "PRIME_178",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "PRIME_171",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "PRIME_225",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "PRIME_118",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "PRIME_116",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "PRIME_198",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "PRIME_140",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "PRIME_112",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "PRIME_226",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "PRIME_111",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "PRIME_120",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "CORE_029",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "PRIME_213",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "PRIME_269",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "PRIME_218",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "CORE_085",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "PRIME_212",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "CORE_041",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "CORE_002",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "CORE_038",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "PRIME_122",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "CORE_094",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "CORE_008",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_RANGER",
+    "card": "CORE_024",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "CORE_042",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WARDEN",
+    "card": "CORE_001",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "CORE_098",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "PRIME_257",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "PRIME_150",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CLERIC",
+    "card": "PRIME_175",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "CORE_132",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "PRIME_189",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "PRIME_236",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_CRUSADER",
+    "card": "CORE_073",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "PRIME_145",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "PRIME_207",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_FIGHTER",
+    "card": "CORE_008",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "CORE_038",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "PRIME_141",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_WIZARD",
+    "card": "PRIME_279",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_NECROMANCER",
+    "card": "CORE_013",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_ASSASSIN",
+    "card": "PRIME_192",
+    "copies": 2
+  },
+  {
+    "class": "CLASS_MYSTIC",
+    "card": "CORE_004",
+    "copies": 2
+  }
+]

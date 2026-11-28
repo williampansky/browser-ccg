@@ -26,6 +26,7 @@ const TABLE_NAMES = [
   'SKILLS',
   'MECHANICS',
   'CONSTANTS',
+  'STARTER DECKS',
 ];
 const PAGE_SIZE = 100;
 // Airtable allows 5 requests per second; stay under it.
@@ -235,6 +236,19 @@ const pull = async () => {
     tables.CLASSES.map((record) => [record.id, record.fields.symbol]),
   );
   const cards = rows('CARDS');
+  const cardIdByRecord = Object.fromEntries(
+    tables.CARDS.map((record) => [record.id, record.fields.id]),
+  );
+  const toStarterEntry = (fields) => {
+    const [cardRecord] = fields.card || [];
+    const [classRecord] = fields.class || [];
+
+    return {
+      class: classSymbolById[classRecord],
+      card: cardIdByRecord[cardRecord],
+      copies: fields.copies,
+    };
+  };
   const files = {
     core: cards
       .filter(isInSet('CORE'))
@@ -253,6 +267,7 @@ const pull = async () => {
     skills: rows('SKILLS').map((fields) => toSkill(fields, classSymbolById)),
     mechanics: rows('MECHANICS').map(toMechanic),
     constants: rows('CONSTANTS').map(toConstant),
+    'starter-decks': rows('STARTER DECKS').map(toStarterEntry),
   };
 
   fs.mkdirSync(OUT_DIR, { recursive: true });

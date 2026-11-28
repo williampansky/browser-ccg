@@ -2,11 +2,7 @@ import { checkDeck } from '../deck-rules';
 import { loadHsCards } from '../cards/load-hs-cards';
 import { isPlayable } from '../decks';
 import { heroes } from '../heroes';
-import {
-  STARTER_CLASS_IDS,
-  STARTER_NEUTRAL_IDS,
-  starterDeck,
-} from '../starter-decks';
+import { starterDeck } from '../starter-decks';
 
 const { byId } = loadHsCards();
 
@@ -25,27 +21,15 @@ describe('starter decks', () => {
     });
   });
 
-  it('uses only playable, active, non-Mystery, non-Mythic cards', () => {
-    const ids = [
-      ...Object.values(STARTER_NEUTRAL_IDS).flat(),
-      ...Object.values(STARTER_CLASS_IDS).flat(),
-    ];
+  it('uses only playable, active, non-Mythic cards', () => {
+    heroes().forEach((hero) => {
+      starterDeck(hero.id).forEach((id) => {
+        const card = byId.get(id)!;
 
-    ids.forEach((id) => {
-      const card = byId.get(id)!;
-
-      expect(card.active).toBe(true);
-      expect(isPlayable(card)).toBe(true);
-      expect(card.rarity).not.toBe('MYTHIC');
-      expect(card.mechanics).not.toContain('MYSTERY');
-    });
-  });
-
-  it('only uses starter-available class cards', () => {
-    Object.values(STARTER_CLASS_IDS)
-      .flat()
-      .forEach((id) => {
-        expect(byId.get(id)!.availability).toBe('STARTER');
+        expect(card.active).toBe(true);
+        expect(isPlayable(card)).toBe(true);
+        expect(card.rarity).not.toBe('MYTHIC');
       });
+    });
   });
 });

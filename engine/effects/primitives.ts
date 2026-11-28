@@ -12,6 +12,7 @@ import {
   type MinionKeywords,
   type TargetRef,
 } from '../state/types';
+import { self as selfSelector } from './selectors';
 import type { Effect, Selector } from './types';
 
 /** Deals `amount` damage to everything the selector picks. */
@@ -224,6 +225,22 @@ export const destroy =
   (select: Selector): Effect =>
   (ctx) => {
     for (const { minion } of minionsOf(ctx, select)) minion.health = 0;
+  };
+
+/**
+ * Destroys the selected friendly minions and adds their combined Attack and
+ * Health to the minion this effect belongs to. Does nothing when none are
+ * selected.
+ */
+export const devourFriendlies =
+  (select: Selector): Effect =>
+  (ctx) => {
+    const victims = minionsOf(ctx, select);
+    const attack = victims.reduce((sum, { minion }) => sum + minion.attack, 0);
+    const health = victims.reduce((sum, { minion }) => sum + minion.health, 0);
+
+    destroy(select)(ctx);
+    buff(selfSelector(), attack, health)(ctx);
   };
 
 /**

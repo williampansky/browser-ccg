@@ -1,153 +1,46 @@
+import starterEntries from '../data/starter-decks.json';
+
 /**
  * The starter decks: what a new player plays before collecting anything.
- * Every deck is two copies of five class cards (the class's starter cards,
- * none of them a Mystery or Mythic) and two copies of ten neutral Core cards
- * chosen for that class, thirty cards in all.
+ * They come from the Airtable STARTER DECKS table (`data/starter-decks.json`,
+ * one row per card with its class and copies), thirty cards a deck. Some
+ * picks may not have availability STARTER; that is fine.
  */
-
-const COPIES_PER_CARD = 2;
 
 /**
- * The ten neutral Core cards of each class's starter deck, by class key. They
- * differ per class (a defensive class gets sturdier bodies, an aggressive one
- * cheap fast ones), with some overlap.
+ * Snapshot of the hand-picked starter decks as of 2026-11-27, before the
+ * Airtable STARTER DECKS table took over (CORE / PRIME numbers; two copies of
+ * each):
+ *
+ * FIGHTER: PRIME 235, 236, 239, 261, 255;
+ *   CORE 004, 005, 009, 010, 016, 019, 023, 025, 035, 038
+ * WIZARD: PRIME 151, 274, 279, 273, 145;
+ *   CORE 001, 004, 008, 013, 014, 017, 024, 026, 029, 038
+ * RANGER: PRIME 277, 276, 278, 130, 131;
+ *   CORE 005, 008, 014, 016, 017, 020, 027, 031, 040, 061
+ * CLERIC: PRIME 171, 176, 173, 172, 175;
+ *   CORE 002, 006, 011, 013, 015, 021, 024, 026, 032, 034
+ * CRUSADER: PRIME 160, 166, 264, 162, 165;
+ *   CORE 002, 005, 009, 010, 016, 019, 025, 030, 033, 042
+ * ASSASSIN: PRIME 265, 189, 193, 188, 192;
+ *   CORE 001, 002, 010, 013, 016, 025, 026, 030, 035, 131
+ * MYSTIC: PRIME 204, 207, 203, 259, 260;
+ *   CORE 004, 006, 010, 013, 019, 020, 029, 032, 033, 042
+ * NECROMANCER: PRIME 269, 216, 219, 224, 217;
+ *   CORE 001, 004, 006, 008, 014, 015, 017, 028, 032, 042
+ * WARDEN: PRIME 113, 111, 112, 121, 120;
+ *   CORE 001, 008, 010, 014, 017, 021, 024, 029, 032, 039
  */
-export const STARTER_NEUTRAL_IDS: Record<string, string[]> = {
-  FIGHTER: [
-    'CORE_004',
-    'CORE_005',
-    'CORE_009',
-    'CORE_010',
-    'CORE_016',
-    'CORE_019',
-    'CORE_023',
-    'CORE_025',
-    'CORE_035',
-    'CORE_038',
-  ],
-  WIZARD: [
-    'CORE_001',
-    'CORE_004',
-    'CORE_008',
-    'CORE_013',
-    'CORE_014',
-    'CORE_017',
-    'CORE_024',
-    'CORE_026',
-    'CORE_029',
-    'CORE_038',
-  ],
-  RANGER: [
-    'CORE_005',
-    'CORE_008',
-    'CORE_014',
-    'CORE_016',
-    'CORE_017',
-    'CORE_020',
-    'CORE_027',
-    'CORE_031',
-    'CORE_040',
-    'CORE_061',
-  ],
-  CLERIC: [
-    'CORE_002',
-    'CORE_006',
-    'CORE_011',
-    'CORE_013',
-    'CORE_015',
-    'CORE_021',
-    'CORE_024',
-    'CORE_026',
-    'CORE_032',
-    'CORE_034',
-  ],
-  CRUSADER: [
-    'CORE_002',
-    'CORE_005',
-    'CORE_009',
-    'CORE_010',
-    'CORE_016',
-    'CORE_019',
-    'CORE_025',
-    'CORE_030',
-    'CORE_033',
-    'CORE_042',
-  ],
-  ASSASSIN: [
-    'CORE_001',
-    'CORE_002',
-    'CORE_010',
-    'CORE_013',
-    'CORE_016',
-    'CORE_025',
-    'CORE_026',
-    'CORE_030',
-    'CORE_035',
-    'CORE_131',
-  ],
-  MYSTIC: [
-    'CORE_004',
-    'CORE_006',
-    'CORE_010',
-    'CORE_013',
-    'CORE_019',
-    'CORE_020',
-    'CORE_029',
-    'CORE_032',
-    'CORE_033',
-    'CORE_042',
-  ],
-  NECROMANCER: [
-    'CORE_001',
-    'CORE_004',
-    'CORE_006',
-    'CORE_008',
-    'CORE_014',
-    'CORE_015',
-    'CORE_017',
-    'CORE_028',
-    'CORE_032',
-    'CORE_042',
-  ],
-  WARDEN: [
-    'CORE_001',
-    'CORE_008',
-    'CORE_010',
-    'CORE_014',
-    'CORE_017',
-    'CORE_021',
-    'CORE_024',
-    'CORE_029',
-    'CORE_032',
-    'CORE_039',
-  ],
-};
 
-/** The five class cards of each class's starter deck, by class key. */
-export const STARTER_CLASS_IDS: Record<string, string[]> = {
-  FIGHTER: ['PRIME_235', 'PRIME_236', 'PRIME_239', 'PRIME_261', 'PRIME_255'],
-  WIZARD: ['PRIME_151', 'PRIME_274', 'PRIME_279', 'PRIME_273', 'PRIME_145'],
-  RANGER: ['PRIME_277', 'PRIME_276', 'PRIME_278', 'PRIME_130', 'PRIME_131'],
-  CLERIC: ['PRIME_171', 'PRIME_176', 'PRIME_173', 'PRIME_172', 'PRIME_175'],
-  CRUSADER: ['PRIME_160', 'PRIME_166', 'PRIME_264', 'PRIME_162', 'PRIME_165'],
-  ASSASSIN: ['PRIME_265', 'PRIME_189', 'PRIME_193', 'PRIME_188', 'PRIME_192'],
-  MYSTIC: ['PRIME_204', 'PRIME_207', 'PRIME_203', 'PRIME_259', 'PRIME_260'],
-  NECROMANCER: [
-    'PRIME_269',
-    'PRIME_216',
-    'PRIME_219',
-    'PRIME_224',
-    'PRIME_217',
-  ],
-  WARDEN: ['PRIME_113', 'PRIME_111', 'PRIME_112', 'PRIME_121', 'PRIME_120'],
-};
+type StarterEntry = { class: string; card: string; copies: number };
+
+const CLASS_PREFIX = 'CLASS_';
 
 /** The thirty-card starter deck for a class key (empty for an unknown one). */
 export const starterDeck = (classKey: string): string[] => {
-  const classIds = STARTER_CLASS_IDS[classKey];
-  if (!classIds) return [];
+  const entries = starterEntries as StarterEntry[];
 
-  return [...classIds, ...STARTER_NEUTRAL_IDS[classKey]].flatMap((id) =>
-    Array.from({ length: COPIES_PER_CARD }, () => id),
-  );
+  return entries
+    .filter((entry) => entry.class.replace(CLASS_PREFIX, '') === classKey)
+    .flatMap((entry) => Array.from({ length: entry.copies }, () => entry.card));
 };

@@ -1310,7 +1310,12 @@
     "cost": 3,
     "attack": 3,
     "health": 3,
-    "text": "<strong>%ON_PLAY%:</strong> Destroy the minions on either side of this minion and gain their Attack and Health.",
+    "text": "<strong>%ON_PLAY%:</strong> %DESTROY% adjacent friendly minions and gain their Attack and Health",
+    "mechanics": [
+      "%ON_PLAY%",
+      "%DESTROY%",
+      "%BUFF%"
+    ],
     "availability": "STARTER",
     "active": true,
     "artistName": "a-ravlik",

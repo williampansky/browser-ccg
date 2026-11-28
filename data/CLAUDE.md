@@ -7,6 +7,8 @@ The root `CLAUDE.md` still holds the rules that apply everywhere.
   the heroes, classes, skills, mechanics and constants (the card counts the tests expect are in `gameConfig.cardCounts` in `app.config.ts`). Link columns (`SKILLS.class`, `CARDS.cardClass`) come back from Airtable as record ids, so the pull resolves them to class symbols through `CLASSES`. This is the data the engine and `/play` use. It
   fetches every table first and writes nothing if any fails or comes back empty.
 
+- The `STARTER DECKS` table (one row per card: `class`, `card`, `copies`) is pulled into `data/starter-decks.json` and read by `engine/starter-decks.ts`; a pick need not have availability STARTER.
+
 - The Airtable base was rebuilt on 2026-11-12: tables `CARDS` (all sets in one table; `set` column, `isEntourage` checkbox),
   `HEROES`, `CLASSES`, `SKILLS` (renamed from `ABILITIES` on 2026-11-23), `MECHANICS`, `CONSTANTS`; symbols are stored bare (`BULWARK`, `MINION`) and the pull puts the
   `%...%` back. `balance/airtable/` has the scripts that built and loaded it (`build.js`, `rebuild.js`; the Airtable API
