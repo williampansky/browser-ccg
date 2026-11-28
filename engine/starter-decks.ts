@@ -24,7 +24,7 @@ export const STARTER_NEUTRAL_IDS: string[] = [
 /** The five class cards of each class's starter deck, by class key. */
 export const STARTER_CLASS_IDS: Record<string, string[]> = {
   FIGHTER: ['PRIME_235', 'PRIME_236', 'PRIME_239', 'PRIME_261', 'PRIME_255'],
-  WIZARD: ['PRIME_151', 'PRIME_274', 'PRIME_279', 'PRIME_275', 'PRIME_145'],
+  WIZARD: ['PRIME_151', 'PRIME_274', 'PRIME_279', 'PRIME_273', 'PRIME_145'],
   RANGER: ['PRIME_277', 'PRIME_276', 'PRIME_278', 'PRIME_130', 'PRIME_131'],
   CLERIC: ['PRIME_171', 'PRIME_176', 'PRIME_173', 'PRIME_172', 'PRIME_175'],
   CRUSADER: ['PRIME_160', 'PRIME_166', 'PRIME_264', 'PRIME_162', 'PRIME_165'],
@@ -34,10 +34,10 @@ export const STARTER_CLASS_IDS: Record<string, string[]> = {
     'PRIME_269',
     'PRIME_216',
     'PRIME_219',
-    'PRIME_226',
-    'PRIME_218',
+    'PRIME_224',
+    'PRIME_217',
   ],
-  WARDEN: ['PRIME_113', 'PRIME_111', 'PRIME_118', 'PRIME_119', 'PRIME_120'],
+  WARDEN: ['PRIME_113', 'PRIME_111', 'PRIME_112', 'PRIME_121', 'PRIME_120'],
 };
 
 /** The thirty-card starter deck for a class key (empty for an unknown one). */
