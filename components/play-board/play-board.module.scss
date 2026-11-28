@@ -152,6 +152,16 @@
   position: var(--mid-tpp, static);
   left: 50%;
   top: 50%;
+  white-space: nowrap;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  // display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   translate: calc(var(--mid-tpsx, 0px) + var(--mid-tdx, 0px))
     calc(var(--mid-tpsy, 0px) + var(--mid-tdy, 0px));
 }

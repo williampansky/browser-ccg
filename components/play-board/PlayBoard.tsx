@@ -2335,7 +2335,12 @@ export const PlayBoard = ({
    */
   const hoverTo = (target: number) => {
     if (hoverRelease.current) clearTimeout(hoverRelease.current);
-    if (over || document.body.classList.contains('dragging')) return;
+    const isDragging = document.body.classList.contains('dragging');
+
+    // A selection ends the hover: the hovered slot reaches up over the board
+    // on a short window, and would eat the click meant for a minion.
+    if (over || isDragging || selectionRef.current) return;
+
     underHand.current = target;
     const from = hoverRef.current;
     const el = handRef.current;
@@ -2366,6 +2371,15 @@ export const PlayBoard = ({
   };
 
   useEffect(() => stopStepping, []);
+
+  // Selecting something lets the hovered hand slot go (see `hoverTo`).
+  useEffect(() => {
+    if (!selection) return;
+    if (hoverRelease.current) clearTimeout(hoverRelease.current);
+    underHand.current = null;
+    stopStepping();
+    applyHover(null);
+  }, [selection]);
 
   /**
    * A card dragged to aim at a target stays in the hand (selected, with the

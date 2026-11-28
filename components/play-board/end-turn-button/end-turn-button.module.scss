@@ -15,6 +15,7 @@
   font-size: calc(1em * var(--mid-bs, 1));
   font-weight: var(--mid-bw, 700);
   cursor: pointer;
+  white-space: nowrap;
 
   &:not(:disabled) {
     box-shadow: 0 0 var(--mid-bg, 0px) var(--mid-bc, #3b6fd4);
