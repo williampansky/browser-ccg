@@ -6,6 +6,7 @@ import {
   MAX_DECK_SIZE,
   Rng,
 } from '../../engine';
+import { starterDeck } from '../../engine/starter-decks';
 import type { SavedDeck } from '../deck-builder/deck-model';
 
 /** `'random-all'`, `'random'` or `'saved:<id>'`. */
@@ -17,18 +18,23 @@ export type DeckChoice = string;
 export const RANDOM_DECK: DeckChoice = 'random';
 /**
  * A random deck from CORE and PRIME together, with a third of it the hero's own
- * class cards. The default for both seats.
+ * class cards.
  */
 export const RANDOM_ALL: DeckChoice = 'random-all';
+
+/** The hero's own starter deck from `starter-decks.ts`. */
+export const STARTER_DECK: DeckChoice = 'starter';
 
 const SAVED_PREFIX = 'saved:';
 
 /**
  * The choice the AI seat actually uses: a random deck as picked, anything else
- * (a saved deck) becomes `RANDOM_ALL`.
+ * (a saved deck) becomes the starter deck.
  */
 export const aiDeckChoice = (choice: DeckChoice): DeckChoice =>
-  choice === RANDOM_DECK || choice === RANDOM_ALL ? choice : RANDOM_ALL;
+  choice === RANDOM_DECK || choice === RANDOM_ALL || choice === STARTER_DECK
+    ? choice
+    : STARTER_DECK;
 
 export interface DeckOption {
   value: DeckChoice;
@@ -42,6 +48,11 @@ export interface DeckOption {
  * player's saved decks.
  */
 export const deckOptions = (saved: SavedDeck[]): DeckOption[] => [
+  {
+    value: STARTER_DECK,
+    label: 'Starter deck',
+    plan: `${MAX_DECK_SIZE} cards chosen for your hero's class`,
+  },
   {
     value: RANDOM_ALL,
     label: 'Random deck (Core + Prime)',
@@ -85,7 +96,14 @@ export const resolveDeck = (
   prime: Card[] = [],
   /** The hero's class cards (none for no hero or a class without any) */
   classCards: Card[] = [],
+  /** The hero's class key, for the starter deck */
+  hero?: string,
 ): { name: string; cards: string[]; hero?: string } => {
+  const starter = hero ? starterDeck(hero) : [];
+
+  if (choice === STARTER_DECK && starter.length > 0)
+    return { name: 'the starter deck', cards: starter };
+
   if (choice === RANDOM_DECK) {
     const ownCore = classCards.filter((c) => c.source === 'core');
 
@@ -101,6 +119,8 @@ export const resolveDeck = (
     if (deck && deck.cards.length > 0)
       return { name: deck.name, cards: deck.cards, hero: deck.hero };
   }
+
+  if (starter.length > 0) return { name: 'the starter deck', cards: starter };
 
   return {
     name: 'a random Core + Prime deck',
@@ -124,9 +144,10 @@ const KEY = 'ccg.newGame.v1';
 const validChoice = (value: unknown): DeckChoice =>
   value === RANDOM_DECK ||
   value === RANDOM_ALL ||
+  value === STARTER_DECK ||
   (typeof value === 'string' && value.startsWith(SAVED_PREFIX))
     ? value
-    : RANDOM_ALL;
+    : STARTER_DECK;
 
 /** The decks picked last time for Player 1 and Player 2. */
 export const loadChoices = (): Record<'0' | '1', DeckChoice> => {
@@ -135,7 +156,7 @@ export const loadChoices = (): Record<'0' | '1', DeckChoice> => {
 
     return { '0': validChoice(raw['0']), '1': validChoice(raw['1']) };
   } catch {
-    return { '0': RANDOM_ALL, '1': RANDOM_ALL };
+    return { '0': STARTER_DECK, '1': STARTER_DECK };
   }
 };
 export const saveChoices = (choices: Record<'0' | '1', DeckChoice>): void => {

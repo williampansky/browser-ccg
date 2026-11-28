@@ -6,6 +6,7 @@ import {
   RANDOM_DECK,
   resolveDeck,
   savedDeckHero,
+  STARTER_DECK,
 } from '../deck-choice';
 import {
   classCardsFor,
@@ -28,18 +29,21 @@ const saved = [
 ];
 
 describe('deck choice', () => {
-  it('lists the two random decks, then the saved decks that have cards', () => {
+  it('lists the starter and two random decks, then the saved decks that have cards', () => {
     expect(deckOptions(saved).map((o) => o.value)).toEqual([
+      STARTER_DECK,
       RANDOM_ALL,
       RANDOM_DECK,
       'saved:a',
       'saved:c',
     ]);
   });
-  it('has no premade decks left to choose', () => {
+  it('offers one starter deck and no other premade decks', () => {
     const values = deckOptions(saved).map((o) => o.value);
 
-    expect(values.some((v) => v.startsWith('starter'))).toBe(false);
+    expect(values.filter((v) => v.startsWith('starter'))).toEqual([
+      STARTER_DECK,
+    ]);
     expect(values).not.toContain('surprise');
   });
   it('resolves a saved deck as is, with its hero', () => {
@@ -136,11 +140,11 @@ describe('class cards in a random deck', () => {
 });
 
 describe('the AI seat', () => {
-  it('keeps a random-deck choice, and a saved deck becomes Core + Prime', () => {
+  it('keeps a random or starter choice, and a saved deck becomes the starter deck', () => {
     expect(aiDeckChoice(RANDOM_DECK)).toBe(RANDOM_DECK);
     expect(aiDeckChoice(RANDOM_ALL)).toBe(RANDOM_ALL);
-    expect(aiDeckChoice('saved:a')).toBe(RANDOM_ALL);
-    expect(aiDeckChoice('starter:Aggro')).toBe(RANDOM_ALL);
+    expect(aiDeckChoice('saved:a')).toBe(STARTER_DECK);
+    expect(aiDeckChoice('starter:Aggro')).toBe(STARTER_DECK);
   });
 });
 
@@ -157,13 +161,16 @@ describe('a saved deck with a hero', () => {
 describe('remembered choices', () => {
   afterEach(() => window.localStorage.clear());
 
-  it('resets an old removed choice (a premade deck, Surprise) to Core + Prime', () => {
+  it('resets an old removed choice (a premade deck, Surprise) to the starter deck', () => {
     window.localStorage.setItem(
       'ccg.newGame.v1',
       JSON.stringify({ '0': 'starter:Aggro', '1': 'surprise' }),
     );
 
-    expect(loadChoices()).toEqual({ '0': RANDOM_ALL, '1': RANDOM_ALL });
+    expect(loadChoices()).toEqual({
+      '0': STARTER_DECK,
+      '1': STARTER_DECK,
+    });
   });
   it('keeps a random-deck choice and a saved-deck choice', () => {
     window.localStorage.setItem(
@@ -173,7 +180,10 @@ describe('remembered choices', () => {
 
     expect(loadChoices()).toEqual({ '0': RANDOM_DECK, '1': 'saved:a' });
   });
-  it('defaults both seats to Core + Prime', () => {
-    expect(loadChoices()).toEqual({ '0': RANDOM_ALL, '1': RANDOM_ALL });
+  it('defaults both seats to the starter deck', () => {
+    expect(loadChoices()).toEqual({
+      '0': STARTER_DECK,
+      '1': STARTER_DECK,
+    });
   });
 });

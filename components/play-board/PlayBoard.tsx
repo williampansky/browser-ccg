@@ -855,6 +855,7 @@ const newGame = (
     rng,
     prime,
     classCardsOf(heroKeys['0']),
+    heroKeys['0'],
   );
 
   const p1 = resolveDeck(
@@ -864,6 +865,7 @@ const newGame = (
     rng,
     prime,
     classCardsOf(heroKeys['1']),
+    heroKeys['1'],
   );
 
   const decks = { '0': p0.cards, '1': p1.cards };

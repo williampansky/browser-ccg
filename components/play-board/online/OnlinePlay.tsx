@@ -181,6 +181,7 @@ export const OnlinePlay = () => {
       rng,
       prime,
       classCardsFor(cards, hero),
+      hero,
     );
     lastDeck.current = picked.cards;
     saveChoices({ ...loadChoices(), [SLOT]: deckChoice });
