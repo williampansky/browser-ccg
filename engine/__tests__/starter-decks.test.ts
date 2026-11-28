@@ -27,7 +27,7 @@ describe('starter decks', () => {
 
   it('uses only playable, active, non-Mystery, non-Mythic cards', () => {
     const ids = [
-      ...STARTER_NEUTRAL_IDS,
+      ...Object.values(STARTER_NEUTRAL_IDS).flat(),
       ...Object.values(STARTER_CLASS_IDS).flat(),
     ];
 

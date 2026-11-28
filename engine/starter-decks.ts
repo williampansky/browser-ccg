@@ -1,25 +1,127 @@
 /**
  * The starter decks: what a new player plays before collecting anything.
  * Every deck is two copies of five class cards (the class's starter cards,
- * none of them a Mystery or Mythic) and two copies of the same ten neutral
- * Core cards, thirty cards in all.
+ * none of them a Mystery or Mythic) and two copies of ten neutral Core cards
+ * chosen for that class, thirty cards in all.
  */
 
 const COPIES_PER_CARD = 2;
 
-/** The neutral Core cards every starter deck shares, one entry per card. */
-export const STARTER_NEUTRAL_IDS: string[] = [
-  'CORE_004',
-  'CORE_008',
-  'CORE_010',
-  'CORE_017',
-  'CORE_020',
-  'CORE_023',
-  'CORE_029',
-  'CORE_026',
-  'CORE_035',
-  'CORE_038',
-];
+/**
+ * The ten neutral Core cards of each class's starter deck, by class key. They
+ * differ per class (a defensive class gets sturdier bodies, an aggressive one
+ * cheap fast ones), with some overlap.
+ */
+export const STARTER_NEUTRAL_IDS: Record<string, string[]> = {
+  FIGHTER: [
+    'CORE_004',
+    'CORE_005',
+    'CORE_009',
+    'CORE_010',
+    'CORE_016',
+    'CORE_019',
+    'CORE_023',
+    'CORE_025',
+    'CORE_035',
+    'CORE_038',
+  ],
+  WIZARD: [
+    'CORE_001',
+    'CORE_004',
+    'CORE_008',
+    'CORE_013',
+    'CORE_014',
+    'CORE_017',
+    'CORE_024',
+    'CORE_026',
+    'CORE_029',
+    'CORE_038',
+  ],
+  RANGER: [
+    'CORE_005',
+    'CORE_008',
+    'CORE_014',
+    'CORE_016',
+    'CORE_017',
+    'CORE_020',
+    'CORE_027',
+    'CORE_031',
+    'CORE_040',
+    'CORE_061',
+  ],
+  CLERIC: [
+    'CORE_002',
+    'CORE_006',
+    'CORE_011',
+    'CORE_013',
+    'CORE_015',
+    'CORE_021',
+    'CORE_024',
+    'CORE_026',
+    'CORE_032',
+    'CORE_034',
+  ],
+  CRUSADER: [
+    'CORE_002',
+    'CORE_005',
+    'CORE_009',
+    'CORE_010',
+    'CORE_016',
+    'CORE_019',
+    'CORE_025',
+    'CORE_030',
+    'CORE_033',
+    'CORE_042',
+  ],
+  ASSASSIN: [
+    'CORE_001',
+    'CORE_002',
+    'CORE_010',
+    'CORE_013',
+    'CORE_016',
+    'CORE_025',
+    'CORE_026',
+    'CORE_030',
+    'CORE_035',
+    'CORE_131',
+  ],
+  MYSTIC: [
+    'CORE_004',
+    'CORE_006',
+    'CORE_010',
+    'CORE_013',
+    'CORE_019',
+    'CORE_020',
+    'CORE_029',
+    'CORE_032',
+    'CORE_033',
+    'CORE_042',
+  ],
+  NECROMANCER: [
+    'CORE_001',
+    'CORE_004',
+    'CORE_006',
+    'CORE_008',
+    'CORE_014',
+    'CORE_015',
+    'CORE_017',
+    'CORE_028',
+    'CORE_032',
+    'CORE_042',
+  ],
+  WARDEN: [
+    'CORE_001',
+    'CORE_008',
+    'CORE_010',
+    'CORE_014',
+    'CORE_017',
+    'CORE_021',
+    'CORE_024',
+    'CORE_029',
+    'CORE_032',
+    'CORE_039',
+  ],
+};
 
 /** The five class cards of each class's starter deck, by class key. */
 export const STARTER_CLASS_IDS: Record<string, string[]> = {
@@ -45,7 +147,7 @@ export const starterDeck = (classKey: string): string[] => {
   const classIds = STARTER_CLASS_IDS[classKey];
   if (!classIds) return [];
 
-  return [...classIds, ...STARTER_NEUTRAL_IDS].flatMap((id) =>
+  return [...classIds, ...STARTER_NEUTRAL_IDS[classKey]].flatMap((id) =>
     Array.from({ length: COPIES_PER_CARD }, () => id),
   );
 };
