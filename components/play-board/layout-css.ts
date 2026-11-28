@@ -1049,6 +1049,7 @@ export const PLAY_LAYOUT: Record<string, string> = {
   lswk: '55',
   lswh: '140',
   lswsb: '12',
+  lsely: '45',
 };
 
 export type LayoutTier = 'large' | 'medium' | 'small';
