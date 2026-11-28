@@ -108,6 +108,11 @@ The author is **playtesting `/play`** and gives feedback in `PLAYTEST_NOTES.md`;
 
 ## Working style: keep token costs down
 
+- **The author's API budget is tight, so watch conversation size.** Every turn re-reads the whole conversation. Flag a long
+  session early (many turns, big tool outputs, or a finished task before an unrelated one), write a handoff note to memory,
+  and remind the author to `/clear` or `/compact`; you cannot run those yourself. Keep replies short, do not re-read files
+  already read, and for "can you X or do I?" questions answer and wait for a go instead of starting the work.
+
 - **Visual work (board art, textures, backgrounds, themes): ask for a reference or a clear description first**, then build ONE opt-in option (a URL param such as the board lab's `l...` knobs) for the author to look at in their own browser. Do not build several variants and screenshot each (three board-art prototypes were tried and thrown away on 2026-11-14).
 - **Check with the cheapest tool that answers the question:** a unit test, a DOM query through `browser_run_code_unsafe` (read one element's text or rect), or a screenshot of one element. A full-page accessibility snapshot (`browser_snapshot`) dumps the whole board, log and deck list; avoid it, or pass `depth` / a `target`. Take a full screenshot only when the look itself is the question.
 - **Read only the part of a big file you need** (`pages/board-lab.tsx` is 600 lines; `PlayBoard.tsx` is far larger): `git grep -n` first, then read a range.
