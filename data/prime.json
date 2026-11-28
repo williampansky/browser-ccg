@@ -2408,7 +2408,11 @@
     "cost": 3,
     "attack": 1,
     "health": 5,
-    "text": "After you summon a minion, give it +1/+1 and this loses 1 Durability.",
+    "text": "After you summon a minion, give it +1/+1 and lose 1 durability",
+    "mechanics": [
+      "%EVENT%",
+      "%BUFF%"
+    ],
     "availability": "STARTER",
     "active": true,
     "artistName": "a-ravlik",
