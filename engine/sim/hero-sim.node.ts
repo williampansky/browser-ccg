@@ -1,5 +1,5 @@
 /**
- * Hero balance report. Usage: `npm run sim:heroes -- [games] [core]`
+ * Hero balance report. Usage: `npm run sim:heroes -- [games] [core|basic]`
  * Hero against hero (every playable class plus "no hero") on the same base
  * deck, one of twelve seeded random Core + Prime decks (`sim-decks.ts`). Each
  * class's side has up to ten of its class cards swapped in, so both sides share
@@ -8,10 +8,14 @@
  * hero's rate by deck. Greedy bot on both sides.
  *
  * With `core`, the decks are Core only and no class cards are swapped in (Core
- * has none), so heroes differ by skill alone: the starter deck situation.
+ * has none), so heroes differ by skill alone.
+ *
+ * With `basic`, the decks are Core plus each class's STARTER class cards (up to
+ * ten, one copy each, swapped in): what a new player has.
  */
 import { chooseGreedyAction } from '../bots/greedy-bot';
 import { loadHsCards } from '../cards/load-hs-cards';
+import type { Card } from '../cards/types';
 import { classCardsFor, playablePool, primePool } from '../decks';
 import { heroes, withHeroTokens } from '../heroes';
 import { classDeck, simDecks } from './sim-decks';
@@ -19,7 +23,9 @@ import { playMatchup } from './simulate';
 
 const gamesArg = process.argv.slice(2).find((arg) => /^\d+$/.test(arg));
 const games = Number(gamesArg ?? 20);
+const isBasic = process.argv.slice(2).includes('basic');
 const isCoreOnly = process.argv.slice(2).includes('core');
+const isCorePool = isCoreOnly || isBasic;
 const DECK_COUNT = 12;
 const NO_HERO = 'NONE';
 const COLUMN_WIDTH = 16;
@@ -34,7 +40,7 @@ if (!Number.isInteger(games) || games < 2)
 const { byId, cards } = loadHsCards();
 const catalog = withHeroTokens(byId);
 const decks = simDecks(
-  isCoreOnly
+  isCorePool
     ? playablePool(cards)
     : [...playablePool(cards), ...primePool(cards)],
   DECK_COUNT,
@@ -44,10 +50,18 @@ const bot = chooseGreedyAction;
 const started = Date.now();
 const rate = (value: number): string => `${(value * 100).toFixed(0)}%`;
 
+const isStarter = (card: Card): boolean => card.availability === 'STARTER';
+
+const swapCardsFor = (name: string): Card[] => {
+  const classCards = classCardsFor(cards, name);
+
+  return isBasic ? classCards.filter(isStarter) : classCards;
+};
+
 const deckFor = (name: string, base: string[], seed: number): string[] =>
   name === NO_HERO || isCoreOnly
     ? base
-    : classDeck(base, classCardsFor(cards, name), seed);
+    : classDeck(base, swapCardsFor(name), seed);
 
 const wins = new Map<string, number>();
 const total = new Map<string, number>();
@@ -99,7 +113,7 @@ decks.forEach((base, deckIndex) => {
 });
 
 console.log(
-  `Hero vs hero on the same base deck, ${isCoreOnly ? 'Core only, no class cards (skills alone)' : 'class cards swapped in'}, ${decks.length} random decks x ${games} games per pair (seats alternating), greedy bot\n`,
+  `Hero vs hero on the same base deck, ${isCoreOnly ? 'Core only, no class cards (skills alone)' : isBasic ? 'Core plus starter class cards' : 'class cards swapped in'}, ${decks.length} random decks x ${games} games per pair (seats alternating), greedy bot\n`,
 );
 console.log(
   ''.padEnd(COLUMN_WIDTH) +
