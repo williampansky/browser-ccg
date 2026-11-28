@@ -224,6 +224,7 @@ import prime230 from './prime-230';
 import prime135 from './prime-135';
 import prime145 from './prime-145';
 import prime153 from './prime-153';
+import prime166 from './prime-166';
 import prime168 from './prime-168';
 import prime177 from './prime-177';
 import prime181 from './prime-181';
@@ -490,6 +491,7 @@ export const primeDefinitions: Definition[] = [
   prime135,
   prime145,
   prime153,
+  prime166,
   prime168,
   prime177,
   prime181,

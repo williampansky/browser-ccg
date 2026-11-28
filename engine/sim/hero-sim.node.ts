@@ -1,5 +1,5 @@
 /**
- * Hero balance report. Usage: `npm run sim:heroes -- [games] [core|basic]`
+ * Hero balance report. Usage: `npm run sim:heroes -- [games] [core|starter]`
  * Hero against hero (every playable class plus "no hero") on the same base
  * deck, one of twelve seeded random Core + Prime decks (`sim-decks.ts`). Each
  * class's side has up to ten of its class cards swapped in, so both sides share
@@ -10,22 +10,24 @@
  * With `core`, the decks are Core only and no class cards are swapped in (Core
  * has none), so heroes differ by skill alone.
  *
- * With `basic`, the decks are Core plus each class's STARTER class cards (up to
- * ten, one copy each, swapped in): what a new player has.
+ * With `starter`, every hero plays its real starter deck (`starter-decks.ts`:
+ * five class cards and ten neutral Core cards, two copies each), with no random
+ * decks. There is no "no hero" side. `games` is then per hero pair, and is
+ * multiplied by the number of random decks the other modes use, so the totals
+ * match.
  */
 import { chooseGreedyAction } from '../bots/greedy-bot';
 import { loadHsCards } from '../cards/load-hs-cards';
-import type { Card } from '../cards/types';
 import { classCardsFor, playablePool, primePool } from '../decks';
 import { heroes, withHeroTokens } from '../heroes';
+import { starterDeck } from '../starter-decks';
 import { classDeck, simDecks } from './sim-decks';
 import { playMatchup } from './simulate';
 
 const gamesArg = process.argv.slice(2).find((arg) => /^\d+$/.test(arg));
-const games = Number(gamesArg ?? 20);
-const isBasic = process.argv.slice(2).includes('basic');
+const requestedGames = Number(gamesArg ?? 20);
+const isStarter = process.argv.slice(2).includes('starter');
 const isCoreOnly = process.argv.slice(2).includes('core');
-const isCorePool = isCoreOnly || isBasic;
 const DECK_COUNT = 12;
 const NO_HERO = 'NONE';
 const COLUMN_WIDTH = 16;
@@ -34,34 +36,32 @@ const DECK_LABEL_WIDTH = 18;
 const SEED_STEP = 100000;
 const PAIR_SEED_STEP = 1000;
 
-if (!Number.isInteger(games) || games < 2)
+const games = isStarter ? requestedGames * DECK_COUNT : requestedGames;
+
+if (!Number.isInteger(requestedGames) || requestedGames < 2)
   throw new Error('games must be a whole number, at least 2');
 
 const { byId, cards } = loadHsCards();
 const catalog = withHeroTokens(byId);
-const decks = simDecks(
-  isCorePool
+const randomDecks = simDecks(
+  isCoreOnly
     ? playablePool(cards)
     : [...playablePool(cards), ...primePool(cards)],
   DECK_COUNT,
 );
-const names = [...heroes().map((hero) => hero.id), NO_HERO];
+const decks = isStarter ? [{ name: 'Starter', deck: [] }] : randomDecks;
+const heroNames = heroes().map((hero) => hero.id);
+const names = isStarter ? heroNames : [...heroNames, NO_HERO];
 const bot = chooseGreedyAction;
 const started = Date.now();
 const rate = (value: number): string => `${(value * 100).toFixed(0)}%`;
 
-const isStarter = (card: Card): boolean => card.availability === 'STARTER';
+const deckFor = (name: string, base: string[], seed: number): string[] => {
+  if (isStarter) return starterDeck(name);
+  if (name === NO_HERO || isCoreOnly) return base;
 
-const swapCardsFor = (name: string): Card[] => {
-  const classCards = classCardsFor(cards, name);
-
-  return isBasic ? classCards.filter(isStarter) : classCards;
+  return classDeck(base, classCardsFor(cards, name), seed);
 };
-
-const deckFor = (name: string, base: string[], seed: number): string[] =>
-  name === NO_HERO || isCoreOnly
-    ? base
-    : classDeck(base, swapCardsFor(name), seed);
 
 const wins = new Map<string, number>();
 const total = new Map<string, number>();
@@ -113,7 +113,7 @@ decks.forEach((base, deckIndex) => {
 });
 
 console.log(
-  `Hero vs hero on the same base deck, ${isCoreOnly ? 'Core only, no class cards (skills alone)' : isBasic ? 'Core plus starter class cards' : 'class cards swapped in'}, ${decks.length} random decks x ${games} games per pair (seats alternating), greedy bot\n`,
+  `Hero vs hero on the same base deck, ${isStarter ? 'the real starter decks' : isCoreOnly ? 'Core only, no class cards (skills alone)' : 'class cards swapped in'}, ${decks.length} decks x ${games} games per pair (seats alternating), greedy bot\n`,
 );
 console.log(
   ''.padEnd(COLUMN_WIDTH) +

@@ -1339,7 +1339,8 @@ export const drawToMatchOpponent = (cap: number): Effect =>
 export const targetOwnerDraws =
   (count: number): Effect =>
   (ctx) => {
-    const found = ctx.target?.kind === 'minion' && findMinion(ctx.g, ctx.target.instanceId);
+    const found =
+      ctx.target?.kind === 'minion' && findMinion(ctx.g, ctx.target.instanceId);
 
     if (!found) return;
 
@@ -1351,7 +1352,8 @@ export const targetOwnerDraws =
  * before the minion is destroyed.
  */
 export const healByTargetHealth: Effect = (ctx) => {
-  const found = ctx.target?.kind === 'minion' && findMinion(ctx.g, ctx.target.instanceId);
+  const found =
+    ctx.target?.kind === 'minion' && findMinion(ctx.g, ctx.target.instanceId);
 
   if (!found) return;
 
@@ -1365,6 +1367,20 @@ export const addWeaponDurability =
     const { weapon } = ctx.g.players[ctx.caster];
 
     if (weapon) weapon.durability += amount;
+  };
+
+/**
+ * The caster's weapon loses `amount` Durability and is destroyed at 0 (an
+ * attack does the same check, but a trigger can lower it between attacks).
+ */
+export const loseWeaponDurability =
+  (amount: number): Effect =>
+  (ctx) => {
+    const player = ctx.g.players[ctx.caster];
+
+    if (!player.weapon) return;
+    player.weapon.durability -= amount;
+    if (player.weapon.durability <= 0) player.weapon = null;
   };
 
 /**
