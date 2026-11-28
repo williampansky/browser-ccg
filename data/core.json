@@ -506,29 +506,6 @@
     "artStatus": "FINAL"
   },
   {
-    "id": "CORE_070",
-    "name": "Transmogrify",
-    "set": "%SET_002%",
-    "type": "%TYPE_SPELL%",
-    "rarity": "%RARITY_FREE%",
-    "cost": 3,
-    "text": "<strong>%TRANSFORM%</strong> an enemy minion into a 1/1 %RACE_CREATURE%",
-    "mechanics": [
-      "%TRANSFORM%",
-      "%TARGET%"
-    ],
-    "playType": "TARGETED",
-    "playContext": "%TRANSFORM%",
-    "targetingArrowText": "%TRANSFORM% into a 1/1 %RACE_CREATURE%",
-    "availability": "STARTER",
-    "active": true,
-    "entourage": "CORE_070a",
-    "howToEarn": "Provided to all players.",
-    "artistName": "Rexard",
-    "artistUrl": "https://graphicriver.net/user/rexard",
-    "artStatus": "FINAL"
-  },
-  {
     "id": "CORE_043",
     "name": "Inner Spark",
     "set": "%SET_002%",

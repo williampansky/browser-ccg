@@ -55,10 +55,10 @@ describe('choose-one cards', () => {
   it('PRIME_111: +1/+1 to your Creatures only, or a 3/2 with Rush', () => {
     const buffed = choose('PRIME_111', 0, {
       mine: [
-        [2, 2, 'CORE_070a'],
+        [2, 2, 'PRIME_279a'],
         [2, 2, 'PRIME_061'],
       ],
-      theirs: [[2, 2, 'CORE_070a']],
+      theirs: [[2, 2, 'PRIME_279a']],
     });
     expect(stats(buffed, '0')).toEqual([
       [3, 3],

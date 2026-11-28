@@ -723,6 +723,30 @@
     "artStatus": "FINAL"
   },
   {
+    "id": "PRIME_279",
+    "name": "Transmogrify",
+    "set": "%SET_003%",
+    "type": "%TYPE_SPELL%",
+    "rarity": "%RARITY_FREE%",
+    "cardClass": "0 %CLASS_WIZARD%",
+    "cost": 3,
+    "text": "<strong>%TRANSFORM%</strong> an enemy minion into a 1/1 %RACE_CREATURE%",
+    "mechanics": [
+      "%TRANSFORM%",
+      "%TARGET%"
+    ],
+    "playType": "TARGETED",
+    "playContext": "%TRANSFORM%",
+    "targetingArrowText": "%TRANSFORM% into a 1/1 %RACE_CREATURE%",
+    "availability": "STARTER",
+    "active": true,
+    "entourage": "PRIME_279a",
+    "howToEarn": "Provided to all players.",
+    "artistName": "Rexard",
+    "artistUrl": "https://graphicriver.net/user/rexard",
+    "artStatus": "FINAL"
+  },
+  {
     "id": "PRIME_139",
     "name": "Verdant Triune",
     "set": "%SET_003%",

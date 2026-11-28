@@ -45,7 +45,6 @@ import core090 from './core/core-090';
 import core101 from './core/core-101';
 import core126 from './core/core-126';
 import core093 from './core/core-093';
-import core070 from './core/core-070';
 import core109 from './core/core-109';
 import core056 from './core/core-056';
 import core075 from './core/core-075';
@@ -170,7 +169,6 @@ const all: Definition[] = [
   core075,
   core056,
   core109,
-  core070,
   core093,
   core126,
   core101,

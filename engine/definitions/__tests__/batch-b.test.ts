@@ -28,7 +28,6 @@ const ids = [
     '101',
     '126',
     '093',
-    '070',
     '109',
     '056',
     '075',
@@ -193,7 +192,7 @@ describe('destroy', () => {
 
 describe('transform', () => {
   it('070 turns an enemy minion into a fresh 1/1 Creature in the same slot', () => {
-    let s = setup('CORE_070', {
+    let s = setup('PRIME_279', {
       theirs: [
         [5, 5],
         [3, 3],
@@ -205,11 +204,11 @@ describe('transform', () => {
       [1, 1],
       [3, 3],
     ]);
-    expect(r.players['1'].board[0].cardId).toBe('CORE_070a');
+    expect(r.players['1'].board[0].cardId).toBe('PRIME_279a');
     expect(r.players['1'].board[0].instanceId).not.toBe(
       s.players['1'].board[0].instanceId,
     );
-    const mine = setup('CORE_070', { mine: [[1, 1]] });
+    const mine = setup('PRIME_279', { mine: [[1, 1]] });
     expect(failCode(mine, mref(mine, '0', 0))).toBe('ILLEGAL_TARGET');
   });
   it('109 turns any minion into a plain 1/1 with no Guard', () => {

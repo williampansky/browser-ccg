@@ -867,11 +867,12 @@
     "isEntourage": true
   },
   {
-    "id": "CORE_070a",
+    "id": "PRIME_279a",
     "name": "Birdie",
-    "set": "%SET_002%",
+    "set": "%SET_003%",
     "type": "%TYPE_MINION%",
     "rarity": "%RARITY_NONE%",
+    "cardClass": "0 %CLASS_WIZARD%",
     "race": "%RACE_CREATURE%",
     "cost": 1,
     "attack": 1,

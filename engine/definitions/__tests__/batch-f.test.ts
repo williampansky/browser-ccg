@@ -99,7 +99,7 @@ describe('Poison (Touch of Death)', () => {
       return attack(play(s).state, 0, mref(play(s).state, '1', 0)).players['1']
         .board.length;
     };
-    expect(vs('CORE_070a')).toBe(0); // a Creature
+    expect(vs('PRIME_279a')).toBe(0); // a Creature
     expect(vs('PRIME_061')).toBe(1); // a Location
   });
   it('a Suppressed poisoner loses Touch of Death', () => {

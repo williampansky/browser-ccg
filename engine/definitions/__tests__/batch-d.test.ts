@@ -297,7 +297,7 @@ describe('minion deaths and auras', () => {
     const c = setup('CORE_043', {
       mine: [
         [1, 1, 'PRIME_128'],
-        [1, 1, 'CORE_070a'],
+        [1, 1, 'PRIME_279a'],
       ],
     });
     expect(stats(play(hurt(c, '0', 1, 0)).state, '0')[0]).toEqual([3, 2]);
